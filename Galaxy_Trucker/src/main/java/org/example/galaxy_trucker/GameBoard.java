@@ -9,9 +9,4 @@ public class GameBoard {
     public void printMessage() {
         System.out.println(prova1);
     }
-
-    public static void main(String[] args) {
-        GameBoard board = new GameBoard();
-        board.printMessage();
-    }
 }
