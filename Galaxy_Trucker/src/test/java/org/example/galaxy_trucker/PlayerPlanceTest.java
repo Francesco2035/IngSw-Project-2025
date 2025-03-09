@@ -11,7 +11,7 @@ public class PlayerPlanceTest {
     @Test
     public void testPlayerPlanceInitialization() {
 
-        PlayerPlance playerPlance = new PlayerPlance(1);
+        PlayerPlance playerPlance = new PlayerPlance(1, null);
 
         int[][] plance = playerPlance.getValidPlance();
         assertNotNull(plance, "La matrice Plance non dovrebbe essere null");

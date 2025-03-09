@@ -12,14 +12,17 @@ public class PlayerPlance {
     private int damage;
     private int power;
     private ArrayList<Pair<Tile, Integer>> ExposedConnectors;
-    private ArrayList<Pair<Integer, Integer>> Umans;
-    private ArrayList<Pair<Integer, Integer>> Energy;
+    private ArrayList<Pair<Integer, Integer>> Umans;private ArrayList<Tile> energyTiles;
+//    private ArrayList<Pair<Integer, Integer>> Energy;
     //richiesta di Pietro per le sue carte
     private ArrayList<Pair<Integer, Integer>> RedCargo;
     private ArrayList<Pair<Integer, Integer>> YellowCargo;
     private ArrayList<Pair<Integer, Integer>> GreenCargo;
     private ArrayList<Pair<Integer, Integer>> BlueCargo;
     private ArrayList<Tile> Buffer;
+
+
+
 
 
     //attributes
@@ -29,7 +32,8 @@ public class PlayerPlance {
         this.power = 0;
         this.ExposedConnectors = new ArrayList<>();
         this.Umans = new ArrayList<>();
-        this.Energy = new ArrayList<>();
+        this.energyTiles = new ArrayList<>();
+//        this.Energy = new ArrayList<>();
         this.RedCargo = new ArrayList<>();
         this.YellowCargo = new ArrayList<>();
         this.GreenCargo = new ArrayList<>();
@@ -89,4 +93,32 @@ public class PlayerPlance {
     public int[][] getValidPlance(){
         return this.ValidPlance;
     }
+
+//    public ArrayList<Pair<Integer, Integer>> getEnergy() {
+//        return Energy;
+//    }
+    public ArrayList<Tile> getEnergyTiles() {
+        return energyTiles;
+    }
+
+
+    public void setEnergyTiles(ArrayList<Tile> energyTiles) {
+        this.energyTiles = energyTiles;
+    }
+
+
+    public void addEnergyTiles(Tile energyTile) {
+        this.energyTiles.add(energyTile);
+    }
+
+    public void insertTile(Tile tile, int x, int y) {
+        try {
+            this.Plance[x][y] = tile;
+            if (tile.getComponent().getClass() == BatteryComp.class) addEnergyTiles(tile);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

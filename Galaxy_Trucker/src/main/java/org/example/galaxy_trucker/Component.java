@@ -4,9 +4,18 @@ import org.example.galaxy_trucker.PlayerPlance;
 
 public abstract class Component {
 
-    Tile[][] plance;
+    Tile[][] myPlance;
 
-    private Component(PlayerPlance plance) {
-        this.plance = plance.getPlayerPlance();
-    };
+    public Component(PlayerPlance myPlance) {
+        this.myPlance = myPlance.getPlayerPlance();
+    }
+
+    public int getAbility(){
+        return 0;
+    }
+
+    public int setAbility(){
+        return 0;
+    }
+
 }
