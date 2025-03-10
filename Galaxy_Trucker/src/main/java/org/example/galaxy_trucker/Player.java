@@ -2,9 +2,14 @@ package org.example.galaxy_trucker;
 
 public class Player {
 
-private PlayerPlance myPlance;
+    private PlayerPlance myPlance;
+    private String ID;
 
-    public Player(){} //builda player
+
+    public Player(String id){
+        myPlance = null;
+        ID = id;
+    } //builda player
 
     public void consumeEnergyFrom(int x, int y){
         myPlance.getEnergyTiles().stream()
@@ -20,13 +25,6 @@ private PlayerPlance myPlance;
     public PlayerPlance getMyPlance() {
         return myPlance;
     }
-
-
-    public void setMyPlance(PlayerPlance myPlance) {
-        this.myPlance = myPlance;
-    }
-
-
 
 
 }
