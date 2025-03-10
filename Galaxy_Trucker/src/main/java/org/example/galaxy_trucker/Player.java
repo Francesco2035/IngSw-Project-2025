@@ -4,11 +4,13 @@ public class Player {
 
     private PlayerPlance myPlance;
     private String ID;
+    private int credits;
 
 
     public Player(String id){
         myPlance = null;
         ID = id;
+        credits = 0;
     } //builda player
 
     public void consumeEnergyFrom(int x, int y){
@@ -24,6 +26,10 @@ public class Player {
 
     public PlayerPlance getMyPlance() {
         return myPlance;
+    }
+
+    public void IcreaseCredits(int num){
+        credits += num;
     }
 
 

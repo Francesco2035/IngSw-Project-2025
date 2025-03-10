@@ -12,7 +12,8 @@ public class PlayerPlance {
     private int damage;
     private int power;
     private ArrayList<Pair<Tile, Integer>> ExposedConnectors;
-    private ArrayList<Pair<Integer, Integer>> Umans;private ArrayList<Tile> energyTiles;
+    // posso avere dei doppioni cosi per sapere quanti sono basta guardare la lunghezza senza accedere ai tasselli
+    private ArrayList<Pair<Integer, Integer>> Humans;private ArrayList<Tile> energyTiles;
 //    private ArrayList<Pair<Integer, Integer>> Energy;
     //richiesta di Pietro per le sue carte
     private ArrayList<Pair<Integer, Integer>> RedCargo;
@@ -31,7 +32,7 @@ public class PlayerPlance {
         this.damage = 0;
         this.power = 0;
         this.ExposedConnectors = new ArrayList<>();
-        this.Umans = new ArrayList<>();
+        this.Humans = new ArrayList<>();
         this.energyTiles = new ArrayList<>();
 //        this.Energy = new ArrayList<>();
         this.RedCargo = new ArrayList<>();
@@ -119,6 +120,8 @@ public class PlayerPlance {
             e.printStackTrace();
         }
     }
+
+    public ArrayList<Pair<Integer, Integer>> getHumans(){ return this.Humans; }
 
 
 }
