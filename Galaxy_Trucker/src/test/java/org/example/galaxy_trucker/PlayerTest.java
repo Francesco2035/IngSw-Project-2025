@@ -12,7 +12,7 @@ class PlayerTest {
     @Test
     void consumeEnergyFrom() {
 
-        Player meplayer = new Player();
+        Player meplayer = new Player("codiscePersona_255");
         PlayerPlance provaPlance = new PlayerPlance(2, null);
         meplayer.setMyPlance(provaPlance);
         BatteryComp batt = new BatteryComp(meplayer.getMyPlance());
