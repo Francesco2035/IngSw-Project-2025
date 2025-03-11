@@ -20,17 +20,18 @@ public class AbandonedShip extends Card{
        PlayerPlance AbandonedShipCurrentPlanche;
         int AbandonedShipLen= AbandonedShipPlayerList.size();
         while(AbandonedShipOrder<AbandonedShipLen && AbandonedShipBool ){
+
             AbandonedShipCurrentPlanche=AbandonedShipPlayerList.get(AbandonedShipOrder).getMyPlance();
            if( AbandonedShipCurrentPlanche.getHumans().size() > this.requirement ){
                AbandonedShipOrder++;
                //il giocatore sceglie se prendere la nave o meno
                //se accetta rimuove a scelta sua un numero di umani pari a requirements
               // AbandonedShipPlayerList.get(AbandonedShipOrder).IcreaseCredits(this.reward);
+               AbandonedShipBool=false;
            }
 
             AbandonedShipOrder++;
         }
-
-
+        return;
     }
 }
