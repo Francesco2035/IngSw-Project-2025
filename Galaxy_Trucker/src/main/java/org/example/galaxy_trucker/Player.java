@@ -7,11 +7,11 @@ public class Player {
     private int credits;
 
 
-    public Player(String id){
-        myPlance = null;
+    public Player(String id, int lv) {
+        myPlance = new PlayerPlance(lv);
         ID = id;
         credits = 0;
-    } //builda player
+    }
 
     public void consumeEnergyFrom(int x, int y){
         myPlance.getEnergyTiles().stream()
@@ -31,7 +31,5 @@ public class Player {
     public void IcreaseCredits(int num){
         credits += num;
     }
-
-
 
 }
