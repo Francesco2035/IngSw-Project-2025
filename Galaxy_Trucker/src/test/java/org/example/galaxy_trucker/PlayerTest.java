@@ -37,4 +37,33 @@ class PlayerTest {
     @Test
     void startEngine() {
     }
+
+    @Test
+    void rollDice() {
+        int cur, min , max;
+        double avg = 0;
+        GameBoard board = new GameBoard();
+
+        Player me = new Player("codiscePersona_255", 2, board);
+
+        cur = me.RollDice();
+        min = cur;
+        max = cur;
+        for(int i=0; i<=99999; i++){
+            cur = me.RollDice();
+            avg += cur;
+            if(cur<min) min = cur;
+            else if(cur>max) max = cur;
+        }
+        avg = avg/100000;
+
+        if(avg>7) avg = Math.floor(avg);
+        if(avg<7) avg = Math.ceil(avg);
+        assertEquals(7, avg);
+        assertEquals(2, min);
+        assertEquals(12, max);
+
+        //System.out.println("Avg: " + avg +"\nMin:" +min + "\nMax:" +max);
+
+    }
 }
