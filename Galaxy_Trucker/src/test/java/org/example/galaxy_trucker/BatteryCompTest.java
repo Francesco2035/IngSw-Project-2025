@@ -10,8 +10,9 @@ class BatteryCompTest {
 
     @Test
     void getAbility() {
+        GameBoard board = new GameBoard();
 
-        Player me = new Player("prova", 2);
+        Player me = new Player("prova", 2, board);
         Component batt = new BatteryComp(3);
         assertEquals(3, batt.getAbility());
 
@@ -19,8 +20,10 @@ class BatteryCompTest {
 
     @Test
     void setAbility() {
+        GameBoard board = new GameBoard();
 
-        Player me = new Player("prova", 2);
+
+        Player me = new Player("prova", 2, board);
         Component batt = new BatteryComp(3);
         assertEquals(2, batt.setAbility());
 

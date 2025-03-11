@@ -17,7 +17,8 @@ public class GameBoard {
     }
 
     public void addPlayer(String id){
-        this.players.add(new Player (id, 2));
+        GameBoard board = new GameBoard();
+        this.players.add(new Player (id, 2, board));
     }
 
     public ArrayList<Player> getPlayers(){
