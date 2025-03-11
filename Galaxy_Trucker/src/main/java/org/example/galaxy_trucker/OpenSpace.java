@@ -14,7 +14,7 @@ public class OpenSpace extends Card{
         int OpenSpaceMovement=0;
         while(OpenSpaceOrder<OpenSpacePlayerList.size()){
             OpenspaceCurrentPlanche=OpenSpacePlayerList.get(OpenSpaceOrder).getMyPlance();
-            OpenSpaceMovement=OpenspaceCurrentPlanche.getPower();
+            //OpenSpaceMovement=OpenspaceCurrentPlanche.getPower();
             //OpenSpacePlayerList.get(OpenSpaceOrder).movePlayer(OpenSpaceMovement);
             //o simili a seconda di come decidiamo di fare il movement
             OpenSpaceOrder++;
