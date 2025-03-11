@@ -27,6 +27,5 @@ class BatteryCompTest {
         Component batt = new BatteryComp(3);
         assertEquals(2, batt.setAbility());
 
-
     }
 }

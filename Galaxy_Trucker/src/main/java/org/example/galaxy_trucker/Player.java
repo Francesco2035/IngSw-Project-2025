@@ -22,7 +22,6 @@ public class Player {
         myPlance.getEnergyTiles().stream()
                 .filter(tile -> tile.getCoords().getKey() == x && tile.getCoords().getValue() == y)
                 .findFirst()
-                .filter(tile -> tile.getComponent().getAbility()!=-1)
                 .ifPresent(tile -> tile.getComponent().setAbility()) //riduce di 1 le batterie a x, y se non sono già a zero
         ;}
 

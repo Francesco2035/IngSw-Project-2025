@@ -21,8 +21,8 @@ public class BatteryComp extends Component{
     @Override
     public int setAbility() {
         try {
-            if(this.getAbility() < 1) throw new IllegalArgumentException("cannot exceed 0");
-            this.privEnergy--;
+            if(this.getAbility() == 0) throw new IllegalArgumentException("cannot exceed 0");
+            else this.privEnergy--;
         } catch (ArithmeticException e) {
             e.printStackTrace();
         }
