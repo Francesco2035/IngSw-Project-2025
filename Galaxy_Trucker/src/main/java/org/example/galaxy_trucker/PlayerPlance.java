@@ -22,14 +22,15 @@ public class PlayerPlance {
     private ArrayList<Pair<Integer, Integer>> BlueCargo;
     private ArrayList<Tile> Buffer;
 
-    private Tile main_cockpit = null; // inserisci tutta la costruzione di tile per renderla main_cockpit
-
+    private Pair<Integer, Integer> main_coords = new Pair<>(6, 6);
+    private Component main_cockpit = new MainCockpitComp(0);
+    private Tile Center = new Tile(main_coords, main_cockpit, Connector.UNIVERSAL,Connector.UNIVERSAL,Connector.UNIVERSAL,Connector.UNIVERSAL);
 
 
 
     //attributes
 
-    public PlayerPlance(int lv) {  //, Tile main_cockpit
+    public PlayerPlance(int lv) {
         this.damage = 0;
         this.power = 0;
         this.ExposedConnectors = new ArrayList<>();
@@ -81,7 +82,7 @@ public class PlayerPlance {
                     Plance[x][y] =  null;
                 }
                 else {
-                    Plance[x][y] = main_cockpit;
+                    Plance[x][y] = Center;
                 }
 
             }
