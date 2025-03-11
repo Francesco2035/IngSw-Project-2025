@@ -19,5 +19,11 @@ class BatteryCompTest {
 
     @Test
     void setAbility() {
+
+        Player me = new Player("prova", 2);
+        Component batt = new BatteryComp(3);
+        assertEquals(2, batt.setAbility());
+
+
     }
 }
