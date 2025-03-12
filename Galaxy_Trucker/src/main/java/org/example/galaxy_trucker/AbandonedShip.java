@@ -12,6 +12,7 @@ public class AbandonedShip extends Card{
         this.requirement = requirement;
         this.reward = reward;
     }
+    @Override
     public void CardEffect(){
        int AbandonedShipOrder=0;
        boolean AbandonedShipBool=true;

@@ -6,6 +6,7 @@ public class OpenSpace extends Card{
     OpenSpace(int level,GameBoard board){
         super(level, 0 ,board);
     }
+    @Override
     public void CardEffect(){
         int OpenSpaceOrder=0;
          GameBoard OpenSpaceBoard=this.getBoard();

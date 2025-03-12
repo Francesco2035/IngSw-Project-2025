@@ -6,6 +6,7 @@ public class StarPowder extends Card {
     StarPowder(int level,GameBoard board){
         super(level, 0 ,board);
     }
+    @Override
     public void CardEffect () {
 
         GameBoard StarPowderBoard=this.getBoard();
