@@ -11,10 +11,11 @@ class PlayerTest {
 
     @Test
     void consumeEnergyFrom() {
+        TileSets tileSets = new TileSets();
+        GameBoard board = new GameBoard(tileSets, 2);
 
-        GameBoard board = new GameBoard();
 
-        Player meplayer = new Player("codiscePersona_255", 2, board);
+        Player meplayer = new Player("codiscePersona_255", board);
         PlayerPlance provaPlance = new PlayerPlance(2);
 //        meplayer.setMyPlance(provaPlance);
         BatteryComp batt = new BatteryComp(3);
@@ -42,9 +43,10 @@ class PlayerTest {
     void rollDice() {
         int cur, min , max;
         double avg = 0;
-        GameBoard board = new GameBoard();
+        TileSets tileSets = new TileSets();
+        GameBoard board = new GameBoard(tileSets, 2);
 
-        Player me = new Player("codiscePersona_255", 2, board);
+        Player me = new Player("codiscePersona_255", board);
 
         cur = me.RollDice();
         min = cur;

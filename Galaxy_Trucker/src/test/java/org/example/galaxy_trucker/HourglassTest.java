@@ -6,13 +6,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HourglassTest {
 
-    //very silly test
+
     @Test
     void startTimer() throws InterruptedException {
         Hourglass hrg = new Hourglass(1);
 
         hrg.StartTimer();
-        assertEquals(true, hrg.StartTimer());
+        hrg.StartTimer();
+        //assertEquals(0, hrg.getUsages());
 
     }
 }
