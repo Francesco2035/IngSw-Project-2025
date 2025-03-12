@@ -20,7 +20,7 @@ public class Player {
 
     public void consumeEnergyFrom(int x, int y){
         myPlance.getEnergyTiles().stream()
-                .filter(tile -> tile.getCoords().getKey() == x && tile.getCoords().getValue() == y)
+                .filter(tile -> tile.getCoords().getFirst() == x && tile.getCoords().getSecond() == y)
                 .findFirst()
                 .ifPresent(tile -> tile.getComponent().setAbility()) //riduce di 1 le batterie a x, y se non sono già a zero
         ;}

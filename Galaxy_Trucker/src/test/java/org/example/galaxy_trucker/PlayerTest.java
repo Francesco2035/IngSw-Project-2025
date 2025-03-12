@@ -19,7 +19,7 @@ class PlayerTest {
 //        meplayer.setMyPlance(provaPlance);
         BatteryComp batt = new BatteryComp(3);
         ArrayList<Tile> batteryTiles = new ArrayList<>();
-        Pair<Integer, Integer> coords = new Pair<>(3, 4);
+        IntegerPair coords = new IntegerPair(3,4);
         Tile battTile = new Tile(coords, batt, Connector.SINGLE, Connector.DOUBLE, Connector.NONE, Connector.NONE);
         batteryTiles.add(battTile);
         provaPlance.insertTile(battTile, 3, 4);

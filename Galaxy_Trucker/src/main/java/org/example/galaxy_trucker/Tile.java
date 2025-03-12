@@ -8,13 +8,13 @@ import org.example.galaxy_trucker.Component;
 public class Tile {
 
 
-    private Pair<Integer, Integer> coords;
+    private IntegerPair coords;
 
 
     private Component component;
     private List<Connector> connectors = new ArrayList<>();
 
-    public Tile(Pair<Integer, Integer > coords, Component component, Connector... connectors) {
+    public Tile( IntegerPair coords, Component component, Connector... connectors) {
         this.coords = coords;
         this.component = component;
         this.connectors.addAll(Arrays.asList(connectors));
@@ -29,12 +29,16 @@ public class Tile {
     }
 
 
-    public Pair<Integer, Integer> getCoords() {
+    public IntegerPair getCoords() {
         return coords;
     }
 
     public Component getComponent() {
         return component;
+    }
+
+    public List<Connector> getConnectors() {
+        return connectors;
     }
 
 }
