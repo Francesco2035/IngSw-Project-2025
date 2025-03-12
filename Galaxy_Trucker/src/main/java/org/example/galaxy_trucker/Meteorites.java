@@ -2,6 +2,8 @@ package org.example.galaxy_trucker;
 //import javafx.util.Pair;
 import java.util.ArrayList;
 
+//RINOMINA AD ATTACK E CONSIDERA ANCHE I PROIETTILI A STO PUNTO
+
 // direzioni int sinistra 0 sopra 1...
 public class Meteorites extends Card {
     private ArrayList<IntegerPair> Attacks; // prima è la direzione, secondo il tipo di attacco
@@ -34,7 +36,7 @@ public class Meteorites extends Card {
                     MeteoritesMovement=0;
                     while(MeteoritesMovement<10 && MeteoritesFlag == false){
                         if(MeteoritesValidPlanche[MeteoritesLine][MeteoritesMovement]>0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                            //Meteorites.Hit(MeteoritesLine,MeteoritesMovement
+                            //Meteorites.Hit(MeteoritesLine,MeteoritesMovement)
                             MeteoritesFlag = true;
                         }
 
@@ -42,11 +44,35 @@ public class Meteorites extends Card {
                     }
                 }
                 if (Attacks.get(MeteoritesAttackNumber).getFirst()==1) {//sopra
+                    MeteoritesMovement=0;
+                    while(MeteoritesMovement<10 && MeteoritesFlag == false) {
+                        if (MeteoritesValidPlanche[MeteoritesMovement][MeteoritesLine] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
+                            //Meteorites.Hit(MeteoritesMovement,MeteoritesLine)
+                            MeteoritesFlag = true;
+                        }
 
+                        MeteoritesOrder++;
+                    }
                 }
                 if (Attacks.get(MeteoritesAttackNumber).getFirst()==2) {// destra
-
+                    MeteoritesMovement=9;
+                    while(MeteoritesMovement>=0 && MeteoritesFlag == false) {
+                        if (MeteoritesValidPlanche[MeteoritesLine][MeteoritesMovement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
+                            //Meteorites.Hit(MeteoritesLine,MeteoritesMovement)
+                            MeteoritesFlag = true;
+                        }
+                    }
+                        MeteoritesOrder--;
                 } else { //sotto
+                    MeteoritesMovement=9;
+                    while(MeteoritesMovement>=0 && MeteoritesFlag == false) {
+                        if (MeteoritesValidPlanche[MeteoritesMovement][MeteoritesLine] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
+                            //Meteorites.Hit(MeteoritesMovement,MeteoritesLine)
+                            MeteoritesFlag = true;
+                        }
+
+                        MeteoritesOrder--;
+                    }
 
                 }
 

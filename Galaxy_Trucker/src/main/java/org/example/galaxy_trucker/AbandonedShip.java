@@ -20,14 +20,17 @@ public class AbandonedShip extends Card{
        ArrayList<Player> AbandonedShipPlayerList = AbandonedShipBoard.getPlayers();
        PlayerPlance AbandonedShipCurrentPlanche;
         int AbandonedShipLen= AbandonedShipPlayerList.size();
-        while(AbandonedShipOrder<AbandonedShipLen && AbandonedShipBool ){
+        while(AbandonedShipOrder<AbandonedShipLen && AbandonedShipBool ){ // ask all the player by order
+            // or untill someone does if they can and want to get the ship
 
-            AbandonedShipCurrentPlanche=AbandonedShipPlayerList.get(AbandonedShipOrder).getMyPlance();
+            AbandonedShipCurrentPlanche=AbandonedShipPlayerList.get(AbandonedShipOrder).getMyPlance(); // get the current active planche
            if( AbandonedShipCurrentPlanche.getHumans().size() > this.requirement ){
                AbandonedShipOrder++;
                //il giocatore sceglie se prendere la nave o meno
                //se accetta rimuove a scelta sua un numero di umani pari a requirements
               // AbandonedShipPlayerList.get(AbandonedShipOrder).IcreaseCredits(this.reward);
+
+               //AbandonedShipPlayerList.get(AbandonedShipOrder).movePlayer(this.getTime());
                AbandonedShipBool=false;
            }
 

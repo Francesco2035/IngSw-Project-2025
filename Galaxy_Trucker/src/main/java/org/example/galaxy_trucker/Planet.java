@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker;
 
+// list of the cargo contained in a planet and the bool signaling if a player chose it already
 public class Planet {
     private boolean Occupied;
     private int NumofRed;

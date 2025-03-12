@@ -4,11 +4,11 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class SolarSystem extends Card {
-    private ArrayList<Planet>  SolarSystemPlanets;
+    private ArrayList<Planet> solarSystemPlanets;
 
     public SolarSystem(int lv, int time, GameBoard board, ArrayList<Planet> planets) {
         super(lv, time,board);
-        SolarSystemPlanets = planets;
+        solarSystemPlanets = planets;
 
     }
     public void CardEffect(){
@@ -20,11 +20,20 @@ public class SolarSystem extends Card {
         Random SolarSystemR= new Random();
 
         while(SolarSystemPlayerList.size()>SolarSystemOrder){
-            //Ask.Descent O qualche cosa che chieda il pianeta di discesa al player
+            //Ask.Descent O qualche cosa che chieda il pianeta di discesa al player se vuol scendere
 
             //per adesso metto un numero random
-            SolarSystemR.nextInt(SolarSystemPlanets.size());
-
+            int yes =SolarSystemR.nextInt(2); // per ora salvo sia la volontà di scendere e il pianeta,
+            // potrei chiamare un metodo che semplicemente chiama un pianeta nullo dove va chi non vuole o non può scendere
+            //rimuovendo la necessità di salvare due parametri
+            int NumPlanet=SolarSystemR.nextInt(solarSystemPlanets.size());
+            while(yes==1 && solarSystemPlanets.get(NumPlanet).isOccupied()){
+                //avviso il player di cambiare idea perché il pianeta è occupato
+            }
+            if(yes==1) {
+               // SolarSystemPlayerList.get(SolarSystemOrder).movePlayer(this.getTime());
+                //chiamo un add resources di ship?
+            }
             SolarSystemOrder++;
         }
     }

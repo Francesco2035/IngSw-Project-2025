@@ -14,6 +14,7 @@ public class Card {
         this.Time = time;
         this.Board = board;
     }
+
     public GameBoard getBoard() {
 
         return this.Board;
@@ -21,6 +22,12 @@ public class Card {
 
     public void CardEffect(){
 
+    }
+    public int getLevel() {
+        return this.Level;
+    }
+    public int getTime() {
+        return this.Time;
     }
 
 }
