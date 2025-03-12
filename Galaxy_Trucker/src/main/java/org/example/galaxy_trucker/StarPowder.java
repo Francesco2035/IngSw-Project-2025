@@ -20,6 +20,7 @@ public class StarPowder extends Card {
             //StarPowderPlayerList.get(StarPowderOrder).movePlayer(StarPowderMovement);
             StarPowderOrder--;
         }
+
         return;
     }
 }
