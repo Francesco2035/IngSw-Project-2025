@@ -15,10 +15,12 @@ public class Card {
         this.Board = board;
     }
     public GameBoard getBoard() {
-        return Board;
+
+        return this.Board;
     }
 
     public void CardEffect(){
 
     }
+
 }

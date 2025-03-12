@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 public class OpenSpace extends Card{
     OpenSpace(int level,GameBoard board){
+
         super(level, 0 ,board);
     }
     @Override
     public void CardEffect(){
         int OpenSpaceOrder=0;
-         GameBoard OpenSpaceBoard=this.getBoard();
+         GameBoard OpenSpaceBoard=this.super.getBoard();
         ArrayList<Player> OpenSpacePlayerList = OpenSpaceBoard.getPlayers();
         PlayerPlance OpenspaceCurrentPlanche;
         int OpenSpaceMovement=0;
