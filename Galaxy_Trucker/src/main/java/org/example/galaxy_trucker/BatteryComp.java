@@ -3,13 +3,15 @@ package org.example.galaxy_trucker;
 public class BatteryComp extends Component{
 
     private int privEnergy;
-//    private int numEnergy;
 
     public BatteryComp(int numEnergy) {
         super();
         this.privEnergy = numEnergy;
-//        this.numEnergy = numEnergy;
     }
+
+
+    public BatteryComp() {}
+
 
 
     @Override

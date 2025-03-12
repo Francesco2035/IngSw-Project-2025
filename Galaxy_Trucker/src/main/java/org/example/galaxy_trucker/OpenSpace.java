@@ -10,7 +10,7 @@ public class OpenSpace extends Card{
     @Override
     public void CardEffect(){
         int OpenSpaceOrder=0;
-         GameBoard OpenSpaceBoard=this.super.getBoard();
+         GameBoard OpenSpaceBoard=super.getBoard();
         ArrayList<Player> OpenSpacePlayerList = OpenSpaceBoard.getPlayers();
         PlayerPlance OpenspaceCurrentPlanche;
         int OpenSpaceMovement=0;

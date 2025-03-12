@@ -11,16 +11,15 @@ class PlayerTest {
 
     @Test
     void consumeEnergyFrom() {
-        TileSets tileSets = new TileSets();
-        GameBoard board = new GameBoard(tileSets, 2);
 
+        GameBoard board = new GameBoard(null, 2);
 
         Player meplayer = new Player("codiscePersona_255", board);
         PlayerPlance provaPlance = new PlayerPlance(2);
 //        meplayer.setMyPlance(provaPlance);
         BatteryComp batt = new BatteryComp(3);
         ArrayList<Tile> batteryTiles = new ArrayList<>();
-        IntegerPair coords = new IntegerPair(3,4);
+        IntegerPair coords = new IntegerPair(3, 4);
         Tile battTile = new Tile(coords, batt, Connector.SINGLE, Connector.DOUBLE, Connector.NONE, Connector.NONE);
         batteryTiles.add(battTile);
         provaPlance.insertTile(battTile, 3, 4);
@@ -43,8 +42,7 @@ class PlayerTest {
     void rollDice() {
         int cur, min , max;
         double avg = 0;
-        TileSets tileSets = new TileSets();
-        GameBoard board = new GameBoard(tileSets, 2);
+        GameBoard board = new GameBoard(null, 2);
 
         Player me = new Player("codiscePersona_255", board);
 

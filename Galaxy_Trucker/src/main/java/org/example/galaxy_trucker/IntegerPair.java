@@ -16,6 +16,17 @@ public class IntegerPair {
         return second;
     }
 
+    //setter per json
+    public void setSecond(int second) {
+        this.second = second;
+    }
+
+    public void setFirst(int first) {
+        this.first = first;
+    }
+
+
+
     @Override
     public boolean equals(Object obj) {
         // Verifica se sono lo stesso oggetto
