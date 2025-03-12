@@ -2,8 +2,10 @@ package org.example.galaxy_trucker;
 
 import javafx.util.Pair;
 
-import javax.lang.model.type.NullType;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class PlayerPlance {
 
@@ -14,7 +16,7 @@ public class PlayerPlance {
     private ArrayList<Pair<Tile, Integer>> ExposedConnectors;
     // posso avere dei doppioni cosi per sapere quanti sono basta guardare la lunghezza senza accedere ai tasselli
     private ArrayList<Pair<Integer, Integer>> Humans;private ArrayList<Tile> energyTiles;
-//    private ArrayList<Pair<Integer, Integer>> Energy;
+    //    private ArrayList<Pair<Integer, Integer>> Energy;
     //richiesta di Pietro per le sue carte
     private ArrayList<Pair<Integer, Integer>> RedCargo;
     private ArrayList<Pair<Integer, Integer>> YellowCargo;
@@ -22,10 +24,10 @@ public class PlayerPlance {
     private ArrayList<Pair<Integer, Integer>> BlueCargo;
     private ArrayList<Tile> Buffer;
 
-    private IntegerPair main_coords = new IntegerPair(6, 6);
-    private Component main_cockpit = new MainCockpitComp(0);
-    private Tile Center = new Tile(main_coords, main_cockpit, null);
-//, Connector.UNIVERSAL,Connector.UNIVERSAL,Connector.UNIVERSAL,Connector.UNIVERSAL
+    private ArrayList<IntegerPair> connectedPlance; ;
+
+
+    HashMap<Connector, ArrayList<Connector>>  validConnection;
 
 
     //attributes
@@ -43,6 +45,17 @@ public class PlayerPlance {
         this.BlueCargo = new ArrayList<>();
         this.Buffer = new ArrayList<>();
         this.ValidPlance = new int[10][10];
+        this.validConnection = new HashMap<Connector, ArrayList<Connector>>();
+        validConnection.put(Connector.UNIVERSAL, new ArrayList<>());
+        validConnection.get(Connector.UNIVERSAL).addAll(List.of(Connector.UNIVERSAL, Connector.SINGLE, Connector.DOUBLE));
+        validConnection.put(Connector.DOUBLE, new ArrayList<>());
+        validConnection.get(Connector.DOUBLE).addAll(List.of(Connector.UNIVERSAL,  Connector.DOUBLE));
+        validConnection.put(Connector.SINGLE, new ArrayList<>());
+        validConnection.get(Connector.SINGLE).addAll(List.of(Connector.UNIVERSAL, Connector.SINGLE));
+        validConnection.put(Connector.MOTOR, new ArrayList<>());
+        validConnection.put(Connector.NONE, new ArrayList<>());
+
+
         if (lv == 1) {
             for (int x = 0; x < 10; x++) {
                 for (int y = 0; y < 10; y++) {
@@ -79,25 +92,26 @@ public class PlayerPlance {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 if (ValidPlance[x][y] == -1) {
-                    Plance[x][y] =  null;
+                    Plance[x][y] =  new Tile(new IntegerPair(x,y), new Void() ,Connector.NONE, Connector.NONE,Connector.NONE, Connector.NONE);
                 }
                 else {
-                    Plance[x][y] = Center;
+                    Plance[x][y] = null;
                 }
 
             }
         }
+        this.Plance[6][6] = new Tile(new IntegerPair(6,6), new MainCockpitComp(0),Connector.UNIVERSAL, Connector.UNIVERSAL,Connector.UNIVERSAL, Connector.UNIVERSAL);
     }
 
     public Tile[][] getPlayerPlance(){
         return this.Plance;
-   }
+    }
 
     public int[][] getValidPlance(){
         return this.ValidPlance;
     }
 
-//    public ArrayList<Pair<Integer, Integer>> getEnergy() {
+    //    public ArrayList<Pair<Integer, Integer>> getEnergy() {
 //        return Energy;
 //    }
     public ArrayList<Tile> getEnergyTiles() {
@@ -118,9 +132,15 @@ public class PlayerPlance {
         try {
             this.Plance[x][y] = tile;
             if (tile.getComponent().getClass() == BatteryComp.class) addEnergyTiles(tile);
+            ValidPlance[x][y] = 1;
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public Tile getTile(int x, int y) {
+        return this.Plance[x][y];
     }
 
     public ArrayList<Pair<Integer, Integer>> getHumans(){ return this.Humans; }
@@ -129,7 +149,138 @@ public class PlayerPlance {
         return power;
     }
 
-    public ArrayList<IntegerPair> checkValidity() {
-        return null;
+    public boolean checkConnection(Connector t1, Connector t2 ){
+        if(validConnection.get(t1).contains(t2)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
+
+    public HashMap<Integer, ArrayList<IntegerPair>> handleAttack(int x, int y){
+
+        ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
+        int i = 0;
+        HashMap<Integer, ArrayList<IntegerPair>> shipSection = new HashMap<>();
+
+        if (ValidPlance[x-1][y] == 1){
+
+            findPaths(x, y-1, visitedPositions);
+            i++;
+            shipSection.put(i, visitedPositions);
+
+        }
+
+        if (ValidPlance[x][y-1] == 1 && !shipSection.get(i).contains (new IntegerPair(x,y-1))){
+            visitedPositions.clear();
+            findPaths(x, y-1, visitedPositions);
+            i++;
+            shipSection.put(i, visitedPositions);
+
+        }
+
+        if (ValidPlance[x+1][y] == 1 && !shipSection.get(i).contains (new IntegerPair(x+1,y))){
+            visitedPositions.clear();
+            findPaths(x+1, y, visitedPositions);
+            i++;
+            shipSection.put(i, visitedPositions);
+
+        }
+
+        if (ValidPlance[x][y + 1] == 1 && !shipSection.get(i).contains (new IntegerPair(x,y+1))){
+            visitedPositions.clear();
+            findPaths(x, y+1, visitedPositions);
+            i++;
+            shipSection.put(i, visitedPositions);
+
+        }
+
+        return shipSection;
+
+
+    }
+
+
+
+
+    public ArrayList<IntegerPair> PathNotVisited(ArrayList<IntegerPair> visited){
+
+        ArrayList<IntegerPair> result = new ArrayList<>();
+        for (int x = 0; x < 10; x++) {
+            for (int y = 0; y < 10; y++) {
+
+                if (ValidPlance[x][y] == 1 && visited.contains(new IntegerPair(x,y))){
+                    result.add(new IntegerPair(x,y));
+                }
+
+            }
+
+
+        }
+        return result;
+
+    }
+
+    public boolean checkIllegal(int r, int c, ArrayList<IntegerPair> visited){
+
+
+
+    }
+
+
+    public boolean checkValidity(int r, int c, ArrayList<IntegerPair> visited){
+
+        int r = 6;
+        int c = 6;
+
+        ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
+        ArrayList<IntegerPair> notValid = new ArrayList<>();
+        ArrayList<IntegerPair> result = new ArrayList<>();
+
+        findPaths(r,c,visitedPositions);
+
+
+        if (PathNotVisited(visitedPositions).isEmpty()){
+            return false;
+        }
+
+        else {
+
+        }
+
+
+
+
+
+    }
+
+    public void findPaths(int r, int c, ArrayList<IntegerPair> visited) {
+
+        System.out.println(r + " " + c);
+        if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlance[r][c] == -1) {
+            return;
+        }
+        visited.add(new IntegerPair(r, c));
+
+        if (getTile(r, c -1) != null && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
+            findPaths(r, c - 1, visited);
+        }
+
+        if (getTile(r -1, c ) != null && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
+            findPaths(r -1,c ,visited);
+        }
+
+        if (getTile(r, c + 1) != null && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
+            findPaths(r,c + 1 ,visited);
+        }
+
+        if (getTile(r + 1, c) != null && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r + 1, c ).getConnectors().get(3))){
+            findPaths(r +1,c ,visited);
+        }
+
+    }
+
+
+
 }
