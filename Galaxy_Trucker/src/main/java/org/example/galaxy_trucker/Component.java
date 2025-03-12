@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
         property = "componentType"
-//        visible = true
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = plasmaDrill.class, name = "plasmaDrill"),

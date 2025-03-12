@@ -86,7 +86,7 @@
   { "id": 85, "component":  {"componentType": "hotWaterHeater" }, "ability":"single", "connectors": ["UNIVERSAL", "NONE","NONE","MOTOR"] },
   { "id": 86, "component":  {"componentType": "hotWaterHeater" }, "ability":"single", "connectors": ["UNIVERSAL","NONE","DOUBLE","MOTOR"] },
   { "id": 87, "component":  {"componentType": "hotWaterHeater" }, "ability":"single", "connectors": ["UNIVERSAL", "SINGLE", "NONE", "MOTOR" ] },
-  { "id": 88, "component":  {"componentType": "hotWaterHeater" }, "ability":"double", "connectors": ["NONE", "SINGLE", "NULL", "MOTOR"] },
+  { "id": 88, "component":  {"componentType": "hotWaterHeater" }, "ability":"double", "connectors": ["NONE", "SINGLE", "NONE", "MOTOR"] },
   { "id": 89, "component":  {"componentType": "hotWaterHeater" }, "ability":"double", "connectors": ["NONE", "SINGLE", "DOUBLE", "MOTOR"] },
   { "id": 90, "component":  {"componentType": "hotWaterHeater" }, "ability":"double", "connectors": ["NONE", "DOUBLE", "NONE", "MOTOR"] },
   { "id": 91, "component":  {"componentType": "hotWaterHeater" }, "ability":"double", "connectors": ["NONE", "DOUBLE", "SINGLE", "MOTOR"] },

@@ -53,13 +53,7 @@ public class Tile {
         this.component = component;
     }
 
-    public ArrayList<Connector> getConnectors() {
-        return connectors;
-    }
-
-//    public void setConnectors(List<String> connectors) {
-//        this.connectors = connectors;
-//    }
+    public ArrayList<Connector> getConnectors() {return connectors;}
 
     public String getComponentType() {
         return componentType;
@@ -78,9 +72,16 @@ public class Tile {
     }
 
 
+    public void setConnectors(ArrayList<Connector> connectors) {
+        this.connectors = connectors;
+    }
 
 
 
+
+
+
+    //metodi rotate per le tiles
     public void RotateSx(){
         Collections.rotate(this.connectors, -1);
     }
