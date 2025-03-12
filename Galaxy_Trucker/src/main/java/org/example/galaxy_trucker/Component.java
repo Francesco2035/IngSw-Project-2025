@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public abstract class Component {
 
     PlayerPlance myPlance;
+    String type;
 
     public Component() {;
     }
@@ -35,9 +36,21 @@ public abstract class Component {
     public int getAbility(){
         return 0;
     }
-
     public int setAbility(){
         return 0;
     }
+
+
+
+
+//  metodi per json
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 
 }
