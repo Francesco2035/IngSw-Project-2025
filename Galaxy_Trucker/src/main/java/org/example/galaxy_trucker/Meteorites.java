@@ -1,5 +1,5 @@
 package org.example.galaxy_trucker;
-import javafx.util.Pair;
+//import javafx.util.Pair;
 import java.util.ArrayList;
 
 // direzioni int sinistra 0 sopra 1...
@@ -20,7 +20,7 @@ public class Meteorites extends Card {
         int MeteoritesLine;
         int MeteoritesMovement;
         boolean MeteoritesFlag = false;
-        GameBoard MeteoritesBoard = this.getBoard();
+        GameBoard MeteoritesBoard = super.getBoard();
         int[][] MeteoritesValidPlanche;
         ArrayList<Player> MeteoritesPlayerList = MeteoritesBoard.getPlayers();
         PlayerPlance MeteoritesCurrentPlanche;
