@@ -203,7 +203,7 @@ public class PlayerPlance {
 
 
 
-
+//ritorna i path non visistati
     public ArrayList<IntegerPair> PathNotVisited(ArrayList<IntegerPair> visited){
 
         ArrayList<IntegerPair> result = new ArrayList<>();
