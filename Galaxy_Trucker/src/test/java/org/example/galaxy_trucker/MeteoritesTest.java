@@ -10,7 +10,8 @@ class MeteoritesTest {
 
     @Test
     void cardEffect() {
-        GameBoard board = new GameBoard();
+        TileSets tileSets = new TileSets();
+        GameBoard board = new GameBoard(tileSets, 2);
         IntegerPair Pair1 = new IntegerPair(3,2);
         IntegerPair Pair2 = new IntegerPair(2,1);
         IntegerPair Pair3 = new IntegerPair(2,0);

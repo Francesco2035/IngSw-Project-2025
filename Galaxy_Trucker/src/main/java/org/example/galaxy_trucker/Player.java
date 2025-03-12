@@ -10,9 +10,10 @@ public class Player {
     private int credits;
 
 
-    public Player(String id, int lv, GameBoard board) {
-        myPlance = new PlayerPlance(lv);
+    public Player(String id, GameBoard board) {
+
         CommonBoard = board;
+        myPlance = new PlayerPlance(board.getLevel());
         ID = id;
         credits = 0;
         ready = false;
