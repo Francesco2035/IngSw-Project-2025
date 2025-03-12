@@ -8,17 +8,77 @@ import org.example.galaxy_trucker.Component;
 public class Tile {
 
 
+    private int id;
     private IntegerPair coords;
-
-
     private Component component;
-    private List<Connector> connectors = new ArrayList<>();
+    private String componentType;
+    private List<String> connectors;
+    private String ability;
 
-    public Tile( IntegerPair coords, Component component, Connector... connectors) {
+
+    public Tile() {}
+
+    public Tile(IntegerPair coords, Component component, Connector... connectors) {
         this.coords = coords;
         this.component = component;
-        this.connectors.addAll(Arrays.asList(connectors));
+        this.connectors = new ArrayList<>();
     }
+
+
+
+
+
+    public IntegerPair getCoords() {
+        return coords;
+    }
+
+    public void setCoords(IntegerPair coords) {
+        this.coords = coords;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Component getComponent() {
+        return component;
+    }
+
+    public void setComponent(Component component) {
+        this.component = component;
+    }
+
+    public List<String> getConnectors() {
+        return connectors;
+    }
+
+    public void setConnectors(List<String> connectors) {
+        this.connectors = connectors;
+    }
+
+    public String getComponentType() {
+        return componentType;
+    }
+
+    public void setComponentType(String componentType) {
+        this.componentType = componentType;
+    }
+
+    public String getAbility() {
+        return ability;
+    }
+
+    public void setAbility(String ability) {
+        this.ability = ability;
+    }
+
+
+
+
 
     public void RotateSx(){
         Collections.rotate(this.connectors, -1);
@@ -26,19 +86,6 @@ public class Tile {
 
     public void RotateDx(){
         Collections.rotate(this.connectors, 1);
-    }
-
-
-    public IntegerPair getCoords() {
-        return coords;
-    }
-
-    public Component getComponent() {
-        return component;
-    }
-
-    public List<Connector> getConnectors() {
-        return connectors;
     }
 
 }
