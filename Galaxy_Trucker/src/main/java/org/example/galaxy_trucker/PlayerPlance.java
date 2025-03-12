@@ -210,8 +210,9 @@ public class PlayerPlance {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
 
-                if (ValidPlance[x][y] == 1 && visited.contains(new IntegerPair(x,y))){
+                if (ValidPlance[x][y] == 1 && !visited.contains(new IntegerPair(x,y))){
                     result.add(new IntegerPair(x,y));
+
                 }
 
             }
@@ -222,36 +223,50 @@ public class PlayerPlance {
 
     }
 
-    public boolean checkIllegal(int r, int c, ArrayList<IntegerPair> visited){
+    public boolean checkIllegal( ArrayList<IntegerPair> visited){
 
+        int x;
+        int y;
 
+        for (IntegerPair pair : visited) {
+            x = pair.getFirst();
+            y = pair.getSecond();
+            if (ValidPlance[x-1][y] == 1 && (Plance[x-1][y].getConnectors().get(2) == Connector.MOTOR || Plance[x-1][y].getConnectors().get(2) == Connector.CANNON)){
+                return false;
+            }
+            if (ValidPlance[x+1][y] == 1 && (Plance[x+1][y].getConnectors().get(0) == Connector.MOTOR || Plance[x+1][y].getConnectors().get(0) == Connector.CANNON)){
+                return false;
+            }
+            if (ValidPlance[x][y-1] == 1 && (Plance[x][y-1].getConnectors().get(1) == Connector.MOTOR || Plance[x][y - 1].getConnectors().get(1) == Connector.CANNON)){
+                return false;
+            }
+            if (ValidPlance[x][y + 1] == 1 && (Plance[x][y+1].getConnectors().get(3) == Connector.MOTOR || Plance[x][y + 1].getConnectors().get(3) == Connector.CANNON)){
+                return false;
+            }
+
+        }
+        return true;
 
     }
 
 
-    public boolean checkValidity(int r, int c, ArrayList<IntegerPair> visited){
+    public boolean checkValidity(){
 
         int r = 6;
         int c = 6;
 
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
-        ArrayList<IntegerPair> notValid = new ArrayList<>();
-        ArrayList<IntegerPair> result = new ArrayList<>();
 
         findPaths(r,c,visitedPositions);
 
 
-        if (PathNotVisited(visitedPositions).isEmpty()){
+        if (!PathNotVisited(visitedPositions).isEmpty()){
             return false;
         }
 
         else {
-
+            return checkIllegal(visitedPositions);
         }
-
-
-
-
 
     }
 

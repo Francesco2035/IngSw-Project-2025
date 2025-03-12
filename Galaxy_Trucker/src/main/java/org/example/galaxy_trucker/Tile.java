@@ -12,7 +12,7 @@ public class Tile {
     private IntegerPair coords;
     private Component component;
     private String componentType;
-    private List<String> connectors;
+    private ArrayList<Connector> connectors;
     private String ability;
 
 
@@ -22,6 +22,7 @@ public class Tile {
         this.coords = coords;
         this.component = component;
         this.connectors = new ArrayList<>();
+        this.connectors.addAll(Arrays.asList(connectors));
     }
 
 
@@ -52,13 +53,13 @@ public class Tile {
         this.component = component;
     }
 
-    public List<String> getConnectors() {
+    public ArrayList<Connector> getConnectors() {
         return connectors;
     }
 
-    public void setConnectors(List<String> connectors) {
-        this.connectors = connectors;
-    }
+//    public void setConnectors(List<String> connectors) {
+//        this.connectors = connectors;
+//    }
 
     public String getComponentType() {
         return componentType;

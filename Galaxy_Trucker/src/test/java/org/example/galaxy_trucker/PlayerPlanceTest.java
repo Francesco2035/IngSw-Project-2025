@@ -57,14 +57,7 @@ public class PlayerPlanceTest {
         playerPlance.insertTile(new Tile(new IntegerPair(4, 5), new sewerPipes(), Connector.NONE, Connector.SINGLE,
                 Connector.DOUBLE, Connector.DOUBLE), 4, 5);
 
-        ArrayList<IntegerPair> result = playerPlance.checkValidity();
 
-        for (int i = 0; i < result.size(); i++) {
-            System.out.println(result.get(i).getFirst());
-            System.out.println(result.get(i).getSecond());
-            System.out.println();
-
-        }
 
 
 //        for (int x = 0; x < 10; x++) {
@@ -108,15 +101,14 @@ public class PlayerPlanceTest {
         playerPlance.insertTile(new Tile(new IntegerPair(4, 5), new sewerPipes(), Connector.NONE, Connector.SINGLE,
                 Connector.DOUBLE, Connector.DOUBLE), 4, 5);
 
-        ArrayList<IntegerPair> result = playerPlance.checkValidity();
-
-        for (int i = 0; i < result.size(); i++) {
-            System.out.println(result.get(i).getFirst());
-            System.out.println(result.get(i).getSecond());
-            System.out.println();
-
-
+        if (playerPlance.checkValidity()) {
+            System.out.println("Path test passed.");
         }
+        else {
+            System.out.println("Path test failed.");
+        }
+
+
 
     }
 }
