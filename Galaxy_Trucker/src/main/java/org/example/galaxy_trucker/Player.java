@@ -11,7 +11,6 @@ public class Player {
 
 
     public Player(String id, GameBoard board) {
-
         CommonBoard = board;
         myPlance = new PlayerPlance(board.getLevel());
         ID = id;
@@ -29,8 +28,8 @@ public class Player {
     public void fireCannon(){}
     public void startEngine(){}
 
-    public void RightRotate(Tile t) {}
-    public void LeftRotate(Tile t) {}
+    public void RightRotate(Tile t) { t.RotateDx();}
+    public void LeftRotate(Tile t) {t.RotateSx();}
 
     public PlayerPlance getMyPlance() {
         return myPlance;
