@@ -2,9 +2,6 @@ package org.example.galaxy_trucker;
 
 import java.util.*;
 
-import javafx.util.Pair;
-import org.example.galaxy_trucker.Component;
-
 public class Tile {
 
 
@@ -13,7 +10,7 @@ public class Tile {
     private Component component;
     private String componentType;
     private ArrayList<Connector> connectors;
-    private String ability;
+    private String type;
 
 
     public Tile() {}
@@ -63,12 +60,12 @@ public class Tile {
         this.componentType = componentType;
     }
 
-    public String getAbility() {
-        return ability;
+    public String getType() {
+        return type;
     }
 
-    public void setAbility(String ability) {
-        this.ability = ability;
+    public void setType(String type) {
+        this.type = type;
     }
 
 
