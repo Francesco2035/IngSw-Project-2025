@@ -3,16 +3,25 @@ package org.example.galaxy_trucker;
 public class powerCenter extends Component{
 
 
+
     private int privEnergy;
 
     public powerCenter(int numEnergy) {
-        super();
         this.privEnergy = numEnergy;
     }
 
 
-    public powerCenter() {
-    }
+    public powerCenter() {}
+
+
+
+    public int getPrivEnergy() {
+        return privEnergy;}
+    public void setPrivEnergy(int privEnergy) {
+        this.privEnergy = privEnergy;}
+
+
+
 
     @Override
     public int getAbility() {
@@ -29,5 +38,13 @@ public class powerCenter extends Component{
             e.printStackTrace();
         }
         return this.privEnergy;
+    }
+
+
+
+
+    public void initType() {
+        if(type.equals("doppio")) setPrivEnergy(2);
+        else if (type.equals("triplo")) setPrivEnergy(3);
     }
 }
