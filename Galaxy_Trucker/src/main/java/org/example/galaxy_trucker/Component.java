@@ -42,6 +42,7 @@ public abstract class Component {
 
 
 
+    public void initType(){}
 
 //  metodi per json
     public String getType() {

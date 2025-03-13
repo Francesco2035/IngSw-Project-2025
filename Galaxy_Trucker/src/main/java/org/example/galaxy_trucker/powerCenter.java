@@ -42,7 +42,7 @@ public class powerCenter extends Component{
 
 
 
-
+    @Override
     public void initType() {
         if(type.equals("doppio")) setPrivEnergy(2);
         else if (type.equals("triplo")) setPrivEnergy(3);
