@@ -55,5 +55,8 @@ public class Player {
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
+    public int getPower(){
+        return myPlance.getPower();
+    }
 
 }
