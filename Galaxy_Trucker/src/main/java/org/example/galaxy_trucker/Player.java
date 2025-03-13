@@ -58,5 +58,11 @@ public class Player {
     public int getPower(){
         return myPlance.getPower();
     }
+    public void killHumans(int umani){
+        return;
+    }
+    public void loseCargo(int numCargo){
+        return;
+    }
 
 }

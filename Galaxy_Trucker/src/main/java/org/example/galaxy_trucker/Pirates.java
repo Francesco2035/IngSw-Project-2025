@@ -96,8 +96,9 @@ public class Pirates extends Card{
             } //fine caso potenza minore
 
             else if (PlayerPower > requirement) {
+                Flag = false;
                 //if(PLayerlist.get(Order).yes()){   //chiedo se vuole prende le ricompense
-                //PlayerList.get(Order).handleCargo(Reward);
+                //PlayerList.get(Order).IncreaseCredits(Reward);
                 //PlayerList.get(Order).movePlayer(-this.Time);
                 //}
             }//fine caso vittoria
