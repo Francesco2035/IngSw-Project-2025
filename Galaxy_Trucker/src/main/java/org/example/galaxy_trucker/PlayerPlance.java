@@ -53,6 +53,7 @@ public class PlayerPlance {
         validConnection.put(Connector.SINGLE, new ArrayList<>());
         validConnection.get(Connector.SINGLE).addAll(List.of(Connector.UNIVERSAL, Connector.SINGLE));
         validConnection.put(Connector.MOTOR, new ArrayList<>());
+        validConnection.put(Connector.CANNON, new ArrayList<>());
         validConnection.put(Connector.NONE, new ArrayList<>());
 
 
@@ -156,6 +157,11 @@ public class PlayerPlance {
     }
 
     public boolean checkConnection(Connector t1, Connector t2 ){
+
+        if (validConnection.get(t1).isEmpty()){
+            return false;
+        }
+
         if(validConnection.get(t1).contains(t2)){
             return true;
         }
@@ -188,26 +194,38 @@ public class PlayerPlance {
 
     //vede se i percorsi trovati sono validi
     public boolean checkIllegal( ArrayList<IntegerPair> visited){
-
+        System.out.println("controllo illegalità");
         int x;
         int y;
 
         for (IntegerPair pair : visited) {
             x = pair.getFirst();
             y = pair.getSecond();
-            if (ValidPlance[x-1][y] == 1 && (Plance[x-1][y].getConnectors().get(2) == Connector.MOTOR || Plance[x-1][y].getConnectors().get(2) == Connector.CANNON)){
-                return false;
-            }
-            if (ValidPlance[x+1][y] == 1 && (Plance[x+1][y].getConnectors().get(0) == Connector.MOTOR || Plance[x+1][y].getConnectors().get(0) == Connector.CANNON)){
-                return false;
-            }
-            if (ValidPlance[x][y-1] == 1 && (Plance[x][y-1].getConnectors().get(1) == Connector.MOTOR || Plance[x][y - 1].getConnectors().get(1) == Connector.CANNON)){
-                return false;
-            }
-            if (ValidPlance[x][y + 1] == 1 && (Plance[x][y+1].getConnectors().get(3) == Connector.MOTOR || Plance[x][y + 1].getConnectors().get(3) == Connector.CANNON)){
-                return false;
-            }
+            if (ValidPlance[x][y] == 1 && (Plance[x][y].getComponent().getClass() == plasmaDrill.class || Plance[x][y].getComponent().getClass() == hotWaterHeater.class)) {
+                System.out.println(x + " " + y);
 
+                    if(ValidPlance[x][y-1] == 1 && (Plance[x][y].getConnectors().get(0) == Connector.CANNON || Plance[x][y].getConnectors().get(0) == Connector.MOTOR)) {
+                        System.out.println("illegale da dx");
+                        return false;
+                    }
+
+                    if(ValidPlance[x-1][y] == 1 && (Plance[x][y].getConnectors().get(1) == Connector.CANNON || Plance[x][y].getConnectors().get(1) == Connector.MOTOR)) {
+                        System.out.println("illegale dal basso");
+                        return false;
+                    }
+
+                    if(ValidPlance[x][y+1] == 1 && (Plance[x][y].getConnectors().get(2) == Connector.CANNON || Plance[x][y].getConnectors().get(2) == Connector.MOTOR)) {
+                        System.out.println("illegale da sx");
+                        return false;
+                    }
+
+                    if(ValidPlance[x+1][y] == 1 && (Plance[x][y].getConnectors().get(3) == Connector.CANNON || Plance[x][y].getConnectors().get(3) == Connector.MOTOR)) {
+                        System.out.println("illegale dall'alto");
+                        return false;
+                    }
+
+
+                }
         }
         return true;
 
@@ -238,11 +256,12 @@ public class PlayerPlance {
     //trova tutti i path che sono percorribili
     public void findPaths(int r, int c, ArrayList<IntegerPair> visited) {
 
-        System.out.println(r + " " + c);
+
         if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlance[r][c] == -1) {
             return;
         }
         visited.add(new IntegerPair(r, c));
+        System.out.println(r + " " + c);
 
         if (getTile(r, c -1) != null && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
             findPaths(r, c - 1, visited);

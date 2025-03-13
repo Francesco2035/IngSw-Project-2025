@@ -91,15 +91,18 @@ public class PlayerPlanceTest {
         };
 
         playerPlance.insertTile(new Tile(new IntegerPair(6, 7), new sewerPipes(), Connector.SINGLE, Connector.UNIVERSAL,
-                Connector.NONE, Connector.UNIVERSAL), 6, 7);
-        playerPlance.insertTile(new Tile(new IntegerPair(6, 5), new sewerPipes(), Connector.SINGLE, Connector.UNIVERSAL,
-                Connector.SINGLE, Connector.DOUBLE), 6, 5);
-        playerPlance.insertTile(new Tile(new IntegerPair(7, 5), new sewerPipes(), Connector.NONE, Connector.SINGLE,
-                Connector.DOUBLE, Connector.DOUBLE), 7, 5);
-        playerPlance.insertTile(new Tile(new IntegerPair(6, 4), new sewerPipes(), Connector.NONE, Connector.SINGLE,
-                Connector.UNIVERSAL, Connector.DOUBLE), 6, 4);
-        playerPlance.insertTile(new Tile(new IntegerPair(4, 5), new sewerPipes(), Connector.NONE, Connector.SINGLE,
-                Connector.DOUBLE, Connector.DOUBLE), 4, 5);
+                Connector.NONE, Connector.SINGLE), 6, 7);
+        playerPlance.insertTile(new Tile(new IntegerPair(7, 7), new sewerPipes(), Connector.UNIVERSAL, Connector.SINGLE,
+                Connector.UNIVERSAL, Connector.UNIVERSAL), 7, 7);
+        playerPlance.insertTile(new Tile(new IntegerPair(7, 8), new sewerPipes(), Connector.SINGLE, Connector.UNIVERSAL,
+                Connector.DOUBLE, Connector.DOUBLE), 7, 8);
+        playerPlance.insertTile(new Tile(new IntegerPair(6, 8), new plasmaDrill(), Connector.CANNON, Connector.UNIVERSAL,
+                Connector.UNIVERSAL, Connector.UNIVERSAL), 6, 8);
+
+
+
+//        playerPlance.insertTile(new Tile(new IntegerPair(4, 5), new sewerPipes(), Connector.NONE, Connector.SINGLE,
+//                Connector.DOUBLE, Connector.DOUBLE), 4, 5);
 
         if (playerPlance.checkValidity()) {
             System.out.println("Path test passed.");
