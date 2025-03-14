@@ -23,6 +23,7 @@ class GAGenTest {
         List<Tile> deck = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
 
         for (Tile comp : deck) {
+            comp.getComponent().initType();
             System.out.println("ID: " + comp.getId());
 
             if (comp.getComponent() instanceof plasmaDrill) {
@@ -35,6 +36,6 @@ class GAGenTest {
 
             System.out.println("Connectors: " + comp.getConnectors());
         }
-
+        assertEquals(2, deck.getFirst().getComponent().getAbility()); //testo se il primo powerCenter ha privEnergy=2 dopo l'operazione di initType
     }
 }
