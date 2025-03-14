@@ -74,4 +74,11 @@ public class Player {
     public int getMovement(){
         return 7;
     }
+
+    public boolean getConfirm(){
+        return true;
+    }
+    public IntegerPair getCoordinates() {
+        return new IntegerPair(4,5);
+    }
 }
