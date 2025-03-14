@@ -29,7 +29,7 @@ public class Slavers extends Card{
         while(Len>Order && Flag){
             PlayerPower=PlayerList.get(Order).getPower();
             if(PlayerPower<requirement) {
-                PlayerList.get(Order).killHumans(int);
+                PlayerList.get(Order).killHumans(Punishment);
             }// fine caso sconfitta
             else if (PlayerPower>requirement){
                 Flag=false;
