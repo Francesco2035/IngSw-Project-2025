@@ -2,9 +2,6 @@ package org.example.galaxy_trucker;
 
 import java.util.*;
 
-import javafx.util.Pair;
-import org.example.galaxy_trucker.Component;
-
 public class Tile {
 
 
@@ -13,7 +10,7 @@ public class Tile {
     private Component component;
     private String componentType;
     private ArrayList<Connector> connectors;
-    private String ability;
+    private String type;
 
 
     public Tile() {}
@@ -53,13 +50,7 @@ public class Tile {
         this.component = component;
     }
 
-    public ArrayList<Connector> getConnectors() {
-        return connectors;
-    }
-
-//    public void setConnectors(List<String> connectors) {
-//        this.connectors = connectors;
-//    }
+    public ArrayList<Connector> getConnectors() {return connectors;}
 
     public String getComponentType() {
         return componentType;
@@ -69,18 +60,25 @@ public class Tile {
         this.componentType = componentType;
     }
 
-    public String getAbility() {
-        return ability;
+    public String getType() {
+        return type;
     }
 
-    public void setAbility(String ability) {
-        this.ability = ability;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+
+    public void setConnectors(ArrayList<Connector> connectors) {
+        this.connectors = connectors;
     }
 
 
 
 
 
+
+    //metodi rotate per le tiles
     public void RotateSx(){
         Collections.rotate(this.connectors, -1);
     }
