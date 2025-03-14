@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = plasmaDrill.class, name = "plasmaDrill"),
         @JsonSubTypes.Type(value = hotWaterHeater.class, name = "hotWaterHeater"),
-        @JsonSubTypes.Type(value = powerCenter.class, name = "powerCenter"),           //BatteryComp
+        @JsonSubTypes.Type(value = powerCenter.class, name = "powerCenter"),
         @JsonSubTypes.Type(value = storageCompartment.class, name = "storageCompartment"),
         @JsonSubTypes.Type(value = modularHousingUnit.class, name = "modularHousingUnit"),
         @JsonSubTypes.Type(value = sewerPipes.class, name = "sewerPipes"),
