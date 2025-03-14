@@ -283,18 +283,6 @@ public class PlayerPlance {
 
 
 
-    //quanta potenza uso
-    //quanto movimento uso
-    //atterrare pianeta
-    //?quanto energia consumo
-
-    //dove mettere le merci
-    //sacrificare umani
-    //prendere merci
-
-    //se sparare
-    //se attivare scudi
-
     //elimina il tassello dell'attacco
     public void destroy(int x, int y){
         Plance[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid(),Connector.NONE, Connector.NONE, Connector.NONE, Connector.NONE);
@@ -369,6 +357,29 @@ public class PlayerPlance {
 
     }
 
+
+
+    public void killHuman(int x, int y){
+
+    }
+
+
+
+    //quanta potenza uso
+    //quanto movimento uso
+    //atterrare pianeta
+    //?quanto energia consumo
+
+    //dove mettere le merci
+    //sacrificare umani
+    //prendere merci
+
+    //se sparare
+    //se attivare scudi
+
+
+    //metodo per aggiugnere merci,  viene fornito un arraylst di merci, il player 1 per volta sceglie se prendere il cargo e
+    //se si dove metterlo, ho un arraylist di posizioni dei magazzini
 
 
 

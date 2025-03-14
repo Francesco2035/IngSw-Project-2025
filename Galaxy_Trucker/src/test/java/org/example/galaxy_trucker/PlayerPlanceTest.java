@@ -77,18 +77,6 @@ public class PlayerPlanceTest {
         PlayerPlance playerPlance = new PlayerPlance(1);
 
 
-        int[][] testPath = {
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, 1, -1, 0, -1, -1},
-                {-1, -1, -1, -1, 0, 0, 0, 0, 0, -1},
-                {-1, -1, -1, 0, 1, 1, 1, 1, 0, 0},
-                {-1, -1, -1, 0, 0, 1, 1, 0, 0, 0},
-                {-1, -1, -1, 0, 0, 0, -1, 0, 0, 0},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
-        };
 
         playerPlance.insertTile(new Tile(new IntegerPair(6, 7), new sewerPipes(), Connector.SINGLE, Connector.UNIVERSAL,
                 Connector.NONE, Connector.SINGLE), 6, 7);
