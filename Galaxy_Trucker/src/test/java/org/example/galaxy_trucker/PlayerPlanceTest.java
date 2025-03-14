@@ -96,13 +96,23 @@ public class PlayerPlanceTest {
                 Connector.UNIVERSAL, Connector.UNIVERSAL), 7, 7);
         playerPlance.insertTile(new Tile(new IntegerPair(7, 8), new sewerPipes(), Connector.SINGLE, Connector.UNIVERSAL,
                 Connector.DOUBLE, Connector.DOUBLE), 7, 8);
-        playerPlance.insertTile(new Tile(new IntegerPair(6, 8), new plasmaDrill(), Connector.CANNON, Connector.UNIVERSAL,
-                Connector.UNIVERSAL, Connector.UNIVERSAL), 6, 8);
+        playerPlance.insertTile(new Tile(new IntegerPair(6, 8), new plasmaDrill(), Connector.UNIVERSAL, Connector.UNIVERSAL,
+                Connector.CANNON, Connector.UNIVERSAL), 6, 8);
 
+        playerPlance.insertTile(new Tile(new IntegerPair(5, 5), new sewerPipes(), Connector.SINGLE, Connector.UNIVERSAL,
+                Connector.DOUBLE, Connector.DOUBLE), 5, 5);
 
+        playerPlance.insertTile(new Tile(new IntegerPair(4, 5), new sewerPipes(), Connector.NONE, Connector.SINGLE,
+                Connector.DOUBLE, Connector.DOUBLE), 4, 5);
 
-//        playerPlance.insertTile(new Tile(new IntegerPair(4, 5), new sewerPipes(), Connector.NONE, Connector.SINGLE,
-//                Connector.DOUBLE, Connector.DOUBLE), 4, 5);
+        playerPlance.insertTile(new Tile(new IntegerPair(6, 5), new hotWaterHeater(), Connector.UNIVERSAL, Connector.UNIVERSAL,
+                Connector.UNIVERSAL, Connector.MOTOR), 6, 5);
+
+        playerPlance.insertTile(new Tile(new IntegerPair(7, 6), new hotWaterHeater(), Connector.UNIVERSAL, Connector.UNIVERSAL,
+                Connector.UNIVERSAL, Connector.MOTOR), 7, 6);
+
+        playerPlance.insertTile(new Tile(new IntegerPair(7, 5), new hotWaterHeater(), Connector.UNIVERSAL, Connector.UNIVERSAL,
+                Connector.UNIVERSAL, Connector.MOTOR), 7, 5);
 
         if (playerPlance.checkValidity()) {
             System.out.println("Path test passed.");
