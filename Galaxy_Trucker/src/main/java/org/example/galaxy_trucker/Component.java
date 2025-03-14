@@ -33,28 +33,24 @@ public abstract class Component {
         this.myPlance = myPlance;
     }
 
+    public void initType(){}
     public int getAbility(){
         return 0;
     }
-    //volendo si può in powerCenter utilizzare l'altro setAbility e semplicemente non utilizzare l'int di input, ma così è visivamente più puliti
-    public int setAbility(){
-        return 0;
-    }
+    public int setAbility(){return 0;}      //volendo si può in powerCenter utilizzare l'altro setAbility e semplicemente non utilizzare l'int di input, ma così è visivamente più puliti
     public int setAbility(int numAbility){
         return 0;
     }
+    public int setAbility(Goods good){return 0;}
+    public int unSetAbility(Goods good){return 0;}
 
 
-    public void initType(){}
+
+
 
 //  metodi per json
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    public String getType() {return type;}
+    public void setType(String type) {this.type = type;}
 
 
 }
