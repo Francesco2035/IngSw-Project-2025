@@ -21,4 +21,12 @@ public class MainCockpitComp extends Component {
         this.numHumans = numHumans;
     }
 
+
+    @Override
+    public int setAbility(int numAbility){
+        this.numHumans -= numAbility;
+        return numHumans;
+    }
+
+
 }
