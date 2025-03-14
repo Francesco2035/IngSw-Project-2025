@@ -359,10 +359,7 @@ public class PlayerPlance {
 
 
 
-    public void killHuman(int x, int y){
-
-    }
-
+    public void killHuman(IntegerPair coordinate){ }
 
 
     //quanta potenza uso
