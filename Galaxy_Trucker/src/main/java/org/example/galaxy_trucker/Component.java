@@ -39,7 +39,9 @@ public abstract class Component {
     public int setAbility(){
         return 0;
     }
-
+    public int setAbility(int numAbility){
+        return 0;
+    }
 
 
     public void initType(){}
