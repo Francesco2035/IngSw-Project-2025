@@ -65,4 +65,13 @@ public class Player {
         return;
     }
 
+    public int getHumans(){
+        return 4;
+    }
+    public void movePlayer(int Movement){
+        return;
+    }
+    public int getMovement(){
+        return 7;
+    }
 }

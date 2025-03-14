@@ -32,7 +32,7 @@ public class Smugglers extends Card{
         while(Len>Order && Flag){
             PlayerPower=PlayerList.get(Order).getPower();
             if(PlayerPower<requirement) {
-                PlayerList.get(Order).loseCargo(int);
+                PlayerList.get(Order).loseCargo(Punishment);
             }// fine caso sconfitta
             else if (PlayerPower>requirement){
                 Flag=false;
