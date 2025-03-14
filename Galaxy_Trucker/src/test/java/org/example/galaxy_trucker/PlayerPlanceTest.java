@@ -97,10 +97,10 @@ public class PlayerPlanceTest {
                 Connector.UNIVERSAL, Connector.MOTOR), 6, 5);
 
         playerPlance.insertTile(new Tile(new IntegerPair(7, 6), new hotWaterHeater(), Connector.UNIVERSAL, Connector.UNIVERSAL,
-                Connector.UNIVERSAL, Connector.MOTOR), 7, 6);
+                Connector.MOTOR, Connector.UNIVERSAL), 7, 6);
 
-        playerPlance.insertTile(new Tile(new IntegerPair(7, 5), new hotWaterHeater(), Connector.UNIVERSAL, Connector.UNIVERSAL,
-                Connector.UNIVERSAL, Connector.MOTOR), 7, 5);
+//        playerPlance.insertTile(new Tile(new IntegerPair(7, 5), new hotWaterHeater(), Connector.UNIVERSAL, Connector.UNIVERSAL,
+//                Connector.UNIVERSAL, Connector.MOTOR), 7, 5);
 
         if (playerPlance.checkValidity()) {
             System.out.println("Path test passed.");

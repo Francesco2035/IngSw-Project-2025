@@ -192,47 +192,60 @@ public class PlayerPlance {
 
     }
 
-    //vede se i percorsi trovati sono validi
+
+    /**
+     * Method checkIllegal checks if there is at least one illegal hotWaterHeater or plasmaDrill.
+     *
+     * @param visited of type ArrayList<IntegerPair> - player board saved as if it were a path.
+     * @return boolean true if everything is legal, false otherwise.
+     */
     public boolean checkIllegal( ArrayList<IntegerPair> visited){
-        System.out.println("controllo illegalità");
-        int x;
-        int y;
+    //System.out.println("controllo illegalità");
+    int x;
+    int y;
 
-        for (IntegerPair pair : visited) {
-            x = pair.getFirst();
-            y = pair.getSecond();
-            if (ValidPlance[x][y] == 1 && (Plance[x][y].getComponent().getClass() == plasmaDrill.class || Plance[x][y].getComponent().getClass() == hotWaterHeater.class)) {
-                System.out.println(x + " " + y);
+    for (IntegerPair pair : visited) {
+        x = pair.getFirst();
+        y = pair.getSecond();
 
-                    if(ValidPlance[x][y-1] == 1 && (Plance[x][y].getConnectors().get(0) == Connector.CANNON || Plance[x][y].getConnectors().get(0) == Connector.MOTOR)) {
-                        System.out.println("illegale da dx");
-                        return false;
-                    }
+        if (ValidPlance[x][y] == 1 && (Plance[x][y].getComponent().getClass() == plasmaDrill.class || Plance[x][y].getComponent().getClass() == hotWaterHeater.class)) {
+            //System.out.println(x + " " + y);
 
-                    if(ValidPlance[x-1][y] == 1 && (Plance[x][y].getConnectors().get(1) == Connector.CANNON || Plance[x][y].getConnectors().get(1) == Connector.MOTOR)) {
-                        System.out.println("illegale dal basso");
-                        return false;
-                    }
-
-                    if(ValidPlance[x][y+1] == 1 && (Plance[x][y].getConnectors().get(2) == Connector.CANNON || Plance[x][y].getConnectors().get(2) == Connector.MOTOR)) {
-                        System.out.println("illegale da sx");
-                        return false;
-                    }
-
-                    if(ValidPlance[x+1][y] == 1 && (Plance[x][y].getConnectors().get(3) == Connector.CANNON || Plance[x][y].getConnectors().get(3) == Connector.MOTOR)) {
-                        System.out.println("illegale dall'alto");
-                        return false;
-                    }
-
-
+                if (ValidPlance[x][y] == 1 && (Plance[x][y].getConnectors().get(0) == Connector.MOTOR  || Plance[x][y].getConnectors().get(1) == Connector.MOTOR) || Plance[x][y].getConnectors().get(2) == Connector.MOTOR){
+                    //System.out.println("Motore illegale");
+                    return false;
                 }
+
+                if(ValidPlance[x][y-1] == 1 && Plance[x][y].getConnectors().get(0) == Connector.CANNON ) {
+                    //System.out.println("illegale da dx");
+                    return false;
+                }
+
+                if(ValidPlance[x-1][y] == 1 && Plance[x][y].getConnectors().get(1) == Connector.CANNON ) {
+                    //System.out.println("illegale dal basso");
+                    return false;
+                }
+
+                if(ValidPlance[x][y+1] == 1 && Plance[x][y].getConnectors().get(2) == Connector.CANNON ) {
+                    //System.out.println("illegale da sx");
+                    return false;
+                }
+
+                if(ValidPlance[x+1][y] == 1 && (Plance[x][y].getConnectors().get(3) == Connector.CANNON || Plance[x][y].getConnectors().get(3) == Connector.MOTOR)) {
+                    //System.out.println("illegale dall'alto");
+                    return false;
+                }
+
+            }
         }
         return true;
 
     }
 
+    /**
+     * Method checkValidity check if the player board is valid according to the rules of the game
 
-  //vede se è valida la plance
+     */
     public boolean checkValidity(){
 
         int r = 6;
@@ -358,8 +371,14 @@ public class PlayerPlance {
     }
 
 
-
-    public void killHuman(IntegerPair coordinate){ }
+/**
+ * Method killHuman reduces the number of humans in a housing cell by 1 given the coordinate of this cell
+ *
+ * @param coordinate of type IntegerPair - the value of the coordinate.
+ */
+    public void killHuman(IntegerPair coordinate){
+        Plance[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(1);
+    }
 
 
     //quanta potenza uso
