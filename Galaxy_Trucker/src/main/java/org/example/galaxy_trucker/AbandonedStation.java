@@ -28,7 +28,7 @@ public class AbandonedStation extends Card{
                 AbandonedStationOrder++;
                 //il giocatore sceglie se prendere la nave o meno
                 //se accetta rimuove a scelta sua un numero di umani pari a requirements
-                // AbandonedShipPlayerList.get(AbandonedShipOrder).IcreaseCredits(this.reward);
+                // AbandonedShipPlayerList.get(AbandonedShipOrder).handleCargo(this.reward);
                 AbandonedStationBool=false;
                 //AbandonedStationPlayerList.get(AbandonedStationOrder).movePlayer(-this.getTime());
             }
