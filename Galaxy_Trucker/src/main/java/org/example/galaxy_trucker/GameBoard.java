@@ -61,10 +61,11 @@ public class GameBoard {
         //the position players[0] corresponds to the starting position of the 1st player
         //the leader (1st player) will be in the first position of the arraylist
 
+
         Pair<Player, Integer> cur = players.stream()
-                .filter(p -> ID
-                .equals( p.getKey().GetID()) )
-                .findFirst().orElseThrow();
+                                           .filter(p -> ID
+                                           .equals( p.getKey().GetID()) )
+                                           .findFirst().orElseThrow();
 
         SetNewPosition(cur, startPos[PlayersOnBoard]);
 
@@ -73,11 +74,12 @@ public class GameBoard {
 
 
     public void movePlayer(String ID, int nSteps) throws IllegalArgumentException{
-        Pair<Player, Integer> cur = players
-                .stream()
-                .filter(p -> ID.equals( p.getKey().GetID() ) )
-                .findFirst()
-                .orElseThrow();
+        //moves the player forward or backwards on the board of a selected number of steps
+
+        Pair<Player, Integer> cur = players.stream()
+                                           .filter(p -> ID.equals( p.getKey().GetID() ) )
+                                           .findFirst()
+                                           .orElseThrow();
 
         int NewPos = cur.getValue();
 
@@ -100,6 +102,8 @@ public class GameBoard {
 
 
     private void SetNewPosition(Pair<Player, Integer> cur, int newPosition){
+        //support method: brings a player on a specified position on the board and reorders the leadboard
+
         int CurIndex = players.indexOf(cur);
         Pair<Player, Integer> NewPair = new Pair<>(cur.getKey(), newPosition);
 
@@ -109,15 +113,14 @@ public class GameBoard {
         players.remove(CurIndex);
         players.add(CurIndex, NewPair);
 
-        players.sort(Comparator.comparing(Pair::getValue));
 
-        //revers the order of the arraylist to have the leader in the 1st position
+        players.sort(Comparator.comparing(Pair::getValue));
+        //revers the order of the arraylist to have the leader in the 1st position (index = 0)
         ArrayList<Pair<Player, Integer>> OrderedPlayers = new ArrayList<>();
         for(int i= players.size()-1; i>=0; i--){
             OrderedPlayers.add(players.get(i));
         }
         players = OrderedPlayers;
-
     }
 
 
@@ -133,6 +136,6 @@ public class GameBoard {
 
     public int getLevel(){return GameLv;}
     public Player[] getPositions(){return this.positions;}
-
+    public TileSets getTilesSets(){return tileSets;}
 
 }
