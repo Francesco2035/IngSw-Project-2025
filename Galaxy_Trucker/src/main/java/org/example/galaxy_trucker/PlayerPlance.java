@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+//  chiamo su tutto e chiamo get humans su ogi tile e se non è housing unit
+// modular housing hunit va dal 33 al 49
+
+// posso chiamre sulla matrice il set a numero
 
 public class PlayerPlance {
 
@@ -15,7 +19,11 @@ public class PlayerPlance {
     private int power;
     private ArrayList<Pair<Tile, Integer>> ExposedConnectors;
     // posso avere dei doppioni cosi per sapere quanti sono basta guardare la lunghezza senza accedere ai tasselli
-    private ArrayList<Pair<Integer, Integer>> Humans;private ArrayList<Tile> energyTiles;
+
+    //mi salvi la posizione delle housing units, cosi so dove sono
+    // e poi posso guardare se nella lista ho un elemento adiacente.
+    private ArrayList<Pair<Integer, Integer>> Humans;
+    private ArrayList<Tile> energyTiles;
     //    private ArrayList<Pair<Integer, Integer>> Energy;
     //richiesta di Pietro per le sue carte
     private ArrayList<Pair<Integer, Integer>> RedCargo;

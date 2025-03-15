@@ -14,6 +14,7 @@ public class Slavers extends Card{
         this.reward = Reward;
         this.Punishment = Punsihment;
     }
+    @Override
     public void CardEffect(){
         int Order=0;
         int AttackNumber=0;
