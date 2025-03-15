@@ -12,16 +12,14 @@ public class PlayerPlance {
     private Tile[][] Plance;
     private int[][] ValidPlance;
     private int damage;
-    private int power;
-    private ArrayList<Pair<Tile, Integer>> ExposedConnectors;
-    // posso avere dei doppioni cosi per sapere quanti sono basta guardare la lunghezza senza accedere ai tasselli
-    private ArrayList<Pair<Integer, Integer>> Humans;private ArrayList<Tile> energyTiles;
-    //    private ArrayList<Pair<Integer, Integer>> Energy;
-    //richiesta di Pietro per le sue carte
-    private ArrayList<Pair<Integer, Integer>> RedCargo;
-    private ArrayList<Pair<Integer, Integer>> YellowCargo;
-    private ArrayList<Pair<Integer, Integer>> GreenCargo;
-    private ArrayList<Pair<Integer, Integer>> BlueCargo;
+    private double power;
+    private ArrayList<IntegerPair> ExposedConnectors;
+
+    private ArrayList<IntegerPair> Humans;
+    private ArrayList<IntegerPair> energyTiles;
+
+
+    private ArrayList<IntegerPair> Cargo;
     private ArrayList<Tile> Buffer;
 
     private ArrayList<IntegerPair> connectedPlance; ;
@@ -38,11 +36,9 @@ public class PlayerPlance {
         this.ExposedConnectors = new ArrayList<>();
         this.Humans = new ArrayList<>();
         this.energyTiles = new ArrayList<>();
-//        this.Energy = new ArrayList<>();
-        this.RedCargo = new ArrayList<>();
-        this.YellowCargo = new ArrayList<>();
-        this.GreenCargo = new ArrayList<>();
-        this.BlueCargo = new ArrayList<>();
+        this.energyTiles = new ArrayList<>();
+
+        this.Cargo = new ArrayList<>();
         this.Buffer = new ArrayList<>();
         this.ValidPlance = new int[10][10];
         this.validConnection = new HashMap<Connector, ArrayList<Connector>>();
@@ -115,29 +111,25 @@ public class PlayerPlance {
     //    public ArrayList<Pair<Integer, Integer>> getEnergy() {
 //        return Energy;
 //    }
-    public ArrayList<Tile> getEnergyTiles() {
+    public ArrayList<IntegerPair> getEnergyTiles() {
         return energyTiles;
     }
 
 
-    public void setEnergyTiles(ArrayList<Tile> energyTiles) {
-        this.energyTiles = energyTiles;
-    }
 
-
-    public void addEnergyTiles(Tile energyTile) {
-        this.energyTiles.add(energyTile);
-    }
 
     public void insertTile(Tile tile, int x, int y) {
         try {
             this.Plance[x][y] = tile;
-            if (tile.getComponent().getClass() == BatteryComp.class) addEnergyTiles(tile);
-            ValidPlance[x][y] = 1;
+            if (tile.getComponent().getClass() == BatteryComp.class){
+                energyTiles.add(new IntegerPair(x, y));
+            };
+
             //va gestito meglio se singolo o doppi e direzione
             if(tile.getComponent().getClass() == plasmaDrill.class) addEnergyTiles(tile);{
                 this.power++;
             }
+            ValidPlance[x][y] = 1;
 
 
         } catch (NullPointerException e) {
@@ -150,9 +142,9 @@ public class PlayerPlance {
         return this.Plance[x][y];
     }
 
-    public ArrayList<Pair<Integer, Integer>> getHumans(){ return this.Humans; }
+    public ArrayList<IntegerPair> getHumans(){ return this.Humans; }
 
-    public int getPower() {
+    public double getPower() {
         return power;
     }
 
