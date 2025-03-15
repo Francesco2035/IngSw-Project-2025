@@ -38,7 +38,7 @@ public abstract class Component {
         return 0;
     }
     public int setAbility(){return 0;}      //volendo si può in powerCenter utilizzare l'altro setAbility e semplicemente non utilizzare l'int di input, ma così è visivamente più puliti
-    public int setAbility(int numAbility){
+    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien){
         return 0;
     }
     public int setAbility(Goods good){return 0;}

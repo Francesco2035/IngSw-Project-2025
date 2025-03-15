@@ -23,7 +23,7 @@ public class MainCockpitComp extends Component {
 
 
     @Override
-    public int setAbility(int numAbility){
+    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien) {
         this.numHumans -= numAbility;
         return numHumans;
     }

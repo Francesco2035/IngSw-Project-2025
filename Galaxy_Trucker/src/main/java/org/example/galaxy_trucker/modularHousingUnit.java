@@ -40,8 +40,10 @@ public class modularHousingUnit extends Component {
 
 
     @Override
-    public int setAbility(int numAbility){
+    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien){
         this.numHumans -= numAbility;
+        this.purpleAlien = this.purpleAlien && purpleAlien;
+        this.brownAlien = this.brownAlien && brownAlien;
         return numHumans;
     }
 
