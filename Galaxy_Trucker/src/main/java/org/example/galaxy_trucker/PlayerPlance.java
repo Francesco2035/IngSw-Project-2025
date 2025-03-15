@@ -12,15 +12,17 @@ public class PlayerPlance {
     private Tile[][] Plance;
     private int[][] ValidPlance;
     private int damage;
-    private double power;
-    private ArrayList<IntegerPair> ExposedConnectors;
+    private int exposedConnectors;
+
+
+    //buffer del cargo
+
 
     private ArrayList<IntegerPair> Humans;
     private ArrayList<IntegerPair> energyTiles;
-
-
     private ArrayList<IntegerPair> Cargo;
     private ArrayList<IntegerPair> plasmaDrills;
+
     private ArrayList<Tile> Buffer;
 
     private ArrayList<IntegerPair> connectedPlance; ;
@@ -31,19 +33,12 @@ public class PlayerPlance {
 
     //attributes
 
-    public void insertBuffer(Tile t){
-        Buffer.add(t);
-    }
-
-    public ArrayList<Tile> getBuffer(){
-        return Buffer;
-    }
 
 
     public PlayerPlance(int lv) {
         this.damage = 0;
-        this.power = 0;
-        this.ExposedConnectors = new ArrayList<>();
+
+        this.exposedConnectors = 0;
         this.Humans = new ArrayList<>();
         this.energyTiles = new ArrayList<>();
         this.energyTiles = new ArrayList<>();
@@ -111,6 +106,25 @@ public class PlayerPlance {
         this.Plance[6][6] = new Tile(new IntegerPair(6,6), new MainCockpitComp(0),Connector.UNIVERSAL, Connector.UNIVERSAL,Connector.UNIVERSAL, Connector.UNIVERSAL);
     }
 
+    public void insertBuffer(Tile t){
+        Buffer.add(t);
+    }
+
+    public ArrayList<Tile> getBuffer(){
+        return Buffer;
+    }
+
+    public int getExposedConnectors(){
+        return exposedConnectors;
+    }
+
+    public ArrayList<IntegerPair> getHumans(){
+        return this.Humans;
+    }
+
+
+
+
     public Tile[][] getPlayerPlance(){
         return this.Plance;
     }
@@ -123,6 +137,9 @@ public class PlayerPlance {
         return energyTiles;
     }
 
+    public Tile getTile(int x, int y) {
+        return this.Plance[x][y];
+    }
 
     public void insertTile(Tile tile, int x, int y) {
         try {
@@ -132,19 +149,6 @@ public class PlayerPlance {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-    }
-
-    public Tile getTile(int x, int y) {
-        return this.Plance[x][y];
-    }
-
-
-    public ArrayList<IntegerPair> getHumans(){
-        return this.Humans;
-    }
-
-    public double getPower() {
-        return power;
     }
 
     public boolean checkConnection(Connector t1, Connector t2 ){
@@ -250,7 +254,13 @@ public class PlayerPlance {
         }
 
         else {
-            return checkIllegal(visitedPositions);
+            if (checkIllegal(visitedPositions)){
+                updateAttributes(r,c);
+                return true;
+            }
+            else{
+                return false;
+            }
         }
 
     }
@@ -286,6 +296,7 @@ public class PlayerPlance {
 
     //elimina il tassello dell'attacco
     public void destroy(int x, int y){
+
         Plance[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid(),Connector.NONE, Connector.NONE, Connector.NONE, Connector.NONE);
         ValidPlance[x][y] = 0;
     }
@@ -310,13 +321,19 @@ public class PlayerPlance {
                 }
             }
         }
+        updateAttributes(newPlance.getFirst().getFirst(),newPlance.getFirst().getSecond());
 
     }
 
 
     public void updateAttributes(int x, int y){
+        this.exposedConnectors = 0;
+        this.Humans.clear();
+        this.energyTiles.clear();
+        this.Cargo.clear();
+        this.plasmaDrills.clear();
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
-        updateBoardAttributes(x,y visitedPositions);
+        updateBoardAttributes(x,y, visitedPositions);
 
     }
 
@@ -324,25 +341,51 @@ public class PlayerPlance {
         if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlance[r][c] == -1) { //!= 1
             return;
         }
+
+        if (Plance[r][c].getComponent().getClass() == BatteryComp.class){
+            energyTiles.add(new IntegerPair(r,c));
+        }
+
+        if (Plance[r][c].getComponent().getClass() == plasmaDrill.class){
+            plasmaDrills.add(new IntegerPair(r, c));
+        }
+
+        if (Plance[r][c].getComponent().getClass() == modularHousingUnit.class || Plance[r][c].getComponent().getClass() == MainCockpitComp.class){
+            Humans.add(new IntegerPair(r,c));
+        }
+
         visited.add(new IntegerPair(r, c));
+
         System.out.println(r + " " + c);
+
 
         if (getTile(r, c -1) != null && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
             findPaths(r, c - 1, visited);
+        }
+        else if (getTile(r,c).getConnectors().get(0) == Connector.SINGLE || getTile(r,c).getConnectors().get(0) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(0) == Connector.DOUBLE) {
+            exposedConnectors++;
         }
 
         if (getTile(r -1, c ) != null && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
             findPaths(r -1,c ,visited);
         }
+        else if (getTile(r,c).getConnectors().get(1) == Connector.SINGLE || getTile(r,c).getConnectors().get(1) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(1) == Connector.DOUBLE) {
+            exposedConnectors++;
+        }
 
         if (getTile(r, c + 1) != null && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
             findPaths(r,c + 1 ,visited);
+        }
+        else if (getTile(r,c).getConnectors().get(2) == Connector.SINGLE || getTile(r,c).getConnectors().get(2) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(2) == Connector.DOUBLE) {
+            exposedConnectors++;
         }
 
         if (getTile(r + 1, c) != null && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r + 1, c ).getConnectors().get(3))){
             findPaths(r +1,c ,visited);
         }
-
+        else if (getTile(r,c).getConnectors().get(3) == Connector.SINGLE || getTile(r,c).getConnectors().get(3) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(3) == Connector.DOUBLE) {
+            exposedConnectors++;
+        }
 
     }
 
@@ -388,7 +431,6 @@ public class PlayerPlance {
 
         return shipSection;
 
-
     }
 
 
@@ -402,22 +444,34 @@ public class PlayerPlance {
     }
 
 
-    //quanta potenza uso
-    //quanto movimento uso
-    //atterrare pianeta
-    //?quanto energia consumo
+    //potenza istantanea cioè scorro arraylist dei cannoni , se è singolo incremento o del valore nominale o per la metèà in base alla direzione, se è doppio uso un altro metodo
+    //che richiede un input dal player
+    public double getPower() {
+        double power = 0;
+        for (IntegerPair cannon : plasmaDrills){
+            if (Plance[cannon.getFirst()][cannon.getSecond()].getConnectors().get(1) == Connector.CANNON){
+                if (Plance[cannon.getFirst()][cannon.getSecond()].getComponent().getAbility() == 1){
+                    power += 1;
+                }
+                else{
+                    //richiedi input con if else
+                    power += 2;
 
-    //dove mettere le merci
-    //sacrificare umani
-    //prendere merci
+                }
+            }
 
-    //se sparare
-    //se attivare scudi
+            else{
+                if (Plance[cannon.getFirst()][cannon.getSecond()].getComponent().getAbility() == 1){
+                    power += 0.5;
+                }
+                else{
+                    //richiedi input con if else
+                    power += 1;
 
-
-    //metodo per aggiugnere merci,  viene fornito un arraylst di merci, il player 1 per volta sceglie se prendere il cargo e
-    //se si dove metterlo, ho un arraylist di posizioni dei magazzini
-
-
+                }
+            }
+        }
+        return power;
+    }
 
 }
