@@ -10,11 +10,11 @@ public class OpenSpace extends Card{
     @Override
     public void CardEffect(){
         int OpenSpaceOrder=0;
-         GameBoard OpenSpaceBoard=super.getBoard();
+         GameBoard OpenSpaceBoard=this.getBoard();
         ArrayList<Player> OpenSpacePlayerList = OpenSpaceBoard.getPlayers();
         PlayerPlance OpenspaceCurrentPlanche;
         int OpenSpaceMovement=0;
-        while(OpenSpaceOrder<OpenSpacePlayerList.size()){
+        while(OpenSpaceOrder<OpenSpacePlayerList.size()){ // moves the players in order
             OpenspaceCurrentPlanche=OpenSpacePlayerList.get(OpenSpaceOrder).getMyPlance();
             //OpenSpaceMovement=OpenspaceCurrentPlanche.getPower();
             //OpenSpacePlayerList.get(OpenSpaceOrder).movePlayer(OpenSpaceMovement);

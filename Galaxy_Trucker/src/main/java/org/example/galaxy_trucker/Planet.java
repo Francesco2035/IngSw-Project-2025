@@ -1,32 +1,23 @@
 package org.example.galaxy_trucker;
 
+import java.util.ArrayList;
+
+// list of the cargo contained in a planet and the bool signaling if a player chose it already
 public class Planet {
     private boolean Occupied;
-    private int NumofRed;
-    private int NumofYellow;
-    private int NumofGreen;
-    private int NumofBlue;
-    Planet(int red, int yellow, int green, int blue ) {
-        this.NumofRed = red;
-        this.NumofYellow = yellow;
-        this.NumofGreen = green;
-        this.NumofBlue= blue;
+
+    ArrayList<Goods> Goods;
+
+    Planet(ArrayList<Goods> Goods) {
+        Goods = Goods;
         this.Occupied=false;
     }
 
-    int getNumofRed() {
-        return NumofRed;
+    public ArrayList<Goods> getGoods() {
+        return Goods;
     }
-    int getNumofYellow() {
-        return NumofYellow;
-    }
-    int getNumofGreen() {
-        return NumofGreen;
-    }
-    int getNumofBlue() {
-        return NumofBlue;
-    }
-    boolean isOccupied() {
+
+    public boolean isOccupied() {
         return Occupied;
     }
 }

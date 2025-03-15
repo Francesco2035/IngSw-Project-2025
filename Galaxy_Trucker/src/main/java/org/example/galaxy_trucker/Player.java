@@ -55,5 +55,30 @@ public class Player {
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
+    public int getPower(){
+        return myPlance.getPower();
+    }
+    public void killHumans(int umani){
+        return;
+    }
+    public void loseCargo(int numCargo){
+        return;
+    }
 
+    public int getHumans(){
+        return 4;
+    }
+    public void movePlayer(int Movement){
+        return;
+    }
+    public int getMovement(){
+        return 7;
+    }
+
+    public boolean getConfirm(){
+        return true;
+    }
+    public IntegerPair getCoordinates() {
+        return new IntegerPair(4,5);
+    }
 }

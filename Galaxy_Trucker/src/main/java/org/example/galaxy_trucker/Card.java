@@ -8,12 +8,13 @@ public class Card {
     // NON SO SE HA SENSO MA LUI DICE DI FARE COSI, QUINDI I METODI DI CARD EFFECT DOVREBBERO ESSERE
     //INTERAMENTE DEFINITI SENZA CHIEDERE ALTRI INPUT AI PLAYER, SEMPLICEMENTE MODIFICHERANNO IL MODELLO
 
-        // puoi invece che salvarti come attributo la Gameboard  posso passaerla per risparmiare in memoria ma non è un big problema :)
+    // puoi invece che salvarti come attributo la Gameboard  posso passaerla per risparmiare in memoria ma non è un big problema :)
     public Card(int level, int time, GameBoard board) {
         this.Level = level;
         this.Time = time;
         this.Board = board;
     }
+
     public GameBoard getBoard() {
 
         return this.Board;
@@ -21,6 +22,12 @@ public class Card {
 
     public void CardEffect(){
 
+    }
+    public int getLevel() {
+        return this.Level;
+    }
+    public int getTime() {
+        return this.Time;
     }
 
 }

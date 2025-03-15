@@ -14,24 +14,34 @@ public class AbandonedShip extends Card{
     }
     @Override
     public void CardEffect(){
-       int AbandonedShipOrder=0;
-       boolean AbandonedShipBool=true;
-       GameBoard AbandonedShipBoard=this.getBoard();
-       ArrayList<Player> AbandonedShipPlayerList = AbandonedShipBoard.getPlayers();
+       int Order=0;
+       boolean Bool=true;
+       GameBoard Board=this.getBoard();
+       ArrayList<Player> PlayerList = Board.getPlayers();
        PlayerPlance AbandonedShipCurrentPlanche;
-        int AbandonedShipLen= AbandonedShipPlayerList.size();
-        while(AbandonedShipOrder<AbandonedShipLen && AbandonedShipBool ){
+        int Len= PlayerList.size();
+        IntegerPair coordinates;
+        while(Order<Len && Bool ){ // ask all the player by order
+            // or untill someone does if they can and want to get the ship
 
-            AbandonedShipCurrentPlanche=AbandonedShipPlayerList.get(AbandonedShipOrder).getMyPlance();
+            AbandonedShipCurrentPlanche=PlayerList.get(Order).getMyPlance(); // get the current active planche
            if( AbandonedShipCurrentPlanche.getHumans().size() > this.requirement ){
-               AbandonedShipOrder++;
                //il giocatore sceglie se prendere la nave o meno
                //se accetta rimuove a scelta sua un numero di umani pari a requirements
               // AbandonedShipPlayerList.get(AbandonedShipOrder).IcreaseCredits(this.reward);
-               AbandonedShipBool=false;
+               if(PlayerList.get(Order).getConfirm()) {
+
+                   //faccio il while che chiede dove uccidere e poi dalla planche ammazzo lì
+                   for (int i = 0; i < this.requirement; i++) {
+                        coordinates=PlayerList.get(Order).getCoordinates();
+                        PlayerList.get(Order).getMyPlance().killHuman(coordinates);
+                   }
+                    PlayerList.get(Order).movePlayer(this.getTime());
+                     Bool=false;
+               }
            }
 
-            AbandonedShipOrder++;
+            Order++;
         }
         return;
     }
