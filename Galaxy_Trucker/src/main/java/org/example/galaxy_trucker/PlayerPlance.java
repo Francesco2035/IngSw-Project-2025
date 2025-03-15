@@ -12,16 +12,15 @@ public class PlayerPlance {
     private Tile[][] Plance;
     private int[][] ValidPlance;
     private int damage;
-    private int power;
-    private ArrayList<Pair<Tile, Integer>> ExposedConnectors;
-    // posso avere dei doppioni cosi per sapere quanti sono basta guardare la lunghezza senza accedere ai tasselli
-    private ArrayList<Pair<Integer, Integer>> Humans;private ArrayList<Tile> energyTiles;
-    //    private ArrayList<Pair<Integer, Integer>> Energy;
-    //richiesta di Pietro per le sue carte
-    private ArrayList<Pair<Integer, Integer>> RedCargo;
-    private ArrayList<Pair<Integer, Integer>> YellowCargo;
-    private ArrayList<Pair<Integer, Integer>> GreenCargo;
-    private ArrayList<Pair<Integer, Integer>> BlueCargo;
+    private double power;
+    private ArrayList<IntegerPair> ExposedConnectors;
+
+    private ArrayList<IntegerPair> Humans;
+    private ArrayList<IntegerPair> energyTiles;
+
+
+    private ArrayList<IntegerPair> Cargo;
+    private ArrayList<IntegerPair> plasmaDrills;
     private ArrayList<Tile> Buffer;
 
     private ArrayList<IntegerPair> connectedPlance; ;
@@ -32,18 +31,26 @@ public class PlayerPlance {
 
     //attributes
 
+    public void insertBuffer(Tile t){
+        Buffer.add(t);
+    }
+
+    public ArrayList<Tile> getBuffer(){
+        return Buffer;
+    }
+
+
     public PlayerPlance(int lv) {
         this.damage = 0;
         this.power = 0;
         this.ExposedConnectors = new ArrayList<>();
         this.Humans = new ArrayList<>();
         this.energyTiles = new ArrayList<>();
-//        this.Energy = new ArrayList<>();
-        this.RedCargo = new ArrayList<>();
-        this.YellowCargo = new ArrayList<>();
-        this.GreenCargo = new ArrayList<>();
-        this.BlueCargo = new ArrayList<>();
+        this.energyTiles = new ArrayList<>();
+
+        this.Cargo = new ArrayList<>();
         this.Buffer = new ArrayList<>();
+        this.plasmaDrills = new ArrayList<>();
         this.ValidPlance = new int[10][10];
         this.validConnection = new HashMap<Connector, ArrayList<Connector>>();
         validConnection.put(Connector.UNIVERSAL, new ArrayList<>());
@@ -112,47 +119,31 @@ public class PlayerPlance {
         return this.ValidPlance;
     }
 
-    //    public ArrayList<Pair<Integer, Integer>> getEnergy() {
-//        return Energy;
-//    }
-    public ArrayList<Tile> getEnergyTiles() {
+    public ArrayList<IntegerPair> getEnergyTiles() {
         return energyTiles;
     }
 
 
-    public void setEnergyTiles(ArrayList<Tile> energyTiles) {
-        this.energyTiles = energyTiles;
-    }
-
-
-    public void addEnergyTiles(Tile energyTile) {
-        this.energyTiles.add(energyTile);
-    }
-
     public void insertTile(Tile tile, int x, int y) {
         try {
             this.Plance[x][y] = tile;
-            if (tile.getComponent().getClass() == BatteryComp.class) addEnergyTiles(tile);
             ValidPlance[x][y] = 1;
-            //va gestito meglio se singolo o doppi e direzione
-            if(tile.getComponent().getClass() == plasmaDrill.class) addEnergyTiles(tile);{
-                this.power++;
-            }
-
 
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-
     public Tile getTile(int x, int y) {
         return this.Plance[x][y];
     }
 
-    public ArrayList<Pair<Integer, Integer>> getHumans(){ return this.Humans; }
 
-    public int getPower() {
+    public ArrayList<IntegerPair> getHumans(){
+        return this.Humans;
+    }
+
+    public double getPower() {
         return power;
     }
 
@@ -161,7 +152,6 @@ public class PlayerPlance {
         if (validConnection.get(t1).isEmpty()){
             return false;
         }
-
         if(validConnection.get(t1).contains(t2)){
             return true;
         }
@@ -169,7 +159,6 @@ public class PlayerPlance {
             return false;
         }
     }
-
 
 
     //ritorna i path non visitati
@@ -295,12 +284,10 @@ public class PlayerPlance {
     }
 
 
-
     //elimina il tassello dell'attacco
     public void destroy(int x, int y){
         Plance[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid(),Connector.NONE, Connector.NONE, Connector.NONE, Connector.NONE);
         ValidPlance[x][y] = 0;
-
     }
 
     //scelta del troncone
@@ -323,6 +310,40 @@ public class PlayerPlance {
                 }
             }
         }
+
+    }
+
+
+    public void updateAttributes(int x, int y){
+        ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
+        updateBoardAttributes(x,y visitedPositions);
+
+    }
+
+    public void updateBoardAttributes(int r, int c,ArrayList<IntegerPair> visited){
+        if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlance[r][c] == -1) { //!= 1
+            return;
+        }
+        visited.add(new IntegerPair(r, c));
+        System.out.println(r + " " + c);
+
+        if (getTile(r, c -1) != null && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
+            findPaths(r, c - 1, visited);
+        }
+
+        if (getTile(r -1, c ) != null && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
+            findPaths(r -1,c ,visited);
+        }
+
+        if (getTile(r, c + 1) != null && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
+            findPaths(r,c + 1 ,visited);
+        }
+
+        if (getTile(r + 1, c) != null && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r + 1, c ).getConnectors().get(3))){
+            findPaths(r +1,c ,visited);
+        }
+
+
     }
 
 
@@ -377,7 +398,7 @@ public class PlayerPlance {
  * @param coordinate of type IntegerPair - the value of the coordinate.
  */
     public void killHuman(IntegerPair coordinate){
-        Plance[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(1);
+        Plance[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(1, true, true);
     }
 
 

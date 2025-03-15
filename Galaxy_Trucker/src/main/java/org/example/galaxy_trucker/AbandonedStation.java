@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class AbandonedStation extends Card{
     private int requirement;
-    private Planet reward;
+    private ArrayList<Goods> reward;
 
 
-    public AbandonedStation(int requirement, Planet reward, int level, int time, GameBoard board) {
+    public AbandonedStation(int requirement, ArrayList<Goods> reward, int level, int time, GameBoard board) {
         super(level, time, board);
         this.requirement = requirement;
         this.reward = reward;

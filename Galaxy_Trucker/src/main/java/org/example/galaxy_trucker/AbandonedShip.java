@@ -34,7 +34,7 @@ public class AbandonedShip extends Card{
                    //faccio il while che chiede dove uccidere e poi dalla planche ammazzo lì
                    for (int i = 0; i < this.requirement; i++) {
                         coordinates=PlayerList.get(Order).getCoordinates();
-                        //PlayerList.get(Order).getMyPlance().killHuman(coordinates);
+                        PlayerList.get(Order).getMyPlance().killHuman(coordinates);
                    }
                     PlayerList.get(Order).movePlayer(this.getTime());
                      Bool=false;

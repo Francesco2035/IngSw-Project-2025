@@ -11,6 +11,7 @@ public class SolarSystem extends Card {
         solarSystemPlanets = planets;
 
     }
+    @Override
     public void CardEffect(){
         int SolarSystemOrder=0;
         boolean SolarSystemBool=true;
