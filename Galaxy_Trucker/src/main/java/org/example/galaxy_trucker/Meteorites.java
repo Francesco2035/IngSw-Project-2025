@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 
 // direzioni int sinistra 0 sopra 1...
+//0 piccolo 1 grande
 public class Meteorites extends Card {
     private ArrayList<IntegerPair> Attacks; // prima è la direzione, secondo il tipo di attacco
 
