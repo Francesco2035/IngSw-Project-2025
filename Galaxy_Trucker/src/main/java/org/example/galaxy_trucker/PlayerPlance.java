@@ -13,7 +13,7 @@ public class PlayerPlance {
     private int[][] ValidPlance;
     private int damage;
     private int exposedConnectors;
-    private int enginePower;
+
 
 
     //buffer del cargo
@@ -23,6 +23,8 @@ public class PlayerPlance {
     private ArrayList<IntegerPair> energyTiles;
     private ArrayList<IntegerPair> Cargo;
     private ArrayList<IntegerPair> plasmaDrills;
+    private ArrayList<IntegerPair> hotWaterHeaters;
+
 
     private ArrayList<Tile> Buffer;
 
@@ -304,6 +306,7 @@ public class PlayerPlance {
         energyTiles.remove(pos);
         plasmaDrills.remove(pos);
         Cargo.remove(pos);
+        hotWaterHeaters.remove(pos);
 
         damage++;
 
@@ -341,7 +344,7 @@ public class PlayerPlance {
 
     public void updateAttributes(int x, int y){
         this.exposedConnectors = 0;
-        this.enginePower = 0;
+
         this.Humans.clear();
         this.energyTiles.clear();
         this.Cargo.clear();
@@ -356,21 +359,22 @@ public class PlayerPlance {
             return;
         }
 
-        if (Plance[r][c].getComponent().getClass() == BatteryComp.class){
+        else if (Plance[r][c].getComponent().getClass() == BatteryComp.class){
             energyTiles.add(new IntegerPair(r,c));
         }
 
-        if (Plance[r][c].getComponent().getClass() == plasmaDrill.class){
+        else if (Plance[r][c].getComponent().getClass() == plasmaDrill.class){
             plasmaDrills.add(new IntegerPair(r, c));
         }
 
-        if (Plance[r][c].getComponent().getClass() == modularHousingUnit.class || Plance[r][c].getComponent().getClass() == MainCockpitComp.class){
+        else if (Plance[r][c].getComponent().getClass() == modularHousingUnit.class || Plance[r][c].getComponent().getClass() == MainCockpitComp.class){
             Humans.add(new IntegerPair(r,c));
         }
 
-        if (Plance[r][c].getComponent().getClass() == hotWaterHeater.class ){
-            this.enginePower += Plance[r][c].getComponent().getAbility();
+        else if (Plance[r][c].getComponent().getClass() == hotWaterHeater.class ){
+            hotWaterHeaters.add(new IntegerPair(r,c));
         }
+
 
         visited.add(new IntegerPair(r, c));
 
@@ -462,7 +466,7 @@ public class PlayerPlance {
     }
 
 
-    //potenza istantanea cioè scorro arraylist dei cannoni , se è singolo incremento o del valore nominale o per la metèà in base alla direzione, se è doppio uso un altro metodo
+    //potenza istantanea cioè scorro arraylist dei cannoni , se è singolo incremento o del valore nominale o per la metà in base alla direzione, se è doppio uso un altro metodo
     //che richiede un input dal player
     public double getPower() {
         double power = 0;
@@ -492,6 +496,21 @@ public class PlayerPlance {
         return power;
     }
 
+    public int getEnginePower() {
+        int power = 0;
+        for (IntegerPair engine : hotWaterHeaters){
 
+            if (Plance[engine.getFirst()][engine.getSecond()].getComponent().getAbility() == 1){
+                power += 1;
+            }
+            else{
+                //richiedi input con if else
+                power += 2;
+
+            }
+
+        }
+        return power;
+    }
 
 }
