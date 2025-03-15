@@ -83,17 +83,26 @@ public class GameBoard {
 
         int NewPos = cur.getValue();
 
-        //AGGIUNGERE GESTIONE DOPPIAGGIO
 
         if(nSteps == 0) throw new IllegalArgumentException("Number of steps cannot be 0: must move forward or backwards");
         else if(nSteps > 0)
             while(nSteps > 0){
                 NewPos++;
                 if(positions[NewPos] == null) nSteps--;
+                else if(cur.getKey().equals(players.getLast().getKey())){
+                    //ELIMINAZIONE GIOCATORE DOPPIATO DA GESTIRE
+                    //TEMPORANEAMENTE SI SOLLEVA UNA ECCEZIONE
+                    throw new RuntimeException("GIOCATORE DOPPIATO");
+                }
             }
         else while(nSteps < 0){
             NewPos--;
             if(positions[NewPos] == null) nSteps++;
+            else if(cur.getKey().equals(players.getFirst().getKey())){
+                //ELIMINAZIONE GIOCATORE DOPPIATO DA GESTIRE
+                //TEMPORANEAMENTE SI SOLLEVA UNA ECCEZIONE
+                throw new RuntimeException("GIOCATORE DOPPIATO");
+            }
         }
 
         SetNewPosition(cur, NewPos);
