@@ -13,10 +13,11 @@ public class PlayerPlance {
     private int[][] ValidPlance;
     private int damage;
     private int exposedConnectors;
+    private int enginePower;
 
 
     //buffer del cargo
-
+    private ArrayList<Goods> BufferGoods;
 
     private ArrayList<IntegerPair> Humans;
     private ArrayList<IntegerPair> energyTiles;
@@ -24,8 +25,6 @@ public class PlayerPlance {
     private ArrayList<IntegerPair> plasmaDrills;
 
     private ArrayList<Tile> Buffer;
-
-    private ArrayList<IntegerPair> connectedPlance; ;
 
 
     HashMap<Connector, ArrayList<Connector>>  validConnection;
@@ -135,6 +134,10 @@ public class PlayerPlance {
 
     public ArrayList<IntegerPair> getEnergyTiles() {
         return energyTiles;
+    }
+
+    public int getDamage(){
+        return damage;
     }
 
     public Tile getTile(int x, int y) {
@@ -302,6 +305,8 @@ public class PlayerPlance {
         plasmaDrills.remove(pos);
         Cargo.remove(pos);
 
+        damage++;
+
         Plance[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid(),Connector.NONE, Connector.NONE, Connector.NONE, Connector.NONE);
         ValidPlance[x][y] = 0;
     }
@@ -309,6 +314,9 @@ public class PlayerPlance {
     //scelta del troncone
     public ArrayList<IntegerPair> choosePlance(HashMap<Integer, ArrayList<IntegerPair>> shipSection , int i){
 
+        for (int j = 0; j < shipSection.size(); j++) {
+            damage += shipSection.get(j).size();
+        }
         return shipSection.get(i);
 
     }
@@ -333,6 +341,7 @@ public class PlayerPlance {
 
     public void updateAttributes(int x, int y){
         this.exposedConnectors = 0;
+        this.enginePower = 0;
         this.Humans.clear();
         this.energyTiles.clear();
         this.Cargo.clear();
@@ -357,6 +366,10 @@ public class PlayerPlance {
 
         if (Plance[r][c].getComponent().getClass() == modularHousingUnit.class || Plance[r][c].getComponent().getClass() == MainCockpitComp.class){
             Humans.add(new IntegerPair(r,c));
+        }
+
+        if (Plance[r][c].getComponent().getClass() == hotWaterHeater.class ){
+            this.enginePower += Plance[r][c].getComponent().getAbility();
         }
 
         visited.add(new IntegerPair(r, c));
@@ -478,5 +491,7 @@ public class PlayerPlance {
         }
         return power;
     }
+
+
 
 }
