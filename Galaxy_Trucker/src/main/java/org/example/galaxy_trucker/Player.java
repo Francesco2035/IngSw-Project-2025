@@ -53,6 +53,10 @@ public class Player {
         CurrentTile = null;
     }
 
+    public void PlaceInBuffer(){
+
+    }
+
     public void PlaceTile(int x, int y){
         this.myPlance.insertTile(CurrentTile, x, y);
         CurrentTile = null;
@@ -66,7 +70,7 @@ public class Player {
         credits += num;
     }
 
-    public void SetReady() {
+    public void SetReady(){
         this.ready = true;
     }
 

@@ -58,6 +58,7 @@ public class GameBoard {
 
 
     public void SetStartingPosition(String ID){
+        //once a player has done building his ship, this method will be called
         //the position players[0] corresponds to the starting position of the 1st player
         //the leader (1st player) will be in the first position of the arraylist
 
