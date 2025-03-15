@@ -296,6 +296,11 @@ public class PlayerPlance {
 
     //elimina il tassello dell'attacco
     public void destroy(int x, int y){
+        IntegerPair pos = new IntegerPair(x, y);
+        Humans.remove(pos);
+        energyTiles.remove(pos);
+        plasmaDrills.remove(pos);
+        Cargo.remove(pos);
 
         Plance[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid(),Connector.NONE, Connector.NONE, Connector.NONE, Connector.NONE);
         ValidPlance[x][y] = 0;
