@@ -2,14 +2,15 @@ package org.example.galaxy_trucker;
 //import javafx.util.Pair;
 import java.util.ArrayList;
 
-
+//GESTISCI GLI ATTACCHI COME UN ARRAY LIST DI INTEGER E NON INTEGER PAIR
 
 // direzioni int sinistra 0 sopra 1...
 //0 piccolo 1 grande
 public class Meteorites extends Card {
     private ArrayList<IntegerPair> Attacks; // prima è la direzione, secondo il tipo di attacco
+    private ArrayList<Integer> attacks;
 
-    public Meteorites(int level, int time, GameBoard board, ArrayList<IntegerPair> Attacks) {
+    public Meteorites(int level, int time, GameBoard board, ArrayList<IntegerPair> Attacks,ArrayList<Integer> attacks) {
         super(level, 0, board);
         this.Attacks = Attacks;
 
@@ -34,11 +35,13 @@ public class Meteorites extends Card {
             while (MeteoritesPlayerList.size() > MeteoritesOrder) { // Scorre i player
                 MeteoritesCurrentPlanche=MeteoritesPlayerList.get(MeteoritesOrder).getMyPlance(); //prendo plancia
                 MeteoritesValidPlanche=MeteoritesCurrentPlanche.getValidPlance();//prende matrice validita
-                if (Attacks.get(MeteoritesAttackNumber).getFirst()==0) { //sinistra
+                if (attacks.get(MeteoritesAttackNumber)==0) { //sinistra
                     Movement=0;
                     while(Movement<10 && MeteoritesFlag == false){
                         if(MeteoritesValidPlanche[MeteoritesLine][Movement]>0) {//guardo se la casella è occupata (spero basti fare questo controllo
                             //Meteorites.Hit(MeteoritesLine,MeteoritesMovement)
+                            //uso
+                            //attacks(MeteoritesAttackNumber+1) per vedere il tipo
                             MeteoritesFlag = true;
                         }
 
@@ -81,7 +84,7 @@ public class Meteorites extends Card {
 
                 MeteoritesOrder++;
             }
-            MeteoritesAttackNumber++;
+            MeteoritesAttackNumber+=2;
 
         }
     }

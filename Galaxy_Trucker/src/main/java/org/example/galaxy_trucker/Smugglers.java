@@ -7,14 +7,14 @@ import java.util.ArrayList;
 
 public class Smugglers extends Card{
     private int requirement;
-    private ArrayList<Goods> reward;
+    private ArrayList<Goods> rewardGoods;
     private int Punishment;
     // conviene creare una classe che lista gli attacchi o in qualche modo chiama solo una volta
     //il player da attaccare cambia Attack
     Smugglers(int level, int time, GameBoard board, ArrayList<Goods> Reward, int Requirement, int Punsihment){
         super(level, time, board);
         this.requirement = Requirement;
-        this.reward = Reward;
+        this.rewardGoods= Reward;
         this.Punishment = Punsihment;
     }
     @Override

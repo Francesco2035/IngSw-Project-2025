@@ -2,8 +2,8 @@ package org.example.galaxy_trucker;
 
 import java.util.ArrayList;
 
-public class StarPowder extends Card {
-    StarPowder(int level,GameBoard board){
+public class Stardust extends Card {
+    public Stardust(int level, GameBoard board){
         super(level, 0 ,board);
     }
     @Override

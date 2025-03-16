@@ -24,6 +24,8 @@ public class AbandonedShip extends Card{
         while(Order<Len && Bool ){ // ask all the player by order
             // or untill someone does if they can and want to get the ship
 
+            //PER GET HUMANS.SIZE IO HO LE COORDINATE DEI TILE E DA LI MI PRENDO IL GET NUMBER CHE SOMMERO AL VALORE ESTERNO
+
             AbandonedShipCurrentPlanche=PlayerList.get(Order).getMyPlance(); // get the current active planche
            if( AbandonedShipCurrentPlanche.getHumans().size() > this.requirement ){
                //il giocatore sceglie se prendere la nave o meno

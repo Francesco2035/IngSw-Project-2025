@@ -8,7 +8,7 @@ public class Slavers extends Card{
     private int Punishment;
     // conviene creare una classe che lista gli attacchi o in qualche modo chiama solo una volta
     //il player da attaccare cambia Attack
-    Slavers(int level, int time, GameBoard board, int Reward, int Requirement, int Punsihment){
+    public Slavers(int level, int time, GameBoard board, int Reward, int Requirement, int Punsihment){
         super(level, time, board);
         this.requirement = Requirement;
         this.reward = Reward;

@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class AbandonedStation extends Card{
     private int requirement;
-    private ArrayList<Goods> reward;
+    private ArrayList<Goods> rewardGoods;
 
 
     public AbandonedStation(int requirement, ArrayList<Goods> reward, int level, int time, GameBoard board) {
         super(level, time, board);
         this.requirement = requirement;
-        this.reward = reward;
+        this.rewardGoods = reward;
     }
     @Override
     public void CardEffect(){

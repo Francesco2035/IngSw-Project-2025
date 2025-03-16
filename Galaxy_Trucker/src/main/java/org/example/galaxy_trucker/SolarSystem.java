@@ -4,11 +4,11 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class SolarSystem extends Card {
-    private ArrayList<Planet> solarSystemPlanets;
+    private ArrayList<Planet> planets;
 
     public SolarSystem(int lv, int time, GameBoard board, ArrayList<Planet> planets) {
         super(lv, time,board);
-        solarSystemPlanets = planets;
+        planets = planets;
 
     }
     @Override
@@ -27,8 +27,8 @@ public class SolarSystem extends Card {
             int yes =SolarSystemR.nextInt(2); // per ora salvo sia la volontà di scendere e il pianeta,
             // potrei chiamare un metodo che semplicemente chiama un pianeta nullo dove va chi non vuole o non può scendere
             //rimuovendo la necessità di salvare due parametri
-            int NumPlanet=SolarSystemR.nextInt(solarSystemPlanets.size());
-            while(yes==1 && solarSystemPlanets.get(NumPlanet).isOccupied()){
+            int NumPlanet=SolarSystemR.nextInt(planets.size());
+            while(yes==1 && planets.get(NumPlanet).isOccupied()){
                 //avviso il player di cambiare idea perché il pianeta è occupato
             }
             if(yes==1) {
