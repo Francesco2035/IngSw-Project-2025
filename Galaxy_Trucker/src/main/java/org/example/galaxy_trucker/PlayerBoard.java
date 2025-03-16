@@ -14,7 +14,7 @@ public class PlayerBoard {
 
     private ArrayList<Goods> BufferGoods;
 
-    private ArrayList<IntegerPair> Humans;
+    private ArrayList<IntegerPair> housingUnits;
     private ArrayList<IntegerPair> energyTiles;
     private ArrayList<IntegerPair> Cargo;
     private ArrayList<IntegerPair> plasmaDrills;
@@ -35,7 +35,7 @@ public class PlayerBoard {
         this.damage = 0;
 
         this.exposedConnectors = 0;
-        this.Humans = new ArrayList<>();
+        this.housingUnits = new ArrayList<>();
         this.energyTiles = new ArrayList<>();
         this.energyTiles = new ArrayList<>();
 
@@ -127,8 +127,8 @@ public class PlayerBoard {
         return exposedConnectors;
     }
 
-    public ArrayList<IntegerPair> getHumans(){
-        return this.Humans;
+    public ArrayList<IntegerPair> gethousingUnits(){
+        return this.housingUnits;
     }
 
 
@@ -333,7 +333,7 @@ public class PlayerBoard {
      */
     public void destroy(int x, int y){
         IntegerPair pos = new IntegerPair(x, y);
-        Humans.remove(pos);
+        housingUnits.remove(pos);
         energyTiles.remove(pos);
         plasmaDrills.remove(pos);
         Cargo.remove(pos);
@@ -394,7 +394,7 @@ public class PlayerBoard {
     public void updateAttributes(int x, int y){
         this.exposedConnectors = 0;
 
-        this.Humans.clear();
+        this.housingUnits.clear();
         this.energyTiles.clear();
         this.Cargo.clear();
         this.plasmaDrills.clear();
@@ -426,7 +426,7 @@ public class PlayerBoard {
         }
 
         else if (PlayerBoard[r][c].getComponent().getClass() == modularHousingUnit.class || PlayerBoard[r][c].getComponent().getClass() == MainCockpitComp.class){
-            Humans.add(new IntegerPair(r,c));
+            housingUnits.add(new IntegerPair(r,c));
         }
 
 //        else if (PlayerBoard[r][c].getComponent().getClass() == hotWaterHeater.class ){
@@ -522,12 +522,12 @@ public class PlayerBoard {
 
 
     /**
-    * Method killHuman reduces the number of humans in a housing cell by 1 given the coordinate of this cell
+    * Method killHuman reduces the number of Human or Alien in a housing cell by 1 given the coordinate of this cell
     *
     * @param coordinate of type IntegerPair - the value of the coordinate.
     */
-    public void killHuman(IntegerPair coordinate){
-        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(1, true, true);
+    public void killHuman(IntegerPair coordinate,int humans ,boolean purpleAlien, boolean brownAlien){
+        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(humans, purpleAlien, brownAlien);
     }
 
 
@@ -605,6 +605,11 @@ public class PlayerBoard {
             PlayerBoard[energy.getFirst()][energy.getSecond()].getComponent().setAbility();
         }
     }
+
+// non lo posso gestire senza che passo modifichi housingUnit, posso solo eliminare umani
+//    public void populateHousingUnit(IntegerPair coordinate , int humans ,boolean purpleAlien, boolean brownAlien){
+//        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility();
+//    }
 
 
 }
