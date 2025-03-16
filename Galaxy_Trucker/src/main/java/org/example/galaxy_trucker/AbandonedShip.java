@@ -29,7 +29,7 @@ public class AbandonedShip extends Card{
                //il giocatore sceglie se prendere la nave o meno
                //se accetta rimuove a scelta sua un numero di umani pari a requirements
               // AbandonedShipPlayerList.get(AbandonedShipOrder).IcreaseCredits(this.reward);
-               if(PlayerList.get(Order).getConfirm()) {
+               if(PlayerList.get(Order).getConfirm()){
 
                    //faccio il while che chiede dove uccidere e poi dalla planche ammazzo lì
                    for (int i = 0; i < this.requirement; i++) {

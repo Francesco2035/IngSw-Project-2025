@@ -51,14 +51,23 @@ public class GameBoard {
 
     /**
      * adds a new player to the game
-     * @param ID of the new player
+     * @param NewPlayer reference to the newborn player
      */
-    public void addPlayer(String ID){
-        Player NewPlayer = new Player(ID, this);
+    public void addPlayer(Player NewPlayer){
         int NewPlayerPosition = 0;
         Pair<Player, Integer> NewPair = new Pair<>(NewPlayer, NewPlayerPosition);
         this.players.add(NewPair);
 
+    }
+
+    public void removePlayer(Player DeadMan){
+
+        Pair<Player, Integer> eliminated = players.stream()
+                                                  .filter(p -> DeadMan
+                                                  .equals( p.getKey()) )
+                                                  .findFirst().orElseThrow();
+
+        players.remove(eliminated);
     }
 
 
