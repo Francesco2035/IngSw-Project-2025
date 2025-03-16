@@ -21,7 +21,7 @@ public class GAGen {
 
 
     //parsa json per connectors e component e chiama il builder di tile ripetuto fino a EOF
-    private GAGen() throws IOException {
+    public GAGen() throws IOException {
         this.deck = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
     }
 

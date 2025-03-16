@@ -55,7 +55,7 @@ public class Player {
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
-    public int getPower(){
+    public double getPower(){
         return myPlance.getPower();
     }
     public void killHumans(int umani){
