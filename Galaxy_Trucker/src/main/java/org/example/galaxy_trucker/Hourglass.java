@@ -23,6 +23,7 @@ public class Hourglass {
             Thread t = new Thread(() -> {
                 try {
                     Thread.sleep(time);
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -30,7 +31,6 @@ public class Hourglass {
             });
 
             t.start();
-
 
             usages--;
 

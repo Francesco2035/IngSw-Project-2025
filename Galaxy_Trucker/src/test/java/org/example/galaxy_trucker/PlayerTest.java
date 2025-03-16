@@ -13,6 +13,7 @@ class PlayerTest {
 
         GameBoard board = new GameBoard(null, 2);
 
+
         Player meplayer = new Player("codiscePersona_255", board);
         PlayerBoard provaPlance = new PlayerBoard(2);
 //        meplayer.setMyPlance(provaPlance);
@@ -24,7 +25,7 @@ class PlayerTest {
         provaPlance.insertTile(battTile, 3, 4);
 
 //        batt.setPrivEnergy(10);
-        meplayer.consumeEnergyFrom(3, 4);
+        meplayer.consumeEnergyFrom(coords);
 
 //        assertEquals(9, batt.getPrivEnergy());
     }
