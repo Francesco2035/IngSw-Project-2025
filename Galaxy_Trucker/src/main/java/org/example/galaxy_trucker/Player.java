@@ -135,6 +135,21 @@ public class Player {
     }
 
 
+    public ArrayList<IntegerPair> getPower(){
+        ArrayList<IntegerPair> Power = new ArrayList<>();
+        IntegerPair coords = new IntegerPair(6, 9);
+        Power.add(coords);
+        return Power;
+    }
+
+    public ArrayList<IntegerPair> getEnginePower(){
+        ArrayList<IntegerPair> Power = new ArrayList<>();
+        IntegerPair coords = new IntegerPair(4, 2);
+        Power.add(coords);
+        return Power;
+
+    }
+
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
