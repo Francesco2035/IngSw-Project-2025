@@ -18,7 +18,7 @@ public class PlayerBoard {
     private ArrayList<IntegerPair> energyTiles;
     private ArrayList<IntegerPair> Cargo;
     private ArrayList<IntegerPair> plasmaDrills;
-    private ArrayList<IntegerPair> hotWaterHeaters;
+    //private ArrayList<IntegerPair> hotWaterHeaters;
 
 
     private ArrayList<Tile> Buffer;
@@ -337,7 +337,7 @@ public class PlayerBoard {
         energyTiles.remove(pos);
         plasmaDrills.remove(pos);
         Cargo.remove(pos);
-        hotWaterHeaters.remove(pos);
+        //hotWaterHeaters.remove(pos);
 
         damage++;
 
@@ -429,9 +429,9 @@ public class PlayerBoard {
             Humans.add(new IntegerPair(r,c));
         }
 
-        else if (PlayerBoard[r][c].getComponent().getClass() == hotWaterHeater.class ){
-            hotWaterHeaters.add(new IntegerPair(r,c));
-        }
+//        else if (PlayerBoard[r][c].getComponent().getClass() == hotWaterHeater.class ){
+//            hotWaterHeaters.add(new IntegerPair(r,c));
+//        }
 
 
         visited.add(new IntegerPair(r, c));
@@ -578,33 +578,33 @@ public class PlayerBoard {
             }
             else{
                 power += 2;
-
             }
 
         }
         return power;
     }
 
-//    public Goods pullGoods(int i, IntegerPair coordinate){
-//        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().;
-//        return BufferGoods.get(i);
-//    }
-//
-//    public void insertBufferGoods(Goods good){
-//        BufferGoods.add(good);
-//    }
-//
-//    public void putGoods(Goods good, IntegerPair coordinate){
-//
-//    }
-//per energie , motori e drilss mmi faccio passare le coordinate
-//
-//    public void useEnery(){
-//        for (IntegerPair energy : energyTiles){
-//
-//        }
-//    }
 
+    public void pullGoods(int i, IntegerPair coordinate){
+        BufferGoods.add(PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(null).get(i));
+    }
+
+
+    public void insertBufferGoods(Goods good){
+        BufferGoods.add(good);
+    }
+
+
+    public void putGoods(Goods good, IntegerPair coordinate){
+        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(good);
+    }
+
+
+    public void useEnergy(ArrayList<IntegerPair> chosenEnergyTiles){
+        for (IntegerPair energy : chosenEnergyTiles){
+            PlayerBoard[energy.getFirst()][energy.getSecond()].getComponent().setAbility();
+        }
+    }
 
 
 }
