@@ -102,6 +102,7 @@ public class PlayerBoard {
         this.PlayerBoard[6][6] = new Tile(new IntegerPair(6,6), new MainCockpitComp(0),Connector.UNIVERSAL, Connector.UNIVERSAL,Connector.UNIVERSAL, Connector.UNIVERSAL);
     }
 
+
     /**
      * Method insertBuffer inserts the tile passed by the player into the buffer.
      *
@@ -535,15 +536,14 @@ public class PlayerBoard {
      *
      * @return the Power of the ship.
      */
-    public double getPower() {
+    public double getPower(ArrayList<IntegerPair> chosenPlasmaDrills) {
         double power = 0;
-        for (IntegerPair cannon : plasmaDrills){
+        for (IntegerPair cannon : chosenPlasmaDrills){
             if (PlayerBoard[cannon.getFirst()][cannon.getSecond()].getConnectors().get(1) == Connector.CANNON){
                 if (PlayerBoard[cannon.getFirst()][cannon.getSecond()].getComponent().getAbility() == 1){
                     power += 1;
                 }
                 else{
-                    //richiedi input con if else
                     power += 2;
 
                 }
@@ -554,7 +554,7 @@ public class PlayerBoard {
                     power += 0.5;
                 }
                 else{
-                    //richiedi input con if else
+
                     power += 1;
 
                 }
@@ -569,15 +569,14 @@ public class PlayerBoard {
      *
      * @return the EnginePower of the ship.
      */
-    public int getEnginePower() {
+    public int getEnginePower(ArrayList<IntegerPair> chosenHotWaterHeaters) {
         int power = 0;
-        for (IntegerPair engine : hotWaterHeaters){
+        for (IntegerPair engine : chosenHotWaterHeaters){
 
             if (PlayerBoard[engine.getFirst()][engine.getSecond()].getComponent().getAbility() == 1){
                 power += 1;
             }
             else{
-                //richiedi input con if else
                 power += 2;
 
             }
@@ -598,7 +597,13 @@ public class PlayerBoard {
 //    public void putGoods(Goods good, IntegerPair coordinate){
 //
 //    }
-
+//per energie , motori e drilss mmi faccio passare le coordinate
+//
+//    public void useEnery(){
+//        for (IntegerPair energy : energyTiles){
+//
+//        }
+//    }
 
 
 

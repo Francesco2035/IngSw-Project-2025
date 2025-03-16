@@ -4,6 +4,8 @@ package org.example.galaxy_trucker;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.ArrayList;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
@@ -23,20 +25,21 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public abstract class Component {
 
-    PlayerPlance myPlance;
+    PlayerBoard myBoard;
     String type;
 
     public Component() {;
     }
 
-    public void referencePlance(PlayerPlance myPlance) {
-        this.myPlance = myPlance;
+    public void referencePlance(PlayerBoard myBoard) {
+        this.myBoard = myBoard;
     }
 
     public void initType(){}
     public int getAbility(){
         return 0;
     }
+    public ArrayList<Goods> getAbility(Goods good){return null;}
     public int setAbility(){return 0;}      //volendo si può in powerCenter utilizzare l'altro setAbility e semplicemente non utilizzare l'int di input, ma così è visivamente più puliti
     public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien){
         return 0;

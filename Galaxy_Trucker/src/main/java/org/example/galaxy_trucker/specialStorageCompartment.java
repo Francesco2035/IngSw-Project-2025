@@ -38,6 +38,24 @@ public class specialStorageCompartment extends Component{
 
 
     @Override
+    public ArrayList<Goods> getAbility(Goods good){
+        if (good == null){
+            return goods;
+        }
+        else{
+            if (goods.contains(good)){
+                return goods;
+            }
+            else {
+                return null;
+            }
+        }
+
+    }
+
+
+
+    @Override
     public int unSetAbility(Goods good) {
         this.goods.remove(good);
         this.orderGoods();
