@@ -24,8 +24,6 @@ public class Tile {
 
 
 
-
-
     public IntegerPair getCoords() {
         return coords;
     }

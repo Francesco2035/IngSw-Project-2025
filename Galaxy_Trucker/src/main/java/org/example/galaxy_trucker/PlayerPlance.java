@@ -32,7 +32,9 @@ public class PlayerPlance {
     //attributes
 
     public void insertBuffer(Tile t){
-        Buffer.add(t);
+        if(Buffer.size()<2)
+            Buffer.add(t);
+        else throw new ArrayIndexOutOfBoundsException();
     }
 
     public ArrayList<Tile> getBuffer(){
@@ -45,7 +47,6 @@ public class PlayerPlance {
         this.power = 0;
         this.ExposedConnectors = new ArrayList<>();
         this.Humans = new ArrayList<>();
-        this.energyTiles = new ArrayList<>();
         this.energyTiles = new ArrayList<>();
 
         this.Cargo = new ArrayList<>();
@@ -316,7 +317,7 @@ public class PlayerPlance {
 
     public void updateAttributes(int x, int y){
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
-        updateBoardAttributes(x,y visitedPositions);
+        updateBoardAttributes(x,y ,visitedPositions);
 
     }
 

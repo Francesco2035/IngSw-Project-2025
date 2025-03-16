@@ -1,4 +1,5 @@
 package org.example.galaxy_trucker;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Player {
@@ -20,12 +21,21 @@ public class Player {
         CurrentTile = null;
     }
 
-    public void consumeEnergyFrom(int x, int y){
+
+
+
+    //DA RIVEDERE------------------------------------------------------------------------
+    public void consumeEnergyFrom(IntegerPair coordinates) {
         myPlance.getEnergyTiles().stream()
-                                 .filter(tile -> tile.getCoords().getFirst() == x && tile.getCoords().getSecond() == y)
+                                 .filter(pair -> pair.equals(coordinates))
                                  .findFirst()
-                                 .ifPresent(tile -> tile.getComponent().setAbility());//riduce di 1 le batterie a x, y se non sono già a zero
-        }
+                                 .ifPresent(pair -> myPlance.getTile(pair.getFirst(), pair.getSecond()).getComponent().setAbility());//riduce di 1 le batterie a x, y se non sono già a zero
+    }
+    //-----------------------------------------------------------------------------------
+
+
+
+
 
     public void fireCannon(){}
     public void startEngine(){}
@@ -38,6 +48,8 @@ public class Player {
         int d2 = r.nextInt(6) + 1;
         return d1+d2;
     }
+
+
 
 
     public void PickNewTile(){      //get a new random tile
@@ -54,8 +66,15 @@ public class Player {
     }
 
     public void PlaceInBuffer(){
-
+        myPlance.insertBuffer(CurrentTile);
+        CurrentTile = null;
     }
+
+    public void SelectFromBuffer(int index){
+        CurrentTile = myPlance.getBuffer().get(index);
+        myPlance.getBuffer().remove(index);
+    }
+
 
     public void PlaceTile(int x, int y){
         this.myPlance.insertTile(CurrentTile, x, y);
@@ -64,6 +83,8 @@ public class Player {
 
     public void RightRotate() {CurrentTile.RotateDx();}
     public void LeftRotate() {CurrentTile.RotateSx();}
+
+
 
 
     public void IcreaseCredits(int num){
@@ -75,10 +96,11 @@ public class Player {
     }
 
 
-
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
     public PlayerPlance getMyPlance() {return myPlance;}
+    public ArrayList <IntegerPair> getHumans(){return this.myPlance.getHumans();}
+    public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();}
 
 }
