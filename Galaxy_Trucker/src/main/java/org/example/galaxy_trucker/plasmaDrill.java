@@ -13,7 +13,6 @@ public class plasmaDrill extends Component{
     public int getAbility() {
         if (isDouble) {return 2;}
         else {return 1;}
-
     }
 
 

@@ -18,7 +18,7 @@ public class AbandonedShip extends Card{
        boolean Bool=true;
        GameBoard Board=this.getBoard();
        ArrayList<Player> PlayerList = Board.getPlayers();
-       PlayerPlance AbandonedShipCurrentPlanche;
+       PlayerBoard AbandonedShipCurrentPlanche;
         int Len= PlayerList.size();
         IntegerPair coordinates;
         while(Order<Len && Bool ){ // ask all the player by order

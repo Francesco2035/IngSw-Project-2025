@@ -5,7 +5,7 @@ import java.util.Random;
 public class Player {
 
     private GameBoard CommonBoard;
-    private PlayerPlance myPlance;
+    private PlayerBoard myPlance;
     private String ID;
     private boolean ready;
     private int credits;
@@ -14,7 +14,7 @@ public class Player {
 
     public Player(String id, GameBoard board) {
         CommonBoard = board;
-        myPlance = new PlayerPlance(board.getLevel());
+        myPlance = new PlayerBoard(board.getLevel());
         ID = id;
         credits = 0;
         ready = false;
@@ -23,22 +23,21 @@ public class Player {
 
 
 
-
-    //DA RIVEDERE------------------------------------------------------------------------
-    public void consumeEnergyFrom(IntegerPair coordinates) {
-        myPlance.getEnergyTiles().stream()
-                                 .filter(pair -> pair.equals(coordinates))
-                                 .findFirst()
-                                 .ifPresent(pair -> myPlance.getTile(pair.getFirst(), pair.getSecond()).getComponent().setAbility());//riduce di 1 le batterie a x, y se non sono già a zero
-    }
-    //-----------------------------------------------------------------------------------
-
+//
+//    public void consumeEnergyFrom(IntegerPair coordinates) {
+//        myPlance.getEnergyTiles().stream()
+//                                 .filter(pair -> pair.equals(coordinates))
+//                                 .findFirst()
+//                                 .ifPresent(pair -> myPlance.getTile(pair.getFirst(), pair.getSecond()).getComponent().setAbility());//riduce di 1 le batterie a x, y se non sono già a zero
+//    }
+//
 
 
 
 
-    public void fireCannon(){}
-    public void startEngine(){}
+
+//    public void fireCannon(){}
+//    public void startEngine(){}
 
 
 
@@ -86,8 +85,7 @@ public class Player {
 
 
 
-
-    public void IcreaseCredits(int num){
+    public void IncreaseCredits(int num){
         credits += num;
     }
 
@@ -99,7 +97,7 @@ public class Player {
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
-    public PlayerPlance getMyPlance() {return myPlance;}
+    public PlayerBoard getMyPlance() {return myPlance;}
     public ArrayList <IntegerPair> getHumans(){return this.myPlance.getHumans();}
     public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();}
 

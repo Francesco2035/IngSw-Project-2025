@@ -48,6 +48,7 @@ public class GameBoard {
         hourglass = new Hourglass(GameLv);
     }
 
+
     public void addPlayer(String id){
         Player NewPlayer = new Player(id, this);
         int NewPlayerPosition = 0;
