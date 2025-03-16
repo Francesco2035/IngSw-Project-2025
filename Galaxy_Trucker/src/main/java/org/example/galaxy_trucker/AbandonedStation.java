@@ -18,7 +18,7 @@ public class AbandonedStation extends Card{
         boolean AbandonedStationBool=true;
         GameBoard AbandonedStationBoard=this.getBoard();
         ArrayList<Player> AbandonedStationPlayerList = AbandonedStationBoard.getPlayers();
-        PlayerPlance AbandonedShipCurrentPlanche;
+        PlayerBoard AbandonedShipCurrentPlanche;
         int AbandonedShipLen= AbandonedStationPlayerList.size();
         while(AbandonedStationOrder<AbandonedShipLen && AbandonedStationBool ){ // ask all the player by order
             // or untill someone does if they can and want to get the ship

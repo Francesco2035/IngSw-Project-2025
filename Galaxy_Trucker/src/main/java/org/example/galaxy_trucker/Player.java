@@ -4,7 +4,7 @@ import java.util.Random;
 public class Player {
 
     private GameBoard CommonBoard;
-    private PlayerPlance myPlance;
+    private PlayerBoard myPlance;
     private String ID;
     private boolean ready;
     private int credits;
@@ -13,18 +13,18 @@ public class Player {
     public Player(String id, GameBoard board) {
 
         CommonBoard = board;
-        myPlance = new PlayerPlance(board.getLevel());
+        myPlance = new PlayerBoard(board.getLevel());
         ID = id;
         credits = 0;
         ready = false;
     }
 
-    public void consumeEnergyFrom(int x, int y){
-        myPlance.getEnergyTiles().stream()
-                .filter(tile -> tile.getCoords().getFirst() == x && tile.getCoords().getSecond() == y)
-                .findFirst()
-                .ifPresent(tile -> tile.getComponent().setAbility()) //riduce di 1 le batterie a x, y se non sono già a zero
-        ;}
+    //public void consumeEnergyFrom(int x, int y){
+       // myPlance.getEnergyTiles().stream()
+       //         .filter(tile -> tile.getCoords().getFirst() == x && tile.getCoords().getSecond() == y)
+        //        .findFirst()
+        //        .ifPresent(tile -> tile.getComponent().setAbility()) //riduce di 1 le batterie a x, y se non sono già a zero
+       // ;}
 
     public void fireCannon(){}
     public void startEngine(){}
@@ -32,7 +32,7 @@ public class Player {
     public void RightRotate(Tile t) {}
     public void LeftRotate(Tile t) {}
 
-    public PlayerPlance getMyPlance() {
+    public PlayerBoard getMyPlance() {
         return myPlance;
     }
 
@@ -56,7 +56,7 @@ public class Player {
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
     public double getPower(){
-        return myPlance.getPower();
+        return myPlance.getPower(0);
     }
     public void killHumans(int umani){
         return;

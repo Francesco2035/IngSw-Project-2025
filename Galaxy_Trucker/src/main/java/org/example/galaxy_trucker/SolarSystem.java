@@ -17,7 +17,7 @@ public class SolarSystem extends Card {
         boolean SolarSystemBool=true;
         GameBoard SolarSystemBoard=this.getBoard();
         ArrayList<Player> SolarSystemPlayerList = SolarSystemBoard.getPlayers();
-        PlayerPlance SolarSystemCurrentPlanche;
+        PlayerBoard SolarSystemCurrentPlanche;
         Random SolarSystemR= new Random();
 
         while(SolarSystemPlayerList.size()>SolarSystemOrder){

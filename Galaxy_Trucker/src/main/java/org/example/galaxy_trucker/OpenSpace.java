@@ -12,7 +12,7 @@ public class OpenSpace extends Card{
         int OpenSpaceOrder=0;
          GameBoard OpenSpaceBoard=this.getBoard();
         ArrayList<Player> OpenSpacePlayerList = OpenSpaceBoard.getPlayers();
-        PlayerPlance OpenspaceCurrentPlanche;
+        PlayerBoard OpenspaceCurrentPlanche;
         int OpenSpaceMovement=0;
         while(OpenSpaceOrder<OpenSpacePlayerList.size()){ // moves the players in order
             OpenspaceCurrentPlanche=OpenSpacePlayerList.get(OpenSpaceOrder).getMyPlance();

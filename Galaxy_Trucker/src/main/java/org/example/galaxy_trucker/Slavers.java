@@ -22,12 +22,13 @@ public class Slavers extends Card{
         boolean Attacked=false;
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerPlance CurrentPlanche;
+        PlayerBoard CurrentPlanche;
         int Len= PlayerList.size(); // quanti player ho
-        int PlayerPower;
+        double PlayerPower;
 
 
         while(Len>Order && Flag){
+
             PlayerPower=PlayerList.get(Order).getPower();
             if(PlayerPower<requirement) {
                 PlayerList.get(Order).killHumans(Punishment);

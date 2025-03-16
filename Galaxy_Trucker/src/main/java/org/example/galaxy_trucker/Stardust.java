@@ -11,7 +11,7 @@ public class Stardust extends Card {
 
         GameBoard StarPowderBoard=this.getBoard();
         ArrayList<Player> StarPowderPlayerList = StarPowderBoard.getPlayers();
-        PlayerPlance StarPowderCurrentPlanche;
+        PlayerBoard StarPowderCurrentPlanche;
         int StarPowderOrder=StarPowderPlayerList.size();
         int StarpowderMovement=0;
         while(StarPowderOrder>=0){

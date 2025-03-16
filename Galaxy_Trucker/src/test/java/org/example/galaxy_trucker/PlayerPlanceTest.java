@@ -2,8 +2,6 @@ package org.example.galaxy_trucker;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -13,7 +11,7 @@ public class PlayerPlanceTest {
     @Test
     public void testPlayerPlanceInitialization() {
 
-        PlayerPlance playerPlance = new PlayerPlance(1);
+        PlayerBoard playerPlance = new PlayerBoard(1);
 
         int[][] plance = playerPlance.getValidPlance();
         assertNotNull(plance, "La matrice Plance non dovrebbe essere null");
@@ -74,7 +72,7 @@ public class PlayerPlanceTest {
 
     @Test
     public void testPath() {
-        PlayerPlance playerPlance = new PlayerPlance(1);
+        PlayerBoard playerPlance = new PlayerBoard(1);
 
 
 

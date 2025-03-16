@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker;
 
-import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ class PlayerTest {
         GameBoard board = new GameBoard(null, 2);
 
         Player meplayer = new Player("codiscePersona_255", board);
-        PlayerPlance provaPlance = new PlayerPlance(2);
+        PlayerBoard provaPlance = new PlayerBoard(2);
 //        meplayer.setMyPlance(provaPlance);
         BatteryComp batt = new BatteryComp(3);
         ArrayList<Tile> batteryTiles = new ArrayList<>();

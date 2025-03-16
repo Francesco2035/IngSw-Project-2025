@@ -28,13 +28,13 @@ public class Meteorites extends Card {
         GameBoard MeteoritesBoard = super.getBoard();
         int[][] MeteoritesValidPlanche;
         ArrayList<Player> MeteoritesPlayerList = MeteoritesBoard.getPlayers();
-        PlayerPlance MeteoritesCurrentPlanche;
+        PlayerBoard MeteoritesCurrentPlanche;
 
         while (Attacks.size() > MeteoritesAttackNumber) { //scorre i meteoriti e attacca i player 1 a 1
             MeteoritesLine = MeteoritesPlayerList.get(0).RollDice(); // tira numero
             while (MeteoritesPlayerList.size() > MeteoritesOrder) { // Scorre i player
                 MeteoritesCurrentPlanche=MeteoritesPlayerList.get(MeteoritesOrder).getMyPlance(); //prendo plancia
-                MeteoritesValidPlanche=MeteoritesCurrentPlanche.getValidPlance();//prende matrice validita
+                MeteoritesValidPlanche=MeteoritesCurrentPlanche.getValidPlayerBoard();//prende matrice validita
                 if (attacks.get(MeteoritesAttackNumber)==0) { //sinistra
                     Movement=0;
                     while(Movement<10 && MeteoritesFlag == false){

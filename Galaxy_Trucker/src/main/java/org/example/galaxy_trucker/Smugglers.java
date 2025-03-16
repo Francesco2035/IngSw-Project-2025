@@ -25,7 +25,7 @@ public class Smugglers extends Card{
         boolean Attacked=false;
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerPlance CurrentPlanche;
+        PlayerBoard CurrentPlanche;
         int Len= PlayerList.size(); // quanti player ho
         int PlayerPower;
 

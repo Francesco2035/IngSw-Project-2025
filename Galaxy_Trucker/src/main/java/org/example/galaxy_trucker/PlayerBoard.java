@@ -14,7 +14,9 @@ public class PlayerBoard {
 
     private ArrayList<Goods> BufferGoods;
 
+    //posizioni celle abitative
     private ArrayList<IntegerPair> Humans;
+
     private ArrayList<IntegerPair> energyTiles;
     private ArrayList<IntegerPair> Cargo;
     private ArrayList<IntegerPair> plasmaDrills;

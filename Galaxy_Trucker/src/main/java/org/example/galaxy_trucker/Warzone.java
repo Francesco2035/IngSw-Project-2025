@@ -72,11 +72,11 @@ public class Warzone extends Card{
         int Order=0;
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerPlance CurrentPlanche;
+        PlayerBoard CurrentPlanche;
         int Len= PlayerList.size(); // quanti player ho
         int PlayerPower;
         Player Worst=PlayerList.get(0);
-        int Minimum=1000000;
+        double Minimum=1000000;
 
         for(int i=0; i<PlayerList.size(); i++){
             if(PlayerList.get(i).getPower()<Minimum){
@@ -91,7 +91,7 @@ public class Warzone extends Card{
         int Order=0;
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerPlance CurrentPlanche;
+        PlayerBoard CurrentPlanche;
         int Len= PlayerList.size(); // quanti player ho
         int PlayerPower;
         Player Worst=PlayerList.get(0);
@@ -110,7 +110,7 @@ public class Warzone extends Card{
         int Order=0;
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerPlance CurrentPlanche;
+        PlayerBoard CurrentPlanche;
         int Len= PlayerList.size(); // quanti player ho
         int PlayerPower;
         Player Worst=PlayerList.get(0);
@@ -142,7 +142,7 @@ public class Warzone extends Card{
         boolean Attacked=false;
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerPlance CurrentPlanche;
+        PlayerBoard CurrentPlanche;
         int Len= PlayerList.size();
         int[][] ValidPlanche;
         int Movement;
@@ -152,7 +152,7 @@ public class Warzone extends Card{
             Lines[i]=PlayerList.get(0).RollDice();
         }
         CurrentPlanche=Worst.getMyPlance();
-        ValidPlanche=CurrentPlanche.getValidPlance(); //prendo la planche da controllare
+        ValidPlanche=CurrentPlanche.getValidPlayerBoard(); //prendo la planche da controllare
         AttackNumber=0;
 
         while(PunishmentShots.size()>AttackNumber) { // faccio tutti gli atttacchi

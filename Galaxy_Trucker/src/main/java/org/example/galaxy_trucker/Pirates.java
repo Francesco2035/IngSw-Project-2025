@@ -22,7 +22,7 @@ public class Pirates extends Card{
         boolean Attacked=false;
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerPlance CurrentPlanche;
+        PlayerBoard CurrentPlanche;
         int Len= PlayerList.size();
         int[][] ValidPlanche;
         int Movement;
@@ -32,7 +32,7 @@ public class Pirates extends Card{
             Lines[i]=PlayerList.get(0).RollDice();
         }
 
-        int PlayerPower;
+        double PlayerPower;
 
 
         while(Len>Order && Flag){ // ciclo attacchi player a player
@@ -41,7 +41,7 @@ public class Pirates extends Card{
                 //metodo simile a metorites cambia solo che lo fa solo su un player e poi la gestione degli attacchi è vagamente diversa
 
                 CurrentPlanche=PlayerList.get(Order).getMyPlance();
-                ValidPlanche=CurrentPlanche.getValidPlance(); //prendo la planche da controllare
+                ValidPlanche=CurrentPlanche.getValidPlayerBoard(); //prendo la planche da controllare
                 AttackNumber=0;
 
                 while(Punishment.size()>AttackNumber) { // faccio tutti gli atttacchi
