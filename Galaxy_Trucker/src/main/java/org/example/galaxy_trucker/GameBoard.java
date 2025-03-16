@@ -49,8 +49,12 @@ public class GameBoard {
     }
 
 
-    public void addPlayer(String id){
-        Player NewPlayer = new Player(id, this);
+    /**
+     * adds a new player to the game
+     * @param ID of the new player
+     */
+    public void addPlayer(String ID){
+        Player NewPlayer = new Player(ID, this);
         int NewPlayerPosition = 0;
         Pair<Player, Integer> NewPair = new Pair<>(NewPlayer, NewPlayerPosition);
         this.players.add(NewPair);
@@ -58,11 +62,13 @@ public class GameBoard {
     }
 
 
+    /**
+     * sets the starting position of a player on the common board:
+     * the position players[0] corresponds to the starting position of the 1st player
+     * the leader (1st player) will be in the first position of the arraylist
+     * @param ID of the player
+     */
     public void SetStartingPosition(String ID){
-        //once a player has done building his ship, this method will be called
-        //the position players[0] corresponds to the starting position of the 1st player
-        //the leader (1st player) will be in the first position of the arraylist
-
 
         Pair<Player, Integer> cur = players.stream()
                                            .filter(p -> ID
@@ -75,8 +81,14 @@ public class GameBoard {
     }
 
 
+    /**
+     * moves the player forward or backwards on the board of a selected number of steps
+     *
+     * @param ID of the player to move
+     * @param nSteps to run (negative if the player is moving backwards)
+     * @throws IllegalArgumentException if the number of steps is 0
+     */
     public void movePlayer(String ID, int nSteps) throws IllegalArgumentException{
-        //moves the player forward or backwards on the board of a selected number of steps
 
         Pair<Player, Integer> cur = players.stream()
                                            .filter(p -> ID.equals( p.getKey().GetID() ) )
@@ -85,8 +97,8 @@ public class GameBoard {
 
         int NewPos = cur.getValue();
 
-
         if(nSteps == 0) throw new IllegalArgumentException("Number of steps cannot be 0: must move forward or backwards");
+
         else if(nSteps > 0)
             while(nSteps > 0){
                 NewPos++;
@@ -111,9 +123,12 @@ public class GameBoard {
     }
 
 
-
+    /**
+     * support method: brings a player on a specified position on the board and reorders the leadboard
+     * @param cur pair of: player to move and relative score (number of steps taken so far)
+     * @param newPosition to move the player on
+     */
     private void SetNewPosition(Pair<Player, Integer> cur, int newPosition){
-        //support method: brings a player on a specified position on the board and reorders the leadboard
 
         int CurIndex = players.indexOf(cur);
         Pair<Player, Integer> NewPair = new Pair<>(cur.getKey(), newPosition);
@@ -143,6 +158,21 @@ public class GameBoard {
         }
 
         return PlayersCopy;
+    }
+
+    public ArrayList<IntegerPair> getPower(){
+        ArrayList<IntegerPair> Power = new ArrayList<>();
+        IntegerPair coords = new IntegerPair(6, 9);
+        Power.add(coords);
+        return Power;
+    }
+
+    public ArrayList<IntegerPair> getEnginePower(){
+        ArrayList<IntegerPair> Power = new ArrayList<>();
+        IntegerPair coords = new IntegerPair(4, 2);
+        Power.add(coords);
+        return Power;
+
     }
 
     public int getLevel(){return GameLv;}

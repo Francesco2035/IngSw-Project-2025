@@ -40,7 +40,11 @@ public class Player {
 //    public void startEngine(){}
 
 
-
+    /**
+     * rolls 2 dice
+     *
+     * @return the dice result (int between 2-12)
+     */
     public int RollDice() {
         Random r = new Random();
         int d1 = r.nextInt(6) + 1;
@@ -49,38 +53,66 @@ public class Player {
     }
 
 
-
-
-    public void PickNewTile(){      //get a new random tile
+    /**
+     * get a new random tile from the covered tiles set
+     */
+    public void PickNewTile(){
         CurrentTile = CommonBoard.getTilesSets().getNewTile();
     }
 
-    public void PickNewTile(int index){     //select a new tile from the uncovered set
+    /**
+     * select a new tile from the uncovered list
+     *
+     * @param index of the tile to pick
+     */
+    public void PickNewTile(int index){
         CurrentTile = CommonBoard.getTilesSets().getNewTile(index);
     }
 
+    /**
+     * discards the current tile and places it back in the uncovered tiles list
+     */
     public void DiscardTile(){
         CommonBoard.getTilesSets().AddUncoveredTile(CurrentTile);
         CurrentTile = null;
     }
 
+    /**
+     * places the current tile in the buffer
+     */
     public void PlaceInBuffer(){
         myPlance.insertBuffer(CurrentTile);
         CurrentTile = null;
     }
 
+    /**
+     * takes a tile from the buffer
+     * @param index of the tile to pick
+     */
     public void SelectFromBuffer(int index){
         CurrentTile = myPlance.getBuffer().get(index);
         myPlance.getBuffer().remove(index);
     }
 
 
-    public void PlaceTile(int x, int y){
-        this.myPlance.insertTile(CurrentTile, x, y);
+    /**
+     * sets the current tile on the shipboard
+     * this action is definitive: the tile cannot be moved or rotated after it is settled
+     * @param coords where the tile will be placed
+     */
+    public void PlaceTile(IntegerPair coords){
+        this.myPlance.insertTile(CurrentTile, coords.getFirst(), coords.getSecond());
         CurrentTile = null;
     }
 
+    /**
+     * rotates the current tile 90° right
+     */
     public void RightRotate() {CurrentTile.RotateDx();}
+
+    /**
+     * rotates the current tile 90° left
+     */
     public void LeftRotate() {CurrentTile.RotateSx();}
 
 
@@ -88,6 +120,15 @@ public class Player {
     public void IncreaseCredits(int num){
         credits += num;
     }
+
+
+    /**
+     * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
+     */
+    public void EndConstruction(){
+        CommonBoard.SetStartingPosition(this.ID);
+    }
+
 
     public void SetReady(){
         this.ready = true;
