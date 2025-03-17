@@ -15,6 +15,7 @@ public class Warzone extends Card{
     private int RequirementsType[];
     private int PunishmentType[];
 
+
     private int PunishmentMovement;
     private int PunishmentHumans;
     private int PunishmentCargo;
