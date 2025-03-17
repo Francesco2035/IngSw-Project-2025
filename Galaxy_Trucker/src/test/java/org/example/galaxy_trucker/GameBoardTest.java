@@ -32,8 +32,8 @@ class GameBoardTest {
         gb.SetStartingPosition("Player1");
         gb.SetStartingPosition("Player2");
 
-        assertEquals("Player1", gb.getPositions()[6].GetID());
-        assertEquals("Player2", gb.getPositions()[3].GetID());
+        assertEquals("Player1", gb.getPositions()[6].getID());
+        assertEquals("Player2", gb.getPositions()[3].getID());
 
         assertNull(gb.getPositions()[4]);
         assertNull(gb.getPositions()[0]);
@@ -42,7 +42,7 @@ class GameBoardTest {
     }
 
     @Test
-    void movePlayer() {
+    void movePlayer(){
         TileSets tileSets = new TileSets();
         GameBoard gb = new GameBoard(tileSets, 2);
         Player p1 = new Player("Player1", gb);
@@ -59,25 +59,56 @@ class GameBoardTest {
         gb.SetStartingPosition("Player3");
 
 
-        assertEquals("Player1", gb.getPositions()[6].GetID());
-        assertEquals("Player2", gb.getPositions()[3].GetID());
-        assertEquals("Player3", gb.getPositions()[1].GetID());
+        assertEquals("Player1", gb.getPositions()[6].getID());
+        assertEquals("Player2", gb.getPositions()[3].getID());
+        assertEquals("Player3", gb.getPositions()[1].getID());
 
 
         gb.movePlayer("Player3", 2);
-        assertEquals("Player2", gb.getPositions()[3].GetID());
-        assertEquals("Player3", gb.getPositions()[4].GetID());
+        assertEquals("Player2", gb.getPositions()[3].getID());
+        assertEquals("Player3", gb.getPositions()[4].getID());
         assertNull(gb.getPositions()[1]);
 
         gb.movePlayer("Player3", -2);
-        assertEquals("Player3", gb.getPositions()[1].GetID());
+        assertEquals("Player3", gb.getPositions()[1].getID());
         assertNull(gb.getPositions()[4]);
 
         gb.movePlayer("Player3", 5);
 
-        assertEquals("Player1", gb.getPositions()[6].GetID());
-        assertEquals("Player3", gb.getPositions()[8].GetID());
+        assertEquals("Player1", gb.getPositions()[6].getID());
+        assertEquals("Player3", gb.getPositions()[8].getID());
         assertNull(gb.getPositions()[4]);
 
+
+
+
     }
+
+    @Test
+    void movePlayerTest2(){
+        TileSets tileSets = new TileSets();
+        GameBoard gb = new GameBoard(tileSets, 2);
+        Player p1 = new Player("Player1", gb);
+        Player p2 = new Player("Player2", gb);
+        Player p3 = new Player("Player3", gb);
+
+
+        gb.addPlayer(p1);
+        gb.addPlayer(p2);
+        gb.addPlayer(p3);
+
+        gb.SetStartingPosition("Player1");
+        gb.SetStartingPosition("Player2");
+        gb.SetStartingPosition("Player3");
+
+        assertEquals("Player1", gb.getPositions()[6].getID());
+        assertEquals("Player2", gb.getPositions()[3].getID());
+        assertEquals("Player3", gb.getPositions()[1].getID());
+
+
+        gb.movePlayer("Player3", -5);
+        assertNull(gb.getPositions()[1]);
+        gb.movePlayer("Player1", 16);
+    }
+
 }

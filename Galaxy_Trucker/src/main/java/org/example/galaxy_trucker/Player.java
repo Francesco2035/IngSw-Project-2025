@@ -150,9 +150,9 @@ public class Player {
     }
 
 
-    public String GetID() {return this.ID;}
-    public int GetCredits() {return this.credits;}
-    public boolean GetReady() {return this.ready;}
+    public String getID() {return this.ID;}
+    public int getCredits() {return this.credits;}
+    public boolean getReady() {return this.ready;}
     public PlayerBoard geyPlance() {return myPlance;}
     public ArrayList <IntegerPair> getHumans(){return this.myPlance.getHumans();}
     public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();}
