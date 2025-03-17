@@ -10,9 +10,10 @@ public class Meteorites extends Card {
     private ArrayList<IntegerPair> Attacks; // prima è la direzione, secondo il tipo di attacco
     private ArrayList<Integer> attacks;
 
-    public Meteorites(int level, int time, GameBoard board, ArrayList<IntegerPair> AttacchiErrati,ArrayList<Integer> attacks) {
+    public Meteorites(int level, int time, GameBoard board,ArrayList<Integer> attacks) {
         super(level, 0, board);
-        this.Attacks = Attacks;
+
+        this.attacks = attacks;
 
 
     }
@@ -198,4 +199,10 @@ public class Meteorites extends Card {
 
         }
     }
+
+
+    //json required
+    public Meteorites() {}
+    public ArrayList<Integer> getAttacks() {return attacks;}
+    public void setAttacks(ArrayList<Integer> attacks) {attacks = attacks;}
 }

@@ -57,4 +57,16 @@ public class Smugglers extends Card{
         }
     }
 
+
+
+    //json required
+    public Smugglers(){}
+    public int getRequirement() {return requirement;}
+    public void setRequirement(int requirement) {this.requirement = requirement;}
+    public ArrayList<Goods> getReward() {return rewardGoods;}
+    public void setReward(ArrayList<Goods> reward) {this.rewardGoods = reward;}
+    public int getPunishment() {return Punishment;}
+    public void setPunishment(int punishment) {Punishment = punishment;}
+
+
 }

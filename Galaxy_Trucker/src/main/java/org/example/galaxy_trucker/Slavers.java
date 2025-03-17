@@ -57,5 +57,14 @@ public class Slavers extends Card{
 
         }
     }
+    //json required
+    public Slavers(){}
+    public int getPunishment() {return Punishment;}
+    public void setPunishment(int punishment) {Punishment = punishment;}
+    public int getReward() {return reward;}
+    public void setReward(int reward) {this.reward = reward;}
+    public int getRequirement() {return requirement;}
+    public void setRequirement(int requirement) {this.requirement = requirement;}
+
 
 }

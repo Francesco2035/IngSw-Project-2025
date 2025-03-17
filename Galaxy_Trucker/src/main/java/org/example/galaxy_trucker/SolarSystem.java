@@ -38,4 +38,11 @@ public class SolarSystem extends Card {
             SolarSystemOrder++;
         }
     }
+
+
+    //json required
+    public SolarSystem() {}
+    public ArrayList<Planet> getSolarSystemPlanets() {return planets;}
+    public void setSolarSystemPlanets(ArrayList<Planet> solarSystemPlanets) {this.planets = solarSystemPlanets;}
+
 }

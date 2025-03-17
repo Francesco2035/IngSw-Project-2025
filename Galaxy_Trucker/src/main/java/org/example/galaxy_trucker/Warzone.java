@@ -18,11 +18,11 @@ public class Warzone extends Card{
     private int PunishmentMovement;
     private int PunishmentHumans;
     private int PunishmentCargo;
-    private ArrayList<IntegerPair> PunishmentShots;
+    private ArrayList<Integer> PunishmentShots;
 
 
 
-    public Warzone(int level, int time, GameBoard board, int RequirementOrder[], int PunishmentOrder[], int Punishment1, int Punishment2, int Punishment3, ArrayList<IntegerPair> Punishment4) {
+    public Warzone(int level, int time, GameBoard board, int RequirementOrder[], int PunishmentOrder[], int Punishment1, int Punishment2, int Punishment3, ArrayList<Integer> Punishment4) {
         super(level, time, board);
         RequirementsType=RequirementOrder;
         PunishmentType=PunishmentOrder;
@@ -108,7 +108,7 @@ public class Warzone extends Card{
             int totHumans=0;
             for(int j=0; i<CurrentPlanche.gethousingUnits().size();i++ ){
                 //somma per vedere il tot umani
-                totHumans+=TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getNumHumans();
+                totHumans+=TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getAbility();
             }
 
 
@@ -189,7 +189,7 @@ public class Warzone extends Card{
         while(PunishmentShots.size()>AttackNumber) { // faccio tutti gli atttacchi
             Line=Lines[AttackNumber]; // prendo la linea da attaccà
 
-            if (PunishmentShots.get(AttackNumber).getFirst() == 0) { //sinistra
+            if (PunishmentShots.get(AttackNumber)== 0) { //sinistra
                 Movement = 0;
 
                 while (Movement < 10 && Attacked == false) {
@@ -201,7 +201,7 @@ public class Warzone extends Card{
                     Movement++;
                 }
             }
-            if (PunishmentShots.get(AttackNumber).getFirst() == 1) {//sopra
+            if (PunishmentShots.get(AttackNumber)== 1) {//sopra
                 Movement = 0;
                 while (Movement < 10 && Attacked == false) {
                     if (ValidPlanche[Movement][Line] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
@@ -212,7 +212,7 @@ public class Warzone extends Card{
                     Movement++;
                 }
             }
-            if (PunishmentShots.get(AttackNumber).getFirst() == 2) {// destra
+            if (PunishmentShots.get(AttackNumber) == 2) {// destra
                 Movement = 9;
                 while (Movement >= 0 && Attacked == false) {
                     if (ValidPlanche[Line][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
@@ -237,5 +237,42 @@ public class Warzone extends Card{
         }
 
 
+    }
+
+    //json required
+    public Warzone() {}
+    public int[] getRequirementsType() {
+        return RequirementsType;
+    }
+    public void setRequirementsType(int requirementsType) {RequirementsType = new int[]{requirementsType};}
+    public int[] getPunishmentType() {
+        return PunishmentType;
+    }
+    public void setPunishmentType(int punishmentType) {
+        PunishmentType = new int[]{punishmentType};
+    }
+    public int getPunishmentMovement() {
+        return PunishmentMovement;
+    }
+    public void setPunishmentMovement(int punishmentMovement) {
+        PunishmentMovement = punishmentMovement;
+    }
+    public int getPunishmentHumans() {
+        return PunishmentHumans;
+    }
+    public void setPunishmentHumans(int punishmentHumans) {
+        PunishmentHumans = punishmentHumans;
+    }
+    public int getPunishmentCargo() {
+        return PunishmentCargo;
+    }
+    public void setPunishmentCargo(int punishmentCargo) {
+        PunishmentCargo = punishmentCargo;
+    }
+    public ArrayList<Integer> getPunishmentShots() {
+        return PunishmentShots;
+    }
+    public void setPunishmentShots(ArrayList<Integer> punishmentShots) {
+        PunishmentShots = punishmentShots;
     }
 }
