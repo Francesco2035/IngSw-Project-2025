@@ -125,9 +125,9 @@ public class Player {
     /**
      * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
      */
-    public void EndConstruction(){
-        CommonBoard.SetStartingPosition(this.ID);
-    }
+//    public void EndConstruction(){
+//        CommonBoard.SetStartingPosition(this.ID);
+//    }
 
 
     public void SetReady(){
@@ -160,7 +160,7 @@ public class Player {
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
     public PlayerBoard getMyPlance() {return myPlance;}
-    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
+//    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
     public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();}
 
     public int getCargoAction(){

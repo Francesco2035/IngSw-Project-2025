@@ -35,19 +35,27 @@ public abstract class Component {
         this.myBoard = myBoard;
     }
 
+
+    //initType
     public void initType(){}
+    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {}
+
+
+    //getAbility
     public int getAbility(){
         return 0;
     }
     public ArrayList<Goods> getAbility(Goods good){return null;}
-    public int setAbility(){return 0;}      //volendo si può in powerCenter utilizzare l'altro setAbility e semplicemente non utilizzare l'int di input, ma così è visivamente più puliti
+    public ArrayList<Integer> getAbility(int integer){return null;}
+
+
+    //setAbility
+    public int setAbility(){return 0;}      //volendo si può in powerCenter utilizzare l'altro setAbility e semplicemente non utilizzare l'int di imput, ma così è visivamente più puliti
     public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien){
         return 0;
     }
-    public int setAbility(Goods good){return 0;}
-    public int unSetAbility(Goods good){return 0;}
-
-
+    public int setAbility(Goods good, boolean select){return 0;}
+    public void setAbility(boolean direzione){}
 
 
 
@@ -55,8 +63,5 @@ public abstract class Component {
     public String getType() {return type;}
     public void setType(String type) {this.type = type;}
 
-    public int getNumHumans() {
-        return -100000;
-    }
 
 }

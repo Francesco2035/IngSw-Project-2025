@@ -27,7 +27,7 @@ class MeteoritesTest {
         attacks.add(Pair3);
         attacks.add(Pair4);
         attacks.add(Pair5);
-         Meteorites TMeteorites = new Meteorites(1,0,board,attacks,attack);
+//         Meteorites TMeteorites = new Meteorites(1,0,board,attacks,attack);
          assertEquals( 3, attacks.get(0).getFirst());
          assertEquals(2, attacks.get(1).getFirst());
          assertEquals(2, attacks.get(2).getFirst());
