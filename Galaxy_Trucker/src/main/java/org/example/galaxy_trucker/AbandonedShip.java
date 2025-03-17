@@ -51,7 +51,7 @@ public class AbandonedShip extends Card{
                     for(int j=0; j<coordinates.size();j++){
                     PlayerList.get(Order).getMyPlance().kill(coordinates.get(j),1,true,true);
                      }
-                  // GameBoard.movePlayer(PlayerList.get(Order).GetID(),this.getTime());
+                    Board.movePlayer(PlayerList.get(Order).GetID(),this.getTime());
                      Bool=false;
                //}
            }

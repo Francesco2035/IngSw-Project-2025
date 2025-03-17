@@ -62,6 +62,8 @@ public class Warzone extends Card{
             else{
                 this.getShot(MinimumPlayer);
             }
+
+            PlayerList.get(0).getGoodsIndex();
         }
     return;
     }
@@ -80,10 +82,10 @@ public class Warzone extends Card{
 
         for(int i=0; i<PlayerList.size(); i++){
            ArrayList<IntegerPair> coords= PlayerList.get(i).getEnginePower();
-           doublemoist.get(i).getMyPlance().getEnginePower(coords);
-            if(PlayerList.get(i).getPower()<Minimum){
+           double movement= PlayerList.get(i).getMyPlance().getEnginePower(coords);
+            if(movement<Minimum){
                 Worst=PlayerList.get(i);
-                Minimum=PlayerList.get(i).getPower();
+                Minimum=movement;
             }
         }
         return Worst;
@@ -101,7 +103,7 @@ public class Warzone extends Card{
 
         for(int i=0; i<PlayerList.size(); i++){
             CurrentPlanche=PlayerList.get(i).getMyPlance(); // get the current active planche
-            ArrayList<IntegerPair> HousingCoords=CurrentPlanche.gethousingUnits();
+            ArrayList<IntegerPair> HousingCoords=CurrentPlanche.getPlasmaDrills();
             Tile TileBoard[][]=CurrentPlanche.getPlayerBoard();
             int totHumans=0;
             for(int j=0; i<CurrentPlanche.gethousingUnits().size();i++ ){
@@ -126,12 +128,14 @@ public class Warzone extends Card{
         int Len= PlayerList.size(); // quanti player ho
         int PlayerPower;
         Player Worst=PlayerList.get(0);
-        int Minimum=1000000;
+        double Minimum=1000000;
 
         for(int i=0; i<PlayerList.size(); i++){
-            if(PlayerList.get(i).getPower()<Minimum){
+            ArrayList<IntegerPair> coords= PlayerList.get(i).getPower();
+            double power= PlayerList.get(i).getMyPlance().getPower(coords);
+            if(power<Minimum){
                 Worst=PlayerList.get(i);
-                Minimum=PlayerList.get(i).getMovement();
+                Minimum=power;
             }
         }
         return Worst;
@@ -141,10 +145,25 @@ public class Warzone extends Card{
         return;
     }
     public void loseCargo(Player Worst) {
-        Worst.loseCargo(PunishmentCargo);
+
+
+        for(int i=0;i<PunishmentCargo;i++){
+            int index=Worst.getGoodsIndex();
+            IntegerPair coord=Worst.getGoodsCoordinates();
+
+            Worst.getMyPlance().removeGood(coord,index);
+        }
     }
     public void losePeople(Player Worst) {
-        Worst.killHumans(PunishmentHumans);
+        ArrayList<IntegerPair> coordinates;
+        coordinates=Worst.getHumanstoKIll();
+        if(coordinates.size()!=this.PunishmentHumans) {
+            //devo dirgli che ha scelto il num sbagliato di persone da shottare
+            //throw new Exception();
+        }
+        for(int j=0; j<coordinates.size();j++){
+            Worst.getMyPlance().kill(coordinates.get(j),1,true,true); // posso anche scegliere gli alieni
+        }
 
     }
     public  void getShot(Player Worst) {
