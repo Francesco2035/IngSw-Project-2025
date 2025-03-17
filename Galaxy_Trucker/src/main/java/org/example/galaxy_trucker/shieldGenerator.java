@@ -1,5 +1,7 @@
 package org.example.galaxy_trucker;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class shieldGenerator extends Component{
