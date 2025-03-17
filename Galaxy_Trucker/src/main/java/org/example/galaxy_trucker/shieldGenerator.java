@@ -3,6 +3,7 @@ package org.example.galaxy_trucker;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class shieldGenerator extends Component{
 
@@ -13,11 +14,28 @@ public class shieldGenerator extends Component{
     }
 
     @Override
-    public void initType(){
-        if (type.equals("nord-ovest")) {
-            protectedDirections = new ArrayList<>();
+    public void initType() {
+        if (type.equals("nord-est")) {
+            protectedDirections = new ArrayList<Integer>();
+            protectedDirections.add(0);
             protectedDirections.add(1);
-            protectedDirections.add(2);
+            protectedDirections.add(1);
+            protectedDirections.add(0);
         }
     }
+
+
+    @Override
+    public ArrayList<Integer> getAbility(int integer) {
+        return this.protectedDirections;
+    }
+
+    @Override
+    public void setAbility(boolean direzione){
+        if (direzione){Collections.rotate(this.protectedDirections, 1);}
+        else {Collections.rotate(this.protectedDirections, -1);}
+    }
+
+
+
 }

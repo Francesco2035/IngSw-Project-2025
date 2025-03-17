@@ -1,7 +1,14 @@
 package org.example.galaxy_trucker;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum Goods {
-    BLUE, GREEN, YELLOW, RED
-
-
+    @JsonProperty("BLUE")
+    BLUE,
+    @JsonProperty("GREEN")
+    GREEN,
+    @JsonProperty("YELLOW")
+    YELLOW,
+    @JsonProperty("RED")
+    RED
 }

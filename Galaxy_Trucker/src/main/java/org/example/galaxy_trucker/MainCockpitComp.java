@@ -12,19 +12,26 @@ public class MainCockpitComp extends Component {
     public int getColor() {
         return color;
     }
+    public void setNumHumans(int numHumans) {this.numHumans = numHumans;}
 
-    public int getNumHumans() {
+
+    @Override
+    public int getAbility() {
         return numHumans;
     }
 
-    public void setNumHumans(int numHumans) {
+
+
+    @Override
+    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
         this.numHumans = numHumans;
     }
 
 
+
     @Override
     public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien) {
-        this.numHumans -= numAbility;
+        if(this.numHumans>0) this.numHumans -= numAbility;
         return numHumans;
     }
 

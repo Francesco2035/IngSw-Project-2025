@@ -9,19 +9,23 @@ public class Stardust extends Card {
     @Override
     public void CardEffect () {
 
-        GameBoard StarPowderBoard=this.getBoard();
-        ArrayList<Player> StarPowderPlayerList = StarPowderBoard.getPlayers();
-        PlayerBoard StarPowderCurrentPlanche;
-        int StarPowderOrder=StarPowderPlayerList.size();
-        int StarpowderMovement=0;
-        while(StarPowderOrder>=0){
-            StarPowderCurrentPlanche=StarPowderPlayerList.get(StarPowderOrder).getMyPlance();
-            //StarpowderMovement=-StarPowderCurrentPlanche.CountExposed();
-            //StarPowderPlayerList.get(StarPowderOrder).movePlayer(StarPowderMovement);
-            StarPowderOrder--;
-        }
-
-        return;
+//        GameBoard StarPowderBoard=this.getBoard();
+//        ArrayList<Player> StarPowderPlayerList = StarPowderBoard.getPlayers();
+//        PlayerBoard StarPowderCurrentPlanche;
+//        int StarPowderOrder=StarPowderPlayerList.size();
+//        int StarpowderMovement=0;
+//        while(StarPowderOrder>=0){
+//            StarPowderCurrentPlanche=StarPowderPlayerList.get(StarPowderOrder).getMyPlance();
+//            //StarpowderMovement=-StarPowderCurrentPlanche.CountExposed();
+//            //StarPowderPlayerList.get(StarPowderOrder).movePlayer(StarPowderMovement);
+//            StarPowderOrder--;
+//        }
+//
+//        return;
     }
+
+    //json required
+    public Stardust(){}
+
 }
 

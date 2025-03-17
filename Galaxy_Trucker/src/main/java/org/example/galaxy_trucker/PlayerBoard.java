@@ -133,7 +133,7 @@ public class PlayerBoard {
         return exposedConnectors;
     }
 
-    public ArrayList<IntegerPair> gethousingUnits(){
+   public ArrayList<IntegerPair> gethousingUnits(){
         return this.housingUnits;
     }
 
@@ -237,16 +237,16 @@ public class PlayerBoard {
      * @return boolean true if everything is legal, false otherwise.
      */
     public boolean checkIllegal( ArrayList<IntegerPair> visited){
-    //System.out.println("controllo illegalità");
-    int x;
-    int y;
+        //System.out.println("controllo illegalità");
+        int x;
+        int y;
 
-    for (IntegerPair pair : visited) {
-        x = pair.getFirst();
-        y = pair.getSecond();
+        for (IntegerPair pair : visited) {
+            x = pair.getFirst();
+            y = pair.getSecond();
 
-        if (ValidPlayerBoard[x][y] == 1 && (PlayerBoard[x][y].getComponent().getClass() == plasmaDrill.class || PlayerBoard[x][y].getComponent().getClass() == hotWaterHeater.class)) {
-            //System.out.println(x + " " + y);
+            if (ValidPlayerBoard[x][y] == 1 && (PlayerBoard[x][y].getComponent().getClass() == plasmaDrill.class || PlayerBoard[x][y].getComponent().getClass() == hotWaterHeater.class)) {
+                //System.out.println(x + " " + y);
 
                 if (ValidPlayerBoard[x][y] == 1 && (PlayerBoard[x][y].getConnectors().get(0) == Connector.MOTOR  || PlayerBoard[x][y].getConnectors().get(1) == Connector.MOTOR) || PlayerBoard[x][y].getConnectors().get(2) == Connector.MOTOR){
                     //System.out.println("Motore illegale");
@@ -551,11 +551,11 @@ public class PlayerBoard {
 
 
     /**
-    * Method kill reduces the number of Human or Alien in a housing cell by 1 given the coordinate of this cell
-    *
-    * @param coordinate of type IntegerPair - the value of the coordinate.
-    * @throws ArrayIndexOutOfBoundsException when the user input is not in the correct range.
-    */
+     * Method kill reduces the number of Human or Alien in a housing cell by 1 given the coordinate of this cell
+     *
+     * @param coordinate of type IntegerPair - the value of the coordinate.
+     * @throws ArrayIndexOutOfBoundsException when the user input is not in the correct range.
+     */
     public void kill(IntegerPair coordinate,int humans ,boolean purpleAlien, boolean brownAlien) throws ArrayIndexOutOfBoundsException{
         if (coordinate.getFirst() < 0 || coordinate.getFirst() >= PlayerBoard.length || coordinate.getSecond() < 0 || coordinate.getSecond() >= PlayerBoard[0].length || ValidPlayerBoard[coordinate.getFirst()][coordinate.getSecond()] == -1) {
             throw new ArrayIndexOutOfBoundsException("Invalid position: (" + coordinate.getFirst() + ", " + coordinate.getSecond() + ")");
@@ -634,7 +634,7 @@ public class PlayerBoard {
 
     //per aggiungere goods nei magazzini
     public void putGoods(Goods good, IntegerPair coordinate){
-        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(good);
+        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(good, true); //aggiunta modifica dell'implementazione di aggiunta/rimozione goods
     }
 
 

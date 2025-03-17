@@ -143,12 +143,12 @@
   { "id": 142, "component": {"componentType": "alienAddons"    , "type":"purple"}, "connectors": ["UNIVERSAL", "NONE", "NONE", "DOUBLE"] },
   { "id": 143, "component": {"componentType": "alienAddons"    , "type":"purple"}, "connectors": ["UNIVERSAL","NONE", "SINGLE", "NONE"] },
   { "id": 144, "component": {"componentType": "alienAddons"    , "type":"purple"}, "connectors": ["UNIVERSAL", "DOUBLE", "NONE", "NONE"] },
-  { "id": 145, "component": {"componentType": "shieldGenerator", "type":"nord-ovest"}, "connectors": ["SINGLE", "NONE", "SINGLE", "UNIVERSAL"] },
-  { "id": 146, "component": {"componentType": "shieldGenerator", "type":"nord-ovest"}, "connectors": ["SINGLE", "SINGLE", "NONE", "SINGLE"] },
-  { "id": 147, "component": {"componentType": "shieldGenerator", "type":"nord-ovest"}, "connectors": ["SINGLE", "DOUBLE", "SINGLE", "DOUBLE"] },
-  { "id": 148, "component": {"componentType": "shieldGenerator", "type":"nord-ovest"}, "connectors": ["DOUBLE", "NONE", "NONE", "UNIVERSAL"] },
-  { "id": 149, "component": {"componentType": "shieldGenerator", "type":"nord-ovest"}, "connectors": ["DOUBLE", "NONE", "DOUBLE", "DOUBLE"] },
-  { "id": 150, "component": {"componentType": "shieldGenerator", "type":"nord-ovest"}, "connectors": ["DOUBLE", "SINGLE", "DOUBLE", "SINGLE"] },
-  { "id": 151, "component": {"componentType": "shieldGenerator", "type":"nord-ovest"}, "connectors": ["UNIVERSAL"," NONE", "NONE", "SINGLE"] },
-  { "id": 152, "component": {"componentType": "shieldGenerator", "type":"nord-ovest"}, "connectors": ["UNIVERSAL", "NONE", "DOUBLE", "DOUBLE"] }
+  { "id": 145, "component": {"componentType": "shieldGenerator", "type":"nord-est"}, "connectors": ["SINGLE", "NONE", "SINGLE", "UNIVERSAL"] },
+  { "id": 146, "component": {"componentType": "shieldGenerator", "type":"nord-est"}, "connectors": ["SINGLE", "SINGLE", "NONE", "SINGLE"] },
+  { "id": 147, "component": {"componentType": "shieldGenerator", "type":"nord-est"}, "connectors": ["SINGLE", "DOUBLE", "SINGLE", "DOUBLE"] },
+  { "id": 148, "component": {"componentType": "shieldGenerator", "type":"nord-est"}, "connectors": ["DOUBLE", "NONE", "NONE", "UNIVERSAL"] },
+  { "id": 149, "component": {"componentType": "shieldGenerator", "type":"nord-est"}, "connectors": ["DOUBLE", "NONE", "DOUBLE", "DOUBLE"] },
+  { "id": 150, "component": {"componentType": "shieldGenerator", "type":"nord-est"}, "connectors": ["DOUBLE", "SINGLE", "DOUBLE", "SINGLE"] },
+  { "id": 151, "component": {"componentType": "shieldGenerator", "type":"nord-est"}, "connectors": ["UNIVERSAL"," NONE", "NONE", "SINGLE"] },
+  { "id": 152, "component": {"componentType": "shieldGenerator", "type":"nord-est"}, "connectors": ["UNIVERSAL", "NONE", "DOUBLE", "DOUBLE"] }
 ]

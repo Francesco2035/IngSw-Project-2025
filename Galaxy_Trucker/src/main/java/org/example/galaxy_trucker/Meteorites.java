@@ -10,9 +10,10 @@ public class Meteorites extends Card {
     private ArrayList<IntegerPair> Attacks; // prima è la direzione, secondo il tipo di attacco
     private ArrayList<Integer> attacks;
 
-    public Meteorites(int level, int time, GameBoard board, ArrayList<IntegerPair> Attacks,ArrayList<Integer> attacks) {
+    public Meteorites(int level, int time, GameBoard board,ArrayList<Integer> attacks) {
         super(level, 0, board);
-        this.Attacks = Attacks;
+
+        this.attacks = attacks;
 
 
     }
@@ -28,20 +29,46 @@ public class Meteorites extends Card {
         GameBoard MeteoritesBoard = super.getBoard();
         int[][] MeteoritesValidPlanche;
         ArrayList<Player> MeteoritesPlayerList = MeteoritesBoard.getPlayers();
-        PlayerBoard MeteoritesCurrentPlanche;
+        PlayerBoard CurrentPlanche;
 
         while (Attacks.size() > MeteoritesAttackNumber) { //scorre i meteoriti e attacca i player 1 a 1
             MeteoritesLine = MeteoritesPlayerList.get(0).RollDice(); // tira numero
             while (MeteoritesPlayerList.size() > MeteoritesOrder) { // Scorre i player
-                MeteoritesCurrentPlanche=MeteoritesPlayerList.get(MeteoritesOrder).getMyPlance(); //prendo plancia
-                MeteoritesValidPlanche=MeteoritesCurrentPlanche.getValidPlayerBoard();//prende matrice validita
+                CurrentPlanche=MeteoritesPlayerList.get(MeteoritesOrder).getMyPlance(); //prendo plancia
+                MeteoritesValidPlanche=CurrentPlanche.getValidPlayerBoard();//prende matrice validita
                 if (attacks.get(MeteoritesAttackNumber)==0) { //sinistra
                     Movement=0;
                     while(Movement<10 && MeteoritesFlag == false){
                         if(MeteoritesValidPlanche[MeteoritesLine][Movement]>0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                            //Meteorites.Hit(MeteoritesLine,MeteoritesMovement)
-                            //uso
-                            //attacks(MeteoritesAttackNumber+1) per vedere il tipo
+                            Tile tiles[][] = CurrentPlanche.getPlayerBoard();
+
+                            if(attacks.get(MeteoritesAttackNumber+1)==0) {
+                                if(tiles[Movement][MeteoritesLine].getConnectors().get(0)!=Connector.NONE) {//manca uso scudi perché non va
+                                    CurrentPlanche.destroy(Movement, MeteoritesLine);
+                                }
+
+                            }
+                            else if (attacks.get(MeteoritesAttackNumber+1)==1) {
+
+
+                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getPlasmaDrills();
+
+                                int i = 0;
+                                int x;
+                                int y;
+                                boolean exploded = false;
+                                while (i < Cannons.size() && !exploded) {
+                                    x = Cannons.get(i).getFirst();
+                                    y = Cannons.get(i).getSecond();
+                                    if(tiles[x][y].getConnectors().get(0)==Connector.CANNON && y==MeteoritesLine) {// anche qui manca scudo
+                                        //chiamo exlode meteorite
+                                        exploded = true;
+                                    }
+                                    else {CurrentPlanche.destroy(x, y);}
+
+                                    i++;
+                                }
+                            }
                             MeteoritesFlag = true;
                         }
 
@@ -52,7 +79,35 @@ public class Meteorites extends Card {
                     Movement=0;
                     while(Movement<10 && MeteoritesFlag == false) {
                         if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                            //Meteorites.Hit(MeteoritesMovement,MeteoritesLine)
+                            Tile tiles[][] = CurrentPlanche.getPlayerBoard();
+
+                            if(attacks.get(MeteoritesAttackNumber+1)==0) {
+                                if(tiles[Movement][MeteoritesLine].getConnectors().get(1)!=Connector.NONE) {//manca uso scudi perché non va
+                                    CurrentPlanche.destroy(Movement, MeteoritesLine);
+                                }
+
+                            }
+                            else if (attacks.get(MeteoritesAttackNumber+1)==1) {
+
+
+                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getPlasmaDrills();
+
+                                int i = 0;
+                                int x;
+                                int y;
+                                boolean exploded = false;
+                                while (i < Cannons.size() && !exploded) {
+                                    x = Cannons.get(i).getFirst();
+                                    y = Cannons.get(i).getSecond();
+                                    if(tiles[x][y].getConnectors().get(1)==Connector.CANNON && y==MeteoritesLine) {
+                                        //chiamo exlode meteorite
+                                        exploded = true;
+                                    }
+                                    else {CurrentPlanche.destroy(x, y);}
+
+                                    i++;
+                                }
+                            }
                             MeteoritesFlag = true;
                         }
 
@@ -63,7 +118,35 @@ public class Meteorites extends Card {
                     Movement=9;
                     while(Movement>=0 && MeteoritesFlag == false) {
                         if (MeteoritesValidPlanche[MeteoritesLine][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                            //Meteorites.Hit(MeteoritesLine,MeteoritesMovement)
+                            Tile tiles[][] = CurrentPlanche.getPlayerBoard();
+
+                            if(attacks.get(MeteoritesAttackNumber+1)==0) {
+                                if(tiles[Movement][MeteoritesLine].getConnectors().get(2)!=Connector.NONE) {//manca uso scudi perché non va
+                                    CurrentPlanche.destroy(Movement, MeteoritesLine);
+                                }
+
+                            }
+                            else if (attacks.get(MeteoritesAttackNumber+1)==1) {
+
+
+                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getPlasmaDrills();
+
+                                int i = 0;
+                                int x;
+                                int y;
+                                boolean exploded = false;
+                                while (i < Cannons.size() && !exploded) {
+                                    x = Cannons.get(i).getFirst();
+                                    y = Cannons.get(i).getSecond();
+                                    if(tiles[x][y].getConnectors().get(2)==Connector.CANNON && y==MeteoritesLine) {
+                                        //chiamo exlode meteorite
+                                        exploded = true;
+                                    }
+                                    else {CurrentPlanche.destroy(x, y);}
+
+                                    i++;
+                                }
+                            }
                             MeteoritesFlag = true;
                         }
                         Movement--;
@@ -73,7 +156,35 @@ public class Meteorites extends Card {
                     Movement=9;
                     while(Movement>=0 && MeteoritesFlag == false) {
                         if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                            //Meteorites.Hit(MeteoritesMovement,MeteoritesLine)
+                            Tile tiles[][] = CurrentPlanche.getPlayerBoard();
+
+                            if(attacks.get(MeteoritesAttackNumber+1)==0) {
+                                if(tiles[Movement][MeteoritesLine].getConnectors().get(3)!=Connector.NONE) {//manca uso scudi perché non va
+                                    CurrentPlanche.destroy(Movement, MeteoritesLine);
+                                }
+
+                            }
+                            else if (attacks.get(MeteoritesAttackNumber+1)==1) {
+
+
+                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getPlasmaDrills();
+
+                                int i = 0;
+                                int x;
+                                int y;
+                                boolean exploded = false;
+                                while (i < Cannons.size() && !exploded) {
+                                    x = Cannons.get(i).getFirst();
+                                    y = Cannons.get(i).getSecond();
+                                    if(tiles[x][y].getConnectors().get(3)==Connector.CANNON && y==MeteoritesLine) {
+                                        //chiamo explode meteorite
+                                        exploded = true;
+                                    }
+                                    else {CurrentPlanche.destroy(x, y);}
+
+                                    i++;
+                                }
+                            }
                             MeteoritesFlag = true;
                         }
 
@@ -88,4 +199,10 @@ public class Meteorites extends Card {
 
         }
     }
+
+
+    //json required
+    public Meteorites() {}
+    public ArrayList<Integer> getAttacks() {return attacks;}
+    public void setAttacks(ArrayList<Integer> attacks) {attacks = attacks;}
 }

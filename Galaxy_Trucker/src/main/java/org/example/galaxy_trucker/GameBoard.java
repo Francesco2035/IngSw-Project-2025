@@ -10,7 +10,8 @@ import java.util.Comparator;
 public class GameBoard {
 
     // questo arrayList tiene conto della posizione effettiva nel Game
-    private ArrayList<Pair<Player, Integer>> players;
+    private ArrayList<Player_IntegerPair> players;
+    //private ArrayList<Pair<Player, Integer>> players;
     private Player[] positions;
     private int nPositions;
     private int[] startPos;
@@ -51,14 +52,22 @@ public class GameBoard {
 
     /**
      * adds a new player to the game
-     * @param ID of the new player
+     * @param NewPlayer reference to the newborn player
      */
-    public void addPlayer(String ID){
-        Player NewPlayer = new Player(ID, this);
-        int NewPlayerPosition = 0;
-        Pair<Player, Integer> NewPair = new Pair<>(NewPlayer, NewPlayerPosition);
+    public void addPlayer(Player NewPlayer){
+        Player_IntegerPair NewPair = new Player_IntegerPair(NewPlayer, 0);
         this.players.add(NewPair);
 
+    }
+
+    public void removePlayer(Player DeadMan){
+
+        Player_IntegerPair eliminated = players.stream()
+                                                  .filter(p -> DeadMan
+                                                  .equals( p.getKey()) )
+                                                  .findFirst().orElseThrow();
+
+        players.remove(eliminated);
     }
 
 
@@ -70,7 +79,7 @@ public class GameBoard {
      */
     public void SetStartingPosition(String ID){
 
-        Pair<Player, Integer> cur = players.stream()
+        Player_IntegerPair cur = players.stream()
                                            .filter(p -> ID
                                            .equals( p.getKey().GetID()) )
                                            .findFirst().orElseThrow();
@@ -90,7 +99,7 @@ public class GameBoard {
      */
     public void movePlayer(String ID, int nSteps) throws IllegalArgumentException{
 
-        Pair<Player, Integer> cur = players.stream()
+        Player_IntegerPair cur = players.stream()
                                            .filter(p -> ID.equals( p.getKey().GetID() ) )
                                            .findFirst()
                                            .orElseThrow();
@@ -103,7 +112,7 @@ public class GameBoard {
             while(nSteps > 0){
                 NewPos++;
                 if(positions[NewPos] == null) nSteps--;
-                else if(cur.getKey().equals(players.getLast().getKey())){
+                else if(cur.getKey().equals(players.getFirst().getKey()) && positions[NewPos].equals(players.getLast().getKey())) {
                     //ELIMINAZIONE GIOCATORE DOPPIATO DA GESTIRE
                     //TEMPORANEAMENTE SI SOLLEVA UNA ECCEZIONE
                     throw new RuntimeException("GIOCATORE DOPPIATO");
@@ -112,7 +121,7 @@ public class GameBoard {
         else while(nSteps < 0){
             NewPos--;
             if(positions[NewPos] == null) nSteps++;
-            else if(cur.getKey().equals(players.getFirst().getKey())){
+            else if(cur.getKey().equals(players.getLast().getKey()) && positions[NewPos].equals(players.getFirst().getKey())){
                 //ELIMINAZIONE GIOCATORE DOPPIATO DA GESTIRE
                 //TEMPORANEAMENTE SI SOLLEVA UNA ECCEZIONE
                 throw new RuntimeException("GIOCATORE DOPPIATO");
@@ -128,10 +137,10 @@ public class GameBoard {
      * @param cur pair of: player to move and relative score (number of steps taken so far)
      * @param newPosition to move the player on
      */
-    private void SetNewPosition(Pair<Player, Integer> cur, int newPosition){
+    private void SetNewPosition(Player_IntegerPair cur, int newPosition){
 
         int CurIndex = players.indexOf(cur);
-        Pair<Player, Integer> NewPair = new Pair<>(cur.getKey(), newPosition);
+        Player_IntegerPair NewPair = new Player_IntegerPair(cur.getKey(), newPosition);
 
         positions[cur.getValue()] = null;
         positions[newPosition % nPositions] = NewPair.getKey();
@@ -140,9 +149,9 @@ public class GameBoard {
         players.add(CurIndex, NewPair);
 
 
-        players.sort(Comparator.comparing(Pair::getValue));
+        players.sort(Comparator.comparing(Player_IntegerPair::getValue));
         //revers the order of the arraylist to have the leader in the 1st position (index = 0)
-        ArrayList<Pair<Player, Integer>> OrderedPlayers = new ArrayList<>();
+        ArrayList<Player_IntegerPair> OrderedPlayers = new ArrayList<>();
         for(int i= players.size()-1; i>=0; i--){
             OrderedPlayers.add(players.get(i));
         }
@@ -153,7 +162,7 @@ public class GameBoard {
     public ArrayList<Player> getPlayers(){
         ArrayList<Player> PlayersCopy = new ArrayList<>();
 
-        for (Pair<Player, Integer> player : players) {
+        for (Player_IntegerPair player : players) {
             PlayersCopy.add(player.getKey());
         }
 
