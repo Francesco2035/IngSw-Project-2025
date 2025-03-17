@@ -15,11 +15,23 @@ class shieldGeneratorTest {
     @Test
     void initType() throws IOException {
 
+        ObjectMapper mapper = new ObjectMapper();
+        File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
+        ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
 
-//        Tile tile = new Tile(new IntegerPair(0, 0), new shieldGenerator(), Connector.SINGLE, Connector.DOUBLE,  Connector.UNIVERSAL, Connector.NONE);
-//        tile.getComponent().initType();
-//        assertEquals(0, tile.getComponent().getAbility());
+        Tile tile = Tiles.get(145);
+        tile.getComponent().initType();
 
+        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
+
+    }
+
+    @Test
+    void getAbility() {
+    }
+
+    @Test
+    void setAbility() throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
         File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
@@ -28,23 +40,15 @@ class shieldGeneratorTest {
         Tile tile = Tiles.get(145);
         tile.getComponent().initType();
 
-        tile.RotateDx();
-        tile.RotateDx();
-        tile.RotateDx();
-        tile.RotateDx();
-        tile.RotateDx();
-        tile.RotateDx();
-        tile.RotateDx();
-        tile.RotateDx();
-        tile.RotateSx();
-        tile.RotateSx();
-        tile.RotateSx();
-        tile.RotateSx();
-        tile.RotateSx();
-        tile.RotateSx();
 
+        tile.RotateDx();
+        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
 
+        tile.RotateDx();
+        assertEquals(1, tile.getComponent().getAbility(0).getFirst());
 
+        tile.RotateSx();
+        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
 
     }
 }
