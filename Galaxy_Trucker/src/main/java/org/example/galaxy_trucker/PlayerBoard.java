@@ -1,7 +1,6 @@
 package org.example.galaxy_trucker;
 
 
-import org.example.galaxy_trucker.CustomExceptions.BufferOverflowException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +12,7 @@ public class PlayerBoard {
     private int[][] ValidPlayerBoard;
     private int damage;
     private int exposedConnectors;
+    private int[] shield;
 
 
     private ArrayList<Goods> BufferGoods;
@@ -36,6 +36,7 @@ public class PlayerBoard {
 
     public PlayerBoard(int lv) {
         this.damage = 0;
+        this.shield = new int[4];
 
         this.exposedConnectors = 0;
         this.housingUnits = new ArrayList<>();
@@ -109,11 +110,11 @@ public class PlayerBoard {
      * Method insertBuffer inserts the tile passed by the player into the buffer.
      *
      * @param t of type Tile .
-     * @throws BufferOverflowException if the buffer's size is = 2
+     * @throws IllegalStateException if the buffer's size is = 2
      */
-    public void insertBuffer(Tile t) throws BufferOverflowException {
+    public void insertBuffer(Tile t) throws IllegalStateException {
         if (Buffer.size() >= 2) {
-            throw new BufferOverflowException("Buffer is full");
+            throw new IllegalStateException("Buffer is full");
         }
         Buffer.add(t);
     }
@@ -159,6 +160,13 @@ public class PlayerBoard {
         return this.PlayerBoard[x][y];
     }
 
+    public ArrayList<IntegerPair> getHousingUnits() {
+        return housingUnits;
+    }
+
+    public ArrayList<IntegerPair> getPlasmaDrills(){
+        return plasmaDrills;
+    }
 
     public void insertTile(Tile tile, int x, int y) throws NullPointerException, ArrayIndexOutOfBoundsException {
         try {
@@ -408,6 +416,9 @@ public class PlayerBoard {
      */
     public void updateAttributes(int x, int y){
         this.exposedConnectors = 0;
+        for(int i = 0; i < 4; i ++){
+            shield[i] = 0;
+        }
 
         this.housingUnits.clear();
         this.energyTiles.clear();
@@ -443,6 +454,9 @@ public class PlayerBoard {
         else if (PlayerBoard[r][c].getComponent().getClass() == modularHousingUnit.class || PlayerBoard[r][c].getComponent().getClass() == MainCockpitComp.class){
             housingUnits.add(new IntegerPair(r,c));
         }
+//        else if (PlayerBoard[r][c].getComponent().getClass() == shieldGenerator.class){
+//
+//        }
 
 //        else if (PlayerBoard[r][c].getComponent().getClass() == hotWaterHeater.class ){
 //            hotWaterHeaters.add(new IntegerPair(r,c));
@@ -612,23 +626,21 @@ public class PlayerBoard {
 
 
 
+    //per switch
     public void pullGoods(int i, IntegerPair coordinate){
-        BufferGoods.add(PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(null).get(i));
+        BufferGoods.add(PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(null).remove(i));
     }
 
 
-    public void insertBufferGoods(Goods good){
-        BufferGoods.add(good);
-    }
-
-
+    //per aggiungere goods nei magazzini
     public void putGoods(Goods good, IntegerPair coordinate){
-        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(good);
+        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(good);
     }
 
 
+    //per switch
     public Goods pullFromBuffer(int i){
-        return BufferGoods.get(i);
+        return BufferGoods.remove(i);
     }
 
 
@@ -638,6 +650,10 @@ public class PlayerBoard {
         }
     }
 
+    //per eliminare senza passare dal buffer
+    public void removeGood(IntegerPair coordinate, int i){
+        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(null).remove(i);
+    }
 // non lo posso gestire senza che passo modifichi housingUnit, posso solo eliminare umani
 //    public void populateHousingUnit(IntegerPair coordinate , int humans ,boolean purpleAlien, boolean brownAlien){
 //        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility();
