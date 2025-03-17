@@ -1,5 +1,7 @@
 package org.example.galaxy_trucker;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
 
@@ -12,12 +14,18 @@ import java.util.ArrayList;
 //ordine punizioni: 1 movimento, 2 umani, 3 cargo, 4 spari
 
 public class Warzone extends Card{
-    private int RequirementsType[];
-    private int PunishmentType[];
+    @JsonProperty("RequirementOrder")
+    private int[] RequirementsType;
+    @JsonProperty("PunishmentOrder")
+    private int[] PunishmentType;
 
+    @JsonProperty("Punishment1")
     private int PunishmentMovement;
+    @JsonProperty("Punishment2")
     private int PunishmentHumans;
+    @JsonProperty("Punishment3")
     private int PunishmentCargo;
+    @JsonProperty("Punishment4")
     private ArrayList<Integer> PunishmentShots;
 
 
@@ -67,6 +75,7 @@ public class Warzone extends Card{
         }
         return;
     }
+
 
     //controlli su chi è il peggiore
 

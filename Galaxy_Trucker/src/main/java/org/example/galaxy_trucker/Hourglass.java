@@ -43,3 +43,4 @@ public class Hourglass {
     public int getUsages() {return usages;}
 
 }
+

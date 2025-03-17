@@ -31,6 +31,7 @@ public abstract class Component {
     public Component() {;
     }
 
+
     public void referencePlance(PlayerBoard myBoard) {
         this.myBoard = myBoard;
     }

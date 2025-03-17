@@ -2,6 +2,7 @@ package org.example.galaxy_trucker;
 
 import java.util.ArrayList;
 
+
 public class AbandonedShip extends Card{
     private int requirement;
     private int reward;

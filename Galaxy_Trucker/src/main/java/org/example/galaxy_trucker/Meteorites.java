@@ -1,19 +1,23 @@
 package org.example.galaxy_trucker;
+//import javafx.util.Pair;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 
-//RINOMINA AD ATTACK E CONSIDERA ANCHE I PROIETTILI A STO PUNTO
+//GESTISCI GLI ATTACCHI COME UN ARRAY LIST DI INTEGER E NON INTEGER PAIR
 
 // direzioni int sinistra 0 sopra 1...
+//0 piccolo 1 grande
 public class Meteorites extends Card {
-    private ArrayList<IntegerPair> Attacks; // prima è la direzione, secondo il tipo di attacco
-    @JsonProperty("attacks")
-    private ArrayList<Integer> attacks; // prima è la direzione, secondo il tipo di attacco
+    private ArrayList<IntegerPair> Attacks;
+    @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
+    private ArrayList<Integer> attacks;
 
-    public Meteorites(int level, int time, GameBoard board, ArrayList<IntegerPair> AttacchiErrati,ArrayList<Integer> attacks) {
+    public Meteorites(int level, int time, GameBoard board,ArrayList<Integer> attacks) {
         super(level, 0, board);
-        this.Attacks = Attacks;
+
+        this.attacks = attacks;
+
 
 
     }
@@ -199,6 +203,8 @@ public class Meteorites extends Card {
 
         }
     }
+
+
     //json required
     public Meteorites() {}
     public ArrayList<Integer> getAttacks() {return attacks;}

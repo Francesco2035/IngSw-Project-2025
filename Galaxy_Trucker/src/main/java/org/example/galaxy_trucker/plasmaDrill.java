@@ -9,11 +9,6 @@ public class plasmaDrill extends Component{
     }
 
 
-    @Override
-    public int getAbility() {
-        if (isDouble) {return 2;}
-        else {return 1;}
-    }
 
 
     @Override

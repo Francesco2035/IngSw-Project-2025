@@ -10,6 +10,7 @@ public class BatteryComp extends Component{
     }
 
 
+
     public BatteryComp() {}
 
 
