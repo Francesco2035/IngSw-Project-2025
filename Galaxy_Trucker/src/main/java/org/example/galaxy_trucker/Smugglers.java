@@ -38,12 +38,17 @@ public class Smugglers extends Card{
             PlayerPower=CurrentPlanche.getPower(ActiveCannons);
 
             if(PlayerPower<requirement) {
-               // PlayerList.get(Order).loseCargo(Punishment);
+                for(int i=0;i<Punishment;i++){
+                    int index=PlayerList.get(Order).getGoodsIndex();
+                    IntegerPair coord=PlayerList.get(Order).getGoodsCoordinates();
+
+                    PlayerList.get(Order).getMyPlance().removeGood(coord,index);
+            }
             }// fine caso sconfitta
             else if (PlayerPower>requirement){
                 Flag=false;
                 //if(PLayerlist.get(Order).yes()){   //chiedo se vuole prende le ricompense
-                //PlayerList.get(Order).HandleCargo(Reward);
+                PlayerList.get(Order).handleCargo(rewardGoods);
                 //PlayerList.get(Order).movePlayer(-this.Time);
                 //}
             }//fine caso vittoria

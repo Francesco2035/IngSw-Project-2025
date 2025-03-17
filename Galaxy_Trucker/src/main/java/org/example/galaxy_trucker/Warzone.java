@@ -1,4 +1,4 @@
-/*package org.example.galaxy_trucker;
+package org.example.galaxy_trucker;
 
 import java.util.ArrayList;
 
@@ -79,6 +79,8 @@ public class Warzone extends Card{
         double Minimum=1000000;
 
         for(int i=0; i<PlayerList.size(); i++){
+           ArrayList<IntegerPair> coords= PlayerList.get(i).getEnginePower();
+           doublemoist.get(i).getMyPlance().getEnginePower(coords);
             if(PlayerList.get(i).getPower()<Minimum){
                 Worst=PlayerList.get(i);
                 Minimum=PlayerList.get(i).getPower();
@@ -98,9 +100,19 @@ public class Warzone extends Card{
         int Minimum=1000000;
 
         for(int i=0; i<PlayerList.size(); i++){
-            if(PlayerList.get(i).getPower()<Minimum){
+            CurrentPlanche=PlayerList.get(i).getMyPlance(); // get the current active planche
+            ArrayList<IntegerPair> HousingCoords=CurrentPlanche.gethousingUnits();
+            Tile TileBoard[][]=CurrentPlanche.getPlayerBoard();
+            int totHumans=0;
+            for(int j=0; i<CurrentPlanche.gethousingUnits().size();i++ ){
+                //somma per vedere il tot umani
+                totHumans+=TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getNumHumans();
+            }
+
+
+            if(totHumans<Minimum){
                 Worst=PlayerList.get(i);
-                Minimum=PlayerList.get(i).getHumans();
+                Minimum=totHumans;
             }
         }
         return Worst;
@@ -125,7 +137,7 @@ public class Warzone extends Card{
         return Worst;
     }
     public void loseTime(Player Worst) {
-        Worst.movePlayer(PunishmentMovement);
+       // Worst.movePlayer(PunishmentMovement);
         return;
     }
     public void loseCargo(Player Worst) {
@@ -208,4 +220,3 @@ public class Warzone extends Card{
 
     }
 }
-*/

@@ -49,7 +49,7 @@ public class Slavers extends Card{
             else if (PlayerPower>requirement){
                 Flag=false;
                 //if(PLayerlist.get(Order).yes()){   //chiedo se vuole prende le ricompense
-                //PlayerList.get(Order).IncreaseCredits(Reward);
+                PlayerList.get(Order).IncreaseCredits(reward);
                 //PlayerList.get(Order).movePlayer(-this.Time);
                 //}
             }//fine caso vittoria

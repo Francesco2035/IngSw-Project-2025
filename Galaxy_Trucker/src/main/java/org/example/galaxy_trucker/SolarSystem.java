@@ -17,7 +17,7 @@ public class SolarSystem extends Card {
         boolean SolarSystemBool=true;
         GameBoard SolarSystemBoard=this.getBoard();
         ArrayList<Player> SolarSystemPlayerList = SolarSystemBoard.getPlayers();
-        PlayerBoard SolarSystemCurrentPlanche;
+
         Random SolarSystemR= new Random();
 
         while(SolarSystemPlayerList.size()>SolarSystemOrder){
@@ -33,7 +33,7 @@ public class SolarSystem extends Card {
             }
             if(yes==1) {
                // SolarSystemPlayerList.get(SolarSystemOrder).movePlayer(this.getTime());
-                //chiamo un add resources di ship?
+               SolarSystemPlayerList.get(SolarSystemOrder).handleCargo(planets.get(NumPlanet).getGoods());
             }
             SolarSystemOrder++;
         }

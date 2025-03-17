@@ -183,6 +183,7 @@ public class Player {
             myPlance.putGoods(myPlance.pullFromBuffer(0),coord2);
     }
 
+
     public void handleCargo(ArrayList<Goods> reward){
         ArrayList<Integer> UsedAddresses= new ArrayList<>();
 
