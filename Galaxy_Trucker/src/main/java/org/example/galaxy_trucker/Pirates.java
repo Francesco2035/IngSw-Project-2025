@@ -7,7 +7,8 @@ import java.util.ArrayList;
 public class Pirates extends Card{
     private int requirement;
     private int reward;
-    //    private ArrayList<IntegerPair> PunishmentCouple;
+    //    private ArrayList<Integer
+    //    > PunishmentCouple;
     @JsonProperty("punishment")
     private ArrayList<Integer> Punishment;
     // conviene creare una classe che lista gli attacchi o in qualche modo chiama solo una volta

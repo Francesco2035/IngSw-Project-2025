@@ -22,3 +22,4 @@ public class hotWaterHeater extends Component{
         else if (type.equals("double")) isDouble = true;
     }
 }
+

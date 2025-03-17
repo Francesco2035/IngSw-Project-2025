@@ -48,3 +48,4 @@ public class powerCenter extends Component{
         else if (type.equals("triple")) setPrivEnergy(3);
     }
 }
+

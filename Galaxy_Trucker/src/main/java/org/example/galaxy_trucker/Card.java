@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 
 
+
 public class Card {
     private int id;
     @JsonProperty("Level")

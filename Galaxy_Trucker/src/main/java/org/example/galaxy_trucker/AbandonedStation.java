@@ -2,6 +2,7 @@ package org.example.galaxy_trucker;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 import java.util.ArrayList;
 
 public class AbandonedStation extends Card{

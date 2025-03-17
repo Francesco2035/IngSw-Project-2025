@@ -15,6 +15,7 @@ public class Meteorites extends Card {
         this.Attacks = Attacks;
 
 
+
     }
 
 //    @Override

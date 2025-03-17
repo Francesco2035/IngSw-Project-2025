@@ -5,3 +5,4 @@ public class Epidemic extends Card {
 
     public Epidemic() {}
 }
+

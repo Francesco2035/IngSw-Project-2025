@@ -29,3 +29,4 @@ public class OpenSpace extends Card{
     //json required
     public OpenSpace() {}
 }
+

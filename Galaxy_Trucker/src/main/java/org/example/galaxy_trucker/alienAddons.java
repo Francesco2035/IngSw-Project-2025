@@ -3,6 +3,7 @@ package org.example.galaxy_trucker;
 public class alienAddons extends Component{
 
 
+
     //purple=true, brown=false
     private boolean whatColor;
 

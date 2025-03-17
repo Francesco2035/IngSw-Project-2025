@@ -59,6 +59,7 @@ public class Slavers extends Card{
     }
 
 
+
     //json required
     public Slavers(){}
     public int getPunishment() {return Punishment;}

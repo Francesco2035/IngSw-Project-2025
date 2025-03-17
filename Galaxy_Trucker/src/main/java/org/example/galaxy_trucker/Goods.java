@@ -12,3 +12,4 @@ public enum Goods {
     @JsonProperty("RED")
     RED
 }
+
