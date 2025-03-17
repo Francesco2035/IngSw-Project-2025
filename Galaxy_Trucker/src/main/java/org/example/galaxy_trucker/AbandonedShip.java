@@ -24,24 +24,26 @@ public class AbandonedShip extends Card{
         while(Order<Len && Bool ){ // ask all the player by order
             // or untill someone does if they can and want to get the ship
 
-            AbandonedShipCurrentPlanche=PlayerList.get(Order).getMyPlance(); // get the current active planche
-           if( AbandonedShipCurrentPlanche.getHumans().size() > this.requirement ){
-               //il giocatore sceglie se prendere la nave o meno
-               //se accetta rimuove a scelta sua un numero di umani pari a requirements
-              // AbandonedShipPlayerList.get(AbandonedShipOrder).IcreaseCredits(this.reward);
-               if(PlayerList.get(Order).getConfirm()){
-
-                   //faccio il while che chiede dove uccidere e poi dalla planche ammazzo lì
-                   for (int i = 0; i < this.requirement; i++) {
-                        coordinates=PlayerList.get(Order).getCoordinates();
-                        PlayerList.get(Order).getMyPlance().killHuman(coordinates);
-                   }
-                    PlayerList.get(Order).movePlayer(this.getTime());
+//            AbandonedShipCurrentPlanche=PlayerList.get(Order).getMyPlance(); // get the current active planche
+//           if( AbandonedShipCurrentPlanche.getHumans().size() > this.requirement ){
+//               //il giocatore sceglie se prendere la nave o meno
+//               //se accetta rimuove a scelta sua un numero di umani pari a requirements
+//              // AbandonedShipPlayerList.get(AbandonedShipOrder).IcreaseCredits(this.reward);
+//               if(PlayerList.get(Order).getConfirm()){
+//
+//                   //faccio il while che chiede dove uccidere e poi dalla planche ammazzo lì
+//                   for (int i = 0; i < this.requirement; i++) {
+//                        coordinates=PlayerList.get(Order).getCoordinates();
+//                        PlayerList.get(Order).getMyPlance().killHuman(coordinates);
+//                   }
+//
+//
+//                    PlayerList.get(Order).movePlayer(this.getTime());
                      Bool=false;
                }
            }
 
-            Order++;
+            //Order++;
         }
         return;
     }
