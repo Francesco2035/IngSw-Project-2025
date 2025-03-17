@@ -79,10 +79,13 @@ public class Tile {
     //metodi rotate per le tiles
     public void RotateSx(){
         Collections.rotate(this.connectors, -1);
+        this.component.setAbility(false);
     }
 
     public void RotateDx(){
         Collections.rotate(this.connectors, 1);
+        this.component.setAbility(true);
     }
 
 }
+

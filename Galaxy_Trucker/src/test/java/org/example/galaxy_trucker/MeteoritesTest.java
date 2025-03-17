@@ -18,6 +18,8 @@ class MeteoritesTest {
         IntegerPair Pair4 = new IntegerPair(4,2);
         IntegerPair Pair5 = new IntegerPair(3,2);
 
+        ArrayList<Integer> attack=new ArrayList<>();
+
 
         ArrayList<IntegerPair> attacks = new ArrayList<>();
         attacks.add(Pair1);
@@ -25,7 +27,7 @@ class MeteoritesTest {
         attacks.add(Pair3);
         attacks.add(Pair4);
         attacks.add(Pair5);
-         Meteorites TMeteorites = new Meteorites(1,0,board,attacks);
+//         Meteorites TMeteorites = new Meteorites(1,0,board,attacks,attack);
          assertEquals( 3, attacks.get(0).getFirst());
          assertEquals(2, attacks.get(1).getFirst());
          assertEquals(2, attacks.get(2).getFirst());

@@ -24,3 +24,4 @@ public enum Connector {
 
     private Connector() {}
 }
+

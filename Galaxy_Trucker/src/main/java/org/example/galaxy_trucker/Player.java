@@ -34,6 +34,8 @@ public class Player {
 
 
 
+
+
 //    public void fireCannon(){}
 //    public void startEngine(){}
 
@@ -123,9 +125,9 @@ public class Player {
     /**
      * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
      */
-    public void EndConstruction(){
-        CommonBoard.SetStartingPosition(this.ID);
-    }
+//    public void EndConstruction(){
+//        CommonBoard.SetStartingPosition(this.ID);
+//    }
 
 
     public void SetReady(){
@@ -140,7 +142,6 @@ public class Player {
         return Power;
     }
 
-
     public ArrayList<IntegerPair> getEnginePower(){
         ArrayList<IntegerPair> Power = new ArrayList<>();
         IntegerPair coords = new IntegerPair(4, 2);
@@ -148,13 +149,68 @@ public class Player {
         return Power;
 
     }
-
+    public ArrayList<IntegerPair> getHumanstoKIll(){
+        ArrayList<IntegerPair> Locations = new ArrayList<>();
+        IntegerPair coords = new IntegerPair(4, 2);
+        Locations.add(coords);
+        return Locations;
+    }
 
     public String getID() {return this.ID;}
-    public int getCredits() {return this.credits;}
-    public boolean getReady() {return this.ready;}
-    public PlayerBoard geyPlance() {return myPlance;}
-    public ArrayList <IntegerPair> getHumans(){return this.myPlance.getHumans();}
-    public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();}
+    public int GetCredits() {return this.credits;}
+    public boolean GetReady() {return this.ready;}
+    public PlayerBoard getMyPlance() {return myPlance;}
+//    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
+    public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();
+    }
+
+    public int getCargoAction(){
+        Random r = new Random();
+        return r.nextInt(3);
+    }
+        public int getGoodsIndex(){
+            return 3;
+        }
+        public IntegerPair getGoodsCoordinates(){
+            IntegerPair coords = new IntegerPair(5,5);
+            return coords;
+        }
+
+        public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
+            myPlance.pullGoods(good1, coord1);
+            myPlance.pullGoods(good2, coord2);
+            //se il buffer è sempre vuoto prima di questa chiamata funziona altrimenti mi serve la size
+            myPlance.putGoods(myPlance.pullFromBuffer(1),coord1);
+            myPlance.putGoods(myPlance.pullFromBuffer(0),coord2);
+    }
+
+    public void handleCargo(ArrayList<Goods> reward){
+        ArrayList<Integer> UsedAddresses= new ArrayList<>();
+
+        while(!reward.isEmpty()) {
+            int a = getCargoAction();
+            if (a == 0) { // terminate handling cargo
+                return;
+            } else if (a == 1) {//put goods
+                int i= getGoodsIndex();
+                if(!UsedAddresses.contains(i)) {
+                    UsedAddresses.add(i);
+                    myPlance.putGoods(reward.get(i),getGoodsCoordinates());
+                    myPlance.putGoods(reward.get(i),getGoodsCoordinates());
+                }
+            } else if (a == 2) {// switch positions
+                //chiamo get type goods e coord
+                int g1=1;
+                int g2=0;
+                IntegerPair c1 = new IntegerPair(5,5);
+                IntegerPair c2 = new IntegerPair(8,6);
+                switchGoods(g1,c1,g2,c2);
+            }
+        }
+
+        //chiedergli un azione alla volta è vieteato neh?
+
+
+    }
 
 }

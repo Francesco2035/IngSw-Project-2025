@@ -53,20 +53,18 @@ public class specialStorageCompartment extends Component{
 
     }
 
-
-
     @Override
-    public int unSetAbility(Goods good) {
-        this.goods.remove(good);
-        this.orderGoods();
-        return 0;
-    }
-
-    @Override
-    public int setAbility(@NotNull Goods good){
-        this.goods.add(good);
-        this.orderGoods();
-        return goods.indexOf(good);
+    public int setAbility(Goods good, boolean select) {
+        if(select){
+            this.goods.add(good);
+            this.orderGoods();
+            return goods.indexOf(good);
+        }
+        else{
+            this.goods.remove(good);
+            this.orderGoods();
+            return 0;
+        }
     }
 
     @Override

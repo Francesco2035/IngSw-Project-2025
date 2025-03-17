@@ -1,5 +1,7 @@
 package org.example.galaxy_trucker;
 
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,15 +12,16 @@ public class PlayerBoard {
     private int[][] ValidPlayerBoard;
     private int damage;
     private int exposedConnectors;
+    private int[] shield;
 
 
     private ArrayList<Goods> BufferGoods;
 
-    private ArrayList<IntegerPair> Humans;
+    private ArrayList<IntegerPair> housingUnits;
     private ArrayList<IntegerPair> energyTiles;
     private ArrayList<IntegerPair> Cargo;
     private ArrayList<IntegerPair> plasmaDrills;
-    private ArrayList<IntegerPair> hotWaterHeaters;
+    //private ArrayList<IntegerPair> hotWaterHeaters;
 
 
     private ArrayList<Tile> Buffer;
@@ -31,12 +34,13 @@ public class PlayerBoard {
 
 
 
+
     public PlayerBoard(int lv) {
         this.damage = 0;
+        this.shield = new int[4];
 
         this.exposedConnectors = 0;
-        this.Humans = new ArrayList<>();
-        this.energyTiles = new ArrayList<>();
+        this.housingUnits = new ArrayList<>();
         this.energyTiles = new ArrayList<>();
 
         this.Cargo = new ArrayList<>();
@@ -55,7 +59,7 @@ public class PlayerBoard {
         validConnection.put(Connector.NONE, new ArrayList<>());
 
 
-        if (lv == 1) {
+        if (lv == 2) {
             for (int x = 0; x < 10; x++) {
                 for (int y = 0; y < 10; y++) {
                     if (x < 4 || y < 3 || (x == 4 && (y == 3 || y == 4 || y == 6 || y == 8 || y == 9)) ||(x == 5 && (y == 3 || y== 9)) || (x == 8 && y == 6) || x ==9) {
@@ -107,11 +111,14 @@ public class PlayerBoard {
      * Method insertBuffer inserts the tile passed by the player into the buffer.
      *
      * @param t of type Tile .
-     *
+     * @throws IllegalStateException if the buffer's size is = 2
      */
-    public void insertBuffer(Tile t){
+    public void insertBuffer(Tile t) throws IllegalStateException {
+        if (Buffer.size() >= 2) {
+            throw new IllegalStateException("Buffer is full");
+        }
         Buffer.add(t);
-    } //eccezione
+    }
 
 
     /**
@@ -127,9 +134,9 @@ public class PlayerBoard {
         return exposedConnectors;
     }
 
-    public ArrayList<IntegerPair> getHumans(){
-        return this.Humans;
-    }
+//    public ArrayList<IntegerPair> gethousingUnits(){
+//        return this.housingUnits;
+//    }
 
 
 
@@ -154,15 +161,32 @@ public class PlayerBoard {
         return this.PlayerBoard[x][y];
     }
 
-    public void insertTile(Tile tile, int x, int y) {
+    public ArrayList<IntegerPair> getHousingUnits() {
+        return housingUnits;
+    }
+
+    public ArrayList<IntegerPair> getPlasmaDrills(){
+        return plasmaDrills;
+    }
+
+    public void insertTile(Tile tile, int x, int y) throws NullPointerException, ArrayIndexOutOfBoundsException {
         try {
+            if (tile == null) {
+                throw new NullPointerException("Tile cannot be null.");
+            }
+
+            if (x < 0 || x >= PlayerBoard.length || y < 0 || y >= PlayerBoard[0].length || ValidPlayerBoard[x][y] == -1) {
+                throw new ArrayIndexOutOfBoundsException("Invalid position: (" + x + ", " + y + ")");
+            }
+
             this.PlayerBoard[x][y] = tile;
             ValidPlayerBoard[x][y] = 1;
-
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
+            System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 
     /**
      * Method checkConnection checks whether two connectors can be soldered.
@@ -214,16 +238,16 @@ public class PlayerBoard {
      * @return boolean true if everything is legal, false otherwise.
      */
     public boolean checkIllegal( ArrayList<IntegerPair> visited){
-    //System.out.println("controllo illegalità");
-    int x;
-    int y;
+        //System.out.println("controllo illegalità");
+        int x;
+        int y;
 
-    for (IntegerPair pair : visited) {
-        x = pair.getFirst();
-        y = pair.getSecond();
+        for (IntegerPair pair : visited) {
+            x = pair.getFirst();
+            y = pair.getSecond();
 
-        if (ValidPlayerBoard[x][y] == 1 && (PlayerBoard[x][y].getComponent().getClass() == plasmaDrill.class || PlayerBoard[x][y].getComponent().getClass() == hotWaterHeater.class)) {
-            //System.out.println(x + " " + y);
+            if (ValidPlayerBoard[x][y] == 1 && (PlayerBoard[x][y].getComponent().getClass() == plasmaDrill.class || PlayerBoard[x][y].getComponent().getClass() == hotWaterHeater.class)) {
+                //System.out.println(x + " " + y);
 
                 if (ValidPlayerBoard[x][y] == 1 && (PlayerBoard[x][y].getConnectors().get(0) == Connector.MOTOR  || PlayerBoard[x][y].getConnectors().get(1) == Connector.MOTOR) || PlayerBoard[x][y].getConnectors().get(2) == Connector.MOTOR){
                     //System.out.println("Motore illegale");
@@ -333,11 +357,11 @@ public class PlayerBoard {
      */
     public void destroy(int x, int y){
         IntegerPair pos = new IntegerPair(x, y);
-        Humans.remove(pos);
+        housingUnits.remove(pos);
         energyTiles.remove(pos);
         plasmaDrills.remove(pos);
         Cargo.remove(pos);
-        hotWaterHeaters.remove(pos);
+        //hotWaterHeaters.remove(pos);
 
         damage++;
 
@@ -393,8 +417,11 @@ public class PlayerBoard {
      */
     public void updateAttributes(int x, int y){
         this.exposedConnectors = 0;
+        for(int i = 0; i < 4; i ++){
+            shield[i] = 0;
+        }
 
-        this.Humans.clear();
+        this.housingUnits.clear();
         this.energyTiles.clear();
         this.Cargo.clear();
         this.plasmaDrills.clear();
@@ -426,12 +453,15 @@ public class PlayerBoard {
         }
 
         else if (PlayerBoard[r][c].getComponent().getClass() == modularHousingUnit.class || PlayerBoard[r][c].getComponent().getClass() == MainCockpitComp.class){
-            Humans.add(new IntegerPair(r,c));
+            housingUnits.add(new IntegerPair(r,c));
         }
+//        else if (PlayerBoard[r][c].getComponent().getClass() == shieldGenerator.class){
+//
+//        }
 
-        else if (PlayerBoard[r][c].getComponent().getClass() == hotWaterHeater.class ){
-            hotWaterHeaters.add(new IntegerPair(r,c));
-        }
+//        else if (PlayerBoard[r][c].getComponent().getClass() == hotWaterHeater.class ){
+//            hotWaterHeaters.add(new IntegerPair(r,c));
+//        }
 
 
         visited.add(new IntegerPair(r, c));
@@ -522,12 +552,16 @@ public class PlayerBoard {
 
 
     /**
-    * Method killHuman reduces the number of humans in a housing cell by 1 given the coordinate of this cell
-    *
-    * @param coordinate of type IntegerPair - the value of the coordinate.
-    */
-    public void killHuman(IntegerPair coordinate){
-        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(1, true, true);
+     * Method kill reduces the number of Human or Alien in a housing cell by 1 given the coordinate of this cell
+     *
+     * @param coordinate of type IntegerPair - the value of the coordinate.
+     * @throws ArrayIndexOutOfBoundsException when the user input is not in the correct range.
+     */
+    public void kill(IntegerPair coordinate,int humans ,boolean purpleAlien, boolean brownAlien) throws ArrayIndexOutOfBoundsException{
+        if (coordinate.getFirst() < 0 || coordinate.getFirst() >= PlayerBoard.length || coordinate.getSecond() < 0 || coordinate.getSecond() >= PlayerBoard[0].length || ValidPlayerBoard[coordinate.getFirst()][coordinate.getSecond()] == -1) {
+            throw new ArrayIndexOutOfBoundsException("Invalid position: (" + coordinate.getFirst() + ", " + coordinate.getSecond() + ")");
+        }
+        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(humans, purpleAlien, brownAlien);
     }
 
 
@@ -535,8 +569,13 @@ public class PlayerBoard {
      * Method getPower calculates the instantaneous power of the ship also based on the player's choices
      *
      * @return the Power of the ship.
+     * @throws NullPointerException if chosenPlasmaDrills is null.
      */
     public double getPower(ArrayList<IntegerPair> chosenPlasmaDrills) {
+        if (chosenPlasmaDrills == null) {
+            throw new NullPointerException("chosenPlasmaDrills cannot be null.");
+        }
+
         double power = 0;
         for (IntegerPair cannon : chosenPlasmaDrills){
             if (PlayerBoard[cannon.getFirst()][cannon.getSecond()].getConnectors().get(1) == Connector.CANNON){
@@ -545,18 +584,14 @@ public class PlayerBoard {
                 }
                 else{
                     power += 2;
-
                 }
             }
-
             else{
                 if (PlayerBoard[cannon.getFirst()][cannon.getSecond()].getComponent().getAbility() == 1){
                     power += 0.5;
                 }
                 else{
-
                     power += 1;
-
                 }
             }
         }
@@ -567,9 +602,15 @@ public class PlayerBoard {
     /**
      * Method getEnginePower calculates the instantaneous EnginePower of the ship also based on the player's choices
      *
+     * @param chosenHotWaterHeaters List of chosen hot water heaters for calculating engine power.
      * @return the EnginePower of the ship.
+     * @throws NullPointerException if chosenHotWaterHeaters is null.
      */
     public int getEnginePower(ArrayList<IntegerPair> chosenHotWaterHeaters) {
+        if (chosenHotWaterHeaters == null) {
+            throw new NullPointerException("chosenHotWaterHeaters cannot be null.");
+        }
+
         int power = 0;
         for (IntegerPair engine : chosenHotWaterHeaters){
 
@@ -578,33 +619,46 @@ public class PlayerBoard {
             }
             else{
                 power += 2;
-
             }
 
         }
         return power;
     }
 
-//    public Goods pullGoods(int i, IntegerPair coordinate){
-//        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().;
-//        return BufferGoods.get(i);
-//    }
-//
-//    public void insertBufferGoods(Goods good){
-//        BufferGoods.add(good);
-//    }
-//
-//    public void putGoods(Goods good, IntegerPair coordinate){
-//
-//    }
-//per energie , motori e drilss mmi faccio passare le coordinate
-//
-//    public void useEnery(){
-//        for (IntegerPair energy : energyTiles){
-//
-//        }
-//    }
 
+
+    //per switch
+    public void pullGoods(int i, IntegerPair coordinate){
+        BufferGoods.add(PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(null).remove(i));
+    }
+
+
+    //per aggiungere goods nei magazzini
+    public void putGoods(Goods good, IntegerPair coordinate){
+        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(good, true); //aggiunta modifica dell'implementazione di aggiunta/rimozione goods
+    }
+
+
+    //per switch
+    public Goods pullFromBuffer(int i){
+        return BufferGoods.remove(i);
+    }
+
+
+    public void useEnergy(ArrayList<IntegerPair> chosenEnergyTiles){
+        for (IntegerPair energy : chosenEnergyTiles){
+            PlayerBoard[energy.getFirst()][energy.getSecond()].getComponent().setAbility();
+        }
+    }
+
+    //per eliminare senza passare dal buffer
+    public void removeGood(IntegerPair coordinate, int i){
+        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(null).remove(i);
+    }
+// non lo posso gestire senza che passo modifichi housingUnit, posso solo eliminare umani
+//    public void populateHousingUnit(IntegerPair coordinate , int humans ,boolean purpleAlien, boolean brownAlien){
+//        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility();
+//    }
 
 
 }

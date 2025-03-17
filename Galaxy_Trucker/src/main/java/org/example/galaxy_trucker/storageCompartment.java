@@ -56,20 +56,20 @@ public class storageCompartment extends Component{
 
 
     @Override
-    public int unSetAbility(Goods good) {
-        this.goods.remove(good);
-        this.orderGoods();
-        return 0;
+    public int setAbility(Goods good, boolean select) {
+        if(select){
+            if (good.ordinal() == 3) throw new IllegalArgumentException("non-specialStorageCompartment");
+            this.goods.add(good);
+            this.orderGoods();
+            return goods.indexOf(good);
+        }
+        else{
+            this.goods.remove(good);
+            this.orderGoods();
+            return 0;
+        }
     }
 
-
-    @Override
-    public int setAbility(@NotNull Goods good){
-        if (good.ordinal()==3) throw new IllegalArgumentException("non-specialStorageCompartment");
-        this.goods.add(good);
-        this.orderGoods();
-        return goods.indexOf(good);
-    }
 
 
     @Override
