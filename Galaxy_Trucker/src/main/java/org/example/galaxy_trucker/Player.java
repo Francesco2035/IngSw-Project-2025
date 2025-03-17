@@ -175,6 +175,10 @@ public class Player {
         return coords;
     }
 
+    public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
+
+    }
+
     public void handleCargo(ArrayList<Goods> reward){
         ArrayList<Integer> UsedAddresses= new ArrayList<>();
 
@@ -189,8 +193,10 @@ public class Player {
                     myPlance.putGoods(reward.get(i),getGoodsCoordinates());
                     myPlance.putGoods(reward.get(i),getGoodsCoordinates());
                 }
-            } else if (a == 2) {
+            } else if (a == 2) {// switch positions
+                //chiamo get type goods e coord
 
+                switchGoods()
             }
         }
 

@@ -1,5 +1,8 @@
 package org.example.galaxy_trucker;
 
+
+import org.example.galaxy_trucker.CustomExceptions.BufferOverflowException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +40,6 @@ public class PlayerBoard {
         this.exposedConnectors = 0;
         this.housingUnits = new ArrayList<>();
         this.energyTiles = new ArrayList<>();
-        this.energyTiles = new ArrayList<>();
 
         this.Cargo = new ArrayList<>();
         this.Buffer = new ArrayList<>();
@@ -55,7 +57,7 @@ public class PlayerBoard {
         validConnection.put(Connector.NONE, new ArrayList<>());
 
 
-        if (lv == 1) {
+        if (lv == 2) {
             for (int x = 0; x < 10; x++) {
                 for (int y = 0; y < 10; y++) {
                     if (x < 4 || y < 3 || (x == 4 && (y == 3 || y == 4 || y == 6 || y == 8 || y == 9)) ||(x == 5 && (y == 3 || y== 9)) || (x == 8 && y == 6) || x ==9) {
@@ -107,11 +109,14 @@ public class PlayerBoard {
      * Method insertBuffer inserts the tile passed by the player into the buffer.
      *
      * @param t of type Tile .
-     *
+     * @throws BufferOverflowException if the buffer's size is = 2
      */
-    public void insertBuffer(Tile t){
+    public void insertBuffer(Tile t) throws BufferOverflowException {
+        if (Buffer.size() >= 2) {
+            throw new BufferOverflowException("Buffer is full");
+        }
         Buffer.add(t);
-    } //eccezione
+    }
 
 
     /**
@@ -154,15 +159,25 @@ public class PlayerBoard {
         return this.PlayerBoard[x][y];
     }
 
-    public void insertTile(Tile tile, int x, int y) {
+
+    public void insertTile(Tile tile, int x, int y) throws NullPointerException, ArrayIndexOutOfBoundsException {
         try {
+            if (tile == null) {
+                throw new NullPointerException("Tile cannot be null.");
+            }
+
+            if (x < 0 || x >= PlayerBoard.length || y < 0 || y >= PlayerBoard[0].length || ValidPlayerBoard[x][y] == -1) {
+                throw new ArrayIndexOutOfBoundsException("Invalid position: (" + x + ", " + y + ")");
+            }
+
             this.PlayerBoard[x][y] = tile;
             ValidPlayerBoard[x][y] = 1;
-
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
+            System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 
     /**
      * Method checkConnection checks whether two connectors can be soldered.
@@ -522,11 +537,15 @@ public class PlayerBoard {
 
 
     /**
-    * Method killHuman reduces the number of Human or Alien in a housing cell by 1 given the coordinate of this cell
+    * Method kill reduces the number of Human or Alien in a housing cell by 1 given the coordinate of this cell
     *
     * @param coordinate of type IntegerPair - the value of the coordinate.
+    * @throws ArrayIndexOutOfBoundsException when the user input is not in the correct range.
     */
-    public void killHuman(IntegerPair coordinate,int humans ,boolean purpleAlien, boolean brownAlien){
+    public void kill(IntegerPair coordinate,int humans ,boolean purpleAlien, boolean brownAlien) throws ArrayIndexOutOfBoundsException{
+        if (coordinate.getFirst() < 0 || coordinate.getFirst() >= PlayerBoard.length || coordinate.getSecond() < 0 || coordinate.getSecond() >= PlayerBoard[0].length || ValidPlayerBoard[coordinate.getFirst()][coordinate.getSecond()] == -1) {
+            throw new ArrayIndexOutOfBoundsException("Invalid position: (" + coordinate.getFirst() + ", " + coordinate.getSecond() + ")");
+        }
         PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(humans, purpleAlien, brownAlien);
     }
 
@@ -535,8 +554,13 @@ public class PlayerBoard {
      * Method getPower calculates the instantaneous power of the ship also based on the player's choices
      *
      * @return the Power of the ship.
+     * @throws NullPointerException if chosenPlasmaDrills is null.
      */
     public double getPower(ArrayList<IntegerPair> chosenPlasmaDrills) {
+        if (chosenPlasmaDrills == null) {
+            throw new NullPointerException("chosenPlasmaDrills cannot be null.");
+        }
+
         double power = 0;
         for (IntegerPair cannon : chosenPlasmaDrills){
             if (PlayerBoard[cannon.getFirst()][cannon.getSecond()].getConnectors().get(1) == Connector.CANNON){
@@ -545,18 +569,14 @@ public class PlayerBoard {
                 }
                 else{
                     power += 2;
-
                 }
             }
-
             else{
                 if (PlayerBoard[cannon.getFirst()][cannon.getSecond()].getComponent().getAbility() == 1){
                     power += 0.5;
                 }
                 else{
-
                     power += 1;
-
                 }
             }
         }
@@ -567,9 +587,15 @@ public class PlayerBoard {
     /**
      * Method getEnginePower calculates the instantaneous EnginePower of the ship also based on the player's choices
      *
+     * @param chosenHotWaterHeaters List of chosen hot water heaters for calculating engine power.
      * @return the EnginePower of the ship.
+     * @throws NullPointerException if chosenHotWaterHeaters is null.
      */
     public int getEnginePower(ArrayList<IntegerPair> chosenHotWaterHeaters) {
+        if (chosenHotWaterHeaters == null) {
+            throw new NullPointerException("chosenHotWaterHeaters cannot be null.");
+        }
+
         int power = 0;
         for (IntegerPair engine : chosenHotWaterHeaters){
 
@@ -585,6 +611,7 @@ public class PlayerBoard {
     }
 
 
+
     public void pullGoods(int i, IntegerPair coordinate){
         BufferGoods.add(PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(null).get(i));
     }
@@ -597,6 +624,11 @@ public class PlayerBoard {
 
     public void putGoods(Goods good, IntegerPair coordinate){
         PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(good);
+    }
+
+
+    public Goods pullFromBuffer(int i){
+        return BufferGoods.get(i);
     }
 
 
