@@ -54,7 +54,7 @@ public class Meteorites extends Card {
                         if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
                             //Meteorites.Hit(MeteoritesMovement,MeteoritesLine)
 
-                            ArrayList<IntegerPair> Cannons=CurrentPlanche.
+                           // ArrayList<IntegerPair> Cannons=CurrentPlanche.
 
                             MeteoritesFlag = true;
                         }

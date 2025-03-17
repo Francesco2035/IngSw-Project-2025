@@ -167,16 +167,20 @@ public class Player {
         Random r = new Random();
         return r.nextInt(3);
     }
-    public int getGoodsIndex(){
-        return 3;
-    }
-    public IntegerPair getGoodsCoordinates(){
-        IntegerPair coords = new IntegerPair(5,5);
-        return coords;
-    }
+        public int getGoodsIndex(){
+            return 3;
+        }
+        public IntegerPair getGoodsCoordinates(){
+            IntegerPair coords = new IntegerPair(5,5);
+            return coords;
+        }
 
-    public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
-
+        public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
+            myPlance.pullGoods(good1, coord1);
+            myPlance.pullGoods(good2, coord2);
+            //se il buffer è sempre vuoto prima di questa chiamata funziona altrimenti mi serve la size
+            myPlance.putGoods(myPlance.pullFromBuffer(1),coord1);
+            myPlance.putGoods(myPlance.pullFromBuffer(0),coord2);
     }
 
     public void handleCargo(ArrayList<Goods> reward){
@@ -195,8 +199,11 @@ public class Player {
                 }
             } else if (a == 2) {// switch positions
                 //chiamo get type goods e coord
-
-                switchGoods()
+                int g1=1;
+                int g2=0;
+                IntegerPair c1 = new IntegerPair(5,5);
+                IntegerPair c2 = new IntegerPair(8,6);
+                switchGoods(g1,c1,g2,c2);
             }
         }
 

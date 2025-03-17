@@ -1,4 +1,4 @@
-package org.example.galaxy_trucker;
+/*package org.example.galaxy_trucker;
 
 import java.util.ArrayList;
 
@@ -208,3 +208,4 @@ public class Warzone extends Card{
 
     }
 }
+*/

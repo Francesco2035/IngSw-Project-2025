@@ -24,14 +24,27 @@ public class Slavers extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         PlayerBoard CurrentPlanche;
         int Len= PlayerList.size(); // quanti player ho
+        ArrayList<IntegerPair> ActiveCannons;
+        ArrayList<IntegerPair> coordinates;
+
+
         double PlayerPower;
 
 
         while(Len>Order && Flag){
 
-            PlayerPower=PlayerList.get(Order).getPower();
+            ActiveCannons=PlayerList.get(Order).getPower();
+            CurrentPlanche=PlayerList.get(Order).getMyPlance();
+            PlayerPower=CurrentPlanche.getPower(ActiveCannons);
             if(PlayerPower<requirement) {
-                PlayerList.get(Order).killHumans(Punishment);
+                coordinates=PlayerList.get(Order).getHumanstoKIll();
+                if(coordinates.size()!=this.requirement) {
+                    //devo dirgli che ha scelto il num sbagliato di persone da shottare
+                    //throw new Exception();
+                }
+                for(int j=0; j<coordinates.size();j++){
+                    PlayerList.get(Order).getMyPlance().kill(coordinates.get(j),1,true,true);
+                }
             }// fine caso sconfitta
             else if (PlayerPower>requirement){
                 Flag=false;

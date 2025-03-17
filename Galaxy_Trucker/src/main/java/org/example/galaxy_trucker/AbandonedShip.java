@@ -49,9 +49,9 @@ public class AbandonedShip extends Card{
                         //throw new Exception();
                     }
                     for(int j=0; j<coordinates.size();j++){
-                    PlayerList.get(Order).getMyPlance().killHuman(coordinates.get(j),1,true,true);
-               }
-                   GameBoard.movePlayer(PlayerList.get(Order).GetID(),this.getTime());
+                    PlayerList.get(Order).getMyPlance().kill(coordinates.get(j),1,true,true);
+                     }
+                  // GameBoard.movePlayer(PlayerList.get(Order).GetID(),this.getTime());
                      Bool=false;
                //}
            }

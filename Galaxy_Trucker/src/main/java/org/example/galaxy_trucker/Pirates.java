@@ -33,10 +33,16 @@ public class Pirates extends Card{
         }
 
         double PlayerPower;
+        ArrayList<IntegerPair> ActiveCannons;
+        ArrayList<IntegerPair> coordinates;
 
 
         while(Len>Order && Flag){ // ciclo attacchi player a player
-            PlayerPower=PlayerList.get(Order).getPower();
+
+
+            ActiveCannons=PlayerList.get(Order).getPower();
+            CurrentPlanche=PlayerList.get(Order).getMyPlance();
+            PlayerPower=CurrentPlanche.getPower(ActiveCannons);
             if(PlayerPower<requirement){ // se il player è meno potente dei pirati lo attacco
                 //metodo simile a metorites cambia solo che lo fa solo su un player e poi la gestione degli attacchi è vagamente diversa
 

@@ -27,13 +27,18 @@ public class Smugglers extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         PlayerBoard CurrentPlanche;
         int Len= PlayerList.size(); // quanti player ho
-        int PlayerPower;
+        double PlayerPower;
+        ArrayList<IntegerPair> ActiveCannons;
+        ArrayList<IntegerPair> coordinates;
 
 
         while(Len>Order && Flag){
-            PlayerPower=PlayerList.get(Order).getPower();
+            ActiveCannons=PlayerList.get(Order).getPower();
+            CurrentPlanche=PlayerList.get(Order).getMyPlance();
+            PlayerPower=CurrentPlanche.getPower(ActiveCannons);
+
             if(PlayerPower<requirement) {
-                PlayerList.get(Order).loseCargo(Punishment);
+               // PlayerList.get(Order).loseCargo(Punishment);
             }// fine caso sconfitta
             else if (PlayerPower>requirement){
                 Flag=false;
