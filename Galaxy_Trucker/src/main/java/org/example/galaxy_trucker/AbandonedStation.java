@@ -14,26 +14,37 @@ public class AbandonedStation extends Card{
     }
     @Override
     public void CardEffect(){
-        int AbandonedStationOrder=0;
+        int Order=0;
         boolean AbandonedStationBool=true;
         GameBoard AbandonedStationBoard=this.getBoard();
-        ArrayList<Player> AbandonedStationPlayerList = AbandonedStationBoard.getPlayers();
+        ArrayList<Player> PlayerList = AbandonedStationBoard.getPlayers();
         PlayerBoard AbandonedShipCurrentPlanche;
-        int AbandonedShipLen= AbandonedStationPlayerList.size();
-        while(AbandonedStationOrder<AbandonedShipLen && AbandonedStationBool ){ // ask all the player by order
+        int AbandonedShipLen= PlayerList.size();
+        while(Order<AbandonedShipLen && AbandonedStationBool ){ // ask all the player by order
             // or untill someone does if they can and want to get the ship
 
-            AbandonedShipCurrentPlanche=AbandonedStationPlayerList.get(AbandonedStationOrder).getMyPlance(); // get the current active planche
-            if( AbandonedShipCurrentPlanche.getHumans().size() > this.requirement ){
-                AbandonedStationOrder++;
+            AbandonedShipCurrentPlanche=PlayerList.get(Order).getMyPlance(); // get the current active planche
+            ArrayList<IntegerPair> HousingCoords=AbandonedShipCurrentPlanche.gethousingUnits();
+            Tile TileBoard[][]=AbandonedShipCurrentPlanche.getPlayerBoard();
+            int totHumans=0;
+
+            for(int i=0; i<AbandonedShipCurrentPlanche.gethousingUnits().size();i++ ){
+                //somma per vedere il tot umani
+                totHumans+=TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getNumHumans();
+            }
+
+            if(totHumans>=this.requirement){
+
                 //il giocatore sceglie se prendere la nave o meno
-                //se accetta rimuove a scelta sua un numero di umani pari a requirements
-                // AbandonedShipPlayerList.get(AbandonedShipOrder).handleCargo(this.reward);
+
+                //tecnicamente dovrebbe anche gestire gli spostamenti, non ha senso che sia io a gestire entrambe le cose
+
+                PlayerList.get(Order).handleCargo(this.rewardGoods);
                 AbandonedStationBool=false;
                 //AbandonedStationPlayerList.get(AbandonedStationOrder).movePlayer(-this.getTime());
             }
 
-            AbandonedStationOrder++;
+            Order++;
         }
         return;
     }

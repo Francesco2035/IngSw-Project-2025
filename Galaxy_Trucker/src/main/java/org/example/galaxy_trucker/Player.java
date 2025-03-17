@@ -149,12 +149,54 @@ public class Player {
         return Power;
 
     }
+    public ArrayList<IntegerPair> getHumanstoKIll(){
+        ArrayList<IntegerPair> Locations = new ArrayList<>();
+        IntegerPair coords = new IntegerPair(4, 2);
+        Locations.add(coords);
+        return Locations;
+    }
 
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
     public PlayerBoard getMyPlance() {return myPlance;}
-    public ArrayList <IntegerPair> getHumans(){return this.myPlance.getHumans();}
+    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
     public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();}
+
+    public int getCargoAction(){
+        Random r = new Random();
+        return r.nextInt(3);
+    }
+    public int getGoodsIndex(){
+        return 3;
+    }
+    public IntegerPair getGoodsCoordinates(){
+        IntegerPair coords = new IntegerPair(5,5);
+        return coords;
+    }
+
+    public void handleCargo(ArrayList<Goods> reward){
+        ArrayList<Integer> UsedAddresses= new ArrayList<>();
+
+        while(!reward.isEmpty()) {
+            int a = getCargoAction();
+            if (a == 0) { // terminate handling cargo
+                return;
+            } else if (a == 1) {//put goods
+                int i= getGoodsIndex();
+                if(!UsedAddresses.contains(i)) {
+                    UsedAddresses.add(i);
+                    myPlance.putGoods(reward.get(i),getGoodsCoordinates());
+                    myPlance.putGoods(reward.get(i),getGoodsCoordinates());
+                }
+            } else if (a == 2) {
+
+            }
+        }
+
+        //chiedergli un azione alla volta è vieteato neh?
+
+
+    }
 
 }

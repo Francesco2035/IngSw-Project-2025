@@ -20,27 +20,40 @@ public class AbandonedShip extends Card{
        ArrayList<Player> PlayerList = Board.getPlayers();
        PlayerBoard AbandonedShipCurrentPlanche;
         int Len= PlayerList.size();
-        IntegerPair coordinates;
+        ArrayList<IntegerPair> coordinates;
         while(Order<Len && Bool ){ // ask all the player by order
             // or untill someone does if they can and want to get the ship
 
             //PER GET HUMANS.SIZE IO HO LE COORDINATE DEI TILE E DA LI MI PRENDO IL GET NUMBER CHE SOMMERO AL VALORE ESTERNO
 
             AbandonedShipCurrentPlanche=PlayerList.get(Order).getMyPlance(); // get the current active planche
-           if( AbandonedShipCurrentPlanche.getHumans().size() > this.requirement ){
+           ArrayList<IntegerPair> HousingCoords=AbandonedShipCurrentPlanche.gethousingUnits();
+           Tile TileBoard[][]=AbandonedShipCurrentPlanche.getPlayerBoard();
+           int totHumans=0;
+
+            for(int i=0; i<AbandonedShipCurrentPlanche.gethousingUnits().size();i++ ){
+                //somma per vedere il tot umani
+                totHumans+=TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getNumHumans();
+            }
+
+            if(totHumans>=this.requirement){
                //il giocatore sceglie se prendere la nave o meno
                //se accetta rimuove a scelta sua un numero di umani pari a requirements
-              // AbandonedShipPlayerList.get(AbandonedShipOrder).IcreaseCredits(this.reward);
-               if(PlayerList.get(Order).getConfirm()) {
+              PlayerList.get(Order).IncreaseCredits(this.reward);
+              // if(PlayerList.get(Order).getConfirm()) {
 
-                   //faccio il while che chiede dove uccidere e poi dalla planche ammazzo lì
-                   for (int i = 0; i < this.requirement; i++) {
-                        coordinates=PlayerList.get(Order).getCoordinates();
-                        PlayerList.get(Order).getMyPlance().killHuman(coordinates);
-                   }
-                    PlayerList.get(Order).movePlayer(this.getTime());
-                     Bool=false;
+               //faccio il while che chiede dove uccidere e poi dalla planche ammazzo lì
+                    coordinates=PlayerList.get(Order).getHumanstoKIll();
+                    if(coordinates.size()!=this.requirement) {
+                        //devo dirgli che ha scelto il num sbagliato di persone da shottare
+                        //throw new Exception();
+                    }
+                    for(int j=0; j<coordinates.size();j++){
+                    PlayerList.get(Order).getMyPlance().killHuman(coordinates.get(j),1,true,true);
                }
+                   GameBoard.movePlayer(PlayerList.get(Order).GetID(),this.getTime());
+                     Bool=false;
+               //}
            }
 
             Order++;

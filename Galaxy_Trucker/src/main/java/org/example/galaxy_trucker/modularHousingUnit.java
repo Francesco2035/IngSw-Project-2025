@@ -13,7 +13,7 @@ public class modularHousingUnit extends Component {
         this.brownAlien = false;
     }
 
-
+    @Override
     public int getNumHumans() {
         return numHumans;
     }
