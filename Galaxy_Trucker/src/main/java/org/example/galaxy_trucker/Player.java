@@ -161,7 +161,8 @@ public class Player {
     public boolean GetReady() {return this.ready;}
     public PlayerBoard getMyPlance() {return myPlance;}
 //    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
-    public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();}
+    public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();
+    }
 
     public int getCargoAction(){
         Random r = new Random();

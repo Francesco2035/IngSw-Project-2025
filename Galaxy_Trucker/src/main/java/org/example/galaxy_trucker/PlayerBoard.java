@@ -34,6 +34,7 @@ public class PlayerBoard {
 
 
 
+
     public PlayerBoard(int lv) {
         this.damage = 0;
         this.shield = new int[4];

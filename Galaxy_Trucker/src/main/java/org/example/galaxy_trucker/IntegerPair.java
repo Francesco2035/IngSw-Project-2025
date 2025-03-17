@@ -47,3 +47,4 @@ public class IntegerPair {
         return Objects.hash(first, second);
     }
 }
+
