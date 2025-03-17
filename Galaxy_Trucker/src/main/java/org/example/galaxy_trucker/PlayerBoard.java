@@ -133,9 +133,9 @@ public class PlayerBoard {
         return exposedConnectors;
     }
 
-//    public ArrayList<IntegerPair> gethousingUnits(){
-//        return this.housingUnits;
-//    }
+   public ArrayList<IntegerPair> gethousingUnits(){
+        return this.housingUnits;
+    }
 
 
 

@@ -66,4 +66,5 @@ public class Slavers extends Card{
     public int getRequirement() {return requirement;}
     public void setRequirement(int requirement) {this.requirement = requirement;}
 
+
 }
