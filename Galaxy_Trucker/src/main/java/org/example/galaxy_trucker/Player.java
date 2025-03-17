@@ -140,6 +140,7 @@ public class Player {
         return Power;
     }
 
+
     public ArrayList<IntegerPair> getEnginePower(){
         ArrayList<IntegerPair> Power = new ArrayList<>();
         IntegerPair coords = new IntegerPair(4, 2);
@@ -148,10 +149,11 @@ public class Player {
 
     }
 
+
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
-    public PlayerBoard getMyPlance() {return myPlance;}
+    public PlayerBoard geyPlance() {return myPlance;}
     public ArrayList <IntegerPair> getHumans(){return this.myPlance.getHumans();}
     public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();}
 
