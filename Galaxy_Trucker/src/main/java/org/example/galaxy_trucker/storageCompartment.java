@@ -71,6 +71,7 @@ public class storageCompartment extends Component{
     }
 
 
+
     @Override
     public void initType() {
         if (type.equals("double")) setMaxNumGoods(2);
