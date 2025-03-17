@@ -10,7 +10,8 @@ class GameBoardTest {
     void addPlayer() {
         TileSets tileSets = new TileSets();
         GameBoard gb = new GameBoard(tileSets, 2);
-        gb.addPlayer("player1");
+        Player p1 = new Player("Player1", gb);
+        gb.addPlayer(p1);
 
         assertEquals(1, gb.getPlayers().size());
         for(Player p : gb.getPositions()){
@@ -22,9 +23,11 @@ class GameBoardTest {
     void setStartingPositions() {
         TileSets tileSets = new TileSets();
         GameBoard gb = new GameBoard(tileSets, 2);
+        Player p1 = new Player("Player1", gb);
+        Player p2 = new Player("Player2", gb);
 
-        gb.addPlayer("Player1");
-        gb.addPlayer("Player2");
+        gb.addPlayer(p1);
+        gb.addPlayer(p2);
 
         gb.SetStartingPosition("Player1");
         gb.SetStartingPosition("Player2");
@@ -42,10 +45,14 @@ class GameBoardTest {
     void movePlayer() {
         TileSets tileSets = new TileSets();
         GameBoard gb = new GameBoard(tileSets, 2);
+        Player p1 = new Player("Player1", gb);
+        Player p2 = new Player("Player2", gb);
+        Player p3 = new Player("Player3", gb);
 
-        gb.addPlayer("Player1");
-        gb.addPlayer("Player2");
-        gb.addPlayer("Player3");
+
+        gb.addPlayer(p1);
+        gb.addPlayer(p2);
+        gb.addPlayer(p3);
 
         gb.SetStartingPosition("Player1");
         gb.SetStartingPosition("Player2");
