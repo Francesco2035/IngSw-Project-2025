@@ -154,7 +154,7 @@ public class Player {
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
     public PlayerBoard getMyPlance() {return myPlance;}
-    public ArrayList <IntegerPair> getHumans(){return this.myPlance.getHumans();}
+    //public ArrayList <IntegerPair> getHumans(){return this.myPlance.getHumans();}
     public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();}
 
 }
