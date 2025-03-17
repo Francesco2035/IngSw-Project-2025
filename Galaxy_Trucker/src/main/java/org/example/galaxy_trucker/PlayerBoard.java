@@ -160,9 +160,6 @@ public class PlayerBoard {
         return this.PlayerBoard[x][y];
     }
 
-    public ArrayList<IntegerPair> getHousingUnits() {
-        return housingUnits;
-    }
 
     public ArrayList<IntegerPair> getPlasmaDrills(){
         return plasmaDrills;

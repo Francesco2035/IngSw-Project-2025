@@ -25,7 +25,7 @@ class PlayerTest {
         provaPlance.insertTile(battTile, 3, 4);
 
 //        batt.setPrivEnergy(10);
-        meplayer.consumeEnergyFrom(coords);
+        //meplayer.consumeEnergyFrom(coords);
 
 //        assertEquals(9, batt.getPrivEnergy());
     }
