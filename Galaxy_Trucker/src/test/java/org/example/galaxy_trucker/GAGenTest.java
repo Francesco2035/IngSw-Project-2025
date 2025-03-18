@@ -35,7 +35,8 @@ class GAGenTest {
     void listToSet() throws IOException {
 
         GAGen g = new GAGen();
-        Set<Object> gset = g.listToSet(true);
+        Set<Tile> gset = g.TileListToSet();
+        Set<Card> gset2 = g.CardListToSet();
 
     }
 }
