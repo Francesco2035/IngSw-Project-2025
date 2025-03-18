@@ -27,12 +27,14 @@ public class GAGen {
 
 
 
-    public Set<Object> listToSet(boolean selector){
-        if(selector) return tilesDeck.stream()
+    public Set<Tile> TileListToSet() {
+        return tilesDeck.stream()
                 .collect(Collectors.toSet());
-        else return cardsDeck.stream()
+    }
+
+    public Set<Card> CardListToSet() {
+        return cardsDeck.stream()
                 .collect(Collectors.toSet());
-//        return new HashSet<>(tilesDeck);
     }
 
 
