@@ -4,7 +4,6 @@ package org.example.galaxy_trucker.Model.Boards;
 
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.*;
-import org.example.galaxy_trucker.Tiles.*;
 import org.example.galaxy_trucker.Model.Void;
 
 import java.util.ArrayList;
