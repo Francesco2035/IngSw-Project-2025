@@ -1,7 +1,5 @@
 package org.example.galaxy_trucker;
 
-import javafx.util.Pair;
-
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -84,7 +82,7 @@ public class GameBoard {
                                            .equals( p.getKey().GetID()) )
                                            .findFirst().orElseThrow();
 
-        SetNewPosition(cur, startPos[PlayersOnBoard]);
+        SetNewPosition(cur, startPos[PlayersOnBoard], startPos[PlayersOnBoard]);
 
         PlayersOnBoard++;
     }
@@ -99,51 +97,71 @@ public class GameBoard {
      */
     public void movePlayer(String ID, int nSteps) throws IllegalArgumentException{
 
+        int NewIndex;
+
         Player_IntegerPair cur = players.stream()
                                            .filter(p -> ID.equals( p.getKey().GetID() ) )
                                            .findFirst()
                                            .orElseThrow();
 
         int NewPos = cur.getValue();
+        int i = nSteps;
+        if(NewPos < 0) NewIndex = nPositions - (-NewPos % nPositions);
+        else NewIndex = NewPos;
 
         if(nSteps == 0) throw new IllegalArgumentException("Number of steps cannot be 0: must move forward or backwards");
 
-        else if(nSteps > 0)
-            while(nSteps > 0){
+        else if(nSteps > 0) {
+            while (i > 0) {
                 NewPos++;
-                if(positions[NewPos] == null) nSteps--;
-                else if(cur.getKey().equals(players.getFirst().getKey()) && positions[NewPos].equals(players.getLast().getKey())) {
+                NewIndex++;
+                if (positions[NewIndex % nPositions] == null) i--;
+                else if (cur.getKey().equals(players.getFirst().getKey()) && players.getFirst().getValue() + nSteps - nPositions >= players.getLast().getValue()) {
                     //ELIMINAZIONE GIOCATORE DOPPIATO DA GESTIRE
                     //TEMPORANEAMENTE SI SOLLEVA UNA ECCEZIONE
-                    throw new RuntimeException("GIOCATORE DOPPIATO");
+                    throw new RuntimeException("GIOCATORE " + players.getLast().getKey().GetID() + " DOPPIATO");
                 }
             }
-        else while(nSteps < 0){
+
+        }
+        else while(i < 0){
             NewPos--;
-            if(positions[NewPos] == null) nSteps++;
-            else if(cur.getKey().equals(players.getLast().getKey()) && positions[NewPos].equals(players.getFirst().getKey())){
+            if(NewPos < 0) NewIndex = nPositions - (-NewPos % nPositions);
+            else NewIndex = NewPos % nPositions;
+
+            if(positions[NewIndex % nPositions] == null) i++;
+            else if(cur.getKey().equals(players.getLast().getKey()) && players.getLast().getValue() + nSteps +nPositions <= players.getFirst().getValue()){
                 //ELIMINAZIONE GIOCATORE DOPPIATO DA GESTIRE
                 //TEMPORANEAMENTE SI SOLLEVA UNA ECCEZIONE
-                throw new RuntimeException("GIOCATORE DOPPIATO");
+                throw new RuntimeException("GIOCATORE "+ players.getLast().getKey().GetID() +" DOPPIATO");
             }
         }
 
-        SetNewPosition(cur, NewPos);
+        if(NewPos < 0) NewIndex = nPositions + NewPos;
+        else NewIndex = NewPos % nPositions;
+
+        SetNewPosition(cur, NewPos, NewIndex);
     }
 
 
     /**
      * support method: brings a player on a specified position on the board and reorders the leadboard
      * @param cur pair of: player to move and relative score (number of steps taken so far)
-     * @param newPosition to move the player on
+     * @param newPosition new score that the player will have once moved
+     * @param NewIndex target index of the array to move the player on
      */
-    private void SetNewPosition(Player_IntegerPair cur, int newPosition){
+    private void SetNewPosition(Player_IntegerPair cur, int newPosition, int NewIndex){
 
         int CurIndex = players.indexOf(cur);
+        int OldIndex = cur.getValue();
+
+        if(OldIndex < 0 ) OldIndex = nPositions - (-OldIndex % nPositions);
+        else OldIndex = OldIndex % nPositions;
+
         Player_IntegerPair NewPair = new Player_IntegerPair(cur.getKey(), newPosition);
 
-        positions[cur.getValue()] = null;
-        positions[newPosition % nPositions] = NewPair.getKey();
+        positions[OldIndex] = null;
+        positions[NewIndex] = NewPair.getKey();
 
         players.remove(CurIndex);
         players.add(CurIndex, NewPair);

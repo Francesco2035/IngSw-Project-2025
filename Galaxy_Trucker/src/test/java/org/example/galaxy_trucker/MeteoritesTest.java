@@ -2,6 +2,7 @@ package org.example.galaxy_trucker;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,8 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class MeteoritesTest {
 
     @Test
-    void cardEffect() {
-        TileSets tileSets = new TileSets();
+    void cardEffect() throws IOException {
+        GAGen gag = new GAGen();
+        TileSets tileSets = new TileSets(gag);
         GameBoard board = new GameBoard(tileSets, 2);
         IntegerPair Pair1 = new IntegerPair(3,2);
         IntegerPair Pair2 = new IntegerPair(2,1);

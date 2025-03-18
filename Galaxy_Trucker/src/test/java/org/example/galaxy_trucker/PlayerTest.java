@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker;
 
+import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -8,35 +9,26 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
 
-    @Test
-    void consumeEnergyFrom() {
-
-        GameBoard board = new GameBoard(null, 2);
-
-
-        Player meplayer = new Player("codiscePersona_255", board);
-        PlayerBoard provaPlance = new PlayerBoard(2);
-//        meplayer.setMyPlance(provaPlance);
-        powerCenter batt = new powerCenter(3);
-        ArrayList<Tile> batteryTiles = new ArrayList<>();
-        IntegerPair coords = new IntegerPair(3, 4);
-        Tile battTile = new Tile(coords, batt, Connector.SINGLE, Connector.DOUBLE, Connector.NONE, Connector.NONE);
-        batteryTiles.add(battTile);
-        provaPlance.insertTile(battTile, 3, 4);
-
-//        batt.setPrivEnergy(10);
+   // @Test
+//    void consumeEnergyFrom() {
+//
+//        GameBoard board = new GameBoard(null, 2);
+//
+//
+//        Player meplayer = new Player("codiscePersona_255", board);
+//        PlayerBoard provaPlance = new PlayerBoard(2);
+////        meplayer.setMyPlance(provaPlance);
+//        ArrayList<Tile> batteryTiles = new ArrayList<>();
+//        IntegerPair coords = new IntegerPair(3, 4);
+//        batteryTiles.add(battTile);
+//        provaPlance.insertTile(battTile, 3, 4);
+//
+////        batt.setPrivEnergy(10);
         //meplayer.consumeEnergyFrom(coords);
 
 //        assertEquals(9, batt.getPrivEnergy());
-    }
+    //}
 
-    @Test
-    void fireCannon() {
-    }
-
-    @Test
-    void startEngine() {
-    }
 
     @Test
     void rollDice() {
