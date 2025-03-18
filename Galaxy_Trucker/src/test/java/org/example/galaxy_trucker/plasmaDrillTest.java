@@ -10,45 +10,31 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class shieldGeneratorTest {
+class plasmaDrillTest {
 
     @Test
     void initType() throws IOException {
 
-        ObjectMapper mapper = new ObjectMapper();
-        File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
-        ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
-
-        Tile tile = Tiles.get(145);
-        tile.getComponent().initType();
-
-        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
-
-    }
-
-    @Test
-    void getAbility() {
-    }
-
-    @Test
-    void setAbility() throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
         File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
         ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
 
-        Tile tile = Tiles.get(145);
+        Tiles.get(97).getComponent().initType();
+        assertEquals(1, Tiles.get(97).getComponent().getAbility());
+    }
+
+    @Test
+    void getAbility() throws IOException {
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
+        ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
+
+        Tile tile = Tiles.get(123);
         tile.getComponent().initType();
-
-
-        tile.RotateDx();
-        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
-
-        tile.RotateDx();
-        assertEquals(1, tile.getComponent().getAbility(0).getFirst());
-
-        tile.RotateSx();
-        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
+        assertEquals(2, tile.getComponent().getAbility());
 
     }
 }

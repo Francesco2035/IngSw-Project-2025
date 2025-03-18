@@ -49,7 +49,7 @@ public class Warzone extends Card{
         Player MinimumPlayer=PlayerList.get(0);
         for(int i=0; i<RequirementsType.length; i++){
             if(RequirementsType[i]==1){
-               MinimumPlayer= this.checkPower();
+                MinimumPlayer= this.checkPower();
             }
             else if(RequirementsType[i]==2){
                 MinimumPlayer=this.checkPeople();
@@ -73,7 +73,7 @@ public class Warzone extends Card{
 
             PlayerList.get(0).getGoodsIndex();
         }
-    return;
+        return;
     }
 
 
@@ -90,8 +90,8 @@ public class Warzone extends Card{
         double Minimum=1000000;
 
         for(int i=0; i<PlayerList.size(); i++){
-           ArrayList<IntegerPair> coords= PlayerList.get(i).getEnginePower();
-           double movement= PlayerList.get(i).getMyPlance().getEnginePower(coords);
+            ArrayList<IntegerPair> coords= PlayerList.get(i).getEnginePower();
+            double movement= PlayerList.get(i).getMyPlance().getEnginePower(coords);
             if(movement<Minimum){
                 Worst=PlayerList.get(i);
                 Minimum=movement;
@@ -150,7 +150,7 @@ public class Warzone extends Card{
         return Worst;
     }
     public void loseTime(Player Worst) {
-       // Worst.movePlayer(PunishmentMovement);
+        // Worst.movePlayer(PunishmentMovement);
         return;
     }
     public void loseCargo(Player Worst) {

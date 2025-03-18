@@ -28,8 +28,8 @@ public abstract class Component {
     PlayerBoard myBoard;
     String type;
 
-    public Component() {;
-    }
+
+    public Component() {}
 
 
     public void referencePlance(PlayerBoard myBoard) {
@@ -51,7 +51,7 @@ public abstract class Component {
 
 
     //setAbility
-    public int setAbility(){return 0;}      //volendo si può in powerCenter utilizzare l'altro setAbility e semplicemente non utilizzare l'int di imput, ma così è visivamente più puliti
+    public int setAbility(){return 0;}      //volendo si può in powerCenter utilizzare l'altro setAbility e semplicemente non utilizzare l'int di ingresso, ma così è visivamente più puliti
     public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien){
         return 0;
     }

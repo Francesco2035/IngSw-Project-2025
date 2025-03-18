@@ -10,7 +10,26 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class shieldGeneratorTest {
+class alienAddonsTest {
+
+    @Test
+    void getAbility() throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
+        ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
+
+        Component comp = Tiles.get(143).getComponent();
+        comp.initType();
+        assertEquals(1, comp.getAbility());
+
+
+        comp = Tiles.get(134).getComponent();
+        comp.initType();
+        assertEquals(0, comp.getAbility());
+
+
+    }
 
     @Test
     void initType() throws IOException {
@@ -19,36 +38,9 @@ class shieldGeneratorTest {
         File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
         ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
 
-        Tile tile = Tiles.get(145);
-        tile.getComponent().initType();
 
-        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
-
-    }
-
-    @Test
-    void getAbility() {
-    }
-
-    @Test
-    void setAbility() throws IOException {
-
-        ObjectMapper mapper = new ObjectMapper();
-        File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
-        ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
-
-        Tile tile = Tiles.get(145);
-        tile.getComponent().initType();
-
-
-        tile.RotateDx();
-        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
-
-        tile.RotateDx();
-        assertEquals(1, tile.getComponent().getAbility(0).getFirst());
-
-        tile.RotateSx();
-        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
-
+        alienAddons alienAddon = ((alienAddons) Tiles.get(135).getComponent());
+        alienAddon.initType();
+        assertFalse(alienAddon.isWhatColor());
     }
 }

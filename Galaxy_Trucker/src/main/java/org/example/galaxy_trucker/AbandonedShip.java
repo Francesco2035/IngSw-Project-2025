@@ -14,15 +14,15 @@ public class AbandonedShip extends Card{
         this.reward = reward;
     }
     @Override
-    public void CardEffect() {
-        int Order = 0;
-        boolean Bool = true;
-        GameBoard Board = this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerBoard AbandonedShipCurrentPlanche;
-        int Len = PlayerList.size();
+    public void CardEffect(){
+       int Order=0;
+       boolean Bool=true;
+       GameBoard Board=this.getBoard();
+       ArrayList<Player> PlayerList = Board.getPlayers();
+       PlayerBoard AbandonedShipCurrentPlanche;
+        int Len= PlayerList.size();
         ArrayList<IntegerPair> coordinates;
-        while (Order < Len && Bool) { // ask all the player by order
+        while(Order<Len && Bool ) { // ask all the player by order
             // or untill someone does if they can and want to get the ship
 
             //PER GET HUMANS.SIZE IO HO LE COORDINATE DEI TILE E DA LI MI PRENDO IL GET NUMBER CHE SOMMERO AL VALORE ESTERNO
@@ -54,8 +54,8 @@ public class AbandonedShip extends Card{
                 }
                 Board.movePlayer(PlayerList.get(Order).GetID(), this.getTime());
                 Bool = false;
+                //}
             }
-            Order++;
         }
     }
     //json

@@ -3,14 +3,27 @@ package org.example.galaxy_trucker;
 public class alienAddons extends Component{
 
 
-
-    //purple=true, brown=false
+//purple=true, brown=false
     private boolean whatColor;
 
-    public alienAddons() {
+    public alienAddons() {}
+
+
+    public boolean isWhatColor() {
+        return whatColor;
+    }
+
+    public void setWhatColor(boolean whatColor) {
+        this.whatColor = whatColor;
     }
 
 
+    @Override
+    public int getAbility() {
+        if (whatColor) {
+            return 1;
+        } else return 0;
+    }
 
     @Override
     public void initType(){

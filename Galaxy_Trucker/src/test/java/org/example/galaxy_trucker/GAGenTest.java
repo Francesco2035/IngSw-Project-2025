@@ -8,14 +8,14 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import javafx.util.Pair;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GAGenTest {
 
     @Test
-    void getDeck() throws IOException {
+    void getDecks() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
         File CardsJSON = new File("src/main/resources/org/example/galaxy_trucker/Cards.JSON");  //add file json
@@ -24,7 +24,19 @@ class GAGenTest {
         ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
         ArrayList<Card> Cards = mapper.readValue(CardsJSON, new TypeReference<ArrayList<Card>>() {});
 
+        assertEquals(153, Tiles.size());
+        assertEquals(40, Cards.size());
 
-        assertEquals(0, Tiles.getFirst().getComponent().getAbility()); //testo se il primo powerCenter ha privEnergy=2 dopo l'operazione di initType
+        assertNotEquals(null, Tiles);
+        assertNotEquals(null, Cards);
+    }
+
+    @Test
+    void listToSet() throws IOException {
+
+        GAGen g = new GAGen();
+        Set<Tile> gset = g.TileListToSet();
+        Set<Card> gset2 = g.CardListToSet();
+
     }
 }

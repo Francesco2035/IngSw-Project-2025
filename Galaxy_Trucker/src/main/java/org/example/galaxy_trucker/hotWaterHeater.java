@@ -2,11 +2,26 @@ package org.example.galaxy_trucker;
 
 public class hotWaterHeater extends Component{
 
-
     private boolean isDouble;
 
     public hotWaterHeater() {
     }
+
+
+
+
+
+    public boolean isDouble() {
+        return isDouble;
+    }
+
+    public void setDouble(boolean aDouble) {
+        isDouble = aDouble;
+    }
+
+
+
+
 
 
     @Override
