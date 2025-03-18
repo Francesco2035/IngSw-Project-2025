@@ -42,7 +42,7 @@ class powerCenterTest {
     @Test
     void initType() throws IOException {
         GAGen gen = new GAGen();
-        ArrayList<Tile> deck = gen.getDeck();
+        ArrayList<Tile> deck = gen.getTilesDeck();
         deck.getFirst().getComponent().initType();
         assertEquals(2, deck.getFirst().getComponent().getAbility());
     }

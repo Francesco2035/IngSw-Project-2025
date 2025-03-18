@@ -5,10 +5,22 @@ public class plasmaDrill extends Component{
 
     private boolean isDouble;
 
-    public plasmaDrill() {
+    public plasmaDrill() {}
+
+
+    public boolean isDouble() {
+        return isDouble;
+    }
+    public void setDouble(boolean aDouble) {
+        isDouble = aDouble;
     }
 
 
+    @Override
+    public int getAbility() {
+        if (isDouble) {return 2;}
+        else {return 1;}
+    }
 
 
     @Override
