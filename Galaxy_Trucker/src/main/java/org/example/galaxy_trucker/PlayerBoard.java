@@ -139,7 +139,9 @@ public class PlayerBoard {
     }
 
 
-
+    public int[] getShield(){
+        return shield;
+    }
 
     public Tile[][] getPlayerBoard(){
         return this.PlayerBoard;
@@ -452,9 +454,12 @@ public class PlayerBoard {
         else if (PlayerBoard[r][c].getComponent().getClass() == modularHousingUnit.class || PlayerBoard[r][c].getComponent().getClass() == MainCockpitComp.class){
             housingUnits.add(new IntegerPair(r,c));
         }
-//        else if (PlayerBoard[r][c].getComponent().getClass() == shieldGenerator.class){
-//
-//        }
+
+        else if (PlayerBoard[r][c].getComponent().getClass() == shieldGenerator.class){
+            for (int i = 0; i < shield.length; i++){
+                shield[i] += PlayerBoard[r][c].getComponent().getAbility(1).get(i);
+            }
+        }
 
 //        else if (PlayerBoard[r][c].getComponent().getClass() == hotWaterHeater.class ){
 //            hotWaterHeaters.add(new IntegerPair(r,c));
