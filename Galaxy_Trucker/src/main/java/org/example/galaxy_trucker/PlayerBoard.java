@@ -652,10 +652,11 @@ public class PlayerBoard {
     public void removeGood(IntegerPair coordinate, int i){
         PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(null).remove(i);
     }
-// non lo posso gestire senza che passo modifichi housingUnit, posso solo eliminare umani
-//    public void populateHousingUnit(IntegerPair coordinate , int humans ,boolean purpleAlien, boolean brownAlien){
-//        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility();
-//    }
+
+
+    public void populateHousingUnit(IntegerPair coordinate , int humans ,boolean purpleAlien, boolean brownAlien){
+        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().initType(humans, purpleAlien, brownAlien);
+    }
 
 
 }
