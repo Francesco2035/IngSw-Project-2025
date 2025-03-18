@@ -1,5 +1,12 @@
 package org.example.galaxy_trucker;
 
+import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.GAGen;
+import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.Tiles.Component;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.TileSets;
+import org.example.galaxy_trucker.Model.Tiles.powerCenter;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

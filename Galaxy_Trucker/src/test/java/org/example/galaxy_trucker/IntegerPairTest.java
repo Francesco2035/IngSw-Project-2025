@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker;
 
+import org.example.galaxy_trucker.Model.IntegerPair;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

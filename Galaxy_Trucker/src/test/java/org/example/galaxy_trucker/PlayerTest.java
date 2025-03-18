@@ -1,9 +1,8 @@
 package org.example.galaxy_trucker;
 
-import javafx.util.Pair;
+import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Player;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 

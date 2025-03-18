@@ -1,5 +1,11 @@
 package org.example.galaxy_trucker;
 
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Tiles.Connector;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.plasmaDrill;
+import org.example.galaxy_trucker.Model.Tiles.sewerPipes;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -150,6 +156,9 @@ public class PlayerBoardTest {
             }
             System.out.println();
         }
+
+        playerBoard.modifyPlayerBoard(handleAttack.get(1));
+
 
     }
 

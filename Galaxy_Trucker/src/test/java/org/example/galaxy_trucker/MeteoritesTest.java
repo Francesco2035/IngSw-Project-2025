@@ -1,5 +1,9 @@
 package org.example.galaxy_trucker;
 
+import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.GAGen;
+import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Tiles.TileSets;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
