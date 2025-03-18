@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,5 +29,13 @@ class GAGenTest {
 
         assertNotEquals(null, Tiles);
         assertNotEquals(null, Cards);
+    }
+
+    @Test
+    void listToSet() throws IOException {
+
+        GAGen g = new GAGen();
+        Set<Object> gset = g.listToSet(true);
+
     }
 }
