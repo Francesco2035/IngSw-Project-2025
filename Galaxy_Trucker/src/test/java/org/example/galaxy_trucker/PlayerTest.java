@@ -17,7 +17,7 @@ class PlayerTest {
         Player meplayer = new Player("codiscePersona_255", board);
         PlayerBoard provaPlance = new PlayerBoard(2);
 //        meplayer.setMyPlance(provaPlance);
-        BatteryComp batt = new BatteryComp(3);
+        powerCenter batt = new powerCenter(3);
         ArrayList<Tile> batteryTiles = new ArrayList<>();
         IntegerPair coords = new IntegerPair(3, 4);
         Tile battTile = new Tile(coords, batt, Connector.SINGLE, Connector.DOUBLE, Connector.NONE, Connector.NONE);
