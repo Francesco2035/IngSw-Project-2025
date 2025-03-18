@@ -519,32 +519,43 @@ public class PlayerBoard {
         if (ValidPlayerBoard[x-1][y] == 1){
 
             findPaths(x, y-1, visitedPositions);
-            i++;
+
             shipSection.put(i, visitedPositions);
+            i++;
 
         }
 
-        if (ValidPlayerBoard[x][y-1] == 1 && !shipSection.get(i).contains (new IntegerPair(x,y-1))){
-            visitedPositions.clear();
+        if (ValidPlayerBoard[x][y-1] == 1 ){
+            visitedPositions = new ArrayList<>();
             findPaths(x, y-1, visitedPositions);
-            i++;
-            shipSection.put(i, visitedPositions);
+            if (!visitedPositions.contains(new IntegerPair(x-1,y))) {
+
+                shipSection.put(i, visitedPositions);
+                i++;
+            }
 
         }
 
-        if (ValidPlayerBoard[x+1][y] == 1 && !shipSection.get(i).contains (new IntegerPair(x+1,y))){
-            visitedPositions.clear();
+
+        if (ValidPlayerBoard[x+1][y] == 1 ){
+            visitedPositions = new ArrayList<>();
             findPaths(x+1, y, visitedPositions);
-            i++;
-            shipSection.put(i, visitedPositions);
+            if (!visitedPositions.contains(new IntegerPair(x-1,y)) && !visitedPositions.contains(new IntegerPair(x,y -1))) {
+
+                shipSection.put(i, visitedPositions);
+                i++;
+            }
 
         }
 
-        if (ValidPlayerBoard[x][y + 1] == 1 && !shipSection.get(i).contains (new IntegerPair(x,y+1))){
-            visitedPositions.clear();
+        if (ValidPlayerBoard[x][y + 1] == 1  ){
+            visitedPositions = new ArrayList<>();
             findPaths(x, y+1, visitedPositions);
-            i++;
-            shipSection.put(i, visitedPositions);
+            if (!visitedPositions.contains(new IntegerPair(x-1,y)) && !visitedPositions.contains(new IntegerPair(x,y -1)) && !visitedPositions.contains(new IntegerPair(x+1,y)) ) {
+
+                shipSection.put(i, visitedPositions);
+                i++;
+            }
 
         }
 
