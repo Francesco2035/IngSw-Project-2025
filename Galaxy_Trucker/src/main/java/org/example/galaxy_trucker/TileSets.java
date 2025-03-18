@@ -9,7 +9,7 @@ public class TileSets {
     private Set<Tile> CoveredTiles;
     private ArrayList<Tile> UncoveredTiles;
     public TileSets(GAGen gag) {
-        CoveredTiles = gag.getTilesDeck();
+        CoveredTiles = gag.TileListToSet();
         UncoveredTiles = new ArrayList<>();
     }
 
