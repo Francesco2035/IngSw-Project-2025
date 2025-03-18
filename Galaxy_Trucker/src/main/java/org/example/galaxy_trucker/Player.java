@@ -156,7 +156,7 @@ public class Player {
         return Locations;
     }
 
-    public String getID() {return this.ID;}
+    public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
     public PlayerBoard getMyPlance() {return myPlance;}
@@ -168,21 +168,22 @@ public class Player {
         Random r = new Random();
         return r.nextInt(3);
     }
-        public int getGoodsIndex(){
-            return 3;
-        }
-        public IntegerPair getGoodsCoordinates(){
-            IntegerPair coords = new IntegerPair(5,5);
-            return coords;
-        }
-
-        public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
-            myPlance.pullGoods(good1, coord1);
-            myPlance.pullGoods(good2, coord2);
-            //se il buffer è sempre vuoto prima di questa chiamata funziona altrimenti mi serve la size
-            myPlance.putGoods(myPlance.pullFromBuffer(1),coord1);
-            myPlance.putGoods(myPlance.pullFromBuffer(0),coord2);
+    public int getGoodsIndex(){
+        return 3;
     }
+    public IntegerPair getGoodsCoordinates(){
+        IntegerPair coords = new IntegerPair(5,5);
+        return coords;
+    }
+
+    public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
+        myPlance.pullGoods(good1, coord1);
+        myPlance.pullGoods(good2, coord2);
+        //se il buffer è sempre vuoto prima di questa chiamata funziona altrimenti mi serve la size
+        myPlance.putGoods(myPlance.pullFromBuffer(1),coord1);
+        myPlance.putGoods(myPlance.pullFromBuffer(0),coord2);
+    }
+
 
     public void handleCargo(ArrayList<Goods> reward){
         ArrayList<Integer> UsedAddresses= new ArrayList<>();

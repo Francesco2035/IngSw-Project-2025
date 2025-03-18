@@ -57,6 +57,9 @@ public class Card {
     public int getTime() {
         return this.Time;
     }
+    public GameBoard getBoard() {
+        return this.Board;
+    }
 
 
     //json required

@@ -134,9 +134,9 @@ public class PlayerBoard {
         return exposedConnectors;
     }
 
-//    public ArrayList<IntegerPair> gethousingUnits(){
-//        return this.housingUnits;
-//    }
+   public ArrayList<IntegerPair> gethousingUnits(){
+        return this.housingUnits;
+    }
 
 
 
@@ -161,9 +161,9 @@ public class PlayerBoard {
         return this.PlayerBoard[x][y];
     }
 
-    public ArrayList<IntegerPair> getHousingUnits() {
-        return housingUnits;
-    }
+//    public ArrayList<IntegerPair> getHousingUnits() {
+//        return housingUnits;
+//    }
 
     public ArrayList<IntegerPair> getPlasmaDrills(){
         return plasmaDrills;
@@ -444,7 +444,7 @@ public class PlayerBoard {
             return;
         }
 
-        else if (PlayerBoard[r][c].getComponent().getClass() == BatteryComp.class){
+        else if (PlayerBoard[r][c].getComponent().getClass() == powerCenter.class){
             energyTiles.add(new IntegerPair(r,c));
         }
 

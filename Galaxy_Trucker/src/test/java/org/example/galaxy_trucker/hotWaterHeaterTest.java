@@ -10,45 +10,41 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class shieldGeneratorTest {
+class hotWaterHeaterTest {
+
+    @Test
+    void getAbility() throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
+        ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
+
+        Component comp = Tiles.get(66).getComponent();
+        comp.initType();
+        assertEquals(1, comp.getAbility());
+
+
+        comp = Tiles.get(87).getComponent();
+        comp.initType();
+        assertEquals(2, comp.getAbility());
+
+    }
 
     @Test
     void initType() throws IOException {
 
-        ObjectMapper mapper = new ObjectMapper();
-        File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
-        ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
-
-        Tile tile = Tiles.get(145);
-        tile.getComponent().initType();
-
-        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
-
-    }
-
-    @Test
-    void getAbility() {
-    }
-
-    @Test
-    void setAbility() throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
         File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
         ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
 
-        Tile tile = Tiles.get(145);
-        tile.getComponent().initType();
 
+        hotWaterHeater engine = ((hotWaterHeater) Tiles.get(66).getComponent());
+        engine.initType();
+        assertFalse(engine.isDouble());
 
-        tile.RotateDx();
-        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
-
-        tile.RotateDx();
-        assertEquals(1, tile.getComponent().getAbility(0).getFirst());
-
-        tile.RotateSx();
-        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
-
+        hotWaterHeater engine2 = ((hotWaterHeater) Tiles.get(87).getComponent());
+        engine2.initType();
+        assertTrue(engine2.isDouble());
     }
 }
