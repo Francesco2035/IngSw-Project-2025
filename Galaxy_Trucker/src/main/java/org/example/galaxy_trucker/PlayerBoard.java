@@ -139,7 +139,9 @@ public class PlayerBoard {
     }
 
 
-
+    public int[] getShield(){
+        return shield;
+    }
 
     public Tile[][] getPlayerBoard(){
         return this.PlayerBoard;
@@ -452,9 +454,12 @@ public class PlayerBoard {
         else if (PlayerBoard[r][c].getComponent().getClass() == modularHousingUnit.class || PlayerBoard[r][c].getComponent().getClass() == MainCockpitComp.class){
             housingUnits.add(new IntegerPair(r,c));
         }
-//        else if (PlayerBoard[r][c].getComponent().getClass() == shieldGenerator.class){
-//
-//        }
+
+        else if (PlayerBoard[r][c].getComponent().getClass() == shieldGenerator.class){
+            for (int i = 0; i < shield.length; i++){
+                shield[i] += PlayerBoard[r][c].getComponent().getAbility(1).get(i);
+            }
+        }
 
 //        else if (PlayerBoard[r][c].getComponent().getClass() == hotWaterHeater.class ){
 //            hotWaterHeaters.add(new IntegerPair(r,c));
@@ -514,32 +519,43 @@ public class PlayerBoard {
         if (ValidPlayerBoard[x-1][y] == 1){
 
             findPaths(x, y-1, visitedPositions);
-            i++;
+
             shipSection.put(i, visitedPositions);
+            i++;
 
         }
 
-        if (ValidPlayerBoard[x][y-1] == 1 && !shipSection.get(i).contains (new IntegerPair(x,y-1))){
-            visitedPositions.clear();
+        if (ValidPlayerBoard[x][y-1] == 1 ){
+            visitedPositions = new ArrayList<>();
             findPaths(x, y-1, visitedPositions);
-            i++;
-            shipSection.put(i, visitedPositions);
+            if (!visitedPositions.contains(new IntegerPair(x-1,y))) {
+
+                shipSection.put(i, visitedPositions);
+                i++;
+            }
 
         }
 
-        if (ValidPlayerBoard[x+1][y] == 1 && !shipSection.get(i).contains (new IntegerPair(x+1,y))){
-            visitedPositions.clear();
+
+        if (ValidPlayerBoard[x+1][y] == 1 ){
+            visitedPositions = new ArrayList<>();
             findPaths(x+1, y, visitedPositions);
-            i++;
-            shipSection.put(i, visitedPositions);
+            if (!visitedPositions.contains(new IntegerPair(x-1,y)) && !visitedPositions.contains(new IntegerPair(x,y -1))) {
+
+                shipSection.put(i, visitedPositions);
+                i++;
+            }
 
         }
 
-        if (ValidPlayerBoard[x][y + 1] == 1 && !shipSection.get(i).contains (new IntegerPair(x,y+1))){
-            visitedPositions.clear();
+        if (ValidPlayerBoard[x][y + 1] == 1  ){
+            visitedPositions = new ArrayList<>();
             findPaths(x, y+1, visitedPositions);
-            i++;
-            shipSection.put(i, visitedPositions);
+            if (!visitedPositions.contains(new IntegerPair(x-1,y)) && !visitedPositions.contains(new IntegerPair(x,y -1)) && !visitedPositions.contains(new IntegerPair(x+1,y)) ) {
+
+                shipSection.put(i, visitedPositions);
+                i++;
+            }
 
         }
 
