@@ -443,7 +443,7 @@ public class PlayerBoard {
             return;
         }
 
-        else if (PlayerBoard[r][c].getComponent().getClass() == BatteryComp.class){
+        else if (PlayerBoard[r][c].getComponent().getClass() == powerCenter.class){
             energyTiles.add(new IntegerPair(r,c));
         }
 
