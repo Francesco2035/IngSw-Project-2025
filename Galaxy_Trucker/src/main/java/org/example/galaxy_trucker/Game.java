@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Game {
@@ -9,13 +10,15 @@ public class Game {
     private TileSets TileDecks;
     private int  lv;
     private State CurrentState;
+    private GAGen gag;
 
 
 
-    public Game(int GameLevel){
+    public Game(int GameLevel) throws IOException {
+        gag = new GAGen();
         PlayerList = new ArrayList<>();
         CardDeck = new CardStacks();
-        TileDecks = new TileSets();
+        TileDecks = new TileSets(gag);
         lv = GameLevel;
         GameBoard = new GameBoard(TileDecks, lv);
     }

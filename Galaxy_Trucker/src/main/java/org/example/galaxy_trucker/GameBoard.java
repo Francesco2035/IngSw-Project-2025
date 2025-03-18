@@ -79,7 +79,7 @@ public class GameBoard {
 
         Player_IntegerPair cur = players.stream()
                                            .filter(p -> ID
-                                           .equals( p.getKey().getID()) )
+                                           .equals( p.getKey().GetID()) )
                                            .findFirst().orElseThrow();
 
         SetNewPosition(cur, startPos[PlayersOnBoard], startPos[PlayersOnBoard]);
@@ -100,7 +100,7 @@ public class GameBoard {
         int NewIndex;
 
         Player_IntegerPair cur = players.stream()
-                                           .filter(p -> ID.equals( p.getKey().getID() ) )
+                                           .filter(p -> ID.equals( p.getKey().GetID() ) )
                                            .findFirst()
                                            .orElseThrow();
 
@@ -119,7 +119,7 @@ public class GameBoard {
                 else if (cur.getKey().equals(players.getFirst().getKey()) && players.getFirst().getValue() + nSteps - nPositions >= players.getLast().getValue()) {
                     //ELIMINAZIONE GIOCATORE DOPPIATO DA GESTIRE
                     //TEMPORANEAMENTE SI SOLLEVA UNA ECCEZIONE
-                    throw new RuntimeException("GIOCATORE " + players.getLast().getKey().getID() + " DOPPIATO");
+                    throw new RuntimeException("GIOCATORE " + players.getLast().getKey().GetID() + " DOPPIATO");
                 }
             }
 
@@ -133,7 +133,7 @@ public class GameBoard {
             else if(cur.getKey().equals(players.getLast().getKey()) && players.getLast().getValue() + nSteps +nPositions <= players.getFirst().getValue()){
                 //ELIMINAZIONE GIOCATORE DOPPIATO DA GESTIRE
                 //TEMPORANEAMENTE SI SOLLEVA UNA ECCEZIONE
-                throw new RuntimeException("GIOCATORE "+ players.getLast().getKey().getID() +" DOPPIATO");
+                throw new RuntimeException("GIOCATORE "+ players.getLast().getKey().GetID() +" DOPPIATO");
             }
         }
 

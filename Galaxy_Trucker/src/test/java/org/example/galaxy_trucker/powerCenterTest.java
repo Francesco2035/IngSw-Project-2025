@@ -18,8 +18,9 @@ class powerCenterTest {
     }
 
     @Test
-    void getAbility() {
-        TileSets tileSets = new TileSets();
+    void getAbility() throws IOException {
+        GAGen gag = new GAGen();
+        TileSets tileSets = new TileSets(gag);
         GameBoard board = new GameBoard(tileSets, 2);
         Player me = new Player("prova", board);
         Component batt = new powerCenter(3);
@@ -28,8 +29,9 @@ class powerCenterTest {
     }
 
     @Test
-    void setAbility() {
-        TileSets tileSets = new TileSets();
+    void setAbility() throws IOException {
+        GAGen gag = new GAGen();
+        TileSets tileSets = new TileSets(gag);
         GameBoard board = new GameBoard(tileSets, 2);
         Player me = new Player("prova", board);
         Component batt = new powerCenter(3);
