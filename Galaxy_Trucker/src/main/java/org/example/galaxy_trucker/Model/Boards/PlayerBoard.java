@@ -1,10 +1,11 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 
-
+import org.example.galaxy_trucker.Exceptions.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.Void;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,16 +26,11 @@ public class PlayerBoard {
     private ArrayList<IntegerPair> energyTiles;
     private ArrayList<IntegerPair> Cargo;
     private ArrayList<IntegerPair> plasmaDrills;
-    //private ArrayList<IntegerPair> hotWaterHeaters;
+    private ArrayList<IntegerPair> hotWaterHeaters;
 
 
     private ArrayList<Tile> Buffer;
-
-
     HashMap<Connector, ArrayList<Connector>>  validConnection;
-
-
-    //attributes
 
 
 
@@ -42,14 +38,17 @@ public class PlayerBoard {
     public PlayerBoard(int lv) {
         this.damage = 0;
         this.shield = new int[4];
+        this.Buffer = new ArrayList<>();
 
         this.exposedConnectors = 0;
         this.housingUnits = new ArrayList<>();
         this.energyTiles = new ArrayList<>();
-
+        this.hotWaterHeaters = new ArrayList<>();
         this.Cargo = new ArrayList<>();
-        this.Buffer = new ArrayList<>();
         this.plasmaDrills = new ArrayList<>();
+
+        this.BufferGoods = new ArrayList<>();
+
         this.ValidPlayerBoard = new int[10][10];
         this.validConnection = new HashMap<Connector, ArrayList<Connector>>();
         validConnection.put(Connector.UNIVERSAL, new ArrayList<>());
@@ -130,64 +129,138 @@ public class PlayerBoard {
      *
      * @return the Buffer.
      */
-    public ArrayList<Tile> getBuffer(){
+    public ArrayList<Tile> getBuffer() throws InvalidInput{
         return Buffer;
     }
 
+
+    /**
+     * Method getExposedConnectors retrieves the number of exposed connectors on the player board.
+     *
+     * @return the number of exposed connectors.
+     */
     public int getExposedConnectors(){
         return exposedConnectors;
     }
 
+
+    /**
+     * Method gethousingUnits retrieves a list of coordinates representing housing units on the player board.
+     *
+     * @return an ArrayList of IntegerPair containing the coordinates of housing units.
+     */
    public ArrayList<IntegerPair> gethousingUnits(){
         return this.housingUnits;
     }
 
 
+    /**
+     * Method getShield retrieves the shield status of the player board.
+     * The shield is represented as an array of size 4, where each index corresponds to a direction:
+     * <ul>
+     *   <li>Index 0 - Left</li>
+     *   <li>Index 1 - Top</li>
+     *   <li>Index 2 - Right</li>
+     *   <li>Index 3 - Bottom</li>
+     * </ul>
+     * A value of 0 indicates no protection, while a non-zero value means the side is protected.
+     *
+     * @return an integer array of size 4 representing the shield status in each direction.
+     */
     public int[] getShield(){
         return shield;
     }
 
+
+    /**
+     * Method getPlayerBoard retrieves the player's board, which consists of a grid of tiles.
+     *
+     * @return a 2D array of Tile objects representing the player's board.
+     */
     public Tile[][] getPlayerBoard(){
         return this.PlayerBoard;
     }
 
+
+    /**
+     * Method getValidPlayerBoard retrieves the validity matrix of the player board.
+     * Each cell indicates whether the position is valid (1), invalid (-1), or empty (0).
+     *
+     * @return a 2D array of integers representing the validity of each position.
+     */
     public int[][] getValidPlayerBoard(){
         return this.ValidPlayerBoard;
     }
 
+
+    /**
+     * Method getEnergyTiles retrieves a list of coordinates representing energy tiles on the player board.
+     *
+     * @return an ArrayList of IntegerPair containing the coordinates of energy tiles.
+     */
     public ArrayList<IntegerPair> getEnergyTiles() {
         return energyTiles;
     }
 
+
+    /**
+     * Method getDamage retrieves the current damage value of the player board.
+     *
+     * @return the amount of damage.
+     */
     public int getDamage(){
         return damage;
     }
 
-    public Tile getTile(int x, int y) {
+
+    /**
+     * Method getTile retrieves the tile located at the specified coordinates on the player board.
+     *
+     * @param x of type int - the x-coordinate of the tile.
+     * @param y of type int - the y-coordinate of the tile.
+     * @return the Tile object at the given coordinates.
+     * @throws InvalidInput If the coordinates are out of bounds or point to an invalid tile.
+     */
+    public Tile getTile(int x, int y) throws InvalidInput {
+        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
+            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
+        }
         return this.PlayerBoard[x][y];
     }
 
 
+    /**
+     * Method getPlasmaDrills retrieves the list of coordinates where plasma drills are located.
+     *
+     * @return an ArrayList of IntegerPair representing the positions of plasma drills.
+     */
     public ArrayList<IntegerPair> getPlasmaDrills(){
         return plasmaDrills;
     }
 
-    public void insertTile(Tile tile, int x, int y) throws NullPointerException, ArrayIndexOutOfBoundsException {
-        try {
-            if (tile == null) {
-                throw new NullPointerException("Tile cannot be null.");
-            }
 
-            if (x < 0 || x >= PlayerBoard.length || y < 0 || y >= PlayerBoard[0].length || ValidPlayerBoard[x][y] == -1) {
-                throw new ArrayIndexOutOfBoundsException("Invalid position: (" + x + ", " + y + ")");
-            }
+    /**
+     * Method insertTile inserts a tile into the player board at the specified coordinates.
+     *
+     * @param tile of type Tile - the tile to be placed.
+     * @param x of type int - the x-coordinate where the tile should be placed.
+     * @param y of type int - the y-coordinate where the tile should be placed.
+     * @throws NullPointerException If the tile is null.
+     * @throws InvalidInput If the coordinates are out of bounds or if the target position is invalid.
+     */
+    public void insertTile(Tile tile, int x, int y) throws NullPointerException, InvalidInput {
 
-            this.PlayerBoard[x][y] = tile;
-            ValidPlayerBoard[x][y] = 1;
-        } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
+        if (tile == null) {
+            throw new NullPointerException("Tile cannot be null.");
         }
+
+        if (x < 0 || x >= PlayerBoard.length || y < 0 || y >= PlayerBoard[0].length || ValidPlayerBoard[x][y] == -1) {
+            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
+        }
+
+        this.PlayerBoard[x][y] = tile;
+        ValidPlayerBoard[x][y] = 1;
+
     }
 
 
@@ -285,6 +358,23 @@ public class PlayerBoard {
 
 
     /**
+     * Method removeTile removes the selected Tile.
+     *
+     * @param x of type int.
+     * @param y of type int.
+     * @throws InvalidInput if the input from the player is invalid.
+     */
+
+    public void removeTile(int x, int y) throws InvalidInput {
+        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
+            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
+        }
+        this.PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new Void() ,Connector.NONE, Connector.NONE, Connector.NONE);
+        ValidPlayerBoard[x][y] = 0;
+    }
+
+
+    /**
      * Method checkValidity check if the player board is valid according to the rules of the game : there can be no unreachable pieces
      * and the constraints on the hotWaterHeaters and plasmaDrills must be respected.
      *
@@ -364,7 +454,7 @@ public class PlayerBoard {
         energyTiles.remove(pos);
         plasmaDrills.remove(pos);
         Cargo.remove(pos);
-        //hotWaterHeaters.remove(pos);
+        hotWaterHeaters.remove(pos);
 
         damage++;
 
@@ -465,9 +555,9 @@ public class PlayerBoard {
             }
         }
 
-//        else if (PlayerBoard[r][c].getComponent().getClass() == hotWaterHeater.class ){
-//            hotWaterHeaters.add(new IntegerPair(r,c));
-//        }
+        else if (PlayerBoard[r][c].getComponent().getClass() == hotWaterHeater.class ){
+            hotWaterHeaters.add(new IntegerPair(r,c));
+        }
 
 
         visited.add(new IntegerPair(r, c));
@@ -573,12 +663,21 @@ public class PlayerBoard {
      *
      * @param coordinate of type IntegerPair - the value of the coordinate.
      * @throws ArrayIndexOutOfBoundsException when the user input is not in the correct range.
+     * @throws HousingUnitEmptyException when the housingUnit is empty or is not possible to kill such a number of humans.
      */
-    public void kill(IntegerPair coordinate,int humans ,boolean purpleAlien, boolean brownAlien) throws ArrayIndexOutOfBoundsException{
+    public void kill(IntegerPair coordinate,int humans ,boolean purpleAlien, boolean brownAlien) throws InvalidInput, HousingUnitEmptyException{
         if (coordinate.getFirst() < 0 || coordinate.getFirst() >= PlayerBoard.length || coordinate.getSecond() < 0 || coordinate.getSecond() >= PlayerBoard[0].length || ValidPlayerBoard[coordinate.getFirst()][coordinate.getSecond()] == -1) {
-            throw new ArrayIndexOutOfBoundsException("Invalid position: (" + coordinate.getFirst() + ", " + coordinate.getSecond() + ")");
+            throw new InvalidInput(coordinate.getFirst(), coordinate.getSecond(), "Invalid input: coordinates out of bounds or invalid tile." );
         }
-        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(humans, purpleAlien, brownAlien);
+        Component unit =  PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent();
+        if ((purpleAlien && !unit.isPurpleAlien()) || (brownAlien && !unit.isBrownAlien())) {
+            throw new HousingUnitEmptyException("There is no alien to kill");
+        }
+
+        if (humans > unit.getAbility()){
+            throw new HousingUnitEmptyException("It is not possible to kill such a number of humans");
+        }
+        unit.setAbility(humans, purpleAlien, brownAlien);
     }
 
 
@@ -622,10 +721,15 @@ public class PlayerBoard {
      * @param chosenHotWaterHeaters List of chosen hot water heaters for calculating engine power.
      * @return the EnginePower of the ship.
      * @throws NullPointerException if chosenHotWaterHeaters is null.
+     * @throws InvalidInput if at least one engine is invalid.
      */
-    public int getEnginePower(ArrayList<IntegerPair> chosenHotWaterHeaters) {
+    public int getEnginePower(ArrayList<IntegerPair> chosenHotWaterHeaters) throws InvalidInput{
         if (chosenHotWaterHeaters == null) {
             throw new NullPointerException("chosenHotWaterHeaters cannot be null.");
+        }
+
+        if (!hotWaterHeaters.containsAll(chosenHotWaterHeaters)) {
+            throw new InvalidInput("Invalid choice, at least one engine is invalid");
         }
 
         int power = 0;
@@ -643,38 +747,186 @@ public class PlayerBoard {
     }
 
 
+    /**
+     * Method pullGoods removes the element at position i of a storageComponent and adds it to the BufferGoods.
+     *
+     * @param i of type int.
+     * @param coordinate of type IntegerPair.
+     * @throws InvalidInput If the coordinates are out of bounds, the tile is not a storage compartment,
+     *                      or the requested position in the compartment does not exist.
+     * @throws StorageCompartmentEmptyException If the storage compartment is empty and no goods can be removed.
+     */
+    public void pullGoods(int i, IntegerPair coordinate) throws InvalidInput, StorageCompartmentEmptyException{
 
-    //per switch
-    public void pullGoods(int i, IntegerPair coordinate){
+        int x = coordinate.getFirst();
+        int y = coordinate.getSecond();
+
+        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
+            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
+        }
+
+        if (PlayerBoard[x][y].getComponent().getClass() != storageCompartment.class && PlayerBoard[x][y].getComponent().getClass() != specialStorageCompartment.class){
+            throw new InvalidInput("The following tile is not a storageCompartment");
+        }
+
+        if (PlayerBoard[x][y].getComponent().getAbility(null).isEmpty()){
+            throw new StorageCompartmentEmptyException("The following StorageCompartment is empty: " + x + "," + y);
+        }
+
+        if (PlayerBoard[x][y].getComponent().getAbility(null).size() < i){
+            throw new InvalidInput("This position in the StorageCompartment does not exist");
+        }
+
         BufferGoods.add(PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(null).remove(i));
     }
 
 
-    //per aggiungere goods nei magazzini
-    public void putGoods(Goods good, IntegerPair coordinate){
-        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(good, true); //aggiunta modifica dell'implementazione di aggiunta/rimozione goods
+    /**
+     * Method putGoods adds a good to a storageCompartment.
+     *
+     * @param good of type Goods.
+     * @param coordinate of type IntegerPair.
+     * @throws InvalidInput If the coordinates are out of bounds, the tile is not a storage compartment.
+     * @throws StorageCompartmentFullException If the storage compartment is full and cannot accept more goods.
+     * @throws IllegalArgumentException If the good being added is not allowed in a standard storage compartment.
+     */
+    public void putGoods(Goods good, IntegerPair coordinate) throws IllegalArgumentException, InvalidInput, StorageCompartmentFullException {
+
+        int x = coordinate.getFirst();
+        int y = coordinate.getSecond();
+
+        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
+            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
+        }
+
+        if (PlayerBoard[x][y].getComponent().getClass() != storageCompartment.class && PlayerBoard[x][y].getComponent().getClass() != specialStorageCompartment.class){
+            throw new InvalidInput("The following tile is not a storageCompartment");
+        }
+
+        if (PlayerBoard[x][y].getComponent().getAbility(null).size() + 1 > PlayerBoard[x][y].getComponent().getAbility()){
+            throw new StorageCompartmentFullException("The following StorageCompartment is full: " + x + "," + y);
+        }
+
+        PlayerBoard[x][y].getComponent().setAbility(good, true);
     }
 
 
-    //per switch
-    public Goods pullFromBuffer(int i){
+    /**
+     * Method pullFromBuffer pull the good in position i of the BufferGoods.
+     *
+     * @param i of type int.
+     * @return the good in order to be added to the storageCompartment.
+     * @throws InvalidInput If the specified index is out of bounds or if the buffer is empty.
+     */
+    public Goods pullFromBuffer(int i) throws InvalidInput{
+        if (i > BufferGoods.size()) {
+            throw new InvalidInput("This position in the BufferGoods does not exist");
+        }
+        if (BufferGoods.isEmpty()) {
+            throw new InvalidInput("BufferGoods is empty");
+        }
         return BufferGoods.remove(i);
     }
 
 
-    public void useEnergy(ArrayList<IntegerPair> chosenEnergyTiles){
+    /**
+     * Method useEnergy reduces the energy of the tiles in the array by 1.
+     *
+     * @param chosenEnergyTiles of type ArrayList<IntegerPair> chosenEnergyTiles - the position of the EnergyTiles chosen by the player,
+     *                          there may be duplicates if the user wants to consume more energy from the same tile .
+     * @throws NullPointerException If the provided list is null.
+     * @throws InvalidInput If at least one of the chosen energy tiles is invalid or does not exist in the player's energyTiles list.
+     * @throws powerCenterEmptyException If any of the selected power centers are empty and cannot provide energy.
+     */
+    public void useEnergy(ArrayList<IntegerPair> chosenEnergyTiles) throws InvalidInput, powerCenterEmptyException{
+        if (chosenEnergyTiles == null) {
+            throw new NullPointerException("chosenEnergyTiles cannot be null.");
+        }
+        if (!energyTiles.containsAll(chosenEnergyTiles)) {
+            throw new InvalidInput("Invalid choice, at least one energy is invalid");
+        }
         for (IntegerPair energy : chosenEnergyTiles){
+            if (PlayerBoard[energy.getFirst()][energy.getSecond()].getComponent().getAbility() == 0){
+                throw new powerCenterEmptyException("PowerCenter is empty");
+            }
             PlayerBoard[energy.getFirst()][energy.getSecond()].getComponent().setAbility();
         }
     }
 
-    //per eliminare senza passare dal buffer
-    public void removeGood(IntegerPair coordinate, int i){
-        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(null).remove(i);
+
+    /**
+     * Method removeGood removes a good from the specified StorageCompartment at the given position.
+     *
+     * @param coordinate of type IntegerPair.
+     * @param i of type int.
+     * @throws InvalidInput If the coordinates are out of bounds, the tile is invalid, or the selected tile is not a storage compartment.
+     * @throws StorageCompartmentEmptyException If the storage compartment is empty and there are no goods to remove.
+     */
+    public void removeGood(IntegerPair coordinate, int i) throws InvalidInput, StorageCompartmentEmptyException {
+
+        int x = coordinate.getFirst();
+        int y = coordinate.getSecond();
+
+        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
+            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
+        }
+
+        if (PlayerBoard[x][y].getComponent().getClass() != storageCompartment.class && PlayerBoard[x][y].getComponent().getClass() != specialStorageCompartment.class){
+            throw new InvalidInput("The following tile is not a storageCompartment");
+        }
+
+        if (PlayerBoard[x][y].getComponent().getAbility() == 0){
+            throw new StorageCompartmentEmptyException("The following StorageCompartment is Empty: " + x + "," + y);
+        }
+
+        PlayerBoard[x][y].getComponent().getAbility(null).remove(i);
     }
 
 
-    public void populateHousingUnit(IntegerPair coordinate , int humans ,boolean purpleAlien, boolean brownAlien){
+    /**
+     * Method populateHousingUnit populates a housing unit with humans or aliens.
+     *
+     * @param coordinate of type IntegerPair.
+     * @param humans of type int.
+     * @param purpleAlien of type boolean.
+     * @param brownAlien of type boolean.
+     * @throws InvalidInput If the coordinates are out of bounds, the tile is invalid, the tile is not a housing unit,
+     *                      aliens are added to the MainCockpit, or the combination of occupants is not allowed.
+     * @throws StorageCompartmentFullException If the housing unit is already full and cannot accommodate more occupants.
+     */
+    public void populateHousingUnit(IntegerPair coordinate , int humans ,boolean purpleAlien, boolean brownAlien) throws InvalidInput, StorageCompartmentFullException{
+
+        int x = coordinate.getFirst();
+        int y = coordinate.getSecond();
+
+        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
+            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
+        }
+
+        if (PlayerBoard[x][y].getComponent().getClass() != modularHousingUnit.class && PlayerBoard[x][y].getComponent().getClass() != MainCockpitComp.class){
+            throw new InvalidInput("The following tile is not a modularHousingUnit");
+        }
+
+        if (PlayerBoard[x][y].getComponent().getClass() == MainCockpitComp.class && (purpleAlien || brownAlien)){
+            throw new InvalidInput("Invalid input: aliens cannot be added to the MainCockpit");
+        }
+
+        if (PlayerBoard[x][y].getComponent().getAbility() == 2 && humans > 0){
+            throw new StorageCompartmentFullException("The following StorageCompartment is Full: " + x + "," + y);
+        }
+
+        if (PlayerBoard[x][y].getComponent().getAbility() != 0 && (purpleAlien || brownAlien)){
+            throw new InvalidInput("Invalid input: aliens cannot be added  if humans are already present");
+        }
+
+        if ((PlayerBoard[x][y].getComponent().isBrownAlien() || PlayerBoard[x][y].getComponent().isPurpleAlien()) && humans > 0){
+            throw new InvalidInput("Invalid input: humans cannot be added if an alien is already present");
+        }
+
+        if ((purpleAlien && PlayerBoard[x][y].getComponent().isBrownAlien()) || (brownAlien && PlayerBoard[x][y].getComponent().isPurpleAlien())){
+            throw new InvalidInput("Invalid input: there is already an alien of the other color present");
+        }
+
         PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().initType(humans, purpleAlien, brownAlien);
     }
 
