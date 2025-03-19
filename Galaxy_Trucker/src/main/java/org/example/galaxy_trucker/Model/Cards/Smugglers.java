@@ -49,7 +49,6 @@ public class Smugglers extends Card{
                 for(int i=0;i<Punishment;i++){
                     int index=PlayerList.get(Order).getGoodsIndex();
                     IntegerPair coord=PlayerList.get(Order).getGoodsCoordinates();
-
                     PlayerList.get(Order).getMyPlance().removeGood(coord,index);
             }
             }// fine caso sconfitta

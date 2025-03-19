@@ -17,6 +17,9 @@ public class Player {
     private Tile CurrentTile;   //the tile that Player has in his hand
 
 
+    private Integer input;
+
+
     public Player(String id, GameBoard board) {
         CommonBoard = board;
         myPlance = new PlayerBoard(board.getLevel());
@@ -24,6 +27,7 @@ public class Player {
         credits = 0;
         ready = false;
         CurrentTile = null;
+        input = null;
     }
 
 
@@ -165,17 +169,39 @@ public class Player {
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
     public PlayerBoard getMyPlance() {return myPlance;}
-//    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
+    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
     public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();
     }
 
+
+    public void setCargoAction(int action){
+        if(action < 0 || action > 3)
+            throw new IllegalArgumentException("Invalid action");
+        else input = action;
+        input.notify();
+    }
+
     public int getCargoAction(){
-        Random r = new Random();
-        return r.nextInt(3);
+        input.wait();
+        if(input == null) throw new NullPointerException("No action selected");
+        int temp = input;
+        input = null;
+        return temp;
     }
-    public int getGoodsIndex(){
-        return 3;
+
+    public void setGoodIndex(int index){
+        input = index;
+        input.notify();
     }
+
+    public int getGoodsIndex() throws InterruptedException {
+        input.wait();
+        if(input == null) throw new NullPointerException("No action selected");
+        int temp = input;
+        input = null;
+        return temp;
+    }
+
     public IntegerPair getGoodsCoordinates(){
         IntegerPair coords = new IntegerPair(5,5);
         return coords;
@@ -204,6 +230,8 @@ public class Player {
                     myPlance.putGoods(reward.get(i),getGoodsCoordinates());
                     myPlance.putGoods(reward.get(i),getGoodsCoordinates());
                 }
+                //else sollevo eccezione?
+
             } else if (a == 2) {// switch positions
                 //chiamo get type goods e coord
                 int g1=1;
