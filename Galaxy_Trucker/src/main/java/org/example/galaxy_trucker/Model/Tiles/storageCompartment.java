@@ -36,6 +36,14 @@ public class storageCompartment extends Component{
     }
 
 
+
+
+    @Override
+    public int getAbility(){
+        return maxNumGoods;
+    }
+
+
     @Override
     public ArrayList<Goods> getAbility(Goods good){
         if (good == null){
