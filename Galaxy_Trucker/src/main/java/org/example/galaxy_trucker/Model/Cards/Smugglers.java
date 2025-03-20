@@ -57,7 +57,7 @@ public class Smugglers extends Card{
                 Flag=false;
                 //if(PLayerlist.get(Order).yes()){   //chiedo se vuole prende le ricompense
                 PlayerList.get(Order).handleCargo(rewardGoods);
-                //PlayerList.get(Order).movePlayer(-this.Time);
+                Board.movePlayer(PlayerList.get(Order).GetID(), -this.getTime());
                 //}
             }//fine caso vittoria
             Order++;

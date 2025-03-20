@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
 import java.lang.*;
@@ -196,5 +197,27 @@ public class GameBoard {
     public int getLevel(){return GameLv;}
     public Player[] getPositions(){return this.positions;}
     public TileSets getTilesSets(){return tileSets;}
+
+
+    public void abandonRace(Player loser){
+
+        players.remove(loser);
+    }
+
+ // va cambiato se vogliamo fare i controlli di vittoria su tutti i player alla fine
+    public void finishPlayer(int position, Player player){
+        int total=0;
+
+        total += player.GetCredits();
+        PlayerBoard playerBoard= player.getMyPlance();
+        total-= playerBoard.getDamage();
+        Tile[][] tiles = playerBoard.getPlayerBoard();
+         ArrayList<Tile> cargoTiles= playerBoard.getc
+                 ;
+
+
+
+    }
+
 
 }

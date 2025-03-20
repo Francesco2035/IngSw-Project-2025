@@ -48,8 +48,9 @@ public class AbandonedStation extends Card{
                 //il giocatore sceglie se prendere la nave o meno
 
                 //tecnicamente dovrebbe anche gestire gli spostamenti, non ha senso che sia io a gestire entrambe le cose
-
                 PlayerList.get(Order).handleCargo(this.rewardGoods);
+
+                AbandonedStationBoard.movePlayer(PlayerList.get(Order).GetID(), this.getTime());
                 AbandonedStationBool=false;
                 //AbandonedStationPlayerList.get(AbandonedStationOrder).movePlayer(-this.getTime());
             }

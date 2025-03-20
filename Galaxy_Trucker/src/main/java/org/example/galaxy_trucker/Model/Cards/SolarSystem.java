@@ -37,7 +37,7 @@ public class SolarSystem extends Card {
                 //avviso il player di cambiare idea perché il pianeta è occupato
             }
             if(yes==1) {
-               // SolarSystemPlayerList.get(SolarSystemOrder).movePlayer(this.getTime());
+                SolarSystemBoard.movePlayer(SolarSystemPlayerList.get(SolarSystemOrder).GetID(), -this.getTime());
                SolarSystemPlayerList.get(SolarSystemOrder).handleCargo(planets.get(NumPlanet).getGoods());
             }
             SolarSystemOrder++;

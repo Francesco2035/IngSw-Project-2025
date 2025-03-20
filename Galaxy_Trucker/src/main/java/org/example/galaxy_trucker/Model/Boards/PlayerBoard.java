@@ -144,6 +144,7 @@ public class PlayerBoard {
     }
 
 
+
     /**
      * Method gethousingUnits retrieves a list of coordinates representing housing units on the player board.
      *
@@ -887,13 +888,15 @@ public class PlayerBoard {
      * Method populateHousingUnit populates a housing unit with humans or aliens.
      *
      * @param coordinate of type IntegerPair.
-     * @param humans of type int.
+     * @param humans of type int.f bounds, the
      * @param purpleAlien of type boolean.
      * @param brownAlien of type boolean.
-     * @throws InvalidInput If the coordinates are out of bounds, the tile is invalid, the tile is not a housing unit,
+     * @throws InvalidInput If the coordinates are out otile is invalid, the tile is not a housing unit,
      *                      aliens are added to the MainCockpit, or the combination of occupants is not allowed.
      * @throws StorageCompartmentFullException If the housing unit is already full and cannot accommodate more occupants.
      */
+
+
     public void populateHousingUnit(IntegerPair coordinate , int humans ,boolean purpleAlien, boolean brownAlien) throws InvalidInput, StorageCompartmentFullException{
 
         int x = coordinate.getFirst();
@@ -930,5 +933,6 @@ public class PlayerBoard {
         PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().initType(humans, purpleAlien, brownAlien);
     }
 
+    public int sellCargo(){}
 
 }

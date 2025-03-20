@@ -140,6 +140,7 @@ public class Player {
     }
 
 
+
     public ArrayList<IntegerPair> getPower(){
         ArrayList<IntegerPair> Power = new ArrayList<>();
         IntegerPair coords = new IntegerPair(6, 9);
