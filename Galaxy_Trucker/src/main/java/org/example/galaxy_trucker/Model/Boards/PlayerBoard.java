@@ -10,6 +10,7 @@ import org.example.galaxy_trucker.Model.Void;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PlayerBoard {
 
@@ -35,6 +36,9 @@ public class PlayerBoard {
     private ArrayList<Tile> Buffer;
     HashMap<Connector, ArrayList<Connector>>  validConnection;
 
+
+//  test della classificazione
+    private Map<Class<?>, ArrayList<Tile>> classificazione = new HashMap<>();
 
 
 
@@ -958,5 +962,12 @@ public class PlayerBoard {
         PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().initType(humans, purpleAlien, brownAlien);
     }
 
+
+
+    public void classifyTle(Tile tile){
+
+        classificazione.computeIfAbsent(tile.getComponent().getClass(), k -> new ArrayList<>()).add(tile);
+
+    }
 
 }
