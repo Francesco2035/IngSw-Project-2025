@@ -2,7 +2,11 @@ package org.example.galaxy_trucker;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Tiles.Component;
+import org.example.galaxy_trucker.Model.Tiles.Connector;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.shieldGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
