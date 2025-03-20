@@ -30,4 +30,9 @@ public class alienAddons extends Component{
         if(type.equals("purple")) whatColor = true;
         else if(type.equals("brown")) whatColor = false;
     }
+
+    @Override
+    public String toString(){
+        return "alienAddons";
+    }
 }

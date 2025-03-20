@@ -19,6 +19,9 @@ public class PlayerBoard {
     private int exposedConnectors;
     private int[] shield;
 
+    private boolean purpleAlien;
+    private boolean brownAlien;
+
 
     private ArrayList<Goods> BufferGoods;
 
@@ -39,6 +42,9 @@ public class PlayerBoard {
         this.damage = 0;
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
+
+        this.purpleAlien = false;
+        this.brownAlien = false;
 
         this.exposedConnectors = 0;
         this.housingUnits = new ArrayList<>();
@@ -462,6 +468,7 @@ public class PlayerBoard {
         ValidPlayerBoard[x][y] = 0;
     }
 
+//NON PUOI SCEGLIERE TRONCONI SENZA UMANI
 
     /**
      * Method chosePlayerBoard returns the selected chunk and calculates the actual damage suffered.
@@ -883,6 +890,23 @@ public class PlayerBoard {
     }
 
 
+    public boolean checkAddons(int x, int y, boolean purple, boolean brown){
+        if (ValidPlayerBoard[x][y] != 1) {
+            return false;
+        }
+        if (!PlayerBoard[x][y].getComponent().toString().equals("alienAddons")){
+            return false;
+        }
+        if ((PlayerBoard[x][y].getComponent().getAbility() == 1 && brown) || (PlayerBoard[x][y].getComponent().getAbility() == 0 && purple)){
+            return false;
+        }
+
+        return true;
+
+    }
+
+
+
     /**
      * Method populateHousingUnit populates a housing unit with humans or aliens.
      *
@@ -891,7 +915,7 @@ public class PlayerBoard {
      * @param purpleAlien of type boolean.
      * @param brownAlien of type boolean.
      * @throws InvalidInput If the coordinates are out of bounds, the tile is invalid, the tile is not a housing unit,
-     *                      aliens are added to the MainCockpit, or the combination of occupants is not allowed.
+     *                      aliens are added to the MainCockpit, aliens are added , or the combination of occupants is not allowed.
      * @throws StorageCompartmentFullException If the housing unit is already full and cannot accommodate more occupants.
      */
     public void populateHousingUnit(IntegerPair coordinate , int humans ,boolean purpleAlien, boolean brownAlien) throws InvalidInput, StorageCompartmentFullException{
@@ -911,12 +935,16 @@ public class PlayerBoard {
             throw new InvalidInput("Invalid input: aliens cannot be added to the MainCockpit");
         }
 
+        if((purpleAlien && brownAlien) || checkAddons(x -1 ,y,purpleAlien, brownAlien)  || checkAddons(x+1,y,purpleAlien, brownAlien) || checkAddons(x,y - 1,purpleAlien, brownAlien) || checkAddons(x,y + 1,purpleAlien, brownAlien) ){
+            throw new InvalidInput("Invalid input: aliens cannot be added without specif Addons.");
+        }
+
         if (PlayerBoard[x][y].getComponent().getAbility() == 2 && humans > 0){
             throw new StorageCompartmentFullException("The following StorageCompartment is Full: " + x + "," + y);
         }
 
         if (PlayerBoard[x][y].getComponent().getAbility() != 0 && (purpleAlien || brownAlien)){
-            throw new InvalidInput("Invalid input: aliens cannot be added  if humans are already present");
+            throw new InvalidInput("Invalid input: aliens cannot be added if humans are already present");
         }
 
         if ((PlayerBoard[x][y].getComponent().isBrownAlien() || PlayerBoard[x][y].getComponent().isPurpleAlien()) && humans > 0){
