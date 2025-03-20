@@ -134,9 +134,13 @@ public class Player {
     /**
      * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
      */
-//    public void EndConstruction(){
-//        CommonBoard.SetStartingPosition(this.ID);
-//    }
+    public void EndConstruction(){
+        CommonBoard.SetStartingPosition(this.ID);
+    }
+
+    public void StatTimer() throws InterruptedException {
+        CommonBoard.StartHourglass();
+    }
 
 
     public void SetReady(){
@@ -158,6 +162,7 @@ public class Player {
         return Power;
 
     }
+
     public ArrayList<IntegerPair> getHumanstoKIll(){
         ArrayList<IntegerPair> Locations = new ArrayList<>();
         IntegerPair coords = new IntegerPair(4, 2);
@@ -174,6 +179,25 @@ public class Player {
     }
 
 
+    public void GiveCoords(IntegerPair coords){
+        //chima metodo della carta passando parametro
+    }
+
+    public void GiveDecision(int decision){
+        //chima metodo della carta passando parametro
+    }
+
+    public void GiveDecision(boolean decision){
+        //chima metodo della carta passando parametro
+    }
+
+
+
+
+
+
+
+
     public void setCargoAction(int action){
         if(action < 0 || action > 3)
             throw new IllegalArgumentException("Invalid action");
@@ -182,7 +206,7 @@ public class Player {
     }
 
     public int getCargoAction(){
-        input.wait();
+
         if(input == null) throw new NullPointerException("No action selected");
         int temp = input;
         input = null;
@@ -194,8 +218,8 @@ public class Player {
         input.notify();
     }
 
-    public int getGoodsIndex() throws InterruptedException {
-        input.wait();
+    public int getGoodsIndex() {
+
         if(input == null) throw new NullPointerException("No action selected");
         int temp = input;
         input = null;

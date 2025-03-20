@@ -63,6 +63,11 @@ public class GameBoard {
 
     }
 
+    public void StartHourglass() throws InterruptedException {
+        hourglass.StartTimer();
+    }
+
+
     public void removePlayer(Player DeadMan){
 
         Player_IntegerPair eliminated = players.stream()
