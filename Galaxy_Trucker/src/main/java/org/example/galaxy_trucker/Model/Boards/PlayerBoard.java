@@ -933,6 +933,16 @@ public class PlayerBoard {
         PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().initType(humans, purpleAlien, brownAlien);
     }
 
-    public int sellCargo(){}
+    public int sellCargo(boolean arrived){
+        int totalSold=0;
+        for(int i=0; i<Cargo.size(); i++){
+            Tile currentTile = PlayerBoard[Cargo.get(i).getFirst()][Cargo.get(i).getSecond()];
+            ArrayList<Goods> currGoods= currentTile.getComponent().getGoods();
+            for(int j=0; j< currGoods.size(); j++){
+                //dovrei asseganre un valore a goods senno è orrendo
+                totalSold
+            }
+        }
+    }
 
 }

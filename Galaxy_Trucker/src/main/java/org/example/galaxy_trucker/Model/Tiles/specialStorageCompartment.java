@@ -57,6 +57,8 @@ public class specialStorageCompartment extends Component{
 
     }
 
+
+
     @Override
     public int setAbility(Goods good, boolean select) {
         if(select){
