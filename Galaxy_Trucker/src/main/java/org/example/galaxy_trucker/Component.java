@@ -37,6 +37,8 @@ public abstract class Component {
     }
 
 
+    //i metodi da overridare sono sa impostare come abstract
+
     //initType
     public void initType(){}
     public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {}
