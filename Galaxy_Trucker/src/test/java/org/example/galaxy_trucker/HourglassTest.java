@@ -1,8 +1,7 @@
 package org.example.galaxy_trucker;
 
+import org.example.galaxy_trucker.Model.Boards.Hourglass;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class HourglassTest {
 

@@ -1,5 +1,12 @@
 package org.example.galaxy_trucker;
 
+import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.GAGen;
+import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.Tiles.Component;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.TileSets;
+import org.example.galaxy_trucker.Model.Tiles.powerCenter;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -18,8 +25,9 @@ class powerCenterTest {
     }
 
     @Test
-    void getAbility() {
-        TileSets tileSets = new TileSets();
+    void getAbility() throws IOException {
+        GAGen gag = new GAGen();
+        TileSets tileSets = new TileSets(gag);
         GameBoard board = new GameBoard(tileSets, 2);
         Player me = new Player("prova", board);
         Component batt = new powerCenter(3);
@@ -28,8 +36,9 @@ class powerCenterTest {
     }
 
     @Test
-    void setAbility() {
-        TileSets tileSets = new TileSets();
+    void setAbility() throws IOException {
+        GAGen gag = new GAGen();
+        TileSets tileSets = new TileSets(gag);
         GameBoard board = new GameBoard(tileSets, 2);
         Player me = new Player("prova", board);
         Component batt = new powerCenter(3);

@@ -1,9 +1,11 @@
 package org.example.galaxy_trucker;
 
+import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Tiles.specialStorageCompartment;
+import org.example.galaxy_trucker.Model.Tiles.storageCompartment;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class GoodsBoardTest {
 

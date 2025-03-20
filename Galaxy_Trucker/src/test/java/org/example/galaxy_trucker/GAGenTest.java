@@ -3,6 +3,9 @@ package org.example.galaxy_trucker;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.galaxy_trucker.Model.Cards.Card;
+import org.example.galaxy_trucker.Model.GAGen;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
