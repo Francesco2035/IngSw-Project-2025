@@ -21,4 +21,5 @@ class PlayerBoardTest {
             prova.classifyTle(g.getTilesDeck().get(i));
         }
     }
+
 }

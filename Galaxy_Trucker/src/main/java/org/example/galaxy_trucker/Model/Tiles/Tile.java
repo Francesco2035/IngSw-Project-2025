@@ -8,7 +8,6 @@ public class Tile {
 
 
     private int id;
-    private IntegerPair coords;
     private Component component;
     private String componentType;
     private ArrayList<Connector> connectors;
@@ -18,21 +17,12 @@ public class Tile {
     public Tile() {}
 
     public Tile(IntegerPair coords, Component component, Connector... connectors) {
-        this.coords = coords;
         this.component = component;
         this.connectors = new ArrayList<>();
         this.connectors.addAll(Arrays.asList(connectors));
     }
 
 
-
-    public IntegerPair getCoords() {
-        return coords;
-    }
-
-    public void setCoords(IntegerPair coords) {
-        this.coords = coords;
-    }
 
     public int getId() {
         return id;

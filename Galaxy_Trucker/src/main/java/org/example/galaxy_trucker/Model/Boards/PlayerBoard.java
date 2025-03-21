@@ -37,10 +37,6 @@ public class PlayerBoard {
     HashMap<Connector, ArrayList<Connector>>  validConnection;
 
 
-//  test della classificazione
-    private Map<Class<?>, ArrayList<Tile>> classificazione = new HashMap<>();
-
-
 
     public PlayerBoard(int lv) {
         this.damage = 0;
@@ -962,6 +958,10 @@ public class PlayerBoard {
         PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().initType(humans, purpleAlien, brownAlien);
     }
 
+
+
+    //  test della classificazione
+    private Map<Class<?>, ArrayList<Tile>> classificazione = new HashMap<>();
 
 
     public void classifyTle(Tile tile){
