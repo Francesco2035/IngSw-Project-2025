@@ -76,10 +76,10 @@ public class plasmaDrill extends Component{
 
         int index = tile.getConnectors().indexOf(Connector.CANNON);
 
-        if (index == 0 && mat[x-1][y]==1 ) return false;
-        if (index == 1 && mat[x][y-1]==1 ) return false;
-        if (index == 2 && mat[x+1][y]==1 ) return false;
-        if (index == 3 && mat[x][y+1]==1 ) return false;
+        if (index == 0 && mat[x][y-1]==1 ) return false;
+        if (index == 1 && mat[x-1][y]==1 ) return false;
+        if (index == 2 && mat[x][y+1]==1 ) return false;
+        if (index == 3 && mat[x+1][y]==1 ) return false;
         return true;
     };
 

@@ -81,7 +81,11 @@ public class hotWaterHeater extends Component{
 
         int index = tile.getConnectors().indexOf(Connector.MOTOR);
 
-        if (index != 3 || mat[x][y+1]==1 ) return false;
+
+        if (index != 3 || mat[x + 1][y]==1 ){
+            System.out.println(index + " " + x + " : " + y);
+            return false;
+        }
         return true;
         //return index == 3 && mat[x][y + 1] != 1;
     };

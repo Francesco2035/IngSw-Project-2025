@@ -74,7 +74,7 @@ public class MainCockpitComp extends Component {
 
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile) {
-        return false;
+        return true;
     }
 
     @Override

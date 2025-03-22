@@ -4,7 +4,7 @@ package org.example.galaxy_trucker.Model.Boards;
 import org.example.galaxy_trucker.Exceptions.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.*;
-import org.example.galaxy_trucker.Model.Void;
+
 
 
 import java.util.ArrayList;
@@ -32,6 +32,11 @@ public class PlayerBoard {
 
 
     private ArrayList<Tile> Buffer;
+
+    public HashMap<Connector, ArrayList<Connector>> getValidConnection() {
+        return validConnection;
+    }
+
     HashMap<Connector, ArrayList<Connector>>  validConnection;
 
 
@@ -99,7 +104,7 @@ public class PlayerBoard {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 if (ValidPlayerBoard[x][y] == -1) {
-                    PlayerBoard[x][y] =  new Tile(new IntegerPair(x,y), new Void() ,Connector.NONE, Connector.NONE,Connector.NONE, Connector.NONE);
+                    PlayerBoard[x][y] =  new Tile(new IntegerPair(x,y), new spaceVoid() ,Connector.NONE, Connector.NONE,Connector.NONE, Connector.NONE);
                 }
                 else {
                     PlayerBoard[x][y] = null;
@@ -110,6 +115,9 @@ public class PlayerBoard {
         this.PlayerBoard[6][6] = new Tile(new IntegerPair(6,6), new MainCockpitComp(0),Connector.UNIVERSAL, Connector.UNIVERSAL,Connector.UNIVERSAL, Connector.UNIVERSAL);
     }
 
+    public Map<Class<?>, ArrayList<IntegerPair>> getClassifiedTiles() {
+        return classifiedTiles;
+    }
 
     /**
      * Method insertBuffer inserts the tile passed by the player into the buffer.
@@ -217,6 +225,7 @@ public class PlayerBoard {
 
     public void classifyTile(Tile tile, int x, int y){
 
+        //System.out.println(tile.getComponent().getClass());
         classifiedTiles.computeIfAbsent(tile.getComponent().getClass(), k -> new ArrayList<>()).add(new IntegerPair(x, y));
 
     }
@@ -299,42 +308,18 @@ public class PlayerBoard {
      * @return boolean true if everything is legal, false otherwise.
      */
     public boolean checkIllegal( ArrayList<IntegerPair> visited){
-        //System.out.println("controllo illegalità");
+        System.out.println("controllo illegalità");
         int x;
         int y;
 
         for (IntegerPair pair : visited) {
+
             x = pair.getFirst();
             y = pair.getSecond();
+            System.out.println(x+ " " + y);
 
-            if (ValidPlayerBoard[x][y] == 1 && (PlayerBoard[x][y].getComponent().getClass() == plasmaDrill.class || PlayerBoard[x][y].getComponent().getClass() == hotWaterHeater.class)) {
-                //System.out.println(x + " " + y);
-
-                if (ValidPlayerBoard[x][y] == 1 && (PlayerBoard[x][y].getConnectors().get(0) == Connector.MOTOR  || PlayerBoard[x][y].getConnectors().get(1) == Connector.MOTOR) || PlayerBoard[x][y].getConnectors().get(2) == Connector.MOTOR){
-                    //System.out.println("Motore illegale");
-                    return false;
-                }
-
-                if(ValidPlayerBoard[x][y-1] == 1 && PlayerBoard[x][y].getConnectors().get(0) == Connector.CANNON ) {
-                    //System.out.println("illegale da dx");
-                    return false;
-                }
-
-                if(ValidPlayerBoard[x-1][y] == 1 && PlayerBoard[x][y].getConnectors().get(1) == Connector.CANNON ) {
-                    //System.out.println("illegale dal basso");
-                    return false;
-                }
-
-                if(ValidPlayerBoard[x][y+1] == 1 && PlayerBoard[x][y].getConnectors().get(2) == Connector.CANNON ) {
-                    //System.out.println("illegale da sx");
-                    return false;
-                }
-
-                if(ValidPlayerBoard[x+1][y] == 1 && (PlayerBoard[x][y].getConnectors().get(3) == Connector.CANNON || PlayerBoard[x][y].getConnectors().get(3) == Connector.MOTOR)) {
-                    //System.out.println("illegale dall'alto");
-                    return false;
-                }
-
+            if(!PlayerBoard[x][y].controlDirections(this,x,y)){
+                return false;
             }
         }
         return true;
@@ -354,7 +339,7 @@ public class PlayerBoard {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
-        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new Void() ,Connector.NONE, Connector.NONE, Connector.NONE);
+        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid() ,Connector.NONE, Connector.NONE, Connector.NONE);
         ValidPlayerBoard[x][y] = 0;
     }
 
@@ -408,19 +393,19 @@ public class PlayerBoard {
         visited.add(new IntegerPair(r, c));
         System.out.println(r + " " + c);
 
-        if (getTile(r, c -1) != null && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
+        if (ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
             findPaths(r, c - 1, visited);
         }
 
-        if (getTile(r -1, c ) != null && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
+        if (ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
             findPaths(r -1,c ,visited);
         }
 
-        if (getTile(r, c + 1) != null && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
+        if (ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
             findPaths(r,c + 1 ,visited);
         }
 
-        if (getTile(r + 1, c) != null && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r + 1, c ).getConnectors().get(3))){
+        if (ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r + 1, c ).getConnectors().get(3))){
             findPaths(r +1,c ,visited);
         }
 
@@ -492,19 +477,25 @@ public class PlayerBoard {
             shield[i] = 0;
         }
 
-        classifiedTiles.clear();
+        classifiedTiles = new HashMap<>();
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
         updateBoardAttributes(x,y, visitedPositions);
 
         if (classifiedTiles.containsKey(shieldGenerator.class)){
             for (int i = 0; i < classifiedTiles.get(shieldGenerator.class).size(); i++) {
                 for (int j = 0; j< 4; j++){
-                    shield[i] += PlayerBoard[classifiedTiles.get(shieldGenerator.class).get(i).getFirst()]
+                    shield[j] += PlayerBoard[classifiedTiles.get(shieldGenerator.class).get(i).getFirst()]
                                             [classifiedTiles.get(shieldGenerator.class).
                                             get(i).getSecond()].getComponent().getAbility(0).get(j);
                 }
             }
         }
+        if (classifiedTiles.containsKey(modularHousingUnit.class)){
+            for (IntegerPair pair : classifiedTiles.get(modularHousingUnit.class)){
+                PlayerBoard[pair.getFirst()][pair.getSecond()].controlDirections(this, pair.getFirst(), pair.getSecond());
+            }
+        }
+
 
 
     }
@@ -522,6 +513,7 @@ public class PlayerBoard {
         if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlayerBoard[r][c] != 1) {
             return;
         }
+        System.out.println("update: "+r + " " + c);
 
         classifyTile(PlayerBoard[r][c], r,c);
 
@@ -530,29 +522,29 @@ public class PlayerBoard {
         System.out.println(r + " " + c);
 
 
-        if (getTile(r, c -1) != null && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
-            findPaths(r, c - 1, visited);
+        if (ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
+            updateBoardAttributes(r, c - 1, visited);
         }
         else if (getTile(r,c).getConnectors().get(0) == Connector.SINGLE || getTile(r,c).getConnectors().get(0) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(0) == Connector.DOUBLE) {
             exposedConnectors++;
         }
 
-        if (getTile(r -1, c ) != null && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
-            findPaths(r -1,c ,visited);
+        if (ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
+            updateBoardAttributes(r -1,c ,visited);
         }
         else if (getTile(r,c).getConnectors().get(1) == Connector.SINGLE || getTile(r,c).getConnectors().get(1) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(1) == Connector.DOUBLE) {
             exposedConnectors++;
         }
 
-        if (getTile(r, c + 1) != null && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
-            findPaths(r,c + 1 ,visited);
+        if (ValidPlayerBoard[r][c+1] == 1&& checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
+            updateBoardAttributes(r,c + 1 ,visited);
         }
         else if (getTile(r,c).getConnectors().get(2) == Connector.SINGLE || getTile(r,c).getConnectors().get(2) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(2) == Connector.DOUBLE) {
             exposedConnectors++;
         }
 
-        if (getTile(r + 1, c) != null && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r + 1, c ).getConnectors().get(3))){
-            findPaths(r +1,c ,visited);
+        if (ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r + 1, c ).getConnectors().get(3))){
+            updateBoardAttributes(r +1,c ,visited);
         }
         else if (getTile(r,c).getConnectors().get(3) == Connector.SINGLE || getTile(r,c).getConnectors().get(3) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(3) == Connector.DOUBLE) {
             exposedConnectors++;
