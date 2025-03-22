@@ -26,11 +26,9 @@ public class PlayerBoard {
 
     private ArrayList<Goods> BufferGoods;
 
-    private ArrayList<IntegerPair> housingUnits;
-    private ArrayList<IntegerPair> energyTiles;
-    private ArrayList<IntegerPair> Cargo;
-    private ArrayList<IntegerPair> plasmaDrills;
-    private ArrayList<IntegerPair> hotWaterHeaters;
+
+
+    private Map<Class<?>, ArrayList<IntegerPair>> classifiedTiles;
 
 
     private ArrayList<Tile> Buffer;
@@ -46,12 +44,9 @@ public class PlayerBoard {
         this.purpleAlien = false;
         this.brownAlien = false;
 
+        this.classifiedTiles = new HashMap<>();
+
         this.exposedConnectors = 0;
-        this.housingUnits = new ArrayList<>();
-        this.energyTiles = new ArrayList<>();
-        this.hotWaterHeaters = new ArrayList<>();
-        this.Cargo = new ArrayList<>();
-        this.plasmaDrills = new ArrayList<>();
 
         this.BufferGoods = new ArrayList<>();
 
@@ -150,15 +145,6 @@ public class PlayerBoard {
     }
 
 
-    /**
-     * Method gethousingUnits retrieves a list of coordinates representing housing units on the player board.
-     *
-     * @return an ArrayList of IntegerPair containing the coordinates of housing units.
-     */
-   public ArrayList<IntegerPair> gethousingUnits(){
-        return this.housingUnits;
-    }
-
 
     /**
      * Method getShield retrieves the shield status of the player board.
@@ -199,14 +185,6 @@ public class PlayerBoard {
     }
 
 
-    /**
-     * Method getEnergyTiles retrieves a list of coordinates representing energy tiles on the player board.
-     *
-     * @return an ArrayList of IntegerPair containing the coordinates of energy tiles.
-     */
-    public ArrayList<IntegerPair> getEnergyTiles() {
-        return energyTiles;
-    }
 
 
     /**
@@ -235,14 +213,14 @@ public class PlayerBoard {
     }
 
 
-    /**
-     * Method getPlasmaDrills retrieves the list of coordinates where plasma drills are located.
-     *
-     * @return an ArrayList of IntegerPair representing the positions of plasma drills.
-     */
-    public ArrayList<IntegerPair> getPlasmaDrills(){
-        return plasmaDrills;
+
+
+    public void classifyTile(Tile tile, int x, int y){
+
+        classifiedTiles.computeIfAbsent(tile.getComponent().getClass(), k -> new ArrayList<>()).add(new IntegerPair(x, y));
+
     }
+
 
 
     /**
@@ -263,6 +241,7 @@ public class PlayerBoard {
         if (x < 0 || x >= PlayerBoard.length || y < 0 || y >= PlayerBoard[0].length || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
+
 
         this.PlayerBoard[x][y] = tile;
         ValidPlayerBoard[x][y] = 1;
@@ -375,7 +354,7 @@ public class PlayerBoard {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
-        this.PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new Void() ,Connector.NONE, Connector.NONE, Connector.NONE);
+        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new Void() ,Connector.NONE, Connector.NONE, Connector.NONE);
         ValidPlayerBoard[x][y] = 0;
     }
 
@@ -455,20 +434,14 @@ public class PlayerBoard {
      * @param y of type int - y coordinate.
      */
     public void destroy(int x, int y){
-        IntegerPair pos = new IntegerPair(x, y);
-        housingUnits.remove(pos);
-        energyTiles.remove(pos);
-        plasmaDrills.remove(pos);
-        Cargo.remove(pos);
-        hotWaterHeaters.remove(pos);
 
+        classifiedTiles.get(PlayerBoard[x][y].getComponent().getClass()).remove(new IntegerPair(x,y));
         damage++;
-
         PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid(),Connector.NONE, Connector.NONE, Connector.NONE, Connector.NONE);
         ValidPlayerBoard[x][y] = 0;
     }
 
-//NON PUOI SCEGLIERE TRONCONI SENZA UMANI
+
 
     /**
      * Method chosePlayerBoard returns the selected chunk and calculates the actual damage suffered.
@@ -477,10 +450,7 @@ public class PlayerBoard {
      * @param i of type int - the chunk selected.
      */
     public ArrayList<IntegerPair> choosePlayerBoard(HashMap<Integer, ArrayList<IntegerPair>> shipSection , int i){
-
-        for (int j = 0; j < shipSection.size(); j++) {
-            damage += shipSection.get(j).size();
-        }
+        //questo metodo non ha molto senso
         return shipSection.get(i);
 
     }
@@ -499,6 +469,7 @@ public class PlayerBoard {
                     if(!newPlayerBoard.contains(new IntegerPair(x,y))){
                         PlayerBoard[x][y] = new Tile(new IntegerPair(x,y),new spaceVoid(),Connector.NONE, Connector.NONE, Connector.NONE, Connector.NONE);
                         ValidPlayerBoard[x][y] = 0;
+                        damage++;
                     }
                 }
             }
@@ -521,12 +492,20 @@ public class PlayerBoard {
             shield[i] = 0;
         }
 
-        this.housingUnits.clear();
-        this.energyTiles.clear();
-        this.Cargo.clear();
-        this.plasmaDrills.clear();
+        classifiedTiles.clear();
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
         updateBoardAttributes(x,y, visitedPositions);
+
+        if (classifiedTiles.containsKey(shieldGenerator.class)){
+            for (int i = 0; i < classifiedTiles.get(shieldGenerator.class).size(); i++) {
+                for (int j = 0; j< 4; j++){
+                    shield[i] += PlayerBoard[classifiedTiles.get(shieldGenerator.class).get(i).getFirst()]
+                                            [classifiedTiles.get(shieldGenerator.class).
+                                            get(i).getSecond()].getComponent().getAbility(0).get(j);
+                }
+            }
+        }
+
 
     }
 
@@ -540,32 +519,11 @@ public class PlayerBoard {
      * @param visited of type ArrayList<IntegerPair> - keeps track of all the tiles already visited.
      */
     public void updateBoardAttributes(int r, int c,ArrayList<IntegerPair> visited){
-        if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlayerBoard[r][c] == -1) { //!= 1
+        if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlayerBoard[r][c] != 1) {
             return;
         }
 
-        else if (PlayerBoard[r][c].getComponent().getClass() == powerCenter.class){
-            energyTiles.add(new IntegerPair(r,c));
-        }
-
-        else if (PlayerBoard[r][c].getComponent().getClass() == plasmaDrill.class){
-            plasmaDrills.add(new IntegerPair(r, c));
-        }
-
-        else if (PlayerBoard[r][c].getComponent().getClass() == modularHousingUnit.class || PlayerBoard[r][c].getComponent().getClass() == MainCockpitComp.class){
-            housingUnits.add(new IntegerPair(r,c));
-        }
-
-        else if (PlayerBoard[r][c].getComponent().getClass() == shieldGenerator.class){
-            for (int i = 0; i < shield.length; i++){
-                shield[i] += PlayerBoard[r][c].getComponent().getAbility(1).get(i);
-            }
-        }
-
-        else if (PlayerBoard[r][c].getComponent().getClass() == hotWaterHeater.class ){
-            hotWaterHeaters.add(new IntegerPair(r,c));
-        }
-
+        classifyTile(PlayerBoard[r][c], r,c);
 
         visited.add(new IntegerPair(r, c));
 
@@ -698,6 +656,9 @@ public class PlayerBoard {
         if (chosenPlasmaDrills == null) {
             throw new NullPointerException("chosenPlasmaDrills cannot be null.");
         }
+        if (!checkExistence(chosenPlasmaDrills, plasmaDrill.class)) {
+            throw new InvalidInput("Invalid input: at least one of the selected tils isn't a plasmaDrill.");
+        }
 
         double power = 0;
         for (IntegerPair cannon : chosenPlasmaDrills){
@@ -734,9 +695,8 @@ public class PlayerBoard {
         if (chosenHotWaterHeaters == null) {
             throw new NullPointerException("chosenHotWaterHeaters cannot be null.");
         }
-
-        if (!hotWaterHeaters.containsAll(chosenHotWaterHeaters)) {
-            throw new InvalidInput("Invalid choice, at least one engine is invalid");
+        if(!checkExistence(chosenHotWaterHeaters, hotWaterHeater.class)) {
+            throw new InvalidInput("Invalid input: at least one of the chosen tiles isn't an hotWaterHeater.");
         }
 
         int power = 0;
@@ -772,7 +732,7 @@ public class PlayerBoard {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (PlayerBoard[x][y].getComponent().getClass() != storageCompartment.class && PlayerBoard[x][y].getComponent().getClass() != specialStorageCompartment.class){
+        if (!checkExistence(x,y, storageCompartment.class, specialStorageCompartment.class)){
             throw new InvalidInput("The following tile is not a storageCompartment");
         }
 
@@ -806,7 +766,7 @@ public class PlayerBoard {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (PlayerBoard[x][y].getComponent().getClass() != storageCompartment.class && PlayerBoard[x][y].getComponent().getClass() != specialStorageCompartment.class){
+        if (!checkExistence(x,y, storageCompartment.class, specialStorageCompartment.class) ){
             throw new InvalidInput("The following tile is not a storageCompartment");
         }
 
@@ -849,7 +809,7 @@ public class PlayerBoard {
         if (chosenEnergyTiles == null) {
             throw new NullPointerException("chosenEnergyTiles cannot be null.");
         }
-        if (!energyTiles.containsAll(chosenEnergyTiles)) {
+        if (!checkExistence(chosenEnergyTiles, powerCenter.class)) {
             throw new InvalidInput("Invalid choice, at least one energy is invalid");
         }
         for (IntegerPair energy : chosenEnergyTiles){
@@ -878,7 +838,7 @@ public class PlayerBoard {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (PlayerBoard[x][y].getComponent().getClass() != storageCompartment.class && PlayerBoard[x][y].getComponent().getClass() != specialStorageCompartment.class){
+        if (!checkExistence(x,y, storageCompartment.class, specialStorageCompartment.class)){
             throw new InvalidInput("The following tile is not a storageCompartment");
         }
 
@@ -894,7 +854,7 @@ public class PlayerBoard {
         if (ValidPlayerBoard[x][y] != 1) {
             return false;
         }
-        if (!PlayerBoard[x][y].getComponent().toString().equals("alienAddons")){
+        if (!checkExistence(x,y, alienAddons.class)){
             return false;
         }
         if ((PlayerBoard[x][y].getComponent().getAbility() == 1 && brown) || (PlayerBoard[x][y].getComponent().getAbility() == 0 && purple)){
@@ -927,11 +887,11 @@ public class PlayerBoard {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (PlayerBoard[x][y].getComponent().getClass() != modularHousingUnit.class && PlayerBoard[x][y].getComponent().getClass() != MainCockpitComp.class){
+        if (!checkExistence(x,y, modularHousingUnit.class)){
             throw new InvalidInput("The following tile is not a modularHousingUnit");
         }
 
-        if (PlayerBoard[x][y].getComponent().getClass() == MainCockpitComp.class && (purpleAlien || brownAlien)){
+        if (x == 6 && y == 6 && (purpleAlien || brownAlien)){
             throw new InvalidInput("Invalid input: aliens cannot be added to the MainCockpit");
         }
 
@@ -959,15 +919,31 @@ public class PlayerBoard {
     }
 
 
-
-    //  test della classificazione
-    private Map<Class<?>, ArrayList<Tile>> classificazione = new HashMap<>();
-
-
-    public void classifyTle(Tile tile){
-
-        classificazione.computeIfAbsent(tile.getComponent().getClass(), k -> new ArrayList<>()).add(tile);
-
+    public boolean checkExistence(int x, int y, Class<?> type){
+        return  classifiedTiles.containsKey(type) &&
+                classifiedTiles.get(type).contains(new IntegerPair(x, y));
     }
+
+    public boolean checkExistence(int x, int y, Class<?> type1, Class<?> type2){
+        return  (   classifiedTiles.containsKey(type1) &&
+                        classifiedTiles.get(type1).contains(new IntegerPair(x, y))) ||
+                (   classifiedTiles.containsKey(type2) &&
+                        classifiedTiles.get(type2).contains(new IntegerPair(x, y)));
+    }
+
+    public boolean checkExistence(ArrayList<IntegerPair> tiles, Class<?> type){
+        return  classifiedTiles.containsKey(type) &&
+                classifiedTiles.get(type).containsAll(tiles);
+    }
+
+    public boolean checkExistence(ArrayList<IntegerPair> tiles, Class<?> type1, Class<?> type2){
+        return  (classifiedTiles.containsKey(type1) &&
+                    classifiedTiles.get(type1).containsAll(tiles) ) ||
+                (classifiedTiles.containsKey(type2) &&
+                        classifiedTiles.get(type2).containsAll(tiles))
+                 ;
+    }
+
+
 
 }
