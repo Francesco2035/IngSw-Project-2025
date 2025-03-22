@@ -4,7 +4,6 @@ package org.example.galaxy_trucker.Model.Boards;
 import org.example.galaxy_trucker.Exceptions.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.*;
-import org.example.galaxy_trucker.Model.Void;
 
 
 import java.util.ArrayList;
@@ -104,7 +103,7 @@ public class PlayerBoard {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 if (ValidPlayerBoard[x][y] == -1) {
-                    PlayerBoard[x][y] =  new Tile(new IntegerPair(x,y), new Void() ,Connector.NONE, Connector.NONE,Connector.NONE, Connector.NONE);
+                    PlayerBoard[x][y] =  new Tile(new IntegerPair(x,y), new spaceVoid() ,Connector.NONE, Connector.NONE,Connector.NONE, Connector.NONE);
                 }
                 else {
                     PlayerBoard[x][y] = null;
@@ -375,7 +374,7 @@ public class PlayerBoard {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
-        this.PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new Void() ,Connector.NONE, Connector.NONE, Connector.NONE);
+        this.PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid() ,Connector.NONE, Connector.NONE, Connector.NONE);
         ValidPlayerBoard[x][y] = 0;
     }
 
@@ -962,6 +961,7 @@ public class PlayerBoard {
 
     //  test della classificazione
     private Map<Class<?>, ArrayList<Tile>> classificazione = new HashMap<>();
+
 
 
     public void classifyTle(Tile tile){

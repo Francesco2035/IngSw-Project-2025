@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,6 +59,21 @@ public class specialStorageCompartment extends Component{
     }
 
     @Override
+    public ArrayList<Integer> getAbility(int integer) {
+        return null;
+    }
+
+    @Override
+    public int setAbility() {
+        return 0;
+    }
+
+    @Override
+    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien) {
+        return 0;
+    }
+
+    @Override
     public int setAbility(Goods good, boolean select) {
         if(select){
             this.goods.add(good);
@@ -72,8 +88,23 @@ public class specialStorageCompartment extends Component{
     }
 
     @Override
+    public void setAbility(boolean direzione) {
+
+    }
+
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile) {
+        return true;
+    }
+
+    @Override
     public void initType() {
         if (type.equals("single")) setMaxNumGoods(1);
         else if (type.equals("double")) setMaxNumGoods(2);
+    }
+
+    @Override
+    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
+
     }
 }
