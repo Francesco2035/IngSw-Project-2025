@@ -26,6 +26,7 @@ public class GameBoard {
 
 
 
+
     public GameBoard(TileSets list, int lv) {
         this.players = new ArrayList<>();
         GameLv = lv; //the GameBoard class learns the current game level from Game anc will extend it to players and other objects
@@ -206,14 +207,13 @@ public class GameBoard {
 
  // va cambiato se vogliamo fare i controlli di vittoria su tutti i player alla fine
     public void finishPlayer(int position, Player player){
-        int total=0;
+        double total=0;
 
         total += player.GetCredits();
         PlayerBoard playerBoard= player.getMyPlance();
         total-= playerBoard.getDamage();
         Tile[][] tiles = playerBoard.getPlayerBoard();
-         ArrayList<Tile> cargoTiles= playerBoard.getc
-                 ;
+
 
 
 

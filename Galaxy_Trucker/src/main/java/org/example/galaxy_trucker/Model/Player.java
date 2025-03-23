@@ -7,6 +7,8 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static org.example.galaxy_trucker.Model.PlayerStates.HandlingCargo;
+
 public class Player {
 
     private GameBoard CommonBoard;
@@ -15,6 +17,8 @@ public class Player {
     private boolean ready;
     private int credits;
     private Tile CurrentTile;   //the tile that Player has in his hand
+    private PlayerStates PlayerState;
+    private ArrayList<Goods> GoodsToHandle;
 
 
     public Player(String id, GameBoard board) {
@@ -24,6 +28,8 @@ public class Player {
         credits = 0;
         ready = false;
         CurrentTile = null;
+        PlayerState = PlayerStates.BaseState;
+        GoodsToHandle = new ArrayList<>();
     }
 
 
@@ -55,6 +61,10 @@ public class Player {
         int d1 = r.nextInt(6) + 1;
         int d2 = r.nextInt(6) + 1;
         return d1+d2;
+    }
+
+    public void setState(PlayerStates state) {
+        this.PlayerState = state;
     }
 
 
@@ -170,10 +180,17 @@ public class Player {
     public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();
     }
 
-    public int getCargoAction(){
-        Random r = new Random();
-        return r.nextInt(3);
+
+    // puts the good in index i into the respective coordinates
+    public void PutGoods(int index, IntegerPair coords){
+      myPlance.putGoods(GoodsToHandle.remove(index), coords);
     }
+
+    // rimuove l'iesimo good in coordinata coords
+    public void removeGoods(IntegerPair coords,int index){
+        this.myPlance.removeGood(coords, index);
+    }
+
     public int getGoodsIndex(){
         return 3;
     }
@@ -192,32 +209,21 @@ public class Player {
 
 
     public void handleCargo(ArrayList<Goods> reward){
-        ArrayList<Integer> UsedAddresses= new ArrayList<>();
+        this.GoodsToHandle.clear();
 
-        while(!reward.isEmpty()) {
-            int a = getCargoAction();
-            if (a == 0) { // terminate handling cargo
-                return;
-            } else if (a == 1) {//put goods
-                int i= getGoodsIndex();
-                if(!UsedAddresses.contains(i)) {
-                    UsedAddresses.add(i);
-                    myPlance.putGoods(reward.get(i),getGoodsCoordinates());
-                    myPlance.putGoods(reward.get(i),getGoodsCoordinates());
-                }
-            } else if (a == 2) {// switch positions
-                //chiamo get type goods e coord
-                int g1=1;
-                int g2=0;
-                IntegerPair c1 = new IntegerPair(5,5);
-                IntegerPair c2 = new IntegerPair(8,6);
-                switchGoods(g1,c1,g2,c2);
-            }
-        }
+        this.GoodsToHandle.addAll(reward);
 
-        //chiedergli un azione alla volta è vieteato neh?
-
+        this.setState(PlayerStates.HandlingCargo);
 
     }
+    public void stopHandlingCargo(){
+        this.setState(PlayerStates.Waiting);
+        //finish card direi
+
+        // controllo che
+    }
+
+    //DOVREI AGGIUNGERE UN MODO PER ARRIVARE A CARD DA PLAYER DIREI :)
+    //principalmente per chiamare i metodi di card dopo l'input
 
 }

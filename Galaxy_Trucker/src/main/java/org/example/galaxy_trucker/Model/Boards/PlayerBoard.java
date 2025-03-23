@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class PlayerBoard {
 
     private Tile[][] PlayerBoard;
@@ -933,15 +934,21 @@ public class PlayerBoard {
         PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().initType(humans, purpleAlien, brownAlien);
     }
 
-    public int sellCargo(boolean arrived){
-        int totalSold=0;
+    public double sellCargo(boolean arrived){
+        double totalSold=0;
         for(int i=0; i<Cargo.size(); i++){
             Tile currentTile = PlayerBoard[Cargo.get(i).getFirst()][Cargo.get(i).getSecond()];
-            ArrayList<Goods> currGoods= currentTile.getComponent().getGoods();
+            ArrayList<Goods> currGoods= currentTile.getComponent().getAbility(null);
             for(int j=0; j< currGoods.size(); j++){
                 //dovrei asseganre un valore a goods senno è orrendo
-                totalSold
+                totalSold += currGoods.get(j).ordinal()+1;
             }
+        }
+        if (arrived){
+            return totalSold;
+        }
+        else{
+            return (Math.ceil(totalSold/2));
         }
     }
 

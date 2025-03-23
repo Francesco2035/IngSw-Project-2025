@@ -70,7 +70,7 @@ public abstract class Component {
         return false;
     }
 
-    public ArrayList<Goods> getGoods(){return null;}
+
 
 
 }

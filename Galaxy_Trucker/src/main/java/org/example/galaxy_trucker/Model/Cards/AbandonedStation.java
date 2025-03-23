@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Model.Boards.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 
@@ -15,6 +16,10 @@ public class AbandonedStation extends Card{
     private int requirement;
     @JsonProperty("rewardGoods")
     private ArrayList<Goods> rewardGoods;
+    private Player currentPlayer;
+    private boolean flag;
+    private int order;
+
 
 
     public AbandonedStation(int requirement, ArrayList<Goods> reward, int level, int time, GameBoard board) {
@@ -24,40 +29,63 @@ public class AbandonedStation extends Card{
     }
     @Override
     public void CardEffect(){
-        int Order=0;
-     boolean AbandonedStationBool=true;
-        GameBoard AbandonedStationBoard=this.getBoard();
-        ArrayList<Player> PlayerList = AbandonedStationBoard.getPlayers();
-        PlayerBoard AbandonedShipCurrentPlanche;
-        int AbandonedShipLen= PlayerList.size();
-        while(Order<AbandonedShipLen && AbandonedStationBool ){ // ask all the player by order
-            // or untill someone does if they can and want to get the ship
 
-            AbandonedShipCurrentPlanche=PlayerList.get(Order).getMyPlance(); // get the current active planche
-            ArrayList<IntegerPair> HousingCoords=AbandonedShipCurrentPlanche.gethousingUnits();
-            Tile TileBoard[][]=AbandonedShipCurrentPlanche.getPlayerBoard();
-            int totHumans=0;
-
-            for(int i=0; i<AbandonedShipCurrentPlanche.gethousingUnits().size();i++ ){
-                //somma per vedere il tot umani
-                totHumans+=TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getAbility();
-            }
-
-            if(totHumans>=this.requirement){
-
-                //il giocatore sceglie se prendere la nave o meno
-
-                //tecnicamente dovrebbe anche gestire gli spostamenti, non ha senso che sia io a gestire entrambe le cose
-                PlayerList.get(Order).handleCargo(this.rewardGoods);
-
-                AbandonedStationBoard.movePlayer(PlayerList.get(Order).GetID(), this.getTime());
-                AbandonedStationBool=false;
-                //AbandonedStationPlayerList.get(AbandonedStationOrder).movePlayer(-this.getTime());
-            }
-
-            Order++;
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        for(Player p : PlayerList){
+            p.setState(PlayerStates.Waiting);
         }
-        return;
+        this.updateSates();
+    }
+    @Override
+    public void updateSates(){
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        while(this.order<PlayerList.size()&& !this.flag) {
+            currentPlayer = PlayerList.get(this.order);
+            PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
+            Tile TileBoard[][] = CurrentPlanche.getPlayerBoard();
+            ArrayList<IntegerPair> HousingCoords = CurrentPlanche.gethousingUnits();
+            int totHumans = 0;
+
+            for (int i = 0; i < CurrentPlanche.gethousingUnits().size(); i++) {
+                //somma per vedere il tot umani
+                totHumans += TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getAbility();
+            }
+            if(totHumans>this.requirement){
+                this.flag = true;
+                currentPlayer.setState(PlayerStates.Playing);
+            }
+
+            this.order++;
+        }
+        if(order==PlayerList.size()){
+            this.finishCard();
+        }
+    }
+
+    @Override
+    public void finishCard() {
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        for(int i=0; i<PlayerList.size(); i++){
+            PlayerList.get(i).setState(PlayerStates.BaseState);
+        }
+    }
+
+    @Override
+    public void continueCard(boolean accepted) {
+        if(accepted) {
+
+            currentPlayer.handleCargo(this.rewardGoods);
+            this.getBoard().movePlayer(this.currentPlayer.GetID(), this.getTime());
+
+        }
+        else{
+            currentPlayer.setState(PlayerStates.Waiting);
+            this.flag = false;
+            this.updateSates();
+        }
     }
 
 
