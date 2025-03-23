@@ -6,6 +6,8 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
+import org.example.galaxy_trucker.Model.Tiles.plasmaDrill;
 
 import java.util.ArrayList;
 
@@ -117,10 +119,10 @@ public class Warzone extends Card{
 
         for(int i=0; i<PlayerList.size(); i++){
             CurrentPlanche=PlayerList.get(i).getMyPlance(); // get the current active planche
-            ArrayList<IntegerPair> HousingCoords=CurrentPlanche.getPlasmaDrills();
+            ArrayList<IntegerPair> HousingCoords=CurrentPlanche.getClassifiedTiles().get(plasmaDrill.class);
             Tile TileBoard[][]=CurrentPlanche.getPlayerBoard();
             int totHumans=0;
-            for(int j=0; i<CurrentPlanche.gethousingUnits().size();i++ ){
+            for(int j = 0; i<CurrentPlanche.getClassifiedTiles().get(modularHousingUnit.class).size(); i++ ){
                 //somma per vedere il tot umani
                 totHumans+=TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getAbility();
             }

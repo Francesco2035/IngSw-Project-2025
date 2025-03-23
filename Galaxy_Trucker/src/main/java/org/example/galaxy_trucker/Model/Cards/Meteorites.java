@@ -7,6 +7,8 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Tiles.Connector;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
+import org.example.galaxy_trucker.Model.Tiles.plasmaDrill;
 
 import java.util.ArrayList;
 
@@ -61,7 +63,7 @@ public class Meteorites extends Card {
                             else if (attacks.get(MeteoritesAttackNumber+1)==1) {
 
 
-                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getPlasmaDrills();
+                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getClassifiedTiles().get(plasmaDrill.class);
 
                                 int i = 0;
                                 int x;
@@ -100,7 +102,7 @@ public class Meteorites extends Card {
                             else if (attacks.get(MeteoritesAttackNumber+1)==1) {
 
 
-                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getPlasmaDrills();
+                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getClassifiedTiles().get(plasmaDrill.class);
 
                                 int i = 0;
                                 int x;
@@ -139,7 +141,7 @@ public class Meteorites extends Card {
                             else if (attacks.get(MeteoritesAttackNumber+1)==1) {
 
 
-                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getPlasmaDrills();
+                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getClassifiedTiles().get(plasmaDrill.class);
 
                                 int i = 0;
                                 int x;
@@ -177,7 +179,7 @@ public class Meteorites extends Card {
                             else if (attacks.get(MeteoritesAttackNumber+1)==1) {
 
 
-                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getPlasmaDrills();
+                                ArrayList<IntegerPair> Cannons = CurrentPlanche.getClassifiedTiles().get(plasmaDrill.class);
 
                                 int i = 0;
                                 int x;

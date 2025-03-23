@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class PlayerBoardTest {
     static PlayerBoard playerBoard = new PlayerBoard(2);
@@ -65,7 +68,7 @@ public class PlayerBoardTest {
 
 
         boolean f = playerBoard.checkValidity();
-        //assertEquals(true, f);
+        assertTrue(f);
         System.out.println(playerBoard.getClassifiedTiles().size());
 
     }

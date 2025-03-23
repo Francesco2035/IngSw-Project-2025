@@ -7,6 +7,7 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
 
 
 import java.util.ArrayList;
@@ -34,11 +35,11 @@ public class AbandonedStation extends Card{
             // or untill someone does if they can and want to get the ship
 
             AbandonedShipCurrentPlanche=PlayerList.get(Order).getMyPlance(); // get the current active planche
-            ArrayList<IntegerPair> HousingCoords=AbandonedShipCurrentPlanche.gethousingUnits();
+            ArrayList<IntegerPair> HousingCoords=AbandonedShipCurrentPlanche.getClassifiedTiles().get(modularHousingUnit.class);
             Tile TileBoard[][]=AbandonedShipCurrentPlanche.getPlayerBoard();
             int totHumans=0;
 
-            for(int i=0; i<AbandonedShipCurrentPlanche.gethousingUnits().size();i++ ){
+            for(int i=0; i<AbandonedShipCurrentPlanche.getClassifiedTiles().get(modularHousingUnit.class).size();i++ ){
                 //somma per vedere il tot umani
                 totHumans+=TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getAbility();
             }
