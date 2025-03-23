@@ -24,7 +24,7 @@ public class Game {
         CardDeck = new CardStacks(gag,GameLevel);
         TileDecks = new TileSets(gag);
         lv = GameLevel;
-        GameBoard = new GameBoard(TileDecks, lv);
+        GameBoard = new GameBoard(TileDecks, lv,CardDeck);
     }
 
 

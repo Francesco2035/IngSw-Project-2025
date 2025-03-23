@@ -2,13 +2,13 @@ package org.example.galaxy_trucker.Model;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Cards.Card;
+import org.example.galaxy_trucker.Model.InputHandlers.InputHandler;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.powerCenter;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import static org.example.galaxy_trucker.Model.PlayerStates.HandlingCargo;
 
 public class Player {
 
@@ -18,8 +18,10 @@ public class Player {
     private boolean ready;
     private int credits;
     private Tile CurrentTile;   //the tile that Player has in his hand
-    private PlayerStates PlayerState;
+    private  PlayerStates PlayerState;
+    private InputHandler InputHandler;
     private ArrayList<Goods> GoodsToHandle;
+    private Card CurrentCard;
 
 
     public Player(String id, GameBoard board) {
@@ -29,9 +31,11 @@ public class Player {
         credits = 0;
         ready = false;
         CurrentTile = null;
-        PlayerState = PlayerStates.BaseState;
+        PlayerState= null;
         GoodsToHandle = new ArrayList<>();
+        CurrentCard = null;
     }
+
 
 
 
@@ -64,10 +68,22 @@ public class Player {
         return d1+d2;
     }
 
+    public InputHandler getInputHandler() {
+        return InputHandler;
+    }
+
+    public void setInputHandler(InputHandler InputHandler) {
+        this.InputHandler = InputHandler;
+    }
+
     public void setState(PlayerStates state) {
         this.PlayerState = state;
     }
 
+    public void  execute() {
+        this.CurrentCard=CommonBoard.getCardStack().getFullAdventure().getFirst();
+        this.CurrentCard.ActivateCard();
+    }
 
     /**
      * get a new random tile from the covered tiles set
@@ -152,26 +168,26 @@ public class Player {
 
 
 
-    public ArrayList<IntegerPair> getPower(){
-        ArrayList<IntegerPair> Power = new ArrayList<>();
-        IntegerPair coords = new IntegerPair(6, 9);
-        Power.add(coords);
-        return Power;
-    }
-
-    public ArrayList<IntegerPair> getEnginePower(){
-        ArrayList<IntegerPair> Power = new ArrayList<>();
-        IntegerPair coords = new IntegerPair(4, 2);
-        Power.add(coords);
-        return Power;
-
-    }
-    public ArrayList<IntegerPair> getHumanstoKIll(){
-        ArrayList<IntegerPair> Locations = new ArrayList<>();
-        IntegerPair coords = new IntegerPair(4, 2);
-        Locations.add(coords);
-        return Locations;
-    }
+//    public ArrayList<IntegerPair> getPower(){
+//        ArrayList<IntegerPair> Power = new ArrayList<>();
+//        IntegerPair coords = new IntegerPair(6, 9);
+//        Power.add(coords);
+//        return Power;
+//    }
+//
+//    public ArrayList<IntegerPair> getEnginePower(){
+//        ArrayList<IntegerPair> Power = new ArrayList<>();
+//        IntegerPair coords = new IntegerPair(4, 2);
+//        Power.add(coords);
+//        return Power;
+//
+//    }
+//    public ArrayList<IntegerPair> getHumanstoKIll(){
+//        ArrayList<IntegerPair> Locations = new ArrayList<>();
+//        IntegerPair coords = new IntegerPair(4, 2);
+//        Locations.add(coords);
+//        return Locations;
+//    }
 
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
@@ -195,13 +211,14 @@ public class Player {
         this.myPlance.removeGood(coords, index);
     }
 
-    public int getGoodsIndex(){
-        return 3;
-    }
-    public IntegerPair getGoodsCoordinates(){
-        IntegerPair coords = new IntegerPair(5,5);
-        return coords;
-    }
+//
+//    public int getGoodsIndex(){
+//        return 3;
+//    }
+//    public IntegerPair getGoodsCoordinates(){
+//        IntegerPair coords = new IntegerPair(5,5);
+//        return coords;
+//    }
 
     public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
         myPlance.pullGoods(good1, coord1);
@@ -220,9 +237,10 @@ public class Player {
         this.setState(PlayerStates.HandlingCargo);
 
     }
+
     public void stopHandlingCargo(){
         this.setState(PlayerStates.Waiting);
-        //finish card direi
+        this.CurrentCard.finishCard();
 
         // controllo che
     }

@@ -47,10 +47,13 @@ public class Meteorites extends Card {
         GameBoard MeteoritesBoard = super.getBoard();
         ArrayList<Player> MeteoritesPlayerList = MeteoritesBoard.getPlayers();
 
-        if (attacks.size() > this.MeteoritesOrder) { //scorre i meteoriti e attacca i player 1 a 1
+        if (this.MeteoritesOrder< this.attacks.size()) { //scorre i meteoriti e attacca i player 1 a 1
             this.MeteoritesLine = MeteoritesPlayerList.get(0).RollDice(); // tira numero
             MeteoritesOrder+=2;
             this.updateSates();
+        }
+        else {
+            this.finishCard();
         }
     }
 
@@ -61,7 +64,10 @@ public class Meteorites extends Card {
         this.currentPlayer=this.getBoard().getPlayers().get(PlayerOrder);
 
 
-
+        if (PlayerOrder==this.getBoard().getPlayers().size()){
+            PlayerOrder=0;
+            this.CardEffect();
+        }
       PlayerBoard  CurrentPlanche=currentPlayer.getMyPlance(); //prendo plancia
         int [][]MeteoritesValidPlanche=CurrentPlanche.getValidPlayerBoard();//prende matrice validita
         if (attacks.get(MeteoritesOrder)==0) { //sinistra
@@ -75,7 +81,7 @@ public class Meteorites extends Card {
                     else {
                         MeteoritesFlag = true;
                         hit.setValue(Movement, MeteoritesLine);
-                        currentPlayer.setState(PlayerStates.Defending);
+                        currentPlayer.setState(PlayerStates.DefendingFromMeteorites);
                     }
                 }
 
@@ -86,8 +92,15 @@ public class Meteorites extends Card {
             Movement=0;
             while(Movement<10 && MeteoritesFlag == false) {
                 if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
+                    Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
-                    MeteoritesFlag = true;
+                    if(attacks.get(MeteoritesOrder+1)==0 && tiles[Movement][MeteoritesLine].getConnectors().get(1)== Connector.NONE) {
+                    }
+                    else {
+                        MeteoritesFlag = true;
+                        hit.setValue(Movement, MeteoritesLine);
+                        currentPlayer.setState(PlayerStates.DefendingFromMeteorites);
+                    }
                 }
 
                 Movement++;
@@ -97,7 +110,15 @@ public class Meteorites extends Card {
             Movement=9;
             while(Movement>=0 && MeteoritesFlag == false) {
                 if (MeteoritesValidPlanche[MeteoritesLine][Movement] > 0) {
-                    MeteoritesFlag = true;
+                    Tile tiles[][] = CurrentPlanche.getPlayerBoard();
+
+                    if(attacks.get(MeteoritesOrder+1)==0 && tiles[Movement][MeteoritesLine].getConnectors().get(2)== Connector.NONE) {
+                    }
+                    else {
+                        MeteoritesFlag = true;
+                        hit.setValue(Movement, MeteoritesLine);
+                        currentPlayer.setState(PlayerStates.DefendingFromMeteorites);
+                    }
                 }
                 Movement--;
             }
@@ -107,17 +128,35 @@ public class Meteorites extends Card {
             Movement=9;
             while(Movement>=0 && MeteoritesFlag == false) {
                 if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {
-                    MeteoritesFlag = true;
+                    Tile tiles[][] = CurrentPlanche.getPlayerBoard();
+
+                    if(attacks.get(MeteoritesOrder+1)==0 && tiles[Movement][MeteoritesLine].getConnectors().get(3)== Connector.NONE) {
+                    }
+                    else {
+                        MeteoritesFlag = true;
+                        hit.setValue(Movement, MeteoritesLine);
+                        currentPlayer.setState(PlayerStates.DefendingFromMeteorites);
+                    }
                 }
 
                 Movement--;
             }
 
         }
-
+        this.PlayerOrder++;
+        if (!MeteoritesFlag){
+            this.updateSates();
+        }
     }
+    public int schifo(){
+        IntegerPair a = new IntegerPair(0,0);
+        IntegerPair b = new IntegerPair(1,1);
+        this.DefendFromMeteorites(a,b);
+        return 1;
+    }
+
     @Override
-    public void continueCard2(IntegerPair CannonCoord, IntegerPair ShieldCoord) {
+    public void DefendFromMeteorites(IntegerPair CannonCoord, IntegerPair ShieldCoord) {
         PlayerBoard currentBoard =this.currentPlayer.getMyPlance();
         Tile[][] tiles =currentBoard.getPlayerBoard();
 
@@ -145,7 +184,15 @@ public class Meteorites extends Card {
         if(CannonCoord ==null && ShieldCoord ==null) { // se sono entrambi nulli non mi son difeso quindi vengo colpito
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
         }
-
+        this.updateSates();
+    }
+    @Override
+    public void finishCard() {
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        for(int i=0; i<PlayerList.size(); i++){
+            PlayerList.get(i).setState(PlayerStates.BaseState);
+        }
     }
 
 

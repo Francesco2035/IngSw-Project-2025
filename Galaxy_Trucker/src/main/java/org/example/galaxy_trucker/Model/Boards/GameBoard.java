@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 
+import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
@@ -23,11 +24,11 @@ public class GameBoard {
     private Hourglass hourglass;
     private int GameLv;
     private int PlayersOnBoard;
+    private CardStacks CardStack;
 
 
 
-
-    public GameBoard(TileSets list, int lv) {
+    public GameBoard(TileSets list, int lv, CardStacks stack) {
         this.players = new ArrayList<>();
         GameLv = lv; //the GameBoard class learns the current game level from Game anc will extend it to players and other objects
         tileSets = list;
@@ -198,6 +199,9 @@ public class GameBoard {
     public int getLevel(){return GameLv;}
     public Player[] getPositions(){return this.positions;}
     public TileSets getTilesSets(){return tileSets;}
+    public CardStacks getCardStack(){
+        return this.CardStack;
+    }
 
 
     public void abandonRace(Player loser){

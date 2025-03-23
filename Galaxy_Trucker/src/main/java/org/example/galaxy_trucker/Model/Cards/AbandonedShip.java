@@ -1,6 +1,8 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -62,7 +64,8 @@ public class AbandonedShip extends Card{
             }
             if(totHumans>this.requirement){
                 this.flag = true;
-                currentPlayer.setState(PlayerStates.Killing);
+                currentPlayer.setState(PlayerStates.AcceptKilling);
+                currentPlayer.setInputHandler(new AcceptKilling(this));
             }
 
             this.order++;

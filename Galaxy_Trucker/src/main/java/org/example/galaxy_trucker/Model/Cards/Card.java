@@ -67,6 +67,15 @@ public class Card {
     public void finishCard() {}
     public void continueCard(boolean accepted) {}
     public void continueCard(ArrayList<IntegerPair> coordinates, boolean accepted) {}
+    public void DefendFromMeteorites(IntegerPair CannonCoord, IntegerPair ShieldCoord) {}
+    public void DefendFromShots(IntegerPair coordinates) {}
+    public void continueCard(ArrayList<IntegerPair> coordinates) {}
+    public void continueCard(){}
+    public void killHmans(ArrayList<IntegerPair> coordinates) {}
+    public void choosePlanet(int planet, boolean accepted){}
+
+    public void ActivateCard(){
+    }
 
 
     //json required
