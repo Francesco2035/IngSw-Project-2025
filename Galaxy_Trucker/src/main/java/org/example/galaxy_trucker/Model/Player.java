@@ -3,6 +3,7 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.powerCenter;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -177,7 +178,10 @@ public class Player {
     public boolean GetReady() {return this.ready;}
     public PlayerBoard getMyPlance() {return myPlance;}
 //    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
-    public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();
+    public ArrayList<IntegerPair> getEnergyTiles(){
+        if(getMyPlance().getClassifiedTiles().containsKey(powerCenter.class))
+        return this.getMyPlance().getClassifiedTiles().get(powerCenter.class);
+        else return null;
     }
 
 

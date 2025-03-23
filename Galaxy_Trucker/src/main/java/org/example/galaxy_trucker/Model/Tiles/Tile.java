@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
 import java.util.*;
@@ -8,7 +9,6 @@ public class Tile {
 
 
     private int id;
-    private IntegerPair coords;
     private Component component;
     private String componentType;
     private ArrayList<Connector> connectors;
@@ -18,21 +18,12 @@ public class Tile {
     public Tile() {}
 
     public Tile(IntegerPair coords, Component component, Connector... connectors) {
-        this.coords = coords;
         this.component = component;
         this.connectors = new ArrayList<>();
         this.connectors.addAll(Arrays.asList(connectors));
     }
 
 
-
-    public IntegerPair getCoords() {
-        return coords;
-    }
-
-    public void setCoords(IntegerPair coords) {
-        this.coords = coords;
-    }
 
     public int getId() {
         return id;
@@ -68,13 +59,14 @@ public class Tile {
         this.type = type;
     }
 
+    public void setConnectors(ArrayList<Connector> connectors) {this.connectors = connectors;}
 
-    public void setConnectors(ArrayList<Connector> connectors) {
-        this.connectors = connectors;
+
+
+
+    public boolean controlDirections(PlayerBoard pb, int x, int y) {
+        return component.controlValidity(pb, x, y, this);
     }
-
-
-
 
 
 

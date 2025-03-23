@@ -27,38 +27,34 @@ import java.util.ArrayList;
 })
 public abstract class Component {
 
-    PlayerBoard myBoard;
     String type;
 
 
     public Component() {}
 
-
-    public void referencePlance(PlayerBoard myBoard) {
-        this.myBoard = myBoard;
-    }
-
+    //i metodi da overridare sono sa impostare come abstract
 
     //initType
-    public void initType(){}
-    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {}
+    public abstract void initType();
+    public abstract void initType(int numHumans, boolean purpleAlien, boolean brownAlien);
 
 
     //getAbility
-    public int getAbility(){
-        return 0;
-    }
-    public ArrayList<Goods> getAbility(Goods good){return null;}
-    public ArrayList<Integer> getAbility(int integer){return null;}
+    public abstract int getAbility();
+    public abstract ArrayList<Goods> getAbility(Goods good);
+    public abstract ArrayList<Integer> getAbility(int integer);
 
 
     //setAbility
-    public int setAbility(){return 0;}      //volendo si può in powerCenter utilizzare l'altro setAbility e semplicemente non utilizzare l'int di ingresso, ma così è visivamente più puliti
-    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien){
-        return 0;
-    }
-    public int setAbility(Goods good, boolean select){return 0;}
-    public void setAbility(boolean direzione){}
+    public abstract int setAbility();
+    public abstract int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien);
+    public abstract int setAbility(Goods good, boolean select);
+    public abstract void setAbility(boolean direzione);
+
+
+
+    public abstract boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile);
+
 
 
 
@@ -69,6 +65,9 @@ public abstract class Component {
     public boolean isBrownAlien() {
         return false;
     }
+
+
+
 
 
 
