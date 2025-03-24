@@ -81,9 +81,9 @@ public class Player {
     }
 
     public void  execute() {
-        this.CurrentCard=CommonBoard.getCardStack().getFullAdventure().getFirst();
         this.CurrentCard.ActivateCard();
     }
+
 
     /**
      * get a new random tile from the covered tiles set
@@ -153,13 +153,17 @@ public class Player {
         credits += num;
     }
 
+    public void setCard(Card NewCard){
+        CurrentCard = NewCard;
+    }
+
 
     /**
      * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
      */
-//    public void EndConstruction(){
-//        CommonBoard.SetStartingPosition(this.ID);
-//    }
+    public void EndConstruction(){
+        CommonBoard.SetStartingPosition(this.ID);
+       }
 
 
     public void SetReady(){
@@ -235,7 +239,6 @@ public class Player {
         this.GoodsToHandle.addAll(reward);
 
         this.setState(PlayerStates.HandlingCargo);
-
     }
 
     public void stopHandlingCargo(){
