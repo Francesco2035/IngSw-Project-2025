@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 import org.example.galaxy_trucker.Exceptions.*;
+import org.example.galaxy_trucker.Model.Cards.AbandonedStation;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.*;
 
@@ -103,7 +104,7 @@ public class PlayerBoard {
         this.PlayerBoard = new Tile[10][10];
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
-                if (ValidPlayerBoard[x][y] == -1) {
+                if (ValidPlayerBoard[x][y] != 1) {
                     PlayerBoard[x][y] =  new Tile(new IntegerPair(x,y), new spaceVoid() ,Connector.NONE, Connector.NONE,Connector.NONE, Connector.NONE);
                 }
                 else {
@@ -214,7 +215,7 @@ public class PlayerBoard {
      * @throws InvalidInput If the coordinates are out of bounds or point to an invalid tile.
      */
     public Tile getTile(int x, int y) throws InvalidInput {
-        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
+        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] != 1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
         return this.PlayerBoard[x][y];
@@ -569,7 +570,7 @@ public class PlayerBoard {
 
         if (ValidPlayerBoard[x-1][y] == 1){
 
-            findPaths(x, y-1, visitedPositions);
+            findPaths(x-1, y, visitedPositions);
 
             shipSection.put(i, visitedPositions);
             i++;
@@ -579,7 +580,7 @@ public class PlayerBoard {
         if (ValidPlayerBoard[x][y-1] == 1 ){
             visitedPositions = new ArrayList<>();
             findPaths(x, y-1, visitedPositions);
-            if (!visitedPositions.contains(new IntegerPair(x-1,y))) {
+            if (!visitedPositions.contains(new IntegerPair(x,y-1))) {
 
                 shipSection.put(i, visitedPositions);
                 i++;
@@ -614,6 +615,8 @@ public class PlayerBoard {
 
     }
 
+
+    //da qui in poi
 
     /**
      * Method kill reduces the number of Human or Alien in a housing cell by 1 given the coordinate of this cell
@@ -842,20 +845,6 @@ public class PlayerBoard {
     }
 
 
-    public boolean checkAddons(int x, int y, boolean purple, boolean brown){
-        if (ValidPlayerBoard[x][y] != 1) {
-            return false;
-        }
-        if (!checkExistence(x,y, alienAddons.class)){
-            return false;
-        }
-        if ((PlayerBoard[x][y].getComponent().getAbility() == 1 && brown) || (PlayerBoard[x][y].getComponent().getAbility() == 0 && purple)){
-            return false;
-        }
-
-        return true;
-
-    }
 
 
 
@@ -883,12 +872,16 @@ public class PlayerBoard {
             throw new InvalidInput("The following tile is not a modularHousingUnit");
         }
 
+        if (purpleAlien && brownAlien){
+            throw new InvalidInput("Invalid input: only one alien can be added");
+        }
+
         if (x == 6 && y == 6 && (purpleAlien || brownAlien)){
             throw new InvalidInput("Invalid input: aliens cannot be added to the MainCockpit");
         }
 
-        if((purpleAlien && brownAlien) || checkAddons(x -1 ,y,purpleAlien, brownAlien)  || checkAddons(x+1,y,purpleAlien, brownAlien) || checkAddons(x,y - 1,purpleAlien, brownAlien) || checkAddons(x,y + 1,purpleAlien, brownAlien) ){
-            throw new InvalidInput("Invalid input: aliens cannot be added without specif Addons.");
+        if((purpleAlien && !PlayerBoard[x][y].getComponent().getNearbyAddons(true)) || (brownAlien && !PlayerBoard[x][y].getComponent().getNearbyAddons(false)) ){
+            throw new InvalidInput("Invalid input: aliens cannot be added without specific Addons.");
         }
 
         if (PlayerBoard[x][y].getComponent().getAbility() == 2 && humans > 0){

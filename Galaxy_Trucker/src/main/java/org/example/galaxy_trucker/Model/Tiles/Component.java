@@ -55,6 +55,8 @@ public abstract class Component {
 
     public abstract boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile);
 
+    public abstract boolean getNearbyAddons(boolean type);
+
 
 
 

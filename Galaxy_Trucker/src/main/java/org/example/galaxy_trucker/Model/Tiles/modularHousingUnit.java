@@ -171,5 +171,19 @@ public class modularHousingUnit extends Component {
         return true;
     }
 
+
+
+    @Override
+    public boolean getNearbyAddons(boolean type) { //true -> purple, false -> brown
+        if (type){
+            return this.nearPurpleAddon;
+        }
+        return this.nearBrownAddon;
+    }
+
+
+
+
+
 }
 

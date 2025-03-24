@@ -82,6 +82,11 @@ public class MainCockpitComp extends Component {
         return type;
     }
 
+    @Override
+    public boolean getNearbyAddons(boolean type){
+        return false;
+    }
+
 
 }
 

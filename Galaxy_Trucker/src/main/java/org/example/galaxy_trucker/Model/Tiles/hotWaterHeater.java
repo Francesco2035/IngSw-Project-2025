@@ -90,5 +90,14 @@ public class hotWaterHeater extends Component{
         //return index == 3 && mat[x][y + 1] != 1;
     };
 
+
+    @Override
+    public boolean getNearbyAddons(boolean type){
+        return false;
+    }
+
+
+
+
 }
 

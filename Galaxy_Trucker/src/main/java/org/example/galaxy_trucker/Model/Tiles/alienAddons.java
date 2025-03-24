@@ -80,4 +80,11 @@ public class alienAddons extends Component{
     public String toString(){
         return "alienAddons";
     }
+
+    @Override
+    public boolean getNearbyAddons(boolean type){
+        return false;
+    }
+
+
 }

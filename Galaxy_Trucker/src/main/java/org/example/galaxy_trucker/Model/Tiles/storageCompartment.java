@@ -113,4 +113,12 @@ public class storageCompartment extends Component{
     public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
 
     }
+
+
+    @Override
+    public boolean getNearbyAddons(boolean type){
+        return false;
+    }
+
+
 }
