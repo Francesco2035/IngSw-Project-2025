@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class storageCompartment extends Component{
     @Override
     public int setAbility(Goods good, boolean select) {
         if(select){
-            if (good.ordinal() == 3) throw new IllegalArgumentException("non-specialStorageCompartment");
+            if (good.getValue() == 3) throw new IllegalArgumentException("non-specialStorageCompartment");
             this.goods.add(good);
             this.orderGoods();
             return goods.indexOf(good);

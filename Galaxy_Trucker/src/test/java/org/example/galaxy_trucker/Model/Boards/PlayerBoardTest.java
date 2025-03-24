@@ -2,6 +2,8 @@ package org.example.galaxy_trucker.Model.Boards;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.GAGen;
+import org.example.galaxy_trucker.Model.GetterHandler.EngineGetter;
+import org.example.galaxy_trucker.Model.GetterHandler.PlasmaDrillsGetter;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.hotWaterHeater;
@@ -99,7 +101,7 @@ public class PlayerBoardTest {
 
     @Test
     @DisplayName("test destruction")
-    @Order(2)
+    @Order(3)
     public void testDestruction(){
 
         assertTrue(playerBoard.getClassifiedTiles().containsKey(hotWaterHeater.class));
@@ -114,10 +116,31 @@ public class PlayerBoardTest {
         assertFalse(playerBoard.getClassifiedTiles().containsKey(hotWaterHeater.class));
         int[] shield = {0,1,1,0};
         assertArrayEquals(shield, playerBoard.getShield());
-        assertEquals(1.5, playerBoard.getPower(playerBoard.getClassifiedTiles().get(plasmaDrill.class)));
+
 
 
     }
+
+
+
+    @Test
+    @DisplayName("test Getters")
+    @Order(2)
+    public void testGetters(){
+        ArrayList<IntegerPair> choise = new ArrayList<>();
+        choise.add(new IntegerPair(6,5));
+        playerBoard.setGetter(new EngineGetter(playerBoard,choise));
+        assertEquals(1, playerBoard.getGetter().get());
+        choise.clear();
+        choise.add(new IntegerPair(5,6));
+        choise.add(new IntegerPair(7,7));
+
+        playerBoard.setGetter(new PlasmaDrillsGetter(playerBoard,choise));
+        assertEquals(1.5, playerBoard.getGetter().get());
+    }
+
+
+
 
 
 }
