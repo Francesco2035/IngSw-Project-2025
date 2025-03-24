@@ -34,6 +34,7 @@ class GAGenTest {
         assertNotEquals(null, Cards);
     }
 
+
     @Test
     void listToSet() throws IOException {
 
