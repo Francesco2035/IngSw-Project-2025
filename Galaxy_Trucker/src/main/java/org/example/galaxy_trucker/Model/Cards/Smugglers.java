@@ -25,45 +25,6 @@ public class Smugglers extends Card{
         this.rewardGoods= Reward;
         this.Punishment = Punsihment;
     }
-    @Override
-    public void CardEffect(){
-        int Order=0;
-        int AttackNumber=0;
-        boolean Flag=true;
-        boolean Attacked=false;
-        GameBoard Board=this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerBoard CurrentPlanche;
-        int Len= PlayerList.size(); // quanti player ho
-        double PlayerPower;
-        ArrayList<IntegerPair> ActiveCannons;
-        ArrayList<IntegerPair> coordinates;
-
-
-        while(Len>Order && Flag){
-            ActiveCannons=PlayerList.get(Order).getPower();
-            CurrentPlanche=PlayerList.get(Order).getMyPlance();
-            PlayerPower=CurrentPlanche.getPower(ActiveCannons);
-
-            if(PlayerPower<requirement) {
-                for(int i=0;i<Punishment;i++){
-                    int index=PlayerList.get(Order).getGoodsIndex();
-                    IntegerPair coord=PlayerList.get(Order).getGoodsCoordinates();
-
-                    PlayerList.get(Order).getMyPlance().removeGood(coord,index);
-            }
-            }// fine caso sconfitta
-            else if (PlayerPower>requirement){
-                Flag=false;
-                //if(PLayerlist.get(Order).yes()){   //chiedo se vuole prende le ricompense
-                PlayerList.get(Order).handleCargo(rewardGoods);
-                //PlayerList.get(Order).movePlayer(-this.Time);
-                //}
-            }//fine caso vittoria
-            Order++;
-
-        }
-    }
 
 
     //json required
