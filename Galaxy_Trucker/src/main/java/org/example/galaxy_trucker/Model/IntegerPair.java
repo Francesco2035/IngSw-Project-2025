@@ -40,6 +40,11 @@ public class IntegerPair {
         return first == that.first && second == that.second;
     }
 
+    public void setValue(int value1, int value2) {
+        this.first = value1;
+        this.second = value2;
+    }
+
     // Sovrascrizione di hashCode
     @Override
     public int hashCode() {

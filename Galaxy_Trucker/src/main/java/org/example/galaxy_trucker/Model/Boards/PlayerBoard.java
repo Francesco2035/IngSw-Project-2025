@@ -928,6 +928,35 @@ public class PlayerBoard {
                         classifiedTiles.get(type2).containsAll(tiles))
                  ;
     }
+    public double sellCargo(boolean arrived){
+        double totalSold=0;
+        if(classifiedTiles.containsKey(specialStorageCompartment.class)){
+            for(IntegerPair pair : classifiedTiles.get(specialStorageCompartment.class)){
+                Tile currentTile = PlayerBoard[pair.getFirst()][pair.getSecond()];
+                ArrayList<Goods> currGoods= currentTile.getComponent().getAbility(null);
+                for(int j=0; j< currGoods.size(); j++){
+                    //dovrei asseganre un valore a goods senno è orrendo
+                    totalSold += currGoods.get(j).ordinal()+1;
+                }
+            }
+        }
+        if(classifiedTiles.containsKey(storageCompartment.class)){
+            for(IntegerPair pair : classifiedTiles.get(storageCompartment.class)){
+                Tile currentTile = PlayerBoard[pair.getFirst()][pair.getSecond()];
+                ArrayList<Goods> currGoods= currentTile.getComponent().getAbility(null);
+                for(int j=0; j< currGoods.size(); j++){
+                    //dovrei asseganre un valore a goods senno è orrendo
+                    totalSold += currGoods.get(j).ordinal()+1;
+                }
+            }
+        }
+        if (arrived){
+            return totalSold;
+        }
+        else{
+            return (Math.ceil(totalSold/2));
+        }
+    }
 
 
 

@@ -58,6 +58,8 @@ public class specialStorageCompartment extends Component{
 
     }
 
+
+
     @Override
     public ArrayList<Integer> getAbility(int integer) {
         return null;
