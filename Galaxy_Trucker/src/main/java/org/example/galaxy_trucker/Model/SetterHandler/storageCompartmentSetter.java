@@ -1,9 +1,11 @@
 package org.example.galaxy_trucker.Model.SetterHandler;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Exceptions.StorageCompartmentFullException;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.specialStorageCompartment;
 import org.intellij.lang.annotations.Pattern;
 
@@ -20,14 +22,39 @@ public class storageCompartmentSetter implements PlayerBoardSetters{
         this.coordinate = coordinate;
         this.good = good;
     }
+
+
+    //SET
+    /**
+     * Method putGoods adds one good to a storageCompartment.
+     *
+     * @throws InvalidInput If the coordinates are out of bounds, the tile is not a storage compartment.
+     * @throws StorageCompartmentFullException If the storage compartment is full and cannot accept more goods.
+     * @throws IllegalArgumentException If the good being added is not allowed in a standard storage compartment.
+     */
     @Override
     public void set(){
-        Map<Class<?>, ArrayList<IntegerPair>>  classifiedTiles = playerBoard.getClassifiedTiles();
-        if (!checkExistence(classifiedTiles,coordinate, storageCompartmentSetter.class, specialStorageCompartment.class)){
-            throw new InvalidInput("pietro");
+
+        int x = coordinate.getFirst();
+        int y = coordinate.getSecond();
+        int[][] ValidPlayerBoard = playerBoard.getValidPlayerBoard();
+        Tile[][] pb = playerBoard.getPlayerBoard();
+
+
+        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
+            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        playerBoard.getPlayerBoard()[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(good, true);
+        Map<Class<?>, ArrayList<IntegerPair>>  classifiedTiles = playerBoard.getClassifiedTiles();
+        if (!checkExistence(classifiedTiles,coordinate, storageCompartmentSetter.class, specialStorageCompartment.class)){
+            throw new InvalidInput("The following tile is not a storageCompartment");
+        }
+
+        if (pb[x][y].getComponent().getAbility(null).size() + 1 > pb[x][y].getComponent().getAbility()){
+            throw new StorageCompartmentFullException("The following StorageCompartment is full: " + x + "," + y);
+        }
+
+        pb[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(good, true);
         playerBoard.getStoredGoods().computeIfAbsent(good.getClass(), k -> new ArrayList<>()).add(coordinate);
 
     }
