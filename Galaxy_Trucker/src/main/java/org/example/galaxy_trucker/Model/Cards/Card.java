@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.IntegerPair;
+
+import java.util.ArrayList;
 
 
 @JsonTypeInfo(
@@ -59,6 +62,19 @@ public class Card {
     }
     public GameBoard getBoard() {
         return this.Board;
+    }
+    public void updateSates(){};
+    public void finishCard() {}
+    public void continueCard(boolean accepted) {}
+    public void continueCard(ArrayList<IntegerPair> coordinates, boolean accepted) {}
+    public void DefendFromMeteorites(IntegerPair CannonCoord, IntegerPair ShieldCoord) {}
+    public void DefendFromShots(IntegerPair coordinates) {}
+    public void continueCard(ArrayList<IntegerPair> coordinates) {}
+    public void continueCard(){}
+    public void killHmans(ArrayList<IntegerPair> coordinates) {}
+    public void choosePlanet(int planet, boolean accepted){}
+
+    public void ActivateCard(){
     }
 
 

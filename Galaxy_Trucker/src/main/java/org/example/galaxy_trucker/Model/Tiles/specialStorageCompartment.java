@@ -58,6 +58,8 @@ public class specialStorageCompartment extends Component{
 
     }
 
+
+
     @Override
     public ArrayList<Integer> getAbility(int integer) {
         return null;
@@ -107,4 +109,14 @@ public class specialStorageCompartment extends Component{
     public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
 
     }
+
+
+    @Override
+    public boolean getNearbyAddons(boolean type){
+        return false;
+    }
+
+
+
+
 }

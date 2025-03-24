@@ -72,6 +72,12 @@ public class shieldGenerator extends Component{
         return true;
     }
 
+    @Override
+    public boolean getNearbyAddons(boolean type){
+        return false;
+    }
+
+
 
 }
 
