@@ -73,6 +73,7 @@ public class SolarSystem extends Card {
         }
     }
 
+
     @Override
     public void choosePlanet(int planet, boolean accepted){
         if(accepted) {
