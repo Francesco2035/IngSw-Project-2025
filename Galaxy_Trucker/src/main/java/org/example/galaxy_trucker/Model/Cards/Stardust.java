@@ -1,6 +1,10 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Player;
+
+import java.util.ArrayList;
 
 public class Stardust extends Card {
     public Stardust(int level, GameBoard board){
@@ -9,19 +13,19 @@ public class Stardust extends Card {
     @Override
     public void CardEffect () {
 
-//        GameBoard StarPowderBoard=this.getBoard();
-//        ArrayList<Player> StarPowderPlayerList = StarPowderBoard.getPlayers();
-//        PlayerBoard StarPowderCurrentPlanche;
-//        int StarPowderOrder=StarPowderPlayerList.size();
-//        int StarpowderMovement=0;
-//        while(StarPowderOrder>=0){
-//            StarPowderCurrentPlanche=StarPowderPlayerList.get(StarPowderOrder).getMyPlance();
-//            //StarpowderMovement=-StarPowderCurrentPlanche.CountExposed();
-//            //StarPowderPlayerList.get(StarPowderOrder).movePlayer(StarPowderMovement);
-//            StarPowderOrder--;
-//        }
-//
-//        return;
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        PlayerBoard CurrentPlanche;
+        int Order=PlayerList.size();
+        int StarpowderMovement=0;
+        while(Order>=0){
+            CurrentPlanche =PlayerList.get(Order).getMyPlance();
+            StarpowderMovement=-CurrentPlanche.getExposedConnectors();
+            Board.movePlayer(PlayerList.get(Order).GetID(), -this.getTime());
+            Order--;
+        }
+
+        return;
     }
 
     //json required

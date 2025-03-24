@@ -2,7 +2,10 @@ package org.example.galaxy_trucker.Model;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Cards.Card;
+import org.example.galaxy_trucker.Model.InputHandlers.InputHandler;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.powerCenter;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,9 +18,10 @@ public class Player {
     private boolean ready;
     private int credits;
     private Tile CurrentTile;   //the tile that Player has in his hand
-
-
-    private Integer input;
+    private  PlayerStates PlayerState;
+    private InputHandler InputHandler;
+    private ArrayList<Goods> GoodsToHandle;
+    private Card CurrentCard;
 
 
     public Player(String id, GameBoard board) {
@@ -27,8 +31,11 @@ public class Player {
         credits = 0;
         ready = false;
         CurrentTile = null;
-        input = null;
+        PlayerState= null;
+        GoodsToHandle = new ArrayList<>();
+        CurrentCard = null;
     }
+
 
 
 
@@ -61,6 +68,22 @@ public class Player {
         return d1+d2;
     }
 
+    public InputHandler getInputHandler() {
+        return InputHandler;
+    }
+
+    public void setInputHandler(InputHandler InputHandler) {
+        this.InputHandler = InputHandler;
+    }
+
+    public void setState(PlayerStates state) {
+        this.PlayerState = state;
+    }
+
+    public void  execute() {
+        this.CurrentCard=CommonBoard.getCardStack().getFullAdventure().getFirst();
+        this.CurrentCard.ActivateCard();
+    }
 
     /**
      * get a new random tile from the covered tiles set
@@ -134,13 +157,9 @@ public class Player {
     /**
      * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
      */
-    public void EndConstruction(){
-        CommonBoard.SetStartingPosition(this.ID);
-    }
-
-    public void StatTimer() throws InterruptedException {
-        CommonBoard.StartHourglass();
-    }
+//    public void EndConstruction(){
+//        CommonBoard.SetStartingPosition(this.ID);
+//    }
 
 
     public void SetReady(){
@@ -148,88 +167,58 @@ public class Player {
     }
 
 
-    public ArrayList<IntegerPair> getPower(){
-        ArrayList<IntegerPair> Power = new ArrayList<>();
-        IntegerPair coords = new IntegerPair(6, 9);
-        Power.add(coords);
-        return Power;
-    }
 
-    public ArrayList<IntegerPair> getEnginePower(){
-        ArrayList<IntegerPair> Power = new ArrayList<>();
-        IntegerPair coords = new IntegerPair(4, 2);
-        Power.add(coords);
-        return Power;
-
-    }
-
-    public ArrayList<IntegerPair> getHumanstoKIll(){
-        ArrayList<IntegerPair> Locations = new ArrayList<>();
-        IntegerPair coords = new IntegerPair(4, 2);
-        Locations.add(coords);
-        return Locations;
-    }
+//    public ArrayList<IntegerPair> getPower(){
+//        ArrayList<IntegerPair> Power = new ArrayList<>();
+//        IntegerPair coords = new IntegerPair(6, 9);
+//        Power.add(coords);
+//        return Power;
+//    }
+//
+//    public ArrayList<IntegerPair> getEnginePower(){
+//        ArrayList<IntegerPair> Power = new ArrayList<>();
+//        IntegerPair coords = new IntegerPair(4, 2);
+//        Power.add(coords);
+//        return Power;
+//
+//    }
+//    public ArrayList<IntegerPair> getHumanstoKIll(){
+//        ArrayList<IntegerPair> Locations = new ArrayList<>();
+//        IntegerPair coords = new IntegerPair(4, 2);
+//        Locations.add(coords);
+//        return Locations;
+//    }
 
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
     public PlayerBoard getMyPlance() {return myPlance;}
-    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
-    public ArrayList<IntegerPair> getEnergyTiles(){return this.myPlance.getEnergyTiles();
+//    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
+    public ArrayList<IntegerPair> getEnergyTiles(){
+        if(getMyPlance().getClassifiedTiles().containsKey(powerCenter.class))
+        return this.getMyPlance().getClassifiedTiles().get(powerCenter.class);
+        else return null;
     }
 
 
-    public void GiveCoords(IntegerPair coords){
-        //chima metodo della carta passando parametro
+    // puts the good in index i into the respective coordinates
+    public void PutGoods(int index, IntegerPair coords){
+      myPlance.putGoods(GoodsToHandle.remove(index), coords);
     }
 
-    public void GiveDecision(int decision){
-        //chima metodo della carta passando parametro
+    // rimuove l'iesimo good in coordinata coords
+    public void removeGoods(IntegerPair coords,int index){
+        this.myPlance.removeGood(coords, index);
     }
 
-    public void GiveDecision(boolean decision){
-        //chima metodo della carta passando parametro
-    }
-
-
-
-
-
-
-
-
-    public void setCargoAction(int action){
-        if(action < 0 || action > 3)
-            throw new IllegalArgumentException("Invalid action");
-        else input = action;
-        input.notify();
-    }
-
-    public int getCargoAction(){
-
-        if(input == null) throw new NullPointerException("No action selected");
-        int temp = input;
-        input = null;
-        return temp;
-    }
-
-    public void setGoodIndex(int index){
-        input = index;
-        input.notify();
-    }
-
-    public int getGoodsIndex() {
-
-        if(input == null) throw new NullPointerException("No action selected");
-        int temp = input;
-        input = null;
-        return temp;
-    }
-
-    public IntegerPair getGoodsCoordinates(){
-        IntegerPair coords = new IntegerPair(5,5);
-        return coords;
-    }
+//
+//    public int getGoodsIndex(){
+//        return 3;
+//    }
+//    public IntegerPair getGoodsCoordinates(){
+//        IntegerPair coords = new IntegerPair(5,5);
+//        return coords;
+//    }
 
     public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
         myPlance.pullGoods(good1, coord1);
@@ -241,34 +230,22 @@ public class Player {
 
 
     public void handleCargo(ArrayList<Goods> reward){
-        ArrayList<Integer> UsedAddresses= new ArrayList<>();
+        this.GoodsToHandle.clear();
 
-        while(!reward.isEmpty()) {
-            int a = getCargoAction();
-            if (a == 0) { // terminate handling cargo
-                return;
-            } else if (a == 1) {//put goods
-                int i= getGoodsIndex();
-                if(!UsedAddresses.contains(i)) {
-                    UsedAddresses.add(i);
-                    myPlance.putGoods(reward.get(i),getGoodsCoordinates());
-                    myPlance.putGoods(reward.get(i),getGoodsCoordinates());
-                }
-                //else sollevo eccezione?
+        this.GoodsToHandle.addAll(reward);
 
-            } else if (a == 2) {// switch positions
-                //chiamo get type goods e coord
-                int g1=1;
-                int g2=0;
-                IntegerPair c1 = new IntegerPair(5,5);
-                IntegerPair c2 = new IntegerPair(8,6);
-                switchGoods(g1,c1,g2,c2);
-            }
-        }
-
-        //chiedergli un azione alla volta è vieteato neh?
-
+        this.setState(PlayerStates.HandlingCargo);
 
     }
+
+    public void stopHandlingCargo(){
+        this.setState(PlayerStates.Waiting);
+        this.CurrentCard.finishCard();
+
+        // controllo che
+    }
+
+    //DOVREI AGGIUNGERE UN MODO PER ARRIVARE A CARD DA PLAYER DIREI :)
+    //principalmente per chiamare i metodi di card dopo l'input
 
 }
