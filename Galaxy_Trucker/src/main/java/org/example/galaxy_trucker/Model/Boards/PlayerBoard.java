@@ -175,6 +175,11 @@ public class PlayerBoard {
         return getter;
     }
 
+    public PlayerBoardSetters getSetter(){
+        return setter;
+    }
+
+
 
     /**
      * Method getExposedConnectors retrieves the number of exposed connectors on the player board.
@@ -542,7 +547,7 @@ public class PlayerBoard {
      * @param c of type int - y coordinate.
      * @param visited of type ArrayList<IntegerPair> - keeps track of all the tiles already visited.
      */
-    public void updateBoardAttributes(int r, int c,ArrayList<IntegerPair> visited){
+    public void     updateBoardAttributes(int r, int c,ArrayList<IntegerPair> visited){
         if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlayerBoard[r][c] != 1) {
             return;
         }

@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class storageCompartment extends Component{
 
@@ -33,7 +34,7 @@ public class storageCompartment extends Component{
 
 
     private void orderGoods() {
-        Collections.sort(goods);
+        this.goods.sort(Comparator.comparingInt(Goods::getValue));
     }
 
 
