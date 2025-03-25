@@ -639,99 +639,6 @@ public class PlayerBoard {
     }
 
 
-    //da qui in poi
-    //SET
-    /**
-     * Method kill reduces the number of Human or Alien in a housing cell by 1 given the coordinate of this cell
-     *
-     * @param coordinate of type IntegerPair - the value of the coordinate.
-     * @throws ArrayIndexOutOfBoundsException when the user input is not in the correct range.
-     * @throws HousingUnitEmptyException when the housingUnit is empty or is not possible to kill such a number of humans.
-     */
-    public void kill(IntegerPair coordinate,int humans ,boolean purpleAlien, boolean brownAlien) throws InvalidInput, HousingUnitEmptyException{
-        if (coordinate.getFirst() < 0 || coordinate.getFirst() >= PlayerBoard.length || coordinate.getSecond() < 0 || coordinate.getSecond() >= PlayerBoard[0].length || ValidPlayerBoard[coordinate.getFirst()][coordinate.getSecond()] == -1) {
-            throw new InvalidInput(coordinate.getFirst(), coordinate.getSecond(), "Invalid input: coordinates out of bounds or invalid tile." );
-        }
-        Component unit =  PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent();
-        if ((purpleAlien && !unit.isPurpleAlien()) || (brownAlien && !unit.isBrownAlien())) {
-            throw new HousingUnitEmptyException("There is no alien to kill");
-        }
-
-        if (humans > unit.getAbility()){
-            throw new HousingUnitEmptyException("It is not possible to kill such a number of humans");
-        }
-        unit.setAbility(humans, purpleAlien, brownAlien);
-    }
-
-
-
-    //GET
-    /**
-     * Method pullGoods removes the element at position i of a storageComponent and adds it to the BufferGoods.
-     *
-     * @param i of type int.
-     * @param coordinate of type IntegerPair.
-     * @throws InvalidInput If the coordinates are out of bounds, the tile is not a storage compartment,
-     *                      or the requested position in the compartment does not exist.
-     * @throws StorageCompartmentEmptyException If the storage compartment is empty and no goods can be removed.
-     */
-    public void pullGoods(int i, IntegerPair coordinate) throws InvalidInput, StorageCompartmentEmptyException{
-
-        int x = coordinate.getFirst();
-        int y = coordinate.getSecond();
-
-        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
-            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
-        }
-
-        if (!checkExistence(x,y, storageCompartment.class, specialStorageCompartment.class)){
-            throw new InvalidInput("The following tile is not a storageCompartment");
-        }
-
-        if (PlayerBoard[x][y].getComponent().getAbility(null).isEmpty()){
-            throw new StorageCompartmentEmptyException("The following StorageCompartment is empty: " + x + "," + y);
-        }
-
-        if (PlayerBoard[x][y].getComponent().getAbility(null).size() < i){
-            throw new InvalidInput("This position in the StorageCompartment does not exist");
-        }
-
-        BufferGoods.add(PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().getAbility(null).remove(i));
-    }
-
-    //SET
-    /**
-     * Method putGoods adds a good to a storageCompartment.
-     *
-     * @param good of type Goods.
-     * @param coordinate of type IntegerPair.
-     * @throws InvalidInput If the coordinates are out of bounds, the tile is not a storage compartment.
-     * @throws StorageCompartmentFullException If the storage compartment is full and cannot accept more goods.
-     * @throws IllegalArgumentException If the good being added is not allowed in a standard storage compartment.
-     */
-    public void putGoods(Goods good, IntegerPair coordinate) throws IllegalArgumentException, InvalidInput, StorageCompartmentFullException {
-
-
-        int x = coordinate.getFirst();
-        int y = coordinate.getSecond();
-
-
-        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
-            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
-        }
-
-        if (!checkExistence(x,y, storageCompartment.class, specialStorageCompartment.class) ){
-            throw new InvalidInput("The following tile is not a storageCompartment");
-        }
-
-        if (PlayerBoard[x][y].getComponent().getAbility(null).size() + 1 > PlayerBoard[x][y].getComponent().getAbility()){
-            throw new StorageCompartmentFullException("The following StorageCompartment is full: " + x + "," + y);
-        }
-
-        PlayerBoard[x][y].getComponent().setAbility(good, true);
-    }
-
-
     /**
      * Method pullFromBuffer pull the good in position i of the BufferGoods.
      *
@@ -749,173 +656,37 @@ public class PlayerBoard {
         return BufferGoods.remove(i);
     }
 
-    //SET
-    /**
-     * Method useEnergy reduces the energy of the tiles in the array by 1.
-     *
-     * @param chosenEnergyTiles of type ArrayList<IntegerPair> chosenEnergyTiles - the position of the EnergyTiles chosen by the player,
-     *                          there may be duplicates if the user wants to consume more energy from the same tile .
-     * @throws NullPointerException If the provided list is null.
-     * @throws InvalidInput If at least one of the chosen energy tiles is invalid or does not exist in the player's energyTiles list.
-     * @throws powerCenterEmptyException If any of the selected power centers are empty and cannot provide energy.
-     */
-    public void useEnergy(ArrayList<IntegerPair> chosenEnergyTiles) throws InvalidInput, powerCenterEmptyException{
-        if (chosenEnergyTiles == null) {
-            throw new NullPointerException("chosenEnergyTiles cannot be null.");
-        }
-        if (!checkExistence(chosenEnergyTiles, powerCenter.class)) {
-            throw new InvalidInput("Invalid choice, at least one energy is invalid");
-        }
-        for (IntegerPair energy : chosenEnergyTiles){
-            if (PlayerBoard[energy.getFirst()][energy.getSecond()].getComponent().getAbility() == 0){
-                throw new powerCenterEmptyException("PowerCenter is empty");
-            }
-            PlayerBoard[energy.getFirst()][energy.getSecond()].getComponent().setAbility();
-        }
-    }
-
-    //SET
-    /**
-     * Method removeGood removes a good from the specified StorageCompartment at the given position.
-     *
-     * @param coordinate of type IntegerPair.
-     * @param i of type int.
-     * @throws InvalidInput If the coordinates are out of bounds, the tile is invalid, or the selected tile is not a storage compartment.
-     * @throws StorageCompartmentEmptyException If the storage compartment is empty and there are no goods to remove.
-     */
-    public void removeGood(IntegerPair coordinate, int i) throws InvalidInput, StorageCompartmentEmptyException {
-
-        int x = coordinate.getFirst();
-        int y = coordinate.getSecond();
-
-        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
-            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
-        }
-
-        if (!checkExistence(x,y, storageCompartment.class, specialStorageCompartment.class)){
-            throw new InvalidInput("The following tile is not a storageCompartment");
-        }
-
-        if (PlayerBoard[x][y].getComponent().getAbility() == 0){
-            throw new StorageCompartmentEmptyException("The following StorageCompartment is Empty: " + x + "," + y);
-        }
-
-        PlayerBoard[x][y].getComponent().getAbility(null).remove(i);
-    }
 
 
-
-
-    //SET
-    /**
-     * Method populateHousingUnit populates a housing unit with humans or aliens.
-     *
-     * @param coordinate of type IntegerPair.
-     * @param humans of type int.
-     * @param purpleAlien of type boolean.
-     * @param brownAlien of type boolean.
-     * @throws InvalidInput If the coordinates are out of bounds, the tile is invalid, the tile is not a housing unit,
-     *                      aliens are added to the MainCockpit, aliens are added , or the combination of occupants is not allowed.
-     * @throws StorageCompartmentFullException If the housing unit is already full and cannot accommodate more occupants.
-     */
-    public void populateHousingUnit(IntegerPair coordinate , int humans ,boolean purpleAlien, boolean brownAlien) throws InvalidInput, StorageCompartmentFullException{
-
-        int x = coordinate.getFirst();
-        int y = coordinate.getSecond();
-
-        if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
-            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
-        }
-
-        if (!checkExistence(x,y, modularHousingUnit.class)){
-            throw new InvalidInput("The following tile is not a modularHousingUnit");
-        }
-
-        if (purpleAlien && brownAlien){
-            throw new InvalidInput("Invalid input: only one alien can be added");
-        }
-
-        if (x == 6 && y == 6 && (purpleAlien || brownAlien)){
-            throw new InvalidInput("Invalid input: aliens cannot be added to the MainCockpit");
-        }
-
-        if((purpleAlien && !PlayerBoard[x][y].getComponent().getNearbyAddons(true)) || (brownAlien && !PlayerBoard[x][y].getComponent().getNearbyAddons(false)) ){
-            throw new InvalidInput("Invalid input: aliens cannot be added without specific Addons.");
-        }
-
-        if (PlayerBoard[x][y].getComponent().getAbility() == 2 && humans > 0){
-            throw new StorageCompartmentFullException("The following StorageCompartment is Full: " + x + "," + y);
-        }
-
-        if (PlayerBoard[x][y].getComponent().getAbility() != 0 && (purpleAlien || brownAlien)){
-            throw new InvalidInput("Invalid input: aliens cannot be added if humans are already present");
-        }
-
-        if ((PlayerBoard[x][y].getComponent().isBrownAlien() || PlayerBoard[x][y].getComponent().isPurpleAlien()) && humans > 0){
-            throw new InvalidInput("Invalid input: humans cannot be added if an alien is already present");
-        }
-
-        if ((purpleAlien && PlayerBoard[x][y].getComponent().isBrownAlien()) || (brownAlien && PlayerBoard[x][y].getComponent().isPurpleAlien())){
-            throw new InvalidInput("Invalid input: there is already an alien of the other color present");
-        }
-
-        PlayerBoard[coordinate.getFirst()][coordinate.getSecond()].getComponent().initType(humans, purpleAlien, brownAlien);
-    }
-
-
-    public boolean checkExistence(int x, int y, Class<?> type){
-        return  classifiedTiles.containsKey(type) &&
-                classifiedTiles.get(type).contains(new IntegerPair(x, y));
-    }
-
-    public boolean checkExistence(int x, int y, Class<?> type1, Class<?> type2){
-        return  (   classifiedTiles.containsKey(type1) &&
-                        classifiedTiles.get(type1).contains(new IntegerPair(x, y))) ||
-                (   classifiedTiles.containsKey(type2) &&
-                        classifiedTiles.get(type2).contains(new IntegerPair(x, y)));
-    }
-
-    public boolean checkExistence(ArrayList<IntegerPair> tiles, Class<?> type){
-        return  classifiedTiles.containsKey(type) &&
-                classifiedTiles.get(type).containsAll(tiles);
-    }
-
-    public boolean checkExistence(ArrayList<IntegerPair> tiles, Class<?> type1, Class<?> type2){
-        return  (classifiedTiles.containsKey(type1) &&
-                    classifiedTiles.get(type1).containsAll(tiles) ) ||
-                (classifiedTiles.containsKey(type2) &&
-                        classifiedTiles.get(type2).containsAll(tiles))
-                 ;
-    }
-    public double sellCargo(boolean arrived){
-        double totalSold=0;
-        if(classifiedTiles.containsKey(specialStorageCompartment.class)){
-            for(IntegerPair pair : classifiedTiles.get(specialStorageCompartment.class)){
-                Tile currentTile = PlayerBoard[pair.getFirst()][pair.getSecond()];
-                ArrayList<Goods> currGoods= currentTile.getComponent().getAbility(null);
-                for(int j=0; j< currGoods.size(); j++){
-                    //dovrei asseganre un valore a goods senno è orrendo
-                    totalSold += currGoods.get(j).ordinal()+1;
-                }
-            }
-        }
-        if(classifiedTiles.containsKey(storageCompartment.class)){
-            for(IntegerPair pair : classifiedTiles.get(storageCompartment.class)){
-                Tile currentTile = PlayerBoard[pair.getFirst()][pair.getSecond()];
-                ArrayList<Goods> currGoods= currentTile.getComponent().getAbility(null);
-                for(int j=0; j< currGoods.size(); j++){
-                    //dovrei asseganre un valore a goods senno è orrendo
-                    totalSold += currGoods.get(j).ordinal()+1;
-                }
-            }
-        }
-        if (arrived){
-            return totalSold;
-        }
-        else{
-            return (Math.ceil(totalSold/2));
-        }
-    }
+//    public double sellCargo(boolean arrived){
+//        double totalSold=0;
+//        if(classifiedTiles.containsKey(specialStorageCompartment.class)){
+//            for(IntegerPair pair : classifiedTiles.get(specialStorageCompartment.class)){
+//                Tile currentTile = PlayerBoard[pair.getFirst()][pair.getSecond()];
+//                ArrayList<Goods> currGoods= currentTile.getComponent().getAbility(null);
+//                for(int j=0; j< currGoods.size(); j++){
+//                    //dovrei asseganre un valore a goods senno è orrendo
+//                    totalSold += currGoods.get(j).ordinal()+1;
+//                }
+//            }
+//        }
+//        if(classifiedTiles.containsKey(storageCompartment.class)){
+//            for(IntegerPair pair : classifiedTiles.get(storageCompartment.class)){
+//                Tile currentTile = PlayerBoard[pair.getFirst()][pair.getSecond()];
+//                ArrayList<Goods> currGoods= currentTile.getComponent().getAbility(null);
+//                for(int j=0; j< currGoods.size(); j++){
+//                    //dovrei asseganre un valore a goods senno è orrendo
+//                    totalSold += currGoods.get(j).ordinal()+1;
+//                }
+//            }
+//        }
+//        if (arrived){
+//            return totalSold;
+//        }
+//        else{
+//            return (Math.ceil(totalSold/2));
+//        }
+//    }
 
 
 
