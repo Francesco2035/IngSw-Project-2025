@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.*;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;

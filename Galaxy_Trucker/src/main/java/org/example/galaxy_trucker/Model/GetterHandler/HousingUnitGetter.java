@@ -50,19 +50,28 @@ public class HousingUnitGetter  implements PlayerBoardGetters{
             throw new InvalidInput("The following tile is not a modularHousingUnit");
         }
 
-        if (coordinate.getFirst() < 0 || coordinate.getFirst() >= pb.length || coordinate.getSecond() < 0 || coordinate.getSecond() >= pb[0].length || ValidPlayerBoard[coordinate.getFirst()][coordinate.getSecond()] == -1) {
-            throw new InvalidInput(coordinate.getFirst(), coordinate.getSecond(), "Invalid input: coordinates out of bounds or invalid tile." );
-        }
+//        if (coordinate.getFirst() < 0 || coordinate.getFirst() >= pb.length || coordinate.getSecond() < 0 || coordinate.getSecond() >= pb[0].length || ValidPlayerBoard[coordinate.getFirst()][coordinate.getSecond()] == -1) {
+//            throw new InvalidInput(coordinate.getFirst(), coordinate.getSecond(), "Invalid input: coordinates out of bounds or invalid tile." );
+//        }
         Component unit =  pb[coordinate.getFirst()][coordinate.getSecond()].getComponent();
-        if ((purpleAlien && !unit.isPurpleAlien()) || (brownAlien && !unit.isBrownAlien())) {
-            throw new HousingUnitEmptyException("There is no alien to kill");
+//        if ((purpleAlien && !unit.isPurpleAlien()) || (brownAlien && !unit.isBrownAlien())) {
+//            throw new HousingUnitEmptyException("There is no alien to kill");
+//        }
+
+        if (humans > unit.getAbility() && (!purpleAlien && !unit.isPurpleAlien()) && (!brownAlien && !unit.isBrownAlien())){
+            throw new HousingUnitEmptyException("It is not possible to kill in this Tile");
         }
 
-        if (humans > unit.getAbility()){
-            throw new HousingUnitEmptyException("It is not possible to kill such a number of humans");
+        if (!purpleAlien && !unit.isPurpleAlien()){
+            playerBoard.setPurpleAlien(false);
         }
+
+        if (!brownAlien && !unit.isBrownAlien()){
+            playerBoard.setBrownAlien(false);
+        }
+
         unit.setAbility(humans, purpleAlien, brownAlien);
-        return null;
+        return true;
     }
 
 

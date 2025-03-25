@@ -139,14 +139,9 @@ public class PlayerBoardTest {
         playerBoard.setGetter(new PlasmaDrillsGetter(playerBoard,choise));
         assertEquals(1.5, playerBoard.getGetter().get());
         playerBoard.setSetter(new HousingUnitSetter(playerBoard, new IntegerPair(5,7), 0, false, true));
+        playerBoard.getSetter().set();
         assertTrue(playerBoard.getTile(5,7).getComponent().isBrownAlien());
     }
-
-
-
-
-
-
 
 
 }
