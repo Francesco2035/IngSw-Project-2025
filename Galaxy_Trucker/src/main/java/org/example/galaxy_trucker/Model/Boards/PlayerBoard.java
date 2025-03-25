@@ -18,7 +18,7 @@ import java.util.Map;
 public class PlayerBoard {
 
 
-    private int total;
+    private int totalValue;
     private Tile[][] PlayerBoard;
     private int[][] ValidPlayerBoard;
     private int damage;
@@ -54,6 +54,7 @@ public class PlayerBoard {
         this.damage = 0;
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
+        this.totalValue = 0;
 
 
         this.purpleAlien = false;
@@ -137,6 +138,14 @@ public class PlayerBoard {
 
     public void setSetter(PlayerBoardSetters setter) {
         this.setter = setter;
+    }
+
+    public void setTotalValue(int i){
+        this.totalValue += i;
+    }
+
+    public int getTotalValue(){
+        return this.totalValue;
     }
 
     /**
@@ -660,39 +669,5 @@ public class PlayerBoard {
         }
         return BufferGoods.remove(i);
     }
-
-
-
-//    public double sellCargo(boolean arrived){
-//        double totalSold=0;
-//        if(classifiedTiles.containsKey(specialStorageCompartment.class)){
-//            for(IntegerPair pair : classifiedTiles.get(specialStorageCompartment.class)){
-//                Tile currentTile = PlayerBoard[pair.getFirst()][pair.getSecond()];
-//                ArrayList<Goods> currGoods= currentTile.getComponent().getAbility(null);
-//                for(int j=0; j< currGoods.size(); j++){
-//                    //dovrei asseganre un valore a goods senno è orrendo
-//                    totalSold += currGoods.get(j).ordinal()+1;
-//                }
-//            }
-//        }
-//        if(classifiedTiles.containsKey(storageCompartment.class)){
-//            for(IntegerPair pair : classifiedTiles.get(storageCompartment.class)){
-//                Tile currentTile = PlayerBoard[pair.getFirst()][pair.getSecond()];
-//                ArrayList<Goods> currGoods= currentTile.getComponent().getAbility(null);
-//                for(int j=0; j< currGoods.size(); j++){
-//                    //dovrei asseganre un valore a goods senno è orrendo
-//                    totalSold += currGoods.get(j).ordinal()+1;
-//                }
-//            }
-//        }
-//        if (arrived){
-//            return totalSold;
-//        }
-//        else{
-//            return (Math.ceil(totalSold/2));
-//        }
-//    }
-
-
 
 }

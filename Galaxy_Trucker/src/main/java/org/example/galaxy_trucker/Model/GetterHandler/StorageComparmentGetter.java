@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model.GetterHandler;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.StorageCompartmentEmptyException;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.specialStorageCompartment;
@@ -52,7 +53,12 @@ public class StorageComparmentGetter implements PlayerBoardGetters{
             throw new StorageCompartmentEmptyException("The following StorageCompartment is Empty: " + x + "," + y);
         }
 
-        return pb[x][y].getComponent().getAbility(null).remove(i);
+
+        Goods good = pb[x][y].getComponent().getAbility(null).remove(i);
+        playerBoard.getStoredGoods().get(good.getClass()).remove(new IntegerPair(x,y));
+        playerBoard.setTotalValue(-good.getValue());
+        return good;
+
     }
 
 
