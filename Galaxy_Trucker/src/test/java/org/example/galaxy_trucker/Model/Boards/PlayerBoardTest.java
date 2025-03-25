@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.GetterHandler.EngineGetter;
 import org.example.galaxy_trucker.Model.GetterHandler.PlasmaDrillsGetter;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.SetterHandler.HousingUnitSetter;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.hotWaterHeater;
 import org.example.galaxy_trucker.Model.Tiles.plasmaDrill;
@@ -137,7 +138,12 @@ public class PlayerBoardTest {
 
         playerBoard.setGetter(new PlasmaDrillsGetter(playerBoard,choise));
         assertEquals(1.5, playerBoard.getGetter().get());
+        playerBoard.setSetter(new HousingUnitSetter(playerBoard, new IntegerPair(5,7), 0, false, true));
+        assertTrue(playerBoard.getTile(5,7).getComponent().isBrownAlien());
     }
+
+
+
 
 
 
