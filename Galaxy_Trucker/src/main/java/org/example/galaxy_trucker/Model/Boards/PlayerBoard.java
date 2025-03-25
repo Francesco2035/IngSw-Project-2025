@@ -166,6 +166,11 @@ public class PlayerBoard {
         return getter;
     }
 
+    public PlayerBoardSetters getSetter(){
+        return setter;
+    }
+
+
 
     /**
      * Method getExposedConnectors retrieves the number of exposed connectors on the player board.

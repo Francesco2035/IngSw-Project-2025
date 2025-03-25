@@ -1,12 +1,14 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.GetterHandler.PlasmaDrillsGetter;
 import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.InputHandlers.Killing;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.SetterHandler.HousingUnitSetter;
 
 import java.util.ArrayList;
 
@@ -62,7 +64,9 @@ public class Slavers extends Card{
 
     @Override
     public void continueCard(ArrayList<IntegerPair> cannons) {
-        double power= currentPlayer.getMyPlance().getPower(cannons);
+        currentPlayer.getMyPlance().setGetter(new PlasmaDrillsGetter(currentPlayer.getMyPlance(), cannons));
+        double power = ((Double) currentPlayer.getMyPlance().getGetter().get());
+
         if(power>this.getRequirement()){
             this.currentPlayer.setState(PlayerStates.Accepting);
             this.currentPlayer.setInputHandler(new Accept(this));
@@ -81,8 +85,10 @@ public class Slavers extends Card{
             //throw new Exception();
         }
 
-        for (int j = 0; j < coordinates.size(); j++) {
-            currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
+        for (IntegerPair coordinate : coordinates) {
+            currentPlayer.getMyPlance().setSetter(new HousingUnitSetter(currentPlayer.getMyPlance(),
+                    coordinate, 1, true, true));
+            currentPlayer.getMyPlance().getSetter().set();
         }
         this.updateSates();
     }

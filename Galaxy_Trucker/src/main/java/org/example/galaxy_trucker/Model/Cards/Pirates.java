@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Model.GetterHandler.PlasmaDrillsGetter;
 import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -77,7 +78,10 @@ public class Pirates extends Card{
 
     @Override
     public void continueCard(ArrayList<IntegerPair> cannons) {
-        double power= currentPlayer.getMyPlance().getPower(cannons);
+//        double power= currentPlayer.getMyPlance().getPower(cannons);
+        currentPlayer.getMyPlance().setGetter(new PlasmaDrillsGetter(currentPlayer.getMyPlance(), cannons));
+        double power = ((Double) currentPlayer.getMyPlance().getGetter().get());
+
         if(power>this.getRequirement()){
             this.defeated=true;
             this.currentPlayer.setState(PlayerStates.Accepting);
