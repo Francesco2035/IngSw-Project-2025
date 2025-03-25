@@ -57,14 +57,14 @@ public class OpenSpace extends Card{
         }
     }
 
-    @Override
-    public void continueCard(ArrayList<IntegerPair> engines) {
-        int movement= currentPlayer.getMyPlance().getEnginePower(engines);
-        this.getBoard().movePlayer(currentPlayer.GetID(),movement);
-        this.currentPlayer.setState(PlayerStates.Waiting);
-        this.updateSates();
-    }
-
+//    @Override
+//    public void continueCard(ArrayList<IntegerPair> engines) {
+//        int movement= currentPlayer.getMyPlance().getEnginePower(engines);
+//        this.getBoard().movePlayer(currentPlayer.GetID(),movement);
+//        this.currentPlayer.setState(PlayerStates.Waiting);
+//        this.updateSates();
+//    }
+//
 
 
     //json required
