@@ -43,6 +43,11 @@ public class Warzone extends Card{
     private int PlayerOrder;
     private int ChallengeOrder;
     private int done;
+    private int ShotsOrder;
+    private int ShotsLine;
+    private IntegerPair hit;
+    private int[] lines;
+
 
 
 
@@ -61,6 +66,13 @@ public class Warzone extends Card{
         this.done = 0;
         this.Worst = null;
         this.Minimum = 0;
+        this.ShotsOrder = 0;
+        this.ShotsLine = 0;
+        this.lines = new int[PunishmentShots.size()/2];
+        for(int i=0;i< PunishmentShots.size()/2;i++){
+            lines[i] = this.getBoard().getPlayers().getFirst().RollDice();
+        }
+        this.hit = null;
 
 
     }
@@ -116,7 +128,10 @@ public class Warzone extends Card{
                 this.currentPlayer.setInputHandler(new Killing(this));
             }
             else if(this.PunishmentType[ChallengeOrder]==3){
-                this.
+              //  chiamo il metodo di fottitura eterna :)
+            }
+            else {
+                this.continueCard();
             }
             this.ChallengeOrder++;
         }
@@ -181,7 +196,7 @@ public class Warzone extends Card{
             CurrentPlanche=PlayerList.get(i).getMyPlance(); // get the current active planche
 
 
-            ArrayList<IntegerPair> HousingCoords=new ArrayList<>()
+            ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
             if(CurrentPlanche.getClassifiedTiles().containsKey(modularHousingUnit.class)) {
                 HousingCoords = CurrentPlanche.getClassifiedTiles().get(modularHousingUnit.class);
             }
@@ -252,78 +267,99 @@ public class Warzone extends Card{
     }
 
 
-    public  void getShot(Player Worst) {
-        int Order=0;
-        int AttackNumber=0;
-        boolean Flag=true;
-        boolean Attacked=false;
-        GameBoard Board=this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerBoard CurrentPlanche;
-        int Len= PlayerList.size();
-        int[][] ValidPlanche;
+    @Override
+    public void continueCard() {
         int Movement;
-        int Lines [] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-        int Line; // gli attacchi son fissi per tutti i player quindi tiro già la sequenza di dadi
-        for(int i=0;i<PunishmentShots.size();i++){
-            Lines[i]=PlayerList.get(0).RollDice();
-        }
-        CurrentPlanche=Worst.getMyPlance();
-        ValidPlanche=CurrentPlanche.getValidPlayerBoard(); //prendo la planche da controllare
-        AttackNumber=0;
+        boolean shotsFlag= false;
+        while (this.ShotsOrder < PunishmentShots.size() && shotsFlag == false) {
 
-        while(PunishmentShots.size()>AttackNumber) { // faccio tutti gli atttacchi
-            Line=Lines[AttackNumber]; // prendo la linea da attaccà
-
-            if (PunishmentShots.get(AttackNumber)== 0) { //sinistra
+            PlayerBoard CurrentPlanche = currentPlayer.getMyPlance(); //prendo plancia
+            int[][] MeteoritesValidPlanche = CurrentPlanche.getValidPlayerBoard();//prende matrice validita
+            if (PunishmentShots.get(ShotsOrder) == 0) { //sinistra
                 Movement = 0;
+                while (Movement < 10 && shotsFlag == false) {
+                    if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
 
-                while (Movement < 10 && Attacked == false) {
-                    if (ValidPlanche[Line][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                        //Meteorites.Hit(MeteoritesLine,MeteoritesMovement)
-                        Attacked = true;
+                        shotsFlag = true;
+                        hit.setValue(Movement, lines[ShotsOrder / 2]);
+                        currentPlayer.setState(PlayerStates.DefendingFromShots);
+                    }
+
+
+                    Movement++;
+                }
+            }
+            if (PunishmentShots.get(ShotsOrder) == 1) {//sopra
+                Movement = 0;
+                while (Movement < 10 && shotsFlag == false) {
+                    if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
+
+                        shotsFlag = true;
+                        hit.setValue(Movement, lines[ShotsOrder / 2]);
+                        currentPlayer.setState(PlayerStates.DefendingFromShots);
+
                     }
 
                     Movement++;
                 }
             }
-            if (PunishmentShots.get(AttackNumber)== 1) {//sopra
-                Movement = 0;
-                while (Movement < 10 && Attacked == false) {
-                    if (ValidPlanche[Movement][Line] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                        //Meteorites.Hit(MeteoritesMovement,MeteoritesLine)
-                        Attacked  = true;
+            if (PunishmentShots.get(ShotsOrder) == 2) {// destra
+                Movement = 9;
+                while (Movement >= 0 && shotsFlag == false) {
+                    if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {
+
+                        shotsFlag = true;
+                        hit.setValue(Movement, lines[ShotsOrder/2]);
+                        currentPlayer.setState(PlayerStates.DefendingFromShots);
+
+                    }
+                    Movement--;
+                }
+
+            }
+            else { //sotto
+                Movement = 9;
+                while (Movement >= 0 && shotsFlag == false) {
+                    if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
+                        shotsFlag = true;
+                        hit.setValue(Movement, lines[ShotsOrder / 2]);
+                        currentPlayer.setState(PlayerStates.DefendingFromShots);
                     }
 
-                    Movement++;
-                }
-            }
-            if (PunishmentShots.get(AttackNumber) == 2) {// destra
-                Movement = 9;
-                while (Movement >= 0 && Attacked == false) {
-                    if (ValidPlanche[Line][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                        //Meteorites.Hit(MeteoritesLine,MeteoritesMovement)
-                        Attacked = true;
-                    }
-                }
-                Movement--;
-            } else { //sotto
-                Movement = 9;
-                while (Movement >= 0 && Attacked == false) {
-                    if (ValidPlanche[Movement][Line] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                        //Meteorites.Hit(MeteoritesMovement,MeteoritesLine)
-                        Attacked = true;
-                    }
 
                     Movement--;
                 }
 
             }
-            AttackNumber++;
+
+            this.ShotsOrder += 2;
         }
-
-
+        if(this.ShotsOrder >=PunishmentShots.size() ){
+            this.ShotsOrder = 0;
+            this.updateSates();
+        }
     }
+
+
+    @Override
+    public void DefendFromShots(IntegerPair coordinates) {
+        PlayerBoard currentBoard =this.currentPlayer.getMyPlance();
+        Tile[][] tiles =currentBoard.getPlayerBoard();
+
+        if(coordinates !=null) {
+            if (!(PunishmentShots.get(ShotsOrder + 1) == 0 && (currentBoard.getTile(coordinates.getFirst(), coordinates.getSecond()).getComponent().getAbility(0).contains(PunishmentShots.get(ShotsOrder))) || PunishmentShots.get(ShotsOrder + 1) == 1)) {
+                // non dovrei attivare lo scudo o lo scudo è sbagliato
+            }
+        }
+        if(coordinates ==null) { // se sono entrambi nulli non mi son difeso quindi vengo colpito
+            currentBoard.destroy(hit.getFirst(), hit.getSecond());
+        }
+        this.continueCard();
+    }
+
+
+
+
 
     //json required
     public Warzone() {}
