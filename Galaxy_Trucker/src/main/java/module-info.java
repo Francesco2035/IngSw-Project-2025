@@ -19,4 +19,6 @@ module org.example.galaxy_trucker {
     opens org.example.galaxy_trucker.Model to com.fasterxml.jackson.databind, javafx.fxml;
     exports org.example.galaxy_trucker.Model.InputHandlers;
     opens org.example.galaxy_trucker.Model.InputHandlers to com.fasterxml.jackson.databind, javafx.fxml;
+    exports org.example.galaxy_trucker.Model.Goods;
+    opens org.example.galaxy_trucker.Model.Goods to com.fasterxml.jackson.databind, javafx.fxml;
 }
