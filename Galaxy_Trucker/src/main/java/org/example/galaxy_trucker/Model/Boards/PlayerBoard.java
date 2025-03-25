@@ -670,4 +670,21 @@ public class PlayerBoard {
         return BufferGoods.remove(i);
     }
 
+
+
+    public boolean getPurpleAlien(){
+        return this.purpleAlien;
+    }
+
+    public boolean getBrownAlien(){
+        return this.brownAlien;
+    }
+
+    public void setBrownAlien(boolean brownAlien) {
+        this.brownAlien = brownAlien;
+    }
+
+    public void setPurpleAlien(boolean purpleAlien) {
+        this.purpleAlien = purpleAlien;
+    }
 }

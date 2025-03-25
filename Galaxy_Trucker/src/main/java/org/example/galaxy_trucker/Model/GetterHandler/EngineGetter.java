@@ -54,6 +54,10 @@ public class EngineGetter implements PlayerBoardGetters{
             }
 
         }
+
+        if (playerBoard.getBrownAlien()){
+            power += 2;
+        }
         return power;
     }
 

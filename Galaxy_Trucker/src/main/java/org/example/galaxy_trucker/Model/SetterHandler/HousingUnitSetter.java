@@ -57,6 +57,14 @@ public class HousingUnitSetter implements PlayerBoardSetters{
             throw new InvalidInput("Invalid input: only one alien can be added");
         }
 
+        if (playerBoard.getPurpleAlien() && purpleAlien){
+            throw new InvalidInput("Invalid input: only one purple alien can be added");
+        }
+
+        if (playerBoard.getBrownAlien() && brownAlien){
+            throw new InvalidInput("Invalid input: only one brown alien can be added");
+        }
+
         if (x == 6 && y == 6 && (purpleAlien || brownAlien)){
             throw new InvalidInput("Invalid input: aliens cannot be added to the MainCockpit");
         }
@@ -81,6 +89,12 @@ public class HousingUnitSetter implements PlayerBoardSetters{
             throw new InvalidInput("Invalid input: there is already an alien of the other color present");
         }
 
+        if (purpleAlien){
+            playerBoard.setPurpleAlien(true);
+        }
+        if (brownAlien){
+            playerBoard.setBrownAlien(true);
+        }
         playerBoard.getPlayerBoard()[x][y].getComponent().initType(humans, purpleAlien, brownAlien);
 
 

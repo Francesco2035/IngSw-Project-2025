@@ -59,6 +59,9 @@ public class PlasmaDrillsGetter implements PlayerBoardGetters{
                 }
             }
         }
+        if (playerBoard.getPurpleAlien()){
+            power += 2;
+        }
         return power;
 
     }
