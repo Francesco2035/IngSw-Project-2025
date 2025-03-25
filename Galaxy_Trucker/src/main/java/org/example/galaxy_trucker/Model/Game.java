@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
@@ -18,13 +19,14 @@ public class Game {
 
 
 
+
     public Game(int GameLevel) throws IOException {
         gag = new GAGen();
         PlayerList = new ArrayList<>();
-        CardDeck = new CardStacks(gag,GameLevel);
+        CardDeck = new CardStacks(gag, GameLevel);
         TileDecks = new TileSets(gag);
         lv = GameLevel;
-        GameBoard = new GameBoard(TileDecks, lv,CardDeck);
+        GameBoard = new GameBoard(TileDecks, lv, CardDeck);
     }
 
 
@@ -37,19 +39,6 @@ public class Game {
     private void RemovePlayer(Player DeadMan){
         PlayerList.remove(DeadMan);
     }
-
-    public void CreateCardDeck(){
-        // ???
-    }
-
-    public void CreateTileDeck(){
-        // ???
-    }
-
-    public void PickNewCard(){
-        //CardDeck.PickCard(???)
-    }
-
 
 
 
