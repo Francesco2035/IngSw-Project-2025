@@ -2,10 +2,14 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.InputHandlers.GiveAttack;
+import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
 
 import java.util.ArrayList;
 
@@ -32,6 +36,12 @@ public class Warzone extends Card{
     private int PunishmentCargo;
     @JsonProperty("Punishment4")
     private ArrayList<Integer> PunishmentShots;
+    private  Player currentPlayer;
+    private Player Worst;
+    private double Minimum;
+    private int PlayerOrder;
+    private int ChallengeOrder;
+    private int done;
 
 
 
@@ -44,85 +54,141 @@ public class Warzone extends Card{
         PunishmentCargo=Punishment3;
         PunishmentShots=Punishment4;
 
+        this.PlayerOrder = 0;
+        this.ChallengeOrder = 0;
+        this.currentPlayer = null;
+        this.done = 0;
+        this.Worst = null;
+        this.Minimum = 0;
 
+
+    }
+
+
+
+    @Override
+    public void CardEffect(){
+
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        for(Player p : PlayerList){
+            p.setState(PlayerStates.Waiting);
+        }
+        this.updateSates();
+    }
+
+
+    @Override
+    public void updateSates(){
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        if(this.PlayerOrder<PlayerList.size()){
+            currentPlayer = PlayerList.get(this.PlayerOrder);
+            PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
+            if(RequirementsType[ChallengeOrder]==1){
+                this.Minimum=1000000;
+                this.currentPlayer.setState(PlayerStates.GiveAttack);
+                this.currentPlayer.setInputHandler(new GiveAttack(this));
+
+            }
+            if(RequirementsType[ChallengeOrder]==2){
+                this.Minimum=1000000;
+                this.currentPlayer.setState(PlayerStates.GiveSpeed);
+                this.currentPlayer.setInputHandler(new GiveSpeed(this));
+
+            }
+            else{
+                this.Minimum=1000000;
+                this.checkPeople();
+            }
+
+
+            this.PlayerOrder++;
+        }
+        else{
+            this.PlayerOrder=0;
+            if(this.ChallengeOrder==1){
+                this.loseTime(Worst);
+            }
+
+            this.ChallengeOrder++;
+        }
     }
 
     @Override
-    public void CardEffect() {
+    public  void  ActivateCard() {
+        currentPlayer.getInputHandler().action();
+    }
+
+    @Override
+    public void finishCard() {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        Player MinimumPlayer=PlayerList.get(0);
-        for(int i=0; i<RequirementsType.length; i++){
-            if(RequirementsType[i]==1){
-                MinimumPlayer= this.checkPower();
+        if(this.done==PlayerList.size()) {
+            for (int i = 0; i < PlayerList.size(); i++) {
+                PlayerList.get(i).setState(PlayerStates.BaseState);
             }
-            else if(RequirementsType[i]==2){
-                MinimumPlayer=this.checkPeople();
-            }
-            else if(RequirementsType[i]==3){
-                MinimumPlayer=this.checkMovement();
-            }
-
-            if(PunishmentType[i]==1){
-                this.loseTime(MinimumPlayer);
-            }
-            else if(PunishmentType[i]==2){
-                this.losePeople(MinimumPlayer);
-            }
-            else if(PunishmentType[i]==3){
-                this.loseCargo(MinimumPlayer);
-            }
-            else{
-                this.getShot(MinimumPlayer);
-            }
-
-            PlayerList.get(0).getGoodsIndex();
         }
-        return;
+        else{
+            done++;
+        }
     }
+
+    @Override
+    public void continueCard(ArrayList<IntegerPair> coordinates) {
+        if (RequirementsType[ChallengeOrder]==1){
+            checkPower(coordinates);
+        }
+        else {
+            checkMovement(coordinates);
+        }
+    }
+
+
+
+
 
 
     //controlli su chi è il peggiore
 
-    public Player checkPower() {
-        int Order=0;
-        GameBoard Board=this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerBoard CurrentPlanche;
-        int Len= PlayerList.size(); // quanti player ho
-        int PlayerPower;
-        Player Worst=PlayerList.get(0);
-        double Minimum=1000000;
-
-        for(int i=0; i<PlayerList.size(); i++){
-            ArrayList<IntegerPair> coords= PlayerList.get(i).getEnginePower();
-            double movement= PlayerList.get(i).getMyPlance().getEnginePower(coords);
+    public void checkPower(ArrayList<IntegerPair> coordinates) {
+            double movement= currentPlayer.getMyPlance().getPower(coordinates);
             if(movement<Minimum){
-                Worst=PlayerList.get(i);
-                Minimum=movement;
+                this.Worst=currentPlayer;
+                this.Minimum=movement;
             }
-        }
-        return Worst;
+        this.currentPlayer.setState(PlayerStates.Waiting);
+        this.updateSates();
     }
 
-    public Player checkPeople() {
+    public void checkPeople() {
         int Order=0;
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         PlayerBoard CurrentPlanche;
         int Len= PlayerList.size(); // quanti player ho
         int PlayerPower;
-        Player Worst=PlayerList.get(0);
-        int Minimum=1000000;
+
 
         for(int i=0; i<PlayerList.size(); i++){
             CurrentPlanche=PlayerList.get(i).getMyPlance(); // get the current active planche
-            ArrayList<IntegerPair> HousingCoords=CurrentPlanche.getPlasmaDrills();
+
+
+            ArrayList<IntegerPair> HousingCoords=new ArrayList<>()
+            if(CurrentPlanche.getClassifiedTiles().containsKey(modularHousingUnit.class)) {
+                HousingCoords = CurrentPlanche.getClassifiedTiles().get(modularHousingUnit.class);
+            }
+            if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
+                HousingCoords.add(new IntegerPair(6,6));
+            }
+
             Tile TileBoard[][]=CurrentPlanche.getPlayerBoard();
-            int totHumans=0;
-            for(int j=0; i<CurrentPlanche.gethousingUnits().size();i++ ){
+            int totHumans = 0;
+
+
+            for (int j = 0; i < HousingCoords.size(); j++) {
                 //somma per vedere il tot umani
-                totHumans+=TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getAbility();
+                totHumans += TileBoard[HousingCoords.get(j).getFirst()][HousingCoords.get(j).getSecond()].getComponent().getAbility();
             }
 
 
@@ -131,28 +197,18 @@ public class Warzone extends Card{
                 Minimum=totHumans;
             }
         }
-        return Worst;
+        this.PlayerOrder=PlayerList.size();
+        this.updateSates();
     }
 
-    public Player checkMovement() {
-        int Order=0;
-        GameBoard Board=this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerBoard CurrentPlanche;
-        int Len= PlayerList.size(); // quanti player ho
-        int PlayerPower;
-        Player Worst=PlayerList.get(0);
-        double Minimum=1000000;
-
-        for(int i=0; i<PlayerList.size(); i++){
-            ArrayList<IntegerPair> coords= PlayerList.get(i).getPower();
-            double power= PlayerList.get(i).getMyPlance().getPower(coords);
-            if(power<Minimum){
-                Worst=PlayerList.get(i);
-                Minimum=power;
-            }
+    public void checkMovement(ArrayList<IntegerPair> coordinates) {
+        double movement= currentPlayer.getMyPlance().getEnginePower(coordinates);
+        if(movement<Minimum){
+            this.Worst=currentPlayer;
+            this.Minimum=movement;
         }
-        return Worst;
+        this.currentPlayer.setState(PlayerStates.Waiting);
+        this.updateSates();
     }
     public void loseTime(Player Worst) {
         // Worst.movePlayer(PunishmentMovement);

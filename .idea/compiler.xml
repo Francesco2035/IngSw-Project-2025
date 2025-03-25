@@ -9,5 +9,8 @@
         <module name="Galaxy_Trucker" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="prova4" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

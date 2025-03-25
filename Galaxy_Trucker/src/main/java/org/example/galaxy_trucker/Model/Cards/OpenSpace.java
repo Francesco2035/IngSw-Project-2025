@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates;
@@ -39,7 +40,8 @@ public class OpenSpace extends Card{
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
 
-                currentPlayer.setState(PlayerStates.GiveSpeed);
+                this.currentPlayer.setState(PlayerStates.GiveSpeed);
+                this.currentPlayer.setInputHandler(new GiveSpeed(this));
 
             this.order++;
         }
