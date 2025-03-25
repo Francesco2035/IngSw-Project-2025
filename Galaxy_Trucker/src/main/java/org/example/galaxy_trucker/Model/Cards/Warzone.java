@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.InputHandlers.GiveAttack;
 import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
+import org.example.galaxy_trucker.Model.InputHandlers.Killing;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -107,10 +108,16 @@ public class Warzone extends Card{
         }
         else{
             this.PlayerOrder=0;
-            if(this.ChallengeOrder==1){
-                this.loseTime(Worst);
+            if(this.PunishmentType[ChallengeOrder]==1){
+                this.loseTime();
             }
-
+            else if(this.PunishmentType[ChallengeOrder]==2){
+                this.currentPlayer.setState(PlayerStates.Killing);
+                this.currentPlayer.setInputHandler(new Killing(this));
+            }
+            else if(this.PunishmentType[ChallengeOrder]==3){
+                this.
+            }
             this.ChallengeOrder++;
         }
     }
@@ -210,32 +217,41 @@ public class Warzone extends Card{
         this.currentPlayer.setState(PlayerStates.Waiting);
         this.updateSates();
     }
-    public void loseTime(Player Worst) {
-        // Worst.movePlayer(PunishmentMovement);
+
+
+    public void loseTime() {
+        this.getBoard().movePlayer(Worst.GetID(),this.PunishmentMovement);
         return;
     }
-    public void loseCargo(Player Worst) {
 
 
-        for(int i=0;i<PunishmentCargo;i++){
-            int index=Worst.getGoodsIndex();
-            IntegerPair coord=Worst.getGoodsCoordinates();
-
-            Worst.getMyPlance().removeGood(coord,index);
-        }
+    public void loseCargo() {
+//
+//
+//        for(int i=0;i<PunishmentCargo;i++){
+//            int index=Worst.getGoodsIndex();
+//            IntegerPair coord=Worst.getGoodsCoordinates();
+//
+//            Worst.getMyPlance().removeGood(coord,index);
+//        }
     }
-    public void losePeople(Player Worst) {
-        ArrayList<IntegerPair> coordinates;
-        coordinates=Worst.getHumanstoKIll();
-        if(coordinates.size()!=this.PunishmentHumans) {
+
+
+
+    @Override
+    public void killHumans(ArrayList<IntegerPair> coordinates){
+        if (coordinates.size() != this.PunishmentHumans) {
             //devo dirgli che ha scelto il num sbagliato di persone da shottare
             //throw new Exception();
         }
-        for(int j=0; j<coordinates.size();j++){
-            Worst.getMyPlance().kill(coordinates.get(j),1,true,true); // posso anche scegliere gli alieni
-        }
 
+        for (int j = 0; j < coordinates.size(); j++) {
+            currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
+        }
+        this.updateSates();
     }
+
+
     public  void getShot(Player Worst) {
         int Order=0;
         int AttackNumber=0;

@@ -18,6 +18,6 @@ public class Killing implements InputHandler {
         this.coords = coords;
     }
     public void action(){
-        this.currentCard.killHmans(coords);
+        this.currentCard.killHumans(coords);
     }
 }

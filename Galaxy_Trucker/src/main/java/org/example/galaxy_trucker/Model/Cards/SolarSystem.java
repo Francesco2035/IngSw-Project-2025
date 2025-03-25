@@ -54,6 +54,7 @@ public class SolarSystem extends Card {
         else{
             for(Planet p: this.planets){
                 if(p.isOccupied()){
+                    this.getBoard().movePlayer(p.getOccupied().GetID(), this.getTime());
                     p.getOccupied().handleCargo(p.getGoods());
                 }
             }

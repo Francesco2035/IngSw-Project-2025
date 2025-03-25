@@ -75,6 +75,9 @@ public class Smugglers extends Card{
             this.defeated=true;
         }
         else if(power<this.getRequirement()){
+
+            //manca il loseCargo
+
             this.currentPlayer.setState(PlayerStates.Killing);
             this.currentPlayer.setInputHandler(new Killing(this));
 
