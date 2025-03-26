@@ -166,6 +166,7 @@ public class Player {
      */
     public void EndConstruction(){
         CommonBoard.SetStartingPosition(this.ID);
+        this.setState(PlayerStates.FinishedBuilding);
        }
 
 
