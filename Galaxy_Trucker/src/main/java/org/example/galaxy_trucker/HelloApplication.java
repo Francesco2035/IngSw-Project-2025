@@ -1,4 +1,4 @@
-package org.example.galaxy_trucker.Model;
+package org.example.galaxy_trucker;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
