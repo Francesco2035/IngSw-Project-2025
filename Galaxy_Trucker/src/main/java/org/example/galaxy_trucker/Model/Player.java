@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.InputHandlers.InputHandler;
@@ -18,7 +18,7 @@ public class Player {
     private boolean ready;
     private int credits;
     private Tile CurrentTile;   //the tile that Player has in his hand
-    private  PlayerStates PlayerState;
+    private PlayerStates PlayerState;
     private InputHandler InputHandler;
     private ArrayList<Goods> GoodsToHandle;
     private Card CurrentCard;
@@ -81,8 +81,11 @@ public class Player {
     }
 
     public void  execute() {
-        this.CurrentCard=CommonBoard.getCardStack().getFullAdventure().getFirst();
         this.CurrentCard.ActivateCard();
+    }
+
+    public void StartTimer() throws InterruptedException {
+        CommonBoard.StartHourglass();
     }
 
     /**
@@ -153,14 +156,19 @@ public class Player {
         credits += num;
     }
 
+    public void setCard(Card NewCard){
+        CurrentCard = NewCard;
+    }
+
 
     /**
      * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
      */
 //    public void EndConstruction(){
 //        CommonBoard.SetStartingPosition(this.ID);
+//        this.setState(PlayerStates.mafiga);
 //    }
-
+//
 
     public void SetReady(){
         this.ready = true;
@@ -193,19 +201,19 @@ public class Player {
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
     public PlayerBoard getMyPlance() {return myPlance;}
-//    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
+    //    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
     public ArrayList<IntegerPair> getEnergyTiles(){
         if(getMyPlance().getClassifiedTiles().containsKey(powerCenter.class))
-        return this.getMyPlance().getClassifiedTiles().get(powerCenter.class);
+            return this.getMyPlance().getClassifiedTiles().get(powerCenter.class);
         else return null;
     }
 
-
+//
 //    // puts the good in index i into the respective coordinates
 //    public void PutGoods(int index, IntegerPair coords){
-//      myPlance.putGoods(GoodsToHandle.remove(index), coords);
+//        myPlance.putGoods(GoodsToHandle.remove(index), coords);
 //    }
-
+//
 //    // rimuove l'iesimo good in coordinata coords
 //    public void removeGoods(IntegerPair coords,int index){
 //        this.myPlance.removeGood(coords, index);
@@ -219,7 +227,7 @@ public class Player {
 //        IntegerPair coords = new IntegerPair(5,5);
 //        return coords;
 //    }
-
+//
 //    public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
 //        myPlance.pullGoods(good1, coord1);
 //        myPlance.pullGoods(good2, coord2);
@@ -235,7 +243,6 @@ public class Player {
         this.GoodsToHandle.addAll(reward);
 
         this.setState(PlayerStates.HandlingCargo);
-
     }
 
     public void stopHandlingCargo(){

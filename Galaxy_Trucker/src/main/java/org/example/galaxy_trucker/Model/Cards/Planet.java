@@ -1,18 +1,17 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates;
 
 import java.util.ArrayList;
 
 // list of the cargo contained in a planet and the bool signaling if a player chose it already
-public class
-Planet {
+public class Planet {
     private Player Occupied;
     @JsonProperty("Goods")
-    ArrayList<org.example.galaxy_trucker.Model.Boards.Goods> Goods;
+    ArrayList<Goods> Goods;
 
     Planet(ArrayList<Goods> Goods) {
         Goods = Goods;

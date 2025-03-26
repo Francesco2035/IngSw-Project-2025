@@ -4,9 +4,11 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.GetterHandler.PlasmaDrillsGetter;
 import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.InputHandlers.Killing;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -66,21 +68,26 @@ public class Smugglers extends Card{
         }
     }
 
-//    @Override
-//    public void continueCard(ArrayList<IntegerPair> cannons) {
-//        double power= currentPlayer.getMyPlance().getPower(cannons);
-//        if(power>this.getRequirement()){
-//            this.currentPlayer.setState(PlayerStates.Accepting);
-//            this.currentPlayer.setInputHandler(new Accept(this));
-//            this.defeated=true;
-//        }
-//        else if(power<this.getRequirement()){
-//            this.currentPlayer.setState(PlayerStates.Killing);
-//            this.currentPlayer.setInputHandler(new Killing(this));
-//
-//            //steal shit su PlayerBoard il player non ha scelta
-//        }
-//    }
+    @Override
+    public void continueCard(ArrayList<IntegerPair> cannons) {
+        currentPlayer.getMyPlance().setGetter(new PlasmaDrillsGetter(currentPlayer.getMyPlance(), cannons));
+        double power = ((Double) currentPlayer.getMyPlance().getGetter().get());
+
+        if(power>this.getRequirement()){
+            this.currentPlayer.setState(PlayerStates.Accepting);
+            this.currentPlayer.setInputHandler(new Accept(this));
+            this.defeated=true;
+        }
+        else if(power<this.getRequirement()){
+
+            //manca il loseCargo
+
+            this.currentPlayer.setState(PlayerStates.Killing);
+            this.currentPlayer.setInputHandler(new Killing(this));
+
+            //steal shit su PlayerBoard il player non ha scelta
+        }
+    }
 
 
 

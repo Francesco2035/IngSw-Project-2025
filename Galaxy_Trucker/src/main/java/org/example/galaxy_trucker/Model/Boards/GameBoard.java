@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 
+import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
@@ -10,6 +11,7 @@ import org.example.galaxy_trucker.Model.Tiles.TileSets;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.concurrent.CyclicBarrier;
 
 
 public class GameBoard {
@@ -25,6 +27,7 @@ public class GameBoard {
     private int GameLv;
     private int PlayersOnBoard;
     private CardStacks CardStack;
+    private Card CurrentCard;
 
 
 
@@ -65,6 +68,11 @@ public class GameBoard {
         this.players.add(NewPair);
 
     }
+
+    public void StartHourglass() throws InterruptedException {
+        hourglass.StartTimer();
+    }
+
 
     public void removePlayer(Player DeadMan){
 
@@ -183,6 +191,19 @@ public class GameBoard {
         }
         players = OrderedPlayers;
     }
+
+
+
+    public void NewCard(){
+        CurrentCard = CardStack.PickNewCard();
+
+        for(Player_IntegerPair p : players){
+            p.getKey().setCard(CurrentCard);
+        }
+
+        CurrentCard.CardEffect();
+    }
+
 
 
     public ArrayList<Player> getPlayers(){

@@ -6,6 +6,7 @@ module org.example.galaxy_trucker {
     requires java.compiler;
     requires com.fasterxml.jackson.databind;
     requires org.jetbrains.annotations;
+    requires java.desktop;
 
     opens org.example.galaxy_trucker to javafx.fxml, com.fasterxml.jackson.databind;
     exports org.example.galaxy_trucker.Exceptions;

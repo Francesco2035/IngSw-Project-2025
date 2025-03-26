@@ -20,6 +20,7 @@ public class AcceptKilling implements InputHandler {
         this.coords=coords;
         this.accepted=accepted;
     }
+
     public void action(){
         this.card.continueCard(this.coords, this.accepted);
     }
