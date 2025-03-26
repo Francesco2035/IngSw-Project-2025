@@ -44,50 +44,39 @@ public class CardStacks {
         }
 
         if(lv==1){
-            //caso tutorial fai finta de nulla
+            HiddenCards = Level1Deck;
         }
+
         else{
-            for(int i=0;i<4;i++){
-                if (i==1){
-                    int curr;
-                    curr= r.nextInt(Level1Deck.size());
-                    VisibleCards1.add(Level1Deck.remove(curr));
-                    curr= r.nextInt(Level2Deck.size());
-                    VisibleCards1.add(Level2Deck.remove(curr));
-                    curr= r.nextInt(Level2Deck.size());
-                    VisibleCards1.add(Level2Deck.remove(curr));
+            int curr;
 
-                }
-                else if (i==2){
-                    int curr;
-                    curr= r.nextInt(Level1Deck.size());
-                    VisibleCards2.add(Level1Deck.remove(curr));
-                    curr= r.nextInt(Level2Deck.size());
-                    VisibleCards2.add(Level2Deck.remove(curr));
-                    curr= r.nextInt(Level2Deck.size());
-                    VisibleCards2.add(Level2Deck.remove(curr));
-                }
-                else if (i==3){
-                    int curr;
-                    curr= r.nextInt(Level1Deck.size());
-                    VisibleCards3.add(Level1Deck.remove(curr));
-                    curr= r.nextInt(Level2Deck.size());
-                    VisibleCards3.add(Level2Deck.remove(curr));
-                    curr= r.nextInt(Level2Deck.size());
-                    VisibleCards3.add(Level2Deck.remove(curr));
-                }
-                else{
-                    int curr;
-                    curr= r.nextInt(Level1Deck.size());
-                    HiddenCards.add(Level1Deck.remove(curr));
-                    curr= r.nextInt(Level2Deck.size());
-                    HiddenCards.add(Level2Deck.remove(curr));
-                    curr= r.nextInt(Level2Deck.size());
-                    HiddenCards.add(Level2Deck.remove(curr));
-                }
+            curr= r.nextInt(Level1Deck.size());
+            VisibleCards1.add(Level1Deck.remove(curr));
+            curr= r.nextInt(Level2Deck.size());
+            VisibleCards1.add(Level2Deck.remove(curr));
+            curr= r.nextInt(Level2Deck.size());
+            VisibleCards1.add(Level2Deck.remove(curr));
 
+            curr= r.nextInt(Level1Deck.size());
+            VisibleCards2.add(Level1Deck.remove(curr));
+            curr= r.nextInt(Level2Deck.size());
+            VisibleCards2.add(Level2Deck.remove(curr));
+            curr= r.nextInt(Level2Deck.size());
+            VisibleCards2.add(Level2Deck.remove(curr));
 
-            }
+            curr= r.nextInt(Level1Deck.size());
+            VisibleCards3.add(Level1Deck.remove(curr));
+            curr= r.nextInt(Level2Deck.size());
+            VisibleCards3.add(Level2Deck.remove(curr));
+            curr= r.nextInt(Level2Deck.size());
+            VisibleCards3.add(Level2Deck.remove(curr));
+
+            curr= r.nextInt(Level1Deck.size());
+            HiddenCards.add(Level1Deck.remove(curr));
+            curr= r.nextInt(Level2Deck.size());
+            HiddenCards.add(Level2Deck.remove(curr));
+            curr= r.nextInt(Level2Deck.size());
+            HiddenCards.add(Level2Deck.remove(curr));
         }
     }
 
@@ -102,6 +91,7 @@ public class CardStacks {
             Collections.shuffle(FullAdventure);
         }
     }
+
     public ArrayList<Card> getFullAdventure(){
         return FullAdventure;
     }
@@ -114,8 +104,6 @@ public class CardStacks {
     public ArrayList<Card> getVisibleCards3(){
         return VisibleCards3;
     }
-
-
 
     public Card PickNewCard(){
         return FullAdventure.removeFirst();
