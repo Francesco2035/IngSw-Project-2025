@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
@@ -170,6 +170,20 @@ public class modularHousingUnit extends Component {
 
         return true;
     }
+
+
+
+    @Override
+    public boolean getNearbyAddons(boolean type) { //true -> purple, false -> brown
+        if (type){
+            return this.nearPurpleAddon;
+        }
+        return this.nearBrownAddon;
+    }
+
+
+
+
 
 }
 

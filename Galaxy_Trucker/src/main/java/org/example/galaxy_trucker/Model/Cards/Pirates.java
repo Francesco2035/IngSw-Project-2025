@@ -75,20 +75,20 @@ public class Pirates extends Card{
             this.finishCard();
         }
     }
-
-    @Override
-    public void continueCard(ArrayList<IntegerPair> cannons) {
-        double power= currentPlayer.getMyPlance().getPower(cannons);
-        if(power>this.getRequirement()){
-            this.defeated=true;
-            this.currentPlayer.setState(PlayerStates.Accepting);
-            this.currentPlayer.setInputHandler(new Accept(this));
-        }
-        else if (power<this.getRequirement()){
-            this.continueCard();
-        }
-
-    }
+//
+//    @Override
+//    public void continueCard(ArrayList<IntegerPair> cannons) {
+//        double power= currentPlayer.getMyPlance().getPower(cannons);
+//        if(power>this.getRequirement()){
+//            this.defeated=true;
+//            this.currentPlayer.setState(PlayerStates.Accepting);
+//            this.currentPlayer.setInputHandler(new Accept(this));
+//        }
+//        else if (power<this.getRequirement()){
+//            this.continueCard();
+//        }
+//
+//    }
 
 
 

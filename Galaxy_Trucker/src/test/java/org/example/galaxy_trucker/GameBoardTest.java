@@ -16,7 +16,7 @@ class GameBoardTest {
     void addPlayer() throws IOException {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
-        GameBoard gb = new GameBoard(tileSets, 2);
+        GameBoard gb = new GameBoard(tileSets, 2, null);
         Player p1 = new Player("Player1", gb);
         gb.addPlayer(p1);
 
@@ -30,7 +30,7 @@ class GameBoardTest {
     void setStartingPositions() throws IOException {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
-        GameBoard gb = new GameBoard(tileSets, 2);
+        GameBoard gb = new GameBoard(tileSets, 2, null);
         Player p1 = new Player("Player1", gb);
         Player p2 = new Player("Player2", gb);
 
@@ -53,7 +53,7 @@ class GameBoardTest {
     void movePlayer() throws IOException {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
-        GameBoard gb = new GameBoard(tileSets, 2);
+        GameBoard gb = new GameBoard(tileSets, 2, null);
         Player p1 = new Player("Player1", gb);
         Player p2 = new Player("Player2", gb);
         Player p3 = new Player("Player3", gb);
@@ -97,7 +97,7 @@ class GameBoardTest {
     void movePlayerTest2() throws IOException {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
-        GameBoard gb = new GameBoard(tileSets, 2);
+        GameBoard gb = new GameBoard(tileSets, 2, null);
         Player p1 = new Player("Player1", gb);
         Player p2 = new Player("Player2", gb);
         Player p3 = new Player("Player3", gb);

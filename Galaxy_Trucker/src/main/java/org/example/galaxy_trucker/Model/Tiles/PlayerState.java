@@ -4,5 +4,6 @@ public enum PlayerState {
     WaitingForOthers,
     InsertInput,
     ReceiveEffect,
-    GivenUp
+    GivenUp,
+    FinishedBuilding
 }

@@ -41,7 +41,7 @@ public class PrepController {
     }
 
     public void StartTimer() throws InterruptedException {
-        CurrentPlayer.StatTimer();
+        CurrentPlayer.StartTimer();
     }
 
 

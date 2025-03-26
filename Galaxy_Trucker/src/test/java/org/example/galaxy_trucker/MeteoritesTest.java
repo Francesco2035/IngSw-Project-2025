@@ -17,7 +17,7 @@ class MeteoritesTest {
     void cardEffect() throws IOException {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
-        GameBoard board = new GameBoard(tileSets, 2);
+        GameBoard board = new GameBoard(tileSets, 2, null);
         IntegerPair Pair1 = new IntegerPair(3,2);
         IntegerPair Pair2 = new IntegerPair(2,1);
         IntegerPair Pair3 = new IntegerPair(2,0);
@@ -34,10 +34,10 @@ class MeteoritesTest {
         attacks.add(Pair4);
         attacks.add(Pair5);
 //         Meteorites TMeteorites = new Meteorites(1,0,board,attacks,attack);
-         assertEquals( 3, attacks.get(0).getFirst());
-         assertEquals(2, attacks.get(1).getFirst());
-         assertEquals(2, attacks.get(2).getFirst());
-         assertEquals(1,attacks.get(1).getSecond());
-         assertEquals(0, attacks.get(2).getSecond());
+        assertEquals( 3, attacks.get(0).getFirst());
+        assertEquals(2, attacks.get(1).getFirst());
+        assertEquals(2, attacks.get(2).getFirst());
+        assertEquals(1,attacks.get(1).getSecond());
+        assertEquals(0, attacks.get(2).getSecond());
     }
 }

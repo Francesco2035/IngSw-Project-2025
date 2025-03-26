@@ -1,10 +1,11 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class storageCompartment extends Component{
 
@@ -33,7 +34,7 @@ public class storageCompartment extends Component{
 
 
     private void orderGoods() {
-        Collections.sort(goods);
+        this.goods.sort(Comparator.comparingInt(Goods::getValue));
     }
 
 
@@ -80,7 +81,7 @@ public class storageCompartment extends Component{
     @Override
     public int setAbility(Goods good, boolean select) {
         if(select){
-            if (good.ordinal() == 3) throw new IllegalArgumentException("non-specialStorageCompartment");
+            if (good.getValue() == 3) throw new IllegalArgumentException("non-specialStorageCompartment");
             this.goods.add(good);
             this.orderGoods();
             return goods.indexOf(good);
@@ -113,4 +114,12 @@ public class storageCompartment extends Component{
     public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
 
     }
+
+
+    @Override
+    public boolean getNearbyAddons(boolean type){
+        return false;
+    }
+
+
 }

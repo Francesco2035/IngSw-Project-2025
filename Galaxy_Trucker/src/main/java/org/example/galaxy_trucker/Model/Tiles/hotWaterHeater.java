@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
@@ -89,6 +89,15 @@ public class hotWaterHeater extends Component{
         return true;
         //return index == 3 && mat[x][y + 1] != 1;
     };
+
+
+    @Override
+    public boolean getNearbyAddons(boolean type){
+        return false;
+    }
+
+
+
 
 }
 
