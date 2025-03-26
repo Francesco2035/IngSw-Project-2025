@@ -81,10 +81,10 @@ public class Slavers extends Card{
             //throw new Exception();
         }
 
-        for (int j = 0; j < coordinates.size(); j++) {
-            currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
-        }
-        this.updateSates();
+//        for (int j = 0; j < coordinates.size(); j++) {
+//            currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
+//        }
+//        this.updateSates();
     }
 
 

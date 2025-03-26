@@ -265,7 +265,7 @@ public class PlayerBoard {
 
     public void classifyTile(Tile tile, int x, int y){
 
-        //System.out.println(tile.getComponent().getClass());
+        System.out.println(tile.getComponent().getClass());
         classifiedTiles.computeIfAbsent(tile.getComponent().getClass(), k -> new ArrayList<>()).add(new IntegerPair(x, y));
 
     }
@@ -357,6 +357,7 @@ public class PlayerBoard {
             System.out.println(x+ " " + y);
 
             if(!PlayerBoard[x][y].controlDirections(this,x,y)){
+                System.out.println("oioioi: "+ x+ " "+y);
                 return false;
             }
         }
@@ -399,6 +400,7 @@ public class PlayerBoard {
 
 
         if (PathNotVisited(visitedPositions)){
+            System.out.println("percorso non visitato");
             return false;
         }
 
@@ -443,7 +445,7 @@ public class PlayerBoard {
             findPaths(r,c + 1 ,visited);
         }
 
-        if (ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r + 1, c ).getConnectors().get(3))){
+        if (ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1))){
             findPaths(r +1,c ,visited);
         }
 
@@ -581,7 +583,7 @@ public class PlayerBoard {
             exposedConnectors++;
         }
 
-        if (ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r + 1, c ).getConnectors().get(3))){
+        if (ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1))){
             updateBoardAttributes(r +1,c ,visited);
         }
         else if (getTile(r,c).getConnectors().get(3) == Connector.SINGLE || getTile(r,c).getConnectors().get(3) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(3) == Connector.DOUBLE) {

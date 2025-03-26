@@ -39,7 +39,7 @@ public class PlayerBoardTest {
         Tile t2 = tiles.get(102); //none,cannon, single, universal , plasmadrill    ruota sx due volte factos
         Tile t3 = tiles.get(128); //doublem cannon, none, unviersal. plasmadrill  factos
         Tile t4 = tiles.get(150); //universal,k none, double, double shield none, double, double, universal ruota a sx factos
-
+        Tile specialStorage = tiles.get(57);
         Tile t8 = tiles.get(56);  // universal, universal, double, double. sewerpips factos
         Tile t9 = tiles.get(32); //SINGLE", "NONE", "NONE", "UNIVERSAL housingjfoaihj factos
         Tile t10 = tiles.get(33); //SINGLE", "SINGLE", "DOUBLE", "SINGLE moudsajdahoyusingunit ruota dx factos
@@ -63,6 +63,10 @@ public class PlayerBoardTest {
         playerBoard.insertTile(t10, 4,5);
         t12.getComponent().initType();
         playerBoard.insertTile(t12, 6,8);
+        specialStorage.getComponent().initType();
+        specialStorage.RotateDx();
+        specialStorage.RotateDx();
+        playerBoard.insertTile(specialStorage, 7,8);
 
     }
 
@@ -105,7 +109,7 @@ public class PlayerBoardTest {
 
     @Test
     @DisplayName("test destruction")
-    @Order(3)
+    @Order(4)
     public void testDestruction(){
 
         assertTrue(playerBoard.getClassifiedTiles().containsKey(hotWaterHeater.class));
@@ -128,11 +132,10 @@ public class PlayerBoardTest {
 
 
     @Test
-    @DisplayName("test HousingUnitGetters")
+    @DisplayName("test HousingUnitGetters/Setters")
     @Order(2)
-    public void testHousingUnitGetters(){
+    public void testHousingUnitGettersSetters(){
 
-        //playerBoard.checkValidity();
         playerBoard.setSetter(new HousingUnitSetter(playerBoard, new IntegerPair(5,7), 0, false, true));
         playerBoard.getSetter().set();
         System.out.println("Testing HousingUnitSetter(0,false,true)");
@@ -185,6 +188,11 @@ public class PlayerBoardTest {
 
     }
 
+    @Test
+    @Order(3)
+    public void testStorageComparmentGettersSetters(){
+
+    }
 
 }
 

@@ -201,15 +201,15 @@ public class Player {
     }
 
 
-    // puts the good in index i into the respective coordinates
-    public void PutGoods(int index, IntegerPair coords){
-      myPlance.putGoods(GoodsToHandle.remove(index), coords);
-    }
+//    // puts the good in index i into the respective coordinates
+//    public void PutGoods(int index, IntegerPair coords){
+//      myPlance.putGoods(GoodsToHandle.remove(index), coords);
+//    }
 
-    // rimuove l'iesimo good in coordinata coords
-    public void removeGoods(IntegerPair coords,int index){
-        this.myPlance.removeGood(coords, index);
-    }
+//    // rimuove l'iesimo good in coordinata coords
+//    public void removeGoods(IntegerPair coords,int index){
+//        this.myPlance.removeGood(coords, index);
+//    }
 
 //
 //    public int getGoodsIndex(){
@@ -220,13 +220,13 @@ public class Player {
 //        return coords;
 //    }
 
-    public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
-        myPlance.pullGoods(good1, coord1);
-        myPlance.pullGoods(good2, coord2);
-        //se il buffer è sempre vuoto prima di questa chiamata funziona altrimenti mi serve la size
-        myPlance.putGoods(myPlance.pullFromBuffer(1),coord1);
-        myPlance.putGoods(myPlance.pullFromBuffer(0),coord2);
-    }
+//    public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
+//        myPlance.pullGoods(good1, coord1);
+//        myPlance.pullGoods(good2, coord2);
+//        //se il buffer è sempre vuoto prima di questa chiamata funziona altrimenti mi serve la size
+//        myPlance.putGoods(myPlance.pullFromBuffer(1),coord1);
+//        myPlance.putGoods(myPlance.pullFromBuffer(0),coord2);
+//    }
 
 
     public void handleCargo(ArrayList<Goods> reward){
