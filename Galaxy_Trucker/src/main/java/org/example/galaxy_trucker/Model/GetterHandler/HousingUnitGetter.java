@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.Component;
+import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
 
@@ -46,7 +47,7 @@ public class HousingUnitGetter  implements PlayerBoardGetters{
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (!checkExistence(playerBoard.getClassifiedTiles(),coordinate, modularHousingUnit.class)){
+        if (!checkExistence(playerBoard.getClassifiedTiles(),coordinate, modularHousingUnit.class, MainCockpitComp.class)){
             throw new InvalidInput("The following tile is not a modularHousingUnit");
         }
 
@@ -66,7 +67,7 @@ public class HousingUnitGetter  implements PlayerBoardGetters{
             playerBoard.setPurpleAlien(false);
         }
 
-        if (!brownAlien && !unit.isBrownAlien()){
+        if (!brownAlien && unit.isBrownAlien()){
             playerBoard.setBrownAlien(false);
         }
 
@@ -74,12 +75,14 @@ public class HousingUnitGetter  implements PlayerBoardGetters{
         return true;
     }
 
+    public boolean checkExistence(Map<Class<?>, ArrayList<IntegerPair>> classifiedTiles, IntegerPair tiles, Class<?> type1, Class<?> type2){
 
-    public boolean checkExistence(Map<Class<?>, ArrayList<IntegerPair>> classifiedTiles, IntegerPair tile, Class<?> type){
-        return  classifiedTiles.containsKey(type) &&
-                classifiedTiles.get(type).contains(tile);
+        return  (classifiedTiles.containsKey(type1) &&
+                classifiedTiles.get(type1).contains(tiles) ) ||
+                (classifiedTiles.containsKey(type2) &&
+                        classifiedTiles.get(type2).contains(tiles))
+                ;
+
     }
-
-
 
 }
