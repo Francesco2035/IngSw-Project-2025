@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
 
 import java.util.ArrayList;
 
@@ -22,17 +23,24 @@ public class Epidemic extends Card {
         ArrayList<Player> PlayerList = Board.getPlayers();
         PlayerBoard CurrentPlanche;
         int Len= PlayerList.size(); // quanti player ho
-        ArrayList<IntegerPair> HousingUnits;
+        ArrayList<IntegerPair> HousingCoords;
         ArrayList<IntegerPair> InfectedUnits;
         Tile[][] playerTiles;
         for(int i=0;i<Len;i++){
             CurrentPlanche=PlayerList.get(i).getMyPlance();
             int[][] valid = CurrentPlanche.getValidPlayerBoard();
             playerTiles = CurrentPlanche.getPlayerBoard();
-            HousingUnits=CurrentPlanche.gethousingUnits();
+            HousingCoords=new ArrayList<>();
+            if(CurrentPlanche.getClassifiedTiles().containsKey(modularHousingUnit.class)) {
+                HousingCoords = CurrentPlanche.getClassifiedTiles().get(modularHousingUnit.class);
+            }
+            if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
+                HousingCoords.add(new IntegerPair(6,6));
+            }
+
             ArrayList<IntegerPair> visited = new ArrayList<>();
-            for (int j = 0; j < HousingUnits.size(); j++) {
-                findPaths(HousingUnits.get(j).getFirst(), HousingUnits.get(j).getSecond(), visited, valid ,playerTiles);
+            for (int j = 0; j < HousingCoords.size(); j++) {
+                findPaths(HousingCoords.get(j).getFirst(), HousingCoords.get(j).getSecond(), visited, valid ,playerTiles);
             }
             for(IntegerPair housingunits :visited){
                 playerTiles[housingunits.getFirst()][housingunits.getSecond()].getComponent().setAbility(1,false,false);
