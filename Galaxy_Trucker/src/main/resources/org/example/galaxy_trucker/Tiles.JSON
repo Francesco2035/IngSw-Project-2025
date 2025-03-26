@@ -128,7 +128,6 @@
   { "id": 127, "component": {"componentType": "plasmaDrill"    , "type":"double"}, "connectors": ["SINGLE", "CANNON", "SINGLE", "DOUBLE"] },
   { "id": 128, "component": {"componentType": "plasmaDrill"    , "type":"double"}, "connectors": ["SINGLE", "CANNON", "DOUBLE", "NONE"] },
   { "id": 129, "component": {"componentType": "plasmaDrill"    , "type":"double"}, "connectors": ["DOUBLE", "CANNON", "NONE", "UNIVERSAL"] },
-  { "id": 109, "component": {"componentType": "plasmaDrill"    , "type":"single"}, "connectors": ["SINGLE","CANNON", "NONE", "DOUBLE"] },
   { "id": 130, "component": {"componentType": "plasmaDrill"    , "type":"double"}, "connectors": ["DOUBLE", "CANNON", "DOUBLE", "SINGLE"] },
   { "id": 131, "component": {"componentType": "plasmaDrill"    , "type":"double"}, "connectors": ["UNIVERSAL", "CANNON", "NONE", "NONE"] },
   { "id": 132, "component": {"componentType": "plasmaDrill"    , "type":"double"}, "connectors": ["UNIVERSAL", "CANNON", "NONE", "SINGLE"] },
