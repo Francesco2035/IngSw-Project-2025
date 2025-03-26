@@ -11,6 +11,7 @@ import org.example.galaxy_trucker.Model.Tiles.TileSets;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.concurrent.CyclicBarrier;
 
 
@@ -227,7 +228,14 @@ public class GameBoard {
 
     public void abandonRace(Player loser){
 
-        players.remove(loser);
+        Player_IntegerPair pair = players.stream()
+                                         .filter(p -> p.getKey().equals(loser))
+                                         .findFirst()
+                                         .orElseThrow();
+
+        positions[pair.getValue() % nPositions] = null;
+
+        players.remove(pair);
     }
 
  // va cambiato se vogliamo fare i controlli di vittoria su tutti i player alla fine

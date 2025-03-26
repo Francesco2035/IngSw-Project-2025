@@ -84,6 +84,9 @@ public class Player {
         this.CurrentCard.ActivateCard();
     }
 
+    public void StartTimer() throws InterruptedException {
+        CommonBoard.StartHourglass();
+    }
 
     /**
      * get a new random tile from the covered tiles set
