@@ -10,9 +10,7 @@ public class Tile {
 
     private int id;
     private Component component;
-    private String componentType;
     private ArrayList<Connector> connectors;
-    private String type;
 
 
     public Tile() {}
@@ -28,37 +26,16 @@ public class Tile {
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
     public Component getComponent() {
         return component;
     }
-
     public void setComponent(Component component) {
         this.component = component;
     }
-
     public ArrayList<Connector> getConnectors() {return connectors;}
-
-    public String getComponentType() {
-        return componentType;
-    }
-
-    public void setComponentType(String componentType) {
-        this.componentType = componentType;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public void setConnectors(ArrayList<Connector> connectors) {this.connectors = connectors;}
 
 

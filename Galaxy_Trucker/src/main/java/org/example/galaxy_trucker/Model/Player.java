@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.InputHandlers.InputHandler;
