@@ -101,6 +101,7 @@ public class AbandonedShip extends Card{
 //                currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
 //            }
 
+
             for (IntegerPair coordinate : coordinates) {
                 currentPlayer.getMyPlance().setSetter(new HousingUnitSetter(currentPlayer.getMyPlance(),
                         coordinate, 1, false, false));
