@@ -75,6 +75,10 @@ public class AbandonedShip extends Card{
             this.finishCard();
         }
     }
+    @Override
+    public  void  ActivateCard() {
+        currentPlayer.getInputHandler().action();
+    }
 
     @Override
     public void finishCard() {

@@ -79,7 +79,7 @@ public class Slavers extends Card{
     }
 
     @Override
-    public void killHmans(ArrayList<IntegerPair> coordinates){
+    public void killHumans(ArrayList<IntegerPair> coordinates){
         if (coordinates.size() != this.requirement) {
             //devo dirgli che ha scelto il num sbagliato di persone da shottare
             //throw new Exception();
