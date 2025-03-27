@@ -20,6 +20,7 @@ public class AbandonedShip extends Card{
     private Player currentPlayer;
     private boolean flag;
     private int order;
+    private int totHumans;
 
 
     public AbandonedShip(int requirement, int reward, int level, int time, GameBoard board) {
@@ -29,6 +30,7 @@ public class AbandonedShip extends Card{
         this.currentPlayer = null;
         this.flag = false;
         this.order = 0;
+        totHumans=0;
     }
 
     @Override
@@ -56,14 +58,16 @@ public class AbandonedShip extends Card{
             if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
                 HousingCoords.add(new IntegerPair(6,6));
             }
-            int totHumans = 0;
+            this.totHumans = 0;
 
-
+            System.out.println("numofHousingCoords: "+HousingCoords.size());
             for (int i = 0; i < HousingCoords.size(); i++) {
                 //somma per vedere il tot umani
                 totHumans += TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getAbility();
             }
+            System.out.println("totHumans di"+currentPlayer.GetID()+": "+totHumans);
             if(totHumans>this.requirement){
+                System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
                 currentPlayer.setState(PlayerStates.AcceptKilling);
                 currentPlayer.setInputHandler(new AcceptKilling(this));
@@ -71,7 +75,7 @@ public class AbandonedShip extends Card{
 
             this.order++;
         }
-        if(order==PlayerList.size()){
+        if(order>PlayerList.size()){
             this.finishCard();
         }
     }
@@ -118,6 +122,11 @@ public class AbandonedShip extends Card{
             this.updateSates();
         }
     }
+
+    public int getTotHumans() {
+        return totHumans;
+    }
+
     //json
     public AbandonedShip() {}
     public int getRequirement() {return requirement;}

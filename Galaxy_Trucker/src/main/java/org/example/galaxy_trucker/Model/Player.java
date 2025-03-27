@@ -72,6 +72,10 @@ public class Player {
         return InputHandler;
     }
 
+    public PlayerStates getPlayerState() {
+        return PlayerState;
+    }
+
     public void setInputHandler(InputHandler InputHandler) {
         this.InputHandler = InputHandler;
     }
