@@ -24,7 +24,7 @@ class AbandonedShipTest {
 
     static {
         try {
-            TGame = new Game(2);
+            TGame = new Game(2,"test");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

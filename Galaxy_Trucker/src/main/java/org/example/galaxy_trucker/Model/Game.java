@@ -9,8 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Game {
+    private String GameID;
     private ArrayList<Player> PlayerList;
-    private org.example.galaxy_trucker.Model.Boards.GameBoard GameBoard;
+    private GameBoard GameBoard;
     private CardStacks CardDeck;
     private TileSets TileDecks;
     private int  lv;
@@ -20,7 +21,8 @@ public class Game {
 
 
 
-    public Game(int GameLevel) throws IOException {
+    public Game(int GameLevel, String id) throws IOException{
+        GameID = id;
         gag = new GAGen();
         PlayerList = new ArrayList<>();
         CardDeck = new CardStacks(gag, GameLevel);
@@ -29,73 +31,32 @@ public class Game {
         GameBoard = new GameBoard(TileDecks, lv, CardDeck);
     }
 
-    public ArrayList<Player> getPlayerList() {
-        return PlayerList;
-    }
 
-    public void setPlayerList(ArrayList<Player> playerList) {
-        PlayerList = playerList;
-    }
+    public void NewPlayer(String ID)throws IllegalArgumentException, IndexOutOfBoundsException{
+        if(PlayerList.size() >= 4)
+            throw new IndexOutOfBoundsException("Game is full");
 
-    public GameBoard getGameBoard() {
-        return GameBoard;
-    }
-
-    public void setGameBoard(GameBoard gameBoard) {
-        GameBoard = gameBoard;
-    }
-
-    public CardStacks getCardDeck() {
-        return CardDeck;
-    }
-
-    public void setCardDeck(CardStacks cardDeck) {
-        CardDeck = cardDeck;
-    }
-
-    public TileSets getTileDecks() {
-        return TileDecks;
-    }
-
-    public int getLv() {
-        return lv;
-    }
-
-    public void setLv(int lv) {
-        this.lv = lv;
-    }
-
-    public State getCurrentState() {
-        return CurrentState;
-    }
-
-    public void setCurrentState(State currentState) {
-        CurrentState = currentState;
-    }
-
-    public void setTileDecks(TileSets tileDecks) {
-        TileDecks = tileDecks;
-    }
-
-    public GAGen getGag() {
-        return gag;
-    }
-
-    public void setGag(GAGen gag) {
-        this.gag = gag;
-    }
-
-    public void NewPlayer(String ID){
+        for(Player p : PlayerList){
+            if(p.GetID().equals(ID)){
+                throw new IllegalArgumentException("Player already exists");
+            }
+        }
         Player newborn = new Player(ID, GameBoard);
         GameBoard.addPlayer(newborn);
         PlayerList.add(newborn);
     }
 
-    private void RemovePlayer(Player DeadMan){
+    public void RemovePlayer(Player DeadMan){
         PlayerList.remove(DeadMan);
     }
 
 
+    public GAGen getGag() {
+        return gag;
+    }
 
+    public GameBoard getGameBoard() {
+        return GameBoard;
+    }
 }
 

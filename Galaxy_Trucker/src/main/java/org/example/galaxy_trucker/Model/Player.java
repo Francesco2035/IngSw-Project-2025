@@ -18,7 +18,7 @@ public class Player {
     private boolean ready;
     private int credits;
     private Tile CurrentTile;   //the tile that Player has in his hand
-    private PlayerStates PlayerState;
+    private  PlayerStates PlayerState;
     private InputHandler InputHandler;
     private ArrayList<Goods> GoodsToHandle;
     private Card CurrentCard;
@@ -168,11 +168,11 @@ public class Player {
     /**
      * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
      */
-//    public void EndConstruction(){
-//        CommonBoard.SetStartingPosition(this.ID);
-//        this.setState(PlayerStates.mafiga);
-//    }
-//
+    public void EndConstruction(){
+        CommonBoard.SetStartingPosition(this.ID);
+        this.setState(PlayerStates.FinishedBuilding);
+       }
+
 
     public void SetReady(){
         this.ready = true;
