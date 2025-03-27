@@ -46,11 +46,6 @@ public class PlayerBoard {
 
     private ArrayList<Tile> Buffer;
 
-    public HashMap<String, ArrayList<Connectors>> getValidConnection() {
-        return validConnection;
-    }
-
-    HashMap<String, ArrayList<Connectors>>  validConnection;
 
 
 
@@ -72,17 +67,7 @@ public class PlayerBoard {
         this.BufferGoods = new ArrayList<>();
 
         this.ValidPlayerBoard = new int[10][10];
-        this.validConnection = new HashMap<String, ArrayList<Connectors>>();
 
-        validConnection.put(new UNIVERSAL().toString(), new ArrayList<>());
-        validConnection.get(new UNIVERSAL().toString()).addAll(List.of(new UNIVERSAL(), new SINGLE(), new DOUBLE()));
-        validConnection.put(new DOUBLE().toString(), new ArrayList<>());
-        validConnection.get(new DOUBLE().toString()).addAll(List.of(new UNIVERSAL(),  new DOUBLE()));
-        validConnection.put(new SINGLE().toString(), new ArrayList<>());
-        validConnection.get(new SINGLE().toString()).addAll(List.of(new UNIVERSAL(), new SINGLE()));
-        validConnection.put(new ENGINE().toString(), new ArrayList<>());
-        validConnection.put(new CANNON().toString(), new ArrayList<>());
-        validConnection.put(new NONE().toString(), new ArrayList<>());
 
 
         if (lv == 2) {
@@ -309,15 +294,16 @@ public class PlayerBoard {
      */
     public boolean checkConnection(Connectors t1, Connectors t2 ){
 
-        if (validConnection.get(t1).isEmpty()){
-            return false;
-        }
-        if(validConnection.get(t1).contains(t2)){
-            return true;
-        }
-        else {
-            return false;
-        }
+//        if (validConnection.get(t1).isEmpty()){
+//            return false;
+//        }
+//        if(validConnection.get(t1).contains(t2)){
+//            return true;
+//        }
+//        else {
+//            return false;
+//        }
+        return t1.checkAdjacent(t2);
     }
 
 
@@ -569,28 +555,28 @@ public class PlayerBoard {
         if (c - 1 >= 0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
             updateBoardAttributes(r, c - 1, visited);
         }
-        else if (getTile(r,c).getConnectors().get(0) == new SINGLE() || getTile(r,c).getConnectors().get(0) == new UNIVERSAL() || getTile(r,c).getConnectors().get(0) == new DOUBLE()) {
+        else if (getTile(r,c).getConnectors().get(0).isExposed() && (c - 1 < 0 || ValidPlayerBoard[r][c - 1] != 1)) {
             exposedConnectors++;
         }
 
         if (r - 1 >= 0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
             updateBoardAttributes(r -1,c ,visited);
         }
-        else if (getTile(r,c).getConnectors().get(1) == new SINGLE() || getTile(r,c).getConnectors().get(1) == new UNIVERSAL() || getTile(r,c).getConnectors().get(1) == new DOUBLE()) {
+        else if (getTile(r,c).getConnectors().get(1).isExposed() && (r - 1 < 0 || ValidPlayerBoard[r - 1][c] != 1) ) {
             exposedConnectors++;
         }
 
         if (c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1&& checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
             updateBoardAttributes(r,c + 1 ,visited);
         }
-        else if (getTile(r,c).getConnectors().get(2) == new SINGLE() || getTile(r,c).getConnectors().get(2) == new UNIVERSAL() || getTile(r,c).getConnectors().get(2) == new DOUBLE()) {
+        else if (getTile(r,c).getConnectors().get(2).isExposed() && (c + 1 > 9 || ValidPlayerBoard[r][c + 1] != 1)) {
             exposedConnectors++;
         }
 
         if (r + 1 <= 9 &&ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1))){
             updateBoardAttributes(r +1,c ,visited);
         }
-        else if (getTile(r,c).getConnectors().get(3) == new SINGLE() || getTile(r,c).getConnectors().get(3) == new UNIVERSAL() || getTile(r,c).getConnectors().get(3) == new DOUBLE()) {
+        else if (getTile(r,c).getConnectors().get(3).isExposed() && (r + 1 < 9 || ValidPlayerBoard[r + 1][c] != 1)) {
             exposedConnectors++;
         }
 

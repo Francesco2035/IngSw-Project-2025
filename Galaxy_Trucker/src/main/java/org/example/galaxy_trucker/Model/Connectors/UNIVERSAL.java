@@ -13,4 +13,9 @@ public class UNIVERSAL implements Connectors {
         return Adjacent instanceof UNIVERSAL || Adjacent instanceof SINGLE || Adjacent instanceof DOUBLE;
     }
 
+    @Override
+    public boolean isExposed() {
+        return true;
+    }
+
 }

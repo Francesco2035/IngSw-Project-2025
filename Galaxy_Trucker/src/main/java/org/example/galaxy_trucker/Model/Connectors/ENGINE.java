@@ -13,4 +13,9 @@ public class ENGINE implements Connectors {
         return Adjacent instanceof NONE;
     }
 
+    @Override
+    public boolean isExposed() {
+        return false;
+    }
+
 }

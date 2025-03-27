@@ -1,9 +1,12 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Connectors.CANNON;
+import org.example.galaxy_trucker.Model.Connectors.ENGINE;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class hotWaterHeater extends Component{
 
@@ -79,7 +82,8 @@ public class hotWaterHeater extends Component{
     public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile){
         int[][] mat = pb.getValidPlayerBoard();
 
-        int index = tile.getConnectors().indexOf(Connector.MOTOR);
+        int index = tile.getConnectors().indexOf((tile.getConnectors().stream().
+                filter(p -> p.getClass().equals(ENGINE.class)).toList().getFirst()));
 
 
         if (index != 3 || (x+1 < 10 && mat[x + 1][y]==1) ){

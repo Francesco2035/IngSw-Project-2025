@@ -12,4 +12,9 @@ public class DOUBLE implements Connectors {
     public boolean checkAdjacent(Connectors Adjacent){
         return Adjacent instanceof DOUBLE || Adjacent instanceof UNIVERSAL;
     }
+
+    @Override
+    public boolean isExposed() {
+        return true;
+    }
 }

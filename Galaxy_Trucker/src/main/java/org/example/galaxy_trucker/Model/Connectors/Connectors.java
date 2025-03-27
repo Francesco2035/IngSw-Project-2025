@@ -28,4 +28,6 @@ public interface Connectors {
 
     public boolean checkAdjacent(Connectors Adjacent);
 
+    public boolean isExposed();
+
 }

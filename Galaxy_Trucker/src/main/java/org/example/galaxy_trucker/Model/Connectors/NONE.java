@@ -13,4 +13,9 @@ public class NONE implements Connectors {
         return true;
     }
 
+    @Override
+    public boolean isExposed() {
+        return false;
+    }
+
 }

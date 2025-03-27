@@ -49,6 +49,7 @@ public class PlayerBoardTest {
 
         boolean f = playerBoard.checkValidity();
         assertTrue(f);
+        assertEquals(17, playerBoard.getExposedConnectors());
     }
 
     @Test

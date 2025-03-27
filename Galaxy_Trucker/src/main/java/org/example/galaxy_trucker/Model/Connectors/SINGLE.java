@@ -13,4 +13,9 @@ public class SINGLE implements Connectors {
         return Adjacent instanceof SINGLE || Adjacent instanceof UNIVERSAL;
     }
 
+    @Override
+    public boolean isExposed() {
+        return true;
+    }
+
 }

@@ -12,4 +12,9 @@ public class CANNON implements Connectors {
     public boolean checkAdjacent(Connectors Adjacent){
         return Adjacent instanceof NONE;
     }
+
+    @Override
+    public boolean isExposed() {
+        return false;
+    }
 }
