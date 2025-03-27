@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Tiles;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +35,7 @@ class shieldGeneratorTest {
         IntegerPair coords = new IntegerPair(1,1);
 
         Component shish = new shieldGenerator();
-        Tile t = new Tile(coords, shish, Connector.SINGLE, Connector.SINGLE,  Connector.DOUBLE, Connector.NONE);
+        Tile t = new Tile(coords, shish, new SINGLE(), new SINGLE(),  new DOUBLE(), new NONE());
         t.getComponent().setType("nord-est");
         t.getComponent().initType();
         ArrayList<Integer> p =  t.getComponent().getAbility(0);

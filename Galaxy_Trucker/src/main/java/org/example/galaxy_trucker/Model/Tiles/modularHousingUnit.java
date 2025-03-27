@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -83,11 +84,11 @@ public class modularHousingUnit extends Component {
         this.nearBrownAddon = false;
         this.nearPurpleAddon = false;
         int[][] vb = pb.getValidPlayerBoard();
-        HashMap<Connector, ArrayList<Connector>> vc = pb.getValidConnection();
+        HashMap<String, ArrayList<Connectors>> vc = pb.getValidConnection();
 
     if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
                 pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x,y-1))){
-        if (vc.get(tile.getConnectors().get(0)).contains(pb.getTile(x,y-1).getConnectors().get(2))){
+        if (vc.get(tile.getConnectors().get(0).toString()).contains(pb.getTile(x,y-1).getConnectors().get(2))){
             if (vb[x][y-1] == 1 && pb.getTile(x,y-1).getComponent().getAbility() == 1){
                 this.nearPurpleAddon = true;
                 }
@@ -99,7 +100,7 @@ public class modularHousingUnit extends Component {
 
         if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
                 pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x-1,y))){
-            if (vc.get(tile.getConnectors().get(1)).contains(pb.getTile(x-1,y).getConnectors().get(3))){
+            if (vc.get(tile.getConnectors().get(1).toString()).contains(pb.getTile(x-1,y).getConnectors().get(3))){
                 if (vb[x-1][y] == 1 && pb.getTile(x-1,y).getComponent().getAbility() == 1){
                     this.nearPurpleAddon = true;
                 }
@@ -111,7 +112,7 @@ public class modularHousingUnit extends Component {
 
         if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
                 pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x,y+1))){
-            if (vc.get(tile.getConnectors().get(2)).contains(pb.getTile(x,y+1).getConnectors().get(0))){
+            if (vc.get(tile.getConnectors().get(2).toString()).contains(pb.getTile(x,y+1).getConnectors().get(0))){
                 if (vb[x][y+1] == 1 && pb.getTile(x,y+1).getComponent().getAbility() == 1){
                     this.nearPurpleAddon = true;
                 }
@@ -124,7 +125,7 @@ public class modularHousingUnit extends Component {
 
         if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
                 pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x+1,y))){
-            if (vc.get(tile.getConnectors().get(3)).contains(pb.getTile(x+1,y).getConnectors().get(1))){
+            if (vc.get(tile.getConnectors().get(3).toString()).contains(pb.getTile(x+1,y).getConnectors().get(1))){
                 if (vb[x + 1][y] == 1 && pb.getTile(x+1,y).getComponent().getAbility() == 1){
                     this.nearPurpleAddon = true;
                 }

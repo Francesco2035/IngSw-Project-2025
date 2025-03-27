@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Cards;
 //import javafx.util.Pair;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -76,7 +77,7 @@ public class Meteorites extends Card {
                 if(MeteoritesValidPlanche[MeteoritesLine][Movement]>0) {//guardo se la casella è occupata (spero basti fare questo controllo
                     Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
-                    if(attacks.get(MeteoritesOrder+1)==0 && tiles[Movement][MeteoritesLine].getConnectors().get(0)== Connector.NONE) {
+                    if(attacks.get(MeteoritesOrder+1)==0 && tiles[Movement][MeteoritesLine].getConnectors().get(0).equals(new NONE())) {
                     }
                     else {
                         MeteoritesFlag = true;
@@ -94,7 +95,7 @@ public class Meteorites extends Card {
                 if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
                     Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
-                    if(attacks.get(MeteoritesOrder+1)==0 && tiles[Movement][MeteoritesLine].getConnectors().get(1)== Connector.NONE) {
+                    if(attacks.get(MeteoritesOrder+1)==0 && tiles[Movement][MeteoritesLine].getConnectors().get(1).equals(new NONE())) {
                     }
                     else {
                         MeteoritesFlag = true;
@@ -112,7 +113,7 @@ public class Meteorites extends Card {
                 if (MeteoritesValidPlanche[MeteoritesLine][Movement] > 0) {
                     Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
-                    if(attacks.get(MeteoritesOrder+1)==0 && tiles[Movement][MeteoritesLine].getConnectors().get(2)== Connector.NONE) {
+                    if(attacks.get(MeteoritesOrder+1)==0 && tiles[Movement][MeteoritesLine].getConnectors().get(2).equals(new NONE())) {
                     }
                     else {
                         MeteoritesFlag = true;
@@ -130,7 +131,7 @@ public class Meteorites extends Card {
                 if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {
                     Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
-                    if(attacks.get(MeteoritesOrder+1)==0 && tiles[Movement][MeteoritesLine].getConnectors().get(3)== Connector.NONE) {
+                    if(attacks.get(MeteoritesOrder+1)==0 && tiles[Movement][MeteoritesLine].getConnectors().get(3).equals(new NONE())) {
                     }
                     else {
                         MeteoritesFlag = true;
@@ -171,11 +172,11 @@ public class Meteorites extends Card {
         }
         if(CannonCoord !=null) {
             if (attacks.get(MeteoritesOrder) == 0 || attacks.get(MeteoritesOrder) == 2) { // sinistra o destra
-                if(!(attacks.get(MeteoritesOrder + 1) == 1 && (CannonCoord.getFirst() == hit.getFirst() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(MeteoritesOrder) == Connector.CANNON)|| attacks.get(MeteoritesOrder + 1) == 0)){
+                if(!(attacks.get(MeteoritesOrder + 1) == 1 && (CannonCoord.getFirst() == hit.getFirst() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(MeteoritesOrder).equals(new CANNON()))|| attacks.get(MeteoritesOrder + 1) == 0)){
                     // cannone errato o tipo dio attaco errato
                 }
             } else {
-                 if(!(attacks.get(MeteoritesOrder + 1) == 1 && (CannonCoord.getSecond() == hit.getSecond() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(MeteoritesOrder) == Connector.CANNON)||attacks.get(MeteoritesOrder + 1) == 0 )){
+                 if(!(attacks.get(MeteoritesOrder + 1) == 1 && (CannonCoord.getSecond() == hit.getSecond() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(MeteoritesOrder).equals(new CANNON()))||attacks.get(MeteoritesOrder + 1) == 0 )){
                      // stessa cosa ma nelle atre due direzioni
                  }
 

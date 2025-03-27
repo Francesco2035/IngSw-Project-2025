@@ -2,6 +2,8 @@ package org.example.galaxy_trucker.Model.GetterHandler;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Connectors.CANNON;
+import org.example.galaxy_trucker.Model.Connectors.NONE;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.Connector;
 import org.example.galaxy_trucker.Model.Tiles.plasmaDrill;
@@ -42,7 +44,7 @@ public class PlasmaDrillsGetter implements PlayerBoardGetters{
 
         double power = 0;
         for (IntegerPair cannon : chosenPlasmaDrills){
-            if (playerBoard.getPlayerBoard()[cannon.getFirst()][cannon.getSecond()].getConnectors().get(1) == Connector.CANNON){
+            if (playerBoard.getPlayerBoard()[cannon.getFirst()][cannon.getSecond()].getConnectors().get(1).equals(new CANNON())){
                 if (playerBoard.getPlayerBoard()[cannon.getFirst()][cannon.getSecond()].getComponent().getAbility() == 1){
                     power += 1;
                 }
