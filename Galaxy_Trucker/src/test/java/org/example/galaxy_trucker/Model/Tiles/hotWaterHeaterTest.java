@@ -1,8 +1,7 @@
-package org.example.galaxy_trucker;
+package org.example.galaxy_trucker.Model.Tiles;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -11,7 +10,25 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class plasmaDrillTest {
+class hotWaterHeaterTest {
+
+    @Test
+    void getAbility() throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
+        ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
+
+        Component comp = Tiles.get(66).getComponent();
+        comp.initType();
+        assertEquals(1, comp.getAbility());
+
+
+        comp = Tiles.get(87).getComponent();
+        comp.initType();
+        assertEquals(2, comp.getAbility());
+
+    }
 
     @Test
     void initType() throws IOException {
@@ -21,21 +38,13 @@ class plasmaDrillTest {
         File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
         ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
 
-        Tiles.get(97).getComponent().initType();
-        assertEquals(1, Tiles.get(97).getComponent().getAbility());
-    }
 
-    @Test
-    void getAbility() throws IOException {
+        hotWaterHeater engine = ((hotWaterHeater) Tiles.get(66).getComponent());
+        engine.initType();
+        assertFalse(engine.isDouble());
 
-
-        ObjectMapper mapper = new ObjectMapper();
-        File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
-        ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
-
-        Tile tile = Tiles.get(123);
-        tile.getComponent().initType();
-        assertEquals(2, tile.getComponent().getAbility());
-
+        hotWaterHeater engine2 = ((hotWaterHeater) Tiles.get(87).getComponent());
+        engine2.initType();
+        assertTrue(engine2.isDouble());
     }
 }

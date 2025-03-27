@@ -1,11 +1,15 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.example.galaxy_trucker.Exceptions.*;
+import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.GetterHandler.*;
 import org.example.galaxy_trucker.Model.SetterHandler.*;
+import com.fasterxml.jackson.annotation.*;
 
 
 
@@ -42,11 +46,11 @@ public class PlayerBoard {
 
     private ArrayList<Tile> Buffer;
 
-    public HashMap<Connector, ArrayList<Connector>> getValidConnection() {
+    public HashMap<String, ArrayList<Connectors>> getValidConnection() {
         return validConnection;
     }
 
-    HashMap<Connector, ArrayList<Connector>>  validConnection;
+    HashMap<String, ArrayList<Connectors>>  validConnection;
 
 
 
@@ -68,17 +72,17 @@ public class PlayerBoard {
         this.BufferGoods = new ArrayList<>();
 
         this.ValidPlayerBoard = new int[10][10];
-        this.validConnection = new HashMap<Connector, ArrayList<Connector>>();
+        this.validConnection = new HashMap<String, ArrayList<Connectors>>();
 
-        validConnection.put(Connector.UNIVERSAL, new ArrayList<>());
-        validConnection.get(Connector.UNIVERSAL).addAll(List.of(Connector.UNIVERSAL, Connector.SINGLE, Connector.DOUBLE));
-        validConnection.put(Connector.DOUBLE, new ArrayList<>());
-        validConnection.get(Connector.DOUBLE).addAll(List.of(Connector.UNIVERSAL,  Connector.DOUBLE));
-        validConnection.put(Connector.SINGLE, new ArrayList<>());
-        validConnection.get(Connector.SINGLE).addAll(List.of(Connector.UNIVERSAL, Connector.SINGLE));
-        validConnection.put(Connector.MOTOR, new ArrayList<>());
-        validConnection.put(Connector.CANNON, new ArrayList<>());
-        validConnection.put(Connector.NONE, new ArrayList<>());
+        validConnection.put(new UNIVERSAL().toString(), new ArrayList<>());
+        validConnection.get(new UNIVERSAL().toString()).addAll(List.of(new UNIVERSAL(), new SINGLE(), new DOUBLE()));
+        validConnection.put(new DOUBLE().toString(), new ArrayList<>());
+        validConnection.get(new DOUBLE().toString()).addAll(List.of(new UNIVERSAL(),  new DOUBLE()));
+        validConnection.put(new SINGLE().toString(), new ArrayList<>());
+        validConnection.get(new SINGLE().toString()).addAll(List.of(new UNIVERSAL(), new SINGLE()));
+        validConnection.put(new ENGINE().toString(), new ArrayList<>());
+        validConnection.put(new CANNON().toString(), new ArrayList<>());
+        validConnection.put(new NONE().toString(), new ArrayList<>());
 
 
         if (lv == 2) {
@@ -117,7 +121,7 @@ public class PlayerBoard {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 if (ValidPlayerBoard[x][y] != 1) {
-                    PlayerBoard[x][y] =  new Tile(new IntegerPair(x,y), new spaceVoid() ,Connector.NONE, Connector.NONE,Connector.NONE, Connector.NONE);
+                    PlayerBoard[x][y] =  new Tile(new IntegerPair(x,y), new spaceVoid() , new NONE(), new NONE(),new NONE(), new NONE());
                 }
                 else {
                     PlayerBoard[x][y] = null;
@@ -125,7 +129,7 @@ public class PlayerBoard {
 
             }
         }
-        this.PlayerBoard[6][6] = new Tile(new IntegerPair(6,6), new MainCockpitComp(0),Connector.UNIVERSAL, Connector.UNIVERSAL,Connector.UNIVERSAL, Connector.UNIVERSAL);
+        this.PlayerBoard[6][6] = new Tile(new IntegerPair(6,6), new MainCockpitComp(0),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
     }
 
     public Map<Class<?>, ArrayList<IntegerPair>> getClassifiedTiles() {
@@ -303,7 +307,7 @@ public class PlayerBoard {
      * @param t2 of type Connector .
      * @return true if the connection is legal, false otherwise.
      */
-    public boolean checkConnection(Connector t1, Connector t2 ){
+    public boolean checkConnection(Connectors t1, Connectors t2 ){
 
         if (validConnection.get(t1).isEmpty()){
             return false;
@@ -378,7 +382,7 @@ public class PlayerBoard {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
-        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid() ,Connector.NONE, Connector.NONE, Connector.NONE);
+        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid() ,new NONE(), new NONE(), new NONE());
         ValidPlayerBoard[x][y] = 0;
     }
 
@@ -462,7 +466,7 @@ public class PlayerBoard {
 
         classifiedTiles.get(PlayerBoard[x][y].getComponent().getClass()).remove(new IntegerPair(x,y));
         damage++;
-        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid(),Connector.NONE, Connector.NONE, Connector.NONE, Connector.NONE);
+        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
         ValidPlayerBoard[x][y] = 0;
     }
 
@@ -492,7 +496,7 @@ public class PlayerBoard {
             for(int y = 0; y <10; y++){
                 if (ValidPlayerBoard[x][y] == 1){
                     if(!newPlayerBoard.contains(new IntegerPair(x,y))){
-                        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y),new spaceVoid(),Connector.NONE, Connector.NONE, Connector.NONE, Connector.NONE);
+                        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y),new spaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
                         ValidPlayerBoard[x][y] = 0;
                         damage++;
                     }
@@ -565,28 +569,28 @@ public class PlayerBoard {
         if (c - 1 >= 0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
             updateBoardAttributes(r, c - 1, visited);
         }
-        else if (getTile(r,c).getConnectors().get(0) == Connector.SINGLE || getTile(r,c).getConnectors().get(0) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(0) == Connector.DOUBLE) {
+        else if (getTile(r,c).getConnectors().get(0) == new SINGLE() || getTile(r,c).getConnectors().get(0) == new UNIVERSAL() || getTile(r,c).getConnectors().get(0) == new DOUBLE()) {
             exposedConnectors++;
         }
 
         if (r - 1 >= 0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
             updateBoardAttributes(r -1,c ,visited);
         }
-        else if (getTile(r,c).getConnectors().get(1) == Connector.SINGLE || getTile(r,c).getConnectors().get(1) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(1) == Connector.DOUBLE) {
+        else if (getTile(r,c).getConnectors().get(1) == new SINGLE() || getTile(r,c).getConnectors().get(1) == new UNIVERSAL() || getTile(r,c).getConnectors().get(1) == new DOUBLE()) {
             exposedConnectors++;
         }
 
         if (c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1&& checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
             updateBoardAttributes(r,c + 1 ,visited);
         }
-        else if (getTile(r,c).getConnectors().get(2) == Connector.SINGLE || getTile(r,c).getConnectors().get(2) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(2) == Connector.DOUBLE) {
+        else if (getTile(r,c).getConnectors().get(2) == new SINGLE() || getTile(r,c).getConnectors().get(2) == new UNIVERSAL() || getTile(r,c).getConnectors().get(2) == new DOUBLE()) {
             exposedConnectors++;
         }
 
         if (r + 1 <= 9 &&ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1))){
             updateBoardAttributes(r +1,c ,visited);
         }
-        else if (getTile(r,c).getConnectors().get(3) == Connector.SINGLE || getTile(r,c).getConnectors().get(3) == Connector.UNIVERSAL || getTile(r,c).getConnectors().get(3) == Connector.DOUBLE) {
+        else if (getTile(r,c).getConnectors().get(3) == new SINGLE() || getTile(r,c).getConnectors().get(3) == new UNIVERSAL() || getTile(r,c).getConnectors().get(3) == new DOUBLE()) {
             exposedConnectors++;
         }
 
