@@ -104,17 +104,12 @@ public class storageCompartment extends Component{
     public void setAbility(boolean direzione) {}
 
     @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile) {
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
         return true;
     }
 
     @Override
     public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {}
-
-    @Override
-    public boolean getNearbyAddons(boolean type){
-        return false;
-    }
 
 
 }

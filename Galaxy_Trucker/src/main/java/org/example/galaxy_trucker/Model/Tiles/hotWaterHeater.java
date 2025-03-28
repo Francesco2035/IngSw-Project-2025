@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Model.Connectors.CANNON;
 import org.example.galaxy_trucker.Model.Connectors.ENGINE;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.HotWaterHeatersChecker;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -79,26 +80,11 @@ public class hotWaterHeater extends Component{
 
 
     @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile){
-        int[][] mat = pb.getValidPlayerBoard();
-
-        int index = tile.getConnectors().indexOf((tile.getConnectors().stream().
-                filter(p -> p.getClass().equals(ENGINE.class)).toList().getFirst()));
-
-
-        if (index != 3 || (x+1 < 10 && mat[x + 1][y]==1) ){
-            System.out.println(index + " " + x + " : " + y);
-            return false;
-        }
-        return true;
-        //return index == 3 && mat[x][y + 1] != 1;
+    public boolean controlValidity(PlayerBoard pb, int x, int y){
+        setComponentChecker(new HotWaterHeatersChecker(pb,x,y));
+        return getComponentChecker().Check();
     };
 
-
-    @Override
-    public boolean getNearbyAddons(boolean type){
-        return false;
-    }
 
 
 

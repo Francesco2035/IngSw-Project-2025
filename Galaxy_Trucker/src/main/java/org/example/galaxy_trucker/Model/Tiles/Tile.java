@@ -45,8 +45,9 @@ public class Tile {
 
 
     public boolean controlDirections(PlayerBoard pb, int x, int y) {
-        return component.controlValidity(pb, x, y, this);
+        return component.controlValidity(pb, x, y);
     }
+
 
 
 // questo fa cagare

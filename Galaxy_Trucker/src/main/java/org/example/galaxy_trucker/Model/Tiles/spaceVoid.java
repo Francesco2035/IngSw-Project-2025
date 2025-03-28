@@ -52,15 +52,9 @@ public class spaceVoid extends Component{
     }
 
     @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile) {
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
         return true;
     }
-
-    @Override
-    public boolean getNearbyAddons(boolean type){
-        return false;
-    }
-
 
 }
 

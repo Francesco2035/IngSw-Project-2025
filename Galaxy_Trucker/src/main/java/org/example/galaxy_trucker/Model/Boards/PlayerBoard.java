@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.example.galaxy_trucker.Exceptions.*;
 import org.example.galaxy_trucker.Model.Connectors.*;
+import org.example.galaxy_trucker.Model.Goods.BLUE;
+import org.example.galaxy_trucker.Model.Goods.GREEN;
+import org.example.galaxy_trucker.Model.Goods.RED;
+import org.example.galaxy_trucker.Model.Goods.YELLOW;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.GetterHandler.*;
@@ -21,7 +25,7 @@ import java.util.Map;
 
 public class PlayerBoard {
 
-
+    private boolean broken;
     private int totalValue;
     private Tile[][] PlayerBoard;
     private int[][] ValidPlayerBoard;
@@ -39,17 +43,16 @@ public class PlayerBoard {
     private ArrayList<Goods> BufferGoods;
 
 
-
     private Map<Class<?>, ArrayList<IntegerPair>> classifiedTiles;
-    private Map<Class<?>, ArrayList<IntegerPair>> storedGoods;
+    private HashMap<Class<?>, ArrayList<IntegerPair>> storedGoods;
+
 
 
     private ArrayList<Tile> Buffer;
 
 
-
-
     public PlayerBoard(int lv) {
+        this.broken = false;
         this.damage = 0;
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
@@ -231,7 +234,7 @@ public class PlayerBoard {
         return damage;
     }
 
-    public Map<Class<?>, ArrayList<IntegerPair>> getStoredGoods(){
+    public HashMap<Class<?>, ArrayList<IntegerPair>> getStoredGoods(){
         return storedGoods;
     }
 
@@ -454,20 +457,31 @@ public class PlayerBoard {
         damage++;
         PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
         ValidPlayerBoard[x][y] = 0;
+        updateStoredGoods();
     }
 
+    public void updateStoredGoods(){
 
+        for (Class<?> Goods : storedGoods.keySet()){
+                storedGoods.get(Goods).removeIf(pair -> ValidPlayerBoard[pair.getFirst()][pair.getSecond()] != 1);
+        }
+
+    }
 
     /**
      * Method chosePlayerBoard returns the selected chunk and calculates the actual damage suffered.
      *
      * @param shipSection HashMap<Integer, ArrayList<IntegerPair>> - collection of chunks.
-     * @param i of type int - the chunk selected.
+     * @param input of type IntegerPair - the chunk selected.
      */
-    public ArrayList<IntegerPair> choosePlayerBoard(HashMap<Integer, ArrayList<IntegerPair>> shipSection , int i){
+    public ArrayList<IntegerPair> choosePlayerBoard(HashMap<Integer, ArrayList<IntegerPair>> shipSection , IntegerPair input){
         //questo metodo non ha molto senso
-        return shipSection.get(i);
-
+        for (Integer i : shipSection.keySet()){
+            if (shipSection.get(i).contains(input)){
+                return shipSection.get(i);
+            }
+        }
+        return null;
     }
 
 
@@ -490,6 +504,7 @@ public class PlayerBoard {
             }
         }
         updateAttributes(newPlayerBoard.getFirst().getFirst(),newPlayerBoard.getFirst().getSecond());
+        broken = false;
 
     }
 
@@ -510,26 +525,18 @@ public class PlayerBoard {
         classifiedTiles = new HashMap<>();
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
         updateBoardAttributes(x,y, visitedPositions);
-
-        if (classifiedTiles.containsKey(shieldGenerator.class)){
-            for (int i = 0; i < classifiedTiles.get(shieldGenerator.class).size(); i++) {
-                for (int j = 0; j< 4; j++){
-                    shield[j] += PlayerBoard[classifiedTiles.get(shieldGenerator.class).get(i).getFirst()]
-                                            [classifiedTiles.get(shieldGenerator.class).
-                                            get(i).getSecond()].getComponent().getAbility(0).get(j);
-                }
-            }
-        }
-        if (classifiedTiles.containsKey(modularHousingUnit.class)){
-            for (IntegerPair pair : classifiedTiles.get(modularHousingUnit.class)){
-                PlayerBoard[pair.getFirst()][pair.getSecond()].controlDirections(this, pair.getFirst(), pair.getSecond());
-            }
-        }
-
-
+        updateGloabalAttributes(visitedPositions);
+        updateStoredGoods();
 
     }
 
+    public void updateGloabalAttributes(ArrayList<IntegerPair> board){
+        for (IntegerPair pair : board)     {
+            int r = pair.getFirst();
+            int c = pair.getSecond();
+            PlayerBoard[r][c].controlDirections(this, r, c);
+        }
+    }
 
     /**
      * Method updateBoardAttributes updates all the attributes of the class also calculating the number of exposed connectors
@@ -539,13 +546,14 @@ public class PlayerBoard {
      * @param c of type int - y coordinate.
      * @param visited of type ArrayList<IntegerPair> - keeps track of all the tiles already visited.
      */
-    public void     updateBoardAttributes(int r, int c,ArrayList<IntegerPair> visited){
+    public void updateBoardAttributes(int r, int c,ArrayList<IntegerPair> visited){
         if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlayerBoard[r][c] != 1) {
             return;
         }
         System.out.println("update: "+r + " " + c);
 
         classifyTile(PlayerBoard[r][c], r,c);
+
 
         visited.add(new IntegerPair(r, c));
 
@@ -617,7 +625,6 @@ public class PlayerBoard {
 
         }
 
-
         if (ValidPlayerBoard[x+1][y] == 1 ){
             visitedPositions = new ArrayList<>();
             findPaths(x+1, y, visitedPositions);
@@ -639,7 +646,9 @@ public class PlayerBoard {
             }
 
         }
-
+        if (shipSection.size() != 1){
+            broken = true;
+        }
         return shipSection;
 
     }
@@ -661,7 +670,6 @@ public class PlayerBoard {
         }
         return BufferGoods.remove(i);
     }
-
 
 
     public boolean getPurpleAlien(){

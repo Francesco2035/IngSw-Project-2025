@@ -50,6 +50,8 @@ public class PlayerBoardTest {
         boolean f = playerBoard.checkValidity();
         assertTrue(f);
         assertEquals(17, playerBoard.getExposedConnectors());
+        int[] shield = {2 ,3 ,1 ,0};
+        assertArrayEquals(shield,playerBoard.getShield());
     }
 
     @Test
@@ -163,7 +165,7 @@ public class PlayerBoardTest {
 
     @Test
     @Order(3)
-    public void testStorageComparmentGettersSetters(){
+    public void testStorageCompartmentGettersSetters(){
 
     }
 

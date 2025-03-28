@@ -1,12 +1,11 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ModularHousingUnitChecker;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.ComponentGetter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class modularHousingUnit extends Component {
 
@@ -40,17 +39,10 @@ public class modularHousingUnit extends Component {
     }
 
 
+
     @Override
     public int getAbility() {
         return numHumans;
-    }
-
-    @Override
-    public boolean getNearbyAddons(boolean type) { //true -> purple, false -> brown
-        if (type){
-            return this.nearPurpleAddon;
-        }
-        return this.nearBrownAddon;
     }
 
 
@@ -79,62 +71,9 @@ public class modularHousingUnit extends Component {
 
 
     @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile) {
-
-        this.nearBrownAddon = false;
-        this.nearPurpleAddon = false;
-        int[][] vb = pb.getValidPlayerBoard();
-
-
-    if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
-                pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x,y-1))){
-        if (tile.getConnectors().get(0).checkAdjacent(pb.getTile(x,y-1).getConnectors().get(2))){
-            if (vb[x][y-1] == 1 && pb.getTile(x,y-1).getComponent().getAbility() == 1){
-                this.nearPurpleAddon = true;
-                }
-            else {
-                this.nearBrownAddon = true;
-                }
-            }
-        }
-
-        if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
-                pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x-1,y))){
-            if (tile.getConnectors().get(1).checkAdjacent((pb.getTile(x-1,y).getConnectors().get(3)))){
-                if (vb[x-1][y] == 1 && pb.getTile(x-1,y).getComponent().getAbility() == 1){
-                    this.nearPurpleAddon = true;
-                }
-                else {
-                    this.nearBrownAddon = true;
-                }
-            }
-        }
-
-        if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
-                pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x,y+1))){
-            if (tile.getConnectors().get(2).checkAdjacent(pb.getTile(x,y+1).getConnectors().get(0))){
-                if (vb[x][y+1] == 1 && pb.getTile(x,y+1).getComponent().getAbility() == 1){
-                    this.nearPurpleAddon = true;
-                }
-                else {
-                    this.nearBrownAddon = true;
-                }
-            }
-        }
-
-
-        if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
-                pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x+1,y))){
-            if (tile.getConnectors().get(3).checkAdjacent (pb.getTile(x+1,y).getConnectors().get(1))){
-                if (vb[x + 1][y] == 1 && pb.getTile(x+1,y).getComponent().getAbility() == 1){
-                    this.nearPurpleAddon = true;
-                }
-                else {
-                    this.nearBrownAddon = true;
-                }
-            }
-        }
-        return true;
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        setComponentChecker(new ModularHousingUnitChecker(pb,x,y, this));
+        return getComponentChecker().Check();
     }
 
 
@@ -160,6 +99,29 @@ public class modularHousingUnit extends Component {
     public int setAbility() {
         return 0;
     }
+
+    public void setNearBrown(boolean nearBrown) {
+        this.nearBrownAddon = nearBrown;
+    }
+
+    public void setNearPurple(boolean nearPurple) {
+        this.nearPurpleAddon = nearPurple;
+    }
+
+    public boolean getNearBrown(){
+        return this.nearBrownAddon;
+    }
+
+    public boolean getNearPurple(){
+        return this.nearPurpleAddon;
+    }
+
+    @Override
+    public Object get(ComponentGetter cg){
+        setComponentGetter(cg);
+        return (Boolean) getComponentGetter().get();
+    }
+
 
 }
 

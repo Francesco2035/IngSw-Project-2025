@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Exceptions.StorageCompartmentFullException;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.NearAddonsGetter;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
@@ -71,7 +72,8 @@ public class HousingUnitSetter implements PlayerBoardSetters{
             throw new InvalidInput("Invalid input: aliens cannot be added to the MainCockpit");
         }
 
-        if((purpleAlien && !pb[x][y].getComponent().getNearbyAddons(true)) || (brownAlien && !pb[x][y].getComponent().getNearbyAddons(false)) ){
+        if((purpleAlien && !(Boolean) pb[x][y].getComponent().get(new NearAddonsGetter((modularHousingUnit) pb[x][y].getComponent(), true))) ||
+                (brownAlien && !(Boolean) pb[x][y].getComponent().get(new NearAddonsGetter((modularHousingUnit) pb[x][y].getComponent(), false)))){
             throw new InvalidInput("Invalid input: aliens cannot be added without specific Addons.");
         }
 
@@ -98,7 +100,8 @@ public class HousingUnitSetter implements PlayerBoardSetters{
             playerBoard.setBrownAlien(true);
         }
         playerBoard.getPlayerBoard()[x][y].getComponent().initType(humans, purpleAlien, brownAlien);
-
+        //setSetter(new setter housingunit(humand, purple, abrrerkeokroek)(
+        //getSetter().set()
 
 
     }
