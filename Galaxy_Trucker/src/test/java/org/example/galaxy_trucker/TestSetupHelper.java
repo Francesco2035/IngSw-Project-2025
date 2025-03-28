@@ -2,7 +2,10 @@ package org.example.galaxy_trucker;
 
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.GAGen;
+import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.SetterHandler.HousingUnitSetter;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -102,6 +105,23 @@ public class TestSetupHelper {
 
     public static PlayerBoard createInitializedBoard4(){
         return playerBoard4;
+    }
+
+    public static void HumansSetter1(PlayerBoard playerBoard){
+        ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
+        if(playerBoard.getClassifiedTiles().containsKey(modularHousingUnit.class)) {
+            HousingCoords = playerBoard.getClassifiedTiles().get(modularHousingUnit.class);
+        }
+        if(playerBoard.getValidPlayerBoard()[6][6]==1) {
+            HousingCoords.add(new IntegerPair(6,6));
+        }
+        for (int i = 0; i < HousingCoords.size(); i++) {
+            playerBoard.setSetter(new HousingUnitSetter(playerBoard,HousingCoords.get(i),2,false,false));
+            playerBoard.getSetter().set();
+        }
+        HousingCoords.remove(new IntegerPair(6,6));
+        
+
     }
 
 }

@@ -8,6 +8,7 @@ import org.example.galaxy_trucker.Model.SetterHandler.HousingUnitSetter;
 import org.example.galaxy_trucker.Model.Tiles.Connector;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
+import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -47,9 +48,11 @@ class AbandonedShipTest {
     }
     static Player Franci;
     static  Player Pietro;
+    static  Player Passo;
 
     static PlayerBoard playerBoard1;
     static PlayerBoard playerBoard2;
+    static PlayerBoard playerBoard3;
 
 
 
@@ -62,13 +65,21 @@ class AbandonedShipTest {
 
         TGame.NewPlayer("fGr");
         TGame.NewPlayer("God");
+        TGame.NewPlayer("Sgregno");
          Franci= GameBoard.getPlayers().get(0);
          Pietro= GameBoard.getPlayers().get(1);
+         Passo= GameBoard.getPlayers().get(2);
         playerBoard1=Pietro.getMyPlance();
         playerBoard2=Franci.getMyPlance();
+        playerBoard3= TestSetupHelper.createInitializedBoard1();
+        playerBoard3.checkValidity();
+        Passo.setMyPlance(playerBoard3);
+
+
 
         modularHousingUnit house1 =new modularHousingUnit();
         modularHousingUnit house2 =new modularHousingUnit();
+
 
         IntegerPair cord = new IntegerPair(0,0);
 
@@ -79,10 +90,14 @@ class AbandonedShipTest {
         playerBoard1.insertTile(tile2,7,7);
         playerBoard1.checkValidity();
 
-        playerBoard1.setSetter(new HousingUnitSetter(playerBoard1,new IntegerPair(6,7),2,false,false));
-        playerBoard1.getSetter().set();
-        playerBoard1.setSetter(new HousingUnitSetter(playerBoard1,new IntegerPair(7,7),2,false,false));
-        playerBoard1.getSetter().set();
+//        playerBoard1.setSetter(new HousingUnitSetter(playerBoard1,new IntegerPair(6,7),2,false,false));
+//        playerBoard1.getSetter().set();
+//        playerBoard1.setSetter(new HousingUnitSetter(playerBoard1,new IntegerPair(7,7),2,false,false));
+//        playerBoard1.getSetter().set();
+
+        TestSetupHelper.HumansSetter1(playerBoard1);
+
+        TestSetupHelper.HumansSetter1(playerBoard3);
 
     }
 
@@ -91,20 +106,20 @@ class AbandonedShipTest {
     void cardEffect() {
 
         FakeAbandonedShip.CardEffect();
-        assertTrue(GameBoard.getPlayers().size()==2);
+        assertTrue(GameBoard.getPlayers().size()==3);
        Franci= GameBoard.getPlayers().get(0);
        Pietro= GameBoard.getPlayers().get(1);
         assertEquals(Franci.GetID(),"fGr");
         assertEquals(Pietro.GetID(),"God");
 
+
         System.out.println("controllo num");
-        assertEquals(4,FakeAbandonedShip.getTotHumans());
+        assertEquals(6,FakeAbandonedShip.getTotHumans());
         System.out.println("fine controllo");
 
         assertEquals(Franci.getPlayerState(),PlayerStates.Waiting);
         assertEquals(Pietro.getPlayerState(), PlayerStates.AcceptKilling);
-
-
+        assertEquals(Passo.getPlayerState(), PlayerStates.Waiting);
 
     }
 
@@ -123,7 +138,15 @@ class AbandonedShipTest {
         coords.add(c2);
         coords.add(c3);
 
-        handler.setInput(coords,true);
+        handler.setInput(coords,false);
+        Pietro.execute();
+        handler=(AcceptKilling) Passo.getInputHandler();
+        handler.setInput(coords,false);
+        Passo.execute();
+
+        assertEquals(PlayerStates.BaseState,Pietro.getPlayerState());
+
+
 
     }
 

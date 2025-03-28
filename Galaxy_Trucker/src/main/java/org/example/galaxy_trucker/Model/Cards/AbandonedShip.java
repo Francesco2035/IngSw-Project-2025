@@ -1,5 +1,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
+import org.example.galaxy_trucker.Model.GetterHandler.HousingUnitGetter;
 import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
@@ -47,7 +49,11 @@ public class AbandonedShip extends Card{
     public void updateSates(){
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        while(this.order<PlayerList.size()&& !this.flag) {
+        while(this.order<=PlayerList.size()&& !this.flag) {
+            if(order==PlayerList.size()){
+                this.finishCard();
+                break;
+            }
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
             Tile TileBoard[][] = CurrentPlanche.getPlayerBoard();
@@ -65,27 +71,30 @@ public class AbandonedShip extends Card{
                 //somma per vedere il tot umani
                 totHumans += TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getAbility();
             }
+            HousingCoords.remove(new IntegerPair(6,6));
             System.out.println("totHumans di"+currentPlayer.GetID()+": "+totHumans);
             if(totHumans>this.requirement){
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
                 currentPlayer.setState(PlayerStates.AcceptKilling);
                 currentPlayer.setInputHandler(new AcceptKilling(this));
+                currentPlayer.setCard(this);
             }
 
             this.order++;
         }
-        if(order>PlayerList.size()){
-            this.finishCard();
-        }
+
     }
     @Override
     public  void  ActivateCard() {
+
+        System.out.println("ActivateCard");
         currentPlayer.getInputHandler().action();
     }
 
     @Override
     public void finishCard() {
+        System.out.println("card finished");
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
@@ -98,7 +107,7 @@ public class AbandonedShip extends Card{
         if(accepted) {
             if (coordinates.size() != this.requirement) {
                 //devo dirgli che ha scelto il num sbagliato di persone da shottare
-                //throw new Exception();
+                throw new WrongNumofHumansException("wrong number of humans");
             }
 
 //            for (int j = 0; j < coordinates.size(); j++) {
@@ -107,9 +116,10 @@ public class AbandonedShip extends Card{
 
 
             for (IntegerPair coordinate : coordinates) {
-                currentPlayer.getMyPlance().setSetter(new HousingUnitSetter(currentPlayer.getMyPlance(),
+                System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
+                currentPlayer.getMyPlance().setGetter(new HousingUnitGetter(currentPlayer.getMyPlance(),
                         coordinate, 1, false, false));
-                currentPlayer.getMyPlance().getSetter().set();
+                currentPlayer.getMyPlance().getGetter().get();
             }
             currentPlayer.IncreaseCredits(this.reward);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), this.getTime());

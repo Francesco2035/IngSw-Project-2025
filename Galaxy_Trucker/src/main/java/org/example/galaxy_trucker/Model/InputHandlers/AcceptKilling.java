@@ -22,6 +22,7 @@ public class AcceptKilling implements InputHandler {
     }
 
     public void action(){
+        System.out.println("Activating card: "+card);
         this.card.continueCard(this.coords, this.accepted);
     }
 }

@@ -84,6 +84,10 @@ public class Player {
         this.PlayerState = state;
     }
 
+    public void setMyPlance(PlayerBoard myPlance) {
+        this.myPlance = myPlance;
+    }
+
     public void  execute() {
         this.CurrentCard.ActivateCard();
     }
