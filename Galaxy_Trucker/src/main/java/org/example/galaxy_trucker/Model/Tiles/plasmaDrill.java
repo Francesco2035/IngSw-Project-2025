@@ -1,9 +1,12 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Connectors.CANNON;
+import org.example.galaxy_trucker.Model.Connectors.ENGINE;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class plasmaDrill extends Component{
 
@@ -74,12 +77,13 @@ public class plasmaDrill extends Component{
     public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile){
         int[][] mat = pb.getValidPlayerBoard();
 
-        int index = tile.getConnectors().indexOf(Connector.CANNON);
+        int index = tile.getConnectors().indexOf((tile.getConnectors().stream().
+                filter(p -> p.getClass().equals(CANNON.class)).toList().getFirst()));
 
-        if (index == 0 && mat[x][y-1]==1 ) return false;
-        if (index == 1 && mat[x-1][y]==1 ) return false;
-        if (index == 2 && mat[x][y+1]==1 ) return false;
-        if (index == 3 && mat[x+1][y]==1 ) return false;
+        if (index == 0 && y-1 >= 0 && mat[x][y-1]==1) return false;
+        if (index == 1 && x-1 >= 0 && mat[x-1][y]==1) return false;
+        if (index == 2 && y+1 < 10 && mat[x][y+1]==1) return false;
+        if (index == 3 && x+1 < 10 && mat[x+1][y]==1) return false;
         return true;
     };
 

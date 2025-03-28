@@ -51,5 +51,7 @@ public class Game {
     }
 
     public String getID(){return GameID;}
+
+    public GameBoard getGameBoard(){return GameBoard;}
 }
 

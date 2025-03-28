@@ -1,46 +1,50 @@
 package org.example.galaxy_trucker.Model.Boards;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.lang.Thread;
 
-public class Hourglass {
+public class Hourglass extends Thread{
 
     private int lv;
     private int time;
     private int usages;
-    private boolean Startable;
+    private boolean startable;
 
 
     public  Hourglass(int lv) {
         this.lv = lv;
         time = 5000;
-        Startable = true;
+        startable = true;
         if(lv == 2) usages = 3;
         else usages = 2;
     }
 
-    public synchronized void StartTimer() throws InterruptedException {
-        if(usages>0) {
-            Thread t = new Thread(() -> {
-                try {
-                    Thread.sleep(time);
+    @Override
+    @JsonIgnore
+    public synchronized void run() {
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        startable = false;
 
-            });
-
-            t.start();
-
-            usages--;
-
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        else throw new IllegalStateException("No hourglass usages left");
+
+        usages--;
+
+        if(usages>0) {
+            startable = true;
+        }
 
     }
 
 
     public int getUsages() {return usages;}
 
-}
+    public boolean isStartable() {return startable;}
 
+    public void setLock(){startable = false;}
+
+}
