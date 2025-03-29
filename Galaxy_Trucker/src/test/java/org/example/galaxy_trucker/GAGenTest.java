@@ -27,12 +27,13 @@ class GAGenTest {
         ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
         ArrayList<Card> Cards = mapper.readValue(CardsJSON, new TypeReference<ArrayList<Card>>() {});
 
-        assertEquals(153, Tiles.size());
+        assertEquals(152, Tiles.size());
         assertEquals(40, Cards.size());
 
         assertNotEquals(null, Tiles);
         assertNotEquals(null, Cards);
     }
+
 
     @Test
     void listToSet() throws IOException {

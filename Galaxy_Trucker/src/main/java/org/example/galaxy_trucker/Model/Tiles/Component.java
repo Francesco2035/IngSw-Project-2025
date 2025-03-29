@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ComponentChecker;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.ComponentGetter;
+import org.example.galaxy_trucker.Model.Tiles.ComponentSetters.ComponentSetter;
 
 import java.util.ArrayList;
 
@@ -28,9 +31,39 @@ import java.util.ArrayList;
 public abstract class Component {
 
     String type;
+    private ComponentGetter componentGetter;
+    private ComponentSetter componentSetter;
+    private ComponentChecker componentChecker;
 
 
     public Component() {}
+
+    public  ComponentSetter getComponentSetter(){
+        return componentSetter;
+    };
+    public  ComponentGetter getComponentGetter(){
+        return componentGetter;
+    };
+    public  ComponentChecker getComponentChecker(){
+        return componentChecker;
+    };
+
+
+    public  void setComponentSetter(ComponentSetter componentSetter){
+        this.componentSetter = componentSetter;
+    };
+    public  void setComponentGetter(ComponentGetter componentGetter){
+        this.componentGetter = componentGetter;
+    };
+    public  void setComponentChecker(ComponentChecker componentChecker){
+        this.componentChecker = componentChecker;
+    };
+
+    public Object get(ComponentGetter cg){
+        return null;
+    }
+
+
 
     //i metodi da overridare sono sa impostare come abstract
 
@@ -53,11 +86,7 @@ public abstract class Component {
 
 
 
-    public abstract boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile);
-
-    public abstract boolean getNearbyAddons(boolean type);
-
-
+    public abstract boolean controlValidity(PlayerBoard pb, int x, int y);
 
 
 //  metodi per json

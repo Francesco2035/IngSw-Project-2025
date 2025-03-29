@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
@@ -52,15 +52,9 @@ public class spaceVoid extends Component{
     }
 
     @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile) {
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
         return true;
     }
-
-    @Override
-    public boolean getNearbyAddons(boolean type){
-        return false;
-    }
-
 
 }
 

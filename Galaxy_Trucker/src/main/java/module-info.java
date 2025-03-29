@@ -6,6 +6,8 @@ module org.example.galaxy_trucker {
     requires java.compiler;
     requires com.fasterxml.jackson.databind;
     requires org.jetbrains.annotations;
+    requires java.desktop;
+    requires jdk.jdi;
 
     opens org.example.galaxy_trucker to javafx.fxml, com.fasterxml.jackson.databind;
     exports org.example.galaxy_trucker.Exceptions;
@@ -19,4 +21,10 @@ module org.example.galaxy_trucker {
     opens org.example.galaxy_trucker.Model to com.fasterxml.jackson.databind, javafx.fxml;
     exports org.example.galaxy_trucker.Model.InputHandlers;
     opens org.example.galaxy_trucker.Model.InputHandlers to com.fasterxml.jackson.databind, javafx.fxml;
+    exports org.example.galaxy_trucker.Model.Goods;
+    opens org.example.galaxy_trucker.Model.Goods to com.fasterxml.jackson.databind, javafx.fxml;
+    exports org.example.galaxy_trucker;
+    opens org.example.galaxy_trucker.Model.Connectors to com.fasterxml.jackson.databind;
+    exports org.example.galaxy_trucker.Model.Connectors to com.fasterxml.jackson.databind, javafx.fxml;
+
 }

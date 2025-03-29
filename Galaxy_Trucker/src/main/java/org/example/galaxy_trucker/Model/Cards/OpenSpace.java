@@ -2,6 +2,8 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
+import org.example.galaxy_trucker.Model.GetterHandler.EngineGetter;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates;
@@ -39,7 +41,8 @@ public class OpenSpace extends Card{
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
 
-                currentPlayer.setState(PlayerStates.GiveSpeed);
+                this.currentPlayer.setState(PlayerStates.GiveSpeed);
+                this.currentPlayer.setInputHandler(new GiveSpeed(this));
 
             this.order++;
         }
@@ -59,7 +62,11 @@ public class OpenSpace extends Card{
 
     @Override
     public void continueCard(ArrayList<IntegerPair> engines) {
-        int movement= currentPlayer.getMyPlance().getEnginePower(engines);
+
+        currentPlayer.getMyPlance().setGetter(new EngineGetter(currentPlayer.getMyPlance(),
+                engines));
+        int movement = ((Integer) currentPlayer.getMyPlance().getGetter().get());
+
         this.getBoard().movePlayer(currentPlayer.GetID(),movement);
         this.currentPlayer.setState(PlayerStates.Waiting);
         this.updateSates();

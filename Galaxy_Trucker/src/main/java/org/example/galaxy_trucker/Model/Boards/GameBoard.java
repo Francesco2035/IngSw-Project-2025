@@ -2,14 +2,18 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 
+import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Optional;
+import java.util.concurrent.CyclicBarrier;
 
 
 public class GameBoard {
@@ -25,6 +29,7 @@ public class GameBoard {
     private int GameLv;
     private int PlayersOnBoard;
     private CardStacks CardStack;
+    private Card CurrentCard;
 
 
 
@@ -63,15 +68,19 @@ public class GameBoard {
     public void addPlayer(Player NewPlayer){
         Player_IntegerPair NewPair = new Player_IntegerPair(NewPlayer, 0);
         this.players.add(NewPair);
-
+        NewPlayer.setState(PlayerStates.BuildingShip);
     }
+
+    public void StartHourglass() throws InterruptedException {
+        hourglass.StartTimer();
+    }
+
 
     public void removePlayer(Player DeadMan){
 
         Player_IntegerPair eliminated = players.stream()
-                                                  .filter(p -> DeadMan
-                                                  .equals( p.getKey()) )
-                                                  .findFirst().orElseThrow();
+                .filter(p -> DeadMan.equals( p.getKey()) )
+                .findFirst().orElseThrow();
 
         players.remove(eliminated);
     }
@@ -86,9 +95,8 @@ public class GameBoard {
     public void SetStartingPosition(String ID){
 
         Player_IntegerPair cur = players.stream()
-                                           .filter(p -> ID
-                                           .equals( p.getKey().GetID()) )
-                                           .findFirst().orElseThrow();
+                .filter(p -> ID.equals( p.getKey().GetID()) )
+                .findFirst().orElseThrow();
 
         SetNewPosition(cur, startPos[PlayersOnBoard], startPos[PlayersOnBoard]);
 
@@ -108,9 +116,9 @@ public class GameBoard {
         int NewIndex;
 
         Player_IntegerPair cur = players.stream()
-                                           .filter(p -> ID.equals( p.getKey().GetID() ) )
-                                           .findFirst()
-                                           .orElseThrow();
+                                        .filter(p -> ID.equals( p.getKey().GetID() ) )
+                                        .findFirst()
+                                        .orElseThrow();
 
         int NewPos = cur.getValue();
         int i = nSteps;
@@ -125,9 +133,7 @@ public class GameBoard {
                 NewIndex++;
                 if (positions[NewIndex % nPositions] == null) i--;
                 else if (cur.getKey().equals(players.getFirst().getKey()) && players.getFirst().getValue() + nSteps - nPositions >= players.getLast().getValue()) {
-                    //ELIMINAZIONE GIOCATORE DOPPIATO DA GESTIRE
-                    //TEMPORANEAMENTE SI SOLLEVA UNA ECCEZIONE
-                    throw new RuntimeException("GIOCATORE " + players.getLast().getKey().GetID() + " DOPPIATO");
+                    abandonRace(players.getLast().getKey());
                 }
             }
 
@@ -139,9 +145,7 @@ public class GameBoard {
 
             if(positions[NewIndex % nPositions] == null) i++;
             else if(cur.getKey().equals(players.getLast().getKey()) && players.getLast().getValue() + nSteps +nPositions <= players.getFirst().getValue()){
-                //ELIMINAZIONE GIOCATORE DOPPIATO DA GESTIRE
-                //TEMPORANEAMENTE SI SOLLEVA UNA ECCEZIONE
-                throw new RuntimeException("GIOCATORE "+ players.getLast().getKey().GetID() +" DOPPIATO");
+                abandonRace(players.getLast().getKey());
             }
         }
 
@@ -185,6 +189,19 @@ public class GameBoard {
     }
 
 
+
+    public void NewCard(){
+        CurrentCard = CardStack.PickNewCard();
+
+        for(Player_IntegerPair p : players){
+            p.getKey().setCard(CurrentCard);
+        }
+
+        CurrentCard.CardEffect();
+    }
+
+
+
     public ArrayList<Player> getPlayers(){
         ArrayList<Player> PlayersCopy = new ArrayList<>();
 
@@ -199,14 +216,19 @@ public class GameBoard {
     public int getLevel(){return GameLv;}
     public Player[] getPositions(){return this.positions;}
     public TileSets getTilesSets(){return tileSets;}
-    public CardStacks getCardStack(){
-        return this.CardStack;
-    }
+    public CardStacks getCardStack(){return this.CardStack;}
 
 
     public void abandonRace(Player loser){
 
-        players.remove(loser);
+        Player_IntegerPair pair = players.stream()
+                                         .filter(p -> p.getKey().equals(loser))
+                                         .findFirst()
+                                         .orElseThrow();
+
+        positions[pair.getValue() % nPositions] = null;
+
+        players.remove(pair);
     }
 
  // va cambiato se vogliamo fare i controlli di vittoria su tutti i player alla fine

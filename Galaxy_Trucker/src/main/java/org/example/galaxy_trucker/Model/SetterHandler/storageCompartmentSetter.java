@@ -56,6 +56,7 @@ public class storageCompartmentSetter implements PlayerBoardSetters{
 
         pb[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(good, true);
         playerBoard.getStoredGoods().computeIfAbsent(good.getClass(), k -> new ArrayList<>()).add(coordinate);
+        playerBoard.setTotalValue(good.getValue());
 
     }
 

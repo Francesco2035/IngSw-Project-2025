@@ -1,10 +1,11 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class specialStorageCompartment extends Component{
 
@@ -18,22 +19,17 @@ public class specialStorageCompartment extends Component{
     public int getMaxNumGoods() {
         return maxNumGoods;
     }
-
     public void setMaxNumGoods(int maxNumGoods) {
         this.maxNumGoods = maxNumGoods;
     }
-
     public ArrayList<Goods> getGoods() {
         return goods;
     }
-
     public void setGoods(ArrayList<Goods> goods) {
         this.goods = goods;
     }
-
-
     private void orderGoods() {
-        Collections.sort(goods);
+          this.goods.sort(Comparator.comparingInt(Goods::getValue));
     }
 
 
@@ -55,9 +51,35 @@ public class specialStorageCompartment extends Component{
                 return null;
             }
         }
-
     }
 
+
+
+    @Override
+    public int setAbility(Goods good, boolean select) {
+        if(select){
+            this.goods.add(good);
+            this.orderGoods();
+            return goods.indexOf(good);
+        }
+        else{
+            this.goods.remove(good);
+            this.orderGoods();
+            return 0;
+        }
+    }
+
+
+    @Override
+    public void initType() {
+        if (type.equals("single")) setMaxNumGoods(1);
+        else if (type.equals("double")) setMaxNumGoods(2);
+    }
+
+
+
+    @Override
+    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {}
 
 
     @Override
@@ -76,47 +98,12 @@ public class specialStorageCompartment extends Component{
     }
 
     @Override
-    public int setAbility(Goods good, boolean select) {
-        if(select){
-            this.goods.add(good);
-            this.orderGoods();
-            return goods.indexOf(good);
-        }
-        else{
-            this.goods.remove(good);
-            this.orderGoods();
-            return 0;
-        }
-    }
+    public void setAbility(boolean direzione) {}
 
     @Override
-    public void setAbility(boolean direzione) {
-
-    }
-
-    @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile) {
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
         return true;
     }
-
-    @Override
-    public void initType() {
-        if (type.equals("single")) setMaxNumGoods(1);
-        else if (type.equals("double")) setMaxNumGoods(2);
-    }
-
-    @Override
-    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
-
-    }
-
-
-    @Override
-    public boolean getNearbyAddons(boolean type){
-        return false;
-    }
-
-
 
 
 }

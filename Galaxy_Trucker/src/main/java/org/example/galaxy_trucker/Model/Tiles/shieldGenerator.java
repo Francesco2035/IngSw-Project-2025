@@ -1,7 +1,11 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ComponentChecker;
+import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ShieldChecker;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.ComponentGetter;
+import org.example.galaxy_trucker.Model.Tiles.ComponentSetters.ComponentSetter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +17,7 @@ public class shieldGenerator extends Component{
 
     public shieldGenerator() {
     }
+
 
     @Override
     public void initType() {
@@ -68,13 +73,10 @@ public class shieldGenerator extends Component{
     }
 
     @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile) {
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        setComponentChecker(new ShieldChecker(pb,this));
+        getComponentChecker().Check();
         return true;
-    }
-
-    @Override
-    public boolean getNearbyAddons(boolean type){
-        return false;
     }
 
 

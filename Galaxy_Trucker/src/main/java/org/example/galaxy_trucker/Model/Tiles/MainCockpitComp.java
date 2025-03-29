@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Goods;
+import org.example.galaxy_trucker.Model.Goods.*;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class MainCockpitComp extends Component {
     }
 
     @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile) {
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
         return true;
     }
 
@@ -81,12 +81,6 @@ public class MainCockpitComp extends Component {
     public String getType() {
         return type;
     }
-
-    @Override
-    public boolean getNearbyAddons(boolean type){
-        return false;
-    }
-
 
 }
 

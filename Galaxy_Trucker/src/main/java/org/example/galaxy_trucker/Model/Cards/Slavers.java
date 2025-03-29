@@ -60,31 +60,31 @@ public class Slavers extends Card{
         }
     }
 
-    @Override
-    public void continueCard(ArrayList<IntegerPair> cannons) {
-        double power= currentPlayer.getMyPlance().getPower(cannons);
-        if(power>this.getRequirement()){
-            this.currentPlayer.setState(PlayerStates.Accepting);
-            this.currentPlayer.setInputHandler(new Accept(this));
-            this.defeated=true;
-        }
-        else if(power<this.getRequirement()){
-            this.currentPlayer.setState(PlayerStates.Killing);
-            this.currentPlayer.setInputHandler(new Killing(this));
-        }
-    }
+//    @Override
+//    public void continueCard(ArrayList<IntegerPair> cannons) {
+//        double power= currentPlayer.getMyPlance().getPower(cannons);
+//        if(power>this.getRequirement()){
+//            this.currentPlayer.setState(PlayerStates.Accepting);
+//            this.currentPlayer.setInputHandler(new Accept(this));
+//            this.defeated=true;
+//        }
+//        else if(power<this.getRequirement()){
+//            this.currentPlayer.setState(PlayerStates.Killing);
+//            this.currentPlayer.setInputHandler(new Killing(this));
+//        }
+//    }
 
     @Override
-    public void killHmans(ArrayList<IntegerPair> coordinates){
+    public void killHumans(ArrayList<IntegerPair> coordinates){
         if (coordinates.size() != this.requirement) {
             //devo dirgli che ha scelto il num sbagliato di persone da shottare
             //throw new Exception();
         }
 
-        for (int j = 0; j < coordinates.size(); j++) {
-            currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
-        }
-        this.updateSates();
+//        for (int j = 0; j < coordinates.size(); j++) {
+//            currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
+//        }
+//        this.updateSates();
     }
 
 

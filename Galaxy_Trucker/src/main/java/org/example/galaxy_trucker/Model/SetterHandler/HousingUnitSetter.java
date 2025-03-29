@@ -5,8 +5,11 @@ import org.example.galaxy_trucker.Exceptions.StorageCompartmentFullException;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.NearAddonsGetter;
+import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
+import org.example.galaxy_trucker.Model.Tiles.specialStorageCompartment;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -49,7 +52,7 @@ public class HousingUnitSetter implements PlayerBoardSetters{
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (!checkExistence(playerBoard.getClassifiedTiles(),coordinate, modularHousingUnit.class)){
+        if (!checkExistence(playerBoard.getClassifiedTiles(),coordinate, modularHousingUnit.class, MainCockpitComp.class)){
             throw new InvalidInput("The following tile is not a modularHousingUnit");
         }
 
@@ -57,11 +60,20 @@ public class HousingUnitSetter implements PlayerBoardSetters{
             throw new InvalidInput("Invalid input: only one alien can be added");
         }
 
+        if (playerBoard.getPurpleAlien() && purpleAlien){
+            throw new InvalidInput("Invalid input: only one purple alien can be added");
+        }
+
+        if (playerBoard.getBrownAlien() && brownAlien){
+            throw new InvalidInput("Invalid input: only one brown alien can be added");
+        }
+
         if (x == 6 && y == 6 && (purpleAlien || brownAlien)){
             throw new InvalidInput("Invalid input: aliens cannot be added to the MainCockpit");
         }
 
-        if((purpleAlien && !pb[x][y].getComponent().getNearbyAddons(true)) || (brownAlien && !pb[x][y].getComponent().getNearbyAddons(false)) ){
+        if((purpleAlien && !(Boolean) pb[x][y].getComponent().get(new NearAddonsGetter((modularHousingUnit) pb[x][y].getComponent(), true))) ||
+                (brownAlien && !(Boolean) pb[x][y].getComponent().get(new NearAddonsGetter((modularHousingUnit) pb[x][y].getComponent(), false)))){
             throw new InvalidInput("Invalid input: aliens cannot be added without specific Addons.");
         }
 
@@ -81,17 +93,27 @@ public class HousingUnitSetter implements PlayerBoardSetters{
             throw new InvalidInput("Invalid input: there is already an alien of the other color present");
         }
 
+        if (purpleAlien){
+            playerBoard.setPurpleAlien(true);
+        }
+        if (brownAlien){
+            playerBoard.setBrownAlien(true);
+        }
         playerBoard.getPlayerBoard()[x][y].getComponent().initType(humans, purpleAlien, brownAlien);
-
+        //setSetter(new setter housingunit(humand, purple, abrrerkeokroek)(
+        //getSetter().set()
 
 
     }
 
 
-    public boolean checkExistence(Map<Class<?>, ArrayList<IntegerPair>> classifiedTiles, IntegerPair tile, Class<?> type){
-        return  classifiedTiles.containsKey(type) &&
-                classifiedTiles.get(type).contains(tile);
+    public boolean checkExistence(Map<Class<?>, ArrayList<IntegerPair>> classifiedTiles, IntegerPair tiles, Class<?> type1, Class<?> type2){
+
+        return  (classifiedTiles.containsKey(type1) &&
+                classifiedTiles.get(type1).contains(tiles) ) ||
+                (classifiedTiles.containsKey(type2) &&
+                        classifiedTiles.get(type2).contains(tiles))
+                ;
+
     }
-
-
 }
