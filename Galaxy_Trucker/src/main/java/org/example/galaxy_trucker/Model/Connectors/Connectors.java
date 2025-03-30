@@ -26,6 +26,8 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 public interface Connectors {
 
+    public boolean checkLegal(Connectors Adjacent);
+
     public boolean checkAdjacent(Connectors Adjacent);
 
     public boolean isExposed();

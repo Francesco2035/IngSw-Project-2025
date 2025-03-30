@@ -19,7 +19,7 @@ public class Tile {
 
     public Tile() {}
 
-    public Tile(IntegerPair coords, Component component, Connectors... connectors) {
+    public Tile(Component component, Connectors... connectors) {
         this.component = component;
         this.connectors = new ArrayList<>();
         this.connectors.addAll(Arrays.asList(connectors));

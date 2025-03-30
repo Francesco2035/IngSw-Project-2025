@@ -119,7 +119,7 @@ public class modularHousingUnit extends Component {
     @Override
     public Object get(ComponentGetter cg){
         setComponentGetter(cg);
-        return (Boolean) getComponentGetter().get();
+        return getComponentGetter().get();
     }
 
 

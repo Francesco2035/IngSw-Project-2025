@@ -1,8 +1,12 @@
 package org.example.galaxy_trucker;
 
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Connectors.DOUBLE;
+import org.example.galaxy_trucker.Model.Connectors.SINGLE;
 import org.example.galaxy_trucker.Model.GAGen;
+import org.example.galaxy_trucker.Model.Tiles.Connector;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.sewerPipes;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +50,7 @@ public class TestSetupHelper {
         Tile modular3 = tiles.get(48);
         Tile hotWaterHeater = tiles.get(92);
         Tile shield = tiles.get(151);
+
         shield.getComponent().initType();
         shield.RotateSx();
 
@@ -59,7 +64,7 @@ public class TestSetupHelper {
         playerBoard.insertTile(t1, 6,7);
         t2.RotateSx();
         t2.RotateSx();
-        playerBoard.insertTile(t2, 7,7);
+        //playerBoard.insertTile(t2, 7,7);
         t8.RotateDx();
         playerBoard.insertTile(t8, 7,6);
         playerBoard.insertTile(t11, 6,5);
@@ -85,9 +90,9 @@ public class TestSetupHelper {
         playerBoard.insertTile(modular1,7,4);
         playerBoard.insertTile(sewerpipes,7,3);
         playerBoard.insertTile(hotWaterHeater,8,3);
-        playerBoard.insertTile(modular2,8,4);
-        playerBoard.insertTile(modular3,8,5);
-        playerBoard.insertTile(shield,6,3);
+//        playerBoard.insertTile(modular2,8,4);
+//        playerBoard.insertTile(modular3,8,5);
+//        playerBoard.insertTile(shield,6,3);
         return playerBoard;
 
     }
@@ -101,6 +106,14 @@ public class TestSetupHelper {
     }
 
     public static PlayerBoard createInitializedBoard4(){
+        SINGLE SS = new SINGLE();
+        DOUBLE DD = new DOUBLE();
+        Tile single = new Tile(new sewerPipes(),SS,SS,SS,SS);
+        Tile dd = new Tile(new sewerPipes(),DD,DD,DD,DD);
+        playerBoard4.insertTile(single,6,7);
+        playerBoard4.insertTile(dd,7,7);
+        playerBoard4.insertTile(dd,7,6);
+
         return playerBoard4;
     }
 

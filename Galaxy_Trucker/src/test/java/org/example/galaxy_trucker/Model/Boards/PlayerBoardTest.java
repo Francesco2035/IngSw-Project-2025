@@ -37,7 +37,7 @@ public class PlayerBoardTest {
     @BeforeAll
     public static void setup(){
 
-        playerBoard = TestSetupHelper.createInitializedBoard1();
+        playerBoard = TestSetupHelper.createInitializedBoard4();
 
     }
 
@@ -49,8 +49,8 @@ public class PlayerBoardTest {
 
         boolean f = playerBoard.checkValidity();
         assertTrue(f);
-        assertEquals(17, playerBoard.getExposedConnectors());
-        int[] shield = {2 ,3 ,1 ,0};
+        assertEquals(20, playerBoard.getExposedConnectors());
+        int[] shield = {1 ,2 ,1 ,0};
         assertArrayEquals(shield,playerBoard.getShield());
     }
 

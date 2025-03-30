@@ -32,10 +32,10 @@ class shieldGeneratorTest {
     @Test
     void ShieldGen(){
 
-        IntegerPair coords = new IntegerPair(1,1);
+
 
         Component shish = new shieldGenerator();
-        Tile t = new Tile(coords, shish, new SINGLE(), new SINGLE(),  new DOUBLE(), new NONE());
+        Tile t = new Tile(shish, new SINGLE(), new SINGLE(),  new DOUBLE(), new NONE());
         t.getComponent().setType("nord-est");
         t.getComponent().initType();
         ArrayList<Integer> p =  t.getComponent().getAbility(0);
