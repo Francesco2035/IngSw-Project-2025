@@ -33,8 +33,8 @@ public class ModularHousingUnitChecker implements ComponentChecker{
         if(         pb.getClassifiedTiles().containsKey(AlienAddons.class) &&
                 pb.getClassifiedTiles().get(AlienAddons.class).contains(new IntegerPair(x,y-1))){
             if (tile.getConnectors().get(0).checkAdjacent(pb.getTile(x,y-1).getConnectors().get(2))){
-                pb.getTile(x,y-1).getComponent().setComponentGetter(new AlienGetter(pb.getTile(x,y-1).getComponent()));
-                if (vb[x][y-1] == 1 && (boolean) pb.getTile(x, y - 1).getComponent().getComponentGetter().get()){
+
+                if (vb[x][y-1] == 1 && (boolean) pb.getTile(x, y - 1).getComponent().get(new AlienGetter(pb.getTile(x,y-1).getComponent()))){
                     component.setNearPurple(true);
                 }
                 else {
@@ -46,8 +46,8 @@ public class ModularHousingUnitChecker implements ComponentChecker{
         if(         pb.getClassifiedTiles().containsKey(AlienAddons.class) &&
                 pb.getClassifiedTiles().get(AlienAddons.class).contains(new IntegerPair(x-1,y))){
             if (tile.getConnectors().get(1).checkAdjacent((pb.getTile(x-1,y).getConnectors().get(3)))){
-                pb.getTile(x,y-1).getComponent().setComponentGetter(new AlienGetter(pb.getTile(x-1,y).getComponent()));
-                if (vb[x-1][y] == 1 && (boolean) pb.getTile(x-1,y).getComponent().getComponentGetter().get()){
+
+                if (vb[x-1][y] == 1 && (boolean) pb.getTile(x-1,y).getComponent().get(new AlienGetter(pb.getTile(x-1,y).getComponent()))){
                     component.setNearPurple(true);
                 }
                 else {
@@ -59,8 +59,8 @@ public class ModularHousingUnitChecker implements ComponentChecker{
         if(         pb.getClassifiedTiles().containsKey(AlienAddons.class) &&
                 pb.getClassifiedTiles().get(AlienAddons.class).contains(new IntegerPair(x,y+1))){
             if (tile.getConnectors().get(2).checkAdjacent(pb.getTile(x,y+1).getConnectors().get(0))){
-                pb.getTile(x,y-1).getComponent().setComponentGetter(new AlienGetter(pb.getTile(x,y+1).getComponent()));
-                if (vb[x][y+1] == 1 && (boolean) pb.getTile(x,y+1).getComponent().getComponentGetter().get()){
+
+                if (vb[x][y+1] == 1 && (boolean) pb.getTile(x,y+1).getComponent().get(new AlienGetter(pb.getTile(x,y+1).getComponent()))){
                     component.setNearPurple(true);
                 }
                 else {
@@ -73,8 +73,8 @@ public class ModularHousingUnitChecker implements ComponentChecker{
         if(         pb.getClassifiedTiles().containsKey(AlienAddons.class) &&
                 pb.getClassifiedTiles().get(AlienAddons.class).contains(new IntegerPair(x+1,y))){
             if (tile.getConnectors().get(3).checkAdjacent (pb.getTile(x+1,y).getConnectors().get(1))){
-                pb.getTile(x,y-1).getComponent().setComponentGetter(new AlienGetter(pb.getTile(x+1,y).getComponent()));
-                if (vb[x + 1][y] == 1 && (boolean) pb.getTile(x+1,y).getComponent().getComponentGetter().get()){
+
+                if (vb[x + 1][y] == 1 && (boolean) pb.getTile(x+1,y).getComponent().get(new AlienGetter(pb.getTile(x+1,y).getComponent()))){
                     component.setNearPurple(true);
                 }
                 else {

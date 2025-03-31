@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.ComponentGetter;
 
 public class SpaceVoid extends Component{
@@ -63,10 +64,10 @@ public class SpaceVoid extends Component{
 //
 //    }
 //
-//    @Override
-//    public boolean controlValidity(PlayerBoard pb, int x, int y) {
-//        return true;
-//    }
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        return true;
+    }
 
 }
 

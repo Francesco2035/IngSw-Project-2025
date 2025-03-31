@@ -107,7 +107,7 @@ public class PlayerBoard {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 if (ValidPlayerBoard[x][y] != 1) {
-                    PlayerBoard[x][y] =  new Tile(new spaceVoid() , new NONE(), new NONE(),new NONE(), new NONE());
+                    PlayerBoard[x][y] =  new Tile(new SpaceVoid() , new NONE(), new NONE(),new NONE(), new NONE());
                 }
                 else {
                     PlayerBoard[x][y] = null;
@@ -115,7 +115,7 @@ public class PlayerBoard {
 
             }
         }
-        this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(0),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
+        this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
     }
 
     public Map<Class<?>, ArrayList<IntegerPair>> getClassifiedTiles() {
@@ -247,7 +247,7 @@ public class PlayerBoard {
      */
     public Tile getTile(int x, int y) throws InvalidInput {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] != 1) {
-            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
+            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile: "+ x + " "+y);
         }
         return this.PlayerBoard[x][y];
     }
@@ -364,7 +364,7 @@ public class PlayerBoard {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
-        PlayerBoard[x][y] = new Tile(new spaceVoid() ,new NONE(), new NONE(), new NONE());
+        PlayerBoard[x][y] = new Tile(new SpaceVoid() ,new NONE(), new NONE(), new NONE());
         ValidPlayerBoard[x][y] = 0;
     }
 
@@ -422,16 +422,14 @@ public class PlayerBoard {
         visited.add(new IntegerPair(r, c));
         System.out.println(r + " " + c);
 
-        int k  = c-1;
-        System.out.println(r + " cristodio " + k);
+
         if (valid && c - 1 >=0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
 
             findPaths(r, c - 1, visited);
         }
 
 
-        k  = r-1;
-        System.out.println(k + " cristodio " + c);
+
         if (valid && r - 1 >=0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
 
             findPaths(r -1,c ,visited);
@@ -439,15 +437,12 @@ public class PlayerBoard {
 
 
 
-        k  = c+1;
-        System.out.println(r + " cristodio " + k);
         if (valid && c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
 
             findPaths(r,c + 1 ,visited);
         }
 
-         k  = r+1;
-        System.out.println(k + " cristodio " + c);
+
         if (valid && r + 1 <= 9 && ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1))){
 
             findPaths(r +1,c ,visited);
@@ -457,7 +452,7 @@ public class PlayerBoard {
 
 
     /**
-     * Method destroy destroys the designated tile adding a spaceVoid tile in its place, possibly updating the class attributes.
+     * Method destroy destroys the designated tile adding a SpaceVoid tile in its place, possibly updating the class attributes.
      *
      * @param x of type int - x coordinate.
      * @param y of type int - y coordinate.
@@ -466,7 +461,7 @@ public class PlayerBoard {
 
         classifiedTiles.get(PlayerBoard[x][y].getComponent().getClass()).remove(new IntegerPair(x,y));
         damage++;
-        PlayerBoard[x][y] = new Tile(new spaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
+        PlayerBoard[x][y] = new Tile(new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
         ValidPlayerBoard[x][y] = 0;
         updateStoredGoods();
     }
@@ -507,7 +502,7 @@ public class PlayerBoard {
             for(int y = 0; y <10; y++){
                 if (ValidPlayerBoard[x][y] == 1){
                     if(!newPlayerBoard.contains(new IntegerPair(x,y))){
-                        PlayerBoard[x][y] = new Tile(new spaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
+                        PlayerBoard[x][y] = new Tile(new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
                         ValidPlayerBoard[x][y] = 0;
                         damage++;
                     }

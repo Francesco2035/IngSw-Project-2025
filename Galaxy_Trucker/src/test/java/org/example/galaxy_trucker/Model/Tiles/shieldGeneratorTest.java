@@ -35,7 +35,7 @@ class shieldGeneratorTest {
         IntegerPair coords = new IntegerPair(1,1);
 
         Component shish = new ShieldGenerator();
-        Tile t = new Tile(coords, shish, new SINGLE(), new SINGLE(),  new DOUBLE(), new NONE());
+        Tile t = new Tile(shish, new SINGLE(), new SINGLE(),  new DOUBLE(), new NONE());
         t.getComponent().setType(1);
         t.getComponent().initType();
 //        ArrayList<Integer> p =  t.getComponent().getAbility(0);

@@ -60,5 +60,9 @@ public class MainCockpitComp extends HousingUnit {
     }
 
 
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        return true;
+    }
 }
 

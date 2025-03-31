@@ -1,5 +1,8 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.HotWaterHeatersChecker;
+
 public class HotWaterHeater extends Component{
 
     private boolean isDouble;
@@ -31,11 +34,11 @@ public class HotWaterHeater extends Component{
     @Override
     public void rotate(Boolean direction) {}
 
-//    @Override
-//    public boolean controlValidity(PlayerBoard pb, int x, int y){
-//        setComponentChecker(new HotWaterHeatersChecker(pb,x,y));
-//        return getComponentChecker().Check();
-//    };
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y){
+        setComponentChecker(new HotWaterHeatersChecker(pb,x,y));
+        return getComponentChecker().Check();
+    };
 
 }
 

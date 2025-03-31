@@ -1,5 +1,8 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.PlasmaDrillsChecker;
+
 public class PlasmaDrill extends Component{
 
 
@@ -26,12 +29,12 @@ public class PlasmaDrill extends Component{
 
 //
 //
-//    @Override
-//    public boolean controlValidity(PlayerBoard pb, int x, int y){
-//        setComponentChecker(new PlasmaDrillsChecker(pb,x,y));
-//        return getComponentChecker().Check();
-//    };
-//
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y){
+        setComponentChecker(new PlasmaDrillsChecker(pb,x,y));
+        return getComponentChecker().Check();
+    };
+
 
 
 

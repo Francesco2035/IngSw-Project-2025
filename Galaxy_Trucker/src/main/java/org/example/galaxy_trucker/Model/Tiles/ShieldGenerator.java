@@ -1,5 +1,7 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ShieldChecker;
 import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.ComponentGetter;
 import org.example.galaxy_trucker.Model.Tiles.ComponentSetters.ShieldSetter;
 
@@ -77,12 +79,12 @@ public class ShieldGenerator extends Component{
 //        else {Collections.rotate(this.protectedDirections, -1);}
 //    }
 //
-//    @Override
-//    public boolean controlValidity(PlayerBoard pb, int x, int y) {
-//        setComponentChecker(new ShieldChecker(pb,this));
-//        getComponentChecker().Check();
-//        return true;
-//    }
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        setComponentChecker(new ShieldChecker(pb,this));
+        getComponentChecker().Check();
+        return true;
+    }
 
 
 
