@@ -7,6 +7,7 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.ShieldGetter;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.ArrayList;
@@ -164,11 +165,11 @@ public class Meteorites extends Card {
         //se le coordinate date non son cannoni ne scudi ecxeption
         //o se segnalo cannoni diversi da quelli sensati
 
-        if(ShieldCoord !=null) {
-            if (!(attacks.get(MeteoritesOrder + 1) == 0 && (currentBoard.getTile(ShieldCoord.getFirst(), ShieldCoord.getSecond()).getComponent().getAbility(0).contains(attacks.get(MeteoritesOrder))) || attacks.get(MeteoritesOrder + 1) == 1)) {
-                // non dovrei attivare lo scudo o lo scudo è sbagliato
-            }
-        }
+//        if(ShieldCoord !=null) {
+//            if (!(attacks.get(MeteoritesOrder + 1) == 0 && (currentBoard.getTile(ShieldCoord.getFirst(), ShieldCoord.getSecond()).getComponent().get(new ShieldGetter(currentBoard.getTile(ShieldCoord.getFirst(), ShieldCoord.getSecond()).getComponent())) .contains(attacks.get(MeteoritesOrder))) || attacks.get(MeteoritesOrder + 1) == 1)) {
+//                // non dovrei attivare lo scudo o lo scudo è sbagliato
+//            }
+//        }
         if(CannonCoord !=null) {
             if (attacks.get(MeteoritesOrder) == 0 || attacks.get(MeteoritesOrder) == 2) { // sinistra o destra
                 if(!(attacks.get(MeteoritesOrder + 1) == 1 && (CannonCoord.getFirst() == hit.getFirst() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(MeteoritesOrder).equals(new CANNON()))|| attacks.get(MeteoritesOrder + 1) == 0)){

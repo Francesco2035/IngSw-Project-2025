@@ -13,7 +13,7 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.SetterHandler.HousingUnitSetter;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
+import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 
 import java.util.ArrayList;
 
@@ -205,8 +205,8 @@ public class Warzone extends Card{
 
 
             ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
-            if(CurrentPlanche.getClassifiedTiles().containsKey(modularHousingUnit.class)) {
-                HousingCoords = CurrentPlanche.getClassifiedTiles().get(modularHousingUnit.class);
+            if(CurrentPlanche.getClassifiedTiles().containsKey(ModularHousingUnit.class)) {
+                HousingCoords = CurrentPlanche.getClassifiedTiles().get(ModularHousingUnit.class);
             }
             if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
                 HousingCoords.add(new IntegerPair(6,6));
@@ -216,10 +216,10 @@ public class Warzone extends Card{
             int totHumans = 0;
 
 
-            for (int j = 0; i < HousingCoords.size(); j++) {
-                //somma per vedere il tot umani
-                totHumans += TileBoard[HousingCoords.get(j).getFirst()][HousingCoords.get(j).getSecond()].getComponent().getAbility();
-            }
+//            for (int j = 0; i < HousingCoords.size(); j++) {
+//                //somma per vedere il tot umani
+//                totHumans += TileBoard[HousingCoords.get(j).getFirst()][HousingCoords.get(j).getSecond()].getComponent().getAbility();
+//            }
 
 
             if(totHumans<Minimum){
@@ -364,9 +364,9 @@ public class Warzone extends Card{
         Tile[][] tiles =currentBoard.getPlayerBoard();
 
         if(coordinates !=null) {
-            if (!(PunishmentShots.get(ShotsOrder + 1) == 0 && (currentBoard.getTile(coordinates.getFirst(), coordinates.getSecond()).getComponent().getAbility(0).contains(PunishmentShots.get(ShotsOrder))) || PunishmentShots.get(ShotsOrder + 1) == 1)) {
-                // non dovrei attivare lo scudo o lo scudo è sbagliato
-            }
+//            if (!(PunishmentShots.get(ShotsOrder + 1) == 0 && (currentBoard.getTile(coordinates.getFirst(), coordinates.getSecond()).getComponent().getAbility(0).contains(PunishmentShots.get(ShotsOrder))) || PunishmentShots.get(ShotsOrder + 1) == 1)) {
+//                // non dovrei attivare lo scudo o lo scudo è sbagliato
+//            }
         }
         if(coordinates ==null) { // se sono entrambi nulli non mi son difeso quindi vengo colpito
             currentBoard.destroy(hit.getFirst(), hit.getSecond());

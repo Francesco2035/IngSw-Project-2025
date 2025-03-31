@@ -5,7 +5,7 @@ import org.example.galaxy_trucker.Model.Connectors.DOUBLE;
 import org.example.galaxy_trucker.Model.Connectors.SINGLE;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.sewerPipes;
+import org.example.galaxy_trucker.Model.Tiles.SewerPipes;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -119,8 +119,8 @@ public class TestSetupHelper {
     public static PlayerBoard createInitializedBoard4(){
         SINGLE SS = new SINGLE();
         DOUBLE DD = new DOUBLE();
-        Tile single = new Tile(new sewerPipes(),SS,SS,SS,SS);
-        Tile dd = new Tile(new sewerPipes(),DD,DD,DD,DD);
+        Tile single = new Tile(new SewerPipes(),SS,SS,SS,SS);
+        Tile dd = new Tile(new SewerPipes(),DD,DD,DD,DD);
         playerBoard4.insertTile(single,6,7);
         playerBoard4.insertTile(dd,7,7);
         playerBoard4.insertTile(dd,7,6);

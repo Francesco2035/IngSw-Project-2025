@@ -7,8 +7,6 @@ import org.example.galaxy_trucker.Model.GetterHandler.EngineGetter;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
 
 import java.util.ArrayList;
 

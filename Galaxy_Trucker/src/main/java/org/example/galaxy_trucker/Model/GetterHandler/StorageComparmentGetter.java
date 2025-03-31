@@ -6,8 +6,8 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.specialStorageCompartment;
-import org.example.galaxy_trucker.Model.Tiles.storageCompartment;
+import org.example.galaxy_trucker.Model.Tiles.SpecialStorageCompartment;
+import org.example.galaxy_trucker.Model.Tiles.StorageCompartment;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -45,20 +45,22 @@ public class StorageComparmentGetter implements PlayerBoardGetters{
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (!checkExistence(playerBoard.getClassifiedTiles(),coordinate, storageCompartment.class, specialStorageCompartment.class)){
+        if (!checkExistence(playerBoard.getClassifiedTiles(),coordinate, StorageCompartment.class, SpecialStorageCompartment.class)){
             throw new InvalidInput("The following tile is not a storageCompartment");
         }
 
-        if (pb[x][y].getComponent().getAbility() == 0){
-            throw new StorageCompartmentEmptyException("The following StorageCompartment is Empty: " + x + "," + y);
-        }
+//        if (pb[x][y].getComponent().getAbility() == 0){
+//            throw new StorageCompartmentEmptyException("The following StorageCompartment is Empty: " + x + "," + y);
+//        }
 
 
-        Goods good = pb[x][y].getComponent().getAbility(null).remove(i);
-        playerBoard.getStoredGoods().get(good.getClass()).remove(new IntegerPair(x,y));
-        playerBoard.setTotalValue(-good.getValue());
-        return good;
+//        Goods good = pb[x][y].getComponent().getAbility(null).remove(i);
+//        playerBoard.getStoredGoods().get(good.getClass()).remove(new IntegerPair(x,y));
+//        playerBoard.setTotalValue(-good.getValue());
+//        return good;
 
+
+        return null;
     }
 
 
