@@ -60,7 +60,8 @@ public abstract class Component {
     };
 
     public Object get(ComponentGetter cg){
-        return null;
+        setComponentGetter(cg);
+        return getComponentGetter().get();
     }
 
 

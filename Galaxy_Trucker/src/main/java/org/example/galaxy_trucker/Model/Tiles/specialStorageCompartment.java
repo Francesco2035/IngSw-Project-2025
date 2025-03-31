@@ -4,10 +4,9 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
-public class specialStorageCompartment extends Component{
+public class specialStorageCompartment extends Component {
 
 
 
@@ -80,7 +79,6 @@ public class specialStorageCompartment extends Component{
 
     @Override
     public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {}
-
 
     @Override
     public ArrayList<Integer> getAbility(int integer) {

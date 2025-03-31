@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.Component;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingUnitsHumansGetter;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
@@ -59,7 +60,7 @@ public class HousingUnitGetter  implements PlayerBoardGetters{
 //            throw new HousingUnitEmptyException("There is no alien to kill");
 //        }
 
-        if (humans > unit.getAbility() && (!purpleAlien && !unit.isPurpleAlien()) && (!brownAlien && !unit.isBrownAlien())){
+        if (humans > (int)unit.get(new HousingUnitsHumansGetter((modularHousingUnit) unit)) && (!purpleAlien && !unit.isPurpleAlien()) && (!brownAlien && !unit.isBrownAlien())){
             throw new HousingUnitEmptyException("It is not possible to kill in this Tile");
         }
 

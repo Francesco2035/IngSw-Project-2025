@@ -4,10 +4,9 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
-public class storageCompartment extends Component{
+public class storageCompartment extends Component {
 
 
     private int maxNumGoods;

@@ -3,9 +3,7 @@ package org.example.galaxy_trucker.Model.GetterHandler;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.CANNON;
-import org.example.galaxy_trucker.Model.Connectors.NONE;
 import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.Tiles.Connector;
 import org.example.galaxy_trucker.Model.Tiles.plasmaDrill;
 
 import java.util.ArrayList;

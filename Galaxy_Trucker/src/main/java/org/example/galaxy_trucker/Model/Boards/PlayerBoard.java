@@ -422,19 +422,34 @@ public class PlayerBoard {
         visited.add(new IntegerPair(r, c));
         System.out.println(r + " " + c);
 
+        int k  = c-1;
+        System.out.println(r + " cristodio " + k);
         if (valid && c - 1 >=0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
+
             findPaths(r, c - 1, visited);
         }
 
+
+        k  = r-1;
+        System.out.println(k + " cristodio " + c);
         if (valid && r - 1 >=0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
+
             findPaths(r -1,c ,visited);
         }
 
+
+
+        k  = c+1;
+        System.out.println(r + " cristodio " + k);
         if (valid && c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
+
             findPaths(r,c + 1 ,visited);
         }
 
+         k  = r+1;
+        System.out.println(k + " cristodio " + c);
         if (valid && r + 1 <= 9 && ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1))){
+
             findPaths(r +1,c ,visited);
         }
 

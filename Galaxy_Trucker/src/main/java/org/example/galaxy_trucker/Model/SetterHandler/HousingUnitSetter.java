@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Exceptions.StorageCompartmentFullException;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingUnitsHumansGetter;
 import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.NearAddonsGetter;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
@@ -77,7 +78,7 @@ public class HousingUnitSetter implements PlayerBoardSetters{
             throw new InvalidInput("Invalid input: aliens cannot be added without specific Addons.");
         }
 
-        if (pb[x][y].getComponent().getAbility() == 2 && humans > 0){
+        if ((int) pb[x][y].getComponent().get(new HousingUnitsHumansGetter((modularHousingUnit) pb[x][y].getComponent())) == 2 && humans > 0){
             throw new StorageCompartmentFullException("The following StorageCompartment is Full: " + x + "," + y);
         }
 
