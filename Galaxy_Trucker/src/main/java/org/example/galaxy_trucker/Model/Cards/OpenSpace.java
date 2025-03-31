@@ -3,7 +3,7 @@ package org.example.galaxy_trucker.Model.Cards;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
-import org.example.galaxy_trucker.Model.GetterHandler.EngineGetter;
+import org.example.galaxy_trucker.Model.Boards.GetterHandler.EngineGetter;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates;

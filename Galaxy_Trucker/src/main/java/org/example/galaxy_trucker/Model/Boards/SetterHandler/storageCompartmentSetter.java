@@ -1,4 +1,4 @@
-package org.example.galaxy_trucker.Model.SetterHandler;
+package org.example.galaxy_trucker.Model.Boards.SetterHandler;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.StorageCompartmentFullException;

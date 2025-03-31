@@ -26,7 +26,10 @@ public class MainCockpitComp extends HousingUnit {
 
     @Override
     public void setPurpleAlien(boolean purpleAlien) throws IllegalArgumentException {
-        throw new IllegalArgumentException("can't have aliens");
+        if (purpleAlien) {
+            throw new IllegalArgumentException("MainCockpit can't have aliens");
+        }
+
     }
 
     @Override
@@ -36,7 +39,9 @@ public class MainCockpitComp extends HousingUnit {
 
     @Override
     public void setBrownAlien(boolean brownAlien) {
-        throw new IllegalArgumentException("can't have aliens");
+        if (brownAlien) {
+            throw new IllegalArgumentException("MainCockpit can't have aliens");
+        }
     }
 
     @Override

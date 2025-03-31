@@ -1,9 +1,8 @@
-package org.example.galaxy_trucker.Model.GetterHandler;
+package org.example.galaxy_trucker.Model.Boards.GetterHandler;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.StorageCompartmentEmptyException;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.SpecialStorageCompartment;

@@ -2,8 +2,8 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.GetterHandler.EngineGetter;
-import org.example.galaxy_trucker.Model.GetterHandler.PlasmaDrillsGetter;
+import org.example.galaxy_trucker.Model.Boards.GetterHandler.EngineGetter;
+import org.example.galaxy_trucker.Model.Boards.GetterHandler.PlasmaDrillsGetter;
 import org.example.galaxy_trucker.Model.InputHandlers.GiveAttack;
 import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
 import org.example.galaxy_trucker.Model.InputHandlers.Killing;
@@ -11,7 +11,7 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates;
-import org.example.galaxy_trucker.Model.SetterHandler.HousingUnitSetter;
+import org.example.galaxy_trucker.Model.Boards.SetterHandler.HousingUnitSetter;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 

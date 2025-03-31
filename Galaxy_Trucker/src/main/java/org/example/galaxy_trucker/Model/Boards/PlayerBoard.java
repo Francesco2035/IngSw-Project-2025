@@ -1,19 +1,12 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.example.galaxy_trucker.Exceptions.*;
+import org.example.galaxy_trucker.Model.Boards.GetterHandler.PlayerBoardGetters;
+import org.example.galaxy_trucker.Model.Boards.SetterHandler.PlayerBoardSetters;
 import org.example.galaxy_trucker.Model.Connectors.*;
-import org.example.galaxy_trucker.Model.Goods.BLUE;
-import org.example.galaxy_trucker.Model.Goods.GREEN;
-import org.example.galaxy_trucker.Model.Goods.RED;
-import org.example.galaxy_trucker.Model.Goods.YELLOW;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.*;
-import org.example.galaxy_trucker.Model.GetterHandler.*;
-import org.example.galaxy_trucker.Model.SetterHandler.*;
-import com.fasterxml.jackson.annotation.*;
 
 
 import java.util.*;
@@ -130,6 +123,25 @@ public class PlayerBoard {
         this.setter = setter;
     }
 
+    public PlayerBoardGetters getGetter(){
+        return getter;
+    }
+
+    public PlayerBoardSetters getSetter(){
+        return setter;
+    }
+
+    public void set(PlayerBoardSetters setter) {
+        this.setter = setter;
+        setter.set();
+    }
+
+    public Object get(PlayerBoardGetters getter) {
+        this.getter = getter;
+        return getter.get();
+    }
+
+
     public void setTotalValue(int i){
         this.totalValue += i;
     }
@@ -160,15 +172,6 @@ public class PlayerBoard {
     public ArrayList<Tile> getBuffer() throws InvalidInput{
         return Buffer;
     }
-
-    public PlayerBoardGetters getGetter(){
-        return getter;
-    }
-
-    public PlayerBoardSetters getSetter(){
-        return setter;
-    }
-
 
 
     /**

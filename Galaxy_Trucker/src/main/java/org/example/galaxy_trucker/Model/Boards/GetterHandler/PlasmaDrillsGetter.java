@@ -1,4 +1,4 @@
-package org.example.galaxy_trucker.Model.GetterHandler;
+package org.example.galaxy_trucker.Model.Boards.GetterHandler;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;

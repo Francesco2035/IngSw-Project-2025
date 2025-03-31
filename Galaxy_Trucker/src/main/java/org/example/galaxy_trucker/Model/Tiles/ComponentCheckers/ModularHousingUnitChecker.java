@@ -74,6 +74,7 @@ public class ModularHousingUnitChecker implements ComponentChecker{
                 pb.getClassifiedTiles().get(AlienAddons.class).contains(new IntegerPair(x+1,y))){
             if (tile.getConnectors().get(3).checkAdjacent (pb.getTile(x+1,y).getConnectors().get(1))){
 
+
                 if (vb[x + 1][y] == 1 && (boolean) pb.getTile(x+1,y).getComponent().get(new AlienGetter(pb.getTile(x+1,y).getComponent()))){
                     component.setNearPurple(true);
                 }
