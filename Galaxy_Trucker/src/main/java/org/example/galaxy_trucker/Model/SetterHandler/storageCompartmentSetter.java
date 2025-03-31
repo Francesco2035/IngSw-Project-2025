@@ -6,8 +6,7 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.specialStorageCompartment;
-import org.intellij.lang.annotations.Pattern;
+import org.example.galaxy_trucker.Model.Tiles.SpecialStorageCompartment;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -46,17 +45,17 @@ public class storageCompartmentSetter implements PlayerBoardSetters{
         }
 
         Map<Class<?>, ArrayList<IntegerPair>>  classifiedTiles = playerBoard.getClassifiedTiles();
-        if (!checkExistence(classifiedTiles,coordinate, storageCompartmentSetter.class, specialStorageCompartment.class)){
+        if (!checkExistence(classifiedTiles,coordinate, storageCompartmentSetter.class, SpecialStorageCompartment.class)){
             throw new InvalidInput("The following tile is not a storageCompartment");
         }
 
-        if (pb[x][y].getComponent().getAbility(null).size() + 1 > pb[x][y].getComponent().getAbility()){
-            throw new StorageCompartmentFullException("The following StorageCompartment is full: " + x + "," + y);
-        }
+//        if (pb[x][y].getComponent().getAbility(null).size() + 1 > pb[x][y].getComponent().getAbility()){
+//            throw new StorageCompartmentFullException("The following StorageCompartment is full: " + x + "," + y);
+//        }
 
-        pb[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(good, true);
-        playerBoard.getStoredGoods().computeIfAbsent(good.getClass(), k -> new ArrayList<>()).add(coordinate);
-        playerBoard.setTotalValue(good.getValue());
+//        pb[coordinate.getFirst()][coordinate.getSecond()].getComponent().setAbility(good, true);
+//        playerBoard.getStoredGoods().computeIfAbsent(good.getClass(), k -> new ArrayList<>()).add(coordinate);
+//        playerBoard.setTotalValue(good.getValue());
 
     }
 

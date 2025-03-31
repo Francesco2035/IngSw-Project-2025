@@ -3,9 +3,8 @@ package org.example.galaxy_trucker.Model.GetterHandler;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.Tiles.Connector;
-import org.example.galaxy_trucker.Model.Tiles.hotWaterHeater;
-import org.example.galaxy_trucker.Model.Tiles.plasmaDrill;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.EnginePowerGetter;
+import org.example.galaxy_trucker.Model.Tiles.HotWaterHeater;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -39,14 +38,14 @@ public class EngineGetter implements PlayerBoardGetters{
         if (chosenHotWaterHeaters == null) {
             throw new NullPointerException("chosenHotWaterHeaters cannot be null.");
         }
-        if (!checkExistence(classifiedTiles,chosenHotWaterHeaters, hotWaterHeater.class)) {
+        if (!checkExistence(classifiedTiles,chosenHotWaterHeaters, HotWaterHeater.class)) {
             throw new InvalidInput("Invalid input: at least one of the selected tils isn't an hotWaterHeater.");
         }
 
         int power = 0;
         for (IntegerPair engine : chosenHotWaterHeaters){
 
-            if (playerBoard.getPlayerBoard()[engine.getFirst()][engine.getSecond()].getComponent().getAbility() == 1){
+            if ((int)playerBoard.getPlayerBoard()[engine.getFirst()][engine.getSecond()].getComponent().get(new EnginePowerGetter(playerBoard.getPlayerBoard()[engine.getFirst()][engine.getSecond()].getComponent())) == 1){
                 power += 1;
             }
             else{

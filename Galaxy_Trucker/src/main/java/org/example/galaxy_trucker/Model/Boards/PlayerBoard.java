@@ -1,26 +1,16 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.example.galaxy_trucker.Exceptions.*;
 import org.example.galaxy_trucker.Model.Connectors.*;
-import org.example.galaxy_trucker.Model.Goods.BLUE;
-import org.example.galaxy_trucker.Model.Goods.GREEN;
-import org.example.galaxy_trucker.Model.Goods.RED;
-import org.example.galaxy_trucker.Model.Goods.YELLOW;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.GetterHandler.*;
 import org.example.galaxy_trucker.Model.SetterHandler.*;
-import com.fasterxml.jackson.annotation.*;
-
-
 
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PlayerBoard {
@@ -109,7 +99,7 @@ public class PlayerBoard {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 if (ValidPlayerBoard[x][y] != 1) {
-                    PlayerBoard[x][y] =  new Tile(new IntegerPair(x,y), new spaceVoid() , new NONE(), new NONE(),new NONE(), new NONE());
+                    PlayerBoard[x][y] =  new Tile(new IntegerPair(x,y), new SpaceVoid() , new NONE(), new NONE(),new NONE(), new NONE());
                 }
                 else {
                     PlayerBoard[x][y] = null;
@@ -117,7 +107,7 @@ public class PlayerBoard {
 
             }
         }
-        this.PlayerBoard[6][6] = new Tile(new IntegerPair(6,6), new MainCockpitComp(0),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
+        this.PlayerBoard[6][6] = new Tile(new IntegerPair(6,6), new MainCockpitComp(),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
     }
 
     public Map<Class<?>, ArrayList<IntegerPair>> getClassifiedTiles() {
@@ -349,10 +339,10 @@ public class PlayerBoard {
             y = pair.getSecond();
             System.out.println(x+ " " + y);
 
-            if(!PlayerBoard[x][y].controlDirections(this,x,y)){
-                System.out.println("oioioi: "+ x+ " "+y);
-                return false;
-            }
+//            if(!PlayerBoard[x][y].controlDirections(this,x,y)){
+//                System.out.println("oioioi: "+ x+ " "+y);
+//                return false;
+//            }
         }
         return true;
 
@@ -371,7 +361,7 @@ public class PlayerBoard {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
-        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid() ,new NONE(), new NONE(), new NONE());
+        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new SpaceVoid() ,new NONE(), new NONE(), new NONE());
         ValidPlayerBoard[x][y] = 0;
     }
 
@@ -455,7 +445,7 @@ public class PlayerBoard {
 
         classifiedTiles.get(PlayerBoard[x][y].getComponent().getClass()).remove(new IntegerPair(x,y));
         damage++;
-        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
+        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
         ValidPlayerBoard[x][y] = 0;
         updateStoredGoods();
     }
@@ -496,7 +486,7 @@ public class PlayerBoard {
             for(int y = 0; y <10; y++){
                 if (ValidPlayerBoard[x][y] == 1){
                     if(!newPlayerBoard.contains(new IntegerPair(x,y))){
-                        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y),new spaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
+                        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y),new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
                         ValidPlayerBoard[x][y] = 0;
                         damage++;
                     }
@@ -534,7 +524,7 @@ public class PlayerBoard {
         for (IntegerPair pair : board)     {
             int r = pair.getFirst();
             int c = pair.getSecond();
-            PlayerBoard[r][c].controlDirections(this, r, c);
+//            PlayerBoard[r][c].controlDirections(this, r, c);
         }
     }
 

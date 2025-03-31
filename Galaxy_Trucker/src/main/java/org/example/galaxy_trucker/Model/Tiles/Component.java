@@ -3,13 +3,9 @@ package org.example.galaxy_trucker.Model.Tiles;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.example.galaxy_trucker.Model.Goods.Goods;
-import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ComponentChecker;
 import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.ComponentGetter;
 import org.example.galaxy_trucker.Model.Tiles.ComponentSetters.ComponentSetter;
-
-import java.util.ArrayList;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -17,20 +13,20 @@ import java.util.ArrayList;
         property = "componentType"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = plasmaDrill.class, name = "plasmaDrill"),
-        @JsonSubTypes.Type(value = hotWaterHeater.class, name = "hotWaterHeater"),
-        @JsonSubTypes.Type(value = powerCenter.class, name = "powerCenter"),
-        @JsonSubTypes.Type(value = storageCompartment.class, name = "storageCompartment"),
-        @JsonSubTypes.Type(value = modularHousingUnit.class, name = "modularHousingUnit"),
-        @JsonSubTypes.Type(value = sewerPipes.class, name = "sewerPipes"),
-        @JsonSubTypes.Type(value = specialStorageCompartment.class, name = "specialStorageCompartment"),
-        @JsonSubTypes.Type(value = alienAddons.class, name = "alienAddons"),
-        @JsonSubTypes.Type(value = shieldGenerator.class, name = "shieldGenerator"),
-        @JsonSubTypes.Type(value = spaceVoid.class, name = "spaceVoid")
+        @JsonSubTypes.Type(value = PlasmaDrill.class, name = "plasmaDrill"),
+        @JsonSubTypes.Type(value = HotWaterHeater.class, name = "hotWaterHeater"),
+        @JsonSubTypes.Type(value = PowerCenter.class, name = "powerCenter"),
+        @JsonSubTypes.Type(value = StorageCompartment.class, name = "storageCompartment"),
+        @JsonSubTypes.Type(value = ModularHousingUnit.class, name = "modularHousingUnit"),
+        @JsonSubTypes.Type(value = SewerPipes.class, name = "sewerPipes"),
+        @JsonSubTypes.Type(value = SpecialStorageCompartment.class, name = "specialStorageCompartment"),
+        @JsonSubTypes.Type(value = AlienAddons.class, name = "alienAddons"),
+        @JsonSubTypes.Type(value = ShieldGenerator.class, name = "shieldGenerator"),
+        @JsonSubTypes.Type(value = SpaceVoid.class, name = "spaceVoid")
 })
 public abstract class Component {
 
-    String type;
+    int type;
     private ComponentGetter componentGetter;
     private ComponentSetter componentSetter;
     private ComponentChecker componentChecker;
@@ -38,65 +34,89 @@ public abstract class Component {
 
     public Component() {}
 
-    public  ComponentSetter getComponentSetter(){
+    public ComponentSetter getComponentSetter(){
         return componentSetter;
     };
-    public  ComponentGetter getComponentGetter(){
+    public ComponentGetter getComponentGetter(){
         return componentGetter;
     };
-    public  ComponentChecker getComponentChecker(){
+    public ComponentChecker getComponentChecker(){
         return componentChecker;
     };
 
 
-    public  void setComponentSetter(ComponentSetter componentSetter){
+    public void setComponentSetter(ComponentSetter componentSetter){
         this.componentSetter = componentSetter;
     };
-    public  void setComponentGetter(ComponentGetter componentGetter){
+    public void setComponentGetter(ComponentGetter componentGetter){
         this.componentGetter = componentGetter;
     };
-    public  void setComponentChecker(ComponentChecker componentChecker){
+    public void setComponentChecker(ComponentChecker componentChecker){
         this.componentChecker = componentChecker;
     };
 
+
     public Object get(ComponentGetter cg){
-        return null;
+        setComponentGetter(cg);
+        return getComponentGetter().get();
+    }
+
+    public void set(ComponentSetter cg){
+        setComponentSetter(cg);
+        getComponentSetter().set();
     }
 
 
-
-    //i metodi da overridare sono sa impostare come abstract
+    //i metodi da overridare sono sa impostare come 
 
     //initType
     public abstract void initType();
-    public abstract void initType(int numHumans, boolean purpleAlien, boolean brownAlien);
+
+//
+//    //getAbility
+//    public  int getAbility();
+//    public  ArrayList<Goods> getAbility(Goods good);
+//    public  ArrayList<Integer> getAbility(int integer);
+//
+//
+//    //setAbility
+//    public  int setAbility();
+//    public  int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien);
+//    public  int setAbility(Goods good, boolean select);
+//    public  void setAbility(boolean direzione);
+//
+//
+//
+//    public  boolean controlValidity(PlayerBoard pb, int x, int y);
+//
 
 
-    //getAbility
-    public abstract int getAbility();
-    public abstract ArrayList<Goods> getAbility(Goods good);
-    public abstract ArrayList<Integer> getAbility(int integer);
-
-
-    //setAbility
-    public abstract int setAbility();
-    public abstract int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien);
-    public abstract int setAbility(Goods good, boolean select);
-    public abstract void setAbility(boolean direzione);
 
 
 
-    public abstract boolean controlValidity(PlayerBoard pb, int x, int y);
+    public abstract void rotate(Boolean direction);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //  metodi per json
-    public String getType() {return type;}
-    public void setType(String type) {this.type = type;}
-    public boolean isPurpleAlien() {return false;}
-    public boolean isBrownAlien() {
-        return false;
-    }
-
+    public int getType() {return type;}
+    public void setType(int type) {this.type = type;}
+//    public boolean isPurpleAlien() {return false;}
+//    public boolean isBrownAlien() {
+//        return false;
+//    }
+//
 
 
 

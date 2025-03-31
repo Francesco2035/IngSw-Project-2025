@@ -26,5 +26,11 @@ module org.example.galaxy_trucker {
     exports org.example.galaxy_trucker;
     opens org.example.galaxy_trucker.Model.Connectors to com.fasterxml.jackson.databind;
     exports org.example.galaxy_trucker.Model.Connectors to com.fasterxml.jackson.databind, javafx.fxml;
+    opens org.example.galaxy_trucker.Model.Tiles.ComponentSetters to com.fasterxml.jackson.databind;
+    exports org.example.galaxy_trucker.Model.Tiles.ComponentSetters to com.fasterxml.jackson.databind, javafx.fxml;
+    opens org.example.galaxy_trucker.Model.Tiles.ComponentGetters to com.fasterxml.jackson.databind;
+    exports org.example.galaxy_trucker.Model.Tiles.ComponentGetters to com.fasterxml.jackson.databind, javafx.fxml;
+    opens org.example.galaxy_trucker.Model.Tiles.ComponentCheckers to com.fasterxml.jackson.databind;
+    exports org.example.galaxy_trucker.Model.Tiles.ComponentCheckers to com.fasterxml.jackson.databind, javafx.fxml;
 
 }
