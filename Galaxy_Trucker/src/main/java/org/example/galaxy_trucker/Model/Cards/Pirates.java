@@ -181,9 +181,9 @@ public class Pirates extends Card{
         Tile[][] tiles =currentBoard.getPlayerBoard();
 
         if(coordinates !=null) {
-            if (!(Punishment.get(ShotsOrder + 1) == 0 && (currentBoard.getTile(coordinates.getFirst(), coordinates.getSecond()).getComponent().getAbility(0).contains(Punishment.get(ShotsOrder))) || Punishment.get(ShotsOrder + 1) == 1)) {
-                // non dovrei attivare lo scudo o lo scudo è sbagliato
-            }
+//            if (!(Punishment.get(ShotsOrder + 1) == 0 && (currentBoard.getTile(coordinates.getFirst(), coordinates.getSecond()).getComponent().getAbility(0).contains(Punishment.get(ShotsOrder))) || Punishment.get(ShotsOrder + 1) == 1)) {
+//                // non dovrei attivare lo scudo o lo scudo è sbagliato
+//            }
         }
         if(coordinates ==null) { // se sono entrambi nulli non mi son difeso quindi vengo colpito
             currentBoard.destroy(hit.getFirst(), hit.getSecond());

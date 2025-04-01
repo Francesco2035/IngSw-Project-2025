@@ -102,7 +102,8 @@ public class Epidemic extends Card {
             w=x;
             z=y+1; //right
             if((0<=w&&w<10)&&(0<=z&&z<10)&&valid[w][z]==1) {
-                if ((tiles[w][z].getComponent().getType().equals("modularHousingUnit")||tiles[w][z].getComponent().getType().equals("MainCockpit")) && (tiles[w][z].getComponent().getAbility() > 0 || tiles[w][z].getComponent().isBrownAlien() || tiles[w][z].getComponent().isPurpleAlien())){
+
+                if ((playerBoard.getClassifiedTiles().get(modularHousingUnit.class).contains(new IntegerPair(w,z))||tiles[w][z].getComponent().getType().equals("MainCockpit")) && (tiles[w][z].getComponent().getAbility() > 0 || tiles[w][z].getComponent().isBrownAlien() || tiles[w][z].getComponent().isPurpleAlien())){
                     System.out.println(w+" "+z+" is a house");
                     if (!this.infected.contains(coords)) {
                         System.out.println("added from right");

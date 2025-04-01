@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
-import org.example.galaxy_trucker.Model.GetterHandler.HousingUnitGetter;
+import org.example.galaxy_trucker.Model.Boards.GetterHandler.HousingUnitGetter;
 import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
@@ -9,7 +9,9 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates;
-import org.example.galaxy_trucker.Model.SetterHandler.HousingUnitSetter;
+import org.example.galaxy_trucker.Model.Boards.SetterHandler.HousingUnitSetter;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingHumanGetter;
+import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
 
@@ -69,7 +71,8 @@ public class AbandonedShip extends Card{
             System.out.println("numofHousingCoords: "+HousingCoords.size());
             for (int i = 0; i < HousingCoords.size(); i++) {
                 //somma per vedere il tot umani
-                totHumans += TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getAbility();
+                totHumans += ((int) TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent()
+                        .get(new HousingHumanGetter(TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent())));
             }
             HousingCoords.remove(new IntegerPair(6,6));
             System.out.println("totHumans di"+currentPlayer.GetID()+": "+totHumans);
@@ -113,7 +116,6 @@ public class AbandonedShip extends Card{
 //            for (int j = 0; j < coordinates.size(); j++) {
 //                currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
 //            }
-
 
             for (IntegerPair coordinate : coordinates) {
                 System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());

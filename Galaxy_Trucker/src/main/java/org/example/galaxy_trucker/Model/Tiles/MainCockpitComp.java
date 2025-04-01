@@ -5,88 +5,69 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import java.util.ArrayList;
 
-public class MainCockpitComp extends Component {
+public class MainCockpitComp extends HousingUnit {
 
     private int numHumans;
-    private int color;
-    private String type;
-
-    public MainCockpitComp(int color) {
-
-        this.color = color;
-        this.type="MainCockpit";
-    }
-
-    public int getColor() {
-        return color;
-    }
-    public void setNumHumans(int numHumans) {this.numHumans = numHumans;}
 
 
     @Override
-    public int getAbility() {
-        return numHumans;
+    public int getNumHumans() {
+        return this.numHumans;
     }
 
-    @Override
-    public ArrayList<Goods> getAbility(Goods good) {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> getAbility(int integer) {
-        return null;
-    }
-
-    @Override
-    public int setAbility() {
-        return 0;
-    }
-
-
-    @Override
-    public void initType() {
-
-    }
-
-    @Override
-    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
+    public void setNumHumans(int numHumans) {
         this.numHumans = numHumans;
     }
 
-
-
     @Override
-    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien) {
-        if(this.numHumans>0) this.numHumans -= numAbility;
-        return numHumans;
-    }
-
-    @Override
-    public int setAbility(Goods good, boolean select) {
-        return 0;
-    }
-
-    @Override
-    public void setAbility(boolean direzione) {
-
-    }
-
-    @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile) {
-        return true;
-    }
-
-    @Override
-    public String getType() {
-        return type;
-    }
-
-    @Override
-    public boolean getNearbyAddons(boolean type){
+    public boolean isPurpleAlien() {
         return false;
     }
 
+    @Override
+    public void setPurpleAlien(boolean purpleAlien) throws IllegalArgumentException {
+        if (purpleAlien) {
+            throw new IllegalArgumentException("MainCockpit can't have aliens");
+        }
 
+    }
+
+    @Override
+    public boolean isBrownAlien() {
+        return false;
+    }
+
+    @Override
+    public void setBrownAlien(boolean brownAlien) {
+        if (brownAlien) {
+            throw new IllegalArgumentException("MainCockpit can't have aliens");
+        }
+    }
+
+    @Override
+    public boolean isNearPurpleAddon() {
+        return false;
+    }
+
+    @Override
+    public void setNearPurpleAddon(boolean nearPurpleAddon) {
+        throw new IllegalArgumentException("can't have aliens");
+    }
+
+    @Override
+    public boolean isNearBrownAddon() {
+        return false;
+    }
+
+    @Override
+    public void setNearBrownAddon(boolean nearBrownAddon) {
+        throw new IllegalArgumentException("can't have aliens");
+    }
+
+
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        return true;
+    }
 }
 
