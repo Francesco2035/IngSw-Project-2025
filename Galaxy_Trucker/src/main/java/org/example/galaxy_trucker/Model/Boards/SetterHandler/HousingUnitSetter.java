@@ -9,8 +9,8 @@ import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingHumanGette
 import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.NearAddonsGetter;
 import org.example.galaxy_trucker.Model.Tiles.ComponentSetters.HousingSetter;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.ArrayList;
 import java.util.Map;

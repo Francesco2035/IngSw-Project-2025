@@ -4,7 +4,6 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.AlienGetter;
-import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 
 public class ModularHousingUnitChecker implements ComponentChecker{
 

@@ -2,7 +2,6 @@ package org.example.galaxy_trucker.Model.Tiles.ComponentSetters;
 
 import org.example.galaxy_trucker.Model.Tiles.Component;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
-import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 
 public class HousingSetter implements ComponentSetter{
 

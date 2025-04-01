@@ -2,13 +2,11 @@ package org.example.galaxy_trucker.Model.Boards;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.GetterHandler.HousingUnitGetter;
-import org.example.galaxy_trucker.Model.Boards.GetterHandler.PlayerBoardGetters;
 import org.example.galaxy_trucker.Model.Boards.SetterHandler.HousingUnitSetter;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingAlienGetter;
 import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingHumanGetter;
-import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingUnitsHumansGetter;
 import org.example.galaxy_trucker.Model.Tiles.HotWaterHeater;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.*;
@@ -151,13 +149,13 @@ public class PlayerBoardTest {
 
         playerBoard.set(new HousingUnitSetter(playerBoard, new IntegerPair(4,5), 2, false,false ));
         System.out.println("Testing populateHousingUnits");
-//        assertTrue(!(boolean)playerBoard.getTile(6,6).getComponent().get(new HousingAlienGetter(playerBoard.getTile(6,6).getComponent(),false) &&
-//                !(boolean)playerBoard.getTile(6,6).getComponent().get(new HousingAlienGetter(playerBoard.getTile(6,6).getComponent(),true) &&
-//                        (int)playerBoard.getTile(6,6).getComponent().get(new HousingUnitsHumansGetter(playerBoard.getTile(6,6).getComponent())) == 2);
+        assertTrue(!(boolean)playerBoard.getTile(6,6).getComponent().get(new HousingAlienGetter(playerBoard.getTile(6,6).getComponent(),false) ) &&
+                !(boolean)playerBoard.getTile(6,6).getComponent().get(new HousingAlienGetter(playerBoard.getTile(6,6).getComponent(),true)) &&
+                        (int)playerBoard.getTile(6,6).getComponent().get(new HousingHumanGetter(playerBoard.getTile(6,6).getComponent())) == 2);
 //
-//        assertTrue(!playerBoard.getTile(4,5).getComponent().isBrownAlien() &&
-//                !playerBoard.getTile(4,5).getComponent().isPurpleAlien() &&
-//                playerBoard.getTile(4,5).getComponent().getAbility() == 2);
+        assertTrue(!(boolean)playerBoard.getTile(4,5).getComponent().get(new HousingAlienGetter(playerBoard.getTile(4,5).getComponent(),false) ) &&
+                !(boolean)playerBoard.getTile(4,5).getComponent().get(new HousingAlienGetter(playerBoard.getTile(4,5).getComponent(),true)) &&
+                (int)playerBoard.getTile(6,6).getComponent().get(new HousingHumanGetter(playerBoard.getTile(6,6).getComponent())) == 2);
 //        assertTrue(playerBoard.getTile(5,7).getComponent().isBrownAlien() &&
 //                !playerBoard.getTile(5,7).getComponent().isPurpleAlien() &&
 //                playerBoard.getTile(5,7).getComponent().getAbility() == 0);

@@ -9,8 +9,8 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingHumanGetter;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 
 import java.util.ArrayList;
