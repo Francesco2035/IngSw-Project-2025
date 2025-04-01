@@ -56,7 +56,7 @@ public class PlasmaDrill extends Component{
 
     @Override
     public void insert(PlayerBoard playerBoard) {
-        if (isDouble) {
+        if (type == 2) {
             if (CannonDirection == 1){
                 playerBoard.setPlasmaDrillsPower(2);
             }
@@ -77,7 +77,7 @@ public class PlasmaDrill extends Component{
 
     @Override
     public void remove(PlayerBoard playerBoard) {
-        if (isDouble) {
+        if (type == 2) {
             if (CannonDirection == 1){
                 playerBoard.setPlasmaDrillsPower(-2);
             }

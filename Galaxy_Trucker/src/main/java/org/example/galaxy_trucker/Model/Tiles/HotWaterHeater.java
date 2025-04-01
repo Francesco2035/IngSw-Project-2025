@@ -44,7 +44,7 @@ public class HotWaterHeater extends Component{
 
     @Override
     public void insert(PlayerBoard playerBoard) {
-        if (isDouble) {
+        if (type == 2) {
             playerBoard.setEnginePower(2);
         }
         else{
@@ -55,7 +55,7 @@ public class HotWaterHeater extends Component{
 
     @Override
     public void remove(PlayerBoard playerBoard) {
-        if (isDouble) {
+        if (type == 2) {
             playerBoard.setEnginePower(-2);
         }
         else{
