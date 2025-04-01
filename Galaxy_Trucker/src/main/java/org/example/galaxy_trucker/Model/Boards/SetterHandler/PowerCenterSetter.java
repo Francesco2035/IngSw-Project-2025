@@ -1,11 +1,12 @@
-package org.example.galaxy_trucker.Model.SetterHandler;
+package org.example.galaxy_trucker.Model.Boards.SetterHandler;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.powerCenterEmptyException;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.EnergyGetter;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.powerCenter;
+import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -38,14 +39,15 @@ public class PowerCenterSetter implements PlayerBoardSetters{
         if (chosenEnergyTiles == null) {
             throw new NullPointerException("chosenEnergyTiles cannot be null.");
         }
-        if (!checkExistence(classifiedTiles,chosenEnergyTiles, powerCenter.class)) {
+        if (!checkExistence(classifiedTiles,chosenEnergyTiles, PowerCenter.class)) {
             throw new InvalidInput("Invalid choice, at least one energy is invalid");
         }
         for (IntegerPair energy : chosenEnergyTiles){
-            if (pb[energy.getFirst()][energy.getSecond()].getComponent().getAbility() == 0){
+            pb[energy.getFirst()][energy.getSecond()].getComponent().setComponentGetter(new EnergyGetter(pb[energy.getFirst()][energy.getSecond()].getComponent()));
+            if ((int) pb[energy.getFirst()][energy.getSecond()].getComponent().getComponentGetter().get() == 0){
                 throw new powerCenterEmptyException("PowerCenter is empty");
             }
-            pb[energy.getFirst()][energy.getSecond()].getComponent().setAbility();
+            pb[energy.getFirst()][energy.getSecond()].getComponent().getComponentSetter().set();
         }
     }
 

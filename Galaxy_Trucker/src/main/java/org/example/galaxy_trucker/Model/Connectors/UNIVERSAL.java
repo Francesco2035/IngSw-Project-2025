@@ -7,7 +7,12 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 public class UNIVERSAL implements Connectors {
 
     public UNIVERSAL() {}
-    
+
+    @Override
+    public boolean checkLegal(Connectors Adjacent) {
+        return Adjacent instanceof UNIVERSAL || Adjacent instanceof SINGLE || Adjacent instanceof DOUBLE;
+    }
+
     @Override
     public boolean checkAdjacent(Connectors Adjacent){
         return Adjacent instanceof UNIVERSAL || Adjacent instanceof SINGLE || Adjacent instanceof DOUBLE;

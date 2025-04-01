@@ -1,15 +1,16 @@
-package org.example.galaxy_trucker.Model.SetterHandler;
+package org.example.galaxy_trucker.Model.Boards.SetterHandler;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.StorageCompartmentFullException;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingAlienGetter;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingHumanGetter;
 import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.NearAddonsGetter;
+import org.example.galaxy_trucker.Model.Tiles.ComponentSetters.HousingSetter;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
-import org.example.galaxy_trucker.Model.Tiles.specialStorageCompartment;
+import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class HousingUnitSetter implements PlayerBoardSetters{
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (!checkExistence(playerBoard.getClassifiedTiles(),coordinate, modularHousingUnit.class, MainCockpitComp.class)){
+        if (!checkExistence(playerBoard.getClassifiedTiles(),coordinate, ModularHousingUnit.class, MainCockpitComp.class)){
             throw new InvalidInput("The following tile is not a modularHousingUnit");
         }
 
@@ -72,24 +73,24 @@ public class HousingUnitSetter implements PlayerBoardSetters{
             throw new InvalidInput("Invalid input: aliens cannot be added to the MainCockpit");
         }
 
-        if((purpleAlien && !(Boolean) pb[x][y].getComponent().get(new NearAddonsGetter((modularHousingUnit) pb[x][y].getComponent(), true))) ||
-                (brownAlien && !(Boolean) pb[x][y].getComponent().get(new NearAddonsGetter((modularHousingUnit) pb[x][y].getComponent(), false)))){
+        if((purpleAlien && !(Boolean) pb[x][y].getComponent().get(new NearAddonsGetter((ModularHousingUnit) pb[x][y].getComponent(), true))) ||
+                (brownAlien && !(Boolean) pb[x][y].getComponent().get(new NearAddonsGetter((ModularHousingUnit) pb[x][y].getComponent(), false)))){
             throw new InvalidInput("Invalid input: aliens cannot be added without specific Addons.");
         }
 
-        if (pb[x][y].getComponent().getAbility() == 2 && humans > 0){
+        if (((int) pb[x][y].getComponent().get(new HousingHumanGetter(pb[x][y].getComponent()))) == 2 && humans > 0){
             throw new StorageCompartmentFullException("The following StorageCompartment is Full: " + x + "," + y);
         }
 
-        if (pb[x][y].getComponent().getAbility() != 0 && (purpleAlien || brownAlien)){
+        if (((int) pb[x][y].getComponent().get(new HousingHumanGetter(pb[x][y].getComponent()))) != 0 && (purpleAlien || brownAlien)){
             throw new InvalidInput("Invalid input: aliens cannot be added if humans are already present");
         }
 
-        if ((pb[x][y].getComponent().isBrownAlien() || pb[x][y].getComponent().isPurpleAlien()) && humans > 0){
+        if ((((boolean) pb[x][y].getComponent().get(new HousingAlienGetter(pb[x][y].getComponent(), false))) || (((boolean) pb[x][y].getComponent().get(new HousingAlienGetter(pb[x][y].getComponent(), true))))) && humans > 0){
             throw new InvalidInput("Invalid input: humans cannot be added if an alien is already present");
         }
 
-        if ((purpleAlien && pb[x][y].getComponent().isBrownAlien()) || (brownAlien && pb[x][y].getComponent().isPurpleAlien())){
+        if ((purpleAlien && ((boolean) pb[x][y].getComponent().get(new HousingAlienGetter(pb[x][y].getComponent(), false)))) || (brownAlien && (((boolean) pb[x][y].getComponent().get(new HousingAlienGetter(pb[x][y].getComponent(), true)))))){
             throw new InvalidInput("Invalid input: there is already an alien of the other color present");
         }
 
@@ -99,10 +100,7 @@ public class HousingUnitSetter implements PlayerBoardSetters{
         if (brownAlien){
             playerBoard.setBrownAlien(true);
         }
-        playerBoard.getPlayerBoard()[x][y].getComponent().initType(humans, purpleAlien, brownAlien);
-        //setSetter(new setter housingunit(humand, purple, abrrerkeokroek)(
-        //getSetter().set()
-
+        playerBoard.getPlayerBoard()[x][y].getComponent().set(new HousingSetter(playerBoard.getPlayerBoard()[x][y].getComponent(), humans, purpleAlien, brownAlien));
 
     }
 

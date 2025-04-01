@@ -1,13 +1,13 @@
-package org.example.galaxy_trucker.Model.GetterHandler;
+package org.example.galaxy_trucker.Model.Boards.GetterHandler;
 
 import org.example.galaxy_trucker.Exceptions.HousingUnitEmptyException;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.Tiles.Component;
-import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
+import org.example.galaxy_trucker.Model.Tiles.*;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingAlienGetter;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingHumanGetter;
+import org.example.galaxy_trucker.Model.Tiles.ComponentSetters.HousingSetter;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -47,19 +47,19 @@ public class HousingUnitGetter  implements PlayerBoardGetters{
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (!checkExistence(playerBoard.getClassifiedTiles(),coordinate, modularHousingUnit.class, MainCockpitComp.class)){
+        if (!checkExistence(playerBoard.getClassifiedTiles(),coordinate, ModularHousingUnit.class, MainCockpitComp.class)){
             throw new InvalidInput("The following tile is not a modularHousingUnit");
         }
 
 //        if (coordinate.getFirst() < 0 || coordinate.getFirst() >= pb.length || coordinate.getSecond() < 0 || coordinate.getSecond() >= pb[0].length || ValidPlayerBoard[coordinate.getFirst()][coordinate.getSecond()] == -1) {
 //            throw new InvalidInput(coordinate.getFirst(), coordinate.getSecond(), "Invalid input: coordinates out of bounds or invalid tile." );
 //        }
-        Component unit =  pb[coordinate.getFirst()][coordinate.getSecond()].getComponent();
+        HousingUnit unit =  ((HousingUnit) pb[coordinate.getFirst()][coordinate.getSecond()].getComponent());
 //        if ((purpleAlien && !unit.isPurpleAlien()) || (brownAlien && !unit.isBrownAlien())) {
 //            throw new HousingUnitEmptyException("There is no alien to kill");
 //        }
 
-        if (humans > unit.getAbility() && (!purpleAlien && !unit.isPurpleAlien()) && (!brownAlien && !unit.isBrownAlien())){
+        if (humans > ((int) unit.get(new HousingHumanGetter(unit))) && (!purpleAlien && !((boolean) unit.get(new HousingAlienGetter(unit, true)))) && (!brownAlien && !((boolean) unit.get(new HousingAlienGetter(unit, false))))){
             throw new HousingUnitEmptyException("It is not possible to kill in this Tile");
         }
 
@@ -71,7 +71,7 @@ public class HousingUnitGetter  implements PlayerBoardGetters{
             playerBoard.setBrownAlien(false);
         }
 
-        unit.setAbility(humans, purpleAlien, brownAlien);
+        unit.set(new HousingSetter(unit, humans, purpleAlien, brownAlien));
         return true;
     }
 

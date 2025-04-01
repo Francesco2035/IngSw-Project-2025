@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Tiles.ComponentCheckers;
 
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Tiles.Component;
+import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.ShieldGetter;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -12,8 +13,7 @@ public class ShieldChecker implements ComponentChecker{
     ArrayList<Integer> c_shield;
     public ShieldChecker(PlayerBoard playerBoard, Component component) {
         pb_shield = playerBoard.getShield();
-        c_shield = component.getAbility(0);
-
+        c_shield = ((ArrayList<Integer>) component.get(new ShieldGetter(component)));
     }
 
     @Override

@@ -7,7 +7,12 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 public class DOUBLE implements Connectors {
 
     public DOUBLE() {}
-    
+
+    @Override
+    public boolean checkLegal(Connectors Adjacent) {
+        return Adjacent instanceof DOUBLE || Adjacent instanceof UNIVERSAL;
+    }
+
     @Override
     public boolean checkAdjacent(Connectors Adjacent){
         return Adjacent instanceof DOUBLE || Adjacent instanceof UNIVERSAL;
