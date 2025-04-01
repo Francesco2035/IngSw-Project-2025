@@ -101,10 +101,7 @@ public class ModularHousingUnit extends HousingUnit {
 //    @Override
 //    public void setAbility(boolean direzione) {}
 //
-//    @Override
-//    public ArrayList<Goods> getAbility(Goods good) {
-//        return null;
-//    }
+
 //
 //    @Override
 //    public ArrayList<Integer> getAbility(int integer) {
