@@ -1,58 +1,67 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Connectors.Connectors;
-import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ModularHousingUnitChecker;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-public class modularHousingUnit extends Component {
-
-    private int numHumans;
-    private boolean purpleAlien;
-    private boolean brownAlien;
-
-    private boolean nearPurpleAddon;
-    private boolean nearBrownAddon;
+public class ModularHousingUnit extends HousingUnit {
 
 
-    public modularHousingUnit() {
-        this.numHumans = 0;
-        this.purpleAlien = false;
-        this.brownAlien = false;
+    protected int numHumans;
+    protected boolean purpleAlien;
+    protected boolean brownAlien;
+    protected boolean nearPurpleAddon;
+    protected boolean nearBrownAddon;
+    
+    @Override
+    public int getNumHumans() {
+        return this.numHumans;
     }
 
-
+    @Override
     public void setNumHumans(int numHumans) {
         this.numHumans = numHumans;
     }
+
+    @Override
     public boolean isPurpleAlien() {
-        return purpleAlien;
+        return this.purpleAlien;
     }
-    public void setPurpleAlien(boolean purpleAlien) {this.purpleAlien = purpleAlien;}
+
+    @Override
+    public void setPurpleAlien(boolean purpleAlien) {
+        this.purpleAlien = purpleAlien;
+    }
+
+    @Override
     public boolean isBrownAlien() {
-        return brownAlien;
+        return this.brownAlien;
     }
+
+    @Override
     public void setBrownAlien(boolean brownAlien) {
         this.brownAlien = brownAlien;
     }
 
-
     @Override
-    public int getAbility() {
-        return numHumans;
+    public boolean isNearPurpleAddon() {
+        return this.nearPurpleAddon;
     }
 
     @Override
-    public boolean getNearbyAddons(boolean type) { //true -> purple, false -> brown
-        if (type){
-            return this.nearPurpleAddon;
-        }
+    public void setNearPurpleAddon(boolean nearPurpleAddon) {
+        this.nearPurpleAddon = nearPurpleAddon;
+    }
+
+    @Override
+    public boolean isNearBrownAddon() {
         return this.nearBrownAddon;
     }
 
+    @Override
+    public void setNearBrownAddon(boolean nearBrownAddon) {
+        this.nearBrownAddon = nearBrownAddon;
+    }
+    
 
     @Override
     public void initType() {
@@ -62,104 +71,68 @@ public class modularHousingUnit extends Component {
         //così facendo non devo passare l'input di initType e posso chiamare su tutti i tasselli initType e sarà poi il gioco a trovare dinamicamente dove è richiesto un input
     }
 
+
+
+
     @Override
-    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
-        this.numHumans = numHumans;
-        this.purpleAlien = purpleAlien;
-        this.brownAlien = brownAlien;
+    public void rotate(Boolean direction) {}
+
+//    @Override
+//    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien){
+//        if(this.numHumans>0) this.numHumans -= numAbility;
+//        this.purpleAlien = this.purpleAlien && purpleAlien;
+//        this.brownAlien = this.brownAlien && brownAlien;
+//        return numHumans;
+//    }
+//
+//
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        setComponentChecker(new ModularHousingUnitChecker(pb,x,y, this));
+        return getComponentChecker().Check();
+    }
+//
+//
+//    @Override
+//    public int setAbility(Goods good, boolean select) {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void setAbility(boolean direzione) {}
+//
+//    @Override
+//    public ArrayList<Goods> getAbility(Goods good) {
+//        return null;
+//    }
+//
+//    @Override
+//    public ArrayList<Integer> getAbility(int integer) {
+//        return null;
+//    }
+//
+//    @Override
+//    public int setAbility() {
+//        return 0;
+//    }
+
+
+
+
+    public void setNearBrown(boolean nearBrown) {
+        this.nearBrownAddon = nearBrown;
+    }
+    public void setNearPurple(boolean nearPurple) {
+        this.nearPurpleAddon = nearPurple;
     }
 
-    @Override
-    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien){
-        if(this.numHumans>0) this.numHumans -= numAbility;
-        this.purpleAlien = this.purpleAlien && purpleAlien;
-        this.brownAlien = this.brownAlien && brownAlien;
-        return numHumans;
+    public boolean getNearBrown(){
+        return this.nearBrownAddon;
+    }
+    public boolean getNearPurple(){
+        return this.nearPurpleAddon;
     }
 
-
-    @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y, Tile tile) {
-
-        this.nearBrownAddon = false;
-        this.nearPurpleAddon = false;
-        int[][] vb = pb.getValidPlayerBoard();
-
-
-    if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
-                pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x,y-1))){
-        if (tile.getConnectors().get(0).checkAdjacent(pb.getTile(x,y-1).getConnectors().get(2))){
-            if (vb[x][y-1] == 1 && pb.getTile(x,y-1).getComponent().getAbility() == 1){
-                this.nearPurpleAddon = true;
-                }
-            else {
-                this.nearBrownAddon = true;
-                }
-            }
-        }
-
-        if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
-                pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x-1,y))){
-            if (tile.getConnectors().get(1).checkAdjacent((pb.getTile(x-1,y).getConnectors().get(3)))){
-                if (vb[x-1][y] == 1 && pb.getTile(x-1,y).getComponent().getAbility() == 1){
-                    this.nearPurpleAddon = true;
-                }
-                else {
-                    this.nearBrownAddon = true;
-                }
-            }
-        }
-
-        if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
-                pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x,y+1))){
-            if (tile.getConnectors().get(2).checkAdjacent(pb.getTile(x,y+1).getConnectors().get(0))){
-                if (vb[x][y+1] == 1 && pb.getTile(x,y+1).getComponent().getAbility() == 1){
-                    this.nearPurpleAddon = true;
-                }
-                else {
-                    this.nearBrownAddon = true;
-                }
-            }
-        }
-
-
-        if(         pb.getClassifiedTiles().containsKey(alienAddons.class) &&
-                pb.getClassifiedTiles().get(alienAddons.class).contains(new IntegerPair(x+1,y))){
-            if (tile.getConnectors().get(3).checkAdjacent (pb.getTile(x+1,y).getConnectors().get(1))){
-                if (vb[x + 1][y] == 1 && pb.getTile(x+1,y).getComponent().getAbility() == 1){
-                    this.nearPurpleAddon = true;
-                }
-                else {
-                    this.nearBrownAddon = true;
-                }
-            }
-        }
-        return true;
-    }
-
-
-    @Override
-    public int setAbility(Goods good, boolean select) {
-        return 0;
-    }
-
-    @Override
-    public void setAbility(boolean direzione) {}
-
-    @Override
-    public ArrayList<Goods> getAbility(Goods good) {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> getAbility(int integer) {
-        return null;
-    }
-
-    @Override
-    public int setAbility() {
-        return 0;
-    }
 
 }
 

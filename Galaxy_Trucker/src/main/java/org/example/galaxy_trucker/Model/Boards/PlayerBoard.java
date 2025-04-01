@@ -1,33 +1,27 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.example.galaxy_trucker.Exceptions.*;
+import org.example.galaxy_trucker.Model.Boards.GetterHandler.PlayerBoardGetters;
+import org.example.galaxy_trucker.Model.Boards.SetterHandler.PlayerBoardSetters;
 import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.*;
-import org.example.galaxy_trucker.Model.GetterHandler.*;
-import org.example.galaxy_trucker.Model.SetterHandler.*;
-import com.fasterxml.jackson.annotation.*;
 
 
-
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PlayerBoard {
 
-
+    private boolean broken;
     private int totalValue;
     private Tile[][] PlayerBoard;
     private int[][] ValidPlayerBoard;
     private int damage;
     private int exposedConnectors;
     private int[] shield;
+
+    private boolean valid;
 
     private boolean purpleAlien;
     private boolean brownAlien;
@@ -39,22 +33,22 @@ public class PlayerBoard {
     private ArrayList<Goods> BufferGoods;
 
 
-
     private Map<Class<?>, ArrayList<IntegerPair>> classifiedTiles;
-    private Map<Class<?>, ArrayList<IntegerPair>> storedGoods;
+    private HashMap<Class<?>, ArrayList<IntegerPair>> storedGoods;
+
 
 
     private ArrayList<Tile> Buffer;
 
 
-
-
     public PlayerBoard(int lv) {
+        this.broken = false;
         this.damage = 0;
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
         this.totalValue = 0;
 
+        this.valid = true;
 
         this.purpleAlien = false;
         this.brownAlien = false;
@@ -106,7 +100,7 @@ public class PlayerBoard {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 if (ValidPlayerBoard[x][y] != 1) {
-                    PlayerBoard[x][y] =  new Tile(new IntegerPair(x,y), new spaceVoid() , new NONE(), new NONE(),new NONE(), new NONE());
+                    PlayerBoard[x][y] =  new Tile(new SpaceVoid() , new NONE(), new NONE(),new NONE(), new NONE());
                 }
                 else {
                     PlayerBoard[x][y] = null;
@@ -114,7 +108,7 @@ public class PlayerBoard {
 
             }
         }
-        this.PlayerBoard[6][6] = new Tile(new IntegerPair(6,6), new MainCockpitComp(0),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
+        this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
     }
 
     public Map<Class<?>, ArrayList<IntegerPair>> getClassifiedTiles() {
@@ -128,6 +122,25 @@ public class PlayerBoard {
     public void setSetter(PlayerBoardSetters setter) {
         this.setter = setter;
     }
+
+    public PlayerBoardGetters getGetter(){
+        return getter;
+    }
+
+    public PlayerBoardSetters getSetter(){
+        return setter;
+    }
+
+    public void set(PlayerBoardSetters setter) {
+        this.setter = setter;
+        setter.set();
+    }
+
+    public Object get(PlayerBoardGetters getter) {
+        this.getter = getter;
+        return getter.get();
+    }
+
 
     public void setTotalValue(int i){
         this.totalValue += i;
@@ -159,15 +172,6 @@ public class PlayerBoard {
     public ArrayList<Tile> getBuffer() throws InvalidInput{
         return Buffer;
     }
-
-    public PlayerBoardGetters getGetter(){
-        return getter;
-    }
-
-    public PlayerBoardSetters getSetter(){
-        return setter;
-    }
-
 
 
     /**
@@ -231,7 +235,7 @@ public class PlayerBoard {
         return damage;
     }
 
-    public Map<Class<?>, ArrayList<IntegerPair>> getStoredGoods(){
+    public HashMap<Class<?>, ArrayList<IntegerPair>> getStoredGoods(){
         return storedGoods;
     }
 
@@ -246,7 +250,7 @@ public class PlayerBoard {
      */
     public Tile getTile(int x, int y) throws InvalidInput {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] != 1) {
-            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
+            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile: "+ x + " "+y);
         }
         return this.PlayerBoard[x][y];
     }
@@ -294,15 +298,10 @@ public class PlayerBoard {
      */
     public boolean checkConnection(Connectors t1, Connectors t2 ){
 
-//        if (validConnection.get(t1).isEmpty()){
-//            return false;
-//        }
-//        if(validConnection.get(t1).contains(t2)){
-//            return true;
-//        }
-//        else {
-//            return false;
-//        }
+        if (!t1.checkLegal(t2)){
+            System.out.println("INVALID CONNECTION "+ t1.getClass() + " " + t2.getClass());
+            valid = false;
+        }
         return t1.checkAdjacent(t2);
     }
 
@@ -368,7 +367,7 @@ public class PlayerBoard {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
-        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid() ,new NONE(), new NONE(), new NONE());
+        PlayerBoard[x][y] = new Tile(new SpaceVoid() ,new NONE(), new NONE(), new NONE());
         ValidPlayerBoard[x][y] = 0;
     }
 
@@ -383,11 +382,14 @@ public class PlayerBoard {
 
         int r = 6;
         int c = 6;
-
+        valid = true;
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
 
         findPaths(r,c,visitedPositions);
 
+        if(!valid){
+            return false;
+        }
 
         if (PathNotVisited(visitedPositions)){
             System.out.println("percorso non visitato");
@@ -395,7 +397,7 @@ public class PlayerBoard {
         }
 
         else {
-            if (checkIllegal(visitedPositions)){
+            if (checkIllegal(visitedPositions)){ //secondo me si può togliere
                 updateAttributes(r,c);
                 return true;
             }
@@ -417,25 +419,35 @@ public class PlayerBoard {
      */
     public void findPaths(int r, int c, ArrayList<IntegerPair> visited) {
 
-        if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlayerBoard[r][c] == -1 ) {
+        if (!valid || visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlayerBoard[r][c] == -1 ) {
             return;
         }
         visited.add(new IntegerPair(r, c));
         System.out.println(r + " " + c);
 
-        if (c - 1 >=0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
+
+        if (valid && c - 1 >=0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
+
             findPaths(r, c - 1, visited);
         }
 
-        if (r - 1 >=0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
+
+
+        if (valid && r - 1 >=0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
+
             findPaths(r -1,c ,visited);
         }
 
-        if (c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
+
+
+        if (valid && c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
+
             findPaths(r,c + 1 ,visited);
         }
 
-        if (r + 1 <= 9 && ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1))){
+
+        if (valid && r + 1 <= 9 && ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1))){
+
             findPaths(r +1,c ,visited);
         }
 
@@ -443,7 +455,7 @@ public class PlayerBoard {
 
 
     /**
-     * Method destroy destroys the designated tile adding a spaceVoid tile in its place, possibly updating the class attributes.
+     * Method destroy destroys the designated tile adding a SpaceVoid tile in its place, possibly updating the class attributes.
      *
      * @param x of type int - x coordinate.
      * @param y of type int - y coordinate.
@@ -452,22 +464,33 @@ public class PlayerBoard {
 
         classifiedTiles.get(PlayerBoard[x][y].getComponent().getClass()).remove(new IntegerPair(x,y));
         damage++;
-        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y), new spaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
+        PlayerBoard[x][y] = new Tile(new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
         ValidPlayerBoard[x][y] = 0;
+        updateStoredGoods();
     }
 
+    public void updateStoredGoods(){
 
+        for (Class<?> Goods : storedGoods.keySet()){
+                storedGoods.get(Goods).removeIf(pair -> ValidPlayerBoard[pair.getFirst()][pair.getSecond()] != 1);
+        }
+
+    }
 
     /**
      * Method chosePlayerBoard returns the selected chunk and calculates the actual damage suffered.
      *
      * @param shipSection HashMap<Integer, ArrayList<IntegerPair>> - collection of chunks.
-     * @param i of type int - the chunk selected.
+     * @param input of type IntegerPair - the chunk selected.
      */
-    public ArrayList<IntegerPair> choosePlayerBoard(HashMap<Integer, ArrayList<IntegerPair>> shipSection , int i){
+    public ArrayList<IntegerPair> choosePlayerBoard(HashMap<Integer, ArrayList<IntegerPair>> shipSection , IntegerPair input){
         //questo metodo non ha molto senso
-        return shipSection.get(i);
-
+        for (Integer i : shipSection.keySet()){
+            if (shipSection.get(i).contains(input)){
+                return shipSection.get(i);
+            }
+        }
+        return null;
     }
 
 
@@ -482,7 +505,7 @@ public class PlayerBoard {
             for(int y = 0; y <10; y++){
                 if (ValidPlayerBoard[x][y] == 1){
                     if(!newPlayerBoard.contains(new IntegerPair(x,y))){
-                        PlayerBoard[x][y] = new Tile(new IntegerPair(x,y),new spaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
+                        PlayerBoard[x][y] = new Tile(new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
                         ValidPlayerBoard[x][y] = 0;
                         damage++;
                     }
@@ -490,6 +513,7 @@ public class PlayerBoard {
             }
         }
         updateAttributes(newPlayerBoard.getFirst().getFirst(),newPlayerBoard.getFirst().getSecond());
+        broken = false;
 
     }
 
@@ -510,26 +534,18 @@ public class PlayerBoard {
         classifiedTiles = new HashMap<>();
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
         updateBoardAttributes(x,y, visitedPositions);
-
-        if (classifiedTiles.containsKey(shieldGenerator.class)){
-            for (int i = 0; i < classifiedTiles.get(shieldGenerator.class).size(); i++) {
-                for (int j = 0; j< 4; j++){
-                    shield[j] += PlayerBoard[classifiedTiles.get(shieldGenerator.class).get(i).getFirst()]
-                                            [classifiedTiles.get(shieldGenerator.class).
-                                            get(i).getSecond()].getComponent().getAbility(0).get(j);
-                }
-            }
-        }
-        if (classifiedTiles.containsKey(modularHousingUnit.class)){
-            for (IntegerPair pair : classifiedTiles.get(modularHousingUnit.class)){
-                PlayerBoard[pair.getFirst()][pair.getSecond()].controlDirections(this, pair.getFirst(), pair.getSecond());
-            }
-        }
-
-
+        updateGloabalAttributes(visitedPositions);
+        updateStoredGoods();
 
     }
 
+    public void updateGloabalAttributes(ArrayList<IntegerPair> board){
+        for (IntegerPair pair : board)     {
+            int r = pair.getFirst();
+            int c = pair.getSecond();
+            PlayerBoard[r][c].controlDirections(this, r, c);
+        }
+    }
 
     /**
      * Method updateBoardAttributes updates all the attributes of the class also calculating the number of exposed connectors
@@ -539,13 +555,14 @@ public class PlayerBoard {
      * @param c of type int - y coordinate.
      * @param visited of type ArrayList<IntegerPair> - keeps track of all the tiles already visited.
      */
-    public void     updateBoardAttributes(int r, int c,ArrayList<IntegerPair> visited){
+    public void updateBoardAttributes(int r, int c,ArrayList<IntegerPair> visited){
         if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || this.ValidPlayerBoard[r][c] != 1) {
             return;
         }
         System.out.println("update: "+r + " " + c);
 
         classifyTile(PlayerBoard[r][c], r,c);
+
 
         visited.add(new IntegerPair(r, c));
 
@@ -617,7 +634,6 @@ public class PlayerBoard {
 
         }
 
-
         if (ValidPlayerBoard[x+1][y] == 1 ){
             visitedPositions = new ArrayList<>();
             findPaths(x+1, y, visitedPositions);
@@ -639,7 +655,9 @@ public class PlayerBoard {
             }
 
         }
-
+        if (shipSection.size() != 1){
+            broken = true;
+        }
         return shipSection;
 
     }
@@ -661,7 +679,6 @@ public class PlayerBoard {
         }
         return BufferGoods.remove(i);
     }
-
 
 
     public boolean getPurpleAlien(){

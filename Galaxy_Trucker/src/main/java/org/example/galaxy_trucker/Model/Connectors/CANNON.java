@@ -7,10 +7,15 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 public class CANNON implements Connectors {
 
     public CANNON() {}
-    
+
+    @Override
+    public boolean checkLegal(Connectors Adjacent) {
+        return false;
+    }
+
     @Override
     public boolean checkAdjacent(Connectors Adjacent){
-        return Adjacent instanceof NONE;
+        return false;
     }
 
     @Override
