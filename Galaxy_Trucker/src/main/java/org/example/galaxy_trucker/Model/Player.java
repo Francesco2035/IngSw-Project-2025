@@ -203,9 +203,10 @@ public class Player {
     public PlayerBoard getMyPlance() {return myPlance;}
     //    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
     public ArrayList<IntegerPair> getEnergyTiles(){
-        if(getMyPlance().getClassifiedTiles().containsKey(PowerCenter.class))
-            return this.getMyPlance().getClassifiedTiles().get(PowerCenter.class);
-        else return null;
+//        if(getMyPlance().getClassifiedTiles().containsKey(PowerCenter.class))
+//            return this.getMyPlance().getClassifiedTiles().get(PowerCenter.class);
+//        else return null;
+        return null;
     }
 
 //

@@ -1,11 +1,12 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.HotWaterHeatersChecker;
 
 public class HotWaterHeater extends Component{
 
     private boolean isDouble;
+
+    private int EngineDirection = 3;
 
     public HotWaterHeater() {}
 
@@ -18,13 +19,6 @@ public class HotWaterHeater extends Component{
     }
 
 
-//
-//    @Override
-//    public int getAbility() {
-//        if (isDouble) {return 2;}
-//        else {return 1;}
-//    }
-
     @Override
     public void initType(){
         if (type==(1)) isDouble = false;
@@ -32,13 +26,43 @@ public class HotWaterHeater extends Component{
     }
 
     @Override
-    public void rotate(Boolean direction) {}
+    public void rotate(Boolean direction) {
+        if (direction){
+            EngineDirection += 1;
+            EngineDirection = EngineDirection % 4;
+        }
+        else {
+            EngineDirection -= 1;
+            EngineDirection = EngineDirection % 4;
+        }
+    }
 
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y){
-        setComponentChecker(new HotWaterHeatersChecker(pb,x,y));
-        return getComponentChecker().Check();
-    };
+        return EngineDirection == 3;
+    }
+
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+        if (isDouble) {
+            playerBoard.setEnginePower(2);
+        }
+        else{
+            playerBoard.setEnginePower(1);
+        }
+        playerBoard.getHotWaterHeaters().add(this);
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        if (isDouble) {
+            playerBoard.setEnginePower(-2);
+        }
+        else{
+            playerBoard.setEnginePower(-1);
+        }
+        playerBoard.getHotWaterHeaters().remove(this);
+    }
 
 }
 

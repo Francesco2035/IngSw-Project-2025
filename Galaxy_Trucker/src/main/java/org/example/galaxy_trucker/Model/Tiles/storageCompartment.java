@@ -1,9 +1,12 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.IntegerPair;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 
 public class StorageCompartment extends Storage{
 
@@ -111,5 +114,15 @@ public class StorageCompartment extends Storage{
 //    @Override
 //    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {}
 
+
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+        playerBoard.getStorages().add(this);
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getStorages().remove(this);
+    }
 
 }

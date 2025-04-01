@@ -2,8 +2,10 @@ package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Model.Goods.*;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.IntegerPair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainCockpitComp extends HousingUnit {
 
@@ -69,5 +71,16 @@ public class MainCockpitComp extends HousingUnit {
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
         return true;
     }
+
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+        playerBoard.getHousingUnits().add(this);
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getHousingUnits().remove(this);
+    }
+
 }
 

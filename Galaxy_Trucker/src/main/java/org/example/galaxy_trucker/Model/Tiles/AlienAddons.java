@@ -1,6 +1,10 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.IntegerPair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AlienAddons extends Component{
 
@@ -76,6 +80,16 @@ public class AlienAddons extends Component{
 
     @Override
     public void rotate(Boolean direction) {}
+
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+        playerBoard.getAlienAddons().add(this);
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getAlienAddons().remove(this);
+    }
 
 //    @Override
 //    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {

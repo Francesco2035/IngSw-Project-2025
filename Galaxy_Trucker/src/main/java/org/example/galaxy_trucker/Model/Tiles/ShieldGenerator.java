@@ -1,11 +1,13 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ShieldChecker;
-import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.ComponentGetter;
-import org.example.galaxy_trucker.Model.Tiles.ComponentSetters.ShieldSetter;
+import org.example.galaxy_trucker.Model.IntegerPair;
+
+
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 public class ShieldGenerator extends Component{
 
@@ -35,7 +37,9 @@ public class ShieldGenerator extends Component{
 
     @Override
     public void rotate(Boolean direction) {
-        setComponentSetter(new ShieldSetter(this, direction));
+        if (direction){
+            Collections.rotate(getProtectedDirections(), 1);}
+        else {Collections.rotate(getProtectedDirections(), -1);}
     }
 
 
@@ -81,11 +85,23 @@ public class ShieldGenerator extends Component{
 //
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
-        setComponentChecker(new ShieldChecker(pb,this));
-        getComponentChecker().Check();
+        int[] pb_shield = pb.getShield();
+        for (int i = 0; i < pb_shield.length; i++){
+            pb_shield[i] += protectedDirections.get(i);
+        }
+
         return true;
     }
 
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+        playerBoard.getShieldGenerators().add(this);
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getShieldGenerators().remove(this);
+    }
 
 
 }

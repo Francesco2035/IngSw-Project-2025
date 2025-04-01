@@ -1,7 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ModularHousingUnitChecker;
 
 public class ModularHousingUnit extends HousingUnit {
 
@@ -87,9 +86,66 @@ public class ModularHousingUnit extends HousingUnit {
 //
 //
     @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y) {
-        setComponentChecker(new ModularHousingUnitChecker(pb,x,y, this));
-        return getComponentChecker().Check();
+    public boolean controlValidity(PlayerBoard playerBoard, int x, int y) {
+        Tile tile = playerBoard.getTile(x,y);
+        nearBrownAddon = false;
+        nearPurpleAddon = false;
+        int[][] vb = playerBoard.getValidPlayerBoard();
+        int index = 0;
+
+        if(vb[x][y-1] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x,y-1).getComponent())){
+            index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x,y-1).getComponent());
+            if (tile.getConnectors().get(0).checkAdjacent(playerBoard.getTile(x,y-1).getConnectors().get(2))){
+
+                if (vb[x][y-1] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
+                    nearPurpleAddon = true;
+                }
+                else {
+                    nearBrownAddon = true;
+                }
+            }
+        }
+
+        if(vb[x-1][y] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x-1,y).getComponent())){
+            index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x-1,y).getComponent());
+            if (tile.getConnectors().get(1).checkAdjacent(playerBoard.getTile(x-1,y).getConnectors().get(3))){
+
+                if (vb[x-1][y] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
+                    nearPurpleAddon = true;
+                }
+                else {
+                    nearBrownAddon = true;
+                }
+            }
+        }
+
+        if(vb[x][y+1] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x,y+1).getComponent())){
+            index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x,y+1).getComponent());
+            if (tile.getConnectors().get(2).checkAdjacent(playerBoard.getTile(x,y+1).getConnectors().get(0))){
+
+                if (vb[x][y+1] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
+                    nearPurpleAddon = true;
+                }
+                else {
+                    nearBrownAddon = true;
+                }
+            }
+        }
+        //System.out.println("salve");
+        if(vb[x+1][y] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x +1,y).getComponent())){
+            index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x+1,y).getComponent());
+            //System.out.println("dovrei entrare qui "+index);
+            if (tile.getConnectors().get(3).checkAdjacent(playerBoard.getTile(x+1,y).getConnectors().get(1))){
+
+                if (vb[x+1][y] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
+                    nearPurpleAddon = true;
+                }
+                else {
+                    nearBrownAddon = true;
+                }
+            }
+        }
+        return true;
     }
 //
 //
@@ -116,23 +172,15 @@ public class ModularHousingUnit extends HousingUnit {
 //        return 0;
 //    }
 
-
-
-
-    public void setNearBrown(boolean nearBrown) {
-        this.nearBrownAddon = nearBrown;
-    }
-    public void setNearPurple(boolean nearPurple) {
-        this.nearPurpleAddon = nearPurple;
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+        playerBoard.getHousingUnits().add(this);
     }
 
-    public boolean getNearBrown(){
-        return this.nearBrownAddon;
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getHousingUnits().remove(this);
     }
-    public boolean getNearPurple(){
-        return this.nearPurpleAddon;
-    }
-
 
 }
 

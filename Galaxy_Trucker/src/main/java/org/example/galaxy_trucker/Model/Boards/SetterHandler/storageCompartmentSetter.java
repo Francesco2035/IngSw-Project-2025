@@ -9,6 +9,7 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.SpecialStorageCompartment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class storageCompartmentSetter implements PlayerBoardSetters{
@@ -44,7 +45,7 @@ public class storageCompartmentSetter implements PlayerBoardSetters{
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        Map<Class<?>, ArrayList<IntegerPair>>  classifiedTiles = playerBoard.getClassifiedTiles();
+        Map<Class<?>, ArrayList<IntegerPair>>  classifiedTiles = new HashMap<>();
         if (!checkExistence(classifiedTiles,coordinate, storageCompartmentSetter.class, SpecialStorageCompartment.class)){
             throw new InvalidInput("The following tile is not a storageCompartment");
         }

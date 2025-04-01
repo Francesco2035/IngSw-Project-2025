@@ -14,6 +14,7 @@ public class HousingUnitsHumansGetter implements ComponentGetter{
 
     @Override
     public Object get() {
-        return housingUnit.get(new HousingUnitsHumansGetter(this.housingUnit));
+        //return housingUnit.get(new HousingUnitsHumansGetter(this.housingUnit));
+        return null;
     }
 }

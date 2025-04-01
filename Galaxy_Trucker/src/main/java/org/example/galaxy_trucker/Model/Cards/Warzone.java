@@ -2,8 +2,7 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.Boards.GetterHandler.EngineGetter;
-import org.example.galaxy_trucker.Model.Boards.GetterHandler.PlasmaDrillsGetter;
+
 import org.example.galaxy_trucker.Model.InputHandlers.GiveAttack;
 import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
 import org.example.galaxy_trucker.Model.InputHandlers.Killing;
@@ -11,7 +10,7 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates;
-import org.example.galaxy_trucker.Model.Boards.SetterHandler.HousingUnitSetter;
+
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 
@@ -124,7 +123,7 @@ public class Warzone extends Card{
         else{
             this.PlayerOrder=0;
             if(this.PunishmentType[ChallengeOrder]==1){
-                this.loseTime();
+                //this.loseTime();
             }
             else if(this.PunishmentType[ChallengeOrder]==2){
                 this.currentPlayer.setState(PlayerStates.Killing);
@@ -165,7 +164,7 @@ public class Warzone extends Card{
             checkPower(coordinates);
         }
         else {
-            checkMovement(coordinates);
+            //checkMovement(coordinates);
         }
     }
 
@@ -179,108 +178,108 @@ public class Warzone extends Card{
     public void checkPower(ArrayList<IntegerPair> coordinates) {
 //            double movement= currentPlayer.getMyPlance().getPower(coordinates);
 
-        currentPlayer.getMyPlance().setGetter(new PlasmaDrillsGetter(currentPlayer.getMyPlance(), coordinates));
-        double power = ((Double) currentPlayer.getMyPlance().getGetter().get());
+//        currentPlayer.getMyPlance().setGetter(new PlasmaDrillsGetter(currentPlayer.getMyPlance(), coordinates));
+//        double power = ((Double) currentPlayer.getMyPlance().getGetter().get());
 
 
-        if(power<Minimum){
-                this.Worst=currentPlayer;
-                this.Minimum=power;
-            }
-        this.currentPlayer.setState(PlayerStates.Waiting);
-        this.updateSates();
+//        if(power<Minimum){
+//                this.Worst=currentPlayer;
+//                this.Minimum=power;
+//            }
+//        this.currentPlayer.setState(PlayerStates.Waiting);
+//        this.updateSates();
     }
 
     public void checkPeople() {
-        int Order=0;
-        GameBoard Board=this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
-        PlayerBoard CurrentPlanche;
-        int Len= PlayerList.size(); // quanti player ho
-        int PlayerPower;
-
-
-        for(int i=0; i<PlayerList.size(); i++){
-            CurrentPlanche=PlayerList.get(i).getMyPlance(); // get the current active planche
-
-
-            ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
-            if(CurrentPlanche.getClassifiedTiles().containsKey(ModularHousingUnit.class)) {
-                HousingCoords = CurrentPlanche.getClassifiedTiles().get(ModularHousingUnit.class);
-            }
-            if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
-                HousingCoords.add(new IntegerPair(6,6));
-            }
-
-            Tile TileBoard[][]=CurrentPlanche.getPlayerBoard();
-            int totHumans = 0;
-
-
-//            for (int j = 0; i < HousingCoords.size(); j++) {
-//                //somma per vedere il tot umani
-//                totHumans += TileBoard[HousingCoords.get(j).getFirst()][HousingCoords.get(j).getSecond()].getComponent().getAbility();
+//        int Order=0;
+//        GameBoard Board=this.getBoard();
+//        ArrayList<Player> PlayerList = Board.getPlayers();
+//        PlayerBoard CurrentPlanche;
+//        int Len= PlayerList.size(); // quanti player ho
+//        int PlayerPower;
+//
+//
+//        for(int i=0; i<PlayerList.size(); i++){
+//            CurrentPlanche=PlayerList.get(i).getMyPlance(); // get the current active planche
+//
+//
+//            ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
+//            if(CurrentPlanche.getClassifiedTiles().containsKey(ModularHousingUnit.class)) {
+//                HousingCoords = CurrentPlanche.getClassifiedTiles().get(ModularHousingUnit.class);
 //            }
-
-
-            if(totHumans<Minimum){
-                Worst=PlayerList.get(i);
-                Minimum=totHumans;
-            }
-        }
-        this.PlayerOrder=PlayerList.size();
-        this.updateSates();
-    }
-
-    public void checkMovement(ArrayList<IntegerPair> coordinates) {
-//        double movement= currentPlayer.getMyPlance().getEnginePower(coordinates);
-
-
-        currentPlayer.getMyPlance().setGetter(new EngineGetter(currentPlayer.getMyPlance(),
-                coordinates));
-        double movement = ((Double) currentPlayer.getMyPlance().getGetter().get());
-
-
-        if(movement<Minimum){
-            this.Worst=currentPlayer;
-            this.Minimum=movement;
-        }
-        this.currentPlayer.setState(PlayerStates.Waiting);
-        this.updateSates();
-    }
-
-
-    public void loseTime() {
-        this.getBoard().movePlayer(Worst.GetID(),this.PunishmentMovement);
-        return;
-    }
-
-
-    public void loseCargo() {
+//            if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
+//                HousingCoords.add(new IntegerPair(6,6));
+//            }
+//
+//            Tile TileBoard[][]=CurrentPlanche.getPlayerBoard();
+//            int totHumans = 0;
 //
 //
-//        for(int i=0;i<PunishmentCargo;i++){
-//            int index=Worst.getGoodsIndex();
-//            IntegerPair coord=Worst.getGoodsCoordinates();
+////            for (int j = 0; i < HousingCoords.size(); j++) {
+////                //somma per vedere il tot umani
+////                totHumans += TileBoard[HousingCoords.get(j).getFirst()][HousingCoords.get(j).getSecond()].getComponent().getAbility();
+////            }
 //
-//            Worst.getMyPlance().removeGood(coord,index);
+//
+//            if(totHumans<Minimum){
+//                Worst=PlayerList.get(i);
+//                Minimum=totHumans;
+//            }
 //        }
-    }
-
-
-
-    @Override
-    public void killHumans(ArrayList<IntegerPair> coordinates){
-        if (coordinates.size() != this.PunishmentHumans) {
-            //devo dirgli che ha scelto il num sbagliato di persone da shottare
-            //throw new Exception();
-        }
-
-        for (IntegerPair coordinate : coordinates) {
-            currentPlayer.getMyPlance().setSetter(new HousingUnitSetter(currentPlayer.getMyPlance(),
-                    coordinate, 1, true, true));
-            currentPlayer.getMyPlance().getSetter().set();
-        }
-        this.updateSates();
+//        this.PlayerOrder=PlayerList.size();
+//        this.updateSates();
+//    }
+//
+//    public void checkMovement(ArrayList<IntegerPair> coordinates) {
+////        double movement= currentPlayer.getMyPlance().getEnginePower(coordinates);
+//
+//
+//        currentPlayer.getMyPlance().setGetter(new EngineGetter(currentPlayer.getMyPlance(),
+//                coordinates));
+//        double movement = ((Double) currentPlayer.getMyPlance().getGetter().get());
+//
+//
+//        if(movement<Minimum){
+//            this.Worst=currentPlayer;
+//            this.Minimum=movement;
+//        }
+//        this.currentPlayer.setState(PlayerStates.Waiting);
+//        this.updateSates();
+//    }
+//
+//
+//    public void loseTime() {
+//        this.getBoard().movePlayer(Worst.GetID(),this.PunishmentMovement);
+//        return;
+//    }
+//
+//
+//    public void loseCargo() {
+////
+////
+////        for(int i=0;i<PunishmentCargo;i++){
+////            int index=Worst.getGoodsIndex();
+////            IntegerPair coord=Worst.getGoodsCoordinates();
+////
+////            Worst.getMyPlance().removeGood(coord,index);
+////        }
+//    }
+//
+//
+//
+//    @Override
+//    public void killHumans(ArrayList<IntegerPair> coordinates){
+//        if (coordinates.size() != this.PunishmentHumans) {
+//            //devo dirgli che ha scelto il num sbagliato di persone da shottare
+//            //throw new Exception();
+//        }
+//
+//        for (IntegerPair coordinate : coordinates) {
+//            currentPlayer.getMyPlance().setSetter(new HousingUnitSetter(currentPlayer.getMyPlance(),
+//                    coordinate, 1, true, true));
+//            currentPlayer.getMyPlance().getSetter().set();
+//        }
+//        this.updateSates();
     }
 
 

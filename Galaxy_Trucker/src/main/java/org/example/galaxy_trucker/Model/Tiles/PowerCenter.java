@@ -1,6 +1,10 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.IntegerPair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PowerCenter extends Component{
 
@@ -43,6 +47,16 @@ public class PowerCenter extends Component{
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
         return true;
+    }
+
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+        playerBoard.getPowerCenters().add(this);
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getPowerCenters().remove(this);
     }
 
 }
