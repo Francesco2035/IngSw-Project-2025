@@ -122,7 +122,7 @@ public class AbandonedShip extends Card{
                 currentPlayer.getMyPlance().getGetter().get();
             }
             currentPlayer.IncreaseCredits(this.reward);
-            this.getBoard().movePlayer(this.currentPlayer.GetID(), this.getTime());
+            this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
 
             this.finishCard();
         }
@@ -135,6 +135,10 @@ public class AbandonedShip extends Card{
 
     public int getTotHumans() {
         return totHumans;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 
     //json

@@ -41,7 +41,7 @@ public class Pirates extends Card{
         this.currentPlayer = null;
         this.lines = new int[Punsihment.size()/2];
         for(int i=0;i< Punishment.size()/2;i++){
-            lines[i] = this.getBoard().getPlayers().getFirst().RollDice();
+            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
         }
         this.hit = null;
 

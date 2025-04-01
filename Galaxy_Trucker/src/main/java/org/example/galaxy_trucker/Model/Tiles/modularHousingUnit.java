@@ -25,7 +25,7 @@ public class modularHousingUnit extends Component {
 
     @Override
     public void initType() {
-
+        this.type = "modularHousingUnit";
     }
 
     @Override

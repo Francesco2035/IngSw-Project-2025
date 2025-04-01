@@ -73,7 +73,7 @@ public class Warzone extends Card{
         this.ShotsLine = 0;
         this.lines = new int[PunishmentShots.size()/2];
         for(int i=0;i< PunishmentShots.size()/2;i++){
-            lines[i] = this.getBoard().getPlayers().getFirst().RollDice();
+            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
         }
         this.hit = null;
 

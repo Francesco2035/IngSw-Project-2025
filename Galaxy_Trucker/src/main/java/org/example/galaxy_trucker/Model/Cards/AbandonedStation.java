@@ -21,6 +21,7 @@ public class AbandonedStation extends Card{
     private Player currentPlayer;
     private boolean flag;
     private int order;
+    int totHumans;
 
 
 
@@ -28,6 +29,11 @@ public class AbandonedStation extends Card{
         super(level, time, board);
         this.requirement = requirement;
         this.rewardGoods = reward;
+        this.order = 0;
+        this.totHumans = 0;
+        this.flag = false;
+        this.currentPlayer = null;
+
     }
 
 
@@ -50,7 +56,11 @@ public class AbandonedStation extends Card{
     public void updateSates(){
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        while(this.order<PlayerList.size()&& !this.flag) {
+        while(this.order<=PlayerList.size()&& !this.flag) {
+            if(order==PlayerList.size()){
+                this.finishCard();
+                break;
+            }
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
             Tile TileBoard[][] = CurrentPlanche.getPlayerBoard();
@@ -59,15 +69,19 @@ public class AbandonedStation extends Card{
                 HousingCoords = CurrentPlanche.getClassifiedTiles().get(modularHousingUnit.class);
             }
             if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
-                HousingCoords.add(new IntegerPair(6, 6));
+                HousingCoords.add(new IntegerPair(6,6));
             }
-            int totHumans = 0;
+            this.totHumans = 0;
 
+            System.out.println("numofHousingCoords: "+HousingCoords.size());
             for (int i = 0; i < HousingCoords.size(); i++) {
                 //somma per vedere il tot umani
                 totHumans += TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().getAbility();
             }
+            HousingCoords.remove(new IntegerPair(6,6));
+            System.out.println("totHumans di"+currentPlayer.GetID()+": "+totHumans);
             if(totHumans>this.requirement){
+                System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
                 currentPlayer.setState(PlayerStates.Accepting);
                 currentPlayer.setInputHandler(new Accept(this));
@@ -75,9 +89,6 @@ public class AbandonedStation extends Card{
             }
 
             this.order++;
-        }
-        if(order==PlayerList.size()){
-            this.finishCard();
         }
     }
 
@@ -95,7 +106,7 @@ public class AbandonedStation extends Card{
         if(accepted) {
 
             currentPlayer.handleCargo(this.rewardGoods);
-            this.getBoard().movePlayer(this.currentPlayer.GetID(), this.getTime());
+            this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
 
         }
         else{

@@ -96,7 +96,41 @@ public class TestSetupHelper {
     }
 
     public static PlayerBoard createInitializedBoard2(){
+        ArrayList<Tile> tiles = gag.getTilesDeck();
+        Tile t1 = tiles.get(39); //House:   double,single,double,none
+        Tile t2 = tiles.get(35); //House: singe,double,none,none
+        Tile t3 = tiles.get(48);//house: uni,double,double
+        Tile t4 = tiles.get(99); //Cannon: none,cannon,none,double
+        Tile t5 = tiles.get(117);//Cannon: double, cannon,single,uni
+        Tile t6 = tiles.get(137);//BrownAddon: uni,single,none,none
+        Tile t7 = tiles.get(150);//Shield: uni,none,none,single
+
+        t1.getComponent().initType();
+        t2.getComponent().initType();
+        t3.getComponent().initType();
+        t4.getComponent().initType();
+        t5.getComponent().initType();
+        t6.getComponent().initType();
+        t7.getComponent().initType();
+
+        t1.RotateSx();
+        t1.RotateSx();
+        t2.RotateDx();
+        t3.RotateDx();
+        t5.RotateDx();
+        t6.RotateDx();
+
+        playerBoard2.insertTile(t1,5,6);
+        playerBoard2.insertTile(t7,6,7);
+        playerBoard2.insertTile(t2,7,7);
+        playerBoard2.insertTile(t5,7,8);
+        playerBoard2.insertTile(t6,6,5);
+        playerBoard2.insertTile(t3,5,5);
+        playerBoard2.insertTile(t4,4,5);
         return playerBoard2;
+
+
+
     }
 
     public static PlayerBoard createInitializedBoard3(){
@@ -120,8 +154,34 @@ public class TestSetupHelper {
             playerBoard.getSetter().set();
         }
         HousingCoords.remove(new IntegerPair(6,6));
-        
+
 
     }
+
+
+    public static void HumansSetter2(PlayerBoard playerBoard){
+        ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
+        if(playerBoard.getClassifiedTiles().containsKey(modularHousingUnit.class)) {
+            HousingCoords = playerBoard.getClassifiedTiles().get(modularHousingUnit.class);
+        }
+        if(playerBoard.getValidPlayerBoard()[6][6]==1) {
+            HousingCoords.add(new IntegerPair(6,6));
+        }
+        for (int i = 0; i < HousingCoords.size(); i++) {
+            if(HousingCoords.get(i).getFirst()==5 && HousingCoords.get(i).getSecond()==5) {
+                playerBoard.setSetter(new HousingUnitSetter(playerBoard,HousingCoords.get(i),0,false,true));
+                playerBoard.getSetter().set();
+            }
+            else{
+                System.out.println("Populating: "+HousingCoords.get(i).getFirst()+" "+HousingCoords.get(i).getSecond());
+                playerBoard.setSetter(new HousingUnitSetter(playerBoard,HousingCoords.get(i),2,false,false));
+            playerBoard.getSetter().set();
+            }
+        }
+        HousingCoords.remove(new IntegerPair(6,6));
+
+
+    }
+
 
 }

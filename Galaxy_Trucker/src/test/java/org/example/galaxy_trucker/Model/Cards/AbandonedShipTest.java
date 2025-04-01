@@ -18,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
+//test is pretty through
+//it's just missing a test on the positioning on the players because i don't know how to check it
 
 class AbandonedShipTest {
 
@@ -98,6 +100,9 @@ class AbandonedShipTest {
         TestSetupHelper.HumansSetter1(playerBoard1);
 
         TestSetupHelper.HumansSetter1(playerBoard3);
+        Passo.EndConstruction();
+        Pietro.EndConstruction();
+        Franci.EndConstruction();
 
     }
 
@@ -107,19 +112,19 @@ class AbandonedShipTest {
 
         FakeAbandonedShip.CardEffect();
         assertTrue(GameBoard.getPlayers().size()==3);
-       Franci= GameBoard.getPlayers().get(0);
+       Franci= GameBoard.getPlayers().get(2);
        Pietro= GameBoard.getPlayers().get(1);
         assertEquals(Franci.GetID(),"fGr");
         assertEquals(Pietro.GetID(),"God");
 
-
+        assertEquals(FakeAbandonedShip.getCurrentPlayer().GetID(),"Sgregno");
         System.out.println("controllo num");
-        assertEquals(6,FakeAbandonedShip.getTotHumans());
+        assertEquals(12,FakeAbandonedShip.getTotHumans());
         System.out.println("fine controllo");
 
         assertEquals(Franci.getPlayerState(),PlayerStates.Waiting);
-        assertEquals(Pietro.getPlayerState(), PlayerStates.AcceptKilling);
-        assertEquals(Passo.getPlayerState(), PlayerStates.Waiting);
+        assertEquals(Passo.getPlayerState(), PlayerStates.AcceptKilling);
+        assertEquals(Pietro.getPlayerState(), PlayerStates.Waiting);
 
     }
 
@@ -128,21 +133,21 @@ class AbandonedShipTest {
     @Order(3)
     void activateCard() {
         Pietro=GameBoard.getPlayers().get(1);
-        System.out.println(Pietro.GetID()+"state"+Pietro.getPlayerState());
-        AcceptKilling handler = (AcceptKilling) Pietro.getInputHandler();
+        System.out.println(Passo.GetID()+"state"+Passo.getPlayerState());
+        AcceptKilling handler = (AcceptKilling) Passo.getInputHandler();
         ArrayList<IntegerPair> coords= new ArrayList<>();
-        IntegerPair c1= new IntegerPair(6,7);
-        IntegerPair c2= new IntegerPair(7,7);
-        IntegerPair c3= new IntegerPair(7,7);
+        IntegerPair c1= new IntegerPair(7,4);
+        IntegerPair c2= new IntegerPair(8,5);
+        IntegerPair c3= new IntegerPair(6,6);
         coords.add(c1);
         coords.add(c2);
         coords.add(c3);
 
-        handler.setInput(coords,false);
-        Pietro.execute();
-        handler=(AcceptKilling) Passo.getInputHandler();
-        handler.setInput(coords,false);
+        handler.setInput(coords,true);
         Passo.execute();
+//        handler=(AcceptKilling) Pietro.getInputHandler();
+//        handler.setInput(coords,false);
+//        Pietro.execute();
 
         assertEquals(PlayerStates.BaseState,Pietro.getPlayerState());
 
