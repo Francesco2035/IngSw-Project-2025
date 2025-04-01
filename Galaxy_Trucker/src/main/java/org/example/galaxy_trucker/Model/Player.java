@@ -13,7 +13,7 @@ import java.util.Random;
 public class Player {
 
     private GameBoard CommonBoard;
-    private PlayerBoard myPlance;
+    private PlayerBoard myPlayerBoard;
     private String ID;
     private boolean ready;
     private int credits;
@@ -26,7 +26,7 @@ public class Player {
 
     public Player(String id, GameBoard board) {
         CommonBoard = board;
-        myPlance = new PlayerBoard(board.getLevel());
+        myPlayerBoard = new PlayerBoard(board.getLevel());
         ID = id;
         credits = 0;
         ready = false;
@@ -41,10 +41,10 @@ public class Player {
 
 //
 //    public void consumeEnergyFrom(IntegerPair coordinates) {
-//        myPlance.getEnergyTiles().stream()
+//        myPlayerBoard.getEnergyTiles().stream()
 //                                 .filter(pair -> pair.equals(coordinates))
 //                                 .findFirst()
-//                                 .ifPresent(pair -> myPlance.getTile(pair.getFirst(), pair.getSecond()).getComponent().setAbility());//riduce di 1 le batterie a x, y se non sono già a zero
+//                                 .ifPresent(pair -> myPlayerBoard.getTile(pair.getFirst(), pair.getSecond()).getComponent().setAbility());//riduce di 1 le batterie a x, y se non sono già a zero
 //    }
 //
 
@@ -88,6 +88,12 @@ public class Player {
         CommonBoard.StartHourglass();
     }
 
+    
+    public void useEnergy(int x, int y){
+
+    }
+    
+    
     /**
      * get a new random tile from the covered tiles set
      */
@@ -116,7 +122,7 @@ public class Player {
      * places the current tile in the buffer
      */
     public void PlaceInBuffer(){
-        myPlance.insertBuffer(CurrentTile);
+        myPlayerBoard.insertBuffer(CurrentTile);
         CurrentTile = null;
     }
 
@@ -125,8 +131,8 @@ public class Player {
      * @param index of the tile to pick
      */
     public void SelectFromBuffer(int index){
-        CurrentTile = myPlance.getBuffer().get(index);
-        myPlance.getBuffer().remove(index);
+        CurrentTile = myPlayerBoard.getBuffer().get(index);
+        myPlayerBoard.getBuffer().remove(index);
     }
 
 
@@ -136,7 +142,7 @@ public class Player {
      * @param coords where the tile will be placed
      */
     public void PlaceTile(IntegerPair coords){
-        this.myPlance.insertTile(CurrentTile, coords.getFirst(), coords.getSecond());
+        this.myPlayerBoard.insertTile(CurrentTile, coords.getFirst(), coords.getSecond());
         CurrentTile = null;
     }
 
@@ -200,11 +206,11 @@ public class Player {
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
-    public PlayerBoard getMyPlance() {return myPlance;}
-    //    public ArrayList <IntegerPair> getHumans(){return this.myPlance.gethousingUnits();}
+    public PlayerBoard getmyPlayerBoard() {return myPlayerBoard;}
+    //    public ArrayList <IntegerPair> getHumans(){return this.myPlayerBoard.gethousingUnits();}
     public ArrayList<IntegerPair> getEnergyTiles(){
-//        if(getMyPlance().getClassifiedTiles().containsKey(PowerCenter.class))
-//            return this.getMyPlance().getClassifiedTiles().get(PowerCenter.class);
+//        if(getmyPlayerBoard().getClassifiedTiles().containsKey(PowerCenter.class))
+//            return this.getmyPlayerBoard().getClassifiedTiles().get(PowerCenter.class);
 //        else return null;
         return null;
     }
@@ -212,12 +218,12 @@ public class Player {
 //
 //    // puts the good in index i into the respective coordinates
 //    public void PutGoods(int index, IntegerPair coords){
-//        myPlance.putGoods(GoodsToHandle.remove(index), coords);
+//        myPlayerBoard.putGoods(GoodsToHandle.remove(index), coords);
 //    }
 //
 //    // rimuove l'iesimo good in coordinata coords
 //    public void removeGoods(IntegerPair coords,int index){
-//        this.myPlance.removeGood(coords, index);
+//        this.myPlayerBoard.removeGood(coords, index);
 //    }
 
 //
@@ -230,11 +236,11 @@ public class Player {
 //    }
 //
 //    public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
-//        myPlance.pullGoods(good1, coord1);
-//        myPlance.pullGoods(good2, coord2);
+//        myPlayerBoard.pullGoods(good1, coord1);
+//        myPlayerBoard.pullGoods(good2, coord2);
 //        //se il buffer è sempre vuoto prima di questa chiamata funziona altrimenti mi serve la size
-//        myPlance.putGoods(myPlance.pullFromBuffer(1),coord1);
-//        myPlance.putGoods(myPlance.pullFromBuffer(0),coord2);
+//        myPlayerBoard.putGoods(myPlayerBoard.pullFromBuffer(1),coord1);
+//        myPlayerBoard.putGoods(myPlayerBoard.pullFromBuffer(0),coord2);
 //    }
 
 

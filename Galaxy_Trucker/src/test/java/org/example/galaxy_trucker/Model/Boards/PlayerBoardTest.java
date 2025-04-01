@@ -80,11 +80,10 @@ public class PlayerBoardTest {
 
     @Test
     @DisplayName("test destruction")
-    @Disabled
     @Order(4)
     public void testDestruction(){
 
-        //assertTrue(playerBoard.getClassifiedTiles().containsKey(HotWaterHeater.class));
+
         playerBoard.destroy(6,5);
         assertFalse(playerBoard.checkValidity());
         assertEquals(1, playerBoard.getDamage());
@@ -92,8 +91,7 @@ public class PlayerBoardTest {
         assertEquals(2, handleAttack.size());
         playerBoard.modifyPlayerBoard(handleAttack.get(1));
         assertTrue(playerBoard.checkValidity());
-        assertEquals(3, playerBoard.getDamage());
-        //assertFalse(playerBoard.getClassifiedTiles().containsKey(HotWaterHeater.class));
+        assertEquals(8, playerBoard.getDamage());
         int[] shield = {0,1,1,0};
         assertArrayEquals(shield, playerBoard.getShield());
 

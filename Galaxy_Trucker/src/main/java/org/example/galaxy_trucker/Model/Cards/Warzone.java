@@ -99,7 +99,7 @@ public class Warzone extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.PlayerOrder<PlayerList.size()){
             currentPlayer = PlayerList.get(this.PlayerOrder);
-            PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
+            PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             if(RequirementsType[ChallengeOrder]==1){
                 this.Minimum=1000000;
                 this.currentPlayer.setState(PlayerStates.GiveAttack);
@@ -289,7 +289,7 @@ public class Warzone extends Card{
         boolean shotsFlag= false;
         while (this.ShotsOrder < PunishmentShots.size() && shotsFlag == false) {
 
-            PlayerBoard CurrentPlanche = currentPlayer.getMyPlance(); //prendo plancia
+            PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard(); //prendo plancia
             int[][] MeteoritesValidPlanche = CurrentPlanche.getValidPlayerBoard();//prende matrice validita
             if (PunishmentShots.get(ShotsOrder) == 0) { //sinistra
                 Movement = 0;
@@ -359,7 +359,7 @@ public class Warzone extends Card{
 
     @Override
     public void DefendFromShots(IntegerPair coordinates) {
-        PlayerBoard currentBoard =this.currentPlayer.getMyPlance();
+        PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
 
         if(coordinates !=null) {

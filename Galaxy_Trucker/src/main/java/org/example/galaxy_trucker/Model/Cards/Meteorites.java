@@ -69,7 +69,7 @@ public class Meteorites extends Card {
             PlayerOrder=0;
             this.CardEffect();
         }
-      PlayerBoard  CurrentPlanche=currentPlayer.getMyPlance(); //prendo plancia
+      PlayerBoard  CurrentPlanche=currentPlayer.getmyPlayerBoard(); //prendo plancia
         int [][]MeteoritesValidPlanche=CurrentPlanche.getValidPlayerBoard();//prende matrice validita
         if (attacks.get(MeteoritesOrder)==0) { //sinistra
             Movement=0;
@@ -158,7 +158,7 @@ public class Meteorites extends Card {
 
     @Override
     public void DefendFromMeteorites(IntegerPair CannonCoord, IntegerPair ShieldCoord) {
-        PlayerBoard currentBoard =this.currentPlayer.getMyPlance();
+        PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
 
 

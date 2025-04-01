@@ -236,7 +236,7 @@ public class GameBoard {
         double total=0;
 
         total += player.GetCredits();
-        PlayerBoard playerBoard= player.getMyPlance();
+        PlayerBoard playerBoard= player.getmyPlayerBoard();
         total-= playerBoard.getDamage();
         Tile[][] tiles = playerBoard.getPlayerBoard();
 

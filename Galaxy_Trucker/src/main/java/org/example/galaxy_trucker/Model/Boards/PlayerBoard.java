@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Exceptions.*;
 
 import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.*;
 
 
@@ -38,7 +39,7 @@ public class PlayerBoard {
     private ArrayList<ShieldGenerator> ShieldGenerators;
     private ArrayList<PowerCenter> PowerCenters;
 
-    private HashMap<Class<?>, IntegerPair> classifiedTiles;
+
     private HashMap<Class<?>, ArrayList<IntegerPair>> storedGoods;
 
 
@@ -122,6 +123,7 @@ public class PlayerBoard {
             }
         }
         this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
+        PlayerBoard[6][6].getComponent().insert(this);
     }
 
 
@@ -485,6 +487,7 @@ public class PlayerBoard {
             for(int y = 0; y <10; y++){
                 if (ValidPlayerBoard[x][y] == 1){
                     if(!newPlayerBoard.contains(new IntegerPair(x,y))){
+                        PlayerBoard[x][y].getComponent().remove(this);
                         PlayerBoard[x][y] = new Tile(new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
                         ValidPlayerBoard[x][y] = 0;
                         damage++;
@@ -511,7 +514,6 @@ public class PlayerBoard {
             shield[i] = 0;
         }
 
-        classifiedTiles = new HashMap<>();
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
         updateBoardAttributes(x,y, visitedPositions);
         updateGloabalAttributes(visitedPositions);
@@ -523,7 +525,6 @@ public class PlayerBoard {
         for (IntegerPair pair : board)     {
             int r = pair.getFirst();
             int c = pair.getSecond();
-            System.out.println("Bombazza "+r+" "+c);
             PlayerBoard[r][c].controlDirections(this, r, c);
         }
     }
@@ -692,7 +693,7 @@ public class PlayerBoard {
         return PlasmaDrills;
     }
 
-    public ArrayList<org.example.galaxy_trucker.Model.Tiles.AlienAddons> getAlienAddons() {
+    public ArrayList<AlienAddons> getAlienAddons() {
         return AlienAddons;
     }
 
@@ -723,4 +724,5 @@ public class PlayerBoard {
     public void setPlasmaDrillsPower(double plasmaDrillsPower) {
         PlasmaDrillsPower += plasmaDrillsPower;
     }
+
 }
