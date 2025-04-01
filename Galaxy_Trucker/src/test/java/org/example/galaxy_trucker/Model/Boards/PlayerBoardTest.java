@@ -152,13 +152,14 @@ public class PlayerBoardTest {
         assertTrue(!(boolean)playerBoard.getTile(6,6).getComponent().get(new HousingAlienGetter(playerBoard.getTile(6,6).getComponent(),false) ) &&
                 !(boolean)playerBoard.getTile(6,6).getComponent().get(new HousingAlienGetter(playerBoard.getTile(6,6).getComponent(),true)) &&
                         (int)playerBoard.getTile(6,6).getComponent().get(new HousingHumanGetter(playerBoard.getTile(6,6).getComponent())) == 2);
-//
+
         assertTrue(!(boolean)playerBoard.getTile(4,5).getComponent().get(new HousingAlienGetter(playerBoard.getTile(4,5).getComponent(),false) ) &&
                 !(boolean)playerBoard.getTile(4,5).getComponent().get(new HousingAlienGetter(playerBoard.getTile(4,5).getComponent(),true)) &&
-                (int)playerBoard.getTile(6,6).getComponent().get(new HousingHumanGetter(playerBoard.getTile(6,6).getComponent())) == 2);
-//        assertTrue(playerBoard.getTile(5,7).getComponent().isBrownAlien() &&
-//                !playerBoard.getTile(5,7).getComponent().isPurpleAlien() &&
-//                playerBoard.getTile(5,7).getComponent().getAbility() == 0);
+                (int)playerBoard.getTile(4,5).getComponent().get(new HousingHumanGetter(playerBoard.getTile(4,5).getComponent())) == 2);
+
+        assertTrue((boolean)playerBoard.getTile(5,7).getComponent().get(new HousingAlienGetter(playerBoard.getTile(5,7).getComponent(),false) ) &&
+                !(boolean)playerBoard.getTile(5,7).getComponent().get(new HousingAlienGetter(playerBoard.getTile(5,7).getComponent(),true)) &&
+                (int)playerBoard.getTile(5,7).getComponent().get(new HousingHumanGetter(playerBoard.getTile(5,7).getComponent())) == 0);
 
     }
 
