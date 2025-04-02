@@ -245,11 +245,11 @@ public class Player {
 
 
     public void handleCargo(ArrayList<Goods> reward){
-        this.GoodsToHandle.clear();
-
-        this.GoodsToHandle.addAll(reward);
-
-        this.setState(PlayerStates.HandlingCargo);
+//        this.GoodsToHandle.clear();
+//
+//        this.GoodsToHandle.addAll(reward);
+//
+//        this.setState(PlayerStates.HandlingCargo);
     }
 
     public void stopHandlingCargo(){

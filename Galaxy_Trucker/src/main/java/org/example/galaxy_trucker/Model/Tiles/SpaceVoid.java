@@ -1,6 +1,9 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.PlayerStates;
 
 
 public class SpaceVoid extends Component{
@@ -21,40 +24,12 @@ public class SpaceVoid extends Component{
     @Override
     public void remove(PlayerBoard playerBoard) {}
 
+
+
+    @Override
+    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
+        throw new InvalidInput("cannot accept this action on spaceVoid tile: " +visitor.getClass().getSimpleName());
+    }
+
 }
 
-//    @Override
-//    public int getAbility() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public ArrayList<Goods> getAbility(Goods good) {
-//        return null;
-//    }
-//
-//    @Override
-//    public ArrayList<Integer> getAbility(int integer) {
-//        return null;
-//    }
-//
-//    @Override
-//    public int setAbility() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int setAbility(Goods good, boolean select) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void setAbility(boolean direzione) {
-//
-//    }
-//

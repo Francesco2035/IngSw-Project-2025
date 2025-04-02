@@ -1,10 +1,10 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Exceptions.powerCenterEmptyException;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.IntegerPair;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.example.galaxy_trucker.Model.PlayerStates;
 
 public class PowerCenter extends Component{
 
@@ -30,8 +30,19 @@ public class PowerCenter extends Component{
     }
 
 
-    public void setEnergy() throws IllegalAccessException{
-        if(this.type == 0) throw new IllegalAccessException("cannot exceed 0 energy");
+    @Override
+    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
+        if (!State.equals(PlayerStates.UseEnergy)){
+            throw new IllegalStateException("Player state is not UseEnergy state");
+        }
+        visitor.visit(this, State);
+    }
+
+
+    public void useEnergy() {
+        if(this.type == 0) {
+            throw new InvalidInput("cannot exceed 0 energy");
+        }
         this.type = this.type-1;
     }
 
@@ -41,59 +52,4 @@ public class PowerCenter extends Component{
 
 
 
-//
-//    @Override
-//    public int getAbility() {
-//        return Energy;
-//    }
-//
-//    @Override
-//    public ArrayList<Goods> getAbility(Goods good) {
-//        return null;
-//    }
-//
-//    @Override
-//    public ArrayList<Integer> getAbility(int integer) {
-//        return null;
-//    }
-//
-//
-//    @Override
-//    public int setAbility() {
-//        try {
-//            if(this.getAbility() == 0) throw new IllegalArgumentException("cannot exceed 0");
-//            else this.Energy--;
-//        } catch (ArithmeticException e) {
-//            e.printStackTrace();
-//        }
-//        return this.Energy;
-//    }
-//
-//    @Override
-//    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int setAbility(Goods good, boolean select) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void setAbility(boolean direzione) {}
-//
-//    @Override
-//    public boolean controlValidity(PlayerBoard pb, int x, int y) {
-//        return true;
-//    }
-//
-//
-//    @Override
-//    public void initType() {
-//        if(type.equals("double")) setEnergy(2);
-//        else if (type.equals("triple")) setEnergy(3);
-//    }
-//
-//    @Override
-//    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {}
 

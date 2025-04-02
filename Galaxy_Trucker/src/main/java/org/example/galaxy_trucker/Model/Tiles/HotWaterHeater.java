@@ -1,6 +1,8 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.PlayerStates;
 
 public class HotWaterHeater extends Component{
 
@@ -34,14 +36,21 @@ public class HotWaterHeater extends Component{
 
 
 
+
+    @Override
+    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
+        if (!State.equals(PlayerStates.GiveSpeed)){
+            throw new IllegalStateException("invalid state");
+        }
+        visitor.visit(this, State);
+    }
+
     @Override
     public void insert(PlayerBoard playerBoard) {
-        if (type == 2) {
-            playerBoard.setEnginePower(2);
-        }
-        else  if (type == 1){
+        if (type == 1) {
             playerBoard.setEnginePower(1);
         }
+
         playerBoard.getHotWaterHeaters().add(this);
     }
 
@@ -50,21 +59,23 @@ public class HotWaterHeater extends Component{
 
     @Override
     public void remove(PlayerBoard playerBoard) {
-        if (type == 2) {
-            playerBoard.setEnginePower(-2);
-        }
-        else if (type == 1){
+        if (type == 1) {
             playerBoard.setEnginePower(-1);
         }
+
         playerBoard.getHotWaterHeaters().remove(this);
     }
 
 
-
-
-    @Override
-    public void setType(int type){
+    public int getEnginePower(){
+        if (type == 2){
+            return 2;
+        }
+        else {
+            return 0;
+        }
     }
+
 
 }
 

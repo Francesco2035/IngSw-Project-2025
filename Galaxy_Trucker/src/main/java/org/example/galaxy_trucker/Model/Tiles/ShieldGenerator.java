@@ -1,14 +1,14 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.IntegerPair;
-
+import org.example.galaxy_trucker.Model.PlayerStates;
 
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class ShieldGenerator extends Component{
 
@@ -18,10 +18,6 @@ public class ShieldGenerator extends Component{
 
     public ArrayList<Integer> getProtectedDirections() {
         return protectedDirections;
-    }
-
-    public void setProtectedDirections(ArrayList<Integer> protectedDirections) {
-        this.protectedDirections = protectedDirections;
     }
 
 
@@ -39,7 +35,13 @@ public class ShieldGenerator extends Component{
         for (int i = 0; i < pb_shield.length; i++){
             pb_shield[i] += protectedDirections.get(i);
         }
+
         return true;
+    }
+
+    @Override
+    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
+        throw new InvalidInput("cannot accept this action on ShieldGenerator tile: " +visitor.getClass().getSimpleName());
     }
 
     @Override
@@ -56,44 +58,3 @@ public class ShieldGenerator extends Component{
 }
 
 
-
-
-
-
-//    @Override
-//    public int getAbility() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public ArrayList<Goods> getAbility(Goods good) {
-//        return null;
-//    }
-//
-//
-//    @Override
-//    public ArrayList<Integer> getAbility(int integer) {
-//        return this.protectedDirections;
-//    }
-//
-//    @Override
-//    public int setAbility() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int setAbility(Goods good, boolean select) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void setAbility(boolean direzione){
-//        if (direzione){Collections.rotate(this.protectedDirections, 1);}
-//        else {Collections.rotate(this.protectedDirections, -1);}
-//    }
-//

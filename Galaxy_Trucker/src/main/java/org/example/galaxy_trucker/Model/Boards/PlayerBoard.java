@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model.Boards;
 
 import org.example.galaxy_trucker.Exceptions.*;
 
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.PlayerStates;
@@ -22,9 +23,10 @@ public class PlayerBoard {
     private int damage;
     private int exposedConnectors;
     private int[] shield;
-
+    private int numHumans = 0;
     private int EnginePower = 0;
     private double PlasmaDrillsPower = 0;
+    private int Energy = 0;
 
     private boolean valid;
 
@@ -43,7 +45,6 @@ public class PlayerBoard {
 
 
     private HashMap<Class<?>, ArrayList<IntegerPair>> storedGoods;
-
 
 
     private ArrayList<Tile> Buffer;
@@ -361,7 +362,6 @@ public class PlayerBoard {
             System.out.println(x+ " " + y);
 
             if(!PlayerBoard[x][y].controlDirections(this,x,y)){
-                System.out.println("oioioi: "+ x+ " "+y);
                 return false;
             }
         }
@@ -757,6 +757,26 @@ public class PlayerBoard {
 
     public void setPlasmaDrillsPower(double plasmaDrillsPower) {
         PlasmaDrillsPower += plasmaDrillsPower;
+    }
+
+    public int getNumHumans() {
+        return numHumans;
+    }
+
+    public void setNumHumans(int numHumans) {
+        this.numHumans += numHumans;
+    }
+
+    public int getEnergy() {
+        return Energy;
+    }
+
+    public void setEnergy(int energy) {
+        Energy += energy;
+    }
+
+    public void performAction(Component component, ComponentActionVisitor action, PlayerStates State) {
+        component.accept(action,State);
     }
 
 }

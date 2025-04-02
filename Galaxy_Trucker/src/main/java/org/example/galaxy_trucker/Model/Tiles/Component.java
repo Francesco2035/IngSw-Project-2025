@@ -3,8 +3,9 @@ package org.example.galaxy_trucker.Model.Tiles;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-
+import org.example.galaxy_trucker.Model.PlayerStates;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -41,17 +42,10 @@ public abstract class Component {
     public int getType() {return type;}
     public void setType(int type) {this.type = type;}
 
+
+
+
+    public  abstract void accept(ComponentActionVisitor visitor, PlayerStates State);
+
+
 }
-
-
-
-//    //getAbility
-//    public  int getAbility();
-//    public  ArrayList<Goods> getAbility(Goods good);
-//    public  ArrayList<Integer> getAbility(int integer);
-//
-//    //setAbility
-//    public  int setAbility();
-//    public  int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien);
-//    public  int setAbility(Goods good, boolean select);
-//    public  void setAbility(boolean direzione);
