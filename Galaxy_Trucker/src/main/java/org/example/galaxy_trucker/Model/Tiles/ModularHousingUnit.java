@@ -1,5 +1,8 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ModularHousingUnitChecker;
+
 public class ModularHousingUnit extends HousingUnit {
 
 
@@ -83,11 +86,11 @@ public class ModularHousingUnit extends HousingUnit {
 //    }
 //
 //
-//    @Override
-//    public boolean controlValidity(PlayerBoard pb, int x, int y) {
-//        setComponentChecker(new ModularHousingUnitChecker(pb,x,y, this));
-//        return getComponentChecker().Check();
-//    }
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        setComponentChecker(new ModularHousingUnitChecker(pb,x,y, this));
+        return getComponentChecker().Check();
+    }
 //
 //
 //    @Override
