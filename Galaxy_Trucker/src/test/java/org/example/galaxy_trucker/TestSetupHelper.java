@@ -54,16 +54,11 @@ public class TestSetupHelper {
         Tile hotWaterHeater = tiles.get(92);
         Tile shield = tiles.get(151);
 
-        shield.getComponent().initType();
         shield.RotateSx();
 
-        addonspurple.getComponent().initType();
         addonspurple.RotateSx();
         plasmaDrill.RotateDx();
-        powerCenter.getComponent().initType();
-        powerCenter2.getComponent().initType();
 
-        t1.getComponent().initType();
         playerBoard.insertTile(t1, 6,7);
         t2.RotateSx();
         t2.RotateSx();
@@ -73,18 +68,14 @@ public class TestSetupHelper {
         playerBoard.insertTile(t11, 6,5);
         playerBoard.insertTile(t9, 5,7);
         //playerBoard.insertTile(t3, 5,6);
-        t4.getComponent().initType();
         t4.RotateSx();
         playerBoard.insertTile(t4, 5,5);
         t10.RotateDx();
         playerBoard.insertTile(t10, 4,5);
-        t12.getComponent().initType();
         playerBoard.insertTile(t12, 6,8);
-        specialStorage.getComponent().initType();
         specialStorage.RotateDx();
         specialStorage.RotateDx();
         playerBoard.insertTile(specialStorage, 7,8);
-        normalStorage.getComponent().initType();
         playerBoard.insertTile(normalStorage, 7,9);
         playerBoard.insertTile(powerCenter, 6,9);
         playerBoard.insertTile(powerCenter2, 5,4);

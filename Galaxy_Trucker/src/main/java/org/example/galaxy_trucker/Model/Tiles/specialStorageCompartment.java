@@ -27,7 +27,7 @@ public class SpecialStorageCompartment extends Storage{
         this.goods = goods;
     }
     private void orderGoods() {
-          this.goods.sort(Comparator.comparingInt(Goods::getValue));
+        this.goods.sort(Comparator.comparingInt(Goods::getValue));
     }
 
 

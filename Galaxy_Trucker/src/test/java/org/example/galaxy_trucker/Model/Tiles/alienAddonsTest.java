@@ -20,12 +20,10 @@ class alienAddonsTest {
         ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
 
         Component comp = Tiles.get(143).getComponent();
-        comp.initType();
 //        assertEquals(1, comp.getAbility());
 
 
         comp = Tiles.get(134).getComponent();
-        comp.initType();
 //        assertEquals(0, comp.getAbility());
 
 
