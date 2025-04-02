@@ -10,7 +10,7 @@ public class ModularHousingUnit extends HousingUnit {
     protected boolean brownAlien;
     protected boolean nearPurpleAddon;
     protected boolean nearBrownAddon;
-    
+
     @Override
     public int getNumHumans() {
         return this.numHumans;
@@ -60,7 +60,7 @@ public class ModularHousingUnit extends HousingUnit {
     public void setNearBrownAddon(boolean nearBrownAddon) {
         this.nearBrownAddon = nearBrownAddon;
     }
-    
+
 
         // if non ci sono alienaddons adiacenti -> numHumans==2
         // if c'è solo un colore -> chiama l'interfaccia per richiedere l'input dal giocatore su human/alien di quel colore
