@@ -74,7 +74,8 @@ public class GameBoard {
     public void StartHourglass() {
         if(hourglass.isStartable() && hourglass.getUsages() > 0){
             hourglass.setLock();
-            hourglass.start();
+            Thread t1 = new Thread(hourglass);
+            t1.start();
         }
         else throw new RuntimeException("Cannot start hourglass");
     }

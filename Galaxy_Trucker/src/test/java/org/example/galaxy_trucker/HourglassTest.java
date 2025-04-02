@@ -16,15 +16,21 @@ class HourglassTest {
 
         Game g = new Game(2, "gameid");
         GameBoard gb = g.getGameBoard();
-        //Hourglass h = gb.getHourglass();
+        Hourglass h = gb.getHourglass();
 
         gb.StartHourglass();
         System.out.println("Starting Hourglass 1");
+        while(!h.isStartable()){}
+
         gb.StartHourglass();
-        //while(!h.isStartable()){}
         System.out.println("Starting Hourglass 2");
+        while(!h.isStartable()){}
+
         gb.StartHourglass();
         System.out.println("Starting Hourglass 3");
+        while(!h.isStartable()){}
+
+        System.out.println("Fin");
 
     }
 }

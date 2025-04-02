@@ -151,10 +151,22 @@ public class Player {
     public void LeftRotate() {CurrentTile.RotateSx();}
 
 
+    public void SpyDeck(int index){
+
+        ArrayList<Card> observedDeck = switch (index) {
+            case 1 -> CommonBoard.getCardStack().getVisibleCards1();
+            case 2 -> CommonBoard.getCardStack().getVisibleCards2();
+            case 3 -> CommonBoard.getCardStack().getVisibleCards3();
+            default -> throw new IllegalArgumentException("Invalid index");
+        };
+
+    }
+
 
     public void IncreaseCredits(int num){
         credits += num;
     }
+
 
     public void setCard(Card NewCard){
         CurrentCard = NewCard;

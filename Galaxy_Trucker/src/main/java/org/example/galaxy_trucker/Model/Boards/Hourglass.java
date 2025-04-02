@@ -1,16 +1,18 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.lang.Thread;
 
-public class Hourglass extends Thread{
+public class Hourglass implements Runnable {
 
     private int lv;
     private int time;
     private int usages;
     private boolean startable;
 
+    public Hourglass(){}
 
     public  Hourglass(int lv) {
         this.lv = lv;
@@ -22,7 +24,7 @@ public class Hourglass extends Thread{
 
     @Override
     @JsonIgnore
-    public synchronized void run() {
+    public void run() {
 
         startable = false;
 
