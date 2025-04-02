@@ -73,12 +73,7 @@ public abstract class Component {
     //initType
     public abstract void initType();
 
-//
-//    //getAbility
-//    public  int getAbility();
-//    public  ArrayList<Goods> getAbility(Goods good);
-//    public  ArrayList<Integer> getAbility(int integer);
-//
+
 //
 //    //setAbility
 //    public  int setAbility();
