@@ -2,11 +2,12 @@ package org.example.galaxy_trucker.Model.Cards;
 //import javafx.util.Pair;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Boards.SetterHandler.PowerCenterSetter;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates;
-import org.example.galaxy_trucker.Model.Tiles.Connector;
+import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class Meteorites extends Card {
                     if (MeteoritesValidPlanche[MeteoritesLine][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
                         System.out.println("touch in:"+MeteoritesLine+" "+Movement);
-                        if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[MeteoritesLine][Movement].getConnectors().get(0) == Connector.NONE) {
+                        if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[MeteoritesLine][Movement].getConnectors().get(0).equals(NONE.class)) {
                             MeteoritesFlag = true;
                             System.out.println("lisciato");
                         } else {
@@ -107,7 +108,7 @@ public class Meteorites extends Card {
                     if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
-                        if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[Movement][MeteoritesLine].getConnectors().get(1) == Connector.NONE) {
+                        if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[Movement][MeteoritesLine].getConnectors().get(1).equals(NONE.class)) {
                             MeteoritesFlag = true;
                             System.out.println("lisciato");
                         } else {
@@ -129,7 +130,7 @@ public class Meteorites extends Card {
                     if (MeteoritesValidPlanche[MeteoritesLine][Movement] > 0) {
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
-                        if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[MeteoritesLine][Movement].getConnectors().get(2) == Connector.NONE) {
+                        if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[MeteoritesLine][Movement].getConnectors().get(2).equals(NONE.class)) {
                             MeteoritesFlag = true;
                             System.out.println("lisciato");
                         } else {
@@ -151,7 +152,7 @@ public class Meteorites extends Card {
                     if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
-                        if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[Movement][MeteoritesLine].getConnectors().get(3) == Connector.NONE) {
+                        if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[Movement][MeteoritesLine].getConnectors().get(3).equals(NONE.class)) {
                             MeteoritesFlag = true;
                             System.out.println("lisciato");
                         } else {
@@ -180,6 +181,9 @@ public class Meteorites extends Card {
         return 1;
     }
 
+
+
+        // DEVO NON ANDAR SUBITO IN UPDATE STATES MA IN SCELTA TRONCONI! UPSIE :)
     @Override
     public void DefendFromMeteorites(IntegerPair CannonCoord, IntegerPair ShieldCoord) {
         PlayerBoard currentBoard =this.currentPlayer.getMyPlance();
@@ -189,24 +193,24 @@ public class Meteorites extends Card {
         //se le coordinate date non son cannoni ne scudi ecxeption
         //o se segnalo cannoni diversi da quelli sensati
 
-        if(ShieldCoord !=null) {
-            if (!(attacks.get(MeteoritesOrder + 1) == 0 && (currentBoard.getTile(ShieldCoord.getFirst(), ShieldCoord.getSecond()).getComponent().getAbility(0).contains(attacks.get(MeteoritesOrder))) || attacks.get(MeteoritesOrder + 1) == 1)) {
-                // non dovrei attivare lo scudo o lo scudo è sbagliato
+        if(ShieldCoord!=null) {
+            if (!(attacks.get(MeteoritesOrder + 1) == 0 && (currentBoard.getShield()[attacks.get(MeteoritesOrder)]!=0)) || attacks.get(MeteoritesOrder + 1) == 1) {
+                currentBoard.set(new PowerCenterSetter(currentBoard, ShieldCoord));
             }
         }
         if(CannonCoord !=null) {
             if (attacks.get(MeteoritesOrder) == 0 || attacks.get(MeteoritesOrder) == 2) { // sinistra o destra
-                if(!(attacks.get(MeteoritesOrder + 1) == 1 && (CannonCoord.getFirst() == hit.getFirst() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(MeteoritesOrder) == Connector.CANNON)|| attacks.get(MeteoritesOrder + 1) == 0)){
+                if(!(attacks.get(MeteoritesOrder + 1) == 1 && (CannonCoord.getFirst() == hit.getFirst() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(MeteoritesOrder).equals(CANNON.class)))|| attacks.get(MeteoritesOrder + 1) == 0){
                     // cannone errato o tipo dio attaco errato
                 }
             } else {
-                 if(!(attacks.get(MeteoritesOrder + 1) == 1 && (CannonCoord.getSecond() == hit.getSecond() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(MeteoritesOrder) == Connector.CANNON)||attacks.get(MeteoritesOrder + 1) == 0 )){
+                 if(!(attacks.get(MeteoritesOrder + 1) == 1 && (CannonCoord.getSecond() == hit.getSecond() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(MeteoritesOrder).equals(CANNON.class)))||attacks.get(MeteoritesOrder + 1) == 0 ){
                      // stessa cosa ma nelle atre due direzioni
                  }
 
             }
         }
-        if(CannonCoord ==null && ShieldCoord ==null) { // se sono entrambi nulli non mi son difeso quindi vengo colpito
+        if(CannonCoord ==null && ShieldCoord==null) { // se sono entrambi nulli non mi son difeso quindi vengo colpito
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
         }
         this.updateSates();

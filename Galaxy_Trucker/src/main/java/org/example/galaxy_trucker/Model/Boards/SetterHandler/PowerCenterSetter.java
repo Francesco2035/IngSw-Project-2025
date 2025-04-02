@@ -14,12 +14,12 @@ import java.util.Map;
 public class PowerCenterSetter implements PlayerBoardSetters{
 
 
-    private ArrayList<IntegerPair> chosenEnergyTiles;
+    private IntegerPair chosenEnergyTile;
     PlayerBoard playerBoard;
 
-    public PowerCenterSetter(PlayerBoard pb , ArrayList<IntegerPair> chosenEnergyTiles){
+    public PowerCenterSetter(PlayerBoard pb , IntegerPair chosenEnergyTile){
         this.playerBoard = pb;
-        this.chosenEnergyTiles = chosenEnergyTiles;
+        this.chosenEnergyTile = chosenEnergyTile;
 
     }
 
@@ -36,26 +36,26 @@ public class PowerCenterSetter implements PlayerBoardSetters{
 
         Map<Class<?>, ArrayList<IntegerPair>> classifiedTiles = playerBoard.getClassifiedTiles();
         Tile[][] pb = playerBoard.getPlayerBoard();
-        if (chosenEnergyTiles == null) {
+        if (chosenEnergyTile == null) {
             throw new NullPointerException("chosenEnergyTiles cannot be null.");
         }
-        if (!checkExistence(classifiedTiles,chosenEnergyTiles, PowerCenter.class)) {
+        if (!checkExistence(classifiedTiles,chosenEnergyTile, PowerCenter.class)) {
             throw new InvalidInput("Invalid choice, at least one energy is invalid");
         }
-        for (IntegerPair energy : chosenEnergyTiles){
-            pb[energy.getFirst()][energy.getSecond()].getComponent().setComponentGetter(new EnergyGetter(pb[energy.getFirst()][energy.getSecond()].getComponent()));
-            if ((int) pb[energy.getFirst()][energy.getSecond()].getComponent().getComponentGetter().get() == 0){
+
+            pb[chosenEnergyTile.getFirst()][chosenEnergyTile.getSecond()].getComponent().setComponentGetter(new EnergyGetter(pb[chosenEnergyTile.getFirst()][chosenEnergyTile.getSecond()].getComponent()));
+            if ((int) pb[chosenEnergyTile.getFirst()][chosenEnergyTile.getSecond()].getComponent().getComponentGetter().get() == 0){
                 throw new powerCenterEmptyException("PowerCenter is empty");
             }
-            pb[energy.getFirst()][energy.getSecond()].getComponent().getComponentSetter().set();
-        }
+            pb[chosenEnergyTile.getFirst()][chosenEnergyTile.getSecond()].getComponent().getComponentSetter().set();
+
     }
 
 
 
-    public boolean checkExistence(Map<Class<?>, ArrayList<IntegerPair>> classifiedTiles,ArrayList<IntegerPair> tiles, Class<?> type){
+    public boolean checkExistence(Map<Class<?>, ArrayList<IntegerPair>> classifiedTiles,IntegerPair tile, Class<?> type){
         return  classifiedTiles.containsKey(type) &&
-                classifiedTiles.get(type).containsAll(tiles);
+                classifiedTiles.get(type).contains(tile);
     }
 
 }

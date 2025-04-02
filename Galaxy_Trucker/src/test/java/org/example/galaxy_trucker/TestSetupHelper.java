@@ -116,6 +116,7 @@ public class TestSetupHelper {
         Tile t5 = tiles.get(117);//Cannon: double, cannon,single,uni
         Tile t6 = tiles.get(137);//BrownAddon: uni,single,none,none
         Tile t7 = tiles.get(150);//Shield: uni,none,none,single
+        Tile t8 = tiles.get(10);//battery uni,uni,none,none
 
         t1.getComponent().initType();
         t2.getComponent().initType();
@@ -139,6 +140,7 @@ public class TestSetupHelper {
         playerBoard2.insertTile(t6,6,5);
         playerBoard2.insertTile(t3,5,5);
         playerBoard2.insertTile(t4,4,5);
+        playerBoard2.insertTile(t8,8,8);
         return playerBoard2;
 
 

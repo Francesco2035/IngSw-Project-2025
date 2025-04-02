@@ -4,18 +4,21 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
+import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 
 import java.util.ArrayList;
 
 public class Epidemic extends Card {
     private ArrayList<IntegerPair> infected;
+    Player currentPlayer;
 
 
     public Epidemic(int level, int time, GameBoard board) {
         super(level, time, board);
         this.infected = new ArrayList<>();
+
 
     }
 
@@ -31,12 +34,13 @@ public class Epidemic extends Card {
         Tile[][] playerTiles;
         for(int i=0;i<Len;i++){
             this.infected.clear();
-            CurrentPlanche=PlayerList.get(i).getMyPlance();
+            this.currentPlayer = PlayerList.get(i);
+            CurrentPlanche=this.currentPlayer.getMyPlance();
             int[][] valid = CurrentPlanche.getValidPlayerBoard();
             playerTiles = CurrentPlanche.getPlayerBoard();
             HousingCoords=new ArrayList<>();
-            if(CurrentPlanche.getClassifiedTiles().containsKey(modularHousingUnit.class)) {
-                HousingCoords = CurrentPlanche.getClassifiedTiles().get(modularHousingUnit.class);
+            if(CurrentPlanche.getClassifiedTiles().containsKey(ModularHousingUnit.class)) {
+                HousingCoords.addAll(CurrentPlanche.getClassifiedTiles().get(ModularHousingUnit.class));
             }
             if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
                 HousingCoords.add(new IntegerPair(6,6));
@@ -65,6 +69,16 @@ public class Epidemic extends Card {
         int y = coords.getSecond();
         Tile [][] tiles=playerBoard.getPlayerBoard();
         int[][]valid=playerBoard.getValidPlayerBoard();
+        PlayerBoard currBoard= this.currentPlayer.getMyPlance();
+        ArrayList<IntegerPair> Houses= new ArrayList<>();
+        if (currBoard.getClassifiedTiles().containsKey(ModularHousingUnit.class)) {
+            Houses.addAll(currBoard.getClassifiedTiles().get(ModularHousingUnit.class));
+        }
+        if(currBoard.getValidPlayerBoard()[6][6]==1) {
+            Houses.add(new IntegerPair(6,6));
+        }
+
+
         System.out.println("looking at: "+x+" "+y);
         int w;
         int z;
@@ -82,12 +96,13 @@ public class Epidemic extends Card {
 //            }
 
             if((0<=w&&w<10)&&(0<=z&&z<10)&&valid[w][z]==1) {
-                if ((tiles[w][z].getComponent().getType().equals("modularHousingUnit")||tiles[w][z].getComponent().getType().equals("MainCockpit")) && (tiles[w][z].getComponent().getAbility() > 0 || tiles[w][z].getComponent().isBrownAlien() || tiles[w][z].getComponent().isPurpleAlien())) {
+                if ((Houses.contains(new IntegerPair(w,z))) && (tiles[w][z].getComponent().getAbility() > 0 || tiles[w][z].getComponent().isBrownAlien() || tiles[w][z].getComponent().isPurpleAlien())) {
                     if (!this.infected.contains(coords)) {
                         System.out.println("added from left");
                         this.infected.add(coords);
                     }
                 }
+
             }
             w=x-1;
             z=y;//up

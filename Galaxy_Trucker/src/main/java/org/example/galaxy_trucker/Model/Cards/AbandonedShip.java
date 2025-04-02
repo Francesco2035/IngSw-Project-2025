@@ -13,7 +13,7 @@ import org.example.galaxy_trucker.Model.Boards.SetterHandler.HousingUnitSetter;
 import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingHumanGetter;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
+import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 
 import java.util.ArrayList;
 
@@ -60,8 +60,8 @@ public class AbandonedShip extends Card{
             PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
             Tile TileBoard[][] = CurrentPlanche.getPlayerBoard();
             ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
-            if(CurrentPlanche.getClassifiedTiles().containsKey(modularHousingUnit.class)) {
-                 HousingCoords = CurrentPlanche.getClassifiedTiles().get(modularHousingUnit.class);
+            if(CurrentPlanche.getClassifiedTiles().containsKey(ModularHousingUnit.class)) {
+                 HousingCoords = CurrentPlanche.getClassifiedTiles().get(ModularHousingUnit.class);
             }
             if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
                 HousingCoords.add(new IntegerPair(6,6));
