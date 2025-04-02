@@ -2,17 +2,30 @@ package org.example.galaxy_trucker.Model.Boards.Actions;
 
 import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.HotWaterHeater;
-import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
+
 
 public class GetEnginePower extends ComponentActionVisitor{
-    private int power = 0;
+    private int power;
+    private int countDoubleEngine = 0;
+    public GetEnginePower(int singlePower) {
+        power = singlePower;
+    }
 
     @Override
     public void visit(HotWaterHeater hotWaterHeater, PlayerStates State) {
-        power+= hotWaterHeater.getEnginePower();
+        int temp = hotWaterHeater.getEnginePower();
+        if (temp != 0) {
+            countDoubleEngine++;
+        }
+        power+= temp;
     }
 
     public  int getPower(){
         return power;
     }
+
+    public int getCountDoubleEngine(){
+        return countDoubleEngine;
+    }
+
 }

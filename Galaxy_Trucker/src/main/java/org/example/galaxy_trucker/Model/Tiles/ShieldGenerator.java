@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates;
@@ -94,7 +95,7 @@ public class ShieldGenerator extends Component{
 
     @Override
     public void accept(ComponentActionVisitor visitor, PlayerStates State) {
-
+        throw new InvalidInput("cannot accept this action on ShieldGenerator tile: " +visitor.getClass().getSimpleName());
     }
 
     @Override

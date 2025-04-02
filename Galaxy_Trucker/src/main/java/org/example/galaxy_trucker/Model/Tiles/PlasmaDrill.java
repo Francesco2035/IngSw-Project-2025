@@ -57,23 +57,16 @@ public class PlasmaDrill extends Component{
 
     @Override
     public void accept(ComponentActionVisitor visitor, PlayerStates State) {
-
+        if (!State.equals(PlayerStates.GiveAttack)){
+            throw new IllegalStateException("invalid state");
+        }
+        visitor.visit(this, State);
     }
-
-    ;
 
 
     @Override
     public void insert(PlayerBoard playerBoard) {
-        if (type == 2) {
-            if (CannonDirection == 1){
-                playerBoard.setPlasmaDrillsPower(2);
-            }
-            else {
-                playerBoard.setPlasmaDrillsPower(1);
-            }
-        }
-        else{
+        if (type == 1) {
             if (CannonDirection == 1){
                 playerBoard.setPlasmaDrillsPower(1);
             }
@@ -86,25 +79,31 @@ public class PlasmaDrill extends Component{
 
     @Override
     public void remove(PlayerBoard playerBoard) {
-        if (type == 2) {
-            if (CannonDirection == 1){
-                playerBoard.setPlasmaDrillsPower(-2);
-            }
-            else {
+        if (type == 1) {
+            if (CannonDirection == 1) {
                 playerBoard.setPlasmaDrillsPower(-1);
-            }
-        }
-        else{
-            if (CannonDirection == 1){
-                playerBoard.setPlasmaDrillsPower(-1);
-            }
-            else {
+            } else {
                 playerBoard.setPlasmaDrillsPower(-0.5);
             }
+
+            playerBoard.getPlasmaDrills().remove(this);
         }
-        playerBoard.getPlasmaDrills().remove(this);
     }
 
+    public double getCannonPower(){
+        if (type == 2){
+            if (CannonDirection == 1){
+                return 2;
+            }
+            else {
+                return 1;
+            }
+        }
+        else {
+
+            return 0;
+        }
+    }
 
 
 }

@@ -15,4 +15,5 @@ public class UseEnergyAction extends ComponentActionVisitor {
         powerCenter.useEnergy();
         playerBoard.setEnergy(-1);
     }
+
 }

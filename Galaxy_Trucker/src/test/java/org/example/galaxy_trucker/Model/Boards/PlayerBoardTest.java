@@ -117,17 +117,19 @@ public class PlayerBoardTest {
 
 
         playerBoard.performAction(playerBoard.getTile(6,6).getComponent(), new AddCrewAction(2,false,false, playerBoard), state);
+        playerBoard.performAction(playerBoard.getTile(5,7).getComponent(), new AddCrewAction(0,false,true, playerBoard), state);
         assertEquals(2,playerBoard.getNumHumans());
 
 
 
 
         state = PlayerStates.GiveSpeed;
-        GetEnginePower action = new GetEnginePower();
+
+        GetEnginePower action = new GetEnginePower(playerBoard.getEnginePower());
         for (HotWaterHeater hw : playerBoard.getHotWaterHeaters() ) {
             playerBoard.performAction(hw,action,state);
         }
-        assertEquals(3, action.getPower() + playerBoard.getEnginePower() );
+        assertEquals(3, action.getPower());
 
 
     }

@@ -45,7 +45,6 @@ public class PlayerBoard {
     private HashMap<Class<?>, ArrayList<IntegerPair>> storedGoods;
 
 
-
     private ArrayList<Tile> Buffer;
 
 
