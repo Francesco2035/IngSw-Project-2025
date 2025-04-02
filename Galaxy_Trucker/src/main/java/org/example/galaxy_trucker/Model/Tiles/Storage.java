@@ -11,7 +11,6 @@ public class Storage extends Component{
 
     ArrayList<Goods> goods;
 
-
     @Override
     public void rotate(Boolean direction) {
     }

@@ -6,19 +6,22 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
 public class ShieldGenerator extends Component{
 
 
-    private ArrayList<Integer> protectedDirections;
+    private ArrayList<Integer> protectedDirections = new ArrayList<>(Arrays.asList(0, 1, 1, 0));
     public ShieldGenerator() {}
-
-
 
     public ArrayList<Integer> getProtectedDirections() {
         return protectedDirections;
+    }
+
+    public void setProtectedDirections(ArrayList<Integer> protectedDirections) {
+        this.protectedDirections = protectedDirections;
     }
 
 
@@ -28,6 +31,30 @@ public class ShieldGenerator extends Component{
             Collections.rotate(getProtectedDirections(), 1);}
         else {Collections.rotate(getProtectedDirections(), -1);}
     }
+
+
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        int[] pb_shield = pb.getShield();
+        for (int i = 0; i < pb_shield.length; i++){
+            pb_shield[i] += protectedDirections.get(i);
+        }
+        return true;
+    }
+
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+        playerBoard.getShieldGenerators().add(this);
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getShieldGenerators().remove(this);
+    }
+
+
+}
+
 
 
 
@@ -70,27 +97,3 @@ public class ShieldGenerator extends Component{
 //        else {Collections.rotate(this.protectedDirections, -1);}
 //    }
 //
-    @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y) {
-        int[] pb_shield = pb.getShield();
-        for (int i = 0; i < pb_shield.length; i++){
-            pb_shield[i] += protectedDirections.get(i);
-        }
-
-        return true;
-    }
-
-    @Override
-    public void insert(PlayerBoard playerBoard) {
-        playerBoard.getShieldGenerators().add(this);
-    }
-
-    @Override
-    public void remove(PlayerBoard playerBoard) {
-        playerBoard.getShieldGenerators().remove(this);
-    }
-
-
-}
-
-

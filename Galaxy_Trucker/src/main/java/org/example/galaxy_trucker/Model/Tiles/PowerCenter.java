@@ -30,7 +30,7 @@ public class PowerCenter extends Component{
     }
 
 
-    public void setEnergy(int type) throws IllegalAccessException{
+    public void setEnergy() throws IllegalAccessException{
         if(this.type == 0) throw new IllegalAccessException("cannot exceed 0 energy");
         this.type = this.type-1;
     }

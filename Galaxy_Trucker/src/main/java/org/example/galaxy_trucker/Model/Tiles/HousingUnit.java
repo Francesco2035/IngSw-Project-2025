@@ -12,10 +12,12 @@ public abstract class HousingUnit extends Component{
 
     public abstract int getNumHumans();
     public abstract void setNumHumans(int numHumans);
+
     public abstract boolean isPurpleAlien();
     public abstract void setPurpleAlien(boolean purpleAlien);
     public abstract boolean isBrownAlien();
     public abstract void setBrownAlien(boolean brownAlien);
+
     public abstract boolean isNearPurpleAddon();
     public abstract void setNearPurpleAddon(boolean nearPurpleAddon);
     public abstract boolean isNearBrownAddon();
@@ -24,9 +26,7 @@ public abstract class HousingUnit extends Component{
 
 
     @Override
-    public void rotate(Boolean direction){
-
-    }
+    public void rotate(Boolean direction){}
 
 
 }
