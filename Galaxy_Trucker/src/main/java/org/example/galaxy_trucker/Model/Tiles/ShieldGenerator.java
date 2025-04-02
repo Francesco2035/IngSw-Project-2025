@@ -7,33 +7,19 @@ import org.example.galaxy_trucker.Model.PlayerStates;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class ShieldGenerator extends Component{
 
 
-    private ArrayList<Integer> protectedDirections;
+    private ArrayList<Integer> protectedDirections = new ArrayList<>(Arrays.asList(0, 1, 1, 0));
     public ShieldGenerator() {}
-
-
-
-    @Override
-    public void initType() {
-        protectedDirections = new ArrayList<Integer>();
-        protectedDirections.add(0);
-        protectedDirections.add(1);
-        protectedDirections.add(1);
-        protectedDirections.add(0);
-    }
-
 
     public ArrayList<Integer> getProtectedDirections() {
         return protectedDirections;
     }
 
-//
-//    @Override
-//    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {}
 
     @Override
     public void rotate(Boolean direction) {

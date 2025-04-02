@@ -5,17 +5,18 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.State;
+import org.example.galaxy_trucker.Model.Goods.Goods;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Storage extends Component{
 
-    @Override
-    public void initType() {
 
-    }
+    ArrayList<Goods> goods;
 
     @Override
     public void rotate(Boolean direction) {
-
     }
 
     @Override
@@ -39,5 +40,18 @@ public class Storage extends Component{
 
     }
 
+
+
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+    }
+
+    private void orderGoods() {
+        this.goods.sort(Comparator.comparingInt(Goods::getValue));
+    }
 
 }

@@ -36,11 +36,6 @@ public class SpecialStorageCompartment extends Storage{
 
 
 
-    @Override
-    public void initType() {
-        if (type==1) setMaxNumGoods(1);
-        else if (type==2) setMaxNumGoods(2);
-    }
 
     @Override
     public void rotate(Boolean direction) {}
