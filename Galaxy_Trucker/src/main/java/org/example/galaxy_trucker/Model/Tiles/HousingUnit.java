@@ -1,7 +1,9 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.PlayerStates;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,5 +44,9 @@ public abstract class HousingUnit extends Component{
 
     }
 
+    public abstract int kill();
 
+    public abstract void accept(ComponentActionVisitor visitor, PlayerStates State);
+
+    public abstract void addCrew(int humans, boolean purple, boolean brown);
 }

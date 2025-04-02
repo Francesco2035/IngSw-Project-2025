@@ -1,8 +1,10 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.CANNON;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.PlayerStates;
 
 
 import java.util.ArrayList;
@@ -51,7 +53,14 @@ public class PlasmaDrill extends Component{
         if (CannonDirection == 3 && x+1 < 10 && mat[x+1][y]==1) return false;
 
         return true;
-    };
+    }
+
+    @Override
+    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
+
+    }
+
+    ;
 
 
     @Override

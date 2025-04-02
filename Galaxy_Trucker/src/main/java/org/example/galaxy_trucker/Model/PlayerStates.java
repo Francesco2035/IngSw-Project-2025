@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model;
 public enum PlayerStates {
     BuildingShip,
     FinishedBuilding,
+    PopulateHousingUnits,
     BaseState,
     ChoosingPlanet,
     Waiting,
@@ -11,6 +12,7 @@ public enum PlayerStates {
     DealingWithEffect,
     DefendingFromMeteorites,
     DefendingFromShots,
+    UseEnergy,
     GiveSpeed,
     GiveAttack,
     Accepting,

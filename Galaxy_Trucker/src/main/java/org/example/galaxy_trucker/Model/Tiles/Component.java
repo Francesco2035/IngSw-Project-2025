@@ -3,8 +3,9 @@ package org.example.galaxy_trucker.Model.Tiles;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-
+import org.example.galaxy_trucker.Model.PlayerStates;
 
 
 @JsonTypeInfo(
@@ -70,6 +71,8 @@ public abstract class Component {
         return;
     }
 
+    public  abstract void accept(ComponentActionVisitor visitor, PlayerStates State);
+
 
     public abstract boolean controlValidity(PlayerBoard pb, int x, int y);
 
@@ -77,6 +80,8 @@ public abstract class Component {
 //  metodi per json
     public int getType() {return type;}
     public void setType(int type) {this.type = type;}
+
+
 //    public boolean isPurpleAlien() {return false;}
 //    public boolean isBrownAlien() {
 //        return false;

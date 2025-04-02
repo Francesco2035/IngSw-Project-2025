@@ -3,9 +3,14 @@ package org.example.galaxy_trucker.Model.Boards;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 
 
+import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
+import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
+import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.HotWaterHeater;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.*;
@@ -80,7 +85,7 @@ public class PlayerBoardTest {
 
     @Test
     @DisplayName("test destruction")
-    @Order(4)
+    @Order(3)
     public void testDestruction(){
 
 
@@ -102,68 +107,31 @@ public class PlayerBoardTest {
 
 
     @Test
-    @DisplayName("test HousingUnitGetters/Setters")
+    @DisplayName("test ComponentActions")
     @Order(2)
-    public void testHousingUnitGettersSetters(){
+    public void testComponentActions(){
 
-//        playerBoard.checkValidity();
-//        playerBoard.set(new HousingUnitSetter(playerBoard, new IntegerPair(5,7), 0, false, true));
-//        System.out.println("Testing HousingUnitSetter(0,false,true)");
-//        assertTrue((boolean)playerBoard.getTile(5,7).getComponent().get(new HousingAlienGetter(playerBoard.getTile(5,7).getComponent(),false)));
-//
-//        assertThrows(
-//                InvalidInput.class,
-//                () -> playerBoard.set(new HousingUnitSetter(playerBoard, new IntegerPair(5,7), 0, false, true)),
-//                "An InvalidInput should be thrown.");
-//        System.out.println("Testing invalideInput Exception");
-//
-//        assertThrows(
-//                InvalidInput.class,
-//                () -> playerBoard.set(new HousingUnitSetter(playerBoard, new IntegerPair(5,7), 0, true,false )),
-//                "An InvalidInput should be thrown.");
-//        System.out.println("Testing invalideInput Exception (adding human when is already present an alien)");
-//
-//        assertThrows(
-//                InvalidInput.class,
-//                () -> playerBoard.set(new HousingUnitSetter(playerBoard, new IntegerPair(5,7), 1, false, false)),
-//                "An InvalidInput should be thrown.");
-//
-//
-//        playerBoard.get(new HousingUnitGetter(playerBoard, new IntegerPair(5,7), 0, false, false));
-//        assertFalse((boolean)playerBoard.getTile(5,7).getComponent().get(new HousingAlienGetter(playerBoard.getTile(5,7).getComponent(),false)));
-//        System.out.println("Testing invalideInput Exception (no near addons)");
-//
-//        assertThrows(
-//                InvalidInput.class,
-//                () -> playerBoard.set(new HousingUnitSetter(playerBoard, new IntegerPair(5,7), 0, true,false )),
-//                "An InvalidInput should be thrown.");
-//
-//
-//        System.out.println("Populate HousingUnits...");
-//        playerBoard.set(new HousingUnitSetter(playerBoard, new IntegerPair(5,7), 0, false,true ));
-//
-//        playerBoard.set(new HousingUnitSetter(playerBoard, new IntegerPair(6,6), 2, false,false ));
-//
-//        playerBoard.set(new HousingUnitSetter(playerBoard, new IntegerPair(4,5), 2, false,false ));
-//        System.out.println("Testing populateHousingUnits");
-////        assertTrue(!(boolean)playerBoard.getTile(6,6).getComponent().get(new HousingAlienGetter(playerBoard.getTile(6,6).getComponent(),false) &&
-////                !(boolean)playerBoard.getTile(6,6).getComponent().get(new HousingAlienGetter(playerBoard.getTile(6,6).getComponent(),true) &&
-////                        (int)playerBoard.getTile(6,6).getComponent().get(new HousingUnitsHumansGetter(playerBoard.getTile(6,6).getComponent())) == 2);
-////
-////        assertTrue(!playerBoard.getTile(4,5).getComponent().isBrownAlien() &&
-////                !playerBoard.getTile(4,5).getComponent().isPurpleAlien() &&
-////                playerBoard.getTile(4,5).getComponent().getAbility() == 2);
-////        assertTrue(playerBoard.getTile(5,7).getComponent().isBrownAlien() &&
-////                !playerBoard.getTile(5,7).getComponent().isPurpleAlien() &&
-////                playerBoard.getTile(5,7).getComponent().getAbility() == 0);
+        PlayerStates state = PlayerStates.PopulateHousingUnits;
+
+        System.out.println(playerBoard.getHousingUnits().indexOf(playerBoard.getTile(6,6).getComponent()));
+
+
+        playerBoard.performAction(playerBoard.getTile(6,6).getComponent(), new AddCrewAction(2,false,false, playerBoard), state);
+        assertEquals(2,playerBoard.getNumHumans());
+
+
+
+
+        state = PlayerStates.GiveSpeed;
+        GetEnginePower action = new GetEnginePower();
+        for (HotWaterHeater hw : playerBoard.getHotWaterHeaters() ) {
+            playerBoard.performAction(hw,action,state);
+        }
+        assertEquals(3, action.getPower() + playerBoard.getEnginePower() );
+
 
     }
 
-    @Test
-    @Order(3)
-    public void testStorageCompartmentGettersSetters(){
-
-    }
 
 }
 

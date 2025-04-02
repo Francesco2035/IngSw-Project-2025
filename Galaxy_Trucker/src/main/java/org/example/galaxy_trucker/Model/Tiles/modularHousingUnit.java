@@ -1,6 +1,9 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.PlayerStates;
 
 public class ModularHousingUnit extends HousingUnit {
 
@@ -180,6 +183,62 @@ public class ModularHousingUnit extends HousingUnit {
     @Override
     public void remove(PlayerBoard playerBoard) {
         playerBoard.getHousingUnits().remove(this);
+    }
+
+
+
+    @Override
+    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
+        if (!(State.equals(PlayerStates.Killing) || State.equals(PlayerStates.PopulateHousingUnits))){
+            throw new IllegalStateException("Player state is not Killing state or PopulateHousingUnits");
+        }
+        visitor.visit(this, State);
+    }
+
+    @Override
+    public int kill(){
+        if (numHumans == 0 && !purpleAlien && !brownAlien){
+            throw new InvalidInput("This ModularHousingUnit is empty!");
+        }
+        if (numHumans != 0){
+            numHumans--;
+            return 2;
+        }
+        else if (purpleAlien){
+            purpleAlien = false;
+            return 1;
+        }
+        else {
+            brownAlien = false;
+            return 0;
+        }
+
+
+    }
+
+    @Override
+    public void addCrew(int humans, boolean purple, boolean brown){
+        if (purple && brown){
+            throw new InvalidInput("Is possible to add only one type of alien");
+        }
+        if ((purple && !nearPurpleAddon ) || (brown && !nearBrownAddon)){
+            throw new InvalidInput("There isn't a nearby addon");
+        }
+        if (humans > 2){
+            throw new InvalidInput("Input Human amount is greater than 2");
+        }
+        if (humans > 0 && (purple || brown)){
+            throw new InvalidInput("Is possible to add only one type of alien or humans");
+        }
+        if (numHumans + humans > 2){
+            throw new InvalidInput("Human amount is greater than 2");
+        }
+        if ((purple && brownAlien) || (brown && purpleAlien) || (purple && purpleAlien) || (brown && brownAlien)){
+            throw new InvalidInput("There is already an alien");
+        }
+        numHumans += humans;
+        purpleAlien = purple;
+        brownAlien = brown;
     }
 
 }
