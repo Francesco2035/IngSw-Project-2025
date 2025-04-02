@@ -3,11 +3,12 @@ package org.example.galaxy_trucker.Model.Boards;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 
 
-import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
-import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
-import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
+import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.GAGen;
+import org.example.galaxy_trucker.Model.Goods.BLUE;
+import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.Goods.RED;
+import org.example.galaxy_trucker.Model.Goods.YELLOW;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
 import org.example.galaxy_trucker.Model.PlayerStates;
@@ -130,6 +131,19 @@ public class PlayerBoardTest {
             playerBoard.performAction(hw,action,state);
         }
         assertEquals(3, action.getPower());
+
+        Goods red = new RED();
+        Goods blue = new BLUE();
+        Goods yellow = new YELLOW();
+        state = PlayerStates.AddCargo;
+        AddGoodAction action3 = new AddGoodAction(red, playerBoard,7,8);
+        playerBoard.performAction(playerBoard.getTile(7,8).getComponent(), action3, state);
+        action3 = new AddGoodAction(blue, playerBoard,7,9);
+        playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
+        playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
+        action3 = new AddGoodAction(yellow, playerBoard,7,9);
+        //playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
+
 
 
     }

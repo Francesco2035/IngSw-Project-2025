@@ -20,6 +20,7 @@ public class StorageCompartment extends Storage{
     @Override
     public void insert(PlayerBoard playerBoard) {
         playerBoard.getStorages().add(this);
+        goods = new ArrayList<>();
     }
 
     @Override

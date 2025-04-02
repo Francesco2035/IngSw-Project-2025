@@ -44,7 +44,7 @@ public class PlayerBoard {
     private ArrayList<PowerCenter> PowerCenters;
 
 
-    private HashMap<Class<?>, ArrayList<IntegerPair>> storedGoods;
+    private HashMap<Integer, ArrayList<IntegerPair>> storedGoods;
 
 
     private ArrayList<Tile> Buffer;
@@ -255,7 +255,7 @@ public class PlayerBoard {
         return damage;
     }
 
-    public HashMap<Class<?>, ArrayList<IntegerPair>> getStoredGoods(){
+    public HashMap<Integer, ArrayList<IntegerPair>> getStoredGoods(){
         return storedGoods;
     }
 
@@ -487,7 +487,7 @@ public class PlayerBoard {
 
     public void updateStoredGoods(){
 
-        for (Class<?> Goods : storedGoods.keySet()){
+        for (Integer Goods : storedGoods.keySet()){
                 storedGoods.get(Goods).removeIf(pair -> ValidPlayerBoard[pair.getFirst()][pair.getSecond()] != 1);
         }
 
