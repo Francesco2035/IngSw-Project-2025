@@ -71,17 +71,11 @@ public class HotWaterHeater extends Component{
         if (type == 2){
             return 2;
         }
-
         else {
             return 0;
         }
     }
 
-
-
-    @Override
-    public void setType(int type){
-    }
 
 }
 

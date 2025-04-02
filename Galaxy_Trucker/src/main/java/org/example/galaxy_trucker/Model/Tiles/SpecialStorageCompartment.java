@@ -13,17 +13,11 @@ public class SpecialStorageCompartment extends Storage{
 
 
 
-    private int maxNumGoods;
+
     private ArrayList<Goods> goods;
 
 
 
-    public int getMaxNumGoods() {
-        return maxNumGoods;
-    }
-    public void setMaxNumGoods(int maxNumGoods) {
-        this.maxNumGoods = maxNumGoods;
-    }
     public ArrayList<Goods> getGoods() {
         return goods;
     }
@@ -63,7 +57,7 @@ public class SpecialStorageCompartment extends Storage{
 
     @Override
     public void addGood(Goods good) {
-        if (goods.size() == maxNumGoods){
+        if (goods.size() == type){
             throw new InvalidInput("StorageCompartment is full!");
         }
         goods.add(good);

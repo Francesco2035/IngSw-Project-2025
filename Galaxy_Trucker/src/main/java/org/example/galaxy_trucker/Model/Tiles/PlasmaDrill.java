@@ -86,8 +86,4 @@ public class PlasmaDrill extends Component{
     }
 
 
-    @Override
-    public void setType(int type){
-    }
-
 }

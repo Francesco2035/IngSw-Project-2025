@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.powerCenterEmptyException;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -38,8 +39,10 @@ public class PowerCenter extends Component{
     }
 
 
-    public void useEnergy() throws IllegalAccessException{
-        if(this.type == 0) throw new IllegalAccessException("cannot exceed 0 energy");
+    public void useEnergy() {
+        if(this.type == 0) {
+            throw new InvalidInput("cannot exceed 0 energy");
+        }
         this.type = this.type-1;
     }
 

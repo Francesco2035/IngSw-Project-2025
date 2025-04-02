@@ -11,27 +11,8 @@ import java.util.HashMap;
 
 public class StorageCompartment extends Storage{
 
-
-    private int maxNumGoods;
     private ArrayList<Goods> goods;
 
-
-
-    public int getMaxNumGoods() {
-        return maxNumGoods;
-    }
-
-    public void setMaxNumGoods(int maxNumGoods) {
-        this.maxNumGoods = maxNumGoods;
-    }
-
-    public ArrayList<Goods> getGoods() {
-        return goods;
-    }
-
-    public void setGoods(ArrayList<Goods> goods) {
-        this.goods = goods;
-    }
 
     private void orderGoods() {
         this.goods.sort(Comparator.comparingInt(Goods::getValue));
@@ -59,7 +40,7 @@ public class StorageCompartment extends Storage{
 
     @Override
     public void addGood(Goods good) {
-        if (goods.size() == maxNumGoods){
+        if (goods.size() == type){
             throw new InvalidInput("StorageCompartment is full!");
         }
         if (good.getValue() == 4){

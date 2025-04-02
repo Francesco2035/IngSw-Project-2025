@@ -35,11 +35,6 @@ public class AlienAddons extends Component{
 
 
     @Override
-    public void setType(int type){
-    }
-
-
-    @Override
     public void accept(ComponentActionVisitor visitor, PlayerStates State) {
 
     }

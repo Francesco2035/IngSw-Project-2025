@@ -23,7 +23,7 @@ class GoodsBoardTest {
     void removeGood() {
         StorageCompartment storage1 = new StorageCompartment();
         SpecialStorageCompartment storage2 = new SpecialStorageCompartment();
-        storage1.setMaxNumGoods(3);
+
 //        storage1.setAbility(new BLUE(), true);
 //        storage1.setAbility(new GREEN(), true);
 //        Assertions.assertEquals(new GREEN(), storage1.getGoods().get(0));
