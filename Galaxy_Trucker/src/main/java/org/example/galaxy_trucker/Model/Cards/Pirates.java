@@ -64,7 +64,7 @@ public class Pirates extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.order<PlayerList.size() && !this.defeated){
             currentPlayer = PlayerList.get(this.order);
-            PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
+            PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
             this.currentPlayer.setState(PlayerStates.GiveAttack);
             this.currentPlayer.setInputHandler(new Accept(this));
@@ -98,7 +98,7 @@ public class Pirates extends Card{
         boolean shotsFlag= false;
             while (this.ShotsOrder < Punishment.size() && shotsFlag == false) {
 
-            PlayerBoard CurrentPlanche = currentPlayer.getMyPlance(); //prendo plancia
+            PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard(); //prendo plancia
             int[][] MeteoritesValidPlanche = CurrentPlanche.getValidPlayerBoard();//prende matrice validita
             if (Punishment.get(ShotsOrder) == 0) { //sinistra
                 Movement = 0;
@@ -177,7 +177,7 @@ public class Pirates extends Card{
 
     @Override
     public void DefendFromShots(IntegerPair coordinates) {
-        PlayerBoard currentBoard =this.currentPlayer.getMyPlance();
+        PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
 
         if(coordinates !=null) {

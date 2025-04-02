@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.Boards.GetterHandler.PlasmaDrillsGetter;
+
 import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.InputHandlers.Killing;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -55,7 +55,7 @@ public class Smugglers extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.order<PlayerList.size() && !this.defeated){
             currentPlayer = PlayerList.get(this.order);
-            PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
+            PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
             this.currentPlayer.setState(PlayerStates.GiveAttack);
             this.currentPlayer.setInputHandler(new Accept(this));
@@ -69,23 +69,23 @@ public class Smugglers extends Card{
 
     @Override
     public void continueCard(ArrayList<IntegerPair> cannons) {
-        currentPlayer.getMyPlance().setGetter(new PlasmaDrillsGetter(currentPlayer.getMyPlance(), cannons));
-        double power = ((Double) currentPlayer.getMyPlance().getGetter().get());
-
-        if(power>this.getRequirement()){
-            this.currentPlayer.setState(PlayerStates.Accepting);
-            this.currentPlayer.setInputHandler(new Accept(this));
-            this.defeated=true;
-        }
-        else if(power<this.getRequirement()){
-
-            //manca il loseCargo
-
-            this.currentPlayer.setState(PlayerStates.Killing);
-            this.currentPlayer.setInputHandler(new Killing(this));
-
-            //steal shit su PlayerBoard il player non ha scelta
-        }
+//        currentPlayer.getMyPlance().setGetter(new PlasmaDrillsGetter(currentPlayer.getMyPlance(), cannons));
+//        double power = ((Double) currentPlayer.getMyPlance().getGetter().get());
+//
+//        if(power>this.getRequirement()){
+//            this.currentPlayer.setState(PlayerStates.Accepting);
+//            this.currentPlayer.setInputHandler(new Accept(this));
+//            this.defeated=true;
+//        }
+//        else if(power<this.getRequirement()){
+//
+//            //manca il loseCargo
+//
+//            this.currentPlayer.setState(PlayerStates.Killing);
+//            this.currentPlayer.setInputHandler(new Killing(this));
+//
+//            //steal shit su PlayerBoard il player non ha scelta
+//        }
     }
 
 

@@ -2,10 +2,11 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 import org.example.galaxy_trucker.Exceptions.*;
-import org.example.galaxy_trucker.Model.Boards.GetterHandler.PlayerBoardGetters;
-import org.example.galaxy_trucker.Model.Boards.SetterHandler.PlayerBoardSetters;
+
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.*;
 
 
@@ -20,22 +21,28 @@ public class PlayerBoard {
     private int damage;
     private int exposedConnectors;
     private int[] shield;
+    private int numHumans = 0;
+    private int EnginePower = 0;
+    private double PlasmaDrillsPower = 0;
+    private int Energy = 0;
 
     private boolean valid;
 
     private boolean purpleAlien;
     private boolean brownAlien;
 
-    private PlayerBoardGetters getter;
-    private PlayerBoardSetters setter;
-
-
     private ArrayList<Goods> BufferGoods;
 
+    private ArrayList<HousingUnit> HousingUnits;
+    private ArrayList<HotWaterHeater> HotWaterHeaters;
+    private ArrayList<PlasmaDrill> PlasmaDrills;
+    private ArrayList<AlienAddons> AlienAddons;
+    private ArrayList<Storage> Storages;
+    private ArrayList<ShieldGenerator> ShieldGenerators;
+    private ArrayList<PowerCenter> PowerCenters;
 
-    private Map<Class<?>, ArrayList<IntegerPair>> classifiedTiles;
+
     private HashMap<Class<?>, ArrayList<IntegerPair>> storedGoods;
-
 
 
     private ArrayList<Tile> Buffer;
@@ -53,7 +60,7 @@ public class PlayerBoard {
         this.purpleAlien = false;
         this.brownAlien = false;
 
-        this.classifiedTiles = new HashMap<>();
+
         this.storedGoods = new HashMap<>();
 
         this.exposedConnectors = 0;
@@ -62,6 +69,14 @@ public class PlayerBoard {
 
         this.ValidPlayerBoard = new int[10][10];
 
+
+        this.HousingUnits = new ArrayList<>();
+        this.HotWaterHeaters= new ArrayList<>();
+        this.PlasmaDrills= new ArrayList<>();
+        this.AlienAddons= new ArrayList<>();
+        this.Storages= new ArrayList<>();
+        this.ShieldGenerators= new ArrayList<>();
+        this.PowerCenters= new ArrayList<>();
 
 
         if (lv == 2) {
@@ -109,36 +124,7 @@ public class PlayerBoard {
             }
         }
         this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
-    }
-
-    public Map<Class<?>, ArrayList<IntegerPair>> getClassifiedTiles() {
-        return classifiedTiles;
-    }
-
-    public void setGetter(PlayerBoardGetters getter) {
-        this.getter = getter;
-    }
-
-    public void setSetter(PlayerBoardSetters setter) {
-        this.setter = setter;
-    }
-
-    public PlayerBoardGetters getGetter(){
-        return getter;
-    }
-
-    public PlayerBoardSetters getSetter(){
-        return setter;
-    }
-
-    public void set(PlayerBoardSetters setter) {
-        this.setter = setter;
-        setter.set();
-    }
-
-    public Object get(PlayerBoardGetters getter) {
-        this.getter = getter;
-        return getter.get();
+        PlayerBoard[6][6].getComponent().insert(this);
     }
 
 
@@ -256,12 +242,7 @@ public class PlayerBoard {
     }
 
 
-    public void classifyTile(Tile tile, int x, int y){
 
-        System.out.println(tile.getComponent().getClass());
-        classifiedTiles.computeIfAbsent(tile.getComponent().getClass(), k -> new ArrayList<>()).add(new IntegerPair(x, y));
-
-    }
 
     /**
      * Method insertTile inserts a tile into the player board at the specified coordinates.
@@ -284,6 +265,7 @@ public class PlayerBoard {
 
 
         this.PlayerBoard[x][y] = tile;
+        tile.getComponent().insert(this);
         ValidPlayerBoard[x][y] = 1;
 
     }
@@ -367,6 +349,7 @@ public class PlayerBoard {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
+        PlayerBoard[x][y].getComponent().remove(this);
         PlayerBoard[x][y] = new Tile(new SpaceVoid() ,new NONE(), new NONE(), new NONE());
         ValidPlayerBoard[x][y] = 0;
     }
@@ -462,7 +445,7 @@ public class PlayerBoard {
      */
     public void destroy(int x, int y){
 
-        classifiedTiles.get(PlayerBoard[x][y].getComponent().getClass()).remove(new IntegerPair(x,y));
+        PlayerBoard[x][y].getComponent().remove(this);
         damage++;
         PlayerBoard[x][y] = new Tile(new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
         ValidPlayerBoard[x][y] = 0;
@@ -505,6 +488,7 @@ public class PlayerBoard {
             for(int y = 0; y <10; y++){
                 if (ValidPlayerBoard[x][y] == 1){
                     if(!newPlayerBoard.contains(new IntegerPair(x,y))){
+                        PlayerBoard[x][y].getComponent().remove(this);
                         PlayerBoard[x][y] = new Tile(new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
                         ValidPlayerBoard[x][y] = 0;
                         damage++;
@@ -531,7 +515,6 @@ public class PlayerBoard {
             shield[i] = 0;
         }
 
-        classifiedTiles = new HashMap<>();
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
         updateBoardAttributes(x,y, visitedPositions);
         updateGloabalAttributes(visitedPositions);
@@ -561,11 +544,8 @@ public class PlayerBoard {
         }
         System.out.println("update: "+r + " " + c);
 
-        classifyTile(PlayerBoard[r][c], r,c);
-
 
         visited.add(new IntegerPair(r, c));
-
         System.out.println(r + " " + c);
 
 
@@ -696,4 +676,74 @@ public class PlayerBoard {
     public void setPurpleAlien(boolean purpleAlien) {
         this.purpleAlien = purpleAlien;
     }
+
+
+    public ArrayList<Goods> getBufferGoods() {
+        return BufferGoods;
+    }
+
+    public ArrayList<HousingUnit> getHousingUnits() {
+        return HousingUnits;
+    }
+
+    public ArrayList<HotWaterHeater> getHotWaterHeaters() {
+        return HotWaterHeaters;
+    }
+
+    public ArrayList<PlasmaDrill> getPlasmaDrills() {
+        return PlasmaDrills;
+    }
+
+    public ArrayList<AlienAddons> getAlienAddons() {
+        return AlienAddons;
+    }
+
+    public ArrayList<Storage> getStorages() {
+        return Storages;
+    }
+
+    public ArrayList<ShieldGenerator> getShieldGenerators() {
+        return ShieldGenerators;
+    }
+
+    public ArrayList<PowerCenter> getPowerCenters() {
+        return PowerCenters;
+    }
+
+    public int getEnginePower() {
+        return EnginePower;
+    }
+
+    public void setEnginePower(int enginePower) {
+        EnginePower += enginePower;
+    }
+
+    public double getPlasmaDrillsPower() {
+        return PlasmaDrillsPower;
+    }
+
+    public void setPlasmaDrillsPower(double plasmaDrillsPower) {
+        PlasmaDrillsPower += plasmaDrillsPower;
+    }
+
+    public int getNumHumans() {
+        return numHumans;
+    }
+
+    public void setNumHumans(int numHumans) {
+        this.numHumans += numHumans;
+    }
+
+    public int getEnergy() {
+        return Energy;
+    }
+
+    public void setEnergy(int energy) {
+        Energy += energy;
+    }
+
+    public void performAction(Component component, ComponentActionVisitor action, PlayerStates State) {
+        component.accept(action,State);
+    }
+
 }

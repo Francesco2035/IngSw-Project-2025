@@ -1,11 +1,13 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ShieldChecker;
-import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.ComponentGetter;
-import org.example.galaxy_trucker.Model.Tiles.ComponentSetters.ShieldSetter;
+import org.example.galaxy_trucker.Model.PlayerStates;
+
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ShieldGenerator extends Component{
 
@@ -35,7 +37,9 @@ public class ShieldGenerator extends Component{
 
     @Override
     public void rotate(Boolean direction) {
-        setComponentSetter(new ShieldSetter(this, direction));
+        if (direction){
+            Collections.rotate(getProtectedDirections(), 1);}
+        else {Collections.rotate(getProtectedDirections(), -1);}
     }
 
 
@@ -81,11 +85,28 @@ public class ShieldGenerator extends Component{
 //
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
-        setComponentChecker(new ShieldChecker(pb,this));
-        getComponentChecker().Check();
+        int[] pb_shield = pb.getShield();
+        for (int i = 0; i < pb_shield.length; i++){
+            pb_shield[i] += protectedDirections.get(i);
+        }
+
         return true;
     }
 
+    @Override
+    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
+        throw new InvalidInput("cannot accept this action on ShieldGenerator tile: " +visitor.getClass().getSimpleName());
+    }
+
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+        playerBoard.getShieldGenerators().add(this);
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getShieldGenerators().remove(this);
+    }
 
 
 }
