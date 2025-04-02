@@ -43,46 +43,6 @@ public class ShieldGenerator extends Component{
     }
 
 
-
-
-
-//    @Override
-//    public int getAbility() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public ArrayList<Goods> getAbility(Goods good) {
-//        return null;
-//    }
-//
-//
-//    @Override
-//    public ArrayList<Integer> getAbility(int integer) {
-//        return this.protectedDirections;
-//    }
-//
-//    @Override
-//    public int setAbility() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int setAbility(Goods good, boolean select) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void setAbility(boolean direzione){
-//        if (direzione){Collections.rotate(this.protectedDirections, 1);}
-//        else {Collections.rotate(this.protectedDirections, -1);}
-//    }
-//
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
         int[] pb_shield = pb.getShield();

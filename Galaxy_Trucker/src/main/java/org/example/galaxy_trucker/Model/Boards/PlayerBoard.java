@@ -328,7 +328,6 @@ public class PlayerBoard {
             System.out.println(x+ " " + y);
 
             if(!PlayerBoard[x][y].controlDirections(this,x,y)){
-                System.out.println("oioioi: "+ x+ " "+y);
                 return false;
             }
         }
