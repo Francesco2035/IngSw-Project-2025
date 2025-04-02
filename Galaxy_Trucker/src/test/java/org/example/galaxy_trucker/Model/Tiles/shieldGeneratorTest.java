@@ -23,21 +23,19 @@ class shieldGeneratorTest {
 
 
         Tile tile = Tiles.get(145);
-        tile.getComponent().initType();
 
 //        assertEquals(0, tile.getComponent().getAbility(0).getFirst());
 
     }
 
     @Test
-    void ShieldGen(){
+    void ShieldGen() throws IllegalAccessException{
 
         IntegerPair coords = new IntegerPair(1,1);
 
         Component shish = new ShieldGenerator();
         Tile t = new Tile(shish, new SINGLE(), new SINGLE(),  new DOUBLE(), new NONE());
         t.getComponent().setType(1);
-        t.getComponent().initType();
 //        ArrayList<Integer> p =  t.getComponent().getAbility(0);
 //        assertEquals(0,p.get(0).intValue());
     }
@@ -53,7 +51,6 @@ class shieldGeneratorTest {
         ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
 
         Tile tile = Tiles.get(145);
-        tile.getComponent().initType();
 
 
         tile.RotateDx();

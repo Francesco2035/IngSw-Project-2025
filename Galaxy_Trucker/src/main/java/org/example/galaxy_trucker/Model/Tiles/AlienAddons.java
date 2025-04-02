@@ -10,17 +10,35 @@ public class AlienAddons extends Component{
 
 
 //purple=true, brown=false
-    private boolean whatColor;
 
     public AlienAddons() {}
 
-    public boolean isWhatColor() {
-        return whatColor;
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        return true;
     }
 
-    public void setWhatColor(boolean whatColor) {
-        this.whatColor = whatColor;
+    @Override
+    public void rotate(Boolean direction){}
+
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+        playerBoard.getAlienAddons().add(this);
     }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getAlienAddons().remove(this);
+    }
+
+
+    @Override
+    public void setType(int type){
+    }
+}
+
+
+
 
 
 //
@@ -61,41 +79,3 @@ public class AlienAddons extends Component{
 //
 //    }
 //
-    @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y) {
-        return true;
-    }
-//
-    @Override
-    public void initType(){
-        if(type==1) whatColor = true;
-        else if(type==2) whatColor = false;
-    }
-
-
-//    @Override
-//    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
-//
-//    }
-
-    @Override
-    public void rotate(Boolean direction) {}
-
-    @Override
-    public void insert(PlayerBoard playerBoard) {
-        playerBoard.getAlienAddons().add(this);
-    }
-
-    @Override
-    public void remove(PlayerBoard playerBoard) {
-        playerBoard.getAlienAddons().remove(this);
-    }
-
-//    @Override
-//    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
-//
-//    }
-
-
-
-}

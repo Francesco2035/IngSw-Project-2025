@@ -17,23 +17,10 @@ public class ShieldGenerator extends Component{
 
 
 
-    @Override
-    public void initType() {
-        protectedDirections = new ArrayList<Integer>();
-        protectedDirections.add(0);
-        protectedDirections.add(1);
-        protectedDirections.add(1);
-        protectedDirections.add(0);
-    }
-
-
     public ArrayList<Integer> getProtectedDirections() {
         return protectedDirections;
     }
 
-//
-//    @Override
-//    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {}
 
     @Override
     public void rotate(Boolean direction) {

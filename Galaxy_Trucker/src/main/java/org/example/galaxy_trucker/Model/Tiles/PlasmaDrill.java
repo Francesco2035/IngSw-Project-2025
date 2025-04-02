@@ -11,24 +11,7 @@ import java.util.HashMap;
 public class PlasmaDrill extends Component{
 
 
-    private boolean isDouble;
-
     private int CannonDirection = 1;
-
-    public PlasmaDrill() {}
-    public boolean isDouble() {
-        return isDouble;
-    }
-    public void setDouble(boolean aDouble) {
-        isDouble = aDouble;
-    }
-
-
-    @Override
-    public void initType(){
-        if (type==1) isDouble = false;
-        else if (type==2) isDouble = true;
-    }
 
     @Override
     public void rotate(Boolean direction) {
@@ -43,13 +26,10 @@ public class PlasmaDrill extends Component{
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y){
         int[][] mat = pb.getValidPlayerBoard();
-
-
         if (CannonDirection == 0 && y-1 >= 0 && mat[x][y-1]==1) return false;
         if (CannonDirection == 1 && x-1 >= 0 && mat[x-1][y]==1) return false;
         if (CannonDirection == 2 && y+1 < 10 && mat[x][y+1]==1) return false;
         if (CannonDirection == 3 && x+1 < 10 && mat[x+1][y]==1) return false;
-
         return true;
     };
 
@@ -97,5 +77,9 @@ public class PlasmaDrill extends Component{
     }
 
 
+
+    @Override
+    public void setType(int type){
+    }
 
 }

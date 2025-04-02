@@ -6,25 +6,22 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 public class SpaceVoid extends Component{
 
 
-
-
+    @Override
+    public void rotate(Boolean direction) {}
 
 
     @Override
-    public void initType() {
-
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        return true;
     }
-
-
-//    @Override
-//    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
-//
-//    }
 
     @Override
-    public void rotate(Boolean direction) {
+    public void insert(PlayerBoard playerBoard) {}
 
-    }
+    @Override
+    public void remove(PlayerBoard playerBoard) {}
+
+}
 
 //    @Override
 //    public int getAbility() {
@@ -61,10 +58,3 @@ public class SpaceVoid extends Component{
 //
 //    }
 //
-    @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y) {
-        return true;
-    }
-
-}
-

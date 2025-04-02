@@ -9,37 +9,7 @@ import java.util.HashMap;
 public class PowerCenter extends Component{
 
 
-
-    private int Energy;
-
-    public PowerCenter(int numEnergy) {
-        this.Energy = numEnergy;
-    }
-
-
     public PowerCenter() {}
-
-
-    public int getEnergy() {
-        return Energy;
-    }
-    
-    public void setEnergy(int Energy) {
-        this.Energy = Energy;
-    }
-
-
-
-
-    @Override
-    public void initType() {
-
-    }
-
-//    @Override
-//    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
-//
-//    }
 
     @Override
     public void rotate(Boolean direction) {}
@@ -57,6 +27,12 @@ public class PowerCenter extends Component{
     @Override
     public void remove(PlayerBoard playerBoard) {
         playerBoard.getPowerCenters().remove(this);
+    }
+
+
+    public void setEnergy(int type) throws IllegalAccessException{
+        if(this.type == 0) throw new IllegalAccessException("cannot exceed 0 energy");
+        this.type = this.type-1;
     }
 
 }

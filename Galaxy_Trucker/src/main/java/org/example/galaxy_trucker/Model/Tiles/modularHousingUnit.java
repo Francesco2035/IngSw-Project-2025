@@ -62,19 +62,31 @@ public class ModularHousingUnit extends HousingUnit {
     }
     
 
-    @Override
-    public void initType() {
         // if non ci sono alienaddons adiacenti -> numHumans==2
         // if c'è solo un colore -> chiama l'interfaccia per richiedere l'input dal giocatore su human/alien di quel colore
         // if ci sono due colori -> chiama l'interfaccia per richiedere l'input dal giocatore su human/alien di uno o dell'altro colore
         //così facendo non devo passare l'input di initType e posso chiamare su tutti i tasselli initType e sarà poi il gioco a trovare dinamicamente dove è richiesto un input
-    }
 
 
 
 
     @Override
     public void rotate(Boolean direction) {}
+
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        return false;
+    }
+
+    @Override
+    public void insert(PlayerBoard playerBoard) {
+
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+
+    }
 
 //    @Override
 //    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien){
@@ -85,68 +97,11 @@ public class ModularHousingUnit extends HousingUnit {
 //    }
 //
 //
-    @Override
-    public boolean controlValidity(PlayerBoard playerBoard, int x, int y) {
-        Tile tile = playerBoard.getTile(x,y);
-        nearBrownAddon = false;
-        nearPurpleAddon = false;
-        int[][] vb = playerBoard.getValidPlayerBoard();
-        int index = 0;
-
-        if(vb[x][y-1] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x,y-1).getComponent())){
-            index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x,y-1).getComponent());
-            if (tile.getConnectors().get(0).checkAdjacent(playerBoard.getTile(x,y-1).getConnectors().get(2))){
-
-                if (vb[x][y-1] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
-                    nearPurpleAddon = true;
-                }
-                else {
-                    nearBrownAddon = true;
-                }
-            }
-        }
-
-        if(vb[x-1][y] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x-1,y).getComponent())){
-            index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x-1,y).getComponent());
-            if (tile.getConnectors().get(1).checkAdjacent(playerBoard.getTile(x-1,y).getConnectors().get(3))){
-
-                if (vb[x-1][y] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
-                    nearPurpleAddon = true;
-                }
-                else {
-                    nearBrownAddon = true;
-                }
-            }
-        }
-
-        if(vb[x][y+1] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x,y+1).getComponent())){
-            index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x,y+1).getComponent());
-            if (tile.getConnectors().get(2).checkAdjacent(playerBoard.getTile(x,y+1).getConnectors().get(0))){
-
-                if (vb[x][y+1] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
-                    nearPurpleAddon = true;
-                }
-                else {
-                    nearBrownAddon = true;
-                }
-            }
-        }
-        //System.out.println("salve");
-        if(vb[x+1][y] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x +1,y).getComponent())){
-            index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x+1,y).getComponent());
-            //System.out.println("dovrei entrare qui "+index);
-            if (tile.getConnectors().get(3).checkAdjacent(playerBoard.getTile(x+1,y).getConnectors().get(1))){
-
-                if (vb[x+1][y] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
-                    nearPurpleAddon = true;
-                }
-                else {
-                    nearBrownAddon = true;
-                }
-            }
-        }
-        return true;
-    }
+//    @Override
+//    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+//        setComponentChecker(new ModularHousingUnitChecker(pb,x,y, this));
+//        return getComponentChecker().Check();
+//    }
 //
 //
 //    @Override
@@ -172,15 +127,23 @@ public class ModularHousingUnit extends HousingUnit {
 //        return 0;
 //    }
 
-    @Override
-    public void insert(PlayerBoard playerBoard) {
-        playerBoard.getHousingUnits().add(this);
+
+
+
+    public void setNearBrown(boolean nearBrown) {
+        this.nearBrownAddon = nearBrown;
+    }
+    public void setNearPurple(boolean nearPurple) {
+        this.nearPurpleAddon = nearPurple;
     }
 
-    @Override
-    public void remove(PlayerBoard playerBoard) {
-        playerBoard.getHousingUnits().remove(this);
+    public boolean getNearBrown(){
+        return this.nearBrownAddon;
     }
+    public boolean getNearPurple(){
+        return this.nearPurpleAddon;
+    }
+
 
 }
 

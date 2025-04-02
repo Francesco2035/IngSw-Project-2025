@@ -7,6 +7,8 @@ import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.*;
+import org.example.galaxy_trucker.Model.Goods.*;
+
 
 
 import java.util.*;
@@ -148,6 +150,38 @@ public class PlayerBoard {
         Buffer.add(t);
     }
 
+// setter and getters for lists
+    public void setBufferGoods(ArrayList<Goods> bufferGoods) {
+        BufferGoods = bufferGoods;
+    }
+
+    public void setHousingUnits(ArrayList<HousingUnit> housingUnits) {
+        HousingUnits = housingUnits;
+    }
+
+    public void setHotWaterHeaters(ArrayList<HotWaterHeater> hotWaterHeaters) {
+        HotWaterHeaters = hotWaterHeaters;
+    }
+
+    public void setPlasmaDrills(ArrayList<PlasmaDrill> plasmaDrills) {
+        PlasmaDrills = plasmaDrills;
+    }
+
+    public void setStorages(ArrayList<Storage> storages) {
+        Storages = storages;
+    }
+
+    public void setAlienAddons(ArrayList<AlienAddons> alienAddons) {
+        AlienAddons = alienAddons;
+    }
+
+    public void setShieldGenerators(ArrayList<ShieldGenerator> shieldGenerators) {
+        ShieldGenerators = shieldGenerators;
+    }
+
+    public void setPowerCenters(ArrayList<PowerCenter> powerCenters) {
+        PowerCenters = powerCenters;
+    }
 
     /**
      * Method getBuffer return the buffer.
