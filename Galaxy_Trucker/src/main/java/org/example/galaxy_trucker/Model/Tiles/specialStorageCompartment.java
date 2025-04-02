@@ -31,43 +31,6 @@ public class SpecialStorageCompartment extends Storage{
     }
 
 
-//    @Override
-//    public int getAbility(){
-//        return maxNumGoods;
-//    }
-
-//
-//    @Override
-//    public ArrayList<Goods> getAbility(Goods good){
-//        if (good == null){
-//            return goods;
-//        }
-//        else{
-//            if (goods.contains(good)){
-//                return goods;
-//            }
-//            else {
-//                return null;
-//            }
-//        }
-//    }
-//
-//
-//
-//    @Override
-//    public int setAbility(Goods good, boolean select) {
-//        if(select){
-//            this.goods.add(good);
-//            this.orderGoods();
-//            return goods.indexOf(good);
-//        }
-//        else{
-//            this.goods.remove(good);
-//            this.orderGoods();
-//            return 0;
-//        }
-//    }
-
     @Override
     public void rotate(Boolean direction) {}
 
