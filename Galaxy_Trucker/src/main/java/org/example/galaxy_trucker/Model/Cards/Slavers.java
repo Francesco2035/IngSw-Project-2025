@@ -48,7 +48,7 @@ public class Slavers extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.order<PlayerList.size() && !this.defeated){
             currentPlayer = PlayerList.get(this.order);
-            PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
+            PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
             this.currentPlayer.setState(PlayerStates.GiveAttack);
             this.currentPlayer.setInputHandler(new Accept(this));

@@ -44,7 +44,7 @@ public class SolarSystem extends Card {
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.order<PlayerList.size()){
             currentPlayer = PlayerList.get(this.order);
-            PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
+            PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
             this.currentPlayer.setState(PlayerStates.ChoosingPlanet);
             this.currentPlayer.setInputHandler(new ChoosingPlanet(this));

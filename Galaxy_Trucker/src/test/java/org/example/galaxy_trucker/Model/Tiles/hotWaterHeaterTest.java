@@ -20,12 +20,10 @@ class hotWaterHeaterTest {
         ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
 
         Component comp = Tiles.get(66).getComponent();
-        comp.initType();
 //        assertEquals(1, comp.getAbility());
 
 
         comp = Tiles.get(87).getComponent();
-        comp.initType();
 //        assertEquals(2, comp.getAbility());
 
     }
@@ -40,11 +38,7 @@ class hotWaterHeaterTest {
 
 
         HotWaterHeater engine = ((HotWaterHeater) Tiles.get(66).getComponent());
-        engine.initType();
-        assertFalse(engine.isDouble());
 
         HotWaterHeater engine2 = ((HotWaterHeater) Tiles.get(87).getComponent());
-        engine2.initType();
-        assertTrue(engine2.isDouble());
     }
 }

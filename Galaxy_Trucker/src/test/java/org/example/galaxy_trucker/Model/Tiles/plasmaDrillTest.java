@@ -20,7 +20,6 @@ class plasmaDrillTest {
         File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");  //add file json
         ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
 
-        Tiles.get(97).getComponent().initType();
 //        assertEquals(1, Tiles.get(97).getComponent().getAbility());
     }
 
@@ -33,7 +32,6 @@ class plasmaDrillTest {
         ArrayList<Tile> Tiles = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
 
         Tile tile = Tiles.get(123);
-        tile.getComponent().initType();
 //        assertEquals(2, tile.getComponent().getAbility());
 
     }

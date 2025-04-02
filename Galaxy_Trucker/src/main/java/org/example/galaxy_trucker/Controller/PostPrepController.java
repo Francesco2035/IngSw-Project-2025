@@ -8,6 +8,6 @@ public class PostPrepController {
     private Player CurrentPlayer;
 
     public void DestroyTile(IntegerPair coords){
-        CurrentPlayer.getMyPlance().destroy(coords.getFirst(),  coords.getSecond());
+        CurrentPlayer.getmyPlayerBoard().destroy(coords.getFirst(),  coords.getSecond());
     }
 }

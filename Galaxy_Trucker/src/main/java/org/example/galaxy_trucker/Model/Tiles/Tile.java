@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.Tiles.ComponentSetters.ComponentSetter;
-import org.example.galaxy_trucker.Model.Tiles.ComponentSetters.ShieldSetter;
+
 
 import java.util.*;
 
@@ -44,7 +43,7 @@ public class Tile {
 
     public void RotateDx(){
         Collections.rotate(this.connectors, 1);
-        this.getComponent().rotate(false);
+        this.getComponent().rotate(true);
     }
 
 

@@ -7,7 +7,7 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates;
-import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.ShieldGetter;
+
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class Meteorites extends Card {
             PlayerOrder=0;
             this.CardEffect();
         }
-      PlayerBoard  CurrentPlanche=currentPlayer.getMyPlance(); //prendo plancia
+      PlayerBoard  CurrentPlanche=currentPlayer.getmyPlayerBoard(); //prendo plancia
         int [][]MeteoritesValidPlanche=CurrentPlanche.getValidPlayerBoard();//prende matrice validita
         if (attacks.get(MeteoritesOrder)==0) { //sinistra
             Movement=0;
@@ -158,7 +158,7 @@ public class Meteorites extends Card {
 
     @Override
     public void DefendFromMeteorites(IntegerPair CannonCoord, IntegerPair ShieldCoord) {
-        PlayerBoard currentBoard =this.currentPlayer.getMyPlance();
+        PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
 
 
