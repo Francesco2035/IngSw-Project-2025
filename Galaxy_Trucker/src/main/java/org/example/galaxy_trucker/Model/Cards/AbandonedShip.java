@@ -1,7 +1,8 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
-import org.example.galaxy_trucker.Model.Boards.GetterHandler.HousingUnitGetter;
+import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
+
 import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
@@ -9,8 +10,8 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates;
-import org.example.galaxy_trucker.Model.Boards.SetterHandler.HousingUnitSetter;
-import org.example.galaxy_trucker.Model.Tiles.ComponentGetters.HousingHumanGetter;
+
+import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
@@ -57,26 +58,29 @@ public class AbandonedShip extends Card{
                 break;
             }
             currentPlayer = PlayerList.get(this.order);
-            PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
-            Tile TileBoard[][] = CurrentPlanche.getPlayerBoard();
-            ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
-            if(CurrentPlanche.getClassifiedTiles().containsKey(ModularHousingUnit.class)) {
-                 HousingCoords = CurrentPlanche.getClassifiedTiles().get(ModularHousingUnit.class);
-            }
-            if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
-                HousingCoords.add(new IntegerPair(6,6));
-            }
-            this.totHumans = 0;
+            PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
-            System.out.println("numofHousingCoords: "+HousingCoords.size());
-            for (int i = 0; i < HousingCoords.size(); i++) {
-                //somma per vedere il tot umani
-                totHumans += ((int) TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent()
-                        .get(new HousingHumanGetter(TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent())));
-            }
-            HousingCoords.remove(new IntegerPair(6,6));
-            System.out.println("totHumans di"+currentPlayer.GetID()+": "+totHumans);
-            if(totHumans>this.requirement){
+////            if(CurrentPlanche.getClassifiedTiles().containsKey(ModularHousingUnit.class)) {
+////                 HousingCoords = CurrentPlanche.getClassifiedTiles().get(ModularHousingUnit.class);
+////            }
+////            if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
+////                HousingCoords.add(new IntegerPair(6,6));
+////            }
+//            this.totHumans = 0;
+//
+//            System.out.println("numofHousingCoords: "+HousingCoords.size());
+//              for (int i = 0; i < HousingCoords.size(); i++) {
+//
+//                  HousingCoords.get(i).getNumHumans();
+//
+////                //somma per vedere il tot umani
+////                totHumans += ((int) TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent()
+////                        .get(new HousingHumanGetter(TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent())));
+//            }
+//            HousingCoords.remove(new IntegerPair(6,6));
+//            System.out.println("totHumans di"+currentPlayer.GetID()+": "+totHumans);
+//            if(totHumans>this.requirement){
+            if(CurrentPlanche.getNumHumans()>requirement){
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
                 currentPlayer.setState(PlayerStates.AcceptKilling);
@@ -116,12 +120,16 @@ public class AbandonedShip extends Card{
 //            for (int j = 0; j < coordinates.size(); j++) {
 //                currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
 //            }
-
+            PlayerBoard curr= currentPlayer.getmyPlayerBoard();
+            Tile tiles[][]=curr.getPlayerBoard();
             for (IntegerPair coordinate : coordinates) {
                 System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
-                currentPlayer.getMyPlance().setGetter(new HousingUnitGetter(currentPlayer.getMyPlance(),
-                        coordinate, 1, false, false));
-                currentPlayer.getMyPlance().getGetter().get();
+
+                curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr),PlayerStates.AcceptKilling);
+
+//                currentPlayer.getmyPlayerBoard().setGetter(new HousingUnitGetter(currentPlayer.getmyPlayerBoard(),
+//                        coordinate, 1, false, false));
+//                currentPlayer.getmyPlayerBoard().getGetter().get();
             }
             currentPlayer.IncreaseCredits(this.reward);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());

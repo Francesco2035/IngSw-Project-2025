@@ -67,7 +67,7 @@ public class Player {
         int d2 = r.nextInt(6) + 1;
         return d1+d2;
     }
-
+    
     public InputHandler getInputHandler() {
         return InputHandler;
     }
@@ -85,7 +85,7 @@ public class Player {
     }
 
     public void setMyPlance(PlayerBoard myPlance) {
-        this.myPlance = myPlance;
+        this.myPlayerBoard = myPlance;
     }
 
     public void  execute() {

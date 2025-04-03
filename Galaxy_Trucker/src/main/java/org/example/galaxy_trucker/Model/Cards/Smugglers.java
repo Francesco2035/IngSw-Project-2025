@@ -68,24 +68,23 @@ public class Smugglers extends Card{
     }
 
     @Override
-    public void continueCard(ArrayList<IntegerPair> cannons) {
-//        currentPlayer.getMyPlance().setGetter(new PlasmaDrillsGetter(currentPlayer.getMyPlance(), cannons));
-//        double power = ((Double) currentPlayer.getMyPlance().getGetter().get());
-//
-//        if(power>this.getRequirement()){
-//            this.currentPlayer.setState(PlayerStates.Accepting);
-//            this.currentPlayer.setInputHandler(new Accept(this));
-//            this.defeated=true;
-//        }
-//        else if(power<this.getRequirement()){
-//
-//            //manca il loseCargo
-//
-//            this.currentPlayer.setState(PlayerStates.Killing);
-//            this.currentPlayer.setInputHandler(new Killing(this));
-//
-//            //steal shit su PlayerBoard il player non ha scelta
-//        }
+    public void continueCard(double power) {
+
+
+        if(power>this.getRequirement()){
+            this.currentPlayer.setState(PlayerStates.Accepting);
+            this.currentPlayer.setInputHandler(new Accept(this));
+            this.defeated=true;
+        }
+        else if(power<this.getRequirement()){
+
+            //manca il loseCargo
+
+            this.currentPlayer.setState(PlayerStates.Killing);
+            this.currentPlayer.setInputHandler(new Killing(this));
+
+            //steal shit su PlayerBoard il player non ha scelta
+        }
     }
 
 

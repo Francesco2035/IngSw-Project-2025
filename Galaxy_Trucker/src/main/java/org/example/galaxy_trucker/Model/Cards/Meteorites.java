@@ -1,8 +1,8 @@
 package org.example.galaxy_trucker.Model.Cards;
 //import javafx.util.Pair;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.Boards.SetterHandler.PowerCenterSetter;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 // direzioni int sinistra 0 sopra 1...
 //0 piccolo 1 grande
-public class Meteorites extends Card {
+public class   Meteorites extends Card {
     @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
     private ArrayList<Integer> attacks;
     private Player currentPlayer;
@@ -78,7 +78,7 @@ public class Meteorites extends Card {
         else {
             this.currentPlayer = this.getBoard().getPlayers().get(PlayerOrder);
 
-            PlayerBoard CurrentPlanche = currentPlayer.getMyPlance(); //prendo plancia
+            PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard(); //prendo plancia
             int[][] MeteoritesValidPlanche = CurrentPlanche.getValidPlayerBoard();//prende matrice validita
             if (attacks.get(MeteoritesOrder) == 0) { //sinistra
                 System.out.println("SINISTRA");
@@ -175,19 +175,12 @@ public class Meteorites extends Card {
             }
         }
     }
-    public int schifo(){
-        IntegerPair a = new IntegerPair(0,0);
-        IntegerPair b = new IntegerPair(1,1);
-        this.DefendFromMeteorites(a,b);
-        return 1;
-    }
-
 
 
         // DEVO NON ANDAR SUBITO IN UPDATE STATES MA IN SCELTA TRONCONI! UPSIE :)
     @Override
-    public void DefendFromMeteorites(IntegerPair CannonCoord, IntegerPair ShieldCoord) {
-        PlayerBoard currentBoard =this.currentPlayer.getMyPlance();
+    public void DefendFromMeteorites(IntegerPair CannonCoord, IntegerPair ShieldCoord, IntegerPair EnergyStorage) {
+        PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
 
 
@@ -196,7 +189,7 @@ public class Meteorites extends Card {
 
         if(ShieldCoord!=null) {
             if (!(attacks.get(MeteoritesOrder + 1) == 0 && (currentBoard.getShield()[attacks.get(MeteoritesOrder)]!=0)) || attacks.get(MeteoritesOrder + 1) == 1) {
-                currentBoard.set(new PowerCenterSetter(currentBoard, ShieldCoord));
+                currentBoard.performAction(tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent(),new UseEnergyAction(currentBoard),PlayerStates.DefendingFromMeteorites);
             }
         }
         if(CannonCoord !=null) {
