@@ -71,8 +71,13 @@ public class GameBoard {
         NewPlayer.setState(PlayerStates.BuildingShip);
     }
 
-    public void StartHourglass() throws InterruptedException {
-        hourglass.StartTimer();
+    public void StartHourglass() {
+        if(hourglass.isStartable() && hourglass.getUsages() > 0){
+            hourglass.setLock();
+            Thread t1 = new Thread(hourglass);
+            t1.start();
+        }
+        else throw new RuntimeException("Cannot start hourglass");
     }
 
 
@@ -218,6 +223,7 @@ public class GameBoard {
     public TileSets getTilesSets(){return tileSets;}
     public CardStacks getCardStack(){return this.CardStack;}
 
+    public Hourglass getHourglass() {return hourglass;}
 
     public void abandonRace(Player loser){
 

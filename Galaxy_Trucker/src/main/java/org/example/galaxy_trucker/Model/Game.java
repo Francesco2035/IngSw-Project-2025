@@ -38,7 +38,7 @@ public class Game {
 
         for(Player p : PlayerList){
             if(p.GetID().equals(ID)){
-                throw new IllegalArgumentException("Player already exists");
+                throw new IllegalArgumentException("Username already exists");
             }
         }
         Player newborn = new Player(ID, GameBoard);
@@ -50,6 +50,7 @@ public class Game {
         PlayerList.remove(DeadMan);
     }
 
+    public String getID(){return GameID;}
 
     public GAGen getGag() {
         return gag;

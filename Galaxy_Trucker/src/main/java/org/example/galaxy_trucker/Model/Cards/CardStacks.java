@@ -19,8 +19,8 @@ public class CardStacks {
     private GAGen GaG;
 
 
-    public CardStacks(GAGen Gag, int lv) throws IOException {
-        //dipende da come vien creato dal json
+    public CardStacks(GAGen Gag, int lv) {
+        this.level = lv;
         this.GaG=Gag;
         this.HiddenCards = new ArrayList<>();
         this.FullAdventure = new ArrayList<>();
@@ -29,7 +29,6 @@ public class CardStacks {
         VisibleCards1 = new ArrayList<>();
         VisibleCards2 = new ArrayList<>();
         VisibleCards3 = new ArrayList<>();
-        this.level=lv;
 
         Card Currentcard;
         Random r = new Random();
@@ -44,7 +43,7 @@ public class CardStacks {
 
         }
 
-        if(lv==1){
+        if(level==1){
             HiddenCards = Level1Deck;
         }
 
@@ -81,16 +80,19 @@ public class CardStacks {
         }
     }
 
+
     public void mergeDecks(){
-        FullAdventure.addAll(VisibleCards1);
-        FullAdventure.addAll(VisibleCards2);
-        FullAdventure.addAll(VisibleCards3);
+        if(level==2){
+            FullAdventure.addAll(VisibleCards1);
+            FullAdventure.addAll(VisibleCards2);
+            FullAdventure.addAll(VisibleCards3);
+        }
+
         FullAdventure.addAll(HiddenCards);
 
-        Collections.shuffle(FullAdventure);
-        while(FullAdventure.get(0).getLevel() != this.level){
+        do {
             Collections.shuffle(FullAdventure);
-        }
+        } while (FullAdventure.getFirst().getLevel() != level);
     }
 
     public ArrayList<Card> getFullAdventure(){
