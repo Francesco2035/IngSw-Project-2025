@@ -12,15 +12,11 @@ import java.util.HashMap;
 public class SewerPipes extends Component {
 
 
-
-    @Override
-    public void initType() {}
+    public SewerPipes() {}
 
 
     @Override
-    public void rotate(Boolean direction) {
-
-    }
+    public void rotate(Boolean direction) {}
 
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
@@ -28,10 +24,16 @@ public class SewerPipes extends Component {
     }
 
     @Override
+    public void insert(PlayerBoard playerBoard, int x, int y) {}
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {}
+
+
+    @Override
     public void accept(ComponentActionVisitor visitor, PlayerStates State) {
         throw new InvalidInput("cannot accept this action on SewerPipes tile: " +visitor.getClass().getSimpleName());
     }
-
 
 }
 

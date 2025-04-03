@@ -3,50 +3,21 @@ package org.example.galaxy_trucker.Model.Tiles;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
-import org.example.galaxy_trucker.Model.IntegerPair;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 
 public class StorageCompartment extends Storage{
 
-
-    private int maxNumGoods;
     private ArrayList<Goods> goods;
 
-
-
-    public int getMaxNumGoods() {
-        return maxNumGoods;
-    }
-
-    public void setMaxNumGoods(int maxNumGoods) {
-        this.maxNumGoods = maxNumGoods;
-    }
-
-    public ArrayList<Goods> getGoods() {
-        return goods;
-    }
-
-    public void setGoods(ArrayList<Goods> goods) {
-        this.goods = goods;
-    }
 
     private void orderGoods() {
         this.goods.sort(Comparator.comparingInt(Goods::getValue));
     }
 
 
-    @Override
-    public void insert(PlayerBoard playerBoard) {
-        playerBoard.getStorages().add(this);
-    }
 
-    @Override
-    public void remove(PlayerBoard playerBoard) {
-        playerBoard.getStorages().remove(this);
-    }
 
     @Override
     public Goods removeGood(int i){
@@ -59,7 +30,7 @@ public class StorageCompartment extends Storage{
 
     @Override
     public void addGood(Goods good) {
-        if (goods.size() == maxNumGoods){
+        if (goods.size() == type){
             throw new InvalidInput("StorageCompartment is full!");
         }
         if (good.getValue() == 4){

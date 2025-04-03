@@ -9,30 +9,22 @@ import org.example.galaxy_trucker.Model.PlayerStates;
 public class SpaceVoid extends Component{
 
 
-
-
-
-
     @Override
-    public void initType() {
+    public void rotate(Boolean direction) {}
 
-    }
-
-
-//    @Override
-//    public void initType(int numHumans, boolean purpleAlien, boolean brownAlien) {
-//
-//    }
-
-    @Override
-    public void rotate(Boolean direction) {
-
-    }
 
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
         return true;
     }
+
+    @Override
+    public void insert(PlayerBoard playerBoard, int x, int y) {}
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {}
+
+
 
     @Override
     public void accept(ComponentActionVisitor visitor, PlayerStates State) {

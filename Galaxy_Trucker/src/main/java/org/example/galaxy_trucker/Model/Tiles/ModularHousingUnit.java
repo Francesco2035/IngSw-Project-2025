@@ -13,7 +13,7 @@ public class ModularHousingUnit extends HousingUnit {
     protected boolean brownAlien;
     protected boolean nearPurpleAddon;
     protected boolean nearBrownAddon;
-    
+
     @Override
     public int getNumHumans() {
         return this.numHumans;
@@ -63,31 +63,10 @@ public class ModularHousingUnit extends HousingUnit {
     public void setNearBrownAddon(boolean nearBrownAddon) {
         this.nearBrownAddon = nearBrownAddon;
     }
-    
-
-    @Override
-    public void initType() {
-        // if non ci sono alienaddons adiacenti -> numHumans==2
-        // if c'è solo un colore -> chiama l'interfaccia per richiedere l'input dal giocatore su human/alien di quel colore
-        // if ci sono due colori -> chiama l'interfaccia per richiedere l'input dal giocatore su human/alien di uno o dell'altro colore
-        //così facendo non devo passare l'input di initType e posso chiamare su tutti i tasselli initType e sarà poi il gioco a trovare dinamicamente dove è richiesto un input
-    }
 
 
 
 
-    @Override
-    public void rotate(Boolean direction) {}
-
-//    @Override
-//    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien){
-//        if(this.numHumans>0) this.numHumans -= numAbility;
-//        this.purpleAlien = this.purpleAlien && purpleAlien;
-//        this.brownAlien = this.brownAlien && brownAlien;
-//        return numHumans;
-//    }
-//
-//
     @Override
     public boolean controlValidity(PlayerBoard playerBoard, int x, int y) {
         Tile tile = playerBoard.getTile(x,y);
@@ -100,7 +79,7 @@ public class ModularHousingUnit extends HousingUnit {
             index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x,y-1).getComponent());
             if (tile.getConnectors().get(0).checkAdjacent(playerBoard.getTile(x,y-1).getConnectors().get(2))){
 
-                if (vb[x][y-1] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
+                if (vb[x][y-1] == 1 && playerBoard.getAlienAddons().get(index).type == 1 ){
                     nearPurpleAddon = true;
                 }
                 else {
@@ -113,7 +92,7 @@ public class ModularHousingUnit extends HousingUnit {
             index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x-1,y).getComponent());
             if (tile.getConnectors().get(1).checkAdjacent(playerBoard.getTile(x-1,y).getConnectors().get(3))){
 
-                if (vb[x-1][y] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
+                if (vb[x-1][y] == 1 && playerBoard.getAlienAddons().get(index).type == 1 ){
                     nearPurpleAddon = true;
                 }
                 else {
@@ -126,7 +105,7 @@ public class ModularHousingUnit extends HousingUnit {
             index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x,y+1).getComponent());
             if (tile.getConnectors().get(2).checkAdjacent(playerBoard.getTile(x,y+1).getConnectors().get(0))){
 
-                if (vb[x][y+1] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
+                if (vb[x][y+1] == 1 && playerBoard.getAlienAddons().get(index).type == 1 ){
                     nearPurpleAddon = true;
                 }
                 else {
@@ -140,7 +119,7 @@ public class ModularHousingUnit extends HousingUnit {
             //System.out.println("dovrei entrare qui "+index);
             if (tile.getConnectors().get(3).checkAdjacent(playerBoard.getTile(x+1,y).getConnectors().get(1))){
 
-                if (vb[x+1][y] == 1 && playerBoard.getAlienAddons().get(index).isWhatColor() ){
+                if (vb[x+1][y] == 1 && playerBoard.getAlienAddons().get(index).type == 1 ){
                     nearPurpleAddon = true;
                 }
                 else {
@@ -149,16 +128,6 @@ public class ModularHousingUnit extends HousingUnit {
             }
         }
         return true;
-    }
-
-    @Override
-    public void insert(PlayerBoard playerBoard) {
-        playerBoard.getHousingUnits().add(this);
-    }
-
-    @Override
-    public void remove(PlayerBoard playerBoard) {
-        playerBoard.getHousingUnits().remove(this);
     }
 
 
@@ -194,9 +163,7 @@ public class ModularHousingUnit extends HousingUnit {
 
     @Override
     public void addCrew(int humans, boolean purple, boolean brown){
-        if (purple && brown){
-            throw new InvalidInput("Is possible to add only one type of alien");
-        }
+
         if ((purple && !nearPurpleAddon ) || (brown && !nearBrownAddon)){
             throw new InvalidInput("There isn't a nearby addon");
         }

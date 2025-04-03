@@ -6,26 +6,14 @@ import org.example.galaxy_trucker.Model.PlayerStates;
 
 public class HotWaterHeater extends Component{
 
-    private boolean isDouble;
+
+    //per info su cannoni chiamare gettype
+
 
     private int EngineDirection = 3;
-
     public HotWaterHeater() {}
 
-    public boolean isDouble() {
-        return isDouble;
-    }
 
-    public void setDouble(boolean aDouble) {
-        isDouble = aDouble;
-    }
-
-
-    @Override
-    public void initType(){
-        if (type==(1)) isDouble = false;
-        else if (type==(2)) isDouble = true;
-    }
 
     @Override
     public void rotate(Boolean direction) {
@@ -39,10 +27,14 @@ public class HotWaterHeater extends Component{
         }
     }
 
+
+
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y){
         return EngineDirection == 3;
     }
+
+
 
 
     @Override
@@ -54,13 +46,16 @@ public class HotWaterHeater extends Component{
     }
 
     @Override
-    public void insert(PlayerBoard playerBoard) {
+    public void insert(PlayerBoard playerBoard, int x, int y) {
         if (type == 1) {
             playerBoard.setEnginePower(1);
         }
 
         playerBoard.getHotWaterHeaters().add(this);
     }
+
+
+
 
     @Override
     public void remove(PlayerBoard playerBoard) {
@@ -80,6 +75,7 @@ public class HotWaterHeater extends Component{
             return 0;
         }
     }
+
 
 }
 

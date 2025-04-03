@@ -75,15 +75,7 @@ public class MainCockpitComp extends HousingUnit {
         return true;
     }
 
-    @Override
-    public void insert(PlayerBoard playerBoard) {
-        playerBoard.getHousingUnits().add(this);
-    }
 
-    @Override
-    public void remove(PlayerBoard playerBoard) {
-        playerBoard.getHousingUnits().remove(this);
-    }
 
     @Override
     public void accept(ComponentActionVisitor visitor, PlayerStates State) {

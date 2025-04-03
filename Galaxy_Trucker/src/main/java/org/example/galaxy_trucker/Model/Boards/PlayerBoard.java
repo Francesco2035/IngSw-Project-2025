@@ -8,8 +8,10 @@ import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.*;
+import org.example.galaxy_trucker.Model.Goods.*;
 
 
+import javax.print.attribute.HashAttributeSet;
 import java.util.*;
 
 public class PlayerBoard {
@@ -34,6 +36,8 @@ public class PlayerBoard {
     private ArrayList<Goods> BufferGoods;
 
     private ArrayList<HousingUnit> HousingUnits;
+
+
     private ArrayList<HotWaterHeater> HotWaterHeaters;
     private ArrayList<PlasmaDrill> PlasmaDrills;
     private ArrayList<AlienAddons> AlienAddons;
@@ -42,7 +46,7 @@ public class PlayerBoard {
     private ArrayList<PowerCenter> PowerCenters;
 
 
-    private HashMap<Class<?>, ArrayList<IntegerPair>> storedGoods;
+    private HashMap<Integer, ArrayList<IntegerPair>> storedGoods;
 
 
     private ArrayList<Tile> Buffer;
@@ -54,6 +58,8 @@ public class PlayerBoard {
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
         this.totalValue = 0;
+
+
 
         this.valid = true;
 
@@ -124,7 +130,7 @@ public class PlayerBoard {
             }
         }
         this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
-        PlayerBoard[6][6].getComponent().insert(this);
+        PlayerBoard[6][6].getComponent().insert(this,6,6);
     }
 
 
@@ -149,6 +155,38 @@ public class PlayerBoard {
         Buffer.add(t);
     }
 
+// setter and getters for lists
+    public void setBufferGoods(ArrayList<Goods> bufferGoods) {
+        BufferGoods = bufferGoods;
+    }
+
+    public void setHousingUnits(ArrayList<HousingUnit> housingUnits) {
+        HousingUnits = housingUnits;
+    }
+
+    public void setHotWaterHeaters(ArrayList<HotWaterHeater> hotWaterHeaters) {
+        HotWaterHeaters = hotWaterHeaters;
+    }
+
+    public void setPlasmaDrills(ArrayList<PlasmaDrill> plasmaDrills) {
+        PlasmaDrills = plasmaDrills;
+    }
+
+    public void setStorages(ArrayList<Storage> storages) {
+        Storages = storages;
+    }
+
+    public void setAlienAddons(ArrayList<AlienAddons> alienAddons) {
+        AlienAddons = alienAddons;
+    }
+
+    public void setShieldGenerators(ArrayList<ShieldGenerator> shieldGenerators) {
+        ShieldGenerators = shieldGenerators;
+    }
+
+    public void setPowerCenters(ArrayList<PowerCenter> powerCenters) {
+        PowerCenters = powerCenters;
+    }
 
     /**
      * Method getBuffer return the buffer.
@@ -221,7 +259,7 @@ public class PlayerBoard {
         return damage;
     }
 
-    public HashMap<Class<?>, ArrayList<IntegerPair>> getStoredGoods(){
+    public HashMap<Integer, ArrayList<IntegerPair>> getStoredGoods(){
         return storedGoods;
     }
 
@@ -265,7 +303,7 @@ public class PlayerBoard {
 
 
         this.PlayerBoard[x][y] = tile;
-        tile.getComponent().insert(this);
+        tile.getComponent().insert(this,x,y);
         ValidPlayerBoard[x][y] = 1;
 
     }
@@ -328,7 +366,6 @@ public class PlayerBoard {
             System.out.println(x+ " " + y);
 
             if(!PlayerBoard[x][y].controlDirections(this,x,y)){
-                System.out.println("oioioi: "+ x+ " "+y);
                 return false;
             }
         }
@@ -454,7 +491,7 @@ public class PlayerBoard {
 
     public void updateStoredGoods(){
 
-        for (Class<?> Goods : storedGoods.keySet()){
+        for (Integer Goods : storedGoods.keySet()){
                 storedGoods.get(Goods).removeIf(pair -> ValidPlayerBoard[pair.getFirst()][pair.getSecond()] != 1);
         }
 
@@ -711,6 +748,9 @@ public class PlayerBoard {
     }
 
     public int getEnginePower() {
+        if (brownAlien){
+            return EnginePower +2;
+        }
         return EnginePower;
     }
 
@@ -719,6 +759,9 @@ public class PlayerBoard {
     }
 
     public double getPlasmaDrillsPower() {
+        if(purpleAlien){
+            return PlasmaDrillsPower + 2;
+        }
         return PlasmaDrillsPower;
     }
 
@@ -745,5 +788,6 @@ public class PlayerBoard {
     public void performAction(Component component, ComponentActionVisitor action, PlayerStates State) {
         component.accept(action,State);
     }
+
 
 }

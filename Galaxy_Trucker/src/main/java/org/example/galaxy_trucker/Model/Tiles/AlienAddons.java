@@ -12,17 +12,8 @@ public class AlienAddons extends Component{
 
 
 //purple=true, brown=false
-    private boolean whatColor;
 
     public AlienAddons() {}
-
-    public boolean isWhatColor() {
-        return whatColor;
-    }
-
-    public void setWhatColor(boolean whatColor) {
-        this.whatColor = whatColor;
-    }
 
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
@@ -30,21 +21,10 @@ public class AlienAddons extends Component{
     }
 
     @Override
-    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
-
-    }
+    public void rotate(Boolean direction){}
 
     @Override
-    public void initType(){
-        if(type==1) whatColor = true;
-        else if(type==2) whatColor = false;
-    }
-
-    @Override
-    public void rotate(Boolean direction) {}
-
-    @Override
-    public void insert(PlayerBoard playerBoard) {
+    public void insert(PlayerBoard playerBoard, int x, int y) {
         playerBoard.getAlienAddons().add(this);
     }
 
@@ -54,6 +34,9 @@ public class AlienAddons extends Component{
     }
 
 
+    @Override
+    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
 
+    }
 
 }
