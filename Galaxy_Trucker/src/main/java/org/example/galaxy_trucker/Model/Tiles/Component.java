@@ -7,12 +7,12 @@ import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates;
 
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
         property = "componentType"
 )
-
 @JsonSubTypes({
         @JsonSubTypes.Type(value = PlasmaDrill.class, name = "plasmaDrill"),
         @JsonSubTypes.Type(value = HotWaterHeater.class, name = "hotWaterHeater"),
@@ -25,11 +25,12 @@ import org.example.galaxy_trucker.Model.PlayerStates;
         @JsonSubTypes.Type(value = ShieldGenerator.class, name = "shieldGenerator"),
         @JsonSubTypes.Type(value = SpaceVoid.class, name = "spaceVoid")
 })
-
 public abstract class Component {
 
-
     int type;
+
+
+
     public Component() {}
 
     public abstract void rotate(Boolean direction);

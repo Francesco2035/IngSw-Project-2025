@@ -29,6 +29,7 @@ public class CardStacks {
         VisibleCards1 = new ArrayList<>();
         VisibleCards2 = new ArrayList<>();
         VisibleCards3 = new ArrayList<>();
+        this.level=lv;
 
         Card Currentcard;
         Random r = new Random();
@@ -87,7 +88,7 @@ public class CardStacks {
         FullAdventure.addAll(HiddenCards);
 
         Collections.shuffle(FullAdventure);
-        while(FullAdventure.get(0).getLevel() != level){
+        while(FullAdventure.get(0).getLevel() != this.level){
             Collections.shuffle(FullAdventure);
         }
     }

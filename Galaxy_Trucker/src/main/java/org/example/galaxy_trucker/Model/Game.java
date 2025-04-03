@@ -51,6 +51,12 @@ public class Game {
     }
 
 
+    public GAGen getGag() {
+        return gag;
+    }
 
+    public GameBoard getGameBoard() {
+        return GameBoard;
+    }
 }
 

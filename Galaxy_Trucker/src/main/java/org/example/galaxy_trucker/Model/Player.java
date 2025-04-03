@@ -67,9 +67,13 @@ public class Player {
         int d2 = r.nextInt(6) + 1;
         return d1+d2;
     }
-
+    
     public InputHandler getInputHandler() {
         return InputHandler;
+    }
+
+    public PlayerStates getPlayerState() {
+        return PlayerState;
     }
 
     public void setInputHandler(InputHandler InputHandler) {
@@ -78,6 +82,10 @@ public class Player {
 
     public void setState(PlayerStates state) {
         this.PlayerState = state;
+    }
+
+    public void setMyPlance(PlayerBoard myPlance) {
+        this.myPlayerBoard = myPlance;
     }
 
     public void  execute() {
