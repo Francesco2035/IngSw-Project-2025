@@ -37,7 +37,6 @@ public class PlayerBoard {
 
     private ArrayList<HousingUnit> HousingUnits;
 
-    private HashMap<HousingUnit, IntegerPair> HousingUnitsCoord;
 
     private ArrayList<HotWaterHeater> HotWaterHeaters;
     private ArrayList<PlasmaDrill> PlasmaDrills;
@@ -59,7 +58,7 @@ public class PlayerBoard {
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
         this.totalValue = 0;
-        this.HousingUnitsCoord = new HashMap<>();
+
 
 
         this.valid = true;
@@ -790,7 +789,5 @@ public class PlayerBoard {
         component.accept(action,State);
     }
 
-    public HashMap<HousingUnit, IntegerPair> getHousingUnitsCoord() {
-        return HousingUnitsCoord;
-    }
+
 }

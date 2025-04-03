@@ -163,9 +163,7 @@ public class ModularHousingUnit extends HousingUnit {
 
     @Override
     public void addCrew(int humans, boolean purple, boolean brown){
-        if (purple && brown){
-            throw new InvalidInput("Is possible to add only one type of alien");
-        }
+
         if ((purple && !nearPurpleAddon ) || (brown && !nearBrownAddon)){
             throw new InvalidInput("There isn't a nearby addon");
         }

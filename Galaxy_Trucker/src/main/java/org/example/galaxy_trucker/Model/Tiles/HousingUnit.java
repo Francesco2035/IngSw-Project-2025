@@ -11,6 +11,8 @@ import java.util.HashMap;
 public abstract class HousingUnit extends Component{
 
 
+    private int x;
+    private int y;
 
     public abstract int getNumHumans();
     public abstract void setNumHumans(int numHumans);
@@ -39,12 +41,14 @@ public abstract class HousingUnit extends Component{
     @Override
     public void insert(PlayerBoard playerBoard, int x, int y) {
         playerBoard.getHousingUnits().add(this);
-        playerBoard.getHousingUnitsCoord().put(this, new IntegerPair(x,y));
+        this.x = x;
+        this.y = y;
+
     }
 
     @Override
     public void remove(PlayerBoard playerBoard) {
         playerBoard.getHousingUnits().remove(this);
-        playerBoard.getHousingUnitsCoord().remove(this);
+
     }
 }
