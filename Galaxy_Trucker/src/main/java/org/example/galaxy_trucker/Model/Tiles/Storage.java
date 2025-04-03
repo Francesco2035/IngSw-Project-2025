@@ -43,11 +43,14 @@ public class Storage extends Component{
 
 
     @Override
-    public void insert(PlayerBoard playerBoard) {
+    public void insert(PlayerBoard playerBoard, int x, int y) {
+        playerBoard.getStorages().add(this);
+        goods = new ArrayList<>();
     }
 
     @Override
     public void remove(PlayerBoard playerBoard) {
+        playerBoard.getStorages().remove(this);
     }
 
     private void orderGoods() {

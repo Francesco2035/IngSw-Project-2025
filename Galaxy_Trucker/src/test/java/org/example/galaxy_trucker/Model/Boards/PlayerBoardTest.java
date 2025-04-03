@@ -1,8 +1,6 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
-
-
 import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Goods.BLUE;
@@ -10,16 +8,13 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Goods.RED;
 import org.example.galaxy_trucker.Model.Goods.YELLOW;
 import org.example.galaxy_trucker.Model.IntegerPair;
-
 import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.HotWaterHeater;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.*;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -68,7 +63,6 @@ public class PlayerBoardTest {
                 () -> playerBoard.insertTile(null, -1,6),
                 "A NullPointerException should be thrown.");
 
-
         assertThrows(
                 InvalidInput.class,
                 () -> playerBoard.insertTile(gag.getTilesDeck().get(10) , 2,6),
@@ -89,7 +83,6 @@ public class PlayerBoardTest {
     @Order(3)
     public void testDestruction(){
 
-
         playerBoard.destroy(6,5);
         assertFalse(playerBoard.checkValidity());
         assertEquals(1, playerBoard.getDamage());
@@ -101,10 +94,7 @@ public class PlayerBoardTest {
         int[] shield = {0,1,1,0};
         assertArrayEquals(shield, playerBoard.getShield());
 
-
-
     }
-
 
 
     @Test
@@ -121,16 +111,13 @@ public class PlayerBoardTest {
         playerBoard.performAction(playerBoard.getTile(5,7).getComponent(), new AddCrewAction(0,false,true, playerBoard), state);
         assertEquals(2,playerBoard.getNumHumans());
 
-
-
-
         state = PlayerStates.GiveSpeed;
 
         GetEnginePower action = new GetEnginePower(playerBoard.getEnginePower());
         for (HotWaterHeater hw : playerBoard.getHotWaterHeaters() ) {
             playerBoard.performAction(hw,action,state);
         }
-        assertEquals(3, action.getPower());
+        assertEquals(5, action.getPower());
 
         Goods red = new RED();
         Goods blue = new BLUE();
@@ -143,7 +130,6 @@ public class PlayerBoardTest {
         playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
         action3 = new AddGoodAction(yellow, playerBoard,7,9);
         //playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
-
 
 
     }

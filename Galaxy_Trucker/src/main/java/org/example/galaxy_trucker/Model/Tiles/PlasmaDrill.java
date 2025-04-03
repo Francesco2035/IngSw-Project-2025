@@ -45,7 +45,7 @@ public class PlasmaDrill extends Component{
 
 
     @Override
-    public void insert(PlayerBoard playerBoard) {
+    public void insert(PlayerBoard playerBoard, int x, int y) {
         if (type == 1) {
             if (CannonDirection == 1){
                 playerBoard.setPlasmaDrillsPower(1);

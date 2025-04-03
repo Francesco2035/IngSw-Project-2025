@@ -130,16 +130,6 @@ public class ModularHousingUnit extends HousingUnit {
         return true;
     }
 
-    @Override
-    public void insert(PlayerBoard playerBoard) {
-        playerBoard.getHousingUnits().add(this);
-    }
-
-    @Override
-    public void remove(PlayerBoard playerBoard) {
-        playerBoard.getHousingUnits().remove(this);
-    }
-
 
 
     @Override

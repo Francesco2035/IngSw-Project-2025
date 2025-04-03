@@ -19,7 +19,7 @@ public class SpaceVoid extends Component{
     }
 
     @Override
-    public void insert(PlayerBoard playerBoard) {}
+    public void insert(PlayerBoard playerBoard, int x, int y) {}
 
     @Override
     public void remove(PlayerBoard playerBoard) {}

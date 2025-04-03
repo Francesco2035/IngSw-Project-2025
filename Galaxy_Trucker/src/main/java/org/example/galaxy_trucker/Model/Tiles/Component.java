@@ -35,7 +35,7 @@ public abstract class Component {
     public abstract void rotate(Boolean direction);
     public abstract boolean controlValidity(PlayerBoard pb, int x, int y);
 
-    public abstract void insert(PlayerBoard playerBoard);
+    public abstract void insert(PlayerBoard playerBoard, int x, int y);
     public abstract void remove(PlayerBoard playerBoard);
 
 //  metodi per json

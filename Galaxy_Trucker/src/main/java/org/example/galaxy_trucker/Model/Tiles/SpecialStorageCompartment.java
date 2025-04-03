@@ -33,16 +33,7 @@ public class SpecialStorageCompartment extends Storage{
     public void rotate(Boolean direction) {}
 
 
-    @Override
-    public void insert(PlayerBoard playerBoard) {
-        playerBoard.getStorages().add(this);
-        goods = new ArrayList<>();
-    }
 
-    @Override
-    public void remove(PlayerBoard playerBoard) {
-        playerBoard.getStorages().remove(this);
-    }
 
 
     @Override

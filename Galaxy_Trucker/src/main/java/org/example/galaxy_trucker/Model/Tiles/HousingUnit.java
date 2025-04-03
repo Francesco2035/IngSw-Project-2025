@@ -35,4 +35,16 @@ public abstract class HousingUnit extends Component{
     public abstract void accept(ComponentActionVisitor visitor, PlayerStates State);
 
     public abstract void addCrew(int humans, boolean purple, boolean brown);
+
+    @Override
+    public void insert(PlayerBoard playerBoard, int x, int y) {
+        playerBoard.getHousingUnits().add(this);
+        playerBoard.getHousingUnitsCoord().put(this, new IntegerPair(x,y));
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getHousingUnits().remove(this);
+        playerBoard.getHousingUnitsCoord().remove(this);
+    }
 }

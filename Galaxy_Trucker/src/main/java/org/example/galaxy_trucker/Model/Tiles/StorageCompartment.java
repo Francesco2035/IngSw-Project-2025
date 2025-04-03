@@ -17,16 +17,7 @@ public class StorageCompartment extends Storage{
     }
 
 
-    @Override
-    public void insert(PlayerBoard playerBoard) {
-        playerBoard.getStorages().add(this);
-        goods = new ArrayList<>();
-    }
 
-    @Override
-    public void remove(PlayerBoard playerBoard) {
-        playerBoard.getStorages().remove(this);
-    }
 
     @Override
     public Goods removeGood(int i){

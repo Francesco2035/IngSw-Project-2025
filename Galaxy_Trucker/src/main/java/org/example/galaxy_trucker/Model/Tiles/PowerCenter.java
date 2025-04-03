@@ -20,7 +20,7 @@ public class PowerCenter extends Component{
     }
 
     @Override
-    public void insert(PlayerBoard playerBoard) {
+    public void insert(PlayerBoard playerBoard, int x, int y) {
         playerBoard.getPowerCenters().add(this);
     }
 

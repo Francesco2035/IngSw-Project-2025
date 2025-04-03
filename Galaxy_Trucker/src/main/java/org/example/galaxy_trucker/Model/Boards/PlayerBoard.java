@@ -11,7 +11,7 @@ import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.Goods.*;
 
 
-
+import javax.print.attribute.HashAttributeSet;
 import java.util.*;
 
 public class PlayerBoard {
@@ -36,6 +36,9 @@ public class PlayerBoard {
     private ArrayList<Goods> BufferGoods;
 
     private ArrayList<HousingUnit> HousingUnits;
+
+    private HashMap<HousingUnit, IntegerPair> HousingUnitsCoord;
+
     private ArrayList<HotWaterHeater> HotWaterHeaters;
     private ArrayList<PlasmaDrill> PlasmaDrills;
     private ArrayList<AlienAddons> AlienAddons;
@@ -56,6 +59,8 @@ public class PlayerBoard {
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
         this.totalValue = 0;
+        this.HousingUnitsCoord = new HashMap<>();
+
 
         this.valid = true;
 
@@ -126,7 +131,7 @@ public class PlayerBoard {
             }
         }
         this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
-        PlayerBoard[6][6].getComponent().insert(this);
+        PlayerBoard[6][6].getComponent().insert(this,6,6);
     }
 
 
@@ -299,7 +304,7 @@ public class PlayerBoard {
 
 
         this.PlayerBoard[x][y] = tile;
-        tile.getComponent().insert(this);
+        tile.getComponent().insert(this,x,y);
         ValidPlayerBoard[x][y] = 1;
 
     }
@@ -744,6 +749,9 @@ public class PlayerBoard {
     }
 
     public int getEnginePower() {
+        if (brownAlien){
+            return EnginePower +2;
+        }
         return EnginePower;
     }
 
@@ -752,6 +760,9 @@ public class PlayerBoard {
     }
 
     public double getPlasmaDrillsPower() {
+        if(purpleAlien){
+            return PlasmaDrillsPower + 2;
+        }
         return PlasmaDrillsPower;
     }
 
@@ -779,4 +790,7 @@ public class PlayerBoard {
         component.accept(action,State);
     }
 
+    public HashMap<HousingUnit, IntegerPair> getHousingUnitsCoord() {
+        return HousingUnitsCoord;
+    }
 }

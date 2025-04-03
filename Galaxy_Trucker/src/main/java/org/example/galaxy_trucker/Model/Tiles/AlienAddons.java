@@ -24,7 +24,7 @@ public class AlienAddons extends Component{
     public void rotate(Boolean direction){}
 
     @Override
-    public void insert(PlayerBoard playerBoard) {
+    public void insert(PlayerBoard playerBoard, int x, int y) {
         playerBoard.getAlienAddons().add(this);
     }
 
