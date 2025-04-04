@@ -32,6 +32,16 @@ public class Storage extends Component{
         return true;
     }
 
+    @Override
+    public void insert(PlayerBoard playerBoard, int x, int y) {
+
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+
+    }
+
     public  Goods removeGood(int i){
         return null;
     }
@@ -40,18 +50,6 @@ public class Storage extends Component{
 
     }
 
-
-
-    @Override
-    public void insert(PlayerBoard playerBoard, int x, int y) {
-        playerBoard.getStorages().add(this);
-        goods = new ArrayList<>();
-    }
-
-    @Override
-    public void remove(PlayerBoard playerBoard) {
-        playerBoard.getStorages().remove(this);
-    }
 
     private void orderGoods() {
         this.goods.sort(Comparator.comparingInt(Goods::getValue));

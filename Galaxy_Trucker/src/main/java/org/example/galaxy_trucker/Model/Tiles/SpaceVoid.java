@@ -10,7 +10,7 @@ public class SpaceVoid extends Component{
 
 
     @Override
-    public void rotate(Boolean direction) {}
+    public void rotate(Boolean direction) {throw new InvalidInput("you can't rotate spaceVoid tile");}
 
 
     @Override
@@ -19,11 +19,12 @@ public class SpaceVoid extends Component{
     }
 
     @Override
-    public void insert(PlayerBoard playerBoard, int x, int y) {}
+    public void insert(PlayerBoard playerBoard, int x, int y) {
+        throw new InvalidInput("you can't add spaceVoid tile");
+    }
 
     @Override
     public void remove(PlayerBoard playerBoard) {}
-
 
 
     @Override

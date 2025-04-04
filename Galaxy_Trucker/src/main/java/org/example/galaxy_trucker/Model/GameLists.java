@@ -3,10 +3,10 @@ package org.example.galaxy_trucker.Model;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class GameHandler {
+public class GameLists {
     ArrayList<Game> Games;
 
-    public GameHandler(){
+    public GameLists(){
         Games = new ArrayList<>();
     }
 
@@ -19,6 +19,10 @@ public class GameHandler {
 
     public void JoinGame(int index, String id){
         Games.get(index).NewPlayer(id);
+    }
+
+    public ArrayList<Game> getGames(){
+        return Games;
     }
 
 }

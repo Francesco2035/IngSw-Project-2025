@@ -6,7 +6,7 @@ import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
 
 public class UseEnergyAction extends ComponentActionVisitor {
     private PlayerBoard playerBoard;
-    UseEnergyAction(PlayerBoard playerBoard) {
+    public UseEnergyAction(PlayerBoard playerBoard) {
         this.playerBoard = playerBoard;
     }
 
