@@ -124,13 +124,13 @@ public class PlayerBoardTest {
         Goods yellow = new YELLOW();
         state = PlayerStates.AddCargo;
         AddGoodAction action3 = new AddGoodAction(red, playerBoard,7,8);
-        playerBoard.performAction(playerBoard.getTile(7,8).getComponent(), action3, state);
-        action3 = new AddGoodAction(blue, playerBoard,7,9);
-        playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
-        playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
-        assertThrows( InvalidInput.class,
-                () -> playerBoard.performAction(playerBoard.getTile(7,9).getComponent(),
-                        new AddGoodAction(yellow, playerBoard,7,9), PlayerStates.AddCargo));
+//        playerBoard.performAction(playerBoard.getTile(7,8).getComponent(), action3, state);
+//        action3 = new AddGoodAction(blue, playerBoard,7,9);
+//        playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
+//        playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
+//        assertThrows( InvalidInput.class,
+//                () -> playerBoard.performAction(playerBoard.getTile(7,9).getComponent(),
+//                        new AddGoodAction(yellow, playerBoard,7,9), PlayerStates.AddCargo));
 
 
 

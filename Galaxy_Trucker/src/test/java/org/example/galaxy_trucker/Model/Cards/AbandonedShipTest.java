@@ -75,6 +75,7 @@ class AbandonedShipTest {
         playerBoard1=Pietro.getmyPlayerBoard();
         playerBoard2=Franci.getmyPlayerBoard();
         playerBoard3= TestSetupHelper.createInitializedBoard1();
+        TestSetupHelper.HumansSetter1(playerBoard3);
         playerBoard3.checkValidity();
         Passo.setMyPlance(playerBoard3);
 
@@ -91,6 +92,7 @@ class AbandonedShipTest {
 
         playerBoard1.insertTile(tile1,6,7);
         playerBoard1.insertTile(tile2,7,7);
+        TestSetupHelper.HumansSetter1(playerBoard1);
         playerBoard1.checkValidity();
 
 //        playerBoard1.setSetter(new HousingUnitSetter(playerBoard1,new IntegerPair(6,7),2,false,false));
@@ -98,9 +100,9 @@ class AbandonedShipTest {
 //        playerBoard1.setSetter(new HousingUnitSetter(playerBoard1,new IntegerPair(7,7),2,false,false));
 //        playerBoard1.getSetter().set();
 
-        TestSetupHelper.HumansSetter1(playerBoard1);
-
-        TestSetupHelper.HumansSetter1(playerBoard3);
+//        TestSetupHelper.HumansSetter1(playerBoard1);
+//
+//        TestSetupHelper.HumansSetter1(playerBoard3);
         Passo.EndConstruction();
         Pietro.EndConstruction();
         Franci.EndConstruction();
