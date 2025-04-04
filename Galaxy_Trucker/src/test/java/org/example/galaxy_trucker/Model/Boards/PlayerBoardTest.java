@@ -93,6 +93,7 @@ public class PlayerBoardTest {
         assertEquals(8, playerBoard.getDamage());
         int[] shield = {0,1,1,0};
         assertArrayEquals(shield, playerBoard.getShield());
+        playerBoard.destroy(6,9);
 
     }
 
@@ -103,8 +104,6 @@ public class PlayerBoardTest {
     public void testComponentActions(){
 
         PlayerStates state = PlayerStates.PopulateHousingUnits;
-
-        System.out.println(playerBoard.getHousingUnits().indexOf(playerBoard.getTile(6,6).getComponent()));
 
 
         playerBoard.performAction(playerBoard.getTile(6,6).getComponent(), new AddCrewAction(2,false,false, playerBoard), state);
@@ -119,19 +118,44 @@ public class PlayerBoardTest {
         }
         assertEquals(5, action.getPower());
 
+
+        System.out.println("Testing GoodsActions");
         Goods red = new RED();
         Goods blue = new BLUE();
         Goods yellow = new YELLOW();
         state = PlayerStates.AddCargo;
         AddGoodAction action3 = new AddGoodAction(red, playerBoard,7,8);
-//        playerBoard.performAction(playerBoard.getTile(7,8).getComponent(), action3, state);
-//        action3 = new AddGoodAction(blue, playerBoard,7,9);
-//        playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
-//        playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
-//        assertThrows( InvalidInput.class,
-//                () -> playerBoard.performAction(playerBoard.getTile(7,9).getComponent(),
-//                        new AddGoodAction(yellow, playerBoard,7,9), PlayerStates.AddCargo));
+        playerBoard.performAction(playerBoard.getTile(7,8).getComponent(), action3, state);
+        action3 = new AddGoodAction(blue, playerBoard,7,9);
+        playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
+        playerBoard.performAction(playerBoard.getTile(7,9).getComponent(), action3, state);
+        assertEquals(2, playerBoard.getStoredGoods().size());
+        GetGoodAction getaction = new GetGoodAction(0,playerBoard,7,8);
+        playerBoard.performAction(playerBoard.getTile(7,8).getComponent(), getaction, PlayerStates.RemoveCargo);
+        assertEquals(1,playerBoard.getStoredGoods().size());
+        assertThrows(InvalidInput.class,
+                () -> playerBoard.performAction(playerBoard.getTile(7,8).getComponent(),
+                        new GetGoodAction(0,playerBoard,7,8), PlayerStates.RemoveCargo));
+        assertThrows( InvalidInput.class,
+                () -> playerBoard.performAction(playerBoard.getTile(7,9).getComponent(),
+                        new AddGoodAction(yellow, playerBoard,7,9), PlayerStates.AddCargo));
 
+
+        System.out.println("Testing EnergyActions");
+        UseEnergyAction energyAction = new UseEnergyAction(playerBoard);
+        state = PlayerStates.UseEnergy;
+        playerBoard.performAction(playerBoard.getTile(5,4).getComponent(), energyAction, state);
+        playerBoard.performAction(playerBoard.getTile(5,4).getComponent(), energyAction, state);
+        playerBoard.performAction(playerBoard.getTile(6,9).getComponent(), energyAction, state);
+        playerBoard.performAction(playerBoard.getTile(6,9).getComponent(), energyAction, state);
+        playerBoard.performAction(playerBoard.getTile(6,9).getComponent(), energyAction, state);
+        assertEquals(0,playerBoard.getEnergy());
+        assertThrows(InvalidInput.class,
+                ()-> playerBoard.performAction
+                        (playerBoard.getTile(6,9).getComponent(),new UseEnergyAction(playerBoard),PlayerStates.UseEnergy));
+        assertThrows(IllegalStateException.class,
+                ()-> playerBoard.performAction
+                        (playerBoard.getTile(6,9).getComponent(),new UseEnergyAction(playerBoard),PlayerStates.Accepting));
 
 
     }

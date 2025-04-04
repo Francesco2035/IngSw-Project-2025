@@ -39,4 +39,16 @@ public class StorageCompartment extends Storage{
         goods.add(good);
     }
 
+
+    @Override
+    public void insert(PlayerBoard playerBoard, int x, int y) {
+        playerBoard.getStorages().add(this);
+        goods = new ArrayList<>();
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getStorages().remove(this);
+    }
+
 }

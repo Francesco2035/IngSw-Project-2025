@@ -7,9 +7,11 @@ import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Game {
     private String GameID;
+    private HashMap<String,Player> Players;
     private ArrayList<Player> PlayerList;
     private GameBoard GameBoard;
     private CardStacks CardDeck;
@@ -25,6 +27,7 @@ public class Game {
         GameID = id;
         gag = new GAGen();
         PlayerList = new ArrayList<>();
+        Players = new HashMap<>();
         CardDeck = new CardStacks(gag, GameLevel);
         TileDecks = new TileSets(gag);
         lv = GameLevel;
@@ -33,21 +36,33 @@ public class Game {
 
 
     public void NewPlayer(String ID)throws IllegalArgumentException, IndexOutOfBoundsException{
-        if(PlayerList.size() >= 4)
+        if(Players.size() >= 4)
             throw new IndexOutOfBoundsException("Game is full");
 
-        for(Player p : PlayerList){
-            if(p.GetID().equals(ID)){
-                throw new IllegalArgumentException("Player already exists");
-            }
+        if (Players.containsKey(ID)){
+            throw new IllegalArgumentException("Player already exists");
         }
         Player newborn = new Player(ID, GameBoard);
-        GameBoard.addPlayer(newborn);
+        Players.put(ID, newborn);
         PlayerList.add(newborn);
+
     }
 
-    public void RemovePlayer(Player DeadMan){
-        PlayerList.remove(DeadMan);
+    public void RemovePlayer(String DeadMan){
+        Players.remove(DeadMan);
+    }
+
+
+    public State getCurrentState(){
+        return CurrentState;
+    }
+
+    public void setState(State newState){
+        CurrentState = newState;
+    }
+
+    public HashMap<String,Player> getPlayers(){
+        return Players;
     }
 
 
