@@ -41,7 +41,7 @@ public class Pirates extends Card{
         this.currentPlayer = null;
         this.lines = new int[Punsihment.size()/2];
         for(int i=0;i< Punishment.size()/2;i++){
-            lines[i] = this.getBoard().getPlayers().getFirst().RollDice();
+            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
         }
         this.hit = null;
 
@@ -75,20 +75,20 @@ public class Pirates extends Card{
             this.finishCard();
         }
     }
-//
-//    @Override
-//    public void continueCard(ArrayList<IntegerPair> cannons) {
-//        double power= currentPlayer.getMyPlance().getPower(cannons);
-//        if(power>this.getRequirement()){
-//            this.defeated=true;
-//            this.currentPlayer.setState(PlayerStates.Accepting);
-//            this.currentPlayer.setInputHandler(new Accept(this));
-//        }
-//        else if (power<this.getRequirement()){
-//            this.continueCard();
-//        }
-//
-//    }
+
+    @Override
+    public void continueCard(double power) {
+
+        if(power>this.getRequirement()){
+            this.defeated=true;
+            this.currentPlayer.setState(PlayerStates.Accepting);
+            this.currentPlayer.setInputHandler(new Accept(this));
+        }
+        else if (power<this.getRequirement()){
+            this.continueCard();
+        }
+
+    }
 
 
 

@@ -21,7 +21,7 @@ public class Stardust extends Card {
         while(Order>=0){
             CurrentPlanche =PlayerList.get(Order).getmyPlayerBoard();
             StarpowderMovement=-CurrentPlanche.getExposedConnectors();
-            Board.movePlayer(PlayerList.get(Order).GetID(), -this.getTime());
+            Board.movePlayer(PlayerList.get(Order).GetID(), StarpowderMovement);
             Order--;
         }
 
