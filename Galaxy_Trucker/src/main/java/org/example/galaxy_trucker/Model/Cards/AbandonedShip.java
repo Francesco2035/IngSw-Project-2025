@@ -81,6 +81,7 @@ public class AbandonedShip extends Card{
 //            System.out.println("totHumans di"+currentPlayer.GetID()+": "+totHumans);
 //            if(totHumans>this.requirement){
             if(CurrentPlanche.getNumHumans()>requirement){
+                this.totHumans=CurrentPlanche.getNumHumans();
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
                 currentPlayer.setState(PlayerStates.AcceptKilling);
@@ -125,7 +126,7 @@ public class AbandonedShip extends Card{
             for (IntegerPair coordinate : coordinates) {
                 System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
 
-                curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr),PlayerStates.AcceptKilling);
+                curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr),PlayerStates.Killing);
 
 //                currentPlayer.getmyPlayerBoard().setGetter(new HousingUnitGetter(currentPlayer.getmyPlayerBoard(),
 //                        coordinate, 1, false, false));

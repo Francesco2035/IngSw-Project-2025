@@ -1,11 +1,13 @@
 package org.example.galaxy_trucker;
 
+import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.DOUBLE;
 import org.example.galaxy_trucker.Model.Connectors.SINGLE;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
+import org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.SewerPipes;
@@ -161,7 +163,7 @@ public class TestSetupHelper {
         ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
         HousingCoords.addAll(playerBoard.getHousingUnits());
         for(HousingUnit housingUnit : HousingCoords){
-            housingUnit.setNumHumans(2);
+           playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),PlayerStates.PopulateHousingUnits);
         }
     }
 

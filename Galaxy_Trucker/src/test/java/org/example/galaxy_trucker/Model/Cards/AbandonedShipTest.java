@@ -122,7 +122,7 @@ class AbandonedShipTest {
 
         assertEquals(FakeAbandonedShip.getCurrentPlayer().GetID(),"Sgregno");
         System.out.println("controllo num");
-        assertEquals(12,FakeAbandonedShip.getTotHumans());
+        assertEquals(8,FakeAbandonedShip.getTotHumans());
         System.out.println("fine controllo");
 
         assertEquals(Franci.getPlayerState(),PlayerStates.Waiting);
@@ -139,8 +139,8 @@ class AbandonedShipTest {
         System.out.println(Passo.GetID()+"state"+Passo.getPlayerState());
         AcceptKilling handler = (AcceptKilling) Passo.getInputHandler();
         ArrayList<IntegerPair> coords= new ArrayList<>();
-        IntegerPair c1= new IntegerPair(7,4);
-        IntegerPair c2= new IntegerPair(8,5);
+        IntegerPair c1= new IntegerPair(4,5);
+        IntegerPair c2= new IntegerPair(6,6);
         IntegerPair c3= new IntegerPair(6,6);
         coords.add(c1);
         coords.add(c2);
