@@ -51,4 +51,12 @@ public abstract class HousingUnit extends Component{
         playerBoard.getHousingUnits().remove(this);
 
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }

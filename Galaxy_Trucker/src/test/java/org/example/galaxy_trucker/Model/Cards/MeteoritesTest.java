@@ -70,7 +70,7 @@ class MeteoritesTest {
 
         Franci.setMyPlance(playerBoard1);
         System.out.println("boh111");
-        TestSetupHelper.HumansSetter2(Franci.getMyPlance());
+        TestSetupHelper.HumansSetter2(Franci.getmyPlayerBoard());
 
     }
 

@@ -43,6 +43,7 @@ public class Game {
             throw new IllegalArgumentException("Player already exists");
         }
         Player newborn = new Player(ID, GameBoard);
+        this.GameBoard.addPlayer(newborn);
         Players.put(ID, newborn);
         PlayerList.add(newborn);
 

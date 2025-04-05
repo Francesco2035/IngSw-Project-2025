@@ -4,10 +4,11 @@ import org.example.galaxy_trucker.Model.*;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
-import org.example.galaxy_trucker.Model.SetterHandler.HousingUnitSetter;
-import org.example.galaxy_trucker.Model.Tiles.Connector;
+
+import org.example.galaxy_trucker.Model.Connectors.*;
+import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.modularHousingUnit;
+import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.*;
 
@@ -71,25 +72,27 @@ class AbandonedShipTest {
          Franci= GameBoard.getPlayers().get(0);
          Pietro= GameBoard.getPlayers().get(1);
          Passo= GameBoard.getPlayers().get(2);
-        playerBoard1=Pietro.getMyPlance();
-        playerBoard2=Franci.getMyPlance();
+        playerBoard1=Pietro.getmyPlayerBoard();
+        playerBoard2=Franci.getmyPlayerBoard();
         playerBoard3= TestSetupHelper.createInitializedBoard1();
+        TestSetupHelper.HumansSetter1(playerBoard3);
         playerBoard3.checkValidity();
         Passo.setMyPlance(playerBoard3);
 
 
 
-        modularHousingUnit house1 =new modularHousingUnit();
-        modularHousingUnit house2 =new modularHousingUnit();
+        ModularHousingUnit house1 =new ModularHousingUnit();
+        ModularHousingUnit house2 =new ModularHousingUnit();
 
 
         IntegerPair cord = new IntegerPair(0,0);
 
-        Tile tile1 = new Tile(cord,house1, Connector.UNIVERSAL,Connector.UNIVERSAL,Connector.UNIVERSAL,Connector.UNIVERSAL);
-        Tile tile2 = new Tile(cord,house2, Connector.UNIVERSAL,Connector.UNIVERSAL,Connector.UNIVERSAL,Connector.UNIVERSAL);
+        Tile tile1 = new Tile(house1, new UNIVERSAL(),new UNIVERSAL(),new UNIVERSAL(),new UNIVERSAL());
+        Tile tile2 = new Tile(house2, new UNIVERSAL(),new UNIVERSAL(),new UNIVERSAL(),new UNIVERSAL());
 
         playerBoard1.insertTile(tile1,6,7);
         playerBoard1.insertTile(tile2,7,7);
+        TestSetupHelper.HumansSetter1(playerBoard1);
         playerBoard1.checkValidity();
 
 //        playerBoard1.setSetter(new HousingUnitSetter(playerBoard1,new IntegerPair(6,7),2,false,false));
@@ -97,9 +100,9 @@ class AbandonedShipTest {
 //        playerBoard1.setSetter(new HousingUnitSetter(playerBoard1,new IntegerPair(7,7),2,false,false));
 //        playerBoard1.getSetter().set();
 
-        TestSetupHelper.HumansSetter1(playerBoard1);
-
-        TestSetupHelper.HumansSetter1(playerBoard3);
+//        TestSetupHelper.HumansSetter1(playerBoard1);
+//
+//        TestSetupHelper.HumansSetter1(playerBoard3);
         Passo.EndConstruction();
         Pietro.EndConstruction();
         Franci.EndConstruction();
@@ -119,7 +122,7 @@ class AbandonedShipTest {
 
         assertEquals(FakeAbandonedShip.getCurrentPlayer().GetID(),"Sgregno");
         System.out.println("controllo num");
-        assertEquals(12,FakeAbandonedShip.getTotHumans());
+        assertEquals(8,FakeAbandonedShip.getTotHumans());
         System.out.println("fine controllo");
 
         assertEquals(Franci.getPlayerState(),PlayerStates.Waiting);
@@ -136,8 +139,8 @@ class AbandonedShipTest {
         System.out.println(Passo.GetID()+"state"+Passo.getPlayerState());
         AcceptKilling handler = (AcceptKilling) Passo.getInputHandler();
         ArrayList<IntegerPair> coords= new ArrayList<>();
-        IntegerPair c1= new IntegerPair(7,4);
-        IntegerPair c2= new IntegerPair(8,5);
+        IntegerPair c1= new IntegerPair(4,5);
+        IntegerPair c2= new IntegerPair(6,6);
         IntegerPair c3= new IntegerPair(6,6);
         coords.add(c1);
         coords.add(c2);
