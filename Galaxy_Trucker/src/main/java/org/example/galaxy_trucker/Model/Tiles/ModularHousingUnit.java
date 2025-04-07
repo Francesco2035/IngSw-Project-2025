@@ -1,9 +1,10 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 public class ModularHousingUnit extends HousingUnit {
 
@@ -68,6 +69,7 @@ public class ModularHousingUnit extends HousingUnit {
 
 
     @Override
+    //@SuppressWarnings("SuspiciousMethodCalls")
     public boolean controlValidity(PlayerBoard playerBoard, int x, int y) {
         Tile tile = playerBoard.getTile(x,y);
         nearBrownAddon = false;
@@ -114,6 +116,7 @@ public class ModularHousingUnit extends HousingUnit {
             }
         }
         //System.out.println("salve");
+        // Safe: getComponent() returns Component, and list contains Component
         if(vb[x+1][y] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x +1,y).getComponent())){
             index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x+1,y).getComponent());
             //System.out.println("dovrei entrare qui "+index);
@@ -133,11 +136,8 @@ public class ModularHousingUnit extends HousingUnit {
 
 
     @Override
-    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
-        if (!(State.equals(PlayerStates.Killing) || State.equals(PlayerStates.PopulateHousingUnits))){
-            throw new IllegalStateException("Player state is not Killing state or PopulateHousingUnits");
-        }
-        visitor.visit(this, State);
+    public void accept(ComponentAction visitor, PlayerState state) {
+        visitor.visit(this, state);
     }
 
     @Override
@@ -185,4 +185,7 @@ public class ModularHousingUnit extends HousingUnit {
     }
 
 }
+
+
+
 

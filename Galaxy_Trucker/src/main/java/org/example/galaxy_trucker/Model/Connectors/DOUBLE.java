@@ -1,21 +1,28 @@
 package org.example.galaxy_trucker.Model.Connectors;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 @JsonTypeName("DOUBLE")
 public class DOUBLE implements Connectors {
 
-    public DOUBLE() {}
+    public static final DOUBLE INSTANCE = new DOUBLE();
 
-    @Override
-    public boolean checkLegal(Connectors Adjacent) {
-        return Adjacent instanceof DOUBLE || Adjacent instanceof UNIVERSAL;
+    private DOUBLE() {}
+
+    @JsonCreator
+    public static DOUBLE getInstance() {
+        return INSTANCE;
     }
 
     @Override
-    public boolean checkAdjacent(Connectors Adjacent){
-        return Adjacent instanceof DOUBLE || Adjacent instanceof UNIVERSAL;
+    public boolean checkLegal(Connectors Adjacent) {
+        return Adjacent == DOUBLE.INSTANCE || Adjacent == UNIVERSAL.INSTANCE;
+    }
+
+    @Override
+    public boolean checkAdjacent(Connectors Adjacent) {
+        return Adjacent == DOUBLE.INSTANCE || Adjacent == UNIVERSAL.INSTANCE;
     }
 
     @Override

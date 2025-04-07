@@ -1,16 +1,16 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 
 
 public class SpaceVoid extends Component{
 
 
     @Override
-    public void rotate(Boolean direction) {}
+    public void rotate(Boolean direction) {throw new InvalidInput("you can't rotate spaceVoid tile");}
 
 
     @Override
@@ -19,17 +19,14 @@ public class SpaceVoid extends Component{
     }
 
     @Override
-    public void insert(PlayerBoard playerBoard, int x, int y) {}
+    public void insert(PlayerBoard playerBoard, int x, int y) {
+        throw new InvalidInput("you can't add spaceVoid tile");
+    }
 
     @Override
     public void remove(PlayerBoard playerBoard) {}
 
 
-
-    @Override
-    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
-        throw new InvalidInput("cannot accept this action on spaceVoid tile: " +visitor.getClass().getSimpleName());
-    }
 
 }
 

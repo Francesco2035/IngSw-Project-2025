@@ -2,12 +2,10 @@ package org.example.galaxy_trucker.Model.Cards;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.InputHandlers.Accept;
-import org.example.galaxy_trucker.Model.InputHandlers.ChoosingPlanet;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates;
-
-import java.util.Random;
+import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
+import org.example.galaxy_trucker.Model.PlayerStates.ChoosingPlanet;
+import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
 import java.util.ArrayList;
 
@@ -32,7 +30,7 @@ public class SolarSystem extends Card {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
-            p.setState(PlayerStates.Waiting);
+            p.setState(new Waiting());
         }
         this.updateSates();
     }
@@ -46,8 +44,8 @@ public class SolarSystem extends Card {
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
-            this.currentPlayer.setState(PlayerStates.ChoosingPlanet);
-            this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
+            this.currentPlayer.setState(new ChoosingPlanet());
+            //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
 
             this.order++;
         }
@@ -66,7 +64,7 @@ public class SolarSystem extends Card {
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.done==PlayerList.size()) {
             for (int i = 0; i < PlayerList.size(); i++) {
-                PlayerList.get(i).setState(PlayerStates.BaseState);
+                PlayerList.get(i).setState(new BaseState());
             }
         }
         else{
@@ -80,8 +78,8 @@ public class SolarSystem extends Card {
         if(accepted) {
             if (this.planets.get(planet).isOccupied()) {
                 //mando un avviso e richiedo
-                this.currentPlayer.setState(PlayerStates.ChoosingPlanet);
-                this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
+                this.currentPlayer.setState(new ChoosingPlanet());
+                //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
             } else {
                 this.planets.get(planet).setOccupied(this.currentPlayer);
                 this.updateSates();

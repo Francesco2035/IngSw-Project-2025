@@ -3,9 +3,9 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
-import org.example.galaxy_trucker.Model.InputHandlers.InputHandler;
+//import org.example.galaxy_trucker.Model.InputHandlers.InputHandler;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
+import org.example.galaxy_trucker.Model.PlayerStates.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -18,10 +18,11 @@ public class Player {
     private boolean ready;
     private int credits;
     private Tile CurrentTile;   //the tile that Player has in his hand
-    private  PlayerStates PlayerState;
-    private InputHandler InputHandler;
+    private PlayerState PlayerState;
+    //private InputHandler InputHandler;
     private ArrayList<Goods> GoodsToHandle;
     private Card CurrentCard;
+
 
 
     public Player(String id, GameBoard board) {
@@ -68,19 +69,19 @@ public class Player {
         return d1+d2;
     }
     
-    public InputHandler getInputHandler() {
-        return InputHandler;
-    }
+//    public InputHandler getInputHandler() {
+//        return InputHandler;
+//    }
 
-    public PlayerStates getPlayerState() {
+    public PlayerState getPlayerState() {
         return PlayerState;
     }
 
-    public void setInputHandler(InputHandler InputHandler) {
-        this.InputHandler = InputHandler;
-    }
+//    public void setInputHandler(InputHandler InputHandler) {
+//        this.InputHandler = InputHandler;
+//    }
 
-    public void setState(PlayerStates state) {
+    public void setState(PlayerState state) {
         this.PlayerState = state;
     }
 
@@ -192,7 +193,7 @@ public class Player {
      */
     public void EndConstruction(){
         CommonBoard.SetStartingPosition(this.ID);
-        this.setState(PlayerStates.FinishedBuilding);
+        this.setState(new FinishedBuilding());
        }
 
 
@@ -273,11 +274,16 @@ public class Player {
     }
 
     public void stopHandlingCargo(){
-        this.setState(PlayerStates.Waiting);
+        this.setState(new Waiting());
         this.CurrentCard.finishCard();
 
         // controllo che
     }
+
+    public Card getCurrentCard() {
+        return CurrentCard;
+    }
+
 
     //DOVREI AGGIUNGERE UN MODO PER ARRIVARE A CARD DA PLAYER DIREI :)
     //principalmente per chiamare i metodi di card dopo l'input

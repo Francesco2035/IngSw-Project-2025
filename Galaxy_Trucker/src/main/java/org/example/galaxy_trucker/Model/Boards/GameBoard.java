@@ -5,15 +5,14 @@ package org.example.galaxy_trucker.Model.Boards;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Optional;
-import java.util.concurrent.CyclicBarrier;
 
 
 public class GameBoard {
@@ -68,7 +67,7 @@ public class GameBoard {
     public void addPlayer(Player NewPlayer){
         Player_IntegerPair NewPair = new Player_IntegerPair(NewPlayer, 0);
         this.players.add(NewPair);
-        NewPlayer.setState(PlayerStates.BuildingShip);
+        NewPlayer.setState(new BuildingShip());
     }
 
     public void StartHourglass() {

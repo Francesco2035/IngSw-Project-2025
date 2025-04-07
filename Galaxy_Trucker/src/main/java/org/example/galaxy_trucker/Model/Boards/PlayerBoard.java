@@ -3,15 +3,14 @@ package org.example.galaxy_trucker.Model.Boards;
 
 import org.example.galaxy_trucker.Exceptions.*;
 
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.Goods.*;
 
 
-import javax.print.attribute.HashAttributeSet;
 import java.util.*;
 
 public class PlayerBoard {
@@ -121,7 +120,7 @@ public class PlayerBoard {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 if (ValidPlayerBoard[x][y] != 1) {
-                    PlayerBoard[x][y] =  new Tile(new SpaceVoid() , new NONE(), new NONE(),new NONE(), new NONE());
+                    PlayerBoard[x][y] =  new Tile(new SpaceVoid() , NONE.INSTANCE , NONE.INSTANCE,NONE.INSTANCE, NONE.INSTANCE);
                 }
                 else {
                     PlayerBoard[x][y] = null;
@@ -129,7 +128,7 @@ public class PlayerBoard {
 
             }
         }
-        this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
+        this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
         PlayerBoard[6][6].getComponent().insert(this,6,6);
     }
 
@@ -387,7 +386,7 @@ public class PlayerBoard {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
         PlayerBoard[x][y].getComponent().remove(this);
-        PlayerBoard[x][y] = new Tile(new SpaceVoid() ,new NONE(), new NONE(), new NONE());
+        PlayerBoard[x][y] = new Tile(new SpaceVoid() ,NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;
     }
 
@@ -484,7 +483,7 @@ public class PlayerBoard {
 
         PlayerBoard[x][y].getComponent().remove(this);
         damage++;
-        PlayerBoard[x][y] = new Tile(new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
+        PlayerBoard[x][y] = new Tile(new SpaceVoid(),NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;
         updateStoredGoods();
     }
@@ -526,7 +525,7 @@ public class PlayerBoard {
                 if (ValidPlayerBoard[x][y] == 1){
                     if(!newPlayerBoard.contains(new IntegerPair(x,y))){
                         PlayerBoard[x][y].getComponent().remove(this);
-                        PlayerBoard[x][y] = new Tile(new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
+                        PlayerBoard[x][y] = new Tile(new SpaceVoid(),NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
                         ValidPlayerBoard[x][y] = 0;
                         damage++;
                     }
@@ -785,8 +784,10 @@ public class PlayerBoard {
         Energy += energy;
     }
 
-    public void performAction(Component component, ComponentActionVisitor action, PlayerStates State) {
-        component.accept(action,State);
+    public void performAction(Component component, ComponentAction action, PlayerState state) {
+
+            component.accept(action, state);
+
     }
 
 

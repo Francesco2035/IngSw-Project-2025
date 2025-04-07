@@ -1,16 +1,15 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.example.galaxy_trucker.Model.InputHandlers.Accept;
+//import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates;
-
-import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.PlayerStates.Accepting;
+import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
+import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 
 
 import java.util.ArrayList;
@@ -38,10 +37,10 @@ public class AbandonedStation extends Card{
     }
 
 
-    @Override
-    public  void  ActivateCard() {
-        currentPlayer.getInputHandler().action();
-    }
+//    @Override
+//    public  void  ActivateCard() {
+//        currentPlayer.getInputHandler().action();
+//    }
 
     @Override
     public void CardEffect(){
@@ -49,7 +48,7 @@ public class AbandonedStation extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
-            p.setState(PlayerStates.Waiting);
+            p.setState(new Waiting());
         }
         this.updateSates();
     }
@@ -68,8 +67,8 @@ public class AbandonedStation extends Card{
             if(CurrentPlanche.getNumHumans()>this.requirement){
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
-                currentPlayer.setState(PlayerStates.Accepting);
-                currentPlayer.setInputHandler(new Accept(this));
+                currentPlayer.setState(new Accepting());
+                //currentPlayer.setInputHandler(new Accept(this));
 
             }
 
@@ -82,7 +81,7 @@ public class AbandonedStation extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
-            PlayerList.get(i).setState(PlayerStates.BaseState);
+            PlayerList.get(i).setState(new BaseState());
         }
     }
 
@@ -95,7 +94,7 @@ public class AbandonedStation extends Card{
 
         }
         else{
-            currentPlayer.setState(PlayerStates.Waiting);
+            currentPlayer.setState(new Waiting());
             this.flag = false;
             this.updateSates();
         }

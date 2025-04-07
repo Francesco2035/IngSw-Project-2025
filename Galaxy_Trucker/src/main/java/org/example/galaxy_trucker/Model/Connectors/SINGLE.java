@@ -1,26 +1,32 @@
 package org.example.galaxy_trucker.Model.Connectors;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 @JsonTypeName("SINGLE")
 public class SINGLE implements Connectors {
 
-    public SINGLE() {}
+    public static final SINGLE INSTANCE = new SINGLE();
 
-    @Override
-    public boolean checkLegal(Connectors Adjacent) {
-        return Adjacent instanceof SINGLE || Adjacent instanceof UNIVERSAL;
+    private SINGLE() {}
+
+    @JsonCreator
+    public static SINGLE getInstance() {
+        return INSTANCE;
     }
 
     @Override
-    public boolean checkAdjacent(Connectors Adjacent){
-        return Adjacent instanceof SINGLE || Adjacent instanceof UNIVERSAL;
+    public boolean checkLegal(Connectors Adjacent) {
+        return Adjacent == SINGLE.INSTANCE || Adjacent == UNIVERSAL.INSTANCE;
+    }
+
+    @Override
+    public boolean checkAdjacent(Connectors Adjacent) {
+        return Adjacent == SINGLE.INSTANCE || Adjacent == UNIVERSAL.INSTANCE;
     }
 
     @Override
     public boolean isExposed() {
         return true;
     }
-
 }

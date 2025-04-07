@@ -1,10 +1,11 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
-import org.example.galaxy_trucker.Exceptions.powerCenterEmptyException;
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
+import org.jetbrains.annotations.NotNull;
 
 public class PowerCenter extends Component{
 
@@ -15,26 +16,25 @@ public class PowerCenter extends Component{
     public void rotate(Boolean direction) {}
 
     @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+    public boolean controlValidity(@NotNull PlayerBoard pb, int x, int y) {
         return true;
     }
 
     @Override
-    public void insert(PlayerBoard playerBoard, int x, int y) {
+    public void insert(@NotNull PlayerBoard playerBoard, int x, int y) {
+        playerBoard.setEnergy(type);
         playerBoard.getPowerCenters().add(this);
     }
 
     @Override
-    public void remove(PlayerBoard playerBoard) {
+    public void remove(@NotNull PlayerBoard playerBoard) {
+        playerBoard.setEnergy(-type);
         playerBoard.getPowerCenters().remove(this);
     }
 
 
     @Override
-    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
-        if (!State.equals(PlayerStates.UseEnergy)){
-            throw new IllegalStateException("Player state is not UseEnergy state");
-        }
+    public void accept(@NotNull ComponentAction visitor, @NotNull PlayerState State) {
         visitor.visit(this, State);
     }
 

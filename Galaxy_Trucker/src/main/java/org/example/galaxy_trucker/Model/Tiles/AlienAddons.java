@@ -1,12 +1,10 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.PlayerStates;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 
 public class AlienAddons extends Component{
 
@@ -33,10 +31,5 @@ public class AlienAddons extends Component{
         playerBoard.getAlienAddons().remove(this);
     }
 
-
-    @Override
-    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
-
-    }
 
 }

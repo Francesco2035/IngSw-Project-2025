@@ -1,10 +1,13 @@
 package org.example.galaxy_trucker;
 
+import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.DOUBLE;
 import org.example.galaxy_trucker.Model.Connectors.SINGLE;
 import org.example.galaxy_trucker.Model.GAGen;
-import org.example.galaxy_trucker.Model.IntegerPair;
+
+import org.example.galaxy_trucker.Model.PlayerStatesss;
+import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.SewerPipes;
 import org.junit.jupiter.api.Test;
@@ -117,6 +120,7 @@ public class TestSetupHelper {
         Tile t7 = tiles.get(150);//Shield: uni,none,none,single
         Tile t8 = tiles.get(10);//battery uni,uni,none,none
 
+
         t1.RotateSx();
         t1.RotateSx();
         t2.RotateDx();
@@ -143,8 +147,8 @@ public class TestSetupHelper {
     }
 
     public static PlayerBoard createInitializedBoard4(){
-        SINGLE SS = new SINGLE();
-        DOUBLE DD = new DOUBLE();
+        SINGLE SS = SINGLE.INSTANCE;
+        DOUBLE DD = DOUBLE.INSTANCE;
         Tile single = new Tile(new SewerPipes(),SS,SS,SS,SS);
         Tile dd = new Tile(new SewerPipes(),DD,DD,DD,DD);
         playerBoard4.insertTile(single,6,7);
@@ -155,44 +159,24 @@ public class TestSetupHelper {
     }
 
     public static void HumansSetter1(PlayerBoard playerBoard){
-        ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
-//        if(playerBoard.getClassifiedTiles().containsKey(modularHousingUnit.class)) {
-//            HousingCoords = playerBoard.getClassifiedTiles().get(modularHousingUnit.class);
+//        ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
+//        HousingCoords.addAll(playerBoard.getHousingUnits());
+//        for(HousingUnit housingUnit : HousingCoords){
+//           playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard), PlayerStatesss.PopulateHousingUnits);
 //        }
-//        if(playerBoard.getValidPlayerBoard()[6][6]==1) {
-//            HousingCoords.add(new IntegerPair(6,6));
-//        }
-//        for (int i = 0; i < HousingCoords.size(); i++) {
-//            playerBoard.setSetter(new HousingUnitSetter(playerBoard,HousingCoords.get(i),2,false,false));
-//            playerBoard.getSetter().set();
-//        }
-//        HousingCoords.remove(new IntegerPair(6,6));
-
-
     }
 
 
-    public static void HumansSetter2(PlayerBoard playerBoard){
-        ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
-//        if(playerBoard.getClassifiedTiles().containsKey(modularHousingUnit.class)) {
-//            HousingCoords = playerBoard.getClassifiedTiles().get(modularHousingUnit.class);
-//        }
-//        if(playerBoard.getValidPlayerBoard()[6][6]==1) {
-//            HousingCoords.add(new IntegerPair(6,6));
-//        }
-//        for (int i = 0; i < HousingCoords.size(); i++) {
-//            if(HousingCoords.get(i).getFirst()==5 && HousingCoords.get(i).getSecond()==5) {
-//                playerBoard.setSetter(new HousingUnitSetter(playerBoard,HousingCoords.get(i),0,false,true));
-//                playerBoard.getSetter().set();
-//            }
-//            else{
-//                System.out.println("Populating: "+HousingCoords.get(i).getFirst()+" "+HousingCoords.get(i).getSecond());
-//                playerBoard.setSetter(new HousingUnitSetter(playerBoard,HousingCoords.get(i),2,false,false));
-//            playerBoard.getSetter().set();
-//            }
-//        }
-//        HousingCoords.remove(new IntegerPair(6,6));
-
+    public static void HumansSetter2(PlayerBoard playerBoard){ ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
+        HousingCoords.addAll(playerBoard.getHousingUnits());
+        for(HousingUnit housingUnit : HousingCoords){
+            if(housingUnit.getX()==5 && housingUnit.getY()==5){
+                housingUnit.setBrownAlien(true);
+            }
+            else{
+                housingUnit.setNumHumans(2);
+            }
+        }
 
     }
 

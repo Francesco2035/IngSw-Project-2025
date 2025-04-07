@@ -3,7 +3,6 @@ package org.example.galaxy_trucker.Model.Cards;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates;
 
 import java.util.ArrayList;
 

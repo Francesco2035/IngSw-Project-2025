@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
+
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.TestSetupHelper;
@@ -52,7 +53,7 @@ class EpidemicTest {
 
     static PlayerBoard playerBoard1;
 
-//    static Epidemic epidemicTest=new Epidemic(2,0,TGameBoard);
+    static Epidemic epidemicTest=new Epidemic(2,0,TGameBoard);
 
     @BeforeAll
     static void setUp() {
@@ -68,7 +69,7 @@ class EpidemicTest {
 
         Franci.setMyPlance(playerBoard1);
         System.out.println("boh111");
-//       TestSetupHelper.HumansSetter2(Franci.getMyPlance());
+       TestSetupHelper.HumansSetter2(Franci.getmyPlayerBoard());
 
     }
 
@@ -81,7 +82,7 @@ class EpidemicTest {
 //        playerBoard1.getGetter().get();
 //        playerBoard1.getGetter().get();
 
-//        epidemicTest.CardEffect();
+        epidemicTest.CardEffect();
         Franci= TGameBoard.getPlayers().get(0);
 
     }
