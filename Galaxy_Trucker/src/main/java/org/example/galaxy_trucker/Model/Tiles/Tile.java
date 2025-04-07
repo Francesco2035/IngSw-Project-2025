@@ -47,6 +47,16 @@ public class Tile {
     }
 
 
+    public Tile clone(){
+        Tile clonedTile = new Tile();
+        clonedTile.setId(this.id);
+        clonedTile.setComponent(this.component.clone());
+        clonedTile.setConnectors(new ArrayList<>(this.connectors));
+        return clonedTile;
+
+    }
+
+
 
 
 
@@ -73,6 +83,8 @@ public class Tile {
     public boolean controlDirections(PlayerBoard pb, int x, int y) {
         return component.controlValidity(pb, x, y);
     }
+
+
 
 
     }

@@ -50,6 +50,7 @@ public abstract class Component {
         throw new InvalidInput("Invalid input for the specific action");
     };
 
+    public abstract Component clone();
 
 
 

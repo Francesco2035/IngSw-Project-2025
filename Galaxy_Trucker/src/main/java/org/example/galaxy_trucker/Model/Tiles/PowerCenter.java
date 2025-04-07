@@ -46,6 +46,14 @@ public class PowerCenter extends Component{
         this.type = this.type-1;
     }
 
+
+    @Override
+    public Component clone(){
+        PowerCenter clone = new PowerCenter();
+        clone.type = this.type;
+        return clone;
+    }
+
 }
 
 

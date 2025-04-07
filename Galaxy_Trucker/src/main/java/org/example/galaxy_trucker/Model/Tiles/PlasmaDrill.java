@@ -77,5 +77,13 @@ public class PlasmaDrill extends Component{
         }
     }
 
+    @Override
+    public Component clone(){
+        PlasmaDrill clone = new PlasmaDrill();
+        clone.CannonDirection = CannonDirection;
+        clone.type = type;
+        return clone;
+    }
+
 
 }

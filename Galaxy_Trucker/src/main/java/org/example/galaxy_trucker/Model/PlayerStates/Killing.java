@@ -49,6 +49,10 @@ public class Killing extends PlayerState{
         }
 
         System.out.println(coordinates);
+        for (IntegerPair coordinate : coordinates) {
+            player.getmyPlayerBoard().getHousingUnits().
+                    contains(player.getmyPlayerBoard().getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent());
+        }
 
         return new Kill(card.get(), coordinates);
     }

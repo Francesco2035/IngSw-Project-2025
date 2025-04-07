@@ -20,11 +20,16 @@ public class SpaceVoid extends Component{
 
     @Override
     public void insert(PlayerBoard playerBoard, int x, int y) {
-        throw new InvalidInput("you can't add spaceVoid tile");
+
     }
 
     @Override
     public void remove(PlayerBoard playerBoard) {}
+
+    @Override
+    public Component clone(){
+        return new SpaceVoid();
+    }
 
 
 

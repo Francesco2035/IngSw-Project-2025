@@ -60,4 +60,12 @@ public class SpecialStorageCompartment extends Storage{
         playerBoard.getStorages().remove(this);
     }
 
+    @Override
+    public Component clone(){
+        SpecialStorageCompartment clone = new SpecialStorageCompartment();
+        clone.goods = new ArrayList<>(goods);
+        clone.type = this.type;
+        return clone;
+    }
+
 }

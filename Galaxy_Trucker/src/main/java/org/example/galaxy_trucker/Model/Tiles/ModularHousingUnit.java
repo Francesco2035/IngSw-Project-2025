@@ -184,6 +184,18 @@ public class ModularHousingUnit extends HousingUnit {
         brownAlien = brown;
     }
 
+
+    @Override
+    public Component clone(){
+        ModularHousingUnit clone = new ModularHousingUnit();
+        clone.setBrownAlien(brownAlien);
+        clone.setPurpleAlien(purpleAlien);
+        clone.setNearPurpleAddon(nearPurpleAddon);
+        clone.setNearBrownAddon(nearBrownAddon);
+        clone.setNumHumans(numHumans);
+        return clone;
+    }
+
 }
 
 

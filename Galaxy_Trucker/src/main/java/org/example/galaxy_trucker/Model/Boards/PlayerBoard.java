@@ -26,6 +26,7 @@ public class PlayerBoard {
     private int EnginePower = 0;
     private double PlasmaDrillsPower = 0;
     private int Energy = 0;
+    private int lv;
 
     private boolean valid;
 
@@ -52,6 +53,7 @@ public class PlayerBoard {
 
 
     public PlayerBoard(int lv) {
+        this.lv = lv;
         this.broken = false;
         this.damage = 0;
         this.shield = new int[4];
@@ -159,33 +161,41 @@ public class PlayerBoard {
         BufferGoods = bufferGoods;
     }
 
+
     public void setHousingUnits(ArrayList<HousingUnit> housingUnits) {
         HousingUnits = housingUnits;
     }
+
 
     public void setHotWaterHeaters(ArrayList<HotWaterHeater> hotWaterHeaters) {
         HotWaterHeaters = hotWaterHeaters;
     }
 
+
     public void setPlasmaDrills(ArrayList<PlasmaDrill> plasmaDrills) {
         PlasmaDrills = plasmaDrills;
     }
+
 
     public void setStorages(ArrayList<Storage> storages) {
         Storages = storages;
     }
 
+
     public void setAlienAddons(ArrayList<AlienAddons> alienAddons) {
         AlienAddons = alienAddons;
     }
+
 
     public void setShieldGenerators(ArrayList<ShieldGenerator> shieldGenerators) {
         ShieldGenerators = shieldGenerators;
     }
 
+
     public void setPowerCenters(ArrayList<PowerCenter> powerCenters) {
         PowerCenters = powerCenters;
     }
+
 
     /**
      * Method getBuffer return the buffer.
@@ -701,13 +711,16 @@ public class PlayerBoard {
         return this.purpleAlien;
     }
 
+
     public boolean getBrownAlien(){
         return this.brownAlien;
     }
 
+
     public void setBrownAlien(boolean brownAlien) {
         this.brownAlien = brownAlien;
     }
+
 
     public void setPurpleAlien(boolean purpleAlien) {
         this.purpleAlien = purpleAlien;
@@ -718,33 +731,41 @@ public class PlayerBoard {
         return BufferGoods;
     }
 
+
     public ArrayList<HousingUnit> getHousingUnits() {
         return HousingUnits;
     }
+
 
     public ArrayList<HotWaterHeater> getHotWaterHeaters() {
         return HotWaterHeaters;
     }
 
+
     public ArrayList<PlasmaDrill> getPlasmaDrills() {
         return PlasmaDrills;
     }
+
 
     public ArrayList<AlienAddons> getAlienAddons() {
         return AlienAddons;
     }
 
+
     public ArrayList<Storage> getStorages() {
         return Storages;
     }
+
 
     public ArrayList<ShieldGenerator> getShieldGenerators() {
         return ShieldGenerators;
     }
 
+
     public ArrayList<PowerCenter> getPowerCenters() {
         return PowerCenters;
     }
+
 
     public int getEnginePower() {
         if (brownAlien){
@@ -757,6 +778,7 @@ public class PlayerBoard {
         EnginePower += enginePower;
     }
 
+
     public double getPlasmaDrillsPower() {
         if(purpleAlien){
             return PlasmaDrillsPower + 2;
@@ -764,25 +786,31 @@ public class PlayerBoard {
         return PlasmaDrillsPower;
     }
 
+
     public void setPlasmaDrillsPower(double plasmaDrillsPower) {
         PlasmaDrillsPower += plasmaDrillsPower;
     }
+
 
     public int getNumHumans() {
         return numHumans;
     }
 
+
     public void setNumHumans(int numHumans) {
         this.numHumans += numHumans;
     }
+
 
     public int getEnergy() {
         return Energy;
     }
 
+
     public void setEnergy(int energy) {
         Energy += energy;
     }
+
 
     public void performAction(Component component, ComponentAction action, PlayerState state) {
 
@@ -790,5 +818,74 @@ public class PlayerBoard {
 
     }
 
+
+    public PlayerBoard clone(){
+        PlayerBoard clonedPlayerBoard = new PlayerBoard(lv);
+        clonedPlayerBoard.broken = broken;
+        clonedPlayerBoard.purpleAlien = purpleAlien;
+        clonedPlayerBoard.brownAlien = brownAlien;
+        clonedPlayerBoard.totalValue = totalValue;
+        clonedPlayerBoard.damage = damage;
+        clonedPlayerBoard.numHumans = numHumans;
+        clonedPlayerBoard.exposedConnectors = exposedConnectors;
+        clonedPlayerBoard.EnginePower = EnginePower;
+        clonedPlayerBoard.PlasmaDrillsPower = PlasmaDrillsPower;
+        clonedPlayerBoard.Energy = Energy;
+        clonedPlayerBoard.lv = lv;
+        clonedPlayerBoard.valid = valid;
+        clonedPlayerBoard.HousingUnits = new ArrayList<>();
+        clonedPlayerBoard.HotWaterHeaters= new ArrayList<>();
+        clonedPlayerBoard.PlasmaDrills= new ArrayList<>();
+        clonedPlayerBoard.AlienAddons= new ArrayList<>();
+        clonedPlayerBoard.Storages= new ArrayList<>();
+        clonedPlayerBoard.ShieldGenerators= new ArrayList<>();
+        clonedPlayerBoard.PowerCenters= new ArrayList<>();
+
+        clonedPlayerBoard.PlayerBoard = new Tile[PlayerBoard.length][PlayerBoard[0].length];
+        for (int i = 0; i < PlayerBoard.length; i++) {
+            for (int j = 0; j < PlayerBoard[i].length; j++) {
+                Tile tile = PlayerBoard[i][j];
+                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone() : null;
+                if (tile != null) {
+                    tile.getComponent().insert(clonedPlayerBoard, i, j);
+                }
+            }
+        }
+
+        clonedPlayerBoard.ValidPlayerBoard = new int[ValidPlayerBoard.length][ValidPlayerBoard[0].length];
+        for (int i = 0; i < ValidPlayerBoard.length; i++) {
+            clonedPlayerBoard.ValidPlayerBoard[i] = Arrays.copyOf(ValidPlayerBoard[i], ValidPlayerBoard[i].length);
+        }
+
+        clonedPlayerBoard.shield = Arrays.copyOf(shield, shield.length);
+
+        return clonedPlayerBoard;
+
+    }
+
+
+    public boolean isBroken() {
+        return broken;
+    }
+
+
+    public int getLv() {
+        return lv;
+    }
+
+
+    public boolean isValid() {
+        return valid;
+    }
+
+
+    public boolean isPurpleAlien() {
+        return purpleAlien;
+    }
+
+
+    public boolean isBrownAlien() {
+        return brownAlien;
+    }
 
 }

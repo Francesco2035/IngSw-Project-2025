@@ -25,6 +25,11 @@ public class SewerPipes extends Component {
     @Override
     public void remove(PlayerBoard playerBoard) {}
 
+    @Override
+    public Component clone(){
+        return new SewerPipes();
+    }
+
 
 }
 

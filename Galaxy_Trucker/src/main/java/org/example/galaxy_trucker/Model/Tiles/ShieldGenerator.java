@@ -51,6 +51,15 @@ public class ShieldGenerator extends Component{
     }
 
 
+    @Override
+    public Component clone(){
+        ShieldGenerator clone = new ShieldGenerator();
+        clone.protectedDirections = new ArrayList<>(this.protectedDirections);
+        return clone;
+    }
+
+
+
 }
 
 
