@@ -3,13 +3,14 @@ package org.example.galaxy_trucker.Model.Boards.Actions;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 import org.example.galaxy_trucker.Model.Tiles.Storage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AddGoodAction extends ComponentActionVisitor{
+public class AddGoodAction extends ComponentAction {
 
     private Goods good;
     private PlayerBoard playerBoard;
@@ -23,9 +24,9 @@ public class AddGoodAction extends ComponentActionVisitor{
     }
 
     @Override
-    public void visit(Storage storage, PlayerStates State){
-        if (!State.equals(PlayerStates.AddCargo)){
-            throw new IllegalStateException("ivalid state");
+    public void visit(Storage storage, PlayerState playerState) {
+        if (!playerState.allows(this)){
+            throw new IllegalStateException("illegal state");
         }
         storage.addGood(good);
 

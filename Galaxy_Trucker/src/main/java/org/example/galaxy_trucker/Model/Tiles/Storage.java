@@ -1,11 +1,10 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
-import org.example.galaxy_trucker.Model.PlayerStates;
-import org.example.galaxy_trucker.Model.State;
-import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,10 +19,7 @@ public class Storage extends Component{
     }
 
     @Override
-    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
-        if (!(State.equals(PlayerStates.AddCargo) || State.equals(PlayerStates.RemoveCargo))){
-            throw new IllegalStateException("Invalid state ");
-        }
+    public void accept(ComponentAction visitor, PlayerState State) {
         visitor.visit(this, State);
     }
 
@@ -34,7 +30,6 @@ public class Storage extends Component{
 
     @Override
     public void insert(PlayerBoard playerBoard, int x, int y) {
-
     }
 
     @Override

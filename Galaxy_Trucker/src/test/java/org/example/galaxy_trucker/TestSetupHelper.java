@@ -5,9 +5,8 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.DOUBLE;
 import org.example.galaxy_trucker.Model.Connectors.SINGLE;
 import org.example.galaxy_trucker.Model.GAGen;
-import org.example.galaxy_trucker.Model.IntegerPair;
 
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.SewerPipes;
@@ -148,8 +147,8 @@ public class TestSetupHelper {
     }
 
     public static PlayerBoard createInitializedBoard4(){
-        SINGLE SS = new SINGLE();
-        DOUBLE DD = new DOUBLE();
+        SINGLE SS = SINGLE.INSTANCE;
+        DOUBLE DD = DOUBLE.INSTANCE;
         Tile single = new Tile(new SewerPipes(),SS,SS,SS,SS);
         Tile dd = new Tile(new SewerPipes(),DD,DD,DD,DD);
         playerBoard4.insertTile(single,6,7);
@@ -160,11 +159,11 @@ public class TestSetupHelper {
     }
 
     public static void HumansSetter1(PlayerBoard playerBoard){
-        ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
-        HousingCoords.addAll(playerBoard.getHousingUnits());
-        for(HousingUnit housingUnit : HousingCoords){
-           playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),PlayerStates.PopulateHousingUnits);
-        }
+//        ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
+//        HousingCoords.addAll(playerBoard.getHousingUnits());
+//        for(HousingUnit housingUnit : HousingCoords){
+//           playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard), PlayerStatesss.PopulateHousingUnits);
+//        }
     }
 
 

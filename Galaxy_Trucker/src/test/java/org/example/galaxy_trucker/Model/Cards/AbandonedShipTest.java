@@ -3,12 +3,11 @@ package org.example.galaxy_trucker.Model.Cards;
 import org.example.galaxy_trucker.Model.*;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
+//import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
 
 import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.*;
 
@@ -87,8 +86,8 @@ class AbandonedShipTest {
 
         IntegerPair cord = new IntegerPair(0,0);
 
-        Tile tile1 = new Tile(house1, new UNIVERSAL(),new UNIVERSAL(),new UNIVERSAL(),new UNIVERSAL());
-        Tile tile2 = new Tile(house2, new UNIVERSAL(),new UNIVERSAL(),new UNIVERSAL(),new UNIVERSAL());
+        Tile tile1 = new Tile(house1, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
+        Tile tile2 = new Tile(house2, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
 
         playerBoard1.insertTile(tile1,6,7);
         playerBoard1.insertTile(tile2,7,7);
@@ -125,9 +124,9 @@ class AbandonedShipTest {
         assertEquals(8,FakeAbandonedShip.getTotHumans());
         System.out.println("fine controllo");
 
-        assertEquals(Franci.getPlayerState(),PlayerStates.Waiting);
-        assertEquals(Passo.getPlayerState(), PlayerStates.AcceptKilling);
-        assertEquals(Pietro.getPlayerState(), PlayerStates.Waiting);
+        assertEquals(Franci.getPlayerState(), PlayerStatesss.Waiting);
+        assertEquals(Passo.getPlayerState(), PlayerStatesss.AcceptKilling);
+        assertEquals(Pietro.getPlayerState(), PlayerStatesss.Waiting);
 
     }
 
@@ -152,7 +151,7 @@ class AbandonedShipTest {
 //        handler.setInput(coords,false);
 //        Pietro.execute();
 
-        assertEquals(PlayerStates.BaseState,Pietro.getPlayerState());
+        assertEquals(PlayerStatesss.BaseState,Pietro.getPlayerState());
 
 
 

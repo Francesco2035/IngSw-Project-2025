@@ -1,14 +1,10 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
-import org.example.galaxy_trucker.Model.Goods.*;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.PlayerStates;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 
 public class MainCockpitComp extends HousingUnit {
 
@@ -78,10 +74,7 @@ public class MainCockpitComp extends HousingUnit {
 
 
     @Override
-    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
-        if (!(State.equals(PlayerStates.Killing) || State.equals(PlayerStates.PopulateHousingUnits))){
-            throw new IllegalStateException("Player state is not Killing state or PopulateHousingUnits");
-        }
+    public void accept(ComponentAction visitor, PlayerState State) {
 
         visitor.visit(this, State);
     }
@@ -95,6 +88,8 @@ public class MainCockpitComp extends HousingUnit {
             numHumans--;
             return 2;
     }
+
+
 
     @Override
     public void addCrew(int humans, boolean purple, boolean brown){

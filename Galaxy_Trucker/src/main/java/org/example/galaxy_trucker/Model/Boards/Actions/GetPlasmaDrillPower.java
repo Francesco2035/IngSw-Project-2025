@@ -1,9 +1,10 @@
 package org.example.galaxy_trucker.Model.Boards.Actions;
 
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 import org.example.galaxy_trucker.Model.Tiles.PlasmaDrill;
 
-public class GetPlasmaDrillPower extends ComponentActionVisitor{
+public class GetPlasmaDrillPower extends ComponentAction {
     private double power;
     private int countDoublePlasmaDrills = 0;
     public GetPlasmaDrillPower(double SinglePower) {
@@ -11,7 +12,10 @@ public class GetPlasmaDrillPower extends ComponentActionVisitor{
     }
 
     @Override
-    public void visit(PlasmaDrill plasmaDrill, PlayerStates state){
+    public void visit(PlasmaDrill plasmaDrill, PlayerState playerState) {
+        if (!playerState.allows(this)){
+            throw new IllegalStateException("illegal state");
+        }
         double temp = plasmaDrill.getCannonPower();
         if (temp != 0){
             countDoublePlasmaDrills++;

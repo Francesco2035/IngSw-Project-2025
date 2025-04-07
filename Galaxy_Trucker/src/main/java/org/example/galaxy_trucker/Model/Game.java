@@ -21,8 +21,6 @@ public class Game {
     private GAGen gag;
 
 
-
-
     public Game(int GameLevel, String id) throws IOException{
         GameID = id;
         gag = new GAGen();

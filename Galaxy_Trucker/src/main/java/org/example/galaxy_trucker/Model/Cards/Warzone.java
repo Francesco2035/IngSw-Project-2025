@@ -1,19 +1,17 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 
-import org.example.galaxy_trucker.Model.InputHandlers.GiveAttack;
-import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
-import org.example.galaxy_trucker.Model.InputHandlers.Killing;
+//import org.example.galaxy_trucker.Model.InputHandlers.GiveAttack;
+//import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
+//import org.example.galaxy_trucker.Model.InputHandlers.Killing;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.PlayerStates;
 
-import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
+import org.example.galaxy_trucker.Model.PlayerStates.*;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.ArrayList;
@@ -89,7 +87,7 @@ public class Warzone extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
-            p.setState(PlayerStates.Waiting);
+            p.setState(new Waiting());
         }
         this.updateSates();
     }
@@ -104,14 +102,14 @@ public class Warzone extends Card{
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             if(RequirementsType[ChallengeOrder]==1){
                 this.Minimum=1000000;
-                this.currentPlayer.setState(PlayerStates.GiveAttack);
-                this.currentPlayer.setInputHandler(new GiveAttack(this));
+                this.currentPlayer.setState(new GiveAttack());
+                //this.currentPlayer.setInputHandler(new GiveAttack(this));
 
             }
             if(RequirementsType[ChallengeOrder]==2){
                 this.Minimum=1000000;
-                this.currentPlayer.setState(PlayerStates.GiveSpeed);
-                this.currentPlayer.setInputHandler(new GiveSpeed(this));
+                this.currentPlayer.setState(new GiveSpeed());
+                //this.currentPlayer.setInputHandler(new GiveSpeed(this));
 
             }
             else{
@@ -128,8 +126,8 @@ public class Warzone extends Card{
                 this.loseTime();
             }
             else if(this.PunishmentType[ChallengeOrder]==2){
-                this.currentPlayer.setState(PlayerStates.Killing);
-                this.currentPlayer.setInputHandler(new Killing(this));
+                this.currentPlayer.setState(new Killing());
+                //this.currentPlayer.setInputHandler(new Killing(this));
             }
             else if(this.PunishmentType[ChallengeOrder]==3){
               //  chiamo il metodo di fottitura eterna :)
@@ -141,10 +139,10 @@ public class Warzone extends Card{
         }
     }
 
-    @Override
-    public  void  ActivateCard() {
-        currentPlayer.getInputHandler().action();
-    }
+//    @Override
+//    public  void  ActivateCard() {
+//        currentPlayer.getInputHandler().action();
+//    }
 
     @Override
     public void finishCard() {
@@ -152,7 +150,7 @@ public class Warzone extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.done==PlayerList.size()) {
             for (int i = 0; i < PlayerList.size(); i++) {
-                PlayerList.get(i).setState(PlayerStates.BaseState);
+                PlayerList.get(i).setState(new BaseState());
             }
         }
         else{
@@ -186,7 +184,7 @@ public class Warzone extends Card{
                 this.Worst=currentPlayer;
                 this.Minimum=power;
             }
-        this.currentPlayer.setState(PlayerStates.Waiting);
+        this.currentPlayer.setState(new Waiting());
         this.updateSates();
     }
 
@@ -235,7 +233,7 @@ public class Warzone extends Card{
             this.Worst=currentPlayer;
             this.Minimum=movement;
         }
-        this.currentPlayer.setState(PlayerStates.Waiting);
+        this.currentPlayer.setState(new Waiting());
         this.updateSates();
     }
 
@@ -271,7 +269,7 @@ public class Warzone extends Card{
         for (IntegerPair coordinate : coordinates) {
             System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
 
-            curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr),PlayerStates.AcceptKilling);
+            //curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr), PlayerS);
 
 
         }
@@ -294,7 +292,7 @@ public class Warzone extends Card{
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
-                        currentPlayer.setState(PlayerStates.DefendingFromShots);
+                        currentPlayer.setState(new DefendingFromShots());
                     }
 
 
@@ -308,7 +306,7 @@ public class Warzone extends Card{
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
-                        currentPlayer.setState(PlayerStates.DefendingFromShots);
+                        currentPlayer.setState(new DefendingFromShots());
 
                     }
 
@@ -322,7 +320,7 @@ public class Warzone extends Card{
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder/2]);
-                        currentPlayer.setState(PlayerStates.DefendingFromShots);
+                        currentPlayer.setState(new DefendingFromShots());
 
                     }
                     Movement--;
@@ -335,7 +333,7 @@ public class Warzone extends Card{
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
-                        currentPlayer.setState(PlayerStates.DefendingFromShots);
+                        currentPlayer.setState(new DefendingFromShots());
                     }
 
 

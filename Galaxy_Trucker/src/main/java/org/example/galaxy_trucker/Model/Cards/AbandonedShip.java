@@ -3,18 +3,16 @@ package org.example.galaxy_trucker.Model.Cards;
 import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 
-import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
+import org.example.galaxy_trucker.Model.PlayerStates.AcceptKilling;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
+import org.example.galaxy_trucker.Model.PlayerStates.Killing;
+import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
-import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
-import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 
 import java.util.ArrayList;
 
@@ -44,7 +42,7 @@ public class AbandonedShip extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
-            p.setState(PlayerStates.Waiting);
+            p.setState(new Waiting());
         }
         this.updateSates();
     }
@@ -84,8 +82,8 @@ public class AbandonedShip extends Card{
                 this.totHumans=CurrentPlanche.getNumHumans();
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
-                currentPlayer.setState(PlayerStates.AcceptKilling);
-                currentPlayer.setInputHandler(new AcceptKilling(this));
+                currentPlayer.setState(new AcceptKilling());
+                //currentPlayer.setInputHandler(new AcceptKilling(this));
                 currentPlayer.setCard(this);
             }
 
@@ -93,12 +91,12 @@ public class AbandonedShip extends Card{
         }
 
     }
-    @Override
-    public  void  ActivateCard() {
-
-        System.out.println("ActivateCard");
-        currentPlayer.getInputHandler().action();
-    }
+//    @Override
+//    public  void  ActivateCard() {
+//
+//        System.out.println("ActivateCard");
+//        currentPlayer.getInputHandler().action();
+//    }
 
     @Override
     public void finishCard() {
@@ -106,7 +104,7 @@ public class AbandonedShip extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
-            PlayerList.get(i).setState(PlayerStates.BaseState);
+            PlayerList.get(i).setState(new BaseState());
         }
     }
 
@@ -126,7 +124,7 @@ public class AbandonedShip extends Card{
             for (IntegerPair coordinate : coordinates) {
                 System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
 
-                curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr),PlayerStates.Killing);
+                curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr), new Killing());
 
 //                currentPlayer.getmyPlayerBoard().setGetter(new HousingUnitGetter(currentPlayer.getmyPlayerBoard(),
 //                        coordinate, 1, false, false));
@@ -138,7 +136,7 @@ public class AbandonedShip extends Card{
             this.finishCard();
         }
         else{
-            currentPlayer.setState(PlayerStates.Waiting);
+            currentPlayer.setState(new Waiting());
             this.flag = false;
             this.updateSates();
         }

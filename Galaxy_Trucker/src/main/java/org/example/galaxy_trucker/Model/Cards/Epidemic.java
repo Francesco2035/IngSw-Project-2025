@@ -5,7 +5,7 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.AcceptKilling;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
@@ -54,7 +54,7 @@ public class Epidemic extends Card {
             for(int k=0;k<infected.size();k++){
 
 
-                CurrentPlanche.performAction(tiles[this.infected.get(k).getFirst()][this.infected.get(k).getSecond()].getComponent(),new KillCrewAction(CurrentPlanche), PlayerStates.AcceptKilling);
+                CurrentPlanche.performAction(tiles[this.infected.get(k).getFirst()][this.infected.get(k).getSecond()].getComponent(),new KillCrewAction(CurrentPlanche), new AcceptKilling());
 
             }
 

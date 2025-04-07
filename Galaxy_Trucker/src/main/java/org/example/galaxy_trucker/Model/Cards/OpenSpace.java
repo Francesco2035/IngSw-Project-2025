@@ -2,11 +2,11 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
+import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
+import org.example.galaxy_trucker.Model.PlayerStates.GiveSpeed;
 
-import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class OpenSpace extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
-            p.setState(PlayerStates.Waiting);
+            p.setState(new Waiting());
         }
         this.updateSates();
     }
@@ -39,8 +39,8 @@ public class OpenSpace extends Card{
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
-                this.currentPlayer.setState(PlayerStates.GiveSpeed);
-                this.currentPlayer.setInputHandler(new GiveSpeed(this));
+                this.currentPlayer.setState(new GiveSpeed());
+                //this.currentPlayer.setInputHandler(new GiveSpeed(this));
 
             this.order++;
         }
@@ -54,7 +54,7 @@ public class OpenSpace extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
-            PlayerList.get(i).setState(PlayerStates.BaseState);
+            PlayerList.get(i).setState(new BaseState());
         }
     }
 
@@ -62,7 +62,7 @@ public class OpenSpace extends Card{
     public void continueCard(int enginePower) {
 
       getBoard().movePlayer(currentPlayer.GetID(),enginePower);
-        this.currentPlayer.setState(PlayerStates.Waiting);
+        this.currentPlayer.setState(new Waiting());
         this.updateSates();
     }
 

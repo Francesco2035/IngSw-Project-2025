@@ -1,10 +1,10 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
-import org.example.galaxy_trucker.Exceptions.powerCenterEmptyException;
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 import org.jetbrains.annotations.NotNull;
 
 public class PowerCenter extends Component{
@@ -34,10 +34,7 @@ public class PowerCenter extends Component{
 
 
     @Override
-    public void accept(@NotNull ComponentActionVisitor visitor, @NotNull PlayerStates State) {
-        if (!State.equals(PlayerStates.UseEnergy)){
-            throw new IllegalStateException("Player state is not UseEnergy state");
-        }
+    public void accept(@NotNull ComponentAction visitor, @NotNull PlayerState State) {
         visitor.visit(this, State);
     }
 
