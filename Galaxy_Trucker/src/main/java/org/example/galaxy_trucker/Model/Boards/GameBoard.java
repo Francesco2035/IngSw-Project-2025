@@ -5,7 +5,8 @@ package org.example.galaxy_trucker.Model.Boards;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
@@ -67,7 +68,7 @@ public class GameBoard {
         NewPlayer.setBoards(this);
         Player_IntegerPair NewPair = new Player_IntegerPair(NewPlayer, 0);
         this.players.add(NewPair);
-        NewPlayer.setState(PlayerStates.BuildingShip);
+        NewPlayer.setState(new BuildingShip());
     }
 
     public void StartHourglass() {

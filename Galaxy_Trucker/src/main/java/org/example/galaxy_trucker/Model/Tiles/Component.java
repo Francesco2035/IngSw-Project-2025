@@ -3,9 +3,10 @@ package org.example.galaxy_trucker.Model.Tiles;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -35,7 +36,7 @@ public abstract class Component {
     public abstract void rotate(Boolean direction);
     public abstract boolean controlValidity(PlayerBoard pb, int x, int y);
 
-    public abstract void insert(PlayerBoard playerBoard);
+    public abstract void insert(PlayerBoard playerBoard, int x, int y);
     public abstract void remove(PlayerBoard playerBoard);
 
 //  metodi per json
@@ -45,7 +46,11 @@ public abstract class Component {
 
 
 
-    public  abstract void accept(ComponentActionVisitor visitor, PlayerStates State);
+    public  void accept(ComponentAction visitor, PlayerState state){
+        throw new InvalidInput("Invalid input for the specific action");
+    };
+
+
 
 
 }

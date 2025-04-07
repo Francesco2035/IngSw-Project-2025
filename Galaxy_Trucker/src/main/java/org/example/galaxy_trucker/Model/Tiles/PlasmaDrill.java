@@ -1,14 +1,9 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.Connectors.CANNON;
-import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.PlayerStates;
-
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 
 public class PlasmaDrill extends Component{
 
@@ -36,16 +31,13 @@ public class PlasmaDrill extends Component{
     }
 
     @Override
-    public void accept(ComponentActionVisitor visitor, PlayerStates State) {
-        if (!State.equals(PlayerStates.GiveAttack)){
-            throw new IllegalStateException("invalid state");
-        }
+    public void accept(ComponentAction visitor, PlayerState State) {
         visitor.visit(this, State);
     }
 
 
     @Override
-    public void insert(PlayerBoard playerBoard) {
+    public void insert(PlayerBoard playerBoard, int x, int y) {
         if (type == 1) {
             if (CannonDirection == 1){
                 playerBoard.setPlasmaDrillsPower(1);

@@ -4,13 +4,15 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.InputHandlers.InputHandler;
+import org.example.galaxy_trucker.Model.PlayerStates.FinishedBuilding;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Player implements Serializable {
+public class Player {
 
     private GameBoard CommonBoard;
     private PlayerBoard myPlayerBoard;
@@ -18,10 +20,14 @@ public class Player implements Serializable {
     private boolean ready;
     private int credits;
     private Tile CurrentTile;   //the tile that Player has in his hand
-    private  PlayerStates PlayerState;
+    private PlayerState PlayerState;
     private InputHandler InputHandler;
     private ArrayList<Goods> GoodsToHandle;
     private Card CurrentCard;
+
+
+
+    private PlayerStatesss fakestate;
 
 
     public Player()  {
@@ -77,7 +83,11 @@ public class Player implements Serializable {
         CommonBoard.StartHourglass();
     }
 
+    
+    public void useEnergy(int x, int y){
 
+    }
+    
     
     /**
      * get a new random tile from the covered tiles set
@@ -160,21 +170,19 @@ public class Player implements Serializable {
 
 
 
-
-
     /**
      * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
      */
     public void EndConstruction(){
         CommonBoard.SetStartingPosition(this.ID);
-        this.setState(PlayerStates.FinishedBuilding);
+        this.setState(new FinishedBuilding());
        }
 
 
     public void setInputHandler(InputHandler InputHandler) {
         this.InputHandler = InputHandler;
     }
-    public void setState(PlayerStates state) {
+    public void setState(PlayerState state) {
         this.PlayerState = state;
     }
     public void setCard(Card NewCard){
@@ -229,9 +237,6 @@ public class Player implements Serializable {
 //        return Locations;
 //    }
 
-
-
-
     //    public ArrayList <IntegerPair> getHumans(){return this.myPlayerBoard.gethousingUnits();}
     public ArrayList<IntegerPair> getEnergyTiles(){
 //        if(getmyPlayerBoard().getClassifiedTiles().containsKey(PowerCenter.class))
@@ -277,12 +282,25 @@ public class Player implements Serializable {
 //        this.setState(PlayerStates.HandlingCargo);
     }
 
-    public void stopHandlingCargo(){
-        this.setState(PlayerStates.Waiting);
-        this.CurrentCard.finishCard();
+//    public void stopHandlingCargo(){
+//        this.setState(PlayerStates.Waiting);
+//        this.CurrentCard.finishCard();
+//
+//        // controllo che
+//    }
 
-        // controllo che
+    public Card getCurrentCard() {
+        return CurrentCard;
     }
+
+    public PlayerStatesss getPlayerState() {
+        return fakestate;
+    }
+
+    public void setMyPlance(PlayerBoard pb) {
+        myPlayerBoard = pb;
+    }
+
 
     //DOVREI AGGIUNGERE UN MODO PER ARRIVARE A CARD DA PLAYER DIREI :)
     //principalmente per chiamare i metodi di card dopo l'input

@@ -17,15 +17,7 @@ public class StorageCompartment extends Storage{
     }
 
 
-    @Override
-    public void insert(PlayerBoard playerBoard) {
-        playerBoard.getStorages().add(this);
-    }
 
-    @Override
-    public void remove(PlayerBoard playerBoard) {
-        playerBoard.getStorages().remove(this);
-    }
 
     @Override
     public Goods removeGood(int i){
@@ -45,6 +37,18 @@ public class StorageCompartment extends Storage{
             throw new InvalidInput("StorageCompartment cannot contain special Goods");
         }
         goods.add(good);
+    }
+
+
+    @Override
+    public void insert(PlayerBoard playerBoard, int x, int y) {
+        playerBoard.getStorages().add(this);
+        goods = new ArrayList<>();
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getStorages().remove(this);
     }
 
 }

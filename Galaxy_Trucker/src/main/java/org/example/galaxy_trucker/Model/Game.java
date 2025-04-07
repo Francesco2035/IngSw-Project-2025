@@ -1,16 +1,18 @@
 package org.example.galaxy_trucker.Model;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Game implements Serializable {
+public class Game {
     private String GameID;
-    private ArrayList<Player> Players;
+    private HashMap<String,Player> Players;
+    private ArrayList<Player> PlayerList;
     private GameBoard GameBoard;
     private CardStacks CardDeck;
     private TileSets TileDecks;
@@ -19,12 +21,11 @@ public class Game implements Serializable {
     private GAGen gag;
 
 
-
-
     public Game(int GameLevel, String id) throws IOException{
         GameID = id;
         gag = new GAGen();
-        Players = new ArrayList<>();
+        PlayerList = new ArrayList<>();
+        Players = new HashMap<>();
         CardDeck = new CardStacks(gag, GameLevel);
         TileDecks = new TileSets(gag);
         lv = GameLevel;
@@ -36,22 +37,41 @@ public class Game implements Serializable {
         if(Players.size() >= 4)
             throw new IndexOutOfBoundsException("Game is full");
 
-        for(Player p : Players){
-            if(p.equals(newborn)){
-                throw new IllegalArgumentException("Username already exists");
-            }
+        if (Players.containsKey(newborn.GetID())){
+            throw new IllegalArgumentException("Player already exists");
         }
+        newborn.setBoards(GameBoard);
+        this.GameBoard.addPlayer(newborn);
+        Players.put(newborn.GetID(), newborn);
+        PlayerList.add(newborn);
 
-        GameBoard.addPlayer(newborn);
-        Players.add(newborn);
     }
 
-    public void RemovePlayer(Player DeadMan){
+    public void RemovePlayer(String DeadMan){
         Players.remove(DeadMan);
     }
 
     public String getID(){return GameID;}
 
-    public GameBoard getGameBoard(){return GameBoard;}
+    public State getCurrentState(){
+        return CurrentState;
+    }
+
+    public void setState(State newState){
+        CurrentState = newState;
+    }
+
+    public HashMap<String,Player> getPlayers(){
+        return Players;
+    }
+
+
+    public GAGen getGag() {
+        return gag;
+    }
+
+    public GameBoard getGameBoard() {
+        return GameBoard;
+    }
 }
 

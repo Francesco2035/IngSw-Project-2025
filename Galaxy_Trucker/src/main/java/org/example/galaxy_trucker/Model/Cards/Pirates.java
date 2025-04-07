@@ -1,12 +1,12 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.example.galaxy_trucker.Model.InputHandlers.Accept;
+//import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.*;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class Pirates extends Card{
         this.currentPlayer = null;
         this.lines = new int[Punsihment.size()/2];
         for(int i=0;i< Punishment.size()/2;i++){
-            lines[i] = this.getBoard().getPlayers().getFirst().RollDice();
+            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
         }
         this.hit = null;
 
@@ -52,7 +52,7 @@ public class Pirates extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
-            p.setState(PlayerStates.Waiting);
+            p.setState(new Waiting());
         }
         this.updateSates();
     }
@@ -66,8 +66,8 @@ public class Pirates extends Card{
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
-            this.currentPlayer.setState(PlayerStates.GiveAttack);
-            this.currentPlayer.setInputHandler(new Accept(this));
+            this.currentPlayer.setState(new GiveAttack());
+            //this.currentPlayer.setInputHandler(new Accept(this));
 
             this.order++;
         }
@@ -75,20 +75,20 @@ public class Pirates extends Card{
             this.finishCard();
         }
     }
-//
-//    @Override
-//    public void continueCard(ArrayList<IntegerPair> cannons) {
-//        double power= currentPlayer.getMyPlance().getPower(cannons);
-//        if(power>this.getRequirement()){
-//            this.defeated=true;
-//            this.currentPlayer.setState(PlayerStates.Accepting);
-//            this.currentPlayer.setInputHandler(new Accept(this));
-//        }
-//        else if (power<this.getRequirement()){
-//            this.continueCard();
-//        }
-//
-//    }
+
+    @Override
+    public void continueCard(double power) {
+
+        if(power>this.getRequirement()){
+            this.defeated=true;
+            this.currentPlayer.setState(new Accepting());
+            //this.currentPlayer.setInputHandler(new Accept(this));
+        }
+        else if (power<this.getRequirement()){
+            this.continueCard();
+        }
+
+    }
 
 
 
@@ -107,7 +107,7 @@ public class Pirates extends Card{
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
-                            currentPlayer.setState(PlayerStates.DefendingFromShots);
+                            currentPlayer.setState(new DefendingFromShots());
                         }
 
 
@@ -121,7 +121,7 @@ public class Pirates extends Card{
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
-                            currentPlayer.setState(PlayerStates.DefendingFromShots);
+                            currentPlayer.setState(new DefendingFromShots());
 
                     }
 
@@ -135,7 +135,7 @@ public class Pirates extends Card{
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder/2]);
-                            currentPlayer.setState(PlayerStates.DefendingFromShots);
+                            currentPlayer.setState(new DefendingFromShots());
 
                     }
                     Movement--;
@@ -148,7 +148,7 @@ public class Pirates extends Card{
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
-                            currentPlayer.setState(PlayerStates.DefendingFromShots);
+                            currentPlayer.setState(new DefendingFromShots());
                         }
 
 
@@ -196,7 +196,7 @@ public class Pirates extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
-            PlayerList.get(i).setState(PlayerStates.BaseState);
+            PlayerList.get(i).setState(new BaseState());
         }
     }
 

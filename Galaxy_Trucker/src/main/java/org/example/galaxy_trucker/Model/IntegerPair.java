@@ -28,6 +28,12 @@ public class IntegerPair {
 
 
     @Override
+    public String toString() {
+        return "IntegerPair{x=" + first + ", y=" + second + "}";
+    }
+
+
+    @Override
     public boolean equals(Object obj) {
         // Verifica se sono lo stesso oggetto
         if (this == obj) return true;

@@ -1,16 +1,17 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 
-import org.example.galaxy_trucker.Model.InputHandlers.GiveAttack;
-import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
-import org.example.galaxy_trucker.Model.InputHandlers.Killing;
+//import org.example.galaxy_trucker.Model.InputHandlers.GiveAttack;
+//import org.example.galaxy_trucker.Model.InputHandlers.GiveSpeed;
+//import org.example.galaxy_trucker.Model.InputHandlers.Killing;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.PlayerStates;
 
+import org.example.galaxy_trucker.Model.PlayerStates.*;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class Warzone extends Card{
         this.ShotsLine = 0;
         this.lines = new int[PunishmentShots.size()/2];
         for(int i=0;i< PunishmentShots.size()/2;i++){
-            lines[i] = this.getBoard().getPlayers().getFirst().RollDice();
+            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
         }
         this.hit = null;
 
@@ -86,7 +87,7 @@ public class Warzone extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
-            p.setState(PlayerStates.Waiting);
+            p.setState(new Waiting());
         }
         this.updateSates();
     }
@@ -101,14 +102,14 @@ public class Warzone extends Card{
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             if(RequirementsType[ChallengeOrder]==1){
                 this.Minimum=1000000;
-                this.currentPlayer.setState(PlayerStates.GiveAttack);
-                this.currentPlayer.setInputHandler(new GiveAttack(this));
+                this.currentPlayer.setState(new GiveAttack());
+                //this.currentPlayer.setInputHandler(new GiveAttack(this));
 
             }
             if(RequirementsType[ChallengeOrder]==2){
                 this.Minimum=1000000;
-                this.currentPlayer.setState(PlayerStates.GiveSpeed);
-                this.currentPlayer.setInputHandler(new GiveSpeed(this));
+                this.currentPlayer.setState(new GiveSpeed());
+                //this.currentPlayer.setInputHandler(new GiveSpeed(this));
 
             }
             else{
@@ -122,11 +123,11 @@ public class Warzone extends Card{
         else{
             this.PlayerOrder=0;
             if(this.PunishmentType[ChallengeOrder]==1){
-                //this.loseTime();
+                this.loseTime();
             }
             else if(this.PunishmentType[ChallengeOrder]==2){
-                this.currentPlayer.setState(PlayerStates.Killing);
-                this.currentPlayer.setInputHandler(new Killing(this));
+                this.currentPlayer.setState(new Killing());
+                //this.currentPlayer.setInputHandler(new Killing(this));
             }
             else if(this.PunishmentType[ChallengeOrder]==3){
               //  chiamo il metodo di fottitura eterna :)
@@ -138,10 +139,10 @@ public class Warzone extends Card{
         }
     }
 
-    @Override
-    public  void  ActivateCard() {
-        currentPlayer.getInputHandler().action();
-    }
+//    @Override
+//    public  void  ActivateCard() {
+//        currentPlayer.getInputHandler().action();
+//    }
 
     @Override
     public void finishCard() {
@@ -149,23 +150,23 @@ public class Warzone extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.done==PlayerList.size()) {
             for (int i = 0; i < PlayerList.size(); i++) {
-                PlayerList.get(i).setState(PlayerStates.BaseState);
+                PlayerList.get(i).setState(new BaseState());
             }
         }
         else{
             done++;
         }
     }
-
-    @Override
-    public void continueCard(ArrayList<IntegerPair> coordinates) {
-        if (RequirementsType[ChallengeOrder]==1){
-            checkPower(coordinates);
-        }
-        else {
-            //checkMovement(coordinates);
-        }
-    }
+//
+//    @Override
+//    public void continueCard(ArrayList<IntegerPair> coordinates) {
+//        if (RequirementsType[ChallengeOrder]==1){
+//            checkPower(coordinates);
+//        }
+//        else {
+//            checkMovement(coordinates);
+//        }
+//    }
 
 
 
@@ -174,111 +175,105 @@ public class Warzone extends Card{
 
     //controlli su chi è il peggiore
 
-    public void checkPower(ArrayList<IntegerPair> coordinates) {
+    public void checkPower(double power) {
 //            double movement= currentPlayer.getMyPlance().getPower(coordinates);
 
-//        currentPlayer.getMyPlance().setGetter(new PlasmaDrillsGetter(currentPlayer.getMyPlance(), coordinates));
-//        double power = ((Double) currentPlayer.getMyPlance().getGetter().get());
 
 
-//        if(power<Minimum){
-//                this.Worst=currentPlayer;
-//                this.Minimum=power;
-//            }
-//        this.currentPlayer.setState(PlayerStates.Waiting);
-//        this.updateSates();
+        if(power<Minimum){
+                this.Worst=currentPlayer;
+                this.Minimum=power;
+            }
+        this.currentPlayer.setState(new Waiting());
+        this.updateSates();
     }
 
     public void checkPeople() {
-//        int Order=0;
-//        GameBoard Board=this.getBoard();
-//        ArrayList<Player> PlayerList = Board.getPlayers();
-//        PlayerBoard CurrentPlanche;
-//        int Len= PlayerList.size(); // quanti player ho
-//        int PlayerPower;
-//
-//
-//        for(int i=0; i<PlayerList.size(); i++){
-//            CurrentPlanche=PlayerList.get(i).getMyPlance(); // get the current active planche
-//
-//
-//            ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
-//            if(CurrentPlanche.getClassifiedTiles().containsKey(ModularHousingUnit.class)) {
-//                HousingCoords = CurrentPlanche.getClassifiedTiles().get(ModularHousingUnit.class);
+        int Order=0;
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        PlayerBoard CurrentPlanche;
+        int Len= PlayerList.size(); // quanti player ho
+        int PlayerPower;
+
+
+        for(int i=0; i<PlayerList.size(); i++){
+            CurrentPlanche=PlayerList.get(i).getmyPlayerBoard(); // get the current active planche
+
+
+
+
+            Tile TileBoard[][]=CurrentPlanche.getPlayerBoard();
+            int totHumans = CurrentPlanche.getNumHumans();
+
+
+//            for (int j = 0; i < HousingCoords.size(); j++) {
+//                //somma per vedere il tot umani
+//                totHumans += TileBoard[HousingCoords.get(j).getFirst()][HousingCoords.get(j).getSecond()].getComponent().getAbility();
 //            }
-//            if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
-//                HousingCoords.add(new IntegerPair(6,6));
-//            }
+
+
+            if(totHumans<Minimum){
+                Worst=PlayerList.get(i);
+                Minimum=totHumans;
+            }
+        }
+        this.PlayerOrder=PlayerList.size();
+        this.updateSates();
+    }
+
+    public void checkMovement(int movement) {
+//        double movement= currentPlayer.getMyPlance().getEnginePower(coordinates);
+
+
+
+
+
+        if(movement<Minimum){
+            this.Worst=currentPlayer;
+            this.Minimum=movement;
+        }
+        this.currentPlayer.setState(new Waiting());
+        this.updateSates();
+    }
+
+
+    public void loseTime() {
+        this.getBoard().movePlayer(Worst.GetID(),this.PunishmentMovement);
+        return;
+    }
+
+
+    public void loseCargo() {
 //
-//            Tile TileBoard[][]=CurrentPlanche.getPlayerBoard();
-//            int totHumans = 0;
 //
+//        for(int i=0;i<PunishmentCargo;i++){
+//            int index=Worst.getGoodsIndex();
+//            IntegerPair coord=Worst.getGoodsCoordinates();
 //
-////            for (int j = 0; i < HousingCoords.size(); j++) {
-////                //somma per vedere il tot umani
-////                totHumans += TileBoard[HousingCoords.get(j).getFirst()][HousingCoords.get(j).getSecond()].getComponent().getAbility();
-////            }
-//
-//
-//            if(totHumans<Minimum){
-//                Worst=PlayerList.get(i);
-//                Minimum=totHumans;
-//            }
+//            Worst.getMyPlance().removeGood(coord,index);
 //        }
-//        this.PlayerOrder=PlayerList.size();
-//        this.updateSates();
-//    }
-//
-//    public void checkMovement(ArrayList<IntegerPair> coordinates) {
-////        double movement= currentPlayer.getMyPlance().getEnginePower(coordinates);
-//
-//
-//        currentPlayer.getMyPlance().setGetter(new EngineGetter(currentPlayer.getMyPlance(),
-//                coordinates));
-//        double movement = ((Double) currentPlayer.getMyPlance().getGetter().get());
-//
-//
-//        if(movement<Minimum){
-//            this.Worst=currentPlayer;
-//            this.Minimum=movement;
-//        }
-//        this.currentPlayer.setState(PlayerStates.Waiting);
-//        this.updateSates();
-//    }
-//
-//
-//    public void loseTime() {
-//        this.getBoard().movePlayer(Worst.GetID(),this.PunishmentMovement);
-//        return;
-//    }
-//
-//
-//    public void loseCargo() {
-////
-////
-////        for(int i=0;i<PunishmentCargo;i++){
-////            int index=Worst.getGoodsIndex();
-////            IntegerPair coord=Worst.getGoodsCoordinates();
-////
-////            Worst.getMyPlance().removeGood(coord,index);
-////        }
-//    }
-//
-//
-//
-//    @Override
-//    public void killHumans(ArrayList<IntegerPair> coordinates){
-//        if (coordinates.size() != this.PunishmentHumans) {
-//            //devo dirgli che ha scelto il num sbagliato di persone da shottare
-//            //throw new Exception();
-//        }
-//
-//        for (IntegerPair coordinate : coordinates) {
-//            currentPlayer.getMyPlance().setSetter(new HousingUnitSetter(currentPlayer.getMyPlance(),
-//                    coordinate, 1, true, true));
-//            currentPlayer.getMyPlance().getSetter().set();
-//        }
-//        this.updateSates();
+    }
+
+
+
+    @Override
+    public void killHumans(ArrayList<IntegerPair> coordinates){
+        if (coordinates.size() != this.PunishmentHumans) {
+            //devo dirgli che ha scelto il num sbagliato di persone da shottare
+            //throw new Exception();
+        }
+
+        PlayerBoard curr= currentPlayer.getmyPlayerBoard();
+        Tile tiles[][]=curr.getPlayerBoard();
+        for (IntegerPair coordinate : coordinates) {
+            System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
+
+            //curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr), PlayerS);
+
+
+        }
+        this.updateSates();
     }
 
 
@@ -297,7 +292,7 @@ public class Warzone extends Card{
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
-                        currentPlayer.setState(PlayerStates.DefendingFromShots);
+                        currentPlayer.setState(new DefendingFromShots());
                     }
 
 
@@ -311,7 +306,7 @@ public class Warzone extends Card{
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
-                        currentPlayer.setState(PlayerStates.DefendingFromShots);
+                        currentPlayer.setState(new DefendingFromShots());
 
                     }
 
@@ -325,7 +320,7 @@ public class Warzone extends Card{
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder/2]);
-                        currentPlayer.setState(PlayerStates.DefendingFromShots);
+                        currentPlayer.setState(new DefendingFromShots());
 
                     }
                     Movement--;
@@ -338,7 +333,7 @@ public class Warzone extends Card{
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
-                        currentPlayer.setState(PlayerStates.DefendingFromShots);
+                        currentPlayer.setState(new DefendingFromShots());
                     }
 
 

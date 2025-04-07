@@ -2,7 +2,8 @@ package org.example.galaxy_trucker.Controller.RMI;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Game;
-import org.example.galaxy_trucker.Model.GameHandler;
+import org.example.galaxy_trucker.Model.GameLists;
+import org.example.galaxy_trucker.Model.GameLists;
 import org.example.galaxy_trucker.Model.Player;
 
 import java.rmi.RemoteException;
@@ -19,12 +20,12 @@ public class ServerActions extends UnicastRemoteObject implements ServerInterfac
 
     Player CurrentPlayer;
 
-    GameHandler gh;
+    GameLists gh;
 
     ArrayList<ClientInterface> clients;
 
     protected ServerActions() throws RemoteException {
-        gh = new GameHandler();
+        gh = new GameLists();
         clients = new ArrayList<>();
     }
 

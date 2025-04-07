@@ -1,12 +1,13 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.InputHandlers.Accept;
-import org.example.galaxy_trucker.Model.InputHandlers.Killing;
+import org.example.galaxy_trucker.Model.PlayerStates.GiveAttack;
+import org.example.galaxy_trucker.Model.PlayerStates.Killing;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.Accepting;
+import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
 import java.util.ArrayList;
 
@@ -36,7 +37,7 @@ public class Slavers extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
-            p.setState(PlayerStates.Waiting);
+            p.setState(new Waiting());
         }
         this.updateSates();
     }
@@ -50,8 +51,8 @@ public class Slavers extends Card{
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
-            this.currentPlayer.setState(PlayerStates.GiveAttack);
-            this.currentPlayer.setInputHandler(new Accept(this));
+            this.currentPlayer.setState(new GiveAttack());
+            //this.currentPlayer.setInputHandler(new Accept(this));
 
             this.order++;
         }
@@ -60,19 +61,19 @@ public class Slavers extends Card{
         }
     }
 
-//    @Override
-//    public void continueCard(ArrayList<IntegerPair> cannons) {
-//        double power= currentPlayer.getMyPlance().getPower(cannons);
-//        if(power>this.getRequirement()){
-//            this.currentPlayer.setState(PlayerStates.Accepting);
-//            this.currentPlayer.setInputHandler(new Accept(this));
-//            this.defeated=true;
-//        }
-//        else if(power<this.getRequirement()){
-//            this.currentPlayer.setState(PlayerStates.Killing);
-//            this.currentPlayer.setInputHandler(new Killing(this));
-//        }
-//    }
+    @Override
+    public void continueCard(double power) {
+
+        if(power>this.getRequirement()){
+            this.currentPlayer.setState(new Accepting());
+            //this.currentPlayer.setInputHandler(new Accept(this));
+            this.defeated=true;
+        }
+        else if(power<this.getRequirement()){
+            this.currentPlayer.setState(new Killing());
+            //this.currentPlayer.setInputHandler(new Killing(this));
+        }
+    }
 
     @Override
     public void killHumans(ArrayList<IntegerPair> coordinates){

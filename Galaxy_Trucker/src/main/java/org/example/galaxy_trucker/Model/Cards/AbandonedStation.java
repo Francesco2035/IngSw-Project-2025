@@ -1,10 +1,15 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+//import org.example.galaxy_trucker.Model.InputHandlers.Accept;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.Accepting;
+import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
+import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 
 
 import java.util.ArrayList;
@@ -16,6 +21,7 @@ public class AbandonedStation extends Card{
     private Player currentPlayer;
     private boolean flag;
     private int order;
+    int totHumans;
 
 
 
@@ -23,13 +29,18 @@ public class AbandonedStation extends Card{
         super(level, time, board);
         this.requirement = requirement;
         this.rewardGoods = reward;
+        this.order = 0;
+        this.totHumans = 0;
+        this.flag = false;
+        this.currentPlayer = null;
+
     }
 
 
-    @Override
-    public  void  ActivateCard() {
-        currentPlayer.getInputHandler().action();
-    }
+//    @Override
+//    public  void  ActivateCard() {
+//        currentPlayer.getInputHandler().action();
+//    }
 
     @Override
     public void CardEffect(){
@@ -37,45 +48,32 @@ public class AbandonedStation extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
-            p.setState(PlayerStates.Waiting);
+            p.setState(new Waiting());
         }
         this.updateSates();
     }
     @Override
     public void updateSates(){
-//        GameBoard Board=this.getBoard();
-//        ArrayList<Player> PlayerList = Board.getPlayers();
-//        while(this.order<PlayerList.size()&& !this.flag) {
-//            currentPlayer = PlayerList.get(this.order);
-//            PlayerBoard CurrentPlanche =currentPlayer.getMyPlance();
-//            Tile TileBoard[][] = CurrentPlanche.getPlayerBoard();
-//            ArrayList<IntegerPair> HousingCoords=new ArrayList<>();
-//            if(CurrentPlanche.getClassifiedTiles().containsKey(ModularHousingUnit.class)) {
-//                HousingCoords = CurrentPlanche.getClassifiedTiles().get(ModularHousingUnit.class);
-//            }
-//            if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
-//                HousingCoords.add(new IntegerPair(6, 6));
-//            }
-//            int totHumans = 0;
-//
-//            for (int i = 0; i < HousingCoords.size(); i++) {
-//                //somma per vedere il tot umani
-//                totHumans += ((ArrayList<Integer>) TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent().
-//                        get(new HousingHumanGetter(TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent()))).getFirst();
-//
-//            }
-//            if(totHumans>this.requirement){
-//                this.flag = true;
-//                currentPlayer.setState(PlayerStates.Accepting);
-//                currentPlayer.setInputHandler(new Accept(this));
-//
-//            }
-//
-//            this.order++;
-//        }
-//        if(order==PlayerList.size()){
-//            this.finishCard();
-//        }
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        while(this.order<=PlayerList.size()&& !this.flag) {
+            if(order==PlayerList.size()){
+                this.finishCard();
+                break;
+            }
+            currentPlayer = PlayerList.get(this.order);
+            PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
+
+            if(CurrentPlanche.getNumHumans()>this.requirement){
+                System.out.println(currentPlayer.GetID()+" has enough required housing");
+                this.flag = true;
+                currentPlayer.setState(new Accepting());
+                //currentPlayer.setInputHandler(new Accept(this));
+
+            }
+
+            this.order++;
+        }
     }
 
     @Override
@@ -83,7 +81,7 @@ public class AbandonedStation extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
-            PlayerList.get(i).setState(PlayerStates.BaseState);
+            PlayerList.get(i).setState(new BaseState());
         }
     }
 
@@ -92,11 +90,11 @@ public class AbandonedStation extends Card{
         if(accepted) {
 
             currentPlayer.handleCargo(this.rewardGoods);
-            this.getBoard().movePlayer(this.currentPlayer.GetID(), this.getTime());
+            this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
 
         }
         else{
-            currentPlayer.setState(PlayerStates.Waiting);
+            currentPlayer.setState(new Waiting());
             this.flag = false;
             this.updateSates();
         }

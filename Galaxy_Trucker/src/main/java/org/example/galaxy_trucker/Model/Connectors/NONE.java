@@ -1,20 +1,27 @@
 package org.example.galaxy_trucker.Model.Connectors;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 @JsonTypeName("NONE")
 public class NONE implements Connectors {
 
-    public NONE() {}
+    public static final NONE INSTANCE = new NONE();
 
-    @Override
-    public boolean checkLegal(Connectors Adjacent) {
-        return Adjacent instanceof NONE;
+    private NONE() {}
+
+    @JsonCreator
+    public static NONE getInstance() {
+        return INSTANCE;
     }
 
     @Override
-    public boolean checkAdjacent(Connectors Adjacent){
+    public boolean checkLegal(Connectors Adjacent) {
+        return Adjacent == NONE.INSTANCE;
+    }
+
+    @Override
+    public boolean checkAdjacent(Connectors Adjacent) {
         return false;
     }
 
@@ -22,5 +29,4 @@ public class NONE implements Connectors {
     public boolean isExposed() {
         return false;
     }
-
 }

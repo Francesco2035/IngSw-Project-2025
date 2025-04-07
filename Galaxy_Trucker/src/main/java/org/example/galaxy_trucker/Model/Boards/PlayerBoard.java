@@ -3,13 +3,12 @@ package org.example.galaxy_trucker.Model.Boards;
 
 import org.example.galaxy_trucker.Exceptions.*;
 
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.PlayerStates;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.Goods.*;
-
 
 
 import java.util.*;
@@ -36,6 +35,8 @@ public class PlayerBoard {
     private ArrayList<Goods> BufferGoods;
 
     private ArrayList<HousingUnit> HousingUnits;
+
+
     private ArrayList<HotWaterHeater> HotWaterHeaters;
     private ArrayList<PlasmaDrill> PlasmaDrills;
     private ArrayList<AlienAddons> AlienAddons;
@@ -44,7 +45,7 @@ public class PlayerBoard {
     private ArrayList<PowerCenter> PowerCenters;
 
 
-    private HashMap<Class<?>, ArrayList<IntegerPair>> storedGoods;
+    private HashMap<Integer, ArrayList<IntegerPair>> storedGoods;
 
 
     private ArrayList<Tile> Buffer;
@@ -56,6 +57,8 @@ public class PlayerBoard {
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
         this.totalValue = 0;
+
+
 
         this.valid = true;
 
@@ -117,7 +120,7 @@ public class PlayerBoard {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 if (ValidPlayerBoard[x][y] != 1) {
-                    PlayerBoard[x][y] =  new Tile(new SpaceVoid() , new NONE(), new NONE(),new NONE(), new NONE());
+                    PlayerBoard[x][y] =  new Tile(new SpaceVoid() , NONE.INSTANCE , NONE.INSTANCE,NONE.INSTANCE, NONE.INSTANCE);
                 }
                 else {
                     PlayerBoard[x][y] = null;
@@ -125,8 +128,8 @@ public class PlayerBoard {
 
             }
         }
-        this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),new UNIVERSAL(), new UNIVERSAL(),new UNIVERSAL(), new UNIVERSAL());
-        PlayerBoard[6][6].getComponent().insert(this);
+        this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
+        PlayerBoard[6][6].getComponent().insert(this,6,6);
     }
 
 
@@ -255,7 +258,7 @@ public class PlayerBoard {
         return damage;
     }
 
-    public HashMap<Class<?>, ArrayList<IntegerPair>> getStoredGoods(){
+    public HashMap<Integer, ArrayList<IntegerPair>> getStoredGoods(){
         return storedGoods;
     }
 
@@ -299,7 +302,7 @@ public class PlayerBoard {
 
 
         this.PlayerBoard[x][y] = tile;
-        tile.getComponent().insert(this);
+        tile.getComponent().insert(this,x,y);
         ValidPlayerBoard[x][y] = 1;
 
     }
@@ -383,7 +386,7 @@ public class PlayerBoard {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
         PlayerBoard[x][y].getComponent().remove(this);
-        PlayerBoard[x][y] = new Tile(new SpaceVoid() ,new NONE(), new NONE(), new NONE());
+        PlayerBoard[x][y] = new Tile(new SpaceVoid() ,NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;
     }
 
@@ -480,14 +483,14 @@ public class PlayerBoard {
 
         PlayerBoard[x][y].getComponent().remove(this);
         damage++;
-        PlayerBoard[x][y] = new Tile(new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
+        PlayerBoard[x][y] = new Tile(new SpaceVoid(),NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;
         updateStoredGoods();
     }
 
     public void updateStoredGoods(){
 
-        for (Class<?> Goods : storedGoods.keySet()){
+        for (Integer Goods : storedGoods.keySet()){
                 storedGoods.get(Goods).removeIf(pair -> ValidPlayerBoard[pair.getFirst()][pair.getSecond()] != 1);
         }
 
@@ -522,7 +525,7 @@ public class PlayerBoard {
                 if (ValidPlayerBoard[x][y] == 1){
                     if(!newPlayerBoard.contains(new IntegerPair(x,y))){
                         PlayerBoard[x][y].getComponent().remove(this);
-                        PlayerBoard[x][y] = new Tile(new SpaceVoid(),new NONE(), new NONE(), new NONE(), new NONE());
+                        PlayerBoard[x][y] = new Tile(new SpaceVoid(),NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
                         ValidPlayerBoard[x][y] = 0;
                         damage++;
                     }
@@ -744,6 +747,9 @@ public class PlayerBoard {
     }
 
     public int getEnginePower() {
+        if (brownAlien){
+            return EnginePower +2;
+        }
         return EnginePower;
     }
 
@@ -752,6 +758,9 @@ public class PlayerBoard {
     }
 
     public double getPlasmaDrillsPower() {
+        if(purpleAlien){
+            return PlasmaDrillsPower + 2;
+        }
         return PlasmaDrillsPower;
     }
 
@@ -775,8 +784,11 @@ public class PlayerBoard {
         Energy += energy;
     }
 
-    public void performAction(Component component, ComponentActionVisitor action, PlayerStates State) {
-        component.accept(action,State);
+    public void performAction(Component component, ComponentAction action, PlayerState state) {
+
+            component.accept(action, state);
+
     }
+
 
 }

@@ -1,6 +1,9 @@
 package org.example.galaxy_trucker.Model;
 
-public enum PlayerStates {
+public enum PlayerStatesss {
+    Login,
+    NotReady,
+    Ready,
     BuildingShip,
     FinishedBuilding,
     PopulateHousingUnits,

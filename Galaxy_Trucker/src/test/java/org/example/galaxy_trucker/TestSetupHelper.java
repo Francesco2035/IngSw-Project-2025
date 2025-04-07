@@ -1,9 +1,13 @@
 package org.example.galaxy_trucker;
 
+import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.DOUBLE;
 import org.example.galaxy_trucker.Model.Connectors.SINGLE;
 import org.example.galaxy_trucker.Model.GAGen;
+
+import org.example.galaxy_trucker.Model.PlayerStatesss;
+import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.SewerPipes;
 import org.junit.jupiter.api.Test;
@@ -29,9 +33,6 @@ public class TestSetupHelper {
     public static PlayerBoard createInitializedBoard1() {
 
         ArrayList<Tile> tiles = gag.getTilesDeck();
-        for (Tile t :tiles){
-            System.out.println(t.getComponent().getClass().getName());
-        }
         Tile t1 = tiles.get(133); //"SINGLE", "DOUBLE", "SINGLE", "NONE addons, br factos
         Tile t2 = tiles.get(102); //none,cannon, single, universal , plasmadrill    ruota sx due volte factos
         Tile t3 = tiles.get(128); //doublem cannon, none, unviersal. plasmadrill  factos
@@ -109,7 +110,36 @@ public class TestSetupHelper {
     }
 
     public static PlayerBoard createInitializedBoard2(){
+        ArrayList<Tile> tiles = gag.getTilesDeck();
+        Tile t1 = tiles.get(39); //House:   double,single,double,none
+        Tile t2 = tiles.get(35); //House: singe,double,none,none
+        Tile t3 = tiles.get(48);//house: uni,double,double
+        Tile t4 = tiles.get(99); //Cannon: none,cannon,none,double
+        Tile t5 = tiles.get(117);//Cannon: double, cannon,single,uni
+        Tile t6 = tiles.get(137);//BrownAddon: uni,single,none,none
+        Tile t7 = tiles.get(150);//Shield: uni,none,none,single
+        Tile t8 = tiles.get(10);//battery uni,uni,none,none
+
+
+        t1.RotateSx();
+        t1.RotateSx();
+        t2.RotateDx();
+        t3.RotateDx();
+        t5.RotateDx();
+        t6.RotateDx();
+
+        playerBoard2.insertTile(t1,5,6);
+        playerBoard2.insertTile(t7,6,7);
+        playerBoard2.insertTile(t2,7,7);
+        playerBoard2.insertTile(t5,7,8);
+        playerBoard2.insertTile(t6,6,5);
+        playerBoard2.insertTile(t3,5,5);
+        playerBoard2.insertTile(t4,4,5);
+        playerBoard2.insertTile(t8,8,8);
         return playerBoard2;
+
+
+
     }
 
     public static PlayerBoard createInitializedBoard3(){
@@ -117,8 +147,8 @@ public class TestSetupHelper {
     }
 
     public static PlayerBoard createInitializedBoard4(){
-        SINGLE SS = new SINGLE();
-        DOUBLE DD = new DOUBLE();
+        SINGLE SS = SINGLE.INSTANCE;
+        DOUBLE DD = DOUBLE.INSTANCE;
         Tile single = new Tile(new SewerPipes(),SS,SS,SS,SS);
         Tile dd = new Tile(new SewerPipes(),DD,DD,DD,DD);
         playerBoard4.insertTile(single,6,7);
@@ -127,5 +157,28 @@ public class TestSetupHelper {
 
         return playerBoard4;
     }
+
+    public static void HumansSetter1(PlayerBoard playerBoard){
+//        ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
+//        HousingCoords.addAll(playerBoard.getHousingUnits());
+//        for(HousingUnit housingUnit : HousingCoords){
+//           playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard), PlayerStatesss.PopulateHousingUnits);
+//        }
+    }
+
+
+    public static void HumansSetter2(PlayerBoard playerBoard){ ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
+        HousingCoords.addAll(playerBoard.getHousingUnits());
+        for(HousingUnit housingUnit : HousingCoords){
+            if(housingUnit.getX()==5 && housingUnit.getY()==5){
+                housingUnit.setBrownAlien(true);
+            }
+            else{
+                housingUnit.setNumHumans(2);
+            }
+        }
+
+    }
+
 
 }

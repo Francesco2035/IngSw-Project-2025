@@ -1,16 +1,15 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentActionVisitor;
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.PlayerStates;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.PlayerStatesss;
 
 public abstract class HousingUnit extends Component{
 
 
+    private int x;
+    private int y;
 
     public abstract int getNumHumans();
     public abstract void setNumHumans(int numHumans);
@@ -32,7 +31,29 @@ public abstract class HousingUnit extends Component{
 
     public abstract int kill();
 
-    public abstract void accept(ComponentActionVisitor visitor, PlayerStates State);
+    public abstract void accept(ComponentAction visitor, PlayerState State);
 
     public abstract void addCrew(int humans, boolean purple, boolean brown);
+
+    @Override
+    public void insert(PlayerBoard playerBoard, int x, int y) {
+        playerBoard.getHousingUnits().add(this);
+        this.x = x;
+        this.y = y;
+
+    }
+
+    @Override
+    public void remove(PlayerBoard playerBoard) {
+        playerBoard.getHousingUnits().remove(this);
+
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }
