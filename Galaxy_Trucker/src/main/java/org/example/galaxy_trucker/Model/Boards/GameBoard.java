@@ -12,8 +12,6 @@ import org.example.galaxy_trucker.Model.Tiles.TileSets;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Optional;
-import java.util.concurrent.CyclicBarrier;
 
 
 public class GameBoard {
@@ -66,6 +64,7 @@ public class GameBoard {
      * @param NewPlayer reference to the newborn player
      */
     public void addPlayer(Player NewPlayer){
+        NewPlayer.setBoards(this);
         Player_IntegerPair NewPair = new Player_IntegerPair(NewPlayer, 0);
         this.players.add(NewPair);
         NewPlayer.setState(PlayerStates.BuildingShip);

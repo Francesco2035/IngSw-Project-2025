@@ -5,12 +5,12 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.InputHandlers.InputHandler;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Player {
+public class Player implements Serializable {
 
     private GameBoard CommonBoard;
     private PlayerBoard myPlayerBoard;
@@ -24,10 +24,7 @@ public class Player {
     private Card CurrentCard;
 
 
-    public Player(String id, GameBoard board) {
-        CommonBoard = board;
-        myPlayerBoard = new PlayerBoard(board.getLevel());
-        ID = id;
+    public Player()  {
         credits = 0;
         ready = false;
         CurrentTile = null;
@@ -68,17 +65,9 @@ public class Player {
         return d1+d2;
     }
 
-    public InputHandler getInputHandler() {
-        return InputHandler;
-    }
 
-    public void setInputHandler(InputHandler InputHandler) {
-        this.InputHandler = InputHandler;
-    }
 
-    public void setState(PlayerStates state) {
-        this.PlayerState = state;
-    }
+
 
     public void  execute() {
         this.CurrentCard.ActivateCard();
@@ -88,11 +77,7 @@ public class Player {
         CommonBoard.StartHourglass();
     }
 
-    
-    public void useEnergy(int x, int y){
 
-    }
-    
     
     /**
      * get a new random tile from the covered tiles set
@@ -174,9 +159,7 @@ public class Player {
     }
 
 
-    public void setCard(Card NewCard){
-        CurrentCard = NewCard;
-    }
+
 
 
     /**
@@ -188,9 +171,40 @@ public class Player {
        }
 
 
+    public void setInputHandler(InputHandler InputHandler) {
+        this.InputHandler = InputHandler;
+    }
+    public void setState(PlayerStates state) {
+        this.PlayerState = state;
+    }
+    public void setCard(Card NewCard){
+        CurrentCard = NewCard;
+    }
     public void SetReady(){
         this.ready = true;
     }
+    public void setId(String id){this.ID = id;}
+
+    public void setBoards(GameBoard CommonBoard) {
+        this.CommonBoard = CommonBoard;
+        myPlayerBoard = new PlayerBoard(CommonBoard.getLevel());
+    }
+
+
+
+    public String GetID() {return this.ID;}
+    public int GetCredits() {return this.credits;}
+    public boolean GetReady() {return this.ready;}
+    public PlayerBoard getmyPlayerBoard() {return myPlayerBoard;}
+    public InputHandler getInputHandler() {
+        return InputHandler;
+    }
+
+
+
+
+
+
 
 
 
@@ -215,10 +229,9 @@ public class Player {
 //        return Locations;
 //    }
 
-    public String GetID() {return this.ID;}
-    public int GetCredits() {return this.credits;}
-    public boolean GetReady() {return this.ready;}
-    public PlayerBoard getmyPlayerBoard() {return myPlayerBoard;}
+
+
+
     //    public ArrayList <IntegerPair> getHumans(){return this.myPlayerBoard.gethousingUnits();}
     public ArrayList<IntegerPair> getEnergyTiles(){
 //        if(getmyPlayerBoard().getClassifiedTiles().containsKey(PowerCenter.class))

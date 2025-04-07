@@ -1,16 +1,16 @@
 package org.example.galaxy_trucker.Model;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Game {
+public class Game implements Serializable {
     private String GameID;
-    private ArrayList<Player> PlayerList;
+    private ArrayList<Player> Players;
     private GameBoard GameBoard;
     private CardStacks CardDeck;
     private TileSets TileDecks;
@@ -24,7 +24,7 @@ public class Game {
     public Game(int GameLevel, String id) throws IOException{
         GameID = id;
         gag = new GAGen();
-        PlayerList = new ArrayList<>();
+        Players = new ArrayList<>();
         CardDeck = new CardStacks(gag, GameLevel);
         TileDecks = new TileSets(gag);
         lv = GameLevel;
@@ -32,22 +32,22 @@ public class Game {
     }
 
 
-    public void NewPlayer(String ID)throws IllegalArgumentException, IndexOutOfBoundsException{
-        if(PlayerList.size() >= 4)
+    public void NewPlayer(Player newborn)throws IllegalArgumentException, IndexOutOfBoundsException{
+        if(Players.size() >= 4)
             throw new IndexOutOfBoundsException("Game is full");
 
-        for(Player p : PlayerList){
-            if(p.GetID().equals(ID)){
+        for(Player p : Players){
+            if(p.equals(newborn)){
                 throw new IllegalArgumentException("Username already exists");
             }
         }
-        Player newborn = new Player(ID, GameBoard);
+
         GameBoard.addPlayer(newborn);
-        PlayerList.add(newborn);
+        Players.add(newborn);
     }
 
     public void RemovePlayer(Player DeadMan){
-        PlayerList.remove(DeadMan);
+        Players.remove(DeadMan);
     }
 
     public String getID(){return GameID;}
