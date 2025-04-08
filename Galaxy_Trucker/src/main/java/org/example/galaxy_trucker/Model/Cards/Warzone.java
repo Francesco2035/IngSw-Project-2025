@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
 import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
@@ -433,16 +434,18 @@ public class Warzone extends Card{
 
 
     @Override
-    public void DefendFromShots(IntegerPair coordinates) {
+    public void DefendFromSmall(IntegerPair shieldcoord,IntegerPair energy){
         PlayerBoard currentBoard =this.Worst.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
-
-        if(coordinates !=null) {
-//            if (!(PunishmentShots.get(ShotsOrder + 1) == 0 && (currentBoard.getTile(coordinates.getFirst(), coordinates.getSecond()).getComponent().getAbility(0).contains(PunishmentShots.get(ShotsOrder))) || PunishmentShots.get(ShotsOrder + 1) == 1)) {
-//                // non dovrei attivare lo scudo o lo scudo è sbagliato
-//            }
+        if (shieldcoord!=null){
+            if (PunishmentShots.get(ShotsOrder + 1) == 0 && (currentBoard.getShield()[PunishmentShots.get(ShotsOrder)]==0)){
+                throw new InvalidDefenceEceptiopn("this shield defends the wrong side");
+            }
+            else {
+                currentBoard.performAction(tiles[hit.getFirst()][hit.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new ConsumingEnergy());
+            }
         }
-        if(coordinates ==null) { // se sono entrambi nulli non mi son difeso quindi vengo colpito
+        else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
         }
         this.continueCard();

@@ -69,8 +69,8 @@ public class Card {
     public void checkPower(double power, int numofDouble) {}
     public void checkMovement(int power, int numofDouble) {}
     public void continueCard(ArrayList<IntegerPair> coordinates, boolean accepted) {}
-    public void DefendFromMeteorites(IntegerPair CannonCoord, IntegerPair ShieldCoord, IntegerPair EnergyStorage) {}
-    public void DefendFromShots(IntegerPair coordinates) {}
+    public void DefendFromLarge(IntegerPair CannonCoord,IntegerPair EnergyStorage) {}
+    public void DefendFromSmall(IntegerPair coordinates, IntegerPair energy) {}
     public void continueCard(ArrayList<IntegerPair> coordinates) {}
     public void continueCard(){}
     public void killHumans(ArrayList<IntegerPair> coordinates) {}
