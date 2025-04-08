@@ -2,6 +2,9 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 //import org.example.galaxy_trucker.Model.InputHandlers.Accept;
+import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
+import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
+import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
@@ -24,6 +27,8 @@ public class Pirates extends Card{
     private int order;
     private Player currentPlayer;
     private int[] lines;
+    private double currentpower;
+    private int energyUsage;
 
     @JsonProperty("punishment")
     private ArrayList<Integer> Punishment;
@@ -44,6 +49,10 @@ public class Pirates extends Card{
             lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
         }
         this.hit = null;
+        this.currentpower = 0;
+        this.energyUsage = 0;
+        this.order = 0;
+
 
     }
  @Override
@@ -65,10 +74,9 @@ public class Pirates extends Card{
         if(this.order<PlayerList.size() && !this.defeated){
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
-
+            this.currentpower=0;
             this.currentPlayer.setState(new GiveAttack());
             //this.currentPlayer.setInputHandler(new Accept(this));
-
             this.order++;
         }
         else{
@@ -77,14 +85,42 @@ public class Pirates extends Card{
     }
 
     @Override
-    public void continueCard(double power) {
+    public void checkPower(double power, int numofDouble) {
+        if(numofDouble==0){
+            this.checkStrength();
+        }
+        else {
+            this.currentpower = power;
+            this.energyUsage = numofDouble;
+            this.currentPlayer.setState(new ConsumingEnergy());
+//
+        }
+    }
 
-        if(power>this.getRequirement()){
+    @Override
+    public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
+        if(coordinates.size()!=this.energyUsage){
+            throw new WrongNumofEnergyExeption("wrong number of enrgy cells");
+            ///  devo fare si che in caso di errore torni alla give attack
+        }
+        PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
+        Tile[][] tiles = CurrentPlanche.getPlayerBoard();
+        /// opero sulla copia
+        for(IntegerPair i:coordinates){
+            CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+        }
+        this.checkStrength();
+
+    }
+
+    public void checkStrength(){
+
+        if(this.currentpower>this.getRequirement()){
             this.defeated=true;
             this.currentPlayer.setState(new Accepting());
             //this.currentPlayer.setInputHandler(new Accept(this));
         }
-        else if (power<this.getRequirement()){
+        else if (this.currentpower<this.getRequirement()){
             this.continueCard();
         }
 
@@ -107,35 +143,50 @@ public class Pirates extends Card{
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
+                        if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
                             currentPlayer.setState(new DefendingFromShots());
+                        }
                         }
 
 
                     Movement++;
                 }
             }
-            if (Punishment.get(ShotsOrder) == 1) {//sopra
+            else if (Punishment.get(ShotsOrder) == 1) {//sopra
                 Movement = 0;
                 while (Movement < 10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
+                        if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
                             currentPlayer.setState(new DefendingFromShots());
+                        }
 
                     }
 
                     Movement++;
                 }
             }
-            if (Punishment.get(ShotsOrder) == 2) {// destra
+            else if (Punishment.get(ShotsOrder) == 2) {// destra
                 Movement = 9;
                 while (Movement >= 0 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder/2]);
+                        if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
                             currentPlayer.setState(new DefendingFromShots());
+                        }
 
                     }
                     Movement--;
@@ -148,7 +199,12 @@ public class Pirates extends Card{
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
+                        if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
                             currentPlayer.setState(new DefendingFromShots());
+                        }
                         }
 
 

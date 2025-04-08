@@ -178,6 +178,7 @@ public class   Meteorites extends Card {
         }
     }
 
+    /// //dividi la defend tu in shield e in cannone a seconda del tipo di meteorite così è piu facile il controllo di correttezza e il passaggio di input
 
         // DEVO NON ANDAR SUBITO IN UPDATE STATES MA IN SCELTA TRONCONI! UPSIE :)
     @Override

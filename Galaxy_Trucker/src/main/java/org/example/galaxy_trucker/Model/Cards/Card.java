@@ -66,8 +66,8 @@ public class Card {
     public void updateSates(){}
     public void finishCard() {}
     public void continueCard(boolean accepted) {}
-    public void continueCard(double power) {}
-    public void continueCard(int power) {}
+    public void checkPower(double power, int numofDouble) {}
+    public void checkMovement(int power, int numofDouble) {}
     public void continueCard(ArrayList<IntegerPair> coordinates, boolean accepted) {}
     public void DefendFromMeteorites(IntegerPair CannonCoord, IntegerPair ShieldCoord, IntegerPair EnergyStorage) {}
     public void DefendFromShots(IntegerPair coordinates) {}
@@ -75,6 +75,7 @@ public class Card {
     public void continueCard(){}
     public void killHumans(ArrayList<IntegerPair> coordinates) {}
     public void choosePlanet(int planet){}
+    public void consumeEnergy(ArrayList<IntegerPair> coordinates) {}
 
     public void ActivateCard(){
     }

@@ -4,15 +4,16 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
+import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
+import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.Accepting;
-import org.example.galaxy_trucker.Model.PlayerStates.GiveAttack;
-import org.example.galaxy_trucker.Model.PlayerStates.Killing;
-import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
+import org.example.galaxy_trucker.Model.PlayerStates.*;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,8 @@ public class Smugglers extends Card{
     private int order;
     private Player currentPlayer;
     private boolean defeated;
+    private double currentpower;
+    private int energyUsage;
     // conviene creare una classe che lista gli attacchi o in qualche modo chiama solo una volta
     //il player da attaccare cambia Attack
     Smugglers(int level, int time, GameBoard board, ArrayList<Goods> Reward, int Requirement, int Punsihment){
@@ -56,7 +59,7 @@ public class Smugglers extends Card{
         if(this.order<PlayerList.size() && !this.defeated){
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
-
+            this.currentpower=0;
             this.currentPlayer.setState(new GiveAttack());
             //this.currentPlayer.setInputHandler(new Accept(this));
 
@@ -68,24 +71,57 @@ public class Smugglers extends Card{
     }
 
     @Override
-    public void continueCard(double power) {
+    public void checkPower(double power, int numofDouble) {
+//
+        if(numofDouble==0){
+            this.checkStrength();
+        }
+        else {
+            this.currentpower = power;
+            this.energyUsage = numofDouble;
+            this.currentPlayer.setState(new ConsumingEnergy());
+//
+        }
 
 
-        if(power>this.getRequirement()){
+
+
+    }
+
+
+    @Override
+    public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
+        if(coordinates.size()!=this.energyUsage){
+            throw new WrongNumofEnergyExeption("wrong number of enrgy cells");
+            ///  devo fare si che in caso di errore torni alla give attack
+        }
+        PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
+        Tile[][] tiles = CurrentPlanche.getPlayerBoard();
+        /// opero sulla copia
+        for(IntegerPair i:coordinates){
+            CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+        }
+        this.checkStrength();
+
+    }
+
+    public void checkStrength(){
+
+
+        if(this.currentpower>this.getRequirement()){
             this.currentPlayer.setState(new Accepting());
             //this.currentPlayer.setInputHandler(new Accept(this));
             this.defeated=true;
         }
-        else if(power<this.getRequirement()){
+        else if(this.currentpower<this.getRequirement()){
 
-            //manca il loseCargo
+           ///manca il loseCargo
 
-            this.currentPlayer.setState(new Killing());
-            //this.currentPlayer.setInputHandler(new Killing(this));
-
-            //steal shit su PlayerBoard il player non ha scelta
         }
     }
+
+
+
 
 
 
