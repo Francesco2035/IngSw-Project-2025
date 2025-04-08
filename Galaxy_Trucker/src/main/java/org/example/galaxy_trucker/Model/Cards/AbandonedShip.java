@@ -108,8 +108,8 @@ public class AbandonedShip extends Card{
     }
 
     @Override
-    public void continueCard(ArrayList<IntegerPair> coordinates, boolean accepted) {
-        if(accepted) {
+    public void killHumans (ArrayList<IntegerPair> coordinates) {
+        if(coordinates!=null) {
             if (coordinates.size() != this.requirement) {
                 //devo dirgli che ha scelto il num sbagliato di persone da shottare
                 throw new WrongNumofHumansException("wrong number of humans");

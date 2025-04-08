@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Exceptions.WrongPlanetExeption;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;
@@ -76,9 +77,14 @@ public class SolarSystem extends Card {
     @Override
     public void choosePlanet(int planet){
         if(planet>-1) {
-            if (this.planets.get(planet).isOccupied()) {
-                //mando un avviso e richiedo
+            if (planet>=planets.size()) {
                 this.currentPlayer.setState(new ChoosingPlanet());
+                throw new WrongPlanetExeption("this planet doesn't exist");
+            }
+            if (this.planets.get(planet).isOccupied()) {
+                this.currentPlayer.setState(new ChoosingPlanet());
+                throw new WrongPlanetExeption("this planet is already ocupied");
+
                 //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
             } else {
                 this.planets.get(planet).setOccupied(this.currentPlayer);
