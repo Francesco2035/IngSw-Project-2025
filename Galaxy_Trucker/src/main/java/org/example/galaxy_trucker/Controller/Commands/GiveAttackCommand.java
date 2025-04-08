@@ -26,8 +26,8 @@ public class GiveAttackCommand implements Command{
             playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),
                     action ,player.getPlayerState());
         }
-        //AGGIUNGERE STATO GIVENREGY
-        card.continueCard(action.getPower(),action.getCountDoublePlasmaDrills());
+
+        card.checkPower(action.getPower() ,action.getCountDoublePlasmaDrills());
     }
 
 }

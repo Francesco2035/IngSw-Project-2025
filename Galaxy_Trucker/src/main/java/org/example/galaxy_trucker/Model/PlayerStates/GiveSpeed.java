@@ -13,7 +13,9 @@ import org.example.galaxy_trucker.Model.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public class GiveSpeed  extends PlayerState{
     @Override
@@ -34,13 +36,18 @@ public class GiveSpeed  extends PlayerState{
             }
 
             JsonNode coordsArray = root.get("coordinates");
+            Set<IntegerPair> uniqueCoordinates = new HashSet<>();
             for (JsonNode node : coordsArray) {
-
                 int x = node.get("x").asInt();
                 int y = node.get("y").asInt();
-                coordinates.add(new IntegerPair(x, y));
-            }
+                IntegerPair pair = new IntegerPair(x, y);
 
+                if (!uniqueCoordinates.add(pair)) {
+                    throw new InvalidInput("Duplicate coordinate found: (" + x + ", " + y + ")");
+                }
+
+                coordinates.add(pair);
+            }
         } catch (IOException e) {
             throw new InvalidInput("Malformed JSON input");
         }

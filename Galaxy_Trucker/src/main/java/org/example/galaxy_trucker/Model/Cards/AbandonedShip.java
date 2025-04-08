@@ -4,7 +4,6 @@ import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.PlayerStates.AcceptKilling;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;

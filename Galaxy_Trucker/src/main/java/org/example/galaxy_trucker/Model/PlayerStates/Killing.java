@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.galaxy_trucker.Controller.Commands.Kill;
+import org.example.galaxy_trucker.Controller.Commands.KillCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Controller.Commands.Command;

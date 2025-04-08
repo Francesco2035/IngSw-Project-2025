@@ -26,7 +26,7 @@ public class GiveSpeedCommand implements Command {
             playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),
                     action ,player.getPlayerState());
         }
-        //AGGIUNGERE STATO GIVENREGY
-        card.continueCard(action.getPower(),action.getCountDoubleEngine());
+
+        card.checkMovement(action.getPower(),action.getCountDoubleEngine());
     }
 }

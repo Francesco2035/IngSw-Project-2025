@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 //import org.example.galaxy_trucker.Model.InputHandlers.Accept;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
@@ -100,14 +101,21 @@ public class Pirates extends Card{
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
         if(coordinates.size()!=this.energyUsage){
-            throw new WrongNumofEnergyExeption("wrong number of enrgy cells");
-            ///  devo fare si che in caso di errore torni alla give attack
+            currentPlayer.setState(new GiveAttack());
+            throw new WrongNumofEnergyExeption("wrong number of energy cells");
         }
         PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
         Tile[][] tiles = CurrentPlanche.getPlayerBoard();
         /// opero sulla copia
         for(IntegerPair i:coordinates){
-            CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            try {
+                CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),
+                        new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            }
+            catch (InvalidInput e){
+                currentPlayer.setState(new GiveAttack());
+                throw new WrongNumofEnergyExeption("wrong number of energy cells");
+            }
         }
         this.checkStrength();
 
