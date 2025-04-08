@@ -412,6 +412,10 @@ public class Warzone extends Card{
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+
+                            /// IMPORTANTE
+                        /// /devo far eil controllo validity, se invalido va in scelta tronconi, altrimenti va avanti
+                            /// deve andare in scelta tronconi
                         }
                         else {//colpo piccolo
                             Worst.setState(new DefendingFromShots());

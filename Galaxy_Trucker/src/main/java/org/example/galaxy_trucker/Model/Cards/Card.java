@@ -70,7 +70,7 @@ public class Card {
     public void checkMovement(int power, int numofDouble) {}
     public void continueCard(ArrayList<IntegerPair> coordinates, boolean accepted) {}
     public void DefendFromLarge(IntegerPair CannonCoord,IntegerPair EnergyStorage) {}
-    public void DefendFromSmall(IntegerPair coordinates, IntegerPair energy) {}
+    public void DefendFromSmall(IntegerPair energy) {}
     public void continueCard(ArrayList<IntegerPair> coordinates) {}
     public void continueCard(){}
     public void killHumans(ArrayList<IntegerPair> coordinates) {}

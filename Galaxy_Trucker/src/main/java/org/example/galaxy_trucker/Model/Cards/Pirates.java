@@ -108,7 +108,10 @@ public class Pirates extends Card{
         Tile[][] tiles = CurrentPlanche.getPlayerBoard();
         /// opero sulla copia
         for(IntegerPair i:coordinates){
-            CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            try {
+                CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(), new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            }
+            catch(Exception e){}
         }
         this.checkStrength();
 

@@ -119,6 +119,8 @@ public class AbandonedShip extends Card{
 //            for (int j = 0; j < coordinates.size(); j++) {
 //                currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
 //            }
+
+            ///  fai l try catch e opera sulla copia :)
             PlayerBoard curr= currentPlayer.getmyPlayerBoard();
             Tile tiles[][]=curr.getPlayerBoard();
             for (IntegerPair coordinate : coordinates) {
