@@ -2,8 +2,7 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.galaxy_trucker.Controller.Commands.DefendFromShotsCommand;
-import org.example.galaxy_trucker.Controller.Commands.KillCommand;
+import org.example.galaxy_trucker.Controller.Commands.DefendFromLargeCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Controller.Commands.Command;
@@ -14,13 +13,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class DefendingFromShots extends PlayerState{
+public class DefendingFromLarge extends PlayerState{
     @Override
     public Command PlayerAction(String json, Player player, Optional<Card> card) {
+
         ObjectMapper mapper = new ObjectMapper();
-        IntegerPair shield;
+        IntegerPair plasmaDrill;
         IntegerPair batteryComp;
 
+        //DA FARE DOMANI 8 APRILE
         try {
             JsonNode root = mapper.readTree(json);
 
@@ -29,26 +30,26 @@ public class DefendingFromShots extends PlayerState{
             }
 
             String title = root.get("title").asText();
-            if (!"Defending from Shots".equals(title)) {
+            if (!"kill".equals(title)) {
                 throw new IllegalArgumentException("Unexpected action type: " + title);
             }
 
-            JsonNode shieldNode = root.get("Shield");
-            JsonNode batteryNode = root.get("BatteryCompo");
+            JsonNode batteryNode = root.get("BatteryComp");
+            JsonNode plasmaDrillNode = root.get("plasmaDrill");
 
-            if (shieldNode == null || batteryNode == null || !shieldNode.has("x") || !shieldNode.has("y") ||
-                    !batteryNode.has("x") || !batteryNode.has("y")) {
+            if (batteryNode == null || !batteryNode.has("x") || !batteryNode.has("y")
+            || plasmaDrillNode == null || !plasmaDrillNode.has("x") || !plasmaDrillNode.has("y")) {
                 throw new InvalidInput("Shield or BatteryCompo data missing or malformed.");
             }
 
-            shield = new IntegerPair(shieldNode.get("x").asInt(), shieldNode.get("y").asInt());
+            plasmaDrill = new IntegerPair(plasmaDrillNode.get("x").asInt(), plasmaDrillNode.get("y").asInt());
             batteryComp = new IntegerPair(batteryNode.get("x").asInt(), batteryNode.get("y").asInt());
 
         } catch (IOException e) {
             throw new InvalidInput("Malformed JSON input");
         }
 
-        // Se hai un comando apposito:
-        return new DefendFromShotsCommand(card.get(), shield, batteryComp);
+        return new DefendFromLargeCommand(card.get(),plasmaDrill,batteryComp);
+
     }
 }

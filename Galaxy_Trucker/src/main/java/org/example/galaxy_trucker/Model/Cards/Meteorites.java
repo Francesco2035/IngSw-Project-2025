@@ -9,7 +9,7 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.ConsumingEnergy;
-import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromMeteorites;
+import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromLarge;
 import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
@@ -90,7 +90,7 @@ public class   Meteorites extends Card {
                     if (MeteoritesValidPlanche[MeteoritesLine][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
                         System.out.println("touch in:"+MeteoritesLine+" "+Movement);
-                        if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[MeteoritesLine][Movement].getConnectors().get(0).equals(NONE.class)) {
+                        if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[MeteoritesLine][Movement].getConnectors().get(0) == NONE.INSTANCE) {
                             MeteoritesFlag = true;
                             System.out.println("lisciato");
                         } else {
@@ -98,7 +98,7 @@ public class   Meteorites extends Card {
                             DamageFlag = true;
                             hit.setValue(MeteoritesLine, Movement);
                             System.out.println("Meteorites hit in: " + MeteoritesLine + " " + Movement);
-                            currentPlayer.setState(new DefendingFromMeteorites());
+                            currentPlayer.setState(new DefendingFromLarge());
                         }
                     }
 
@@ -120,7 +120,7 @@ public class   Meteorites extends Card {
                             DamageFlag = true;
                             hit.setValue(Movement, MeteoritesLine);
                             System.out.println("Meteorites hit in: " + Movement + " " + MeteoritesLine);
-                            currentPlayer.setState(new DefendingFromMeteorites());
+                            currentPlayer.setState(new DefendingFromLarge());
                         }
                     }
 
@@ -142,7 +142,7 @@ public class   Meteorites extends Card {
                             DamageFlag = true;
                             hit.setValue(MeteoritesLine, Movement);
                             System.out.println("Meteorites hit in: " + MeteoritesLine + " " + Movement);
-                            currentPlayer.setState(new DefendingFromMeteorites());
+                            currentPlayer.setState(new DefendingFromLarge());
                         }
                     }
                     Movement--;
@@ -166,7 +166,7 @@ public class   Meteorites extends Card {
                                 DamageFlag = true;
                                 hit.setValue(Movement, MeteoritesLine);
                                 System.out.println("Meteorites hit in: " + Movement + " " + MeteoritesLine);
-                                currentPlayer.setState(new DefendingFromMeteorites());
+                                currentPlayer.setState(new DefendingFromLarge());
                             }
                         }
                         else {// caso meteoriti grandi
@@ -174,7 +174,7 @@ public class   Meteorites extends Card {
                             DamageFlag = true;
                             hit.setValue(Movement, MeteoritesLine);
                             System.out.println("Meteorites hit in: " + Movement + " " + MeteoritesLine);
-                            currentPlayer.setState(new DefendingFromMeteorites());
+                            currentPlayer.setState(new DefendingFromLarge());
                         }
                     }
 
@@ -222,14 +222,14 @@ public class   Meteorites extends Card {
                     throw new InvalidDefenceEceptiopn("this cannon isn't aiming at the meteorite");
                 }
                 else if (currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getComponent().getType() == 2) {
-                    currentBoard.performAction(tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new DefendingFromMeteorites());
+                    currentBoard.performAction(tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new DefendingFromLarge());
                 }
             }
             else if (attacks.get(MeteoritesOrder) == 1 || attacks.get(MeteoritesOrder) == 3){//sopra o sotto
                  if(!((CannonCoord.getSecond() == hit.getSecond() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(MeteoritesOrder).equals(CANNON.class))) ){
                      throw new InvalidDefenceEceptiopn("this cannon isn't aiming at the meteorite");
                  } else if (currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getComponent().getType() == 2) {
-                     currentBoard.performAction(tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new DefendingFromMeteorites());
+                     currentBoard.performAction(tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new DefendingFromLarge());
                  }
             }
         }

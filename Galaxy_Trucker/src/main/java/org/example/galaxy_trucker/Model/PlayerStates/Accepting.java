@@ -28,7 +28,7 @@ public class Accepting extends PlayerState{
             }
 
             String title = root.get("title").asText();
-            if (!"Consume Energy".equals(title)) {
+            if (!"Accepting".equals(title)) {
                 throw new IllegalArgumentException("Unexpected action type: " + title);
             }
 

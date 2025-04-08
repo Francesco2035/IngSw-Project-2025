@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
-import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -156,7 +155,7 @@ public class Pirates extends Card{
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
                         }
                         else {//colpo piccolo
-                            currentPlayer.setState(new DefendingFromShots());
+                            currentPlayer.setState(new DefendingFromSmall());
                         }
                         }
 
@@ -175,7 +174,7 @@ public class Pirates extends Card{
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
                         }
                         else {//colpo piccolo
-                            currentPlayer.setState(new DefendingFromShots());
+                            currentPlayer.setState(new DefendingFromSmall());
                         }
 
                     }
@@ -194,7 +193,7 @@ public class Pirates extends Card{
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
                         }
                         else {//colpo piccolo
-                            currentPlayer.setState(new DefendingFromShots());
+                            currentPlayer.setState(new DefendingFromSmall());
                         }
 
                     }
@@ -212,7 +211,7 @@ public class Pirates extends Card{
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
                         }
                         else {//colpo piccolo
-                            currentPlayer.setState(new DefendingFromShots());
+                            currentPlayer.setState(new DefendingFromSmall());
                         }
                         }
 

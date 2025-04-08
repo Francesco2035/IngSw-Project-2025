@@ -358,7 +358,7 @@ public class Warzone extends Card{
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
                         }
                         else {//colpo piccolo
-                            Worst.setState(new DefendingFromShots());
+                            Worst.setState(new DefendingFromSmall());
                         }
                     }
 
@@ -377,7 +377,7 @@ public class Warzone extends Card{
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
                         }
                         else {//colpo piccolo
-                            Worst.setState(new DefendingFromShots());
+                            Worst.setState(new DefendingFromSmall());
                         }
 
                     }
@@ -396,7 +396,7 @@ public class Warzone extends Card{
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
                         }
                         else {//colpo piccolo
-                            Worst.setState(new DefendingFromShots());
+                            Worst.setState(new DefendingFromSmall());
                         }
 
                     }
@@ -414,7 +414,7 @@ public class Warzone extends Card{
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
                         }
                         else {//colpo piccolo
-                            Worst.setState(new DefendingFromShots());
+                            Worst.setState(new DefendingFromSmall());
                         }
                     }
 
