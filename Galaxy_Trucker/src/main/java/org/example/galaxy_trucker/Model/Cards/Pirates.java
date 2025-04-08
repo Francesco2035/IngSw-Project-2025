@@ -240,10 +240,10 @@ public class Pirates extends Card{
     }
 
     @Override
-    public void DefendFromSmall(IntegerPair shieldcoord,IntegerPair energy){
+    public void DefendFromSmall(IntegerPair energy){
         PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
-        if (shieldcoord!=null){
+        if (energy!=null){
             if (Punishment.get(ShotsOrder + 1) == 0 && (currentBoard.getShield()[Punishment.get(ShotsOrder)]==0)){
                 throw new InvalidDefenceEceptiopn("this shield defends the wrong side");
             }

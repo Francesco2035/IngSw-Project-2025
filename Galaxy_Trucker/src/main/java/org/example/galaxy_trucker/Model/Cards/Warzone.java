@@ -438,10 +438,10 @@ public class Warzone extends Card{
 
 
     @Override
-    public void DefendFromSmall(IntegerPair shieldcoord,IntegerPair energy){
+    public void DefendFromSmall(IntegerPair energy){
         PlayerBoard currentBoard =this.Worst.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
-        if (shieldcoord!=null){
+        if (energy!=null){
             if (PunishmentShots.get(ShotsOrder + 1) == 0 && (currentBoard.getShield()[PunishmentShots.get(ShotsOrder)]==0)){
                 throw new InvalidDefenceEceptiopn("this shield defends the wrong side");
             }

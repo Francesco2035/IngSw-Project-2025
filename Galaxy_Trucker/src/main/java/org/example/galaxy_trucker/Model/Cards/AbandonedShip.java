@@ -81,7 +81,7 @@ public class AbandonedShip extends Card{
                 this.totHumans=CurrentPlanche.getNumHumans();
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
-                currentPlayer.setState(new AcceptKilling());
+                currentPlayer.setState(new Killing());
                 //currentPlayer.setInputHandler(new AcceptKilling(this));
                 currentPlayer.setCard(this);
             }
