@@ -2,8 +2,7 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.galaxy_trucker.Controller.Commands.AcceptCommand;
-import org.example.galaxy_trucker.Controller.Commands.ConsumeEnergyCommand;
+import org.example.galaxy_trucker.Controller.Commands.DefendFromLargeCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Controller.Commands.Command;
@@ -14,12 +13,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class Accepting extends PlayerState{
+public class DefendingFromLarge extends PlayerState{
     @Override
     public Command PlayerAction(String json, Player player, Optional<Card> card) {
+
         ObjectMapper mapper = new ObjectMapper();
-        boolean accepting;
-        //se vuole consumare più energie passa la stessa coordinata più volte
+        IntegerPair plasmaDrill;
+        IntegerPair batteryComp;
+
+        //DA FARE DOMANI 8 APRILE
         try {
             JsonNode root = mapper.readTree(json);
 
@@ -28,19 +30,26 @@ public class Accepting extends PlayerState{
             }
 
             String title = root.get("title").asText();
-            if (!"Accepting".equals(title)) {
+            if (!"kill".equals(title)) {
                 throw new IllegalArgumentException("Unexpected action type: " + title);
             }
 
-            accepting = root.get("accepting").asBoolean();
+            JsonNode batteryNode = root.get("BatteryComp");
+            JsonNode plasmaDrillNode = root.get("plasmaDrill");
 
+            if (batteryNode == null || !batteryNode.has("x") || !batteryNode.has("y")
+            || plasmaDrillNode == null || !plasmaDrillNode.has("x") || !plasmaDrillNode.has("y")) {
+                throw new InvalidInput("Shield or BatteryCompo data missing or malformed.");
+            }
+
+            plasmaDrill = new IntegerPair(plasmaDrillNode.get("x").asInt(), plasmaDrillNode.get("y").asInt());
+            batteryComp = new IntegerPair(batteryNode.get("x").asInt(), batteryNode.get("y").asInt());
 
         } catch (IOException e) {
             throw new InvalidInput("Malformed JSON input");
         }
 
-        return new AcceptCommand(card.get(), accepting);
-
+        return new DefendFromLargeCommand(card.get(),plasmaDrill,batteryComp);
 
     }
 }

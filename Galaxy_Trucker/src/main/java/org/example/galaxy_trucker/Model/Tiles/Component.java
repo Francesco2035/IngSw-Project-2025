@@ -46,7 +46,7 @@ public abstract class Component {
 
 
 
-    public  void accept(ComponentAction visitor, PlayerState state){
+    public void accept(ComponentAction visitor, PlayerState state){
         throw new InvalidInput("Invalid input for the specific action");
     };
 

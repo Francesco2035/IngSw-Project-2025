@@ -50,7 +50,7 @@ public class PlayerBoard {
 
 
     private ArrayList<Tile> Buffer;
-
+    private ArrayList<Goods> Rewards;
 
     public PlayerBoard(int lv) {
         this.lv = lv;
@@ -59,6 +59,9 @@ public class PlayerBoard {
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
         this.totalValue = 0;
+
+
+        this.Rewards = new ArrayList<>();
 
 
 
@@ -813,9 +816,7 @@ public class PlayerBoard {
 
 
     public void performAction(Component component, ComponentAction action, PlayerState state) {
-
             component.accept(action, state);
-
     }
 
 
@@ -840,6 +841,7 @@ public class PlayerBoard {
         clonedPlayerBoard.Storages= new ArrayList<>();
         clonedPlayerBoard.ShieldGenerators= new ArrayList<>();
         clonedPlayerBoard.PowerCenters= new ArrayList<>();
+        clonedPlayerBoard.Rewards = new ArrayList<>(this.Rewards);
 
         clonedPlayerBoard.PlayerBoard = new Tile[PlayerBoard.length][PlayerBoard[0].length];
         for (int i = 0; i < PlayerBoard.length; i++) {
@@ -887,5 +889,16 @@ public class PlayerBoard {
     public boolean isBrownAlien() {
         return brownAlien;
     }
+
+
+    public ArrayList<Goods> getRewards(){
+        return Rewards;
+    }
+
+
+    public Goods getFromRewards(int i){
+        return Rewards.remove(i);
+    }
+
 
 }

@@ -2,8 +2,7 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.galaxy_trucker.Controller.Commands.GiveAttackAction;
-import org.example.galaxy_trucker.Controller.Commands.Kill;
+import org.example.galaxy_trucker.Controller.Commands.KillCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Controller.Commands.Command;
@@ -23,7 +22,7 @@ public class Killing extends PlayerState{
     public Command PlayerAction(String json, Player player, Optional<Card> card) {
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
-
+        //se vuole ammazzare più persone passa la stessa coordinata due volte
         try {
             JsonNode root = mapper.readTree(json);
 
@@ -49,11 +48,8 @@ public class Killing extends PlayerState{
         }
 
         System.out.println(coordinates);
-        for (IntegerPair coordinate : coordinates) {
-            player.getmyPlayerBoard().getHousingUnits().
-                    contains(player.getmyPlayerBoard().getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent());
-        }
 
-        return new Kill(card.get(), coordinates);
+
+        return new KillCommand(card.get(), coordinates);
     }
 }
