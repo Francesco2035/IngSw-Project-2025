@@ -813,9 +813,7 @@ public class PlayerBoard {
 
 
     public void performAction(Component component, ComponentAction action, PlayerState state) {
-
             component.accept(action, state);
-
     }
 
 
@@ -887,5 +885,6 @@ public class PlayerBoard {
     public boolean isBrownAlien() {
         return brownAlien;
     }
+
 
 }

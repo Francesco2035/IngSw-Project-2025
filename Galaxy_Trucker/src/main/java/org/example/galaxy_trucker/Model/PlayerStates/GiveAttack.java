@@ -1,11 +1,9 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Controller.Commands.Command;
-import org.example.galaxy_trucker.Controller.Commands.GiveAttackAction;
+import org.example.galaxy_trucker.Controller.Commands.GiveAttackCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetPlasmaDrillPower;
 import org.example.galaxy_trucker.Model.Cards.Card;
@@ -55,7 +53,7 @@ public class GiveAttack extends PlayerState {
         System.out.println(coordinates);
 
 
-        return new GiveAttackAction(card.get(), coordinates);
+        return new GiveAttackCommand(card.get(), coordinates, player);
     }
 
     @Override

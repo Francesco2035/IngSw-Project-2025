@@ -74,7 +74,7 @@ public class SolarSystem extends Card {
 
 
     @Override
-    public void choosePlanet(int planet, boolean accepted){
+    public void choosePlanet(int planet){
         if(accepted) {
             if (this.planets.get(planet).isOccupied()) {
                 //mando un avviso e richiedo

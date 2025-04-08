@@ -74,7 +74,7 @@ public class Card {
     public void continueCard(ArrayList<IntegerPair> coordinates) {}
     public void continueCard(){}
     public void killHumans(ArrayList<IntegerPair> coordinates) {}
-    public void choosePlanet(int planet, boolean accepted){}
+    public void choosePlanet(int planet){}
 
     public void ActivateCard(){
     }
