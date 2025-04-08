@@ -62,7 +62,7 @@ public class SolarSystem extends Card {
     public void finishCard() {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        if(this.done==PlayerList.size()) {
+        if(this.done==PlayerList.size()-1) {
             for (int i = 0; i < PlayerList.size(); i++) {
                 PlayerList.get(i).setState(new BaseState());
             }
@@ -74,8 +74,8 @@ public class SolarSystem extends Card {
 
 
     @Override
-    public void choosePlanet(int planet, boolean accepted){
-        if(accepted) {
+    public void choosePlanet(int planet){
+        if(planet>-1) {
             if (this.planets.get(planet).isOccupied()) {
                 //mando un avviso e richiedo
                 this.currentPlayer.setState(new ChoosingPlanet());
@@ -87,6 +87,10 @@ public class SolarSystem extends Card {
         }
         else{
             this.finishCard();
+            //dovrebbe non dare problemi ne se l'ultimo rifiuta il pianeta ne se tutti rifiutano
+            // se  l'ultimo rifiuta dovrebbe chiamare update come se avesse accettato cioe scorre l lista di chi ha accettato e li manda in handle cargo
+            // se tutti dicono di no tecnicamente fa prima finish card e poi fa anche update state che però non dovrebbe fare nulla
+            this.updateSates();
         }
     }
 
