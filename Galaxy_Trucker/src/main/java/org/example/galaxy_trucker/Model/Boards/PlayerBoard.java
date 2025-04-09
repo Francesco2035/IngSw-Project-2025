@@ -900,5 +900,13 @@ public class PlayerBoard {
         return Rewards.remove(i);
     }
 
+    public void AddGoodInBuffer(Goods good){
+        BufferGoods.add(good);
+    }
+
+    public Goods pullFromBufferGoods(int i){
+        return BufferGoods.remove(i);
+    }
+
 
 }
