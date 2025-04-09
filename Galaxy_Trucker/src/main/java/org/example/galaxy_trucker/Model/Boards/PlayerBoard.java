@@ -692,22 +692,6 @@ public class PlayerBoard {
     }
 
 
-    /**
-     * Method pullFromBuffer pull the good in position i of the BufferGoods.
-     *
-     * @param i of type int.
-     * @return the good in order to be added to the storageCompartment.
-     * @throws InvalidInput If the specified index is out of bounds or if the buffer is empty.
-     */
-    public Goods pullFromBuffer(int i) throws InvalidInput{
-        if (i > BufferGoods.size()) {
-            throw new InvalidInput("This position in the BufferGoods does not exist");
-        }
-        if (BufferGoods.isEmpty()) {
-            throw new InvalidInput("BufferGoods is empty");
-        }
-        return BufferGoods.remove(i);
-    }
 
 
     public boolean getPurpleAlien(){
@@ -895,8 +879,13 @@ public class PlayerBoard {
         return Rewards;
     }
 
-
     public Goods getFromRewards(int i){
+        if (i > Rewards.size()) {
+            throw new InvalidInput("This position in the Rewards does not exist");
+        }
+        if (Rewards.isEmpty()) {
+            throw new InvalidInput("Rewards is empty");
+        }
         return Rewards.remove(i);
     }
 
@@ -904,7 +893,20 @@ public class PlayerBoard {
         BufferGoods.add(good);
     }
 
-    public Goods pullFromBufferGoods(int i){
+    /**
+     * Method pullFromBufferGoods pull the good in position i of the BufferGoods.
+     *
+     * @param i of type int.
+     * @return the good in order to be added to the storageCompartment.
+     * @throws InvalidInput If the specified index is out of bounds or if the buffer is empty.
+     */
+    public Goods pullFromBufferGoods(int i) throws InvalidInput{
+        if (i > BufferGoods.size()) {
+            throw new InvalidInput("This position in the BufferGoods does not exist");
+        }
+        if (BufferGoods.isEmpty()) {
+            throw new InvalidInput("BufferGoods is empty");
+        }
         return BufferGoods.remove(i);
     }
 
