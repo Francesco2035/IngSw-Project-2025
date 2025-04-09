@@ -6,10 +6,11 @@ import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Game {
+public class Game implements Serializable {
     private String GameID;
     private HashMap<String,Player> Players;
     private ArrayList<Player> PlayerList;

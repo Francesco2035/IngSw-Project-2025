@@ -1,4 +1,4 @@
-package org.example.galaxy_trucker.Controller.RMI;
+package org.example.galaxy_trucker.Controller.ClientServer.RMI;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -6,6 +6,8 @@ import java.rmi.RemoteException;
 public interface ServerInterface extends Remote {
 
     public void command(String cmd)throws RemoteException;
+
+    void StartServer() throws RemoteException;
 
     public void login(ClientInterface client) throws RemoteException;
 

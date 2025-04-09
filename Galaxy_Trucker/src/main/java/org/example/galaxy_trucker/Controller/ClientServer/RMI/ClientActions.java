@@ -1,5 +1,6 @@
-package org.example.galaxy_trucker.Controller.RMI;
+package org.example.galaxy_trucker.Controller.ClientServer.RMI;
 
+import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 
@@ -20,12 +21,13 @@ public class ClientActions extends UnicastRemoteObject implements ClientInterfac
     private Game myGame;
 
 
-    protected ClientActions() throws RemoteException{
+    public ClientActions() throws RemoteException{
         me =  new Player();
         myGame = null;
     }
 
 
+    @Override
     public void StartClient() throws IOException, NotBoundException {
 
         Registry registry;
@@ -37,11 +39,11 @@ public class ClientActions extends UnicastRemoteObject implements ClientInterfac
         BufferedReader br = new BufferedReader (new InputStreamReader(System.in));
 
 
-//        System.out.println("Insert name: ");
-//        String name = br.readLine();
-//        System.out.println("Insert name: ");
-//        String GName = br.readLine();
-//        server.CreateGame(this, name, GName, 2);
+        System.out.println("Insert player name: ");
+        String name = br.readLine();
+        System.out.println("Insert game name: ");
+        String GName = br.readLine();
+        server.CreateGame(this, name, GName, 2);
 
 
         this.inputLoop();
@@ -68,6 +70,8 @@ public class ClientActions extends UnicastRemoteObject implements ClientInterfac
     @Override
     public void setPlayerId(String id) throws RemoteException {me.setId(id);}
 
+
+    //--add-opens org.example.galaxy_trucker/org.example.galaxy_trucker.Controller.RMI=java.rmi
     public static void main(String[] args) throws RemoteException, NotBoundException {
 
         try {

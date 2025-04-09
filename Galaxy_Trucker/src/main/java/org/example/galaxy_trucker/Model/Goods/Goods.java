@@ -4,6 +4,9 @@ package org.example.galaxy_trucker.Model.Goods;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -20,6 +23,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 
 
-public interface Goods {
+public interface Goods extends Serializable {
     public int getValue();
 }

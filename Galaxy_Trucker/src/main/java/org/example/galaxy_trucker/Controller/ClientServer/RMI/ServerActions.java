@@ -1,8 +1,7 @@
-package org.example.galaxy_trucker.Controller.RMI;
+package org.example.galaxy_trucker.Controller.ClientServer.RMI;
 
-import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 import org.example.galaxy_trucker.Model.Game;
-import org.example.galaxy_trucker.Model.GameLists;
 import org.example.galaxy_trucker.Model.GameLists;
 import org.example.galaxy_trucker.Model.Player;
 
@@ -24,14 +23,14 @@ public class ServerActions extends UnicastRemoteObject implements ServerInterfac
 
     ArrayList<ClientInterface> clients;
 
-    protected ServerActions() throws RemoteException {
+    public ServerActions() throws RemoteException {
         gh = new GameLists();
         clients = new ArrayList<>();
     }
 
 
 
-
+    @Override
     public void StartServer() throws RemoteException {
         Registry registry = LocateRegistry.createRegistry(Settings.PORT);
         try {
@@ -93,7 +92,8 @@ public class ServerActions extends UnicastRemoteObject implements ServerInterfac
         joiner.setPlayerId(playerName);
 
         try {
-            joiner.setGame(gh.CreateNewGame(GameName, joiner.getPlayer(), lv));
+            Game g = gh.CreateNewGame(GameName, joiner.getPlayer(), lv);
+            joiner.setGame(g);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -102,6 +102,8 @@ public class ServerActions extends UnicastRemoteObject implements ServerInterfac
     }
 
 
+
+    //--add-opens org.example.galaxy_trucker/org.example.galaxy_trucker.Controller.RMI=java.rmi
 
     public static void main(String[] args){
         try {

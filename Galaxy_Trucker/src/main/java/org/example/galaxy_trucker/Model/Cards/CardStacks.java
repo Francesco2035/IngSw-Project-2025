@@ -3,11 +3,12 @@ package org.example.galaxy_trucker.Model.Cards;
 import org.example.galaxy_trucker.Model.GAGen;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class CardStacks {
+public class CardStacks implements Serializable {
     private int level;
     private ArrayList<Card> VisibleCards1;
     private ArrayList<Card> VisibleCards2;
