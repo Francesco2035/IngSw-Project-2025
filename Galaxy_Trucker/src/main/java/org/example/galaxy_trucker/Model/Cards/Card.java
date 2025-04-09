@@ -27,7 +27,7 @@ import java.util.ArrayList;
         @JsonSubTypes.Type(value = OpenSpace.class, name = "OpenSpace"),
         @JsonSubTypes.Type(value = Warzone.class, name = "Warzone"),
         @JsonSubTypes.Type(value = Stardust.class, name = "Stardust"),
-//        @JsonSubTypes.Type(value = Epidemic.class, name = "Epidemic")
+        @JsonSubTypes.Type(value = Epidemic.class, name = "Epidemic")
 })
 
 

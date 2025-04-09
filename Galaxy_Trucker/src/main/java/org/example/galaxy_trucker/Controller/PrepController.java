@@ -3,7 +3,7 @@ package org.example.galaxy_trucker.Controller;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 
-public class PrepController {
+public class PrepController extends Controller {
 
     Player CurrentPlayer;
 
@@ -46,5 +46,8 @@ public class PrepController {
 
 
 
+    @Override
+    public void nextState(GameHandler gh) {
 
+    }
 }

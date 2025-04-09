@@ -5,7 +5,7 @@ import org.example.galaxy_trucker.Model.State;
 
 import java.io.File;
 
-public class FlightController {
+public class FlightController extends Controller {
 
     //attributi privati letti dal json
 
@@ -20,7 +20,8 @@ public class FlightController {
     }
 
 
+    @Override
+    public void nextState(GameHandler gh) {
 
-
-
+    }
 }

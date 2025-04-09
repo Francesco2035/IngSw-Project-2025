@@ -7,9 +7,12 @@ import org.example.galaxy_trucker.Model.Player;
 import java.util.Optional;
 
 public abstract class PlayerState {
+
+
+
+
+
     public abstract Command PlayerAction(String json, Player player, Optional<Card> card);
-
-
 
     public boolean allows(AddCrewAction action) {
         return false;

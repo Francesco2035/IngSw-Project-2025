@@ -12,7 +12,7 @@ public class GameLists {
 
     public void CreateNewGame(String gameId, String CreatorId, int level) throws IOException {
         for(Game g: Games){
-            if(g.getID().equals(gameId)){
+            if(g.getGameID().equals(gameId)){
                 throw new IllegalArgumentException("Game already exists");
             }
         }

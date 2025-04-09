@@ -72,5 +72,17 @@ public class Game {
     public GameBoard getGameBoard() {
         return GameBoard;
     }
+
+
+
+    public String getGameID() {
+        return GameID;
+    }
+
+    public void setGameID(String gameID) {
+        GameID = gameID;
+    }
+
+
 }
 

@@ -197,8 +197,8 @@ public class Player {
        }
 
 
-    public void SetReady(){
-        this.ready = true;
+    public void SetReady(boolean ready){
+        this.ready = ready;
     }
 
 
