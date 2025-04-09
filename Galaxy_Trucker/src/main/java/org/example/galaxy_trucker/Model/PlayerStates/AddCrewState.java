@@ -26,7 +26,7 @@ public class AddCrewState extends PlayerState {
     }
 
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card){
+    public Command PlayerAction(String json, Player player){
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
 

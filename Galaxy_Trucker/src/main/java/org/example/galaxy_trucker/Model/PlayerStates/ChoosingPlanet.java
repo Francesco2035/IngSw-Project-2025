@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class ChoosingPlanet extends PlayerState{
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card) {
+    public Command PlayerAction(String json, Player player) {
         ObjectMapper mapper = new ObjectMapper();
         int planet;
         try {
@@ -37,8 +37,8 @@ public class ChoosingPlanet extends PlayerState{
         } catch (IOException e) {
             throw new InvalidInput("Malformed JSON input");
         }
-
-        return new ChosingPlanetsCommand(card.get(), planet);
+        Card card = player.getCurrentCard();
+        return new ChosingPlanetsCommand(card, planet);
 
     }
 }

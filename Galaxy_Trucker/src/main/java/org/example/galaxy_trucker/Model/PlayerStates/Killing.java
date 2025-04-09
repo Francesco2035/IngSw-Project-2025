@@ -19,7 +19,7 @@ public class Killing extends PlayerState{
     }
 
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card) {
+    public Command PlayerAction(String json, Player player) {
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
         //se vuole ammazzare più persone passa la stessa coordinata due volte
@@ -49,7 +49,7 @@ public class Killing extends PlayerState{
 
         System.out.println(coordinates);
 
-
-        return new KillCommand(card.get(), coordinates);
+        Card card = player.getCurrentCard();
+        return new KillCommand(card, coordinates);
     }
 }

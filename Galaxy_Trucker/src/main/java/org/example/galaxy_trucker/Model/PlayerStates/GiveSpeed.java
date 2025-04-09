@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class GiveSpeed  extends PlayerState{
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card) {
+    public Command PlayerAction(String json, Player player) {
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
 
@@ -54,8 +54,8 @@ public class GiveSpeed  extends PlayerState{
 
         System.out.println(coordinates);
 
-
-        return new GiveSpeedCommand(card.get(), coordinates, player);
+        Card card = player.getCurrentCard();
+        return new GiveSpeedCommand(card, coordinates, player);
     }
 
     @Override

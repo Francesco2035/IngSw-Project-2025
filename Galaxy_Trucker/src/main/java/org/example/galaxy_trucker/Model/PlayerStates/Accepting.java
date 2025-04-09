@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class Accepting extends PlayerState{
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card) {
+    public Command PlayerAction(String json, Player player) {
         ObjectMapper mapper = new ObjectMapper();
         boolean accepting;
         //se vuole consumare più energie passa la stessa coordinata più volte
@@ -38,8 +38,8 @@ public class Accepting extends PlayerState{
         } catch (IOException e) {
             throw new InvalidInput("Malformed JSON input");
         }
-
-        return new AcceptCommand(card.get(), accepting);
+        Card card = player.getCurrentCard();
+        return new AcceptCommand(card, accepting);
 
 
     }

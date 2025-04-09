@@ -21,7 +21,7 @@ import java.util.Set;
 
 public class HandleCargo extends PlayerState {
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card) {
+    public Command PlayerAction(String json, Player player) {
         ObjectMapper mapper = new ObjectMapper();
         IntegerPair coordinate;
         Goods good;
