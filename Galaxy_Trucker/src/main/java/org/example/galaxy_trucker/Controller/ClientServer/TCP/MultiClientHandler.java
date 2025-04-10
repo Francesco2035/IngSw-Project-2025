@@ -28,7 +28,7 @@ public class MultiClientHandler implements Runnable {
 
     private void clientLoop() {
         
-        String ClientId = "";
+        //String ClientId = "";
         
         BufferedReader in = null;
         PrintWriter out = null;
@@ -45,18 +45,21 @@ public class MultiClientHandler implements Runnable {
 
         String s = "";
 
-        try {
-            ClientId = in.readLine();
-                System.out.println(ClientId + " Joined");
-                out.println("Hello "+ ClientId);
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+//        try {
+//            ClientId = in.readLine();
+//                System.out.println(ClientId + " Joined");
+//                out.println("Hello "+ ClientId);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
 
         try {
             while ((s = in.readLine()) != null) {
-                System.out.println(ClientId + " says: " + s);
+                System.out.println(s);
                 out.println(s);
             }
         } catch (IOException e) {

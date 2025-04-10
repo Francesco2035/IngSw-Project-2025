@@ -37,17 +37,19 @@ public class ClientMain {
 
         String userInput = "";
 
-        System.out.println("Connection started\nInsert Nickname: ");
-        if ((userInput = stdIn.readLine()) != null) {
-            out.println(userInput);
-            System.out.println(in.readLine());
-        }
+        System.out.println("Connection started\n");
+
+//        System.out.println("Insert Nickname: ");
+//        if ((userInput = stdIn.readLine()) != null) {
+//            out.println(userInput);
+//            System.out.println(in.readLine());
+//        }
 
         while (true) {
             try {
                 if ((userInput = stdIn.readLine()) == null) break;
                 out.println(userInput);
-                System.out.println("received: " + in.readLine());
+                System.out.println("Server received: " + in.readLine());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
