@@ -277,7 +277,7 @@ public class Player {
         return CurrentCard;
     }
 
-
+    //palu gay
     //DOVREI AGGIUNGERE UN MODO PER ARRIVARE A CARD DA PLAYER DIREI :)
     //principalmente per chiamare i metodi di card dopo l'input
 
