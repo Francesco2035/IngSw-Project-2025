@@ -9,11 +9,14 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 
+import java.io.Serializable;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
         property = "componentType"
 )
+
 @JsonSubTypes({
         @JsonSubTypes.Type(value = PlasmaDrill.class, name = "plasmaDrill"),
         @JsonSubTypes.Type(value = HotWaterHeater.class, name = "hotWaterHeater"),
@@ -26,12 +29,11 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
         @JsonSubTypes.Type(value = ShieldGenerator.class, name = "shieldGenerator"),
         @JsonSubTypes.Type(value = SpaceVoid.class, name = "spaceVoid")
 })
-public abstract class Component {
+
+public abstract class Component implements Serializable {
+
 
     int type;
-
-
-
     public Component() {}
 
     public abstract void rotate(Boolean direction);

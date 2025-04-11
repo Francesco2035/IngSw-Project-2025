@@ -3,14 +3,16 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
-//import org.example.galaxy_trucker.Model.InputHandlers.InputHandler;
+import org.example.galaxy_trucker.Model.PlayerStates.FinishedBuilding;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.PlayerStates.*;
+import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Player {
+public class Player implements Serializable {
 
     private GameBoard CommonBoard;
     private PlayerBoard myPlayerBoard;
@@ -19,16 +21,16 @@ public class Player {
     private int credits;
     private Tile CurrentTile;   //the tile that Player has in his hand
     private PlayerState PlayerState;
-    //private InputHandler InputHandler;
+//    private InputHandler InputHandler;
     private ArrayList<Goods> GoodsToHandle;
     private Card CurrentCard;
 
 
 
-    public Player(String id, GameBoard board) {
-        CommonBoard = board;
-        myPlayerBoard = new PlayerBoard(board.getLevel());
-        ID = id;
+    private PlayerStatesss fakestate;
+
+
+    public Player()  {
         credits = 0;
         ready = false;
         CurrentTile = null;
@@ -68,26 +70,10 @@ public class Player {
         int d2 = r.nextInt(6) + 1;
         return d1+d2;
     }
-    
-//    public InputHandler getInputHandler() {
-//        return InputHandler;
-//    }
 
-    public PlayerState getPlayerState() {
-        return PlayerState;
-    }
 
-//    public void setInputHandler(InputHandler InputHandler) {
-//        this.InputHandler = InputHandler;
-//    }
 
-    public void setState(PlayerState state) {
-        this.PlayerState = state;
-    }
 
-    public void setMyPlance(PlayerBoard myPlance) {
-        this.myPlayerBoard = myPlance;
-    }
 
     public void  execute() {
         this.CurrentCard.ActivateCard();
@@ -188,23 +174,39 @@ public class Player {
     }
 
 
-    public void setCard(Card NewCard){
-        CurrentCard = NewCard;
-    }
-
 
     /**
      * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
      */
     public void EndConstruction(){
         CommonBoard.SetStartingPosition(this.ID);
-        this.setState(new FinishedBuilding());
+//        this.setState(new FinishedBuilding());
        }
 
 
     public void SetReady(boolean ready){
         this.ready = ready;
     }
+    public void setId(String id){this.ID = id;}
+
+    public void setBoards(GameBoard CommonBoard) {
+        this.CommonBoard = CommonBoard;
+        myPlayerBoard = new PlayerBoard(CommonBoard.getLevel());
+    }
+
+
+
+    public String GetID() {return this.ID;}
+    public int GetCredits() {return this.credits;}
+    public boolean GetReady() {return this.ready;}
+    public PlayerBoard getmyPlayerBoard() {return myPlayerBoard;}
+
+
+
+
+
+
+
 
 
 
@@ -229,10 +231,6 @@ public class Player {
 //        return Locations;
 //    }
 
-    public String GetID() {return this.ID;}
-    public int GetCredits() {return this.credits;}
-    public boolean GetReady() {return this.ready;}
-    public PlayerBoard getmyPlayerBoard() {return myPlayerBoard;}
     //    public ArrayList <IntegerPair> getHumans(){return this.myPlayerBoard.gethousingUnits();}
     public ArrayList<IntegerPair> getEnergyTiles(){
 //        if(getmyPlayerBoard().getClassifiedTiles().containsKey(PowerCenter.class))
@@ -278,15 +276,23 @@ public class Player {
 //        this.setState(PlayerStates.HandlingCargo);
     }
 
-    public void stopHandlingCargo(){
-        this.setState(new Waiting());
-        this.CurrentCard.finishCard();
-
-        // controllo che
-    }
+//    public void stopHandlingCargo(){
+//        this.setState(PlayerStates.Waiting);
+//        this.CurrentCard.finishCard();
+//
+//        // controllo che
+//    }
 
     public Card getCurrentCard() {
         return CurrentCard;
+    }
+
+    public PlayerStatesss getPlayerState() {
+        return fakestate;
+    }
+
+    public void setMyPlance(PlayerBoard pb) {
+        myPlayerBoard = pb;
     }
 
 

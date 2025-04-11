@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller.CardControllers;
 
 //import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
+import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 

@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 //import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
 
 import org.example.galaxy_trucker.Model.Connectors.*;
+import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.TestSetupHelper;
@@ -65,18 +66,26 @@ class AbandonedShipTest {
     @BeforeAll
     static void setup() {
 
-        TGame.NewPlayer("fGr");
-        TGame.NewPlayer("God");
-        TGame.NewPlayer("Sgregno");
+        TGame.NewPlayer(new Player());
+        TGame.NewPlayer(new Player());
+        TGame.NewPlayer(new Player());
          Franci= GameBoard.getPlayers().get(0);
          Pietro= GameBoard.getPlayers().get(1);
          Passo= GameBoard.getPlayers().get(2);
+
+         Franci.setId("fGr");
+         Franci.setBoards(GameBoard);
+         Pietro.setId("God");
+         Pietro.setBoards(GameBoard);
+         Passo.setId("Sgregno");
+         Passo.setBoards(GameBoard);
+
         playerBoard1=Pietro.getmyPlayerBoard();
         playerBoard2=Franci.getmyPlayerBoard();
         playerBoard3= TestSetupHelper.createInitializedBoard1();
         TestSetupHelper.HumansSetter1(playerBoard3);
         playerBoard3.checkValidity();
-        Passo.setMyPlance(playerBoard3);
+        //Passo.setBoards(playerBoard3);
 
 
 
@@ -113,20 +122,20 @@ class AbandonedShipTest {
     void cardEffect() {
 
         FakeAbandonedShip.CardEffect();
-        assertTrue(GameBoard.getPlayers().size()==3);
+        assertEquals(3, GameBoard.getPlayers().size());
        Franci= GameBoard.getPlayers().get(2);
        Pietro= GameBoard.getPlayers().get(1);
-        assertEquals(Franci.GetID(),"fGr");
-        assertEquals(Pietro.GetID(),"God");
+        assertEquals("fGr", Franci.GetID());
+        assertEquals("God", Pietro.GetID());
 
-        assertEquals(FakeAbandonedShip.getCurrentPlayer().GetID(),"Sgregno");
+        assertEquals("Sgregno", FakeAbandonedShip.getCurrentPlayer().GetID());
         System.out.println("controllo num");
         assertEquals(8,FakeAbandonedShip.getTotHumans());
         System.out.println("fine controllo");
 
-        assertEquals(Franci.getPlayerState(), PlayerStatesss.Waiting);
-        assertEquals(Passo.getPlayerState(), PlayerStatesss.AcceptKilling);
-        assertEquals(Pietro.getPlayerState(), PlayerStatesss.Waiting);
+        assertEquals(PlayerStatesss.Waiting, Franci.getPlayerState());
+        assertEquals(PlayerStatesss.AcceptKilling, Passo.getPlayerState());
+        assertEquals(PlayerStatesss.Waiting, Pietro.getPlayerState());
 
     }
 

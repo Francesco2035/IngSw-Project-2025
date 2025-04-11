@@ -10,20 +10,28 @@ public class GameLists {
         Games = new ArrayList<>();
     }
 
-    public void CreateNewGame(String gameId, String CreatorId, int level) throws IOException {
+    public Game CreateNewGame(String gameId, Player creator, int level) throws IOException {
         for(Game g: Games){
             if(g.getGameID().equals(gameId)){
                 throw new IllegalArgumentException("Game already exists");
             }
         }
         Game NewGame = new Game(level, gameId);
-        NewGame.NewPlayer(CreatorId);
+        NewGame.NewPlayer(creator);
         Games.add(NewGame);
+
+        return NewGame;
 
     }
 
-    public void JoinGame(int index, String id){
-        Games.get(index).NewPlayer(id);
+    public void JoinGame(Game g, Player p){
+
+        try{
+            Games.get(Games.indexOf(g)).NewPlayer(p);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public ArrayList<Game> getGames(){

@@ -7,9 +7,10 @@ import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Tile {
+public class Tile implements Serializable {
 
 
     private int id;
