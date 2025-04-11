@@ -136,7 +136,7 @@ class AbandonedShipTest {
     void activateCard() {
         Pietro=GameBoard.getPlayers().get(1);
         System.out.println(Passo.GetID()+"state"+Passo.getPlayerState());
-        AcceptKilling handler = (AcceptKilling) Passo.getInputHandler();
+
         ArrayList<IntegerPair> coords= new ArrayList<>();
         IntegerPair c1= new IntegerPair(4,5);
         IntegerPair c2= new IntegerPair(6,6);
@@ -145,8 +145,8 @@ class AbandonedShipTest {
         coords.add(c2);
         coords.add(c3);
 
-        handler.setInput(coords,true);
-        Passo.execute();
+
+        FakeAbandonedShip.killHumans(coords);
 //        handler=(AcceptKilling) Pietro.getInputHandler();
 //        handler.setInput(coords,false);
 //        Pietro.execute();

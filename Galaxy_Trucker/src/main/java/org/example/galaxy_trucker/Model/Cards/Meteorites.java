@@ -11,6 +11,7 @@ import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.ConsumingEnergy;
 import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromLarge;
 import org.example.galaxy_trucker.Model.Connectors.*;
+import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromSmall;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 
