@@ -116,6 +116,9 @@ public class Player {
      * @param index of the tile to pick
      */
     public void PickNewTile(int index){
+        if (CurrentTile != null) {
+            throw new IllegalStateException("You can't pick a Tile, you have already one!");
+        }
         CurrentTile = CommonBoard.getTilesSets().getNewTile(index);
     }
 
@@ -123,6 +126,9 @@ public class Player {
      * discards the current tile and places it back in the uncovered tiles list
      */
     public void DiscardTile(){
+        if (CurrentTile == null) {
+            throw new IllegalStateException("You can't discard a Tile, you don't have one!");
+        }
         CommonBoard.getTilesSets().AddUncoveredTile(CurrentTile);
         CurrentTile = null;
     }
@@ -140,9 +146,8 @@ public class Player {
      * @param index of the tile to pick
      */
     public void SelectFromBuffer(int index){
-        CurrentTile = myPlayerBoard.getBuffer().get(index);
-        myPlayerBoard.getBuffer().remove(index);
-    }
+        CurrentTile = myPlayerBoard.getTileFromBuffer(index);
+      }
 
 
     /**

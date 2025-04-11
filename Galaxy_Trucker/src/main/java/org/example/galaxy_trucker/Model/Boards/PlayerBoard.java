@@ -159,6 +159,16 @@ public class PlayerBoard {
         Buffer.add(t);
     }
 
+    public Tile getTileFromBuffer(int i){
+        if (i > Buffer.size()) {
+            throw new InvalidInput("This position in the Buffer does not exist");
+        }
+        if (Buffer.isEmpty()) {
+            throw new InvalidInput("Buffer is empty");
+        }
+        return Buffer.remove(i);
+    }
+
 // setter and getters for lists
     public void setBufferGoods(ArrayList<Goods> bufferGoods) {
         BufferGoods = bufferGoods;
@@ -199,15 +209,6 @@ public class PlayerBoard {
         PowerCenters = powerCenters;
     }
 
-
-    /**
-     * Method getBuffer return the buffer.
-     *
-     * @return the Buffer.
-     */
-    public ArrayList<Tile> getBuffer() throws InvalidInput{
-        return Buffer;
-    }
 
 
     /**
