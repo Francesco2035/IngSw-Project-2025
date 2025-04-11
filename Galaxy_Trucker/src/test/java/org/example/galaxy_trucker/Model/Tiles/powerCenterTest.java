@@ -25,7 +25,8 @@ class powerCenterTest {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
         GameBoard board = new GameBoard(tileSets, 2, null);
-        Player me = new Player("prova", board);
+        Player me = new Player();
+
 
     }
 
@@ -34,7 +35,8 @@ class powerCenterTest {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
         GameBoard board = new GameBoard(tileSets, 2, null);
-        Player me = new Player("prova", board);
+        Player me = new Player();
+        me.setId("prova");
 
     }
 

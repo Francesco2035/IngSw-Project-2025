@@ -57,11 +57,13 @@ class EpidemicTest {
 
     @BeforeAll
     static void setUp() {
-        TGame.NewPlayer("fGr");
+
+        TGame.NewPlayer(new Player());
 
 
         Franci= TGameBoard.getPlayers().get(0);
 
+        Franci.setId("fGr");
 
         playerBoard1= TestSetupHelper.createInitializedBoard2();
         assertTrue(playerBoard1.checkValidity());
