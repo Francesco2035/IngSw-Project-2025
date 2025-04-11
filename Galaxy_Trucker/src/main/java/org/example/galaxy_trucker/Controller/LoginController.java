@@ -10,12 +10,12 @@ public class LoginController extends Controller {
 
 
     Player curPlayer;
-    public LoginController(Game gameID, String newPlayer) {
-        curPlayer = new Player(newPlayer, gameID.getGameBoard());
+    public LoginController(Player curPlayer) {
+        this.curPlayer = curPlayer;
     }
 
     @Override
     public void nextState(GameHandler gh) {
-        gh.getControllerMap().put(curPlayer.GetID(), new PrepController());
+        gh.getControllerMap().put(curPlayer.GetID(), new PrepController(curPlayer));
     }
 }

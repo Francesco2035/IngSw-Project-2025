@@ -34,11 +34,6 @@ public class GameHandler {
     }
 
 
-    public void setControllerMap(HashMap<String, Controller> controllerMap) {
-        ControllerMap = controllerMap;
-    }
-
-
     public void initPlayer(String json) {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -61,7 +56,8 @@ public class GameHandler {
                 gameList.JoinGame(gameList.getGames().indexOf(gameList.getGames().stream().filter(g -> g.getGameID().equals(gameID)).findFirst().orElseThrow()), playerID);
             }
 
-            ControllerMap.put(playerID, new LoginController(gameList.getGames().stream().filter(g -> g.getGameID().equals(gameID)).findFirst().orElseThrow(), playerID));
+            ControllerMap.put(playerID, new LoginController(gameList.getGames().stream().filter(g -> g.getGameID().equals(gameID)).findFirst().orElseThrow()
+                    .getPlayers().values().stream().filter(p -> p.GetID().equals(playerID)).findFirst().orElseThrow()));
 
         } catch (IOException e) {
             throw new InvalidInput("Malformed JSON input");

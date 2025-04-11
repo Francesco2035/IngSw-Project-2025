@@ -11,12 +11,13 @@ public class FlightController extends Controller {
 
     Player curPlayer;
 
-    public FlightController(File json, State GameState, Player curPlayer) {
+//    public FlightController(File json, State GameState, Player curPlayer) {
+//        this.curPlayer = curPlayer;
+//    }
+
+
+    public FlightController(Player curPlayer) {
         this.curPlayer = curPlayer;
-    }
-
-    public void action(){
-
     }
 
 
