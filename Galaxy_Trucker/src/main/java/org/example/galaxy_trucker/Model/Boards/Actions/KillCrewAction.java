@@ -16,10 +16,11 @@ public class KillCrewAction extends ComponentAction {
         if (!playerState.allows(this)){
             throw new IllegalStateException("illegal state");
         }
-        if (housing.kill() == 2){
+        int typeKill = housing.kill();
+        if (typeKill == 2){
             playerBoard.setNumHumans(-1);
         }
-        else if (housing.kill() == 1){
+        else if (typeKill == 1){
             playerBoard.setPurpleAlien(false);
         }
         else{
