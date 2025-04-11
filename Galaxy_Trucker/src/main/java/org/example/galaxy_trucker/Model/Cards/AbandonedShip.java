@@ -56,27 +56,7 @@ public class AbandonedShip extends Card{
             }
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
-
-////            if(CurrentPlanche.getClassifiedTiles().containsKey(ModularHousingUnit.class)) {
-////                 HousingCoords = CurrentPlanche.getClassifiedTiles().get(ModularHousingUnit.class);
-////            }
-////            if(CurrentPlanche.getValidPlayerBoard()[6][6]==1) {
-////                HousingCoords.add(new IntegerPair(6,6));
-////            }
-//            this.totHumans = 0;
-//
-//            System.out.println("numofHousingCoords: "+HousingCoords.size());
-//              for (int i = 0; i < HousingCoords.size(); i++) {
-//
-//                  HousingCoords.get(i).getNumHumans();
-//
-////                //somma per vedere il tot umani
-////                totHumans += ((int) TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent()
-////                        .get(new HousingHumanGetter(TileBoard[HousingCoords.get(i).getFirst()][HousingCoords.get(i).getSecond()].getComponent())));
-//            }
-//            HousingCoords.remove(new IntegerPair(6,6));
-//            System.out.println("totHumans di"+currentPlayer.GetID()+": "+totHumans);
-//            if(totHumans>this.requirement){
+            System.out.println("Cchecking:"+currentPlayer.GetID());
             if(CurrentPlanche.getNumHumans()>requirement){
                 this.totHumans=CurrentPlanche.getNumHumans();
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
@@ -122,6 +102,7 @@ public class AbandonedShip extends Card{
             ///  fai l try catch e opera sulla copia :)
             PlayerBoard curr= currentPlayer.getmyPlayerBoard();
             Tile tiles[][]=curr.getPlayerBoard();
+            try{
             for (IntegerPair coordinate : coordinates) {
                 System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
 
@@ -130,6 +111,13 @@ public class AbandonedShip extends Card{
 //                currentPlayer.getmyPlayerBoard().setGetter(new HousingUnitGetter(currentPlayer.getmyPlayerBoard(),
 //                        coordinate, 1, false, false));
 //                currentPlayer.getmyPlayerBoard().getGetter().get();
+            }
+            }
+            catch (Exception e){
+                //devo rimanere allo stato di dare gli umani ezzz
+                System.out.println("non ce sta più ncazzoz di nessuno qui");
+
+                return;
             }
             currentPlayer.IncreaseCredits(this.reward);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());

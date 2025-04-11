@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Controller.Commands.KillCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Controller.Commands.Command;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -51,5 +52,10 @@ public class Killing extends PlayerState{
 
         Card card = player.getCurrentCard();
         return new KillCommand(card, coordinates);
+    }
+
+    @Override
+    public boolean allows(KillCrewAction action) {
+        return true;
     }
 }

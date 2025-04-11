@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Model.Connectors.DOUBLE;
 import org.example.galaxy_trucker.Model.Connectors.SINGLE;
 import org.example.galaxy_trucker.Model.GAGen;
 
+import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 import org.example.galaxy_trucker.Model.PlayerStatesss;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
@@ -159,11 +160,11 @@ public class TestSetupHelper {
     }
 
     public static void HumansSetter1(PlayerBoard playerBoard){
-//        ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
-//        HousingCoords.addAll(playerBoard.getHousingUnits());
-//        for(HousingUnit housingUnit : HousingCoords){
-//           playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard), PlayerStatesss.PopulateHousingUnits);
-//        }
+        ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
+        HousingCoords.addAll(playerBoard.getHousingUnits());
+        for(HousingUnit housingUnit : HousingCoords){
+           playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),new AddCrewState());
+        }
     }
 
 
@@ -171,10 +172,10 @@ public class TestSetupHelper {
         HousingCoords.addAll(playerBoard.getHousingUnits());
         for(HousingUnit housingUnit : HousingCoords){
             if(housingUnit.getX()==5 && housingUnit.getY()==5){
-                housingUnit.setBrownAlien(true);
+                playerBoard.performAction(housingUnit,new AddCrewAction(0,false,true, playerBoard),new AddCrewState());
             }
             else{
-                housingUnit.setNumHumans(2);
+                playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),new AddCrewState());
             }
         }
 

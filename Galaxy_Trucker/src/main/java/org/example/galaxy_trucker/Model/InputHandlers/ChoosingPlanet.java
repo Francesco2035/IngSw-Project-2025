@@ -18,7 +18,7 @@ public class ChoosingPlanet implements InputHandler{
 
     @Override
     public void action() {
-        this.card.choosePlanet(this.planet,this.accepted);
+        this.card.choosePlanet(this.planet);
     }
 
 }

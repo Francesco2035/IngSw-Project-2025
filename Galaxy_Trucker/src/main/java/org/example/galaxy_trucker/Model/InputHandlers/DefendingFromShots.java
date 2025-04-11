@@ -18,7 +18,7 @@ public void setInput(IntegerPair coords) {
 
 @Override
 public void action() {
-    this.card.DefendFromShots(coord);
+    this.card.DefendFromSmall(coord);
 }
 
 

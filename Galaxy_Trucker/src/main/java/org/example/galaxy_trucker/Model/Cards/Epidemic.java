@@ -12,7 +12,7 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 import java.util.ArrayList;
 
 public class Epidemic extends Card {
-    private ArrayList<IntegerPair> infected;
+    private ArrayList<HousingUnit> infected;
     private ArrayList<IntegerPair> houses;
     Player currentPlayer;
 
@@ -52,9 +52,12 @@ public class Epidemic extends Card {
             }
             System.out.println("size of infected is: "+infected.size());
             for(int k=0;k<infected.size();k++){
+                System.out.println(infected.get(k).getX()+" "+infected.get(k).getY());
+            }
+            for(int k=0;k<infected.size();k++){
 
-
-                CurrentPlanche.performAction(tiles[this.infected.get(k).getFirst()][this.infected.get(k).getSecond()].getComponent(),new KillCrewAction(CurrentPlanche), new Killing());
+                System.out.println("killing in:"+infected.get(k).getX()+" "+infected.get(k).getY());
+                CurrentPlanche.performAction(tiles[this.infected.get(k).getX()][this.infected.get(k).getY()].getComponent(),new KillCrewAction(CurrentPlanche), new Killing());
 
             }
 
@@ -89,7 +92,7 @@ public class Epidemic extends Card {
                 if (PopulatedHousecoords.contains(new IntegerPair(w,z)) ) {
                     if (!this.infected.contains(house)) {
                         System.out.println("added from left");
-                        this.infected.add(new IntegerPair(house.getX(),house.getY()));
+                        this.infected.add(house);
                     }
                 }
             }
@@ -99,7 +102,7 @@ public class Epidemic extends Card {
                 if (PopulatedHousecoords.contains(new IntegerPair(w,z)) ) {
                     if (!this.infected.contains(house)) {
                         System.out.println("added from left");
-                        this.infected.add(new IntegerPair(house.getX(),house.getY()));
+                        this.infected.add(house);
                     }
                 }
             }
@@ -109,7 +112,7 @@ public class Epidemic extends Card {
                 if (PopulatedHousecoords.contains(new IntegerPair(w,z)) ) {
                     if (!this.infected.contains(house)) {
                         System.out.println("added from left");
-                        this.infected.add(new IntegerPair(house.getX(),house.getY()));
+                        this.infected.add(house);
                     }
                 }
             }
@@ -119,7 +122,7 @@ public class Epidemic extends Card {
                 if (PopulatedHousecoords.contains(new IntegerPair(w,z)) ) {
                     if (!this.infected.contains(house)) {
                         System.out.println("added from left");
-                        this.infected.add(new IntegerPair(house.getX(),house.getY()));
+                        this.infected.add(house);
                     }
                 }
             }

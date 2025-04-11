@@ -143,18 +143,21 @@ public class ModularHousingUnit extends HousingUnit {
     @Override
     public int kill(){
         if (numHumans == 0 && !purpleAlien && !brownAlien){
-            throw new InvalidInput("This ModularHousingUnit is empty!");
+            throw new InvalidInput("This ModularHousingUnit is empty! "+getX()+" "+getY());
         }
         if (numHumans != 0){
             numHumans--;
+            System.out.println("killed a human in "+getX()+" "+getY());
             return 2;
         }
         else if (purpleAlien){
             purpleAlien = false;
+            System.out.println("killed a purple alien in "+getX()+" "+getY());
             return 1;
         }
         else {
             brownAlien = false;
+            System.out.println("killed a brown alien in "+getX()+" "+getY());
             return 0;
         }
 

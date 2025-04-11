@@ -24,7 +24,7 @@ public class DefendingFromMeteorites implements InputHandler {
 
     @Override
     public void action(){
-        this.card.DefendFromMeteorites(cannon, shield,energy);
+        this.card.DefendFromSmall(this.shield);
     }
 
 }
