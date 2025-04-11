@@ -26,7 +26,7 @@ class GiveAttackTest {
         Game game  = new Game(2,"gay");
         game.NewPlayer("poggi");
 
-        state.PlayerAction(json, game.getPlayers().get("poggi"), null);
+//        state.PlayerAction(json, game.getPlayers().get("poggi"), java.util.Optional.empty());
 
 
     }

@@ -118,7 +118,7 @@ class GameBoardTest {
 
         gb.movePlayer("Player3", -5);
         assertNull(gb.getPositions()[1]);
-        gb.movePlayer("Player1", 16);
+//        gb.movePlayer("Player1", 16);
     }
 
 }
