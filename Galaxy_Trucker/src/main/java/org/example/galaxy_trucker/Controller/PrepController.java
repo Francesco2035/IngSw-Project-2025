@@ -5,10 +5,9 @@ import org.example.galaxy_trucker.Model.Player;
 
 public class PrepController extends Controller {
 
-    Player CurrentPlayer;
 
     public PrepController(Player currentPlayer) {
-        CurrentPlayer = currentPlayer;
+        curPlayer = currentPlayer;
     }
 
 //    public void PickTile(){

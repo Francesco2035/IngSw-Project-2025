@@ -9,7 +9,6 @@ public class FlightController extends Controller {
 
     //attributi privati letti dal json
 
-    Player curPlayer;
 
 //    public FlightController(File json, State GameState, Player curPlayer) {
 //        this.curPlayer = curPlayer;

@@ -9,7 +9,6 @@ import java.io.File;
 public class LoginController extends Controller {
 
 
-    Player curPlayer;
     public LoginController(Player curPlayer) {
         this.curPlayer = curPlayer;
     }
