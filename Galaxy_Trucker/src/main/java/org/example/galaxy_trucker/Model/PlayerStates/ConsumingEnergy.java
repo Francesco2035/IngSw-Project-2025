@@ -18,7 +18,7 @@ import java.util.Optional;
 public class ConsumingEnergy extends PlayerState{
 
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card) {
+    public Command PlayerAction(String json, Player player) {
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
         //se vuole consumare più energie passa la stessa coordinata più volte
@@ -45,8 +45,8 @@ public class ConsumingEnergy extends PlayerState{
         } catch (IOException e) {
             throw new InvalidInput("Malformed JSON input");
         }
-
-        return new ConsumeEnergyCommand(card.get(), coordinates);
+        Card card = player.getCurrentCard();
+        return new ConsumeEnergyCommand(card, coordinates);
     }
 
 

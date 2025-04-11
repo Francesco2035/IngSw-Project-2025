@@ -24,7 +24,7 @@ public class GiveAttack extends PlayerState {
     }
 
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card){
+    public Command PlayerAction(String json, Player player){
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
 
@@ -60,8 +60,8 @@ public class GiveAttack extends PlayerState {
 
         System.out.println(coordinates);
 
-
-        return new GiveAttackCommand(card.get(), coordinates, player);
+        Card card = player.getCurrentCard();
+        return new GiveAttackCommand(card, coordinates, player);
     }
 
     @Override

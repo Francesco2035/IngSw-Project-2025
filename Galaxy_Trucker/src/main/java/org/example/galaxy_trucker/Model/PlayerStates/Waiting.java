@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class Waiting extends PlayerState{
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card) {
+    public Command PlayerAction(String json, Player player) {
         throw new IllegalStateException("no action on Waiting");
     }
 }

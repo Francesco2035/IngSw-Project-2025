@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class DefendingFromSmall extends PlayerState{
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card) {
+    public Command PlayerAction(String json, Player player) {
         ObjectMapper mapper = new ObjectMapper();
         IntegerPair batteryComp;
 
@@ -42,7 +42,7 @@ public class DefendingFromSmall extends PlayerState{
             throw new InvalidInput("Malformed JSON input");
         }
 
-        // Se hai un comando apposito:
-        return new DefendFromSmallCommand(card.get(), batteryComp);
+        Card card = player.getCurrentCard();
+        return new DefendFromSmallCommand(card, batteryComp);
     }
 }

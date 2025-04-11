@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class DefendingFromLarge extends PlayerState{
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card) {
+    public Command PlayerAction(String json, Player player) {
 
         ObjectMapper mapper = new ObjectMapper();
         IntegerPair plasmaDrill;
@@ -48,8 +48,8 @@ public class DefendingFromLarge extends PlayerState{
         } catch (IOException e) {
             throw new InvalidInput("Malformed JSON input");
         }
-
-        return new DefendFromLargeCommand(card.get(),plasmaDrill,batteryComp);
+        Card card = player.getCurrentCard();
+        return new DefendFromLargeCommand(card,plasmaDrill,batteryComp);
 
     }
 }
