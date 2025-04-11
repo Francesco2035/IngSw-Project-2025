@@ -31,5 +31,12 @@ public class AlienAddons extends Component{
         playerBoard.getAlienAddons().remove(this);
     }
 
+    @Override
+    public Component clone(){
+        AlienAddons clone = new AlienAddons();
+        clone.type = type;
+        return clone;
+    }
+
 
 }

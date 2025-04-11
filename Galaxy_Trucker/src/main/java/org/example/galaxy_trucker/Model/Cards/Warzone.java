@@ -1,7 +1,11 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
+import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
+import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
+import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 
 //import org.example.galaxy_trucker.Model.InputHandlers.GiveAttack;
@@ -49,6 +53,9 @@ public class Warzone extends Card{
     private int ShotsLine;
     private IntegerPair hit;
     private int[] lines;
+    private double currentpower;
+    private int currentmovement;
+    private int energyUsage;
 
 
 
@@ -67,7 +74,7 @@ public class Warzone extends Card{
         this.currentPlayer = null;
         this.done = 0;
         this.Worst = null;
-        this.Minimum = 0;
+        this.Minimum = 10000000;
         this.ShotsOrder = 0;
         this.ShotsLine = 0;
         this.lines = new int[PunishmentShots.size()/2];
@@ -75,6 +82,8 @@ public class Warzone extends Card{
             lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
         }
         this.hit = null;
+        this.currentpower=0;
+        this.currentmovement=0;
 
 
     }
@@ -101,19 +110,19 @@ public class Warzone extends Card{
             currentPlayer = PlayerList.get(this.PlayerOrder);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             if(RequirementsType[ChallengeOrder]==1){
-                this.Minimum=1000000;
+
                 this.currentPlayer.setState(new GiveAttack());
                 //this.currentPlayer.setInputHandler(new GiveAttack(this));
 
             }
             if(RequirementsType[ChallengeOrder]==2){
-                this.Minimum=1000000;
+
                 this.currentPlayer.setState(new GiveSpeed());
                 //this.currentPlayer.setInputHandler(new GiveSpeed(this));
 
             }
             else{
-                this.Minimum=1000000;
+
                 this.checkPeople();
             }
 
@@ -126,7 +135,7 @@ public class Warzone extends Card{
                 this.loseTime();
             }
             else if(this.PunishmentType[ChallengeOrder]==2){
-                this.currentPlayer.setState(new Killing());
+                this.Worst.setState(new Killing());
                 //this.currentPlayer.setInputHandler(new Killing(this));
             }
             else if(this.PunishmentType[ChallengeOrder]==3){
@@ -135,6 +144,7 @@ public class Warzone extends Card{
             else {
                 this.continueCard();
             }
+            this.Minimum=1000000;
             this.ChallengeOrder++;
         }
     }
@@ -175,18 +185,86 @@ public class Warzone extends Card{
 
     //controlli su chi è il peggiore
 
-    public void checkPower(double power) {
+
+
+    /// fornisce la potenza dei cannoni
+    @Override
+    public void checkPower(double power, int numofDouble) {
 //            double movement= currentPlayer.getMyPlance().getPower(coordinates);
 
+        this.currentpower = power;
+        this.energyUsage=numofDouble;
+        this.currentPlayer.setState(new ConsumingEnergy());
 
 
-        if(power<Minimum){
-                this.Worst=currentPlayer;
-                this.Minimum=power;
-            }
+//        if(power<Minimum){
+//                this.Worst=currentPlayer;
+//                this.Minimum=power;
+//            }
+//        this.currentPlayer.setState(new Waiting());
+//        this.updateSates();
+    }
+
+
+
+    /// da la potenza motrice
+    @Override
+    public void checkMovement(int movement, int numofDouble) {
+//        double movement= currentPlayer.getMyPlance().getEnginePower(coordinates);
+        this.currentmovement=movement;
+        this.energyUsage=numofDouble;
+        this.currentPlayer.setState(new ConsumingEnergy());
+
+//
+//        if(movement<Minimum){
+//            this.Worst=currentPlayer;
+//            this.Minimum=movement;
+//        }
+//        this.currentPlayer.setState(new Waiting());
+//        this.updateSates();
+
+    }
+
+
+    @Override
+    public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
+        if(coordinates.size()!=this.energyUsage){
+            throw new WrongNumofEnergyExeption("wrong number of enrgy cells");
+            ///  devo fare si che in caso di errore torni alla give attack
+        }
+        PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
+        Tile[][] tiles = CurrentPlanche.getPlayerBoard();
+        /// opero sulla copia
+        for(IntegerPair i:coordinates){
+            CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+        }
+        if(true) {
+            this.checkStrength();
+        }
+        else{
+            this.checkSpeed();
+        }
+    }
+
+    public void checkStrength(){
+        if(this.currentpower<Minimum){
+            this.Worst=currentPlayer;
+            this.Minimum=this.currentpower;
+        }
         this.currentPlayer.setState(new Waiting());
         this.updateSates();
     }
+
+    public void checkSpeed(){
+        if(this.currentmovement<Minimum){
+            this.Worst=currentPlayer;
+            this.Minimum=this.currentmovement;
+        }
+        this.currentPlayer.setState(new Waiting());
+        this.updateSates();
+    }
+
+
 
     public void checkPeople() {
         int Order=0;
@@ -222,20 +300,6 @@ public class Warzone extends Card{
         this.updateSates();
     }
 
-    public void checkMovement(int movement) {
-//        double movement= currentPlayer.getMyPlance().getEnginePower(coordinates);
-
-
-
-
-
-        if(movement<Minimum){
-            this.Worst=currentPlayer;
-            this.Minimum=movement;
-        }
-        this.currentPlayer.setState(new Waiting());
-        this.updateSates();
-    }
 
 
     public void loseTime() {
@@ -260,18 +324,16 @@ public class Warzone extends Card{
     @Override
     public void killHumans(ArrayList<IntegerPair> coordinates){
         if (coordinates.size() != this.PunishmentHumans) {
-            //devo dirgli che ha scelto il num sbagliato di persone da shottare
-            //throw new Exception();
+
+            throw new WrongNumofHumansException("Hai sbagliato il numero di umani");
         }
 
-        PlayerBoard curr= currentPlayer.getmyPlayerBoard();
+        PlayerBoard curr= Worst.getmyPlayerBoard();
         Tile tiles[][]=curr.getPlayerBoard();
         for (IntegerPair coordinate : coordinates) {
             System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
 
-            //curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr), PlayerS);
-
-
+            curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr), Worst.getPlayerState());
         }
         this.updateSates();
     }
@@ -283,7 +345,7 @@ public class Warzone extends Card{
         boolean shotsFlag= false;
         while (this.ShotsOrder < PunishmentShots.size() && shotsFlag == false) {
 
-            PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard(); //prendo plancia
+            PlayerBoard CurrentPlanche = Worst.getmyPlayerBoard(); //prendo plancia
             int[][] MeteoritesValidPlanche = CurrentPlanche.getValidPlayerBoard();//prende matrice validita
             if (PunishmentShots.get(ShotsOrder) == 0) { //sinistra
                 Movement = 0;
@@ -292,7 +354,12 @@ public class Warzone extends Card{
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
-                        currentPlayer.setState(new DefendingFromShots());
+                        if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
+                            Worst.setState(new DefendingFromSmall());
+                        }
                     }
 
 
@@ -306,7 +373,12 @@ public class Warzone extends Card{
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
-                        currentPlayer.setState(new DefendingFromShots());
+                        if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
+                            Worst.setState(new DefendingFromSmall());
+                        }
 
                     }
 
@@ -320,7 +392,12 @@ public class Warzone extends Card{
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder/2]);
-                        currentPlayer.setState(new DefendingFromShots());
+                        if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
+                            Worst.setState(new DefendingFromSmall());
+                        }
 
                     }
                     Movement--;
@@ -333,7 +410,12 @@ public class Warzone extends Card{
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
-                        currentPlayer.setState(new DefendingFromShots());
+                        if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
+                            Worst.setState(new DefendingFromSmall());
+                        }
                     }
 
 
@@ -352,16 +434,18 @@ public class Warzone extends Card{
 
 
     @Override
-    public void DefendFromShots(IntegerPair coordinates) {
-        PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
+    public void DefendFromSmall(IntegerPair shieldcoord,IntegerPair energy){
+        PlayerBoard currentBoard =this.Worst.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
-
-        if(coordinates !=null) {
-//            if (!(PunishmentShots.get(ShotsOrder + 1) == 0 && (currentBoard.getTile(coordinates.getFirst(), coordinates.getSecond()).getComponent().getAbility(0).contains(PunishmentShots.get(ShotsOrder))) || PunishmentShots.get(ShotsOrder + 1) == 1)) {
-//                // non dovrei attivare lo scudo o lo scudo è sbagliato
-//            }
+        if (shieldcoord!=null){
+            if (PunishmentShots.get(ShotsOrder + 1) == 0 && (currentBoard.getShield()[PunishmentShots.get(ShotsOrder)]==0)){
+                throw new InvalidDefenceEceptiopn("this shield defends the wrong side");
+            }
+            else {
+                currentBoard.performAction(tiles[hit.getFirst()][hit.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new ConsumingEnergy());
+            }
         }
-        if(coordinates ==null) { // se sono entrambi nulli non mi son difeso quindi vengo colpito
+        else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
         }
         this.continueCard();

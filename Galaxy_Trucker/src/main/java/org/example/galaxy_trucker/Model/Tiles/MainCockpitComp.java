@@ -105,5 +105,12 @@ public class MainCockpitComp extends HousingUnit {
 
     }
 
+    @Override
+    public Component clone(){
+        ModularHousingUnit clone = new ModularHousingUnit();
+        clone.setNumHumans(numHumans);
+        return clone;
+    }
+
 }
 

@@ -4,7 +4,6 @@ import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.PlayerStates.AcceptKilling;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -82,7 +81,7 @@ public class AbandonedShip extends Card{
                 this.totHumans=CurrentPlanche.getNumHumans();
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
-                currentPlayer.setState(new AcceptKilling());
+//                currentPlayer.setState(new AcceptKilling());
                 //currentPlayer.setInputHandler(new AcceptKilling(this));
                 currentPlayer.setCard(this);
             }
@@ -109,8 +108,8 @@ public class AbandonedShip extends Card{
     }
 
     @Override
-    public void continueCard(ArrayList<IntegerPair> coordinates, boolean accepted) {
-        if(accepted) {
+    public void killHumans (ArrayList<IntegerPair> coordinates) {
+        if(coordinates!=null) {
             if (coordinates.size() != this.requirement) {
                 //devo dirgli che ha scelto il num sbagliato di persone da shottare
                 throw new WrongNumofHumansException("wrong number of humans");

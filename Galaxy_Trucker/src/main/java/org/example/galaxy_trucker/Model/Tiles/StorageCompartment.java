@@ -51,4 +51,12 @@ public class StorageCompartment extends Storage{
         playerBoard.getStorages().remove(this);
     }
 
+    @Override
+    public Component clone(){
+        StorageCompartment clone = new StorageCompartment();
+        clone.goods = new ArrayList<>(goods);
+        clone.type = this.type;
+        return clone;
+    }
+
 }

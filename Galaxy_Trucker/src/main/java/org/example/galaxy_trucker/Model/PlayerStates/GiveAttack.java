@@ -1,11 +1,9 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Controller.Commands.Command;
-import org.example.galaxy_trucker.Controller.Commands.GiveAttackAction;
+import org.example.galaxy_trucker.Controller.Commands.GiveAttackCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetPlasmaDrillPower;
 import org.example.galaxy_trucker.Model.Cards.Card;
@@ -14,7 +12,9 @@ import org.example.galaxy_trucker.Model.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public class GiveAttack extends PlayerState {
 
@@ -24,7 +24,7 @@ public class GiveAttack extends PlayerState {
     }
 
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card){
+    public Command PlayerAction(String json, Player player){
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
 
@@ -41,11 +41,17 @@ public class GiveAttack extends PlayerState {
             }
 
             JsonNode coordsArray = root.get("coordinates");
+            Set<IntegerPair> uniqueCoordinates = new HashSet<>();
             for (JsonNode node : coordsArray) {
-
                 int x = node.get("x").asInt();
                 int y = node.get("y").asInt();
-                coordinates.add(new IntegerPair(x, y));
+                IntegerPair pair = new IntegerPair(x, y);
+
+                if (!uniqueCoordinates.add(pair)) {
+                    throw new InvalidInput("Duplicate coordinate found: (" + x + ", " + y + ")");
+                }
+
+                coordinates.add(pair);
             }
 
         } catch (IOException e) {
@@ -54,8 +60,8 @@ public class GiveAttack extends PlayerState {
 
         System.out.println(coordinates);
 
-
-        return new GiveAttackAction(card.get(), coordinates);
+        Card card = player.getCurrentCard();
+        return new GiveAttackCommand(card, coordinates, player);
     }
 
     @Override

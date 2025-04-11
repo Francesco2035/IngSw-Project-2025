@@ -26,6 +26,7 @@ public class PlayerBoard {
     private int EnginePower = 0;
     private double PlasmaDrillsPower = 0;
     private int Energy = 0;
+    private int lv;
 
     private boolean valid;
 
@@ -49,14 +50,18 @@ public class PlayerBoard {
 
 
     private ArrayList<Tile> Buffer;
-
+    private ArrayList<Goods> Rewards;
 
     public PlayerBoard(int lv) {
+        this.lv = lv;
         this.broken = false;
         this.damage = 0;
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
         this.totalValue = 0;
+
+
+        this.Rewards = new ArrayList<>();
 
 
 
@@ -154,47 +159,56 @@ public class PlayerBoard {
         Buffer.add(t);
     }
 
+    public Tile getTileFromBuffer(int i){
+        if (i > Buffer.size()) {
+            throw new InvalidInput("This position in the Buffer does not exist");
+        }
+        if (Buffer.isEmpty()) {
+            throw new InvalidInput("Buffer is empty");
+        }
+        return Buffer.remove(i);
+    }
+
 // setter and getters for lists
     public void setBufferGoods(ArrayList<Goods> bufferGoods) {
         BufferGoods = bufferGoods;
     }
 
+
     public void setHousingUnits(ArrayList<HousingUnit> housingUnits) {
         HousingUnits = housingUnits;
     }
+
 
     public void setHotWaterHeaters(ArrayList<HotWaterHeater> hotWaterHeaters) {
         HotWaterHeaters = hotWaterHeaters;
     }
 
+
     public void setPlasmaDrills(ArrayList<PlasmaDrill> plasmaDrills) {
         PlasmaDrills = plasmaDrills;
     }
+
 
     public void setStorages(ArrayList<Storage> storages) {
         Storages = storages;
     }
 
+
     public void setAlienAddons(ArrayList<AlienAddons> alienAddons) {
         AlienAddons = alienAddons;
     }
+
 
     public void setShieldGenerators(ArrayList<ShieldGenerator> shieldGenerators) {
         ShieldGenerators = shieldGenerators;
     }
 
+
     public void setPowerCenters(ArrayList<PowerCenter> powerCenters) {
         PowerCenters = powerCenters;
     }
 
-    /**
-     * Method getBuffer return the buffer.
-     *
-     * @return the Buffer.
-     */
-    public ArrayList<Tile> getBuffer() throws InvalidInput{
-        return Buffer;
-    }
 
 
     /**
@@ -679,35 +693,22 @@ public class PlayerBoard {
     }
 
 
-    /**
-     * Method pullFromBuffer pull the good in position i of the BufferGoods.
-     *
-     * @param i of type int.
-     * @return the good in order to be added to the storageCompartment.
-     * @throws InvalidInput If the specified index is out of bounds or if the buffer is empty.
-     */
-    public Goods pullFromBuffer(int i) throws InvalidInput{
-        if (i > BufferGoods.size()) {
-            throw new InvalidInput("This position in the BufferGoods does not exist");
-        }
-        if (BufferGoods.isEmpty()) {
-            throw new InvalidInput("BufferGoods is empty");
-        }
-        return BufferGoods.remove(i);
-    }
 
 
     public boolean getPurpleAlien(){
         return this.purpleAlien;
     }
 
+
     public boolean getBrownAlien(){
         return this.brownAlien;
     }
 
+
     public void setBrownAlien(boolean brownAlien) {
         this.brownAlien = brownAlien;
     }
+
 
     public void setPurpleAlien(boolean purpleAlien) {
         this.purpleAlien = purpleAlien;
@@ -718,33 +719,41 @@ public class PlayerBoard {
         return BufferGoods;
     }
 
+
     public ArrayList<HousingUnit> getHousingUnits() {
         return HousingUnits;
     }
+
 
     public ArrayList<HotWaterHeater> getHotWaterHeaters() {
         return HotWaterHeaters;
     }
 
+
     public ArrayList<PlasmaDrill> getPlasmaDrills() {
         return PlasmaDrills;
     }
+
 
     public ArrayList<AlienAddons> getAlienAddons() {
         return AlienAddons;
     }
 
+
     public ArrayList<Storage> getStorages() {
         return Storages;
     }
+
 
     public ArrayList<ShieldGenerator> getShieldGenerators() {
         return ShieldGenerators;
     }
 
+
     public ArrayList<PowerCenter> getPowerCenters() {
         return PowerCenters;
     }
+
 
     public int getEnginePower() {
         if (brownAlien){
@@ -757,6 +766,7 @@ public class PlayerBoard {
         EnginePower += enginePower;
     }
 
+
     public double getPlasmaDrillsPower() {
         if(purpleAlien){
             return PlasmaDrillsPower + 2;
@@ -764,30 +774,141 @@ public class PlayerBoard {
         return PlasmaDrillsPower;
     }
 
+
     public void setPlasmaDrillsPower(double plasmaDrillsPower) {
         PlasmaDrillsPower += plasmaDrillsPower;
     }
+
 
     public int getNumHumans() {
         return numHumans;
     }
 
+
     public void setNumHumans(int numHumans) {
         this.numHumans += numHumans;
     }
+
 
     public int getEnergy() {
         return Energy;
     }
 
+
     public void setEnergy(int energy) {
         Energy += energy;
     }
 
+
     public void performAction(Component component, ComponentAction action, PlayerState state) {
-
             component.accept(action, state);
+    }
 
+
+    public PlayerBoard clone(){
+        PlayerBoard clonedPlayerBoard = new PlayerBoard(lv);
+        clonedPlayerBoard.broken = broken;
+        clonedPlayerBoard.purpleAlien = purpleAlien;
+        clonedPlayerBoard.brownAlien = brownAlien;
+        clonedPlayerBoard.totalValue = totalValue;
+        clonedPlayerBoard.damage = damage;
+        clonedPlayerBoard.numHumans = numHumans;
+        clonedPlayerBoard.exposedConnectors = exposedConnectors;
+        clonedPlayerBoard.EnginePower = EnginePower;
+        clonedPlayerBoard.PlasmaDrillsPower = PlasmaDrillsPower;
+        clonedPlayerBoard.Energy = Energy;
+        clonedPlayerBoard.lv = lv;
+        clonedPlayerBoard.valid = valid;
+        clonedPlayerBoard.HousingUnits = new ArrayList<>();
+        clonedPlayerBoard.HotWaterHeaters= new ArrayList<>();
+        clonedPlayerBoard.PlasmaDrills= new ArrayList<>();
+        clonedPlayerBoard.AlienAddons= new ArrayList<>();
+        clonedPlayerBoard.Storages= new ArrayList<>();
+        clonedPlayerBoard.ShieldGenerators= new ArrayList<>();
+        clonedPlayerBoard.PowerCenters= new ArrayList<>();
+        clonedPlayerBoard.Rewards = new ArrayList<>(this.Rewards);
+
+        clonedPlayerBoard.PlayerBoard = new Tile[PlayerBoard.length][PlayerBoard[0].length];
+        for (int i = 0; i < PlayerBoard.length; i++) {
+            for (int j = 0; j < PlayerBoard[i].length; j++) {
+                Tile tile = PlayerBoard[i][j];
+                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone() : null;
+                if (tile != null) {
+                    tile.getComponent().insert(clonedPlayerBoard, i, j);
+                }
+            }
+        }
+
+        clonedPlayerBoard.ValidPlayerBoard = new int[ValidPlayerBoard.length][ValidPlayerBoard[0].length];
+        for (int i = 0; i < ValidPlayerBoard.length; i++) {
+            clonedPlayerBoard.ValidPlayerBoard[i] = Arrays.copyOf(ValidPlayerBoard[i], ValidPlayerBoard[i].length);
+        }
+
+        clonedPlayerBoard.shield = Arrays.copyOf(shield, shield.length);
+
+        return clonedPlayerBoard;
+
+    }
+
+
+    public boolean isBroken() {
+        return broken;
+    }
+
+
+    public int getLv() {
+        return lv;
+    }
+
+
+    public boolean isValid() {
+        return valid;
+    }
+
+
+    public boolean isPurpleAlien() {
+        return purpleAlien;
+    }
+
+
+    public boolean isBrownAlien() {
+        return brownAlien;
+    }
+
+
+    public ArrayList<Goods> getRewards(){
+        return Rewards;
+    }
+
+    public Goods getFromRewards(int i){
+        if (i > Rewards.size()) {
+            throw new InvalidInput("This position in the Rewards does not exist");
+        }
+        if (Rewards.isEmpty()) {
+            throw new InvalidInput("Rewards is empty");
+        }
+        return Rewards.remove(i);
+    }
+
+    public void AddGoodInBuffer(Goods good){
+        BufferGoods.add(good);
+    }
+
+    /**
+     * Method pullFromBufferGoods pull the good in position i of the BufferGoods.
+     *
+     * @param i of type int.
+     * @return the good in order to be added to the storageCompartment.
+     * @throws InvalidInput If the specified index is out of bounds or if the buffer is empty.
+     */
+    public Goods pullFromBufferGoods(int i) throws InvalidInput{
+        if (i > BufferGoods.size()) {
+            throw new InvalidInput("This position in the BufferGoods does not exist");
+        }
+        if (BufferGoods.isEmpty()) {
+            throw new InvalidInput("BufferGoods is empty");
+        }
+        return BufferGoods.remove(i);
     }
 
 

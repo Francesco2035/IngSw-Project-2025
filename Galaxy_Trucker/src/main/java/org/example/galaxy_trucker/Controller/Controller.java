@@ -15,7 +15,7 @@ public abstract class Controller {
 
     public void action(String json){
         try {
-            command = curPlayer.getPlayerState().PlayerAction(json, curPlayer, Optional.empty());
+            command = curPlayer.getPlayerState().PlayerAction(json, curPlayer);
         } catch (Exception e) {
             e.printStackTrace();
         }

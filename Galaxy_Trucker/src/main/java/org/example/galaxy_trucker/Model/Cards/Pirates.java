@@ -2,6 +2,10 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 //import org.example.galaxy_trucker.Model.InputHandlers.Accept;
+import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
+import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
@@ -24,6 +28,8 @@ public class Pirates extends Card{
     private int order;
     private Player currentPlayer;
     private int[] lines;
+    private double currentpower;
+    private int energyUsage;
 
     @JsonProperty("punishment")
     private ArrayList<Integer> Punishment;
@@ -44,6 +50,10 @@ public class Pirates extends Card{
             lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
         }
         this.hit = null;
+        this.currentpower = 0;
+        this.energyUsage = 0;
+        this.order = 0;
+
 
     }
  @Override
@@ -65,10 +75,9 @@ public class Pirates extends Card{
         if(this.order<PlayerList.size() && !this.defeated){
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
-
+            this.currentpower=0;
             this.currentPlayer.setState(new GiveAttack());
             //this.currentPlayer.setInputHandler(new Accept(this));
-
             this.order++;
         }
         else{
@@ -77,14 +86,49 @@ public class Pirates extends Card{
     }
 
     @Override
-    public void continueCard(double power) {
+    public void checkPower(double power, int numofDouble) {
+        if(numofDouble==0){
+            this.checkStrength();
+        }
+        else {
+            this.currentpower = power;
+            this.energyUsage = numofDouble;
+            this.currentPlayer.setState(new ConsumingEnergy());
+//
+        }
+    }
 
-        if(power>this.getRequirement()){
+    @Override
+    public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
+        if(coordinates.size()!=this.energyUsage){
+            currentPlayer.setState(new GiveAttack());
+            throw new WrongNumofEnergyExeption("wrong number of energy cells");
+        }
+        PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
+        Tile[][] tiles = CurrentPlanche.getPlayerBoard();
+        /// opero sulla copia
+        for(IntegerPair i:coordinates){
+            try {
+                CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),
+                        new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            }
+            catch (InvalidInput e){
+                currentPlayer.setState(new GiveAttack());
+                throw new WrongNumofEnergyExeption("wrong number of energy cells");
+            }
+        }
+        this.checkStrength();
+
+    }
+
+    public void checkStrength(){
+
+        if(this.currentpower>this.getRequirement()){
             this.defeated=true;
             this.currentPlayer.setState(new Accepting());
             //this.currentPlayer.setInputHandler(new Accept(this));
         }
-        else if (power<this.getRequirement()){
+        else if (this.currentpower<this.getRequirement()){
             this.continueCard();
         }
 
@@ -107,35 +151,50 @@ public class Pirates extends Card{
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
-                            currentPlayer.setState(new DefendingFromShots());
+                        if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
+                            currentPlayer.setState(new DefendingFromSmall());
+                        }
                         }
 
 
                     Movement++;
                 }
             }
-            if (Punishment.get(ShotsOrder) == 1) {//sopra
+            else if (Punishment.get(ShotsOrder) == 1) {//sopra
                 Movement = 0;
                 while (Movement < 10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
-                            currentPlayer.setState(new DefendingFromShots());
+                        if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
+                            currentPlayer.setState(new DefendingFromSmall());
+                        }
 
                     }
 
                     Movement++;
                 }
             }
-            if (Punishment.get(ShotsOrder) == 2) {// destra
+            else if (Punishment.get(ShotsOrder) == 2) {// destra
                 Movement = 9;
                 while (Movement >= 0 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder/2]);
-                            currentPlayer.setState(new DefendingFromShots());
+                        if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
+                            currentPlayer.setState(new DefendingFromSmall());
+                        }
 
                     }
                     Movement--;
@@ -148,7 +207,12 @@ public class Pirates extends Card{
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
-                            currentPlayer.setState(new DefendingFromShots());
+                        if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                        }
+                        else {//colpo piccolo
+                            currentPlayer.setState(new DefendingFromSmall());
+                        }
                         }
 
 
@@ -176,16 +240,18 @@ public class Pirates extends Card{
     }
 
     @Override
-    public void DefendFromShots(IntegerPair coordinates) {
+    public void DefendFromSmall(IntegerPair shieldcoord,IntegerPair energy){
         PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
-
-        if(coordinates !=null) {
-//            if (!(Punishment.get(ShotsOrder + 1) == 0 && (currentBoard.getTile(coordinates.getFirst(), coordinates.getSecond()).getComponent().getAbility(0).contains(Punishment.get(ShotsOrder))) || Punishment.get(ShotsOrder + 1) == 1)) {
-//                // non dovrei attivare lo scudo o lo scudo è sbagliato
-//            }
+        if (shieldcoord!=null){
+            if (Punishment.get(ShotsOrder + 1) == 0 && (currentBoard.getShield()[Punishment.get(ShotsOrder)]==0)){
+                throw new InvalidDefenceEceptiopn("this shield defends the wrong side");
+            }
+            else {
+                currentBoard.performAction(tiles[hit.getFirst()][hit.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new ConsumingEnergy());
+            }
         }
-        if(coordinates ==null) { // se sono entrambi nulli non mi son difeso quindi vengo colpito
+        else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
         }
         this.continueCard();

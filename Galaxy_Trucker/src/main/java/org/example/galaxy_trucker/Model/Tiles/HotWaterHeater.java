@@ -5,6 +5,8 @@ import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+import java.util.ArrayList;
+
 public class HotWaterHeater extends Component{
 
 
@@ -74,6 +76,13 @@ public class HotWaterHeater extends Component{
         else {
             return 0;
         }
+    }
+
+    @Override
+    public Component clone(){
+        HotWaterHeater clone = new HotWaterHeater();
+        clone.type = this.type;
+        return clone;
     }
 
 

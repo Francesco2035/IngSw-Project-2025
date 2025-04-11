@@ -9,7 +9,7 @@ import org.example.galaxy_trucker.Model.PlayerStatesss;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Storage extends Component{
+public abstract class Storage extends Component{
 
 
     ArrayList<Goods> goods;

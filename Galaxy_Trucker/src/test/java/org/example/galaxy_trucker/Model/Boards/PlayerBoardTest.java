@@ -163,6 +163,46 @@ public class PlayerBoardTest {
 
     }
 
+    @Test
+    @DisplayName("Test cloning")
+    @Order(4)
+    public void cloneTest(){
+        PlayerBoard clone = playerBoard.clone();
+
+        // Check: primitive & values
+        assertEquals(playerBoard.isBroken(), clone.isBroken());
+        assertEquals(playerBoard.getTotalValue(), clone.getTotalValue());
+        assertEquals(playerBoard.getDamage(), clone.getDamage());
+        assertEquals(playerBoard.getEnginePower(), clone.getEnginePower());
+        assertEquals(playerBoard.getPlasmaDrillsPower(), clone.getPlasmaDrillsPower());
+        assertEquals(playerBoard.getEnergy(), clone.getEnergy());
+        assertEquals(playerBoard.isPurpleAlien(), clone.isPurpleAlien());
+        assertEquals(playerBoard.isBrownAlien(), clone.isBrownAlien());
+        assertEquals(playerBoard.isValid(), clone.isValid());
+        assertEquals(playerBoard.getLv(), clone.getLv());
+
+        // Check: shield array (contents equal, reference different)
+        assertArrayEquals(playerBoard.getShield(), clone.getShield());
+        assertNotSame(playerBoard.getShield(), clone.getShield());
+
+        // Check: goods list
+        assertEquals(playerBoard.getBufferGoods(), clone.getBufferGoods());
+        assertNotSame(playerBoard.getBufferGoods(), clone.getBufferGoods());
+
+        // Check: Tile matrix
+        assertEquals(playerBoard.getPlayerBoard()[0][0].getComponent().getClass(), clone.getPlayerBoard()[0][0].getComponent().getClass());
+        assertNotSame(playerBoard.getPlayerBoard()[0][0], clone.getPlayerBoard()[0][0]);
+
+        // Check: ValidPlayerBoard
+        assertArrayEquals(playerBoard.getValidPlayerBoard()[0], clone.getValidPlayerBoard()[0]);
+        assertNotSame(playerBoard.getValidPlayerBoard(), clone.getValidPlayerBoard());
+
+        // Mutate clone and verify playerBoard is unchanged
+        clone.getShield()[0] = 99;
+        assertNotEquals(playerBoard.getShield()[0], clone.getShield()[0]);
+
+    }
+
 
 }
 

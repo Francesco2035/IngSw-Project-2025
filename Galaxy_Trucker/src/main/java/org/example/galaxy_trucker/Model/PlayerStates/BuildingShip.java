@@ -26,7 +26,7 @@ public class BuildingShip extends PlayerState {
     }
 
     @Override
-    public Command PlayerAction(String json, Player player, Optional<Card> card){
+    public Command PlayerAction(String json, Player player){
 //        switch (command){
 //            case "add": return new AddTileAction(tile,playerBoard,x,y);
 //            case "take":
