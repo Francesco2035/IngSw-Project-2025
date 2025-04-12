@@ -65,13 +65,19 @@ public class GameBoard {
      * @param NewPlayer reference to the newborn player
      */
     public void addPlayer(Player NewPlayer){
+        NewPlayer.setBoards(this);
         Player_IntegerPair NewPair = new Player_IntegerPair(NewPlayer, 0);
         this.players.add(NewPair);
-        NewPlayer.setState(new BuildingShip());
+//        NewPlayer.setState(new BuildingShip());
     }
 
-    public void StartHourglass() throws InterruptedException {
-        hourglass.StartTimer();
+    public void StartHourglass() {
+        if(hourglass.isStartable() && hourglass.getUsages() > 0){
+            hourglass.setLock();
+            Thread t1 = new Thread(hourglass);
+            t1.start();
+        }
+        else throw new RuntimeException("Cannot start hourglass");
     }
 
 
@@ -193,7 +199,7 @@ public class GameBoard {
         CurrentCard = CardStack.PickNewCard();
 
         for(Player_IntegerPair p : players){
-            p.getKey().setCard(CurrentCard);
+//            p.getKey().setCard(CurrentCard);
         }
 
         CurrentCard.CardEffect();
@@ -217,6 +223,7 @@ public class GameBoard {
     public TileSets getTilesSets(){return tileSets;}
     public CardStacks getCardStack(){return this.CardStack;}
 
+    public Hourglass getHourglass() {return hourglass;}
 
     public void abandonRace(Player loser){
 

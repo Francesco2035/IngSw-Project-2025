@@ -912,4 +912,8 @@ public class PlayerBoard {
     }
 
 
+    public void setBroken(boolean Broken){
+        this.broken = Broken;
+    }
+
 }

@@ -17,6 +17,6 @@ public class DefendFromSmallCommand implements Command {
 
     @Override
     public void execute() {
-        card.DefendFromSmall(batteryComp);
+//        card.DefendFromSmall(batteryComp);
     }
 }

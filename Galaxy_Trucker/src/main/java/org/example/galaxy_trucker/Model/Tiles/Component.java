@@ -8,6 +8,9 @@ import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+
+import java.io.Serializable;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
@@ -27,7 +30,7 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
         @JsonSubTypes.Type(value = SpaceVoid.class, name = "spaceVoid")
 })
 
-public abstract class Component {
+public abstract class Component implements Serializable {
 
 
     int type;

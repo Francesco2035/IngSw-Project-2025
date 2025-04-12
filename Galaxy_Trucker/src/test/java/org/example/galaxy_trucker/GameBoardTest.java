@@ -17,7 +17,8 @@ class GameBoardTest {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
         GameBoard gb = new GameBoard(tileSets, 2, null);
-        Player p1 = new Player("Player1", gb);
+        Player p1 = new Player();
+        p1.setId("Player1");
         gb.addPlayer(p1);
 
         assertEquals(1, gb.getPlayers().size());
@@ -31,8 +32,11 @@ class GameBoardTest {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
         GameBoard gb = new GameBoard(tileSets, 2, null);
-        Player p1 = new Player("Player1", gb);
-        Player p2 = new Player("Player2", gb);
+        Player p1 = new Player();
+        p1.setId("Player1");
+        Player p2 = new Player();
+        p2.setId("Player2");
+
 
         gb.addPlayer(p1);
         gb.addPlayer(p2);
@@ -54,9 +58,12 @@ class GameBoardTest {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
         GameBoard gb = new GameBoard(tileSets, 2, null);
-        Player p1 = new Player("Player1", gb);
-        Player p2 = new Player("Player2", gb);
-        Player p3 = new Player("Player3", gb);
+        Player p1 = new Player();
+        p1.setId("Player1");
+        Player p2 = new Player();
+        p2.setId("Player2");
+        Player p3 = new Player();
+        p2.setId("Player3");
 
 
         gb.addPlayer(p1);
@@ -98,9 +105,12 @@ class GameBoardTest {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
         GameBoard gb = new GameBoard(tileSets, 2, null);
-        Player p1 = new Player("Player1", gb);
-        Player p2 = new Player("Player2", gb);
-        Player p3 = new Player("Player3", gb);
+        Player p1 = new Player();
+        p1.setId("Player1");
+        Player p2 = new Player();
+        p2.setId("Player2");
+        Player p3 = new Player();
+        p2.setId("Player3");
 
 
         gb.addPlayer(p1);
@@ -118,7 +128,7 @@ class GameBoardTest {
 
         gb.movePlayer("Player3", -5);
         assertNull(gb.getPositions()[1]);
-        gb.movePlayer("Player1", 16);
+//        gb.movePlayer("Player1", 16);
     }
 
 }

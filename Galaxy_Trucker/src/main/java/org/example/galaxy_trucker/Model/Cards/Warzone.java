@@ -451,8 +451,19 @@ public class Warzone extends Card{
         }
         else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
+            if (!currentBoard.checkValidity()){
+                currentBoard.setBroken(false);
+                this.currentPlayer.setState(new HandleDestruction());
+                return;
+            }
         }
         this.continueCard();
+    }
+
+
+    @Override
+    public void keepGoing(){
+        continueCard();
     }
 
 

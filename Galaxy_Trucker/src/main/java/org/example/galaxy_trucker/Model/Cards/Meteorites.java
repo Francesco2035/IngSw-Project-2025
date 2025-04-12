@@ -7,11 +7,8 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
-import org.example.galaxy_trucker.Model.PlayerStates.ConsumingEnergy;
-import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromLarge;
+import org.example.galaxy_trucker.Model.PlayerStates.*;
 import org.example.galaxy_trucker.Model.Connectors.*;
-import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromSmall;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 
@@ -66,6 +63,12 @@ public class   Meteorites extends Card {
         else {
             this.finishCard();
         }
+    }
+
+
+    @Override
+    public void keepGoing(){
+        updateSates();
     }
 
     @Override
@@ -245,6 +248,12 @@ public class   Meteorites extends Card {
         }
         else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
+            if (!currentBoard.checkValidity()){
+                currentBoard.setBroken(false);
+                this.currentPlayer.setState(new HandleDestruction());
+                return;
+            }
+
         }
         this.updateSates();
     }
@@ -272,7 +281,11 @@ public class   Meteorites extends Card {
         }
         else  {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
-
+            if (!currentBoard.checkValidity()){
+                currentBoard.setBroken(false);
+                this.currentPlayer.setState(new HandleDestruction());
+                return;
+            }
         }
         this.updateSates();
     }

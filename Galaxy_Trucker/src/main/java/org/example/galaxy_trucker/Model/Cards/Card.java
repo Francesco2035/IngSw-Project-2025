@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 
 
 
-public class Card {
+public class Card implements Serializable {
     private int id;
     @JsonProperty("Level")
     private int Level;
@@ -75,6 +76,7 @@ public class Card {
     public void continueCard(){}
     public void killHumans(ArrayList<IntegerPair> coordinates) {}
     public void choosePlanet(int planet){}
+    public void keepGoing(){}
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {}
 
     public void ActivateCard(){

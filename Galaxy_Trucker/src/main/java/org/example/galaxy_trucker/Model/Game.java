@@ -6,10 +6,11 @@ import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Game {
+public class Game implements Serializable {
     private String GameID;
     private HashMap<String,Player> Players;
     private ArrayList<Player> PlayerList;
@@ -33,16 +34,16 @@ public class Game {
     }
 
 
-    public void NewPlayer(String ID)throws IllegalArgumentException, IndexOutOfBoundsException{
+    public void NewPlayer(Player newborn)throws IllegalArgumentException, IndexOutOfBoundsException{
         if(Players.size() >= 4)
             throw new IndexOutOfBoundsException("Game is full");
 
-        if (Players.containsKey(ID)){
+        if (Players.containsKey(newborn.GetID())){
             throw new IllegalArgumentException("Player already exists");
         }
-        Player newborn = new Player(ID, GameBoard);
+        newborn.setBoards(GameBoard);
         this.GameBoard.addPlayer(newborn);
-        Players.put(ID, newborn);
+        Players.put(newborn.GetID(), newborn);
         PlayerList.add(newborn);
 
     }
@@ -51,6 +52,7 @@ public class Game {
         Players.remove(DeadMan);
     }
 
+    public String getID(){return GameID;}
 
     public State getCurrentState(){
         return CurrentState;
@@ -72,5 +74,17 @@ public class Game {
     public GameBoard getGameBoard() {
         return GameBoard;
     }
+
+
+
+    public String getGameID() {
+        return GameID;
+    }
+
+    public void setGameID(String gameID) {
+        GameID = gameID;
+    }
+
+
 }
 
