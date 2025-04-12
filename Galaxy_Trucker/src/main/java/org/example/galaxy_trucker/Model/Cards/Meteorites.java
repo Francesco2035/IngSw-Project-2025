@@ -272,6 +272,7 @@ public class   Meteorites extends Card {
         }
         else  {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
+
         }
         this.updateSates();
     }

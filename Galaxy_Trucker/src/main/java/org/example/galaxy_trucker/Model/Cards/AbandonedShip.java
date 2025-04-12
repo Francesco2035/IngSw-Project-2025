@@ -116,8 +116,8 @@ public class AbandonedShip extends Card{
             catch (Exception e){
                 //devo rimanere allo stato di dare gli umani ezzz
                 System.out.println("non ce sta più ncazzoz di nessuno qui");
+                throw new WrongNumofHumansException("there was an error in killing humans");
 
-                return;
             }
             currentPlayer.IncreaseCredits(this.reward);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
