@@ -36,7 +36,7 @@ public class PlayerBoard {
     private ArrayList<Goods> BufferGoods;
 
     private ArrayList<HousingUnit> HousingUnits;
-
+    HashMap<Integer, ArrayList<IntegerPair>> shipSection;
 
     private ArrayList<HotWaterHeater> HotWaterHeaters;
     private ArrayList<PlasmaDrill> PlasmaDrills;
@@ -62,7 +62,6 @@ public class PlayerBoard {
 
 
         this.Rewards = new ArrayList<>();
-
 
 
         this.valid = true;
@@ -513,17 +512,16 @@ public class PlayerBoard {
     /**
      * Method chosePlayerBoard returns the selected chunk and calculates the actual damage suffered.
      *
-     * @param shipSection HashMap<Integer, ArrayList<IntegerPair>> - collection of chunks.
      * @param input of type IntegerPair - the chunk selected.
      */
-    public ArrayList<IntegerPair> choosePlayerBoard(HashMap<Integer, ArrayList<IntegerPair>> shipSection , IntegerPair input){
+    public ArrayList<IntegerPair> choosePlayerBoard(IntegerPair input){
         //questo metodo non ha molto senso
-        for (Integer i : shipSection.keySet()){
-            if (shipSection.get(i).contains(input)){
-                return shipSection.get(i);
+        for (Integer i : this.shipSection.keySet()){
+            if (this.shipSection.get(i).contains(input)){
+                return this.shipSection.get(i);
             }
         }
-        return null;
+        throw new InvalidInput("Invalid input: selected chunk doesn't exists!");
     }
 
 
@@ -636,19 +634,18 @@ public class PlayerBoard {
      *
      * @param x of type int - x coordinate of the destroyed Tile.
      * @param y of type int - y coordinate of the destroyed Tile.
-     * @return a collection of all possible chunks.
      */
-    public HashMap<Integer, ArrayList<IntegerPair>> handleAttack(int x, int y){
+    public void handleAttack(int x, int y){
 
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
         int i = 0;
-        HashMap<Integer, ArrayList<IntegerPair>> shipSection = new HashMap<>();
+        this.shipSection = new HashMap<>();
 
         if (ValidPlayerBoard[x-1][y] == 1){
 
             findPaths(x-1, y, visitedPositions);
 
-            shipSection.put(i, visitedPositions);
+            this.shipSection.put(i, visitedPositions);
             i++;
 
         }
@@ -658,7 +655,7 @@ public class PlayerBoard {
             findPaths(x, y-1, visitedPositions);
             if (!visitedPositions.contains(new IntegerPair(x,y-1))) {
 
-                shipSection.put(i, visitedPositions);
+                this.shipSection.put(i, visitedPositions);
                 i++;
             }
 
@@ -669,7 +666,7 @@ public class PlayerBoard {
             findPaths(x+1, y, visitedPositions);
             if (!visitedPositions.contains(new IntegerPair(x-1,y)) && !visitedPositions.contains(new IntegerPair(x,y -1))) {
 
-                shipSection.put(i, visitedPositions);
+                this.shipSection.put(i, visitedPositions);
                 i++;
             }
 
@@ -680,15 +677,14 @@ public class PlayerBoard {
             findPaths(x, y+1, visitedPositions);
             if (!visitedPositions.contains(new IntegerPair(x-1,y)) && !visitedPositions.contains(new IntegerPair(x,y -1)) && !visitedPositions.contains(new IntegerPair(x+1,y)) ) {
 
-                shipSection.put(i, visitedPositions);
-                i++;
+                this.shipSection.put(i, visitedPositions);
+
             }
 
         }
         if (shipSection.size() != 1){
             broken = true;
         }
-        return shipSection;
 
     }
 
@@ -912,8 +908,9 @@ public class PlayerBoard {
     }
 
 
-    public void setBroken(boolean Broken){
-        this.broken = Broken;
+    public boolean getBroken(){
+        return broken;
     }
+
 
 }

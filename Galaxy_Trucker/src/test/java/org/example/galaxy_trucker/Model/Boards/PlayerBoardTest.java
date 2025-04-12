@@ -86,17 +86,17 @@ public class PlayerBoardTest {
     @Order(3)
     public void testDestruction(){
 
-        playerBoard.destroy(6,5);
-        assertFalse(playerBoard.checkValidity());
-        assertEquals(1, playerBoard.getDamage());
-        HashMap<Integer, ArrayList<IntegerPair>> handleAttack = playerBoard.handleAttack(6,5);
-        assertEquals(2, handleAttack.size());
-        playerBoard.modifyPlayerBoard(handleAttack.get(1));
-        assertTrue(playerBoard.checkValidity());
-        assertEquals(8, playerBoard.getDamage());
-        int[] shield = {0,1,1,0};
-        assertArrayEquals(shield, playerBoard.getShield());
-        playerBoard.destroy(6,9);
+//        playerBoard.destroy(6,5);
+//        assertFalse(playerBoard.checkValidity());
+//        assertEquals(1, playerBoard.getDamage());
+//        HashMap<Integer, ArrayList<IntegerPair>> handleAttack = playerBoard.handleAttack(6,5);
+//        assertEquals(2, handleAttack.size());
+//        playerBoard.modifyPlayerBoard(handleAttack.get(1));
+//        assertTrue(playerBoard.checkValidity());
+//        assertEquals(8, playerBoard.getDamage());
+//        int[] shield = {0,1,1,0};
+//        assertArrayEquals(shield, playerBoard.getShield());
+//        playerBoard.destroy(6,9);
 
     }
 

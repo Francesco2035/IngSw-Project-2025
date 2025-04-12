@@ -7,6 +7,7 @@ import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Controller.Commands.Command;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 
 import java.io.IOException;
@@ -17,37 +18,22 @@ public class DefendingFromLarge extends PlayerState{
     @Override
     public Command PlayerAction(String json, Player player) {
 
-        ObjectMapper mapper = new ObjectMapper();
         IntegerPair plasmaDrill;
         IntegerPair batteryComp;
-
-        //DA FARE DOMANI 8 APRILE
-        try {
-            JsonNode root = mapper.readTree(json);
-
-            if (!root.has("title")) {
-                throw new InvalidInput("Title is missing in the JSON input");
-            }
-
-            String title = root.get("title").asText();
-            if (!"kill".equals(title)) {
-                throw new IllegalArgumentException("Unexpected action type: " + title);
-            }
-
-            JsonNode batteryNode = root.get("BatteryComp");
-            JsonNode plasmaDrillNode = root.get("plasmaDrill");
-
-            if (batteryNode == null || !batteryNode.has("x") || !batteryNode.has("y")
-            || plasmaDrillNode == null || !plasmaDrillNode.has("x") || !plasmaDrillNode.has("y")) {
-                throw new InvalidInput("Shield or BatteryCompo data missing or malformed.");
-            }
-
-            plasmaDrill = new IntegerPair(plasmaDrillNode.get("x").asInt(), plasmaDrillNode.get("y").asInt());
-            batteryComp = new IntegerPair(batteryNode.get("x").asInt(), batteryNode.get("y").asInt());
-
-        } catch (IOException e) {
-            throw new InvalidInput("Malformed JSON input");
+        JsonNode root = JsonHelper.parseJson(json);
+        String title = JsonHelper.getRequiredText(root, "title");
+        if (!"Defending From Large".equals(title)) {
+            throw new IllegalArgumentException("Unexpected action type: " + title);
         }
+        root = JsonHelper.getNode(root, "BatteryComp");
+        int x = JsonHelper.readInt(root, "x");
+        int y = JsonHelper.readInt(root, "y");
+        batteryComp = new IntegerPair(x, y);
+        root = JsonHelper.getNode(root, "plasmaDrill");
+        x = JsonHelper.readInt(root, "x");
+        y = JsonHelper.readInt(root, "y");
+        plasmaDrill = new IntegerPair(x, y);
+
         Card card = player.getCurrentCard();
         return new DefendFromLargeCommand(card,plasmaDrill,batteryComp);
 
