@@ -68,7 +68,7 @@ public class GameBoard {
         NewPlayer.setBoards(this);
         Player_IntegerPair NewPair = new Player_IntegerPair(NewPlayer, 0);
         this.players.add(NewPair);
-        NewPlayer.setState(new BuildingShip());
+//        NewPlayer.setState(new BuildingShip());
     }
 
     public void StartHourglass() {
@@ -199,7 +199,7 @@ public class GameBoard {
         CurrentCard = CardStack.PickNewCard();
 
         for(Player_IntegerPair p : players){
-            p.getKey().setCard(CurrentCard);
+//            p.getKey().setCard(CurrentCard);
         }
 
         CurrentCard.CardEffect();

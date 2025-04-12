@@ -8,6 +8,7 @@ import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+
 import java.io.Serializable;
 
 @JsonTypeInfo(

@@ -32,6 +32,12 @@ class GAGenTest {
 
         assertNotEquals(null, Tiles);
         assertNotEquals(null, Cards);
+
+
+        Tiles.get(99).RotateDx();
+        Tiles.get(99).RotateDx();
+        Tiles.get(99).RotateDx();
+        Tiles.get(99).RotateDx();
     }
 
 

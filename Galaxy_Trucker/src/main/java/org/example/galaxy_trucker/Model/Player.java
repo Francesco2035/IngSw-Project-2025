@@ -21,7 +21,6 @@ public class Player implements Serializable {
     private int credits;
     private Tile CurrentTile;   //the tile that Player has in his hand
     private PlayerState PlayerState;
-    //private InputHandler InputHandler;
     private ArrayList<Goods> GoodsToHandle;
     private Card CurrentCard;
 
@@ -189,11 +188,12 @@ public class Player implements Serializable {
      */
     public void EndConstruction(){
         CommonBoard.SetStartingPosition(this.ID);
-        this.setState(new FinishedBuilding());
+//        this.setState(new FinishedBuilding());
        }
 
-    public void SetReady(){
-        this.ready = true;
+
+    public void SetReady(boolean ready){
+        this.ready = ready;
     }
     public void setId(String id){this.ID = id;}
 

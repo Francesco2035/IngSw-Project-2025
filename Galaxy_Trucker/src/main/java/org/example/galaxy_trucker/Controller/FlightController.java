@@ -5,22 +5,23 @@ import org.example.galaxy_trucker.Model.State;
 
 import java.io.File;
 
-public class FlightController {
+public class FlightController extends Controller {
 
     //attributi privati letti dal json
 
-    Player curPlayer;
 
-    public FlightController(File json, State GameState, Player curPlayer) {
+//    public FlightController(File json, State GameState, Player curPlayer) {
+//        this.curPlayer = curPlayer;
+//    }
+
+
+    public FlightController(Player curPlayer) {
         this.curPlayer = curPlayer;
     }
 
-    public void action(){
+
+    @Override
+    public void nextState(GameHandler gh) {
 
     }
-
-
-
-
-
 }

@@ -21,7 +21,7 @@ public class CardStacks implements Serializable {
 
 
     public CardStacks(GAGen Gag, int lv) {
-        level = lv;
+        this.level = lv;
         this.GaG=Gag;
         this.HiddenCards = new ArrayList<>();
         this.FullAdventure = new ArrayList<>();
