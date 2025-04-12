@@ -75,14 +75,49 @@ class MeteoritesTest {
 
     }
 
-    @Test
+
+    @RepeatedTest(30)
     void cardEffect() {
+                attacks.clear();
+//        //0
+//        attacks.add(1);
+//        attacks.add(1);
+//        //1
+//        attacks.add(2);
+//        attacks.add(0);
+//        //2
+//        attacks.add(0);
+//        attacks.add(0);
+//        //3
+//        attacks.add(0);
+//        attacks.add(1);
+//        //4
+//        attacks.add(3);
+//        attacks.add(1);
+
+
+        //sx
         attacks.add(0);
         attacks.add(0);
         attacks.add(0);
         attacks.add(1);
-        attacks.add(3);
-        attacks.add(0);
+//        //sopr
+//        attacks.add(1);
+//        attacks.add(0);
+//        attacks.add(1);
+//        attacks.add(1);
+//        //dx
+//        attacks.add(2);
+//        attacks.add(0);
+//        attacks.add(2);
+//        attacks.add(1);
+////        //sott
+//        attacks.add(3);
+//        attacks.add(0);
+//        attacks.add(3);
+//        attacks.add(1);
+
+
         Meteorites meteoritesTest=new Meteorites(2,0,TGameBoard,attacks);
         meteoritesTest.CardEffect();
     }
@@ -101,6 +136,14 @@ class MeteoritesTest {
         attacks.add(3);
         attacks.add(0);
         Meteorites meteoritesTest=new Meteorites(2,0,TGameBoard,attacks);
+
+        Player current;
+        current= TGameBoard.getPlayers().get(0);
+
+        meteoritesTest.setHit(8,8);
+
+        meteoritesTest.DefendFromSmall(new IntegerPair(8,8));
+
 
 
 

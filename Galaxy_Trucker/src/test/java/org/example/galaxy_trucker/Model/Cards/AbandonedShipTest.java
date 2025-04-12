@@ -66,10 +66,16 @@ class AbandonedShipTest {
 
     @BeforeAll
     static void setup() {
+        Player p1 = new Player();
+        p1.setId("fGr");
+        Player p2 = new Player();
+        p2.setId("God");
+        Player p3 = new Player();
+        p3.setId("Sgregno");
 
-        TGame.NewPlayer("fGr");
-        TGame.NewPlayer("God");
-        TGame.NewPlayer("Sgregno");
+        TGame.NewPlayer(p1);
+        TGame.NewPlayer(p2);
+        TGame.NewPlayer(p3);
          Franci= GameBoard.getPlayers().get(0);
          Pietro= GameBoard.getPlayers().get(1);
          Passo= GameBoard.getPlayers().get(2);

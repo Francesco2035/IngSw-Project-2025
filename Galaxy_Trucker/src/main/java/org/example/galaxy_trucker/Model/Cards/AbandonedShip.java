@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 
@@ -116,7 +117,7 @@ public class AbandonedShip extends Card{
             catch (Exception e){
                 //devo rimanere allo stato di dare gli umani ezzz
                 System.out.println("non ce sta più ncazzoz di nessuno qui");
-                throw new WrongNumofHumansException("there was an error in killing humans");
+                throw new ImpossibleBoardChangeException("there was an error in killing humans");
 
             }
             currentPlayer.IncreaseCredits(this.reward);
