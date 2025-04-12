@@ -49,11 +49,14 @@ public class GameHandler {
             String gameID = root.get("gameID").asText();
             String playerID = root.get("playerID").asText();
             int lvl = root.get("lvl").asInt();
+            Player temp = new Player();
+            temp.setId(playerID);
 
             try {
-                gameList.CreateNewGame(gameID, playerID, lvl);
+                gameList.CreateNewGame(gameID, temp, lvl);
             } catch (IllegalArgumentException e) {
-                gameList.JoinGame(gameList.getGames().indexOf(gameList.getGames().stream().filter(g -> g.getGameID().equals(gameID)).findFirst().orElseThrow()), playerID);
+                gameList.JoinGame(gameList.getGames().get(gameList.getGames().indexOf(
+                        gameList.getGames().stream().filter(g -> g.getGameID().equals(gameID)).findFirst().orElseThrow())), temp);
             }
 
             ControllerMap.put(playerID, new LoginController(gameList.getGames().stream().filter(g -> g.getGameID().equals(gameID)).findFirst().orElseThrow()
