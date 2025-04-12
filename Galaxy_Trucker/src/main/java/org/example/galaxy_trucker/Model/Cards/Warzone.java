@@ -451,8 +451,8 @@ public class Warzone extends Card{
         }
         else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
-            if (!currentBoard.checkValidity()){
-                currentBoard.setBroken(false);
+            currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
+            if (currentBoard.getBroken()){
                 this.currentPlayer.setState(new HandleDestruction());
                 return;
             }

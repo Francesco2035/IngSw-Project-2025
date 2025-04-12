@@ -9,6 +9,7 @@ import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Controller.Commands.Command;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 
 import java.io.IOException;
@@ -20,42 +21,15 @@ import java.util.Set;
 public class GiveSpeed  extends PlayerState{
     @Override
     public Command PlayerAction(String json, Player player) {
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayList<IntegerPair> coordinates = new ArrayList<>();
-
-        try {
-            JsonNode root = mapper.readTree(json);
-
-            if (!root.has("title")) {
-                throw new InvalidInput("Title is missing in the JSON input");
-            }
-
-            String title = root.get("title").asText();
-            if (!"give_attack".equals(title)) {
-                throw new IllegalArgumentException("Unexpected action type: " + title);
-            }
-
-            JsonNode coordsArray = root.get("coordinates");
-            Set<IntegerPair> uniqueCoordinates = new HashSet<>();
-            for (JsonNode node : coordsArray) {
-                int x = node.get("x").asInt();
-                int y = node.get("y").asInt();
-                IntegerPair pair = new IntegerPair(x, y);
-
-                if (!uniqueCoordinates.add(pair)) {
-                    throw new InvalidInput("Duplicate coordinate found: (" + x + ", " + y + ")");
-                }
-
-                coordinates.add(pair);
-            }
-        } catch (IOException e) {
-            throw new InvalidInput("Malformed JSON input");
+        JsonNode root = JsonHelper.parseJson(json);
+        String title = JsonHelper.getRequiredText(root, "title");
+        if (!"give_speed".equals(title)) {
+            throw new IllegalArgumentException("Unexpected action type: " + title);
         }
-
-        System.out.println(coordinates);
+        ArrayList<IntegerPair> coordsArray =JsonHelper.readUniqueIntegerPairs(root, "coordinates");
 
         Card card = player.getCurrentCard();
-        return new GiveSpeedCommand(card, coordinates, player);
+        return new GiveSpeedCommand(card, coordsArray, player);
     }
 
     @Override
