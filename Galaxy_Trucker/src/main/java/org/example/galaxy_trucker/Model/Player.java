@@ -3,10 +3,8 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
-import org.example.galaxy_trucker.Model.PlayerStates.FinishedBuilding;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,6 +17,18 @@ public class Player implements Serializable {
     private String ID;
     private boolean ready;
     private int credits;
+
+    public Tile getCurrentTile() {
+        return CurrentTile;
+    }
+
+    public void setCurrentTile(Tile currentTile) {
+        if (currentTile != null) {
+            throw new IllegalStateException("Your hand is full!");
+        }
+        CurrentTile = currentTile;
+    }
+
     private Tile CurrentTile;   //the tile that Player has in his hand
     private PlayerState PlayerState;
     private ArrayList<Goods> GoodsToHandle;
@@ -93,24 +103,21 @@ public class Player implements Serializable {
 
     }
     
-    
-    /**
-     * get a new random tile from the covered tiles set
-     */
-    public void PickNewTile(){
-        CurrentTile = CommonBoard.getTilesSets().getNewTile();
-    }
 
-    /**
-     * select a new tile from the uncovered list
-     *
-     * @param index of the tile to pick
-     */
+
     public void PickNewTile(int index){
-        if (CurrentTile != null) {
-            throw new IllegalStateException("You can't pick a Tile, you have already one!");
+        if (index == -1){
+            if (CurrentTile != null) {
+                throw new IllegalStateException("You can't pick a Tile, you have already one!");
+            }
+            CurrentTile = CommonBoard.getTilesSets().getNewTile();
         }
-        CurrentTile = CommonBoard.getTilesSets().getNewTile(index);
+        else {
+            if (CurrentTile != null) {
+                throw new IllegalStateException("You can't pick a Tile, you have already one!");
+            }
+            CurrentTile = CommonBoard.getTilesSets().getNewTile(index);
+        }
     }
 
     /**

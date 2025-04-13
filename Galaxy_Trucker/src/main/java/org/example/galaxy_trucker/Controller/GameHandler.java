@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.GameLists;
+import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 
 import java.io.IOException;
@@ -84,16 +85,17 @@ public class GameHandler {
 
             Game curGame = gameList.getGames().get(gameList.getGames().indexOf(gameList.getGames().stream().filter(g -> g.getGameID().equals(root.get("gameID").asText())).findFirst().orElseThrow()));
             curGame.getPlayers().get(root.get("playerID").asText()).SetReady(readyState);
-
+            count = 0;
             for (Player player : curGame.getPlayers().values()) {
                 if(player.GetReady()) count++;
-//                else count--;
             }
+            System.out.println(count + "   "  +curGame.getPlayers().size() );
+
             if(count==curGame.getPlayers().size()) {
                 for (Controller controller : ControllerMap.values()) {
                     controller.nextState(this);
                 }
-                count = 0;
+
                 for (Player player : curGame.getPlayers().values()) {
                     player.SetReady(false);
                 }

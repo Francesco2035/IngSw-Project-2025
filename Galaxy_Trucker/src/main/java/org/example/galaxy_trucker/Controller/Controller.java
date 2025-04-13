@@ -17,7 +17,7 @@ public abstract class Controller {
     public void action(String json){
         try {
             command = curPlayer.getPlayerState().PlayerAction(json, curPlayer);
-            playerBoardCopy = curPlayer.getmyPlayerBoard();
+            playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -26,7 +26,8 @@ public abstract class Controller {
             command.execute();
         } catch (Exception e) {
             curPlayer.setMyPlance(playerBoardCopy);
-            throw new IllegalCallerException("illegal execution of command" + command.toString());
+            //throw new IllegalCallerException("illegal execution of command" + command.toString());
+            System.out.println(e);
         }
     }
 

@@ -644,7 +644,6 @@ public class PlayerBoard {
         if (ValidPlayerBoard[x-1][y] == 1){
 
             findPaths(x-1, y, visitedPositions);
-
             this.shipSection.put(i, visitedPositions);
             i++;
 
@@ -653,7 +652,7 @@ public class PlayerBoard {
         if (ValidPlayerBoard[x][y-1] == 1 ){
             visitedPositions = new ArrayList<>();
             findPaths(x, y-1, visitedPositions);
-            if (!visitedPositions.contains(new IntegerPair(x,y-1))) {
+            if (!visitedPositions.contains(new IntegerPair(x-1,y))) {
 
                 this.shipSection.put(i, visitedPositions);
                 i++;
@@ -910,6 +909,10 @@ public class PlayerBoard {
 
     public boolean getBroken(){
         return broken;
+    }
+
+    public boolean getValid(){
+        return valid;
     }
 
 
