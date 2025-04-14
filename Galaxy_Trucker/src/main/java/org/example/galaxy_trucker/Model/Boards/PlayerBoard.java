@@ -313,6 +313,9 @@ public class PlayerBoard {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
+        if (ValidPlayerBoard[x][y] != 0){
+            throw new InvalidInput(x,y, "Invalid input : invalid position, already occupied or spacevoid");
+        }
 
         this.PlayerBoard[x][y] = tile;
         tile.getComponent().insert(this,x,y);
@@ -644,7 +647,6 @@ public class PlayerBoard {
         if (ValidPlayerBoard[x-1][y] == 1){
 
             findPaths(x-1, y, visitedPositions);
-
             this.shipSection.put(i, visitedPositions);
             i++;
 
@@ -872,6 +874,10 @@ public class PlayerBoard {
     }
 
 
+    public void setRewards(ArrayList<Goods> rewards){
+        this.Rewards = rewards;
+    }
+
     public ArrayList<Goods> getRewards(){
         return Rewards;
     }
@@ -910,6 +916,10 @@ public class PlayerBoard {
 
     public boolean getBroken(){
         return broken;
+    }
+
+    public boolean getValid(){
+        return valid;
     }
 
 

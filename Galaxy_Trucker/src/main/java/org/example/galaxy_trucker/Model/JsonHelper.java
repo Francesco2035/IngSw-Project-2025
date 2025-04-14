@@ -37,6 +37,9 @@ public class JsonHelper {
                 pairs.add(new IntegerPair(x, y));
             }
         }
+        else{
+            throw new IllegalArgumentException("Missing or invalid coordinate field: " + fieldName);
+        }
         return pairs;
     }
 
@@ -49,6 +52,9 @@ public class JsonHelper {
                 int y = node.get("y").asInt();
                 pairSet.add(new IntegerPair(x, y));
             }
+        }
+        else{
+            throw new IllegalArgumentException("Missing or invalid coordinate field: " + fieldName);
         }
         return new ArrayList<>(pairSet);
     }

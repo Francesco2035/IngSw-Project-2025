@@ -37,6 +37,7 @@ public class HandleCargoCommand implements Command {
         switch (title) {
             case "GetFromRewards": {
                 playerBoard.AddGoodInBuffer(playerBoard.getFromRewards(position));
+                break;
             }
             case "PutInStorage":{
                 int x = coordinate.getFirst();
@@ -44,6 +45,8 @@ public class HandleCargoCommand implements Command {
                 temp = playerBoard.pullFromBufferGoods(position);
                 playerBoard.performAction(playerBoard.getTile(x, y).getComponent()
                 , new AddGoodAction(temp, playerBoard,x,y),player.getPlayerState());
+                break;
+
             }
             case "GetFromStorage": {
                 int x = coordinate.getFirst();
@@ -51,14 +54,16 @@ public class HandleCargoCommand implements Command {
                 GetGoodAction action = new GetGoodAction(position,playerBoard,x,y);
                 playerBoard.performAction(playerBoard.getTile(x, y).getComponent(),action,player.getPlayerState());
                 playerBoard.AddGoodInBuffer(action.getGood());
+                break;
+
             }
             case "Finish": {
                 playerBoard.getRewards().clear();
                 playerBoard.getBufferGoods().clear();
                 player.setState(new BaseState());
+                break;
+
             }
         }
-
-
     }
 }

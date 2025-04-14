@@ -2,22 +2,20 @@ package org.example.galaxy_trucker.Controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.GameLists;
 import org.example.galaxy_trucker.Model.JsonHelper;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+
 import java.io.*;
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class GameHandlerTest {
+public class TestBuilding {
 
-    @RepeatedTest(1)
-    public void testInitPlayer() throws Exception {
+    @Test
+    public void testBuilding(){
         String simulatedInput = "{\"title\":\"login\", \"gameID\":\"num1\", \"playerID\":\"paolo\", \"lvl\":2}";
         String simulatedInput2 = "{\"title\":\"login\", \"gameID\":\"num1\", \"playerID\":\"pietro\", \"lvl\":2}";
 
@@ -106,35 +104,8 @@ public class GameHandlerTest {
 
 
 
-        } finally {
-            System.setIn(originalIn);
-        }
-    }
-
-    @Test
-    @Disabled
-    void changeState() throws IOException {
-
-        String simulatedInput = "{\"title\":\"ready\", \"gameID\":\"num1\", \"playerID\":\"paolo\", \"readyState\":true}";
-        String simulatedInput2 = "{\"title\":\"login\", \"gameID\":\"num1\", \"playerID\":\"paolo\", \"lvl\":2}";
-        InputStream originalIn = System.in;
-
-        try {
-            System.setIn(new ByteArrayInputStream(simulatedInput2.getBytes()));
-            BufferedReader br2 = new BufferedReader(new InputStreamReader(System.in));
-
-            System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-            GameLists gl = new GameLists();
-            GameHandler gh = new GameHandler(gl);
-
-            gh.initPlayer(br2.readLine());
-            gh.changeState(br.readLine());
-
-
-            assertEquals(PrepController.class, gh.getControllerMap().get("paolo").getClass());
-
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } finally {
             System.setIn(originalIn);
         }

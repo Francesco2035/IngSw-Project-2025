@@ -24,12 +24,7 @@ public class Killing extends PlayerState {
         }
 
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
-        JsonNode coordsArray = JsonHelper.getNode(root, "coordinates");
-        for (JsonNode node : coordsArray) {
-            int x = JsonHelper.readInt(node, "x");
-            int y = JsonHelper.readInt(node, "y");
-            coordinates.add(new IntegerPair(x, y));
-        }
+        coordinates = JsonHelper.readIntegerPairs(root, "coordinates");
 
         Card card = player.getCurrentCard();
         return new KillCommand(card, coordinates);

@@ -2,14 +2,9 @@ package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
 
 public class PostPrepController extends Controller {
-
-
-//    public void DestroyTile(IntegerPair coords){
-//        CurrentPlayer.getmyPlayerBoard().destroy(coords.getFirst(),  coords.getSecond());
-//    }
-
 
     public PostPrepController(Player curPlayer) {
         this.curPlayer = curPlayer;
@@ -17,6 +12,9 @@ public class PostPrepController extends Controller {
 
     @Override
     public void nextState(GameHandler gh) {
-        gh.getControllerMap().put(curPlayer.GetID(), new FlightController(curPlayer));
+        if (curPlayer.getmyPlayerBoard().checkValidity()){
+            gh.getControllerMap().put(curPlayer.GetID(), new FlightController(curPlayer));
+        }
+        gh.getControllerMap().put(curPlayer.GetID(), new PostPrepController(curPlayer));
     }
 }
