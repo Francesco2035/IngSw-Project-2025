@@ -19,7 +19,7 @@ public class Hourglass implements Runnable {
 
     public Hourglass(int lv) {
         this.lv = lv;
-        time = 5;
+        time = 60000;
         startable = true;
         if(lv == 2) usages = 3;
         else usages = 2;
@@ -38,20 +38,21 @@ public class Hourglass implements Runnable {
 
         try {
             Thread.sleep(time);
+            usages--;
+
+            if(usages>0) {
+                startable = true;
+            }
+            else {
+                for (HourGlassListener listener : listeners){
+                    listener.onFinish();
+                }
+            }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        usages--;
 
-        if(usages>0) {
-            startable = true;
-        }
-        else {
-            for (HourGlassListener listener : listeners){
-                listener.onFinish();
-            }
-        }
 
     }
 

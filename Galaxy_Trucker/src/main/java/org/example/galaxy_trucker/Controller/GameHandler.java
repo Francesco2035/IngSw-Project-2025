@@ -71,12 +71,20 @@ public class GameHandler {
                 gameList.CreateNewGame(gameID, temp, lvl);
                 gameMap.put(gameID, new HashMap<>());
             } catch (IllegalArgumentException e) {
-                gameList.JoinGame(gameList.getGames().get(gameList.getGames().indexOf(
-                        gameList.getGames().stream().filter(g -> g.getGameID().equals(gameID)).findFirst().orElseThrow())), temp);
+                try{
+                    gameList.JoinGame(gameList.getGames().get(gameList.getGames().indexOf(
+                            gameList.getGames().stream().filter(g -> g.getGameID().equals(gameID)).findFirst().orElseThrow())), temp);
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
             }
-
-            gameMap.get(gameID).put(playerID, new LoginController(gameList.getGames().stream().filter(g -> g.getGameID().equals(gameID)).findFirst().orElseThrow()
-                    .getPlayers().values().stream().filter(p -> p.GetID().equals(playerID)).findFirst().orElseThrow(), gameID));
+            try {
+                gameMap.get(gameID).put(playerID, new LoginController(gameList.getGames().stream().filter(g -> g.getGameID().equals(gameID)).findFirst().orElseThrow()
+                        .getPlayers().values().stream().filter(p -> p.GetID().equals(playerID)).findFirst().orElseThrow(), gameID));
+            }
+            catch (Exception ex){
+                System.out.println(ex);
+            }
 
         } catch (IOException e) {
             throw new InvalidInput("Malformed JSON input");

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Model.Boards.Hourglass;
 import org.example.galaxy_trucker.Model.GameLists;
 import org.example.galaxy_trucker.Model.JsonHelper;
+import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
+import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
@@ -82,7 +84,7 @@ public class TestBuilding {
                 Iterator<JsonNode> elements = rootNode.elements();
 
                 Hourglass hourglass = gl.getGames().get(0).getGameBoard().getHourglass();
-                while (elements.hasNext() && hourglass.getUsages() != 0) {
+                do {
                     JsonNode commandNode = elements.next();
 
                     String title = JsonHelper.getRequiredText(commandNode, "title");
@@ -92,7 +94,7 @@ public class TestBuilding {
                     System.out.println(commandString);
 
                     gh.Receive(commandString);
-                }
+                }while (elements.hasNext() );
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -105,6 +107,8 @@ public class TestBuilding {
             System.setIn(originalIn);
         }
 
-        System.out.println("palu gay");
+        //si può testare solo con comandi sotto i 985 ms per il resto dovrebbe funzioanre
+        assertEquals(CheckValidity.class, gl.getGames().getFirst().getPlayers().get("paolo").getPlayerState().getClass());
+
     }
 }

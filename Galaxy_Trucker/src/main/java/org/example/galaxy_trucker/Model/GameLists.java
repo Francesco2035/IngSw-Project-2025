@@ -30,7 +30,8 @@ public class GameLists {
             Games.get(Games.indexOf(g)).NewPlayer(p);
         }
         catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            System.out.println(e);
         }
     }
 
