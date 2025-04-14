@@ -77,7 +77,7 @@ public class TestBuilding {
 
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                File file = new File("C:/Users/franc/Desktop/ing-sw-2025-Poggi-Paludetti-Passolunghi-Rausa/Galaxy_Trucker/src/main/resources/testJson/building_commands.json");
+                File file = new File("src/main/resources/testJson/Building/building_commands.json");
 
                 JsonNode rootNode = objectMapper.readTree(file);
 
