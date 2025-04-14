@@ -87,12 +87,13 @@ public class Pirates extends Card{
 
     @Override
     public void checkPower(double power, int numofDouble) {
+        this.currentpower = power;
+        this.energyUsage = numofDouble;
         if(numofDouble==0){
             this.checkStrength();
         }
         else {
-            this.currentpower = power;
-            this.energyUsage = numofDouble;
+
             this.currentPlayer.setState(new ConsumingEnergy());
 //
         }
@@ -131,6 +132,11 @@ public class Pirates extends Card{
         else if (this.currentpower<this.getRequirement()){
             this.continueCard();
         }
+        else {
+            this.currentPlayer.setState(new Waiting());
+            this.updateSates();
+        }
+
 
     }
 

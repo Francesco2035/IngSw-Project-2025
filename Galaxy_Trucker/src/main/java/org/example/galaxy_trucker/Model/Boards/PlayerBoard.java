@@ -653,7 +653,7 @@ public class PlayerBoard {
         if (ValidPlayerBoard[x][y-1] == 1 ){
             visitedPositions = new ArrayList<>();
             findPaths(x, y-1, visitedPositions);
-            if (!visitedPositions.contains(new IntegerPair(x,y-1))) {
+            if (!visitedPositions.contains(new IntegerPair(x-1,y))) {
 
                 this.shipSection.put(i, visitedPositions);
                 i++;

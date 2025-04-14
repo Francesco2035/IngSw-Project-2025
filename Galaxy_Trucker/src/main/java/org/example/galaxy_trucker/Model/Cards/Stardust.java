@@ -20,6 +20,7 @@ public class Stardust extends Card {
         int StarpowderMovement=0;
         while(Order>=0){
             CurrentPlanche =PlayerList.get(Order).getmyPlayerBoard();
+            System.out.println("numof exposed connectors of: "+PlayerList.get(Order).GetID()+" is: "+PlayerList.get(Order).getmyPlayerBoard().getExposedConnectors());
             StarpowderMovement=-CurrentPlanche.getExposedConnectors();
             Board.movePlayer(PlayerList.get(Order).GetID(), StarpowderMovement);
             Order--;

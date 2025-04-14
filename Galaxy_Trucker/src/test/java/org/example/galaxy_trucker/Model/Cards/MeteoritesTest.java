@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.HandleDestruction;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.*;
 
@@ -128,21 +129,33 @@ class MeteoritesTest {
 
     @Test
     void defendFromMeteorites() {
+        attacks.clear();
 
-        attacks.add(0);
-        attacks.add(0);
-        attacks.add(0);
+        attacks.add(1);
+        attacks.add(1);
+        attacks.add(1);
         attacks.add(1);
         attacks.add(3);
         attacks.add(0);
+
         Meteorites meteoritesTest=new Meteorites(2,0,TGameBoard,attacks);
+
+     //   meteoritesTest.setMeteoritesOrder(2);
+        System.out.println(meteoritesTest.getAttacks().get(meteoritesTest.getMeteoritesOrder()));
+
 
         Player current;
         current= TGameBoard.getPlayers().get(0);
 
+        meteoritesTest.setCurrentPlayer(current);
+
         meteoritesTest.setHit(8,8);
 
-        meteoritesTest.DefendFromSmall(new IntegerPair(8,8));
+        //assertEquals(2,current.getmyPlayerBoard().getTile(7,8).getComponent().getType());
+        meteoritesTest.DefendFromLarge(null,null);
+        assertEquals(HandleDestruction.class,current.getPlayerState().getClass());
+
+
 
 
 

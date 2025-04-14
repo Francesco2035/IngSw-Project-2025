@@ -4,6 +4,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
@@ -72,13 +73,13 @@ public class Smugglers extends Card{
 
     @Override
     public void checkPower(double power, int numofDouble) {
-//
+        this.currentpower = power;
+        this.energyUsage = numofDouble;
         if(numofDouble==0){
             this.checkStrength();
         }
         else {
-            this.currentpower = power;
-            this.energyUsage = numofDouble;
+
             this.currentPlayer.setState(new ConsumingEnergy());
 //
         }
@@ -89,17 +90,25 @@ public class Smugglers extends Card{
     }
 
 
+
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
         if(coordinates.size()!=this.energyUsage){
-            throw new WrongNumofEnergyExeption("wrong number of enrgy cells");
-            ///  devo fare si che in caso di errore torni alla give attack
+            currentPlayer.setState(new GiveAttack());
+            throw new WrongNumofEnergyExeption("wrong number of energy cells");
         }
         PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
         Tile[][] tiles = CurrentPlanche.getPlayerBoard();
         /// opero sulla copia
         for(IntegerPair i:coordinates){
-            CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            try {
+                CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),
+                        new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            }
+            catch (InvalidInput e){
+                currentPlayer.setState(new GiveAttack());
+                throw new WrongNumofEnergyExeption("wrong number of energy cells");
+            }
         }
         this.checkStrength();
 
@@ -118,6 +127,11 @@ public class Smugglers extends Card{
            ///manca il loseCargo
 
         }
+        else {
+            this.currentPlayer.setState(new Waiting());
+            this.updateSates();
+        }
+
     }
 
 
@@ -137,6 +151,17 @@ public class Smugglers extends Card{
 
         this.finishCard();
     }
+
+
+        @Override
+        public void finishCard() {
+            GameBoard Board = this.getBoard();
+            ArrayList<Player> PlayerList = Board.getPlayers();
+            for (int i = 0; i < PlayerList.size(); i++) {
+                PlayerList.get(i).setState(new BaseState());
+            }
+        }
+
 
 
     //json required
