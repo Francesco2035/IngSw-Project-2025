@@ -313,6 +313,9 @@ public class PlayerBoard {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
+        if (ValidPlayerBoard[x][y] != 0){
+            throw new InvalidInput(x,y, "Invalid input : invalid position, already occupied or spacevoid");
+        }
 
         this.PlayerBoard[x][y] = tile;
         tile.getComponent().insert(this,x,y);

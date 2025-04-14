@@ -43,6 +43,4 @@ public class BuildingShip extends PlayerState {
 
     }
 
-
-
 }
