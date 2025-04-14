@@ -53,6 +53,8 @@ class MeteoritesTest {
     }
     static Player Franci;
 
+    static Player pie;
+
     static PlayerBoard playerBoard1;
     static ArrayList<Integer> attacks =new ArrayList<>();
 
@@ -60,11 +62,17 @@ class MeteoritesTest {
     @BeforeAll
     static void setUp() {
         TGame.NewPlayer(new Player());
+        Player p2 = new Player();
+        p2.setId("pie");
+        TGame.NewPlayer(p2);
 
 
         Franci= TGameBoard.getPlayers().get(0);
 
         Franci.setId("fGr");
+
+        pie= TGameBoard.getPlayers().get(1);
+
 
         playerBoard1= TestSetupHelper.createInitializedBoard2();
         assertTrue(playerBoard1.checkValidity());
@@ -74,10 +82,14 @@ class MeteoritesTest {
         System.out.println("boh111");
         TestSetupHelper.HumansSetter2(Franci.getmyPlayerBoard());
 
+
+        Franci.EndConstruction();
+        pie.EndConstruction();
+
+
     }
 
-
-    @RepeatedTest(30)
+    @Test
     void cardEffect() {
                 attacks.clear();
 //        //0

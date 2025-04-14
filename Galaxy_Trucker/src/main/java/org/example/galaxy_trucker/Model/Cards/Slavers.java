@@ -171,7 +171,7 @@ public class Slavers extends Card{
             currentPlayer.IncreaseCredits(this.reward);
 
             //non ricordo se metto il time positivo o negativo nel json se positivo devo fare meno time;
-            this.getBoard().movePlayer(this.currentPlayer.GetID(), this.getTime());
+            this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
         }
 
         this.finishCard();

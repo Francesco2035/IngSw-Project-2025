@@ -323,7 +323,7 @@ public class Warzone extends Card{
 
 
     public void loseTime() {
-        this.getBoard().movePlayer(Worst.GetID(),this.PunishmentMovement);
+        this.getBoard().movePlayer(Worst.GetID(),-this.PunishmentMovement);
         return;
     }
 

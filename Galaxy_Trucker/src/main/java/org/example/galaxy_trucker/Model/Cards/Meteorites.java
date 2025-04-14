@@ -95,6 +95,7 @@ public class   Meteorites extends Card {
 
             PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard(); //prendo plancia
             int[][] MeteoritesValidPlanche = CurrentPlanche.getValidPlayerBoard();//prende matrice validita
+            System.out.println("attack number: "+this.MeteoritesOrder/2 +" on: "+currentPlayer.GetID());
             if (attacks.get(MeteoritesOrder) == 0) { //sinistra
                 System.out.println("SINISTRA");
                 Movement = 0;
@@ -308,9 +309,11 @@ public class   Meteorites extends Card {
         else  {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
             currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
+            System.out.println("destryoyed: "+hit.getFirst()+" "+hit.getSecond()+" of:"+currentPlayer.GetID());
             if (currentBoard.getBroken()){
                 this.currentPlayer.setState(new HandleDestruction());
                 return;
+
             }
         }
         this.updateSates();
