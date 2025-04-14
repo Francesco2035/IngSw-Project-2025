@@ -874,6 +874,10 @@ public class PlayerBoard {
     }
 
 
+    public void setRewards(ArrayList<Goods> rewards){
+        this.Rewards = rewards;
+    }
+
     public ArrayList<Goods> getRewards(){
         return Rewards;
     }
