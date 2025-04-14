@@ -38,6 +38,15 @@ public class BuildingShip extends PlayerState {
             case "Discard":{
                 return new InsertTileCommand(player,0,-1, -1, title,-1);
             }
+            case "Hourglass":{
+                return () -> {
+                    try {
+                        player.StartTimer();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                };
+            }
             default:throw new InvalidInput("Title is missing in the JSON input or invalid Command");
         }
 

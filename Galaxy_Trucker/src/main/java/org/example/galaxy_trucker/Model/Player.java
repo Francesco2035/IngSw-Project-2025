@@ -18,6 +18,10 @@ public class Player implements Serializable {
     private boolean ready;
     private int credits;
 
+    public GameBoard getCommonBoard() {
+        return CommonBoard;
+    }
+
     public Tile getCurrentTile() {
         return CurrentTile;
     }

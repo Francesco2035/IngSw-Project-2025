@@ -76,6 +76,7 @@ public class GameBoard {
             hourglass.setLock();
             Thread t1 = new Thread(hourglass);
             t1.start();
+
         }
         else throw new RuntimeException("Cannot start hourglass");
     }
@@ -199,7 +200,7 @@ public class GameBoard {
         CurrentCard = CardStack.PickNewCard();
 
         for(Player_IntegerPair p : players){
-//            p.getKey().setCard(CurrentCard);
+            p.getKey().setCard(CurrentCard);
         }
 
         CurrentCard.CardEffect();

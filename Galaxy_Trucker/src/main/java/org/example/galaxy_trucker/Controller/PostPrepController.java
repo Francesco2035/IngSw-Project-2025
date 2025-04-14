@@ -6,15 +6,16 @@ import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
 
 public class PostPrepController extends Controller {
 
-    public PostPrepController(Player curPlayer) {
+    public PostPrepController(Player curPlayer, String gameId) {
         this.curPlayer = curPlayer;
+        this.gameId = gameId;
     }
 
     @Override
     public void nextState(GameHandler gh) {
         if (curPlayer.getmyPlayerBoard().checkValidity()){
-            gh.getControllerMap().put(curPlayer.GetID(), new FlightController(curPlayer));
+            gh.setGameMap(gameId,curPlayer,new FlightController(curPlayer, gameId));
         }
-        gh.getControllerMap().put(curPlayer.GetID(), new PostPrepController(curPlayer));
+        gh.setGameMap(gameId,curPlayer,new PostPrepController(curPlayer, gameId));
     }
 }

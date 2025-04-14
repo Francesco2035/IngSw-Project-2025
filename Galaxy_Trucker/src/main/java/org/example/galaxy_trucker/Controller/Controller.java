@@ -12,9 +12,11 @@ public abstract class Controller {
 
     Command command;
     Player curPlayer;
+    String gameId;
     PlayerBoard playerBoardCopy;
 
-    public void action(String json){
+
+    public void action(String json, GameHandler gh){
         try {
             command = curPlayer.getPlayerState().PlayerAction(json, curPlayer);
             playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
@@ -24,11 +26,13 @@ public abstract class Controller {
 
         try {
             command.execute();
+            gh.changeState(gameId);
         } catch (Exception e) {
             curPlayer.setMyPlance(playerBoardCopy);
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
             System.out.println(e);
         }
+
     }
 
 

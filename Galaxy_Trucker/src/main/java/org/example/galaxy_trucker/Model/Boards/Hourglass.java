@@ -2,8 +2,10 @@ package org.example.galaxy_trucker.Model.Boards;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.example.galaxy_trucker.Controller.HourGlassListener;
 
 import java.lang.Thread;
+import java.util.ArrayList;
 
 public class Hourglass implements Runnable {
 
@@ -11,15 +13,21 @@ public class Hourglass implements Runnable {
     private int time;
     private int usages;
     private boolean startable;
+    private ArrayList<HourGlassListener> listeners;
 
     public Hourglass(){}
 
-    public  Hourglass(int lv) {
+    public Hourglass(int lv) {
         this.lv = lv;
-        time = 5000;
+        time = 5;
         startable = true;
         if(lv == 2) usages = 3;
         else usages = 2;
+        this.listeners = new ArrayList<>();
+    }
+
+    public void setListener(HourGlassListener listener){
+        listeners.add(listener);
     }
 
     @Override
@@ -38,6 +46,11 @@ public class Hourglass implements Runnable {
 
         if(usages>0) {
             startable = true;
+        }
+        else {
+            for (HourGlassListener listener : listeners){
+                listener.onFinish();
+            }
         }
 
     }

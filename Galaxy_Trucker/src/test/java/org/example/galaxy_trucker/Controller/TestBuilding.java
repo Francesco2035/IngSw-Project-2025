@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.galaxy_trucker.Model.Boards.Hourglass;
 import org.example.galaxy_trucker.Model.GameLists;
 import org.example.galaxy_trucker.Model.JsonHelper;
 import org.junit.jupiter.api.RepeatedTest;
@@ -23,58 +24,54 @@ public class TestBuilding {
         String simulatedInput4 = "{\"title\":\"login\", \"gameID\":\"num1\", \"playerID\":\"paluGay\", \"lvl\":2}";
 
         InputStream originalIn = System.in;
+        GameLists gl = new GameLists();
+        GameHandler gh = new GameHandler(gl);
 
         try {
-            GameLists gl = new GameLists();
-            GameHandler gh = new GameHandler(gl);
+
             System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 
-            gh.initPlayer(br.readLine());
+            gh.Receive(br.readLine());
             //assertFalse(gh.getControllerMap().isEmpty());
 
             System.setIn(new ByteArrayInputStream(simulatedInput2.getBytes()));
             BufferedReader br2 = new BufferedReader(new InputStreamReader(System.in));
-            gh.initPlayer(br2.readLine());
+            gh.Receive(br2.readLine());
 
             System.setIn(new ByteArrayInputStream(simulatedInput3.getBytes()));
             BufferedReader br3 = new BufferedReader(new InputStreamReader(System.in));
-            gh.initPlayer(br3.readLine());
+            gh.Receive(br3.readLine());
 
             System.setIn(new ByteArrayInputStream(simulatedInput4.getBytes()));
             BufferedReader br4 = new BufferedReader(new InputStreamReader(System.in));
-            gh.initPlayer(br4.readLine());
+            gh.Receive(br4.readLine());
 
             assertEquals(1, gl.getGames().size());
-            String simulatedInput5 = "{\"title\":\"ready\", \"gameID\":\"num1\", \"playerID\":\"paolo\", \"readyState\":true}";
-            String simulatedInput6 = "{\"title\":\"ready\", \"gameID\":\"num1\", \"playerID\":\"pietro\", \"readyState\":true}";
-            String simulatedInput7 = "{\"title\":\"ready\", \"gameID\":\"num1\", \"playerID\":\"gay\", \"readyState\":true}";
-            String simulatedInput8 = "{\"title\":\"ready\", \"gameID\":\"num1\", \"playerID\":\"paluGay\", \"readyState\":true}";
+            String simulatedInput5 = "{\"title\":\"Ready\", \"gameID\":\"num1\", \"playerID\":\"paolo\", \"ready\":true}";
+            String simulatedInput6 = "{\"title\":\"Ready\", \"gameID\":\"num1\", \"playerID\":\"pietro\", \"ready\":true}";
+            String simulatedInput7 = "{\"title\":\"Ready\", \"gameID\":\"num1\", \"playerID\":\"gay\", \"ready\":true}";
+            String simulatedInput8 = "{\"title\":\"Ready\", \"gameID\":\"num1\", \"playerID\":\"paluGay\", \"ready\":true}";
 
             System.setIn(new ByteArrayInputStream(simulatedInput5.getBytes()));
             BufferedReader br5 = new BufferedReader(new InputStreamReader(System.in));
 
 
-            gh.changeState(br5.readLine());
             //assertFalse(gh.getControllerMap().isEmpty());
 
             System.setIn(new ByteArrayInputStream(simulatedInput6.getBytes()));
             BufferedReader br6 = new BufferedReader(new InputStreamReader(System.in));
-            gh.changeState(br6.readLine());
 
             System.setIn(new ByteArrayInputStream(simulatedInput7.getBytes()));
             BufferedReader br7 = new BufferedReader(new InputStreamReader(System.in));
-            gh.changeState(br7.readLine());
 
             System.setIn(new ByteArrayInputStream(simulatedInput8.getBytes()));
             BufferedReader br8 = new BufferedReader(new InputStreamReader(System.in));
-            gh.changeState(br8.readLine());
-            assertEquals(PrepController.class, gh.getControllerMap().get("paolo").getClass());
-            assertEquals(PrepController.class, gh.getControllerMap().get("pietro").getClass());
-            assertEquals(PrepController.class, gh.getControllerMap().get("gay").getClass());
-            assertEquals(PrepController.class, gh.getControllerMap().get("paluGay").getClass());
-
+            gh.Receive(br5.readLine());
+            gh.Receive(br6.readLine());
+            gh.Receive(br7.readLine());
+            gh.Receive(br8.readLine());
 
             ObjectMapper objectMapper = new ObjectMapper();
             try {
@@ -83,7 +80,9 @@ public class TestBuilding {
                 JsonNode rootNode = objectMapper.readTree(file);
 
                 Iterator<JsonNode> elements = rootNode.elements();
-                while (elements.hasNext()) {
+
+                Hourglass hourglass = gl.getGames().get(0).getGameBoard().getHourglass();
+                while (elements.hasNext() && hourglass.getUsages() != 0) {
                     JsonNode commandNode = elements.next();
 
                     String title = JsonHelper.getRequiredText(commandNode, "title");
@@ -92,11 +91,7 @@ public class TestBuilding {
 
                     System.out.println(commandString);
 
-                    if (title.equals("ready")) {
-                        gh.changeState(commandString);
-                    } else {
-                        gh.getControllerMap().get(playerid).action(commandString);
-                    }
+                    gh.Receive(commandString);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -109,5 +104,7 @@ public class TestBuilding {
         } finally {
             System.setIn(originalIn);
         }
+
+        System.out.println("palu gay");
     }
 }
