@@ -16,13 +16,18 @@ public class Stardust extends Card {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         PlayerBoard CurrentPlanche;
-        int Order=PlayerList.size();
+        int Order=PlayerList.size()-1;
         int StarpowderMovement=0;
         while(Order>=0){
             CurrentPlanche =PlayerList.get(Order).getmyPlayerBoard();
             System.out.println("numof exposed connectors of: "+PlayerList.get(Order).GetID()+" is: "+PlayerList.get(Order).getmyPlayerBoard().getExposedConnectors());
             StarpowderMovement=-CurrentPlanche.getExposedConnectors();
-            Board.movePlayer(PlayerList.get(Order).GetID(), StarpowderMovement);
+            if(StarpowderMovement!=0) {
+                Board.movePlayer(PlayerList.get(Order).GetID(), StarpowderMovement);
+            }
+            else {
+                System.out.println("No exposed connectors found for "+PlayerList.get(Order).GetID());
+            }
             Order--;
         }
 

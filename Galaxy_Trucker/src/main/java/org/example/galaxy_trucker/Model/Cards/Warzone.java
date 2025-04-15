@@ -27,8 +27,8 @@ import java.util.ArrayList;
 
 //schiaccia contol shif alt freccetta su e giù per dulicare il curosre
 
-//ordine controlli: 1 cannoni,  2 umani, 3 movimento,
-//ordine punizioni: 1 movimento, 2 umani, 3 cargo, 4 spari
+///ordine controlli: 1 cannoni,  2 umani, 3 movimento,
+///ordine punizioni: 1 movimento, 2 umani, 3 cargo, 4 spari
 
 public class Warzone extends Card{
     @JsonProperty("RequirementOrder")
