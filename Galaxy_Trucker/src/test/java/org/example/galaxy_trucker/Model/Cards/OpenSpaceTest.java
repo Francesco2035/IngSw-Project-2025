@@ -1,12 +1,15 @@
 package org.example.galaxy_trucker.Model.Cards;
 
-import org.example.galaxy_trucker.Model.*;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-//import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
-
-import org.example.galaxy_trucker.Model.Connectors.*;
+import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
+import org.example.galaxy_trucker.Model.GAGen;
+import org.example.galaxy_trucker.Model.Game;
+import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
+import org.example.galaxy_trucker.Model.PlayerStates.ConsumingEnergy;
+import org.example.galaxy_trucker.Model.PlayerStates.GiveSpeed;
 import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
@@ -16,14 +19,14 @@ import org.junit.jupiter.api.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
-//test is pretty through
-//it's just missing a test on the positioning on the players because i don't know how to check it
 
-class AbandonedShipTest {
+class OpenSpaceTest {
+
 
     static Game TGame;
 
@@ -61,8 +64,7 @@ class AbandonedShipTest {
 
 
 
-    static  AbandonedShip FakeAbandonedShip=new AbandonedShip(3,5,2,5, GameBoard);
-
+    static  OpenSpace card= new OpenSpace(2, GameBoard);
 
     @BeforeAll
     static void setup() {
@@ -76,9 +78,9 @@ class AbandonedShipTest {
         TGame.NewPlayer(p1);
         TGame.NewPlayer(p2);
         TGame.NewPlayer(p3);
-         Franci= GameBoard.getPlayers().get(0);
-         Pietro= GameBoard.getPlayers().get(1);
-         Passo= GameBoard.getPlayers().get(2);
+        Franci= GameBoard.getPlayers().get(0);
+        Pietro= GameBoard.getPlayers().get(1);
+        Passo= GameBoard.getPlayers().get(2);
         playerBoard1=Pietro.getmyPlayerBoard();
         playerBoard2=Franci.getmyPlayerBoard();
         playerBoard3= TestSetupHelper.createInitializedBoard1();
@@ -116,60 +118,42 @@ class AbandonedShipTest {
 
     }
 
-    @Test
-    @Order(1)
-    void cardEffect() {
-
-        FakeAbandonedShip.CardEffect();
-        assertTrue(GameBoard.getPlayers().size()==3);
-       Franci= GameBoard.getPlayers().get(2);
-       Pietro= GameBoard.getPlayers().get(1);
-        assertEquals(Franci.GetID(),"fGr");
-        assertEquals(Pietro.GetID(),"God");
-
-        assertEquals(FakeAbandonedShip.getCurrentPlayer().GetID(),"Sgregno");
-        System.out.println("controllo num");
-        assertEquals(8,FakeAbandonedShip.getTotHumans());
-        System.out.println("fine controllo");
-
-        //assertEquals(Franci.getPlayerState(), new Waiting());
-        //assertEquals(Passo.getPlayerState(), PlayerStatesss.AcceptKilling);
-       // assertEquals(Pietro.getPlayerState(), PlayerStatesss.Waiting);
-
-    }
-
 
     @Test
-    @Order(3)
-    void activateCard() {
-        Pietro=GameBoard.getPlayers().get(1);
-        System.out.println(Passo.GetID()+"state"+Passo.getPlayerState());
+    void movimenti(){
 
-                ArrayList<IntegerPair> coords= new ArrayList<>();
-        IntegerPair c1= new IntegerPair(6,6);
-        IntegerPair c2= new IntegerPair(6,6);
-        IntegerPair c3= new IntegerPair(4,5);
-        coords.add(c1);
-        coords.add(c2);
-        coords.add(c3);
+        System.out.println("inizio test");
+        card.CardEffect();
+        assertEquals(new Waiting().getClass(),Pietro.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Franci.getPlayerState().getClass());
+        assertEquals(new GiveSpeed().getClass(),Passo.getPlayerState().getClass());
+        assertEquals(card.getCurrentPlayer(),Passo);
 
+        card.checkMovement(10,1);
+        assertEquals(new ConsumingEnergy().getClass(),Passo.getPlayerState().getClass());
+        ArrayList<IntegerPair> energy= new ArrayList<>();
+        energy.add(new IntegerPair(6,9));
+        card.consumeEnergy(energy);
+        //assertEquals(new ConsumingEnergy().getClass(),Passo.getPlayerState().getClass());
+        assertEquals(new GiveSpeed().getClass(),Pietro.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Franci.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Passo.getPlayerState().getClass());
+        assertEquals(card.getCurrentPlayer(),Pietro);
+        card.checkMovement(14,0);
 
-        FakeAbandonedShip.killHumans(coords);
-//        handler=(AcceptKilling) Pietro.getInputHandler();
-//        handler.setInput(coords,false);
-//        Pietro.execute();
+        assertEquals(new Waiting().getClass(),Pietro.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Passo.getPlayerState().getClass());
+        assertEquals(new GiveSpeed().getClass(),Franci.getPlayerState().getClass());
+        assertEquals(card.getCurrentPlayer(),Franci);
 
-        assertEquals(BaseState.class,Passo.getPlayerState().getClass());
-System.out.println(Passo.GetID()+"state"+Passo.getPlayerState());
+        card.checkMovement(2,0);
+//        energy.add(new IntegerPair(6,6));
+//        card.consumeEnergy(energy);
+        assertEquals(new BaseState().getClass(),Pietro.getPlayerState().getClass());
+        assertEquals(new BaseState().getClass(),Passo.getPlayerState().getClass());
+        assertEquals(new BaseState().getClass(),Franci.getPlayerState().getClass());
 
 
     }
 
-    @Test
-    void finishCard() {
-    }
-
-    @Test
-    void continueCard() {
-    }
 }

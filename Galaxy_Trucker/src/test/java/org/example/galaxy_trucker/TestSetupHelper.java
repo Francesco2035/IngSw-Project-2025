@@ -111,6 +111,9 @@ public class TestSetupHelper {
     }
 
     public static PlayerBoard createInitializedBoard2(){
+        /// crea la 39 e 48 ad hoc perché le usa gia la uno e ovviamente crea problemi popolarle entrambe
+
+
         ArrayList<Tile> tiles = gag.getTilesDeck();
         Tile t1 = tiles.get(39); //House:   double,single,double,none
         Tile t2 = tiles.get(35); //House: singe,double,none,none
@@ -132,10 +135,10 @@ public class TestSetupHelper {
         playerBoard2.insertTile(t1,5,6);
         playerBoard2.insertTile(t7,6,7);
         playerBoard2.insertTile(t2,7,7);
-        playerBoard2.insertTile(t5,7,8);
+        playerBoard2.insertTile(t5,7,8); // cannon looking right tipo 2
         playerBoard2.insertTile(t6,6,5);
         playerBoard2.insertTile(t3,5,5);
-        playerBoard2.insertTile(t4,4,5);
+        playerBoard2.insertTile(t4,4,5); // cannon looking up tipo1
         playerBoard2.insertTile(t8,8,8);
         return playerBoard2;
 

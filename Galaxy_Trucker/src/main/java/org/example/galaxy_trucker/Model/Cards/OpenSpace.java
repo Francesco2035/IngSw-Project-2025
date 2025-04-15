@@ -1,16 +1,14 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
-import org.example.galaxy_trucker.Model.PlayerStates.ConsumingEnergy;
-import org.example.galaxy_trucker.Model.PlayerStates.GiveSpeed;
+import org.example.galaxy_trucker.Model.PlayerStates.*;
 
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ public class OpenSpace extends Card{
 
         super(level, 0 ,board);
         this.order = 0;
-        this.currentPlayer = null;
+        this.currentPlayer = new Player();
         this.energyUsage = 0;
         this.currentmovement = 0;
     }
@@ -46,6 +44,7 @@ public class OpenSpace extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         currentmovement=0;
         if(this.order<PlayerList.size()){
+            currentPlayer.setState(new Waiting());
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
@@ -72,25 +71,35 @@ public class OpenSpace extends Card{
     public void checkMovement(int enginePower, int numofDouble) {
             this.currentmovement=enginePower;
             this.energyUsage=numofDouble;
+            if(this.energyUsage==0){
+                this.moveplayer();
+            }
+            else{
+                this.currentPlayer.setState(new ConsumingEnergy());
+            }
 
-
-      getBoard().movePlayer(currentPlayer.GetID(),enginePower);
-        this.currentPlayer.setState(new Waiting());
-        this.updateSates();
     }
 
 
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
         if(coordinates.size()!=this.energyUsage){
+            currentPlayer.setState(new GiveSpeed());
             throw new WrongNumofEnergyExeption("wrong number of enrgy cells");
-            ///  devo fare si che in caso di errore torni alla give attack
+            ///  devo fare si che in caso di errore torni alla movement
         }
         PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
         Tile[][] tiles = CurrentPlanche.getPlayerBoard();
         /// opero sulla copia
         for(IntegerPair i:coordinates){
-            CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            try {
+                CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),
+                        new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            }
+            catch (InvalidInput e){
+                currentPlayer.setState(new GiveSpeed());
+                throw new WrongNumofEnergyExeption("there was no energy to use in:"+i.getFirst()+" "+i.getSecond());
+            }
         }
         this.moveplayer();
     }
@@ -101,6 +110,9 @@ public class OpenSpace extends Card{
     }
 
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 
     //json required
     public OpenSpace() {}
