@@ -33,7 +33,7 @@ public class   Meteorites extends Card {
         super(level, 0, board);
 
         this.attacks = attacks;
-        this.currentPlayer = null;
+        this.currentPlayer = new Player();
         this.flag = false;
         this.PlayerOrder = 0;
         this.MeteoritesOrder = 0;
@@ -47,6 +47,10 @@ public class   Meteorites extends Card {
     //o gestisce la cosa e poi nel caso di hit chiama solo la posizione coplita se accade ed è indifesa
     @Override
     public void CardEffect() {
+
+        for (Player p: this.getBoard().getPlayers()) {
+            p.setState(new Waiting());
+        }
 
         System.out.println("SIZE OF ATTACK:"+attacks.size());
 
@@ -91,6 +95,7 @@ public class   Meteorites extends Card {
             this.CardEffect();
         }
         else {
+            currentPlayer.setState(new Waiting());
             this.currentPlayer = this.getBoard().getPlayers().get(PlayerOrder);
 
             PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard(); //prendo plancia

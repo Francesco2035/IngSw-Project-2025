@@ -121,6 +121,10 @@ class PiratesTest {
 
     }
 
+
+    // se fai prima victory si rompe tutto perché passo perde tempo e il primo diventa pietro ma non è un malfunzionamento della carta
+
+
    @RepeatedTest(1000)
     void cardEffect() {
         ArrayList<Integer> attacks=new ArrayList<>();
@@ -141,6 +145,7 @@ class PiratesTest {
         assertEquals(new Waiting().getClass(),Franci.getPlayerState().getClass());
         assertEquals(new GiveAttack().getClass(),Passo.getPlayerState().getClass());
         assertEquals(carta.getCurrentPlayer(),Passo);
+        System.out.println("successo iniziale");
 
         carta.checkPower(3,0);
        // assertEquals(new ConsumingEnergy().getClass(),Passo.getPlayerState().getClass()); //passo ha power center in 5,4 e 6,9
@@ -225,5 +230,5 @@ class PiratesTest {
         assertEquals(new BaseState().getClass(),Passo.getPlayerState().getClass());
 
 
-    }
+        }
 }

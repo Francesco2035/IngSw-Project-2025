@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.ChoosingPlanet;
+import org.example.galaxy_trucker.Model.PlayerStates.HandleCargo;
 import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class SolarSystem extends Card {
         super(lv, time,board);
         this.planets = planets;
         this.order = 0;
-        this.currentPlayer = null;
+        this.currentPlayer = new Player();
         this.done = 0;
     }
 
@@ -42,6 +43,7 @@ public class SolarSystem extends Card {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.order<PlayerList.size()){
+            currentPlayer.setState(new Waiting());
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
@@ -54,7 +56,9 @@ public class SolarSystem extends Card {
             for(Planet p: this.planets){
                 if(p.isOccupied()){
                     this.getBoard().movePlayer(p.getOccupied().GetID(), -this.getTime());
-                    p.getOccupied().handleCargo(p.getGoods());
+
+                    p.getOccupied().setState(new HandleCargo());
+                    p.getOccupied().getmyPlayerBoard().setRewards(p.getGoods());
                 }
             }
         }
@@ -100,8 +104,9 @@ public class SolarSystem extends Card {
         }
     }
 
-
-
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 
     //json required
     public SolarSystem() {}

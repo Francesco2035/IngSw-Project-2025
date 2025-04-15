@@ -33,7 +33,7 @@ public class Slavers extends Card{
         this.reward = Reward;
         this.Punishment = Punsihment;
         this.defeated = false;
-        this.currentPlayer=null;
+        this.currentPlayer=new Player();
         this.order=0;
         this.currentpower=0;
         this.energyUsage=0;
@@ -57,6 +57,7 @@ public class Slavers extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.order<PlayerList.size() && !this.defeated){
+            currentPlayer.setState(new Waiting());
             currentPlayer = PlayerList.get(this.order);
             this.currentpower=0;
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();

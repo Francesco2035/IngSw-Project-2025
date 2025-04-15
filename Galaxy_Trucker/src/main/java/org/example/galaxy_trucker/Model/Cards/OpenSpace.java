@@ -23,7 +23,7 @@ public class OpenSpace extends Card{
 
         super(level, 0 ,board);
         this.order = 0;
-        this.currentPlayer = null;
+        this.currentPlayer = new Player();
         this.energyUsage = 0;
         this.currentmovement = 0;
     }
@@ -44,6 +44,7 @@ public class OpenSpace extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         currentmovement=0;
         if(this.order<PlayerList.size()){
+            currentPlayer.setState(new Waiting());
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 

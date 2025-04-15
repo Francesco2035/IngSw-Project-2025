@@ -30,7 +30,7 @@ public class AbandonedShip extends Card{
         super(level, time, board);
         this.requirement = requirement;
         this.reward = reward;
-        this.currentPlayer = null;
+        this.currentPlayer = new Player();
         this.flag = false;
         this.order = 0;
         totHumans=0;
@@ -48,6 +48,7 @@ public class AbandonedShip extends Card{
     }
     @Override
     public void updateSates(){
+
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         while(this.order<=PlayerList.size()&& !this.flag) {
@@ -55,6 +56,7 @@ public class AbandonedShip extends Card{
                 this.finishCard();
                 break;
             }
+            currentPlayer.setState(new Waiting());
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             System.out.println("Cchecking:"+currentPlayer.GetID());

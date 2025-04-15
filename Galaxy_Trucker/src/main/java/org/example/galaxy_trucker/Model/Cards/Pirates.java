@@ -45,7 +45,7 @@ public class Pirates extends Card{
         this.ShotsLine = 0;
 
         this.defeated = false;
-        this.currentPlayer = null;
+        this.currentPlayer = new Player();
         this.lines = new int[Punsihment.size()/2];
         for(int i=0;i< Punishment.size()/2;i++){
             lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
@@ -75,7 +75,9 @@ public class Pirates extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         System.out.println("player number "+this.order);
         if(this.order<PlayerList.size() && !this.defeated){
+            currentPlayer.setState(new  Waiting());
             currentPlayer = PlayerList.get(this.order);
+            System.out.println("current is:"+currentPlayer.GetID());
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             this.currentpower=0;
             this.currentPlayer.setState(new GiveAttack());
