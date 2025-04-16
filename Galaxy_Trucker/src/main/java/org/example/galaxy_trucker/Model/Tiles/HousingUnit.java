@@ -3,7 +3,6 @@ package org.example.galaxy_trucker.Model.Tiles;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
-import org.example.galaxy_trucker.Model.PlayerStatesss;
 
 public abstract class HousingUnit extends Component{
 

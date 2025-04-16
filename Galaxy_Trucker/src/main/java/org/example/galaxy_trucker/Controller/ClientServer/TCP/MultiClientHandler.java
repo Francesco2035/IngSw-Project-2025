@@ -1,6 +1,8 @@
 package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
+import org.example.galaxy_trucker.Controller.GameHandler;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,9 +18,11 @@ import java.net.Socket;
 public class MultiClientHandler implements Runnable {
 
     private Socket clientSocket;
+    private GameHandler gameHandler;
 
-    public MultiClientHandler(Socket clientSocket) {
+    public MultiClientHandler(Socket clientSocket, GameHandler gameHandler) {
         this.clientSocket = clientSocket;
+        this.gameHandler = gameHandler;
     }
 
     @Override
@@ -47,9 +51,14 @@ public class MultiClientHandler implements Runnable {
 
 
 //        try {
-//            ClientId = in.readLine();
-//                System.out.println(ClientId + " Joined");
-//                out.println("Hello "+ ClientId);
+////            ClientId = in.readLine();
+////              System.out.println(ClientId + " Joined");
+////            out.println("Hello "+ ClientId);
+//
+//            assert in != null;
+//            s = in.readLine();
+//            gameHandler.Receive(s);
+//
 //
 //        } catch (IOException e) {
 //            e.printStackTrace();
@@ -58,9 +67,10 @@ public class MultiClientHandler implements Runnable {
 
 
         try {
-            while ((s = in.readLine()) != null) {
+            while (true) { //(s = in.readLine()) != null
                 System.out.println(s);
-                out.println(s);
+                s = in.readLine();
+                gameHandler.Receive(s);
             }
         } catch (IOException e) {
             e.printStackTrace();
