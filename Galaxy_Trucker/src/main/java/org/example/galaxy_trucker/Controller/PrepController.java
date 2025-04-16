@@ -12,6 +12,7 @@ public class PrepController extends Controller implements HourGlassListener {
         curPlayer = currentPlayer;
         this.gameId = gameId;
         this.gh = gh;
+        System.out.println("Prep Controller " + gameId + " - " + curPlayer);
     }
 
     @Override

@@ -1,19 +1,16 @@
 package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
-import org.example.galaxy_trucker.Controller.ClientServer.Settings;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.Controller.GameHandler;
-
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
-
 
 public class MultiClientHandler implements Runnable {
 
@@ -31,9 +28,6 @@ public class MultiClientHandler implements Runnable {
     }
 
     private void clientLoop() {
-        
-        //String ClientId = "";
-        
         BufferedReader in = null;
         PrintWriter out = null;
         try {
@@ -41,40 +35,25 @@ public class MultiClientHandler implements Runnable {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
 
-        // waits for data and reads it in until connection dies
-        // readLine() blocks until the server receives
-        // a new line from client
-
-        String s = "";
-
-
-//        try {
-////            ClientId = in.readLine();
-////              System.out.println(ClientId + " Joined");
-////            out.println("Hello "+ ClientId);
-//
-//            assert in != null;
-//            s = in.readLine();
-//            gameHandler.Receive(s);
-//
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-
+        String s;
 
         try {
-            while (true) { //(s = in.readLine()) != null
-                System.out.println(s);
-                s = in.readLine();
-                gameHandler.Receive(s);
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            while ((s = in.readLine()) != null) {
+                System.out.println("Received: " + s);
+
+                Command command = objectMapper.readValue(s, Command.class);
+
+                System.out.println("Deserialized command: " + command.getTitle());
+                gameHandler.receive(command);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
 }

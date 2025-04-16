@@ -1,31 +1,36 @@
-package org.example.galaxy_trucker.Controller.Commands;
+package org.example.galaxy_trucker.Commands;
 
 import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class AddCrewCommand implements Command {
+public class AddCrewCommand extends Command {
 
     int numHumans;
     boolean purpleAlien;
     boolean brownAlien;
-    Player player;
     IntegerPair coordinate;
 
-    public AddCrewCommand(int numHumans, boolean purpleAlien, boolean brownAlien, Player player, IntegerPair coordinate) {
+    public AddCrewCommand(int numHumans, boolean purpleAlien, boolean brownAlien, IntegerPair coordinate, String gameId, String playerId, int lv, String title) {
+        super(gameId, playerId, lv, title);
         this.numHumans = numHumans;
         this.purpleAlien = purpleAlien;
         this.brownAlien = brownAlien;
-        this.player = player;
         this.coordinate = coordinate;
     }
 
     @Override
-    public void execute() {
+    public void execute(Player player) {
         PlayerBoard playerBoard = player.getmyPlayerBoard();
         AddCrewAction action = new AddCrewAction(numHumans,purpleAlien,brownAlien, playerBoard);
         playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),action, player.getPlayerState());
+    }
+
+    @Override
+    public boolean allowedIn(PlayerState playerState) {
+        return playerState.allows(this);
     }
 
 }

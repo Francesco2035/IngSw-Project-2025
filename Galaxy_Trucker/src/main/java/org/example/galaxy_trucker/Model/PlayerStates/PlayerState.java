@@ -1,13 +1,74 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
-import org.example.galaxy_trucker.Controller.Commands.Command;
+import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.Model.Boards.Actions.*;
-import org.example.galaxy_trucker.Model.Cards.Card;
-import org.example.galaxy_trucker.Model.Player;
-
-import java.util.Optional;
 
 public abstract class PlayerState {
-    public abstract Command PlayerAction(String json, Player player);
+
+
+    public boolean allows(Command command) {
+        System.out.println("allows di def");
+        return false;
+    }
+
+    public boolean allows(AcceptCommand command) {
+        return false;
+    }
+
+    public boolean allows(AddCrewCommand command) {
+        return false;
+    }
+
+    public boolean allows(ChoosingPlanetsCommand command) {
+        return false;
+    }
+
+    public boolean allows(ConsumeEnergyCommand command) {
+        return false;
+    }
+
+    public boolean allows(DefendFromLargeCommand command) {
+        return false;
+    }
+
+    public boolean allows(DefendFromSmallCommand command) {
+        return false;
+    }
+
+    public boolean allows(GiveAttackCommand command) {
+        return false;
+    }
+
+    public boolean allows(GiveSpeedCommand command) {
+        return false;
+    }
+
+    public boolean allows(HandleCargoCommand command) {
+        return false;
+    }
+
+    public boolean allows(InsertTileCommand command) {
+        return false;
+    }
+
+    public boolean allows(KillCommand command) {
+        return false;
+    }
+
+    public boolean allows(LoginCommand command) {
+        return false;
+    }
+
+    public boolean allows(ReadyCommand command) {
+        System.out.println("deffff");
+        return false;
+    }
+
+    public boolean allows(RemoveTileCommand command) {
+        return false;
+    }
+
+
+
 
 
 

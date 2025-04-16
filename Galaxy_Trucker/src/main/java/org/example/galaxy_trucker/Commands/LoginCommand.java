@@ -1,0 +1,29 @@
+package org.example.galaxy_trucker.Commands;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+
+import java.io.Serializable;
+
+
+public class LoginCommand extends Command implements Serializable {
+
+    @JsonProperty("commandType")
+    private final String commandType = "LoginCommand";
+
+    public LoginCommand(String gameId, String playerId, int lv, String title) {
+        super(gameId, playerId, lv, title);
+    }
+
+
+    public LoginCommand(){
+
+    }
+
+    @Override
+    public boolean allowedIn(PlayerState playerState) {
+        return playerState.allows(this);
+    }
+
+}

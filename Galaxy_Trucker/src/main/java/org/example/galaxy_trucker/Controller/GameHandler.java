@@ -1,37 +1,38 @@
 package org.example.galaxy_trucker.Controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.GameLists;
-import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class GameHandler {
 
-
-    //    String json;
     private int count = 0;
     private GameLists gameList;
-    private HashMap<String, Controller> ControllerMap; //problema
-    //hashamp gameid - hasmp
+    private HashMap<String, Controller> controllerMap;
     private HashMap<String, HashMap<String, Controller>> gameMap;
 
-    public GameHandler(GameLists gameList) {
-        this.gameList = gameList;
-        this.ControllerMap = new HashMap<>();
+    // Use BlockingQueue for thread-safe command handling
+    private BlockingQueue<Command> commandQueue = new LinkedBlockingQueue<>();
+
+    public GameHandler() {
+        this.gameList = new GameLists();
+        this.controllerMap = new HashMap<>();
         this.gameMap = new HashMap<>();
+        startApplyLoop();
     }
 
+    public GameLists getGameList() {
+        return gameList;
+    }
 
     public HashMap<String, HashMap<String, Controller>> getGameMap() {
         return gameMap;
@@ -41,31 +42,54 @@ public class GameHandler {
         gameMap.get(gameId).put(player.GetID(), controller);
     }
 
-    public void Receive(String json){
-        JsonNode node = JsonHelper.parseJson(json);
-        System.out.println("Received: " + json);
-        String title = JsonHelper.getRequiredText(node, "title");
-        if (!"login".equals(title)) {
-            System.out.println("SCEMOCHILEGGE");
-            String gameId = JsonHelper.getRequiredText(node, "gameID");
-            String playerId = JsonHelper.getRequiredText(node, "playerID");
-            gameMap.get(gameId).get(playerId).action(json, this);
-        }
-        else {
-            System.out.println("PALUOMOSESSUALE");
-            initPlayer(json);
-            //stab
-        }
+    // Method to receive commands and add them to the queue
+    public void receive(Command command) {
+        System.out.println("Received: " + command.getTitle() + " " + command.getClass().getSimpleName());
+        commandQueue.offer(command);
     }
 
+    // Method that continuously pulls commands and applies them
+    public synchronized void startApplyLoop() {
+        System.out.println("Starting Apply Loop");
+        Thread applyThread = new Thread(() -> {
+            while (true) {
+                try {
+                    // take() aspetta finché la coda non ha un comando disponibile
+                    Command command = commandQueue.take(); // Blocco finché non c'è un comando
+                    System.out.println("Received: " + command.getTitle());
+                    String title = command.getTitle();
 
-    public void initPlayer(String json) {
+                    if (!"Login".equals(title)) {
+                        String gameId = command.getGameId();
+                        String playerId = command.getPlayerId();
+                        System.out.println(gameId + " - " + playerId);
+                        if (!gameMap.containsKey(gameId) || !gameMap.get(gameId).containsKey(playerId)) {
+                            System.out.println("Command ignored temporarily: " + title + " for " + gameId + "/" + playerId);
+                            continue;
+                        }
+                        else {
+                            gameMap.get(gameId).get(playerId).action(command, this);
+                        }
+                    } else {
+                        initPlayer(command);
+                    }
+                } catch (InterruptedException e) {
+                    System.err.println("Apply thread interrupted");
+                    break; // Se il thread viene interrotto, esce dal loop
+                }
+            }
+        });
 
+        applyThread.setDaemon(true); // Facoltativo, se il programma termina, i thread daemon vengono chiusi automaticamente
+        applyThread.start();
+    }
+
+    // Method to initialize a player
+    public void initPlayer(Command command) {
         try {
-            JsonNode root = JsonHelper.parseJson(json);
-            String gameID = root.get("gameID").asText();
-            String playerID = root.get("playerID").asText();
-            int lvl = root.get("lvl").asInt();
+            String gameID = command.getGameId();
+            String playerID = command.getPlayerId();
+            int lvl = command.getLv();
             Player temp = new Player();
             temp.setId(playerID);
             temp.setState(new BaseState());
@@ -74,7 +98,7 @@ public class GameHandler {
                 gameList.CreateNewGame(gameID, temp, lvl);
                 gameMap.put(gameID, new HashMap<>());
             } catch (IllegalArgumentException e) {
-                try{
+                try {
                     gameList.JoinGame(gameList.getGames().get(gameList.getGames().indexOf(
                             gameList.getGames().stream().filter(g -> g.getGameID().equals(gameID)).findFirst().orElseThrow())), temp);
                 } catch (Exception ex) {
@@ -94,9 +118,8 @@ public class GameHandler {
         }
     }
 
-
+    // Method to check if all players are ready and change the game state if they are
     public void changeState(String gameId) {
-
         Game curGame = gameList.getGames().get(gameList.getGames().indexOf(gameList.getGames().stream().filter(g -> g.getGameID().equals(gameId)).findFirst().orElseThrow()));
 
         count = 0;
@@ -112,7 +135,5 @@ public class GameHandler {
                 player.SetReady(false);
             }
         }
-
     }
-
 }

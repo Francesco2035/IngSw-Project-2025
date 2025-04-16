@@ -1,5 +1,8 @@
 package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
+import com.google.gson.Gson;
+import org.example.galaxy_trucker.Commands.CommandInterpreter;
+import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 
 import java.io.BufferedReader;
@@ -9,22 +12,20 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientMain {
+
     public static void main(String[] args) throws IOException {
-
-
-        Socket echoSocket = null;
+        Socket echoSocket;
 
         try {
             echoSocket = new Socket(Settings.SERVER_NAME, Settings.PORT);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println(e.toString() + " " + Settings.SERVER_NAME);
-            System.exit(1);
+            return;
         }
 
-        PrintWriter out = null;
-        BufferedReader in = null;
-        BufferedReader stdIn = null;
+        PrintWriter out;
+        BufferedReader in;
+        BufferedReader stdIn;
 
         try {
             out = new PrintWriter(echoSocket.getOutputStream(), true);
@@ -32,27 +33,47 @@ public class ClientMain {
             stdIn = new BufferedReader(new InputStreamReader(System.in));
         } catch (IOException e) {
             System.err.println(e.toString() + " " + Settings.SERVER_NAME);
-            System.exit(1);
+            return;
         }
 
-        String userInput = "";
+        Gson gson = new Gson();
+        CommandInterpreter commandInterpreter ;
 
         System.out.println("Connection started\n");
 
-//        System.out.println("Insert Nickname: ");
-//        if ((userInput = stdIn.readLine()) != null) {
-//            out.println(userInput);
-//            System.out.println(in.readLine());
-//        }
+        System.out.print("Inserisci il tuo nome (player ID): ");
+        String playerId = stdIn.readLine();
+        System.out.print("Inserisci il Game ID: ");
+        String gameId = stdIn.readLine();
+        System.out.print("Inserisci il livello della partita (livello): ");
+        String gameLevel = stdIn.readLine();
 
-        while (true) {
+        String loginString = "Login"+ " " + playerId + " " + gameId + " " + gameLevel;
+        commandInterpreter = new CommandInterpreter(playerId,gameId);
+        Command loginCommand = commandInterpreter.interpret(loginString);
+
+        String jsonLogin = gson.toJson(loginCommand);
+        out.println(jsonLogin);
+        System.out.println("Comando di login inviato: " + jsonLogin);
+
+        String userInput;
+        while ((userInput = stdIn.readLine()) != null) {
+            System.out.println("Input ricevuto: " + userInput);
             try {
-                if ((userInput = stdIn.readLine()) == null) break;
-                out.println(userInput);
-                System.out.println("Server received: " + in.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                Command command = commandInterpreter.interpret(userInput);
+
+                String json = gson.toJson(command);
+
+                out.println(json);
+                System.out.println("Comando inviato: " + json);
+
+                System.out.println("Nuovo loop");
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
+
+
 }

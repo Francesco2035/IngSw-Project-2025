@@ -27,11 +27,9 @@ public class ServerMain {
         System.out.println("Listening on port " + Settings.PORT + "...");
 
 
-        gameLists = new GameLists();
-        gameHandler = new GameHandler(gameLists);
+        gameHandler = new GameHandler();
 
 
-        // loop forever accepting..
         while (true) {
             Socket clientSocket = null;
             try {
