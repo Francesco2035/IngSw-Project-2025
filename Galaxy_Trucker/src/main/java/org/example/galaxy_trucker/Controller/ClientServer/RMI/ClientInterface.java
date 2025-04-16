@@ -12,10 +12,10 @@ public interface ClientInterface extends Remote {
 
     void StartClient() throws IOException, NotBoundException;
 
-    public Player getPlayer() throws RemoteException;
-    public Game getGame() throws RemoteException;
-
-    public void setGame(Game game) throws RemoteException;
-    public void setPlayerId(String id) throws RemoteException;
+//    public Player getPlayer() throws RemoteException;
+//    public Game getGame() throws RemoteException;
+//
+//    public void setGame(Game game) throws RemoteException;
+//    public void setPlayerId(String id) throws RemoteException;
 
 }

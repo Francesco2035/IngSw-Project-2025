@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller.ClientServer;
 
 public class Settings {
-    public static int PORT = 6969;
-    public static String SERVER_NAME = "172.28.16.1";
+    public static int TCP_PORT = 6969;
+    public static int RMI_PORT = 1109;
+    public static String SERVER_NAME = "192.168.1.3";
 }

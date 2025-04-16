@@ -8,14 +8,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ClientMain {
-    public static void main(String[] args) throws IOException {
+public class TCPClient {
 
+    public static void main(String[] args) throws IOException {
 
         Socket echoSocket = null;
 
         try {
-            echoSocket = new Socket(Settings.SERVER_NAME, Settings.PORT);
+            echoSocket = new Socket(Settings.SERVER_NAME, Settings.TCP_PORT);
         }
         catch (IOException e) {
             System.err.println(e.toString() + " " + Settings.SERVER_NAME);
@@ -39,17 +39,13 @@ public class ClientMain {
 
         System.out.println("Connection started\n");
 
-//        System.out.println("Insert Nickname: ");
-//        if ((userInput = stdIn.readLine()) != null) {
-//            out.println(userInput);
-//            System.out.println(in.readLine());
-//        }
 
         while (true) {
             try {
+                System.out.println("Insert Json command: ");
                 if ((userInput = stdIn.readLine()) == null) break;
                 out.println(userInput);
-                System.out.println("Server received: " + in.readLine());
+                //System.out.println("Server received: " + in.readLine());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

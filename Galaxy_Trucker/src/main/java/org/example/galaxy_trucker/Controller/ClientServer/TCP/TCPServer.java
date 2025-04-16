@@ -2,36 +2,41 @@ package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.GameHandler;
-import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.GameLists;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
-public class ServerMain {
+public class TCPServer implements  Runnable{
 
     private static GameLists gameLists;
     private static GameHandler gameHandler;
+    private ArrayList<String> cmdQueue;
 
-    public static void main(String[] args) {
+    public TCPServer(ArrayList<String> cmdQueue) {
+        this.cmdQueue = cmdQueue;
+    }
 
-        System.out.println("Server Started!");
+    public void run() {
+
+        System.out.println("TCP Server Started!");
         ServerSocket serverSocket = null;
 
         try {
-            serverSocket = new ServerSocket(Settings.PORT);
+            serverSocket = new ServerSocket(Settings.TCP_PORT);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Listening on port " + Settings.PORT + "...");
+        //System.out.println("Listening on port " + Settings.TCP_PORT + "...");
 
 
         gameLists = new GameLists();
         gameHandler = new GameHandler(gameLists);
 
 
-        // loop forever accepting..
+        // loop forever accepting...
         while (true) {
             Socket clientSocket = null;
             try {
@@ -41,8 +46,9 @@ public class ServerMain {
                 e.printStackTrace();
             }
 
-            System.out.println("Accepted");
-            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, gameHandler);
+            //System.out.println("Accepted");
+            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, cmdQueue);
+
             Thread t = new Thread(clientHandler);
             t.start();
         }

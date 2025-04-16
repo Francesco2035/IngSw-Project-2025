@@ -14,14 +14,14 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Objects;
 
-public class ClientActions extends UnicastRemoteObject implements ClientInterface {
+public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     private ServerInterface server;
     private Player me;
     private Game myGame;
 
 
-    public ClientActions() throws RemoteException{
+    public RMIClient() throws RemoteException{
         me =  new Player();
         myGame = null;
     }
@@ -31,19 +31,19 @@ public class ClientActions extends UnicastRemoteObject implements ClientInterfac
     public void StartClient() throws IOException, NotBoundException {
 
         Registry registry;
-        registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.PORT);
+        registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.RMI_PORT);
 
         this.server = (ServerInterface) registry.lookup("CommandReader");
-        this.server.login(this);
+//      this.server.login(this);
 
         BufferedReader br = new BufferedReader (new InputStreamReader(System.in));
 
 
-        System.out.println("Insert player name: ");
-        String name = br.readLine();
-        System.out.println("Insert game name: ");
-        String GName = br.readLine();
-        server.CreateGame(this, name, GName, 2);
+//        System.out.println("Insert player name: ");
+//        String name = br.readLine();
+//        System.out.println("Insert game name: ");
+//        String GName = br.readLine();
+//        server.CreateGame(this, name, GName, 2);
 
 
         this.inputLoop();
@@ -53,29 +53,31 @@ public class ClientActions extends UnicastRemoteObject implements ClientInterfac
     private void inputLoop() throws IOException {
         BufferedReader br = new BufferedReader (new InputStreamReader(System.in));
         String cmd;
-        while (!Objects.equals(cmd = br.readLine(), "end")){
-            server.command("{\"GameId\" : " + myGame.getID() + ", \"PlayerId\" : " + me.GetID() + ", \"Command\" : " + cmd + "}");
-        }
+        do{
+            System.out.println("Insert Json command: ");
+            cmd = br.readLine();
+            server.append(cmd);
+        }while (!Objects.equals(cmd, null));
     }
 
-    @Override
-    public Player getPlayer() throws RemoteException{return me;}
-
-    @Override
-    public Game getGame() throws RemoteException{return myGame;}
-
-    @Override
-    public void setGame(Game game) throws RemoteException{myGame = game;}
-
-    @Override
-    public void setPlayerId(String id) throws RemoteException {me.setId(id);}
+//    @Override
+//    public Player getPlayer() throws RemoteException{return me;}
+//
+//    @Override
+//    public Game getGame() throws RemoteException{return myGame;}
+//
+//    @Override
+//    public void setGame(Game game) throws RemoteException{myGame = game;}
+//
+//    @Override
+//    public void setPlayerId(String id) throws RemoteException {me.setId(id);}
 
 
     //--add-opens org.example.galaxy_trucker/org.example.galaxy_trucker.Controller.RMI=java.rmi
     public static void main(String[] args) throws RemoteException, NotBoundException {
 
         try {
-            new ClientActions().StartClient();
+            new RMIClient().StartClient();
         } catch (Exception e) {
             e.printStackTrace();
         }

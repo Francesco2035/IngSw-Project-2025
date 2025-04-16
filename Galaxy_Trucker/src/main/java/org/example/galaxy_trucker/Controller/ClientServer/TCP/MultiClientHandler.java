@@ -12,17 +12,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
+import java.util.ArrayList;
 
 
 public class MultiClientHandler implements Runnable {
 
     private Socket clientSocket;
-    private GameHandler gameHandler;
+    ArrayList<String> cmdQueue;
 
-    public MultiClientHandler(Socket clientSocket, GameHandler gameHandler) {
+    public MultiClientHandler(Socket clientSocket, ArrayList<String> cmds) {
         this.clientSocket = clientSocket;
-        this.gameHandler = gameHandler;
+        cmdQueue =  cmds;
     }
 
     @Override
@@ -51,9 +51,9 @@ public class MultiClientHandler implements Runnable {
 
 
 //        try {
-////            ClientId = in.readLine();
-////              System.out.println(ClientId + " Joined");
-////            out.println("Hello "+ ClientId);
+//            ClientId = in.readLine();
+//             System.out.println(ClientId + " Joined");
+//           out.println("Hello "+ ClientId);
 //
 //            assert in != null;
 //            s = in.readLine();
@@ -68,9 +68,15 @@ public class MultiClientHandler implements Runnable {
 
         try {
             while (true) { //(s = in.readLine()) != null
-                System.out.println(s);
                 s = in.readLine();
-                gameHandler.Receive(s);
+                //System.out.println("TCP: "+s);
+
+                synchronized (cmdQueue){
+                    cmdQueue.add(s);
+                }
+
+                //out.println(s);
+                //gameHandler.Receive(s);
             }
         } catch (IOException e) {
             e.printStackTrace();
