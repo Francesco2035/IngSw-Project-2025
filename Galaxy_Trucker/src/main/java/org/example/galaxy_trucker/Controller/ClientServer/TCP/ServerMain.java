@@ -1,12 +1,18 @@
 package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
+import org.example.galaxy_trucker.Controller.GameHandler;
+import org.example.galaxy_trucker.Model.GAGen;
+import org.example.galaxy_trucker.Model.GameLists;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerMain {
+
+    private static GameLists gameLists;
+    private static GameHandler gameHandler;
 
     public static void main(String[] args) {
 
@@ -21,6 +27,10 @@ public class ServerMain {
         System.out.println("Listening on port " + Settings.PORT + "...");
 
 
+        gameLists = new GameLists();
+        gameHandler = new GameHandler(gameLists);
+
+
         // loop forever accepting..
         while (true) {
             Socket clientSocket = null;
@@ -32,7 +42,7 @@ public class ServerMain {
             }
 
             System.out.println("Accepted");
-            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket);
+            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, gameHandler);
             Thread t = new Thread(clientHandler);
             t.start();
         }

@@ -43,13 +43,16 @@ public class GameHandler {
 
     public void Receive(String json){
         JsonNode node = JsonHelper.parseJson(json);
+        System.out.println("Received: " + json);
         String title = JsonHelper.getRequiredText(node, "title");
         if (!"login".equals(title)) {
+            System.out.println("SCEMOCHILEGGE");
             String gameId = JsonHelper.getRequiredText(node, "gameID");
             String playerId = JsonHelper.getRequiredText(node, "playerID");
             gameMap.get(gameId).get(playerId).action(json, this);
         }
         else {
+            System.out.println("PALUOMOSESSUALE");
             initPlayer(json);
         }
     }
@@ -57,7 +60,6 @@ public class GameHandler {
 
     public void initPlayer(String json) {
 
-        ObjectMapper mapper = new ObjectMapper();
         try {
             JsonNode root = JsonHelper.parseJson(json);
             String gameID = root.get("gameID").asText();

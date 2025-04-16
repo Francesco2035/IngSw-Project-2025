@@ -3,21 +3,14 @@ package org.example.galaxy_trucker.Model.Boards;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.GAGen;
-import org.example.galaxy_trucker.Model.Goods.BLUE;
-import org.example.galaxy_trucker.Model.Goods.Goods;
-import org.example.galaxy_trucker.Model.Goods.RED;
-import org.example.galaxy_trucker.Model.Goods.YELLOW;
-import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 import org.example.galaxy_trucker.Model.PlayerStates.GiveSpeed;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
-import org.example.galaxy_trucker.Model.PlayerStatesss;
 import org.example.galaxy_trucker.Model.Tiles.HotWaterHeater;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

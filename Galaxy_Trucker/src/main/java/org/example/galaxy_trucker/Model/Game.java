@@ -18,7 +18,7 @@ public class Game implements Serializable {
     private CardStacks CardDeck;
     private TileSets TileDecks;
     private int  lv;
-    private State CurrentState;
+//    private State CurrentState;
     private GAGen gag;
 
 
@@ -54,13 +54,13 @@ public class Game implements Serializable {
 
     public String getID(){return GameID;}
 
-    public State getCurrentState(){
-        return CurrentState;
-    }
-
-    public void setState(State newState){
-        CurrentState = newState;
-    }
+//    public State getCurrentState(){
+//        return CurrentState;
+//    }
+//
+//    public void setState(State newState){
+//        CurrentState = newState;
+//    }
 
     public HashMap<String,Player> getPlayers(){
         return Players;

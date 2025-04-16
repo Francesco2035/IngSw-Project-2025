@@ -2,7 +2,6 @@ package org.example.galaxy_trucker.Model.Boards.Actions;
 
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
-import org.example.galaxy_trucker.Model.PlayerStatesss;
 import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
 
 public class UseEnergyAction extends ComponentAction {
