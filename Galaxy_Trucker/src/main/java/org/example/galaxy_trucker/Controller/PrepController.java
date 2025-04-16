@@ -7,9 +7,11 @@ import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
 public class PrepController extends Controller implements HourGlassListener {
 
-    public PrepController(Player currentPlayer, String gameId) {
+    GameHandler gh;
+    public PrepController(Player currentPlayer, String gameId, GameHandler gh) {
         curPlayer = currentPlayer;
         this.gameId = gameId;
+        this.gh = gh;
     }
 
     @Override
@@ -25,5 +27,7 @@ public class PrepController extends Controller implements HourGlassListener {
     @Override
     public void onFinish() {
         curPlayer.SetReady(true);
+        gh.changeState(gameId);
+
     }
 }

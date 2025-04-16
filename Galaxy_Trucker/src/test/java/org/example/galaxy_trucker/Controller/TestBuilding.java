@@ -94,7 +94,12 @@ public class TestBuilding {
                     System.out.println(commandString);
 
                     gh.Receive(commandString);
-                }while (elements.hasNext() );
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }while (elements.hasNext() && hourglass.getUsages() != 0);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -108,6 +113,11 @@ public class TestBuilding {
         }
 
         //si può testare solo con comandi sotto i 985 ms per il resto dovrebbe funzioanre
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         assertEquals(CheckValidity.class, gl.getGames().getFirst().getPlayers().get("paolo").getPlayerState().getClass());
 
     }
