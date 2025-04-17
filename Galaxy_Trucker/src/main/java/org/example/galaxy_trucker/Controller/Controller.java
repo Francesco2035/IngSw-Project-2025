@@ -15,7 +15,7 @@ public abstract class Controller {
     PlayerBoard playerBoardCopy;
 
 
-    public void action(Command command, GameHandler gh){
+    public synchronized void action(Command command, GameHandler gh){
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){

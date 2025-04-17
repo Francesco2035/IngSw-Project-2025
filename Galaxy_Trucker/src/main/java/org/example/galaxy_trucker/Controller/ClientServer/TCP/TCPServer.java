@@ -31,7 +31,6 @@ public class TCPServer implements  Runnable{
         //System.out.println("Listening on port " + Settings.TCP_PORT + "...");
 
 
-        gameHandler = new GameHandler();
 
 
         // loop forever accepting...
