@@ -43,7 +43,6 @@ public class Command implements Serializable {
     }
 
     public void execute(Player player) {
-        // Esegui azioni per il comando
     }
 
     public String getTitle() {

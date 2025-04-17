@@ -42,7 +42,6 @@ public class MultiClientHandler implements Runnable {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-
             while ((s = in.readLine()) != null) {
                 System.out.println("Received: " + s);
 
