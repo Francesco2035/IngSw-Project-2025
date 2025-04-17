@@ -79,8 +79,7 @@ public class Card implements Serializable {
     public void keepGoing(){}
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {}
     public void loseCargo(IntegerPair pair, int position){}
-    public void ActivateCard(){
-    }
+    public void ActivateCard(){}
 
 
     //json required

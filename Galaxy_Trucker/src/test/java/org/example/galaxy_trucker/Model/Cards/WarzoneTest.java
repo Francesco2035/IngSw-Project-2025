@@ -7,6 +7,7 @@ import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.*;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.TestSetupHelper;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -114,21 +116,72 @@ class WarzoneTest {
     @Test
     void
     cardEffect() {
-        int[] req = new int[2];
+        int[] req = new int[3];
         req[0]=1;//cannoni
-        req[1]=3;//movim
-        req[2]=2;//umani
+        req[1]=2;//movim
+        req[2]=3;//umani
 
-        int[] punishment= new int[2];
-        punishment[0]=1;
-        punishment[1]=2;
-        punishment[2]=3;
+        int[] punishment= new int[3];
+        punishment[0]=1; //movement
+        punishment[1]=2; //people
+        punishment[2]=4; //shots
 
-        Warzone carta= new Warzone(1,5,GameBoard,req,punishment,1,2,3,null);
+
+        ArrayList<Integer> attacks=new ArrayList<>();
+        attacks.clear();
+
+        attacks.add(0);
+        attacks.add(1);
+        attacks.add(1);
+        attacks.add(0);
+
+        Warzone carta= new Warzone(1,5,GameBoard,req,punishment,3,2,3,attacks);
+
+        carta.CardEffect();
+
+        assertEquals(new GiveAttack().getClass(),Passo.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Pietro.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Franci.getPlayerState().getClass());
+
+        carta.checkPower(2.5,1);
+        assertEquals(new ConsumingEnergy().getClass(),Passo.getPlayerState().getClass());
+        ArrayList<IntegerPair> energy= new ArrayList<>();
+           energy.clear();
+            energy.add(new IntegerPair(5,4));
+           // energy.add(new IntegerPair(5,4));
+            carta.consumeEnergy(energy);
+        assertEquals(new GiveAttack().getClass(),Pietro.getPlayerState().getClass());
+        carta.checkPower(1.5,0);
+
+        carta.checkPower(3,0);
+
+        assertEquals(new GiveSpeed().getClass(),Passo.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Pietro.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Franci.getPlayerState().getClass());
+
+        carta.checkMovement(2,1);
+        assertEquals(new ConsumingEnergy().getClass(),Passo.getPlayerState().getClass());
+        System.out.println("skskkk");
+
+        carta.consumeEnergy(energy);
+
+        assertEquals(new GiveSpeed().getClass(),Franci.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Passo.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Pietro.getPlayerState().getClass());
+
+        carta.checkMovement(1,0);
+        carta.checkMovement(4,0);
+
+        assertEquals(new Killing().getClass(),Franci.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Passo.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Pietro.getPlayerState().getClass());
+
     }
 
     @Test
     void updateSates() {
+
+
 
     }
 }
