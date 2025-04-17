@@ -44,12 +44,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         System.out.println("Insert game ID: ");
         String gameId = br.readLine();
-
-//        System.out.println("Insert player name: ");
-//        String name = br.readLine();
-//        System.out.println("Insert game name: ");
-//        String GName = br.readLine();
-//        server.CreateGame(this, name, GName, 2);
         System.out.println("Insert game level: ");
         String level = br.readLine();
 
@@ -62,7 +56,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         this.inputLoop();
     }
-
 
     private void inputLoop() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -78,18 +71,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
             }
         }
     }
-
-//    @Override
-//    public Player getPlayer() throws RemoteException{return me;}
-//
-//    @Override
-//    public Game getGame() throws RemoteException{return myGame;}
-//
-//    @Override
-//    public void setGame(Game game) throws RemoteException{myGame = game;}
-//
-//    @Override
-//    public void setPlayerId(String id) throws RemoteException {me.setId(id);}
 
     public static void main(String[] args) throws RemoteException, NotBoundException {
         try {
