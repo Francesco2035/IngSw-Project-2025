@@ -39,6 +39,8 @@ public class ServersHandler implements Runnable {
         Thread ThreadRMI = new Thread(RMI);
         ThreadRMI.start();
 
+
+        //pop queue
         while(true){
 
             synchronized (cmdQueue){
