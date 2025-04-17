@@ -30,7 +30,7 @@ public class CommandInterpreter {
         commandMap.put("PickTile", this::createInsertTileCommand);
         commandMap.put("Hourglass", this::createInsertTileCommand);
         commandMap.put("Accept", this::createAcceptCommand);
-        commandMap.put("Discard", this::createAcceptCommand);
+        commandMap.put("Discard", this::createInsertTileCommand);
         commandMap.put("FromBuffer", this::createAcceptCommand);
         commandMap.put("ToBuffer", this::createAcceptCommand);
         commandMap.put("AddCrew", this::createAddCrewCommand);

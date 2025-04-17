@@ -54,7 +54,6 @@ public class GameHandler {
         Thread applyThread = new Thread(() -> {
             while (true) {
                 try {
-                    // take() aspetta finché la coda non ha un comando disponibile
                     Command command = commandQueue.take(); // Blocco finché non c'è un comando
                     System.out.println("Received: " + command.getTitle());
                     String title = command.getTitle();
@@ -75,12 +74,12 @@ public class GameHandler {
                     }
                 } catch (InterruptedException e) {
                     System.err.println("Apply thread interrupted");
-                    break; // Se il thread viene interrotto, esce dal loop
+                    break;
                 }
             }
         });
 
-        applyThread.setDaemon(true); // Facoltativo, se il programma termina, i thread daemon vengono chiusi automaticamente
+        applyThread.setDaemon(true);
         applyThread.start();
     }
 

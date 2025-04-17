@@ -11,21 +11,23 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ClientMain {
+public class TCPClient {
 
     public static void main(String[] args) throws IOException {
-        Socket echoSocket;
+
+        Socket echoSocket = null;
 
         try {
-            echoSocket = new Socket(Settings.SERVER_NAME, Settings.PORT);
-        } catch (IOException e) {
+            echoSocket = new Socket(Settings.SERVER_NAME, Settings.TCP_PORT);
+        }
+        catch (IOException e) {
             System.err.println(e.toString() + " " + Settings.SERVER_NAME);
-            return;
+            System.exit(1);
         }
 
-        PrintWriter out;
+        PrintWriter out = null;
         BufferedReader in;
-        BufferedReader stdIn;
+        BufferedReader stdIn = null;
 
         try {
             out = new PrintWriter(echoSocket.getOutputStream(), true);
@@ -33,7 +35,7 @@ public class ClientMain {
             stdIn = new BufferedReader(new InputStreamReader(System.in));
         } catch (IOException e) {
             System.err.println(e.toString() + " " + Settings.SERVER_NAME);
-            return;
+            System.exit(1);
         }
 
         Gson gson = new Gson();

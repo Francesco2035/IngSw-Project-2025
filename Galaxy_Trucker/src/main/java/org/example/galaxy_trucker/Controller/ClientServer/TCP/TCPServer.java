@@ -2,34 +2,39 @@ package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.GameHandler;
-import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.GameLists;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
-public class ServerMain {
+public class TCPServer implements  Runnable{
 
     private static GameLists gameLists;
     private static GameHandler gameHandler;
 
-    public static void main(String[] args) {
+    public TCPServer(GameHandler gameHandler) {
+        this.gameHandler = gameHandler;
+    }
 
-        System.out.println("Server Started!");
+    public void run() {
+
+        System.out.println("TCP Server Started!");
         ServerSocket serverSocket = null;
 
         try {
-            serverSocket = new ServerSocket(Settings.PORT);
+            serverSocket = new ServerSocket(Settings.TCP_PORT);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Listening on port " + Settings.PORT + "...");
+        //System.out.println("Listening on port " + Settings.TCP_PORT + "...");
 
 
         gameHandler = new GameHandler();
 
 
+        // loop forever accepting...
         while (true) {
             Socket clientSocket = null;
             try {
