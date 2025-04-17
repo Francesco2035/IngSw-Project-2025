@@ -20,7 +20,7 @@ public class TCPServer implements  Runnable{
 
     public void run() {
 
-        System.out.println("TCP Server Started!");
+        //System.out.println("TCP Server Started!");
         ServerSocket serverSocket = null;
 
         try {

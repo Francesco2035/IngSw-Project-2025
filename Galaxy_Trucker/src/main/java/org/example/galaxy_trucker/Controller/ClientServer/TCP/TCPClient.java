@@ -41,8 +41,6 @@ public class TCPClient {
         Gson gson = new Gson();
         CommandInterpreter commandInterpreter ;
 
-        System.out.println("Connection started\n");
-
         System.out.print("Inserisci il tuo nome (player ID): ");
         String playerId = stdIn.readLine();
         System.out.print("Inserisci il Game ID: ");

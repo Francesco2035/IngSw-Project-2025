@@ -30,6 +30,7 @@ public class Hourglass implements Runnable {
         listeners.add(listener);
     }
 
+
     @Override
     @JsonIgnore
     public void run() {
