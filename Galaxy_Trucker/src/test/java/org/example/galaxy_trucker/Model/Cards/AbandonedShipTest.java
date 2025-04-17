@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 //import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
 
 import org.example.galaxy_trucker.Model.Connectors.*;
+import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
@@ -65,10 +66,16 @@ class AbandonedShipTest {
 
     @BeforeAll
     static void setup() {
+        Player p1 = new Player();
+        p1.setId("fGr");
+        Player p2 = new Player();
+        p2.setId("God");
+        Player p3 = new Player();
+        p3.setId("Sgregno");
 
-        TGame.NewPlayer("fGr");
-        TGame.NewPlayer("God");
-        TGame.NewPlayer("Sgregno");
+        TGame.NewPlayer(p1);
+        TGame.NewPlayer(p2);
+        TGame.NewPlayer(p3);
          Franci= GameBoard.getPlayers().get(0);
          Pietro= GameBoard.getPlayers().get(1);
          Passo= GameBoard.getPlayers().get(2);
@@ -138,10 +145,10 @@ class AbandonedShipTest {
         Pietro=GameBoard.getPlayers().get(1);
         System.out.println(Passo.GetID()+"state"+Passo.getPlayerState());
 
-        ArrayList<IntegerPair> coords= new ArrayList<>();
+                ArrayList<IntegerPair> coords= new ArrayList<>();
         IntegerPair c1= new IntegerPair(6,6);
         IntegerPair c2= new IntegerPair(6,6);
-        IntegerPair c3= new IntegerPair(6,6);
+        IntegerPair c3= new IntegerPair(4,5);
         coords.add(c1);
         coords.add(c2);
         coords.add(c3);
@@ -152,7 +159,7 @@ class AbandonedShipTest {
 //        handler.setInput(coords,false);
 //        Pietro.execute();
 
-        assertEquals(PlayerStatesss.BaseState,Passo.getPlayerState());
+        assertEquals(BaseState.class,Passo.getPlayerState().getClass());
 System.out.println(Passo.GetID()+"state"+Passo.getPlayerState());
 
 

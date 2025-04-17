@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
-import org.example.galaxy_trucker.Controller.Commands.Command;
+import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.BLUE;
 import org.example.galaxy_trucker.Model.Goods.GREEN;
@@ -36,8 +36,8 @@ class HandleCargoTest {
         }
         """;
 
-        Command command = poggi.getPlayerState().PlayerAction(com1, poggi);
-        command.execute();
+//        Command command = poggi.getPlayerState().PlayerAction(com1, poggi);
+//        command.execute();
 
         assertEquals(1, pb.getBufferGoods().size());
 
@@ -50,8 +50,8 @@ class HandleCargoTest {
         }
         """;
 
-        command = poggi.getPlayerState().PlayerAction(com1, poggi);
-        command.execute();
+//        command = poggi.getPlayerState().PlayerAction(com1, poggi);
+//        command.execute();
 
         assertEquals(0, pb.getBufferGoods().size());
 

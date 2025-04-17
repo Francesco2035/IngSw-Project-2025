@@ -1,25 +1,25 @@
-package org.example.galaxy_trucker.Controller.Commands;
+package org.example.galaxy_trucker.Commands;
 
 import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
-import org.example.galaxy_trucker.Model.Boards.Actions.GetPlasmaDrillPower;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 import java.util.ArrayList;
 
-public class GiveSpeedCommand implements Command {
-    private Card card;
+public class GiveSpeedCommand extends Command {
+
     private ArrayList<IntegerPair> coordinates;
-    private Player player;
-    public GiveSpeedCommand(Card card, ArrayList<IntegerPair> coordinates, Player player) {
+    public GiveSpeedCommand( ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title) {
+        super(gameId, playerId, lv, title);
         this.coordinates = coordinates;
-        this.card = card;
+
     }
 
     @Override
-    public void execute() {
+    public void execute(Player player) {
         PlayerBoard playerBoard = player.getmyPlayerBoard();
         GetEnginePower action = new GetEnginePower(playerBoard.getEnginePower());
         for (IntegerPair coordinate : coordinates) {
@@ -27,6 +27,11 @@ public class GiveSpeedCommand implements Command {
                     action ,player.getPlayerState());
         }
 
-        card.checkMovement(action.getPower(),action.getCountDoubleEngine());
+        player.getCurrentCard().checkMovement(action.getPower(),action.getCountDoubleEngine());
+    }
+
+    @Override
+    public boolean allowedIn(PlayerState playerState) {
+        return playerState.allows(this);
     }
 }

@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 //import org.example.galaxy_trucker.Model.InputHandlers.Accept;
+import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
@@ -44,12 +45,12 @@ public class Pirates extends Card{
         this.ShotsLine = 0;
 
         this.defeated = false;
-        this.currentPlayer = null;
+        this.currentPlayer = new Player();
         this.lines = new int[Punsihment.size()/2];
         for(int i=0;i< Punishment.size()/2;i++){
             lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
         }
-        this.hit = null;
+        this.hit = new IntegerPair(0,0);
         this.currentpower = 0;
         this.energyUsage = 0;
         this.order = 0;
@@ -72,8 +73,11 @@ public class Pirates extends Card{
     public void updateSates(){
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
+        System.out.println("player number "+this.order);
         if(this.order<PlayerList.size() && !this.defeated){
+            currentPlayer.setState(new  Waiting());
             currentPlayer = PlayerList.get(this.order);
+            System.out.println("current is:"+currentPlayer.GetID());
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             this.currentpower=0;
             this.currentPlayer.setState(new GiveAttack());
@@ -87,12 +91,13 @@ public class Pirates extends Card{
 
     @Override
     public void checkPower(double power, int numofDouble) {
+        this.currentpower = power;
+        this.energyUsage = numofDouble;
         if(numofDouble==0){
             this.checkStrength();
         }
         else {
-            this.currentpower = power;
-            this.energyUsage = numofDouble;
+
             this.currentPlayer.setState(new ConsumingEnergy());
 //
         }
@@ -114,7 +119,7 @@ public class Pirates extends Card{
             }
             catch (InvalidInput e){
                 currentPlayer.setState(new GiveAttack());
-                throw new WrongNumofEnergyExeption("wrong number of energy cells");
+                throw new WrongNumofEnergyExeption("no energy here:"+ i.getFirst()+ " "+i.getSecond());
             }
         }
         this.checkStrength();
@@ -131,6 +136,11 @@ public class Pirates extends Card{
         else if (this.currentpower<this.getRequirement()){
             this.continueCard();
         }
+        else {
+            this.currentPlayer.setState(new Waiting());
+            this.updateSates();
+        }
+
 
     }
 
@@ -142,17 +152,34 @@ public class Pirates extends Card{
         boolean shotsFlag= false;
             while (this.ShotsOrder < Punishment.size() && shotsFlag == false) {
 
+                System.out.println("attack number: "+this.ShotsOrder/2 +" on: "+currentPlayer.GetID());
+
             PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard(); //prendo plancia
             int[][] MeteoritesValidPlanche = CurrentPlanche.getValidPlayerBoard();//prende matrice validita
             if (Punishment.get(ShotsOrder) == 0) { //sinistra
                 Movement = 0;
-                while (Movement < 10 && shotsFlag == false) {
+                while (Movement < 10  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                            CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
+                            if (CurrentPlanche.getBroken()){
+                                System.out.println("rottura nave");
+                                this.currentPlayer.setState(new HandleDestruction());
+                                return;
+
+                            }
+                            else{
+                                this.ShotsOrder+=2;
+                                this.continueCard();
+                                return;
+                            }
+
+
                         }
                         else {//colpo piccolo
                             currentPlayer.setState(new DefendingFromSmall());
@@ -165,13 +192,28 @@ public class Pirates extends Card{
             }
             else if (Punishment.get(ShotsOrder) == 1) {//sopra
                 Movement = 0;
-                while (Movement < 10 && shotsFlag == false) {
+                while (Movement < 10 && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+
+                            System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                            CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
+                            if (CurrentPlanche.getBroken()){
+                                System.out.println("rottura nave");
+                                this.currentPlayer.setState(new HandleDestruction());
+                                return;
+
+                            }
+                            else{
+                                this.ShotsOrder+=2;
+                                this.continueCard();
+                                return;
+                            }
+
                         }
                         else {//colpo piccolo
                             currentPlayer.setState(new DefendingFromSmall());
@@ -184,13 +226,29 @@ public class Pirates extends Card{
             }
             else if (Punishment.get(ShotsOrder) == 2) {// destra
                 Movement = 9;
-                while (Movement >= 0 && shotsFlag == false) {
+                while (Movement >= 0   && lines[ShotsOrder/2]<10&& shotsFlag == false) {
                     if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder/2]);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+
+                            System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                            CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
+                            if (CurrentPlanche.getBroken()){
+                                System.out.println("rottura nave");
+                                this.currentPlayer.setState(new HandleDestruction());
+                                return;
+
+                            }
+                            else{
+                                System.out.println("non si è rotto nulla");
+                                this.ShotsOrder+=2;
+                                this.continueCard();
+                                return;
+                            }
+
                         }
                         else {//colpo piccolo
                             currentPlayer.setState(new DefendingFromSmall());
@@ -203,12 +261,26 @@ public class Pirates extends Card{
             }
             else { //sotto
                 Movement = 9;
-                while (Movement >= 0 && shotsFlag == false) {
+                while (Movement >= 0  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                            CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
+                            if (CurrentPlanche.getBroken()){
+                                System.out.println("rottura nave");
+                                this.currentPlayer.setState(new HandleDestruction());
+                                return;
+
+                            }
+                            else{
+                                this.ShotsOrder+=2;
+                                this.continueCard();
+                                return;
+                            }
+
                         }
                         else {//colpo piccolo
                             currentPlayer.setState(new DefendingFromSmall());
@@ -220,8 +292,9 @@ public class Pirates extends Card{
                 }
 
             }
-
+            if(shotsFlag == false){
             this.ShotsOrder += 2;
+            }
         }
         if(this.ShotsOrder >=Punishment.size() ){
             this.ShotsOrder = 0;
@@ -233,7 +306,7 @@ public class Pirates extends Card{
     public void continueCard(boolean accepted){
         if(accepted){
             currentPlayer.IncreaseCredits(this.reward);
-            this.getBoard().movePlayer(this.currentPlayer.GetID(), this.getTime());
+            this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
         }
 
         this.finishCard();
@@ -244,21 +317,31 @@ public class Pirates extends Card{
         PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if (energy!=null){
-            if (Punishment.get(ShotsOrder + 1) == 0 && (currentBoard.getShield()[Punishment.get(ShotsOrder)]==0)){
-                throw new InvalidDefenceEceptiopn("this shield defends the wrong side");
+            if ((currentBoard.getShield()[Punishment.get(ShotsOrder)]==0)){
+                throw new InvalidDefenceEceptiopn("this shield defends the wrong side"+" the side was: "+getPunisment().get(ShotsOrder));
             }
             else {
-                currentBoard.performAction(tiles[hit.getFirst()][hit.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new ConsumingEnergy());
+                try {
+                    currentBoard.performAction(tiles[energy.getFirst()][energy.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new ConsumingEnergy());
+                }
+                catch (Exception e){
+                    throw new ImpossibleBoardChangeException("There was no energy to use here");
+                }
+                System.out.println("DefendFromSmall");
             }
         }
         else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
             currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
             if (currentBoard.getBroken()){
+                System.out.println("rottura nave");
                 this.currentPlayer.setState(new HandleDestruction());
                 return;
+
             }
+            System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
         }
+        this.ShotsOrder+=2;
         this.continueCard();
     }
 
@@ -271,7 +354,17 @@ public class Pirates extends Card{
         }
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 
+    public int getShotsOrder() {
+        return ShotsOrder;
+    }
+
+    public ArrayList<Integer> getPunishment() {
+        return Punishment;
+    }
 
     //json reuired
     public Pirates(){}

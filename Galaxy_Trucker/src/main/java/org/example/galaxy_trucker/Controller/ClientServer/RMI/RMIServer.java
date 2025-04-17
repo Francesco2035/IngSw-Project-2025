@@ -1,7 +1,9 @@
 package org.example.galaxy_trucker.Controller.ClientServer.RMI;
 
+import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
-import org.example.galaxy_trucker.Model.GameLists;
+import org.example.galaxy_trucker.Controller.GameHandler;
+import org.example.galaxy_trucker.Model.Player;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -12,15 +14,17 @@ import java.util.ArrayList;
 
 public class RMIServer extends UnicastRemoteObject implements ServerInterface, Runnable {
 
-    GameLists gh;
+
+
+    Player CurrentPlayer;
+
+    GameHandler gh;
 
     ArrayList<ClientInterface> clients;
 
-    ArrayList<String> cmdQueue;
+    public RMIServer(GameHandler gameHandler) throws RemoteException {
 
-    public RMIServer(ArrayList<String> cmds) throws RemoteException {
-        cmdQueue = cmds;
-        gh = new GameLists();
+        gh = gameHandler;
         clients = new ArrayList<>();
     }
 
@@ -39,18 +43,21 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
         System.out.println("RMI Server Started!");
     }
 
-
-
+//    @Override
+//    public void login(ClientInterface client) throws RemoteException{
+//        clients.add(client);
+//    }
+//
+//
     @Override
-    public void append(String cmd) throws RemoteException{
-        synchronized (cmdQueue){
-            cmdQueue.add(cmd);
-        }
-//        System.out.println("RMI: "+ cmd);
+    public void command(Command cmd) throws RemoteException{
+        gh.receive(cmd);
+        System.out.println(cmd);
+
     }
-
-
-
+//
+//
+//
 //    @Override
 //    public void JoinGame(ClientInterface joiner, String playerName, String GameName) throws RemoteException{
 //
@@ -58,13 +65,13 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 //            throw new IllegalArgumentException("Client not found");
 //        }
 //
-//        Game joining = gh.getGames().stream().filter(g -> g.getID().equals(GameName)).findFirst().orElseThrow();
+//        Game joining = gh.getGameList().getGames().stream().filter(g -> g.getID().equals(GameName)).findFirst().orElseThrow();
 //
 //
 //        joiner.setPlayerId(playerName);
 //
 //        try{
-//            gh.JoinGame(joining, joiner.getPlayer());
+//            gh.getGameList().JoinGame(joining, joiner.getPlayer());
 //        }
 //        catch (Exception e){
 //            e.printStackTrace();
@@ -72,13 +79,13 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 //        joiner.setGame(joining);
 //
 //    }
-
-
-
+//
+//
+//
 //    @Override
 //    public void CreateGame(ClientInterface joiner, String playerName, String GameName, int lv) throws RemoteException{
 //
-//        for(Game  g : gh.getGames()){
+//        for(Game  g : gh.getGameList().getGames()){
 //            if(g.getID().equals(GameName)){
 //                throw new RuntimeException("Game with this ID already exists");
 //            }
@@ -87,7 +94,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 //        joiner.setPlayerId(playerName);
 //
 //        try {
-//            Game g = gh.CreateNewGame(GameName, joiner.getPlayer(), lv);
+//            Game g = gh.getGameList().CreateNewGame(GameName, joiner.getPlayer(), lv);
 //            joiner.setGame(g);
 //        }
 //        catch (Exception e){
@@ -97,8 +104,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 //    }
 
 
-    //in caso di errori, aggiungere alle VM options:
-    // --add-opens org.example.galaxy_trucker/org.example.galaxy_trucker.Controller.RMI=java.rmi
+
 
     public void run(){
         try {

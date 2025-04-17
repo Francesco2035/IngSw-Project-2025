@@ -1,5 +1,8 @@
 package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
+import com.google.gson.Gson;
+import org.example.galaxy_trucker.Commands.CommandInterpreter;
+import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 
 import java.io.BufferedReader;
@@ -23,7 +26,7 @@ public class TCPClient {
         }
 
         PrintWriter out = null;
-        BufferedReader in = null;
+        BufferedReader in;
         BufferedReader stdIn = null;
 
         try {
@@ -35,20 +38,44 @@ public class TCPClient {
             System.exit(1);
         }
 
-        String userInput = "";
+        Gson gson = new Gson();
+        CommandInterpreter commandInterpreter ;
 
         System.out.println("Connection started\n");
 
+        System.out.print("Inserisci il tuo nome (player ID): ");
+        String playerId = stdIn.readLine();
+        System.out.print("Inserisci il Game ID: ");
+        String gameId = stdIn.readLine();
+        System.out.print("Inserisci il livello della partita (livello): ");
+        String gameLevel = stdIn.readLine();
 
-        while (true) {
+        String loginString = "Login"+ " " + playerId + " " + gameId + " " + gameLevel;
+        commandInterpreter = new CommandInterpreter(playerId,gameId);
+        Command loginCommand = commandInterpreter.interpret(loginString);
+
+        String jsonLogin = gson.toJson(loginCommand);
+        out.println(jsonLogin);
+        System.out.println("Comando di login inviato: " + jsonLogin);
+
+        String userInput;
+        while ((userInput = stdIn.readLine()) != null) {
+            System.out.println("Input ricevuto: " + userInput);
             try {
-                System.out.println("Insert Json command: ");
-                if ((userInput = stdIn.readLine()) == null) break;
-                out.println(userInput);
-                //System.out.println("Server received: " + in.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                Command command = commandInterpreter.interpret(userInput);
+
+                String json = gson.toJson(command);
+
+                out.println(json);
+                System.out.println("Comando inviato: " + json);
+
+                System.out.println("Nuovo loop");
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
+
+
 }

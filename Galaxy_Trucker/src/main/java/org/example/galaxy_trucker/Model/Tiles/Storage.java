@@ -36,6 +36,10 @@ public abstract class Storage extends Component{
 
     }
 
+    public int getValue(int i){
+        return goods.get(i).getValue();
+    }
+
     public  Goods removeGood(int i){
         return null;
     }

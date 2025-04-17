@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class ServersHandler implements Runnable {
 
-    private ArrayList<String> cmdQueue;
 
 
     public static void main(String[] args){
@@ -20,36 +19,22 @@ public class ServersHandler implements Runnable {
 
     public void run(){
 
-        cmdQueue = new ArrayList<>();
-        GameLists gameLists = new GameLists();
-        GameHandler gameHandler = new GameHandler(gameLists);
+        GameHandler gameHandler = new GameHandler();
 
         //start thread server tcp
-        TCPServer TCP = new TCPServer(cmdQueue);
+        TCPServer TCP = new TCPServer(gameHandler);
         Thread ThreadTCP = new Thread(TCP);
         ThreadTCP.start();
 
         //start thread server rmi
         RMIServer RMI = null;
         try {
-            RMI = new RMIServer(cmdQueue);
+            RMI = new RMIServer(gameHandler);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
         Thread ThreadRMI = new Thread(RMI);
         ThreadRMI.start();
-
-
-        //pop queue
-        while(true){
-
-            synchronized (cmdQueue){
-                if(!cmdQueue.isEmpty())
-                    gameHandler.Receive(cmdQueue.removeFirst());
-                    //System.out.println(cmdQueue.removeFirst());
-            }
-
-        }
 
     }
 

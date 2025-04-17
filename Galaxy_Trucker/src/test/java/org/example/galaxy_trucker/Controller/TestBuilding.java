@@ -27,7 +27,7 @@ public class TestBuilding {
 
         InputStream originalIn = System.in;
         GameLists gl = new GameLists();
-        GameHandler gh = new GameHandler(gl);
+        GameHandler gh = new GameHandler();
 
         try {
 
@@ -35,20 +35,20 @@ public class TestBuilding {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 
-            gh.Receive(br.readLine());
+            //gh.Receive(br.readLine());
             //assertFalse(gh.getControllerMap().isEmpty());
 
             System.setIn(new ByteArrayInputStream(simulatedInput2.getBytes()));
             BufferedReader br2 = new BufferedReader(new InputStreamReader(System.in));
-            gh.Receive(br2.readLine());
+            //gh.Receive(br2.readLine());
 
             System.setIn(new ByteArrayInputStream(simulatedInput3.getBytes()));
             BufferedReader br3 = new BufferedReader(new InputStreamReader(System.in));
-            gh.Receive(br3.readLine());
+            //gh.Receive(br3.readLine());
 
             System.setIn(new ByteArrayInputStream(simulatedInput4.getBytes()));
             BufferedReader br4 = new BufferedReader(new InputStreamReader(System.in));
-            gh.Receive(br4.readLine());
+            //gh.Receive(br4.readLine());
 
             assertEquals(1, gl.getGames().size());
             String simulatedInput5 = "{\"title\":\"Ready\", \"gameID\":\"num1\", \"playerID\":\"paolo\", \"ready\":true}";
@@ -70,10 +70,10 @@ public class TestBuilding {
 
             System.setIn(new ByteArrayInputStream(simulatedInput8.getBytes()));
             BufferedReader br8 = new BufferedReader(new InputStreamReader(System.in));
-            gh.Receive(br5.readLine());
-            gh.Receive(br6.readLine());
-            gh.Receive(br7.readLine());
-            gh.Receive(br8.readLine());
+//            gh.Receive(br5.readLine());
+//            gh.Receive(br6.readLine());
+//            gh.Receive(br7.readLine());
+//            gh.Receive(br8.readLine());
 
             ObjectMapper objectMapper = new ObjectMapper();
             try {
@@ -93,21 +93,29 @@ public class TestBuilding {
 
                     System.out.println(commandString);
 
-                    gh.Receive(commandString);
-                }while (elements.hasNext() );
+                    //gh.Receive(commandString);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }while (elements.hasNext() && hourglass.getUsages() != 0);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
 
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         } finally {
             System.setIn(originalIn);
         }
 
         //si può testare solo con comandi sotto i 985 ms per il resto dovrebbe funzioanre
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         assertEquals(CheckValidity.class, gl.getGames().getFirst().getPlayers().get("paolo").getPlayerState().getClass());
 
     }

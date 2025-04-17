@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 
@@ -29,7 +30,7 @@ public class AbandonedShip extends Card{
         super(level, time, board);
         this.requirement = requirement;
         this.reward = reward;
-        this.currentPlayer = null;
+        this.currentPlayer = new Player();
         this.flag = false;
         this.order = 0;
         totHumans=0;
@@ -47,6 +48,7 @@ public class AbandonedShip extends Card{
     }
     @Override
     public void updateSates(){
+
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         while(this.order<=PlayerList.size()&& !this.flag) {
@@ -54,6 +56,7 @@ public class AbandonedShip extends Card{
                 this.finishCard();
                 break;
             }
+            currentPlayer.setState(new Waiting());
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             System.out.println("Cchecking:"+currentPlayer.GetID());
@@ -95,10 +98,6 @@ public class AbandonedShip extends Card{
                 throw new WrongNumofHumansException("wrong number of humans");
             }
 
-//            for (int j = 0; j < coordinates.size(); j++) {
-//                currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
-//            }
-
             ///  fai l try catch e opera sulla copia :)
             PlayerBoard curr= currentPlayer.getmyPlayerBoard();
             Tile tiles[][]=curr.getPlayerBoard();
@@ -107,17 +106,13 @@ public class AbandonedShip extends Card{
                 System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
 
                 curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr), new Killing());
-
-//                currentPlayer.getmyPlayerBoard().setGetter(new HousingUnitGetter(currentPlayer.getmyPlayerBoard(),
-//                        coordinate, 1, false, false));
-//                currentPlayer.getmyPlayerBoard().getGetter().get();
             }
             }
             catch (Exception e){
                 //devo rimanere allo stato di dare gli umani ezzz
-                System.out.println("non ce sta più ncazzoz di nessuno qui");
+                System.out.println("non ce sta più nessuno qui");
+                throw new ImpossibleBoardChangeException("there was an error in killing humans");
 
-                return;
             }
             currentPlayer.IncreaseCredits(this.reward);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());

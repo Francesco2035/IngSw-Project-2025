@@ -13,10 +13,9 @@ public class TCPServer implements  Runnable{
 
     private static GameLists gameLists;
     private static GameHandler gameHandler;
-    private ArrayList<String> cmdQueue;
 
-    public TCPServer(ArrayList<String> cmdQueue) {
-        this.cmdQueue = cmdQueue;
+    public TCPServer(GameHandler gameHandler) {
+        this.gameHandler = gameHandler;
     }
 
     public void run() {
@@ -32,8 +31,7 @@ public class TCPServer implements  Runnable{
         //System.out.println("Listening on port " + Settings.TCP_PORT + "...");
 
 
-        gameLists = new GameLists();
-        gameHandler = new GameHandler(gameLists);
+        gameHandler = new GameHandler();
 
 
         // loop forever accepting...
@@ -46,9 +44,8 @@ public class TCPServer implements  Runnable{
                 e.printStackTrace();
             }
 
-            //System.out.println("Accepted");
-            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, cmdQueue);
-
+            System.out.println("Accepted");
+            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, gameHandler);
             Thread t = new Thread(clientHandler);
             t.start();
         }

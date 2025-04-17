@@ -1,35 +1,33 @@
-package org.example.galaxy_trucker.Controller.Commands;
+package org.example.galaxy_trucker.Commands;
 
 import org.example.galaxy_trucker.Model.Boards.Actions.AddGoodAction;
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetGoodAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.Boards.Player_IntegerPair;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-import java.util.ArrayList;
-
-public class HandleCargoCommand implements Command {
+public class HandleCargoCommand extends Command {
 
     String title;
     int position;
     IntegerPair coordinate;
-    Player player;
 
-    public HandleCargoCommand(String title, int position, IntegerPair coordinate, Player player) {
+
+    public HandleCargoCommand(int position, IntegerPair coordinate,String gameId, String playerId, int lv, String title) {
+        super(gameId, playerId, lv, title);
         this.title = title;
         this.position = position;
         this.coordinate = coordinate;
-        this.player = player;
+
     }
 
 
 
     @Override
-    public void execute() {
+    public void execute(Player player) {
 
 
         PlayerBoard playerBoard = player.getmyPlayerBoard();
@@ -65,5 +63,10 @@ public class HandleCargoCommand implements Command {
 
             }
         }
+    }
+
+    @Override
+    public boolean allowedIn(PlayerState playerState) {
+        return playerState.allows(this);
     }
 }

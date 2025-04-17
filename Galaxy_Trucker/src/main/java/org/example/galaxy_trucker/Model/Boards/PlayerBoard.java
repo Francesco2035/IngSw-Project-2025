@@ -663,7 +663,7 @@ public class PlayerBoard {
 
         }
 
-        if (ValidPlayerBoard[x+1][y] == 1 ){
+        if ( x+1<10 &&ValidPlayerBoard[x+1][y] == 1 ){
             visitedPositions = new ArrayList<>();
             findPaths(x+1, y, visitedPositions);
             if (!visitedPositions.contains(new IntegerPair(x-1,y)) && !visitedPositions.contains(new IntegerPair(x,y -1))) {
@@ -674,7 +674,7 @@ public class PlayerBoard {
 
         }
 
-        if (ValidPlayerBoard[x][y + 1] == 1  ){
+        if (y+1 <10 &&ValidPlayerBoard[x][y + 1] == 1  ){
             visitedPositions = new ArrayList<>();
             findPaths(x, y+1, visitedPositions);
             if (!visitedPositions.contains(new IntegerPair(x-1,y)) && !visitedPositions.contains(new IntegerPair(x,y -1)) && !visitedPositions.contains(new IntegerPair(x+1,y)) ) {

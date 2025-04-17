@@ -1,6 +1,10 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
+import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
+import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.*;
@@ -29,7 +33,7 @@ public class Slavers extends Card{
         this.reward = Reward;
         this.Punishment = Punsihment;
         this.defeated = false;
-        this.currentPlayer=null;
+        this.currentPlayer=new Player();
         this.order=0;
         this.currentpower=0;
         this.energyUsage=0;
@@ -53,6 +57,7 @@ public class Slavers extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.order<PlayerList.size() && !this.defeated){
+            currentPlayer.setState(new Waiting());
             currentPlayer = PlayerList.get(this.order);
             this.currentpower=0;
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
@@ -61,31 +66,23 @@ public class Slavers extends Card{
             //this.currentPlayer.setInputHandler(new Accept(this));
 
             this.order++;
+            System.out.println(this.order);
         }
         else{
+            System.out.println("finita");
             this.finishCard();
         }
     }
 
     @Override
     public void checkPower(double power, int numofDouble) {
-//
-//        if(power>this.getRequirement()){
-//            this.currentPlayer.setState(new Accepting());
-//            //this.currentPlayer.setInputHandler(new Accept(this));
-//            this.defeated=true;
-//        }
-//        else if(power<this.getRequirement()){
-//            this.currentPlayer.setState(new Killing());
-//            //this.currentPlayer.setInputHandler(new Killing(this));
-//        }
-
+        this.energyUsage = numofDouble;
+        this.currentpower = power;
         if(numofDouble==0){
             this.checkStrength();
         }
         else {
             this.currentpower = power;
-            this.energyUsage = numofDouble;
             this.currentPlayer.setState(new ConsumingEnergy());
 
 //
@@ -93,32 +90,46 @@ public class Slavers extends Card{
     }
 
 
+
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
         if(coordinates.size()!=this.energyUsage){
-            throw new WrongNumofEnergyExeption("wrong number of enrgy cells");
-            ///  devo fare si che in caso di errore torni alla give attack
+            currentPlayer.setState(new GiveAttack());
+            throw new WrongNumofEnergyExeption("wrong number of energy cells");
         }
         PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
         Tile[][] tiles = CurrentPlanche.getPlayerBoard();
         /// opero sulla copia
         for(IntegerPair i:coordinates){
-            CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            try {
+                CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),
+                        new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            }
+            catch (InvalidInput e){
+                currentPlayer.setState(new GiveAttack());
+
+                throw new WrongNumofEnergyExeption("no energy cell in: "+i.getFirst()+" "+i.getSecond());
+            }
         }
         this.checkStrength();
 
     }
 
     public void checkStrength(){
-
+            System.out.println("Checking strengthof: "+currentPlayer.GetID());
         if(this.currentpower>this.getRequirement()){
             this.currentPlayer.setState(new Accepting());
             //this.currentPlayer.setInputHandler(new Accept(this));
             this.defeated=true;
+            System.out.println("defeated");
         }
         else if(this.currentpower<this.getRequirement()){
             this.currentPlayer.setState(new Killing());
             //this.currentPlayer.setInputHandler(new Killing(this));
+        }
+        else {
+            this.currentPlayer.setState(new Waiting());
+            this.updateSates();
         }
 
     }
@@ -126,15 +137,29 @@ public class Slavers extends Card{
 
     @Override
     public void killHumans(ArrayList<IntegerPair> coordinates){
-        if (coordinates.size() != this.requirement) {
+
+        if (coordinates.size() != this.Punishment) {
             //devo dirgli che ha scelto il num sbagliato di persone da shottare
-            //throw new Exception();
+            throw new WrongNumofHumansException("wrong number of humans");
         }
 
-//        for (int j = 0; j < coordinates.size(); j++) {
-//            currentPlayer.getMyPlance().kill(coordinates.get(j), 1, true, true);
-//        }
-//        this.updateSates();
+        ///  fai l try catch e opera sulla copia :)
+        PlayerBoard curr= currentPlayer.getmyPlayerBoard();
+        Tile tiles[][]=curr.getPlayerBoard();
+        try{
+            for (IntegerPair coordinate : coordinates) {
+                System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
+
+                curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr), new Killing());
+            }
+        }
+        catch (Exception e){
+            //devo rimanere allo stato di dare gli umani ezzz
+            System.out.println("non ce sta più nessuno qui");
+            throw new ImpossibleBoardChangeException("there was an error in killing humans");
+
+        }
+        this.updateSates();
     }
 
 
@@ -145,10 +170,26 @@ public class Slavers extends Card{
     public void continueCard(boolean accepted){
         if(accepted){
             currentPlayer.IncreaseCredits(this.reward);
-            this.getBoard().movePlayer(this.currentPlayer.GetID(), this.getTime());
+
+            //non ricordo se metto il time positivo o negativo nel json se positivo devo fare meno time;
+            this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
         }
 
         this.finishCard();
+    }
+
+
+    @Override
+    public void finishCard() {
+        GameBoard Board = this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        for (int i = 0; i < PlayerList.size(); i++) {
+            PlayerList.get(i).setState(new BaseState());
+        }
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 
     //json required

@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.HandleDestruction;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.*;
 
@@ -52,6 +53,8 @@ class MeteoritesTest {
     }
     static Player Franci;
 
+    static Player pie;
+
     static PlayerBoard playerBoard1;
     static ArrayList<Integer> attacks =new ArrayList<>();
 
@@ -59,11 +62,17 @@ class MeteoritesTest {
     @BeforeAll
     static void setUp() {
         TGame.NewPlayer(new Player());
+        Player p2 = new Player();
+        p2.setId("pie");
+        TGame.NewPlayer(p2);
 
 
         Franci= TGameBoard.getPlayers().get(0);
 
         Franci.setId("fGr");
+
+        pie= TGameBoard.getPlayers().get(1);
+
 
         playerBoard1= TestSetupHelper.createInitializedBoard2();
         assertTrue(playerBoard1.checkValidity());
@@ -73,16 +82,55 @@ class MeteoritesTest {
         System.out.println("boh111");
         TestSetupHelper.HumansSetter2(Franci.getmyPlayerBoard());
 
+
+        Franci.EndConstruction();
+        pie.EndConstruction();
+
+
     }
 
     @Test
     void cardEffect() {
+                attacks.clear();
+//        //0
+//        attacks.add(1);
+//        attacks.add(1);
+//        //1
+//        attacks.add(2);
+//        attacks.add(0);
+//        //2
+//        attacks.add(0);
+//        attacks.add(0);
+//        //3
+//        attacks.add(0);
+//        attacks.add(1);
+//        //4
+//        attacks.add(3);
+//        attacks.add(1);
+
+
+        //sx
         attacks.add(0);
         attacks.add(0);
         attacks.add(0);
         attacks.add(1);
-        attacks.add(3);
-        attacks.add(0);
+//        //sopr
+//        attacks.add(1);
+//        attacks.add(0);
+//        attacks.add(1);
+//        attacks.add(1);
+//        //dx
+//        attacks.add(2);
+//        attacks.add(0);
+//        attacks.add(2);
+//        attacks.add(1);
+////        //sott
+//        attacks.add(3);
+//        attacks.add(0);
+//        attacks.add(3);
+//        attacks.add(1);
+
+
         Meteorites meteoritesTest=new Meteorites(2,0,TGameBoard,attacks);
         meteoritesTest.CardEffect();
     }
@@ -93,14 +141,34 @@ class MeteoritesTest {
 
     @Test
     void defendFromMeteorites() {
+        attacks.clear();
 
-        attacks.add(0);
-        attacks.add(0);
-        attacks.add(0);
+        attacks.add(1);
+        attacks.add(1);
+        attacks.add(1);
         attacks.add(1);
         attacks.add(3);
         attacks.add(0);
+
         Meteorites meteoritesTest=new Meteorites(2,0,TGameBoard,attacks);
+
+     //   meteoritesTest.setMeteoritesOrder(2);
+        System.out.println(meteoritesTest.getAttacks().get(meteoritesTest.getMeteoritesOrder()));
+
+
+        Player current;
+        current= TGameBoard.getPlayers().get(0);
+
+        meteoritesTest.setCurrentPlayer(current);
+
+        meteoritesTest.setHit(8,8);
+
+        //assertEquals(2,current.getmyPlayerBoard().getTile(7,8).getComponent().getType());
+        meteoritesTest.DefendFromLarge(null,null);
+        assertEquals(HandleDestruction.class,current.getPlayerState().getClass());
+
+
+
 
 
 
