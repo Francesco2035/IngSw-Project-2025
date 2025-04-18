@@ -38,6 +38,7 @@ public class CommandInterpreter {
         commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
         commandMap.put("Quit", this::createQuitCommand);
         commandMap.put("Ready", this::createReadyCommand);
+        commandMap.put("RemoveTile", this::createRemoveTileCommand);
         //  altri comandi
     }
 
@@ -145,6 +146,11 @@ public class CommandInterpreter {
         }
 
         return new InsertTileCommand(x, y, rotation,position, gameId,playerId, lv, title);
+    }
+
+    private Command createRemoveTileCommand(String[] strings) {
+
+        return null;
     }
 
 
