@@ -6,9 +6,7 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.Commands.Command;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -44,12 +42,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         System.out.println("Insert game ID: ");
         String gameId = br.readLine();
-
-//        System.out.println("Insert player name: ");
-//        String name = br.readLine();
-//        System.out.println("Insert game name: ");
-//        String GName = br.readLine();
-//        server.CreateGame(this, name, GName, 2);
         System.out.println("Insert game level: ");
         String level = br.readLine();
 
@@ -60,13 +52,45 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         server.command(loginCommand);
 
-        this.inputLoop();
+        this.inputLoop(br.readLine().equals("true"));
     }
 
 
-    private void inputLoop() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+
+
+//
+//    private void inputLoop() throws IOException {
+//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//        String cmd;
+//        while (!Objects.equals(cmd = br.readLine(), "end")) {
+//            try{
+//                Command command = commandInterpreter.interpret(cmd);
+//                server.command(command);
+//
+//            }
+//            catch (Exception e){
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//    }
+
+
+
+
+    private void inputLoop(boolean fromConsole) throws IOException {
+        BufferedReader br;
         String cmd;
+
+        if (fromConsole) {
+            br = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Inserisci comandi JSON:");
+        } else {
+            InputStream commandFile = getClass().getClassLoader().getResourceAsStream("commands_output.txt");
+            assert commandFile != null;
+            br = new BufferedReader(new InputStreamReader(commandFile));
+        }
+
         while (!Objects.equals(cmd = br.readLine(), "end")) {
             try{
                 Command command = commandInterpreter.interpret(cmd);
@@ -77,21 +101,16 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                 System.out.println(e.getMessage());
             }
         }
+        System.out.println("Fine input.");
     }
 
-//    @Override
-//    public Player getPlayer() throws RemoteException{return me;}
-//
-//    @Override
-//    public Game getGame() throws RemoteException{return myGame;}
-//
-//    @Override
-//    public void setGame(Game game) throws RemoteException{myGame = game;}
-//
-//    @Override
-//    public void setPlayerId(String id) throws RemoteException {me.setId(id);}
 
-    public static void main(String[] args) throws RemoteException, NotBoundException {
+
+
+
+
+
+public static void main(String[] args) throws RemoteException, NotBoundException {
         try {
             new RMIClient().StartClient();
         } catch (Exception e) {
