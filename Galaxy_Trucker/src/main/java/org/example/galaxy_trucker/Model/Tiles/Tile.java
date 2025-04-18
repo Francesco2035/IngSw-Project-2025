@@ -18,6 +18,8 @@ public class Tile implements Serializable {
     @JsonProperty("connectors")
     private ArrayList<Connectors> connectors;
 
+    private boolean available;
+
 
     public Tile() {}
 
@@ -60,7 +62,8 @@ public class Tile implements Serializable {
 
 
 
-
+    public boolean isAvailable() {return available;}
+    public void setAvailable(boolean available) {this.available = available;}
 
 
     //  json required

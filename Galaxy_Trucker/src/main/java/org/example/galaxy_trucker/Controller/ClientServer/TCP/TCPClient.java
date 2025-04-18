@@ -11,23 +11,74 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class TCPClient {
 
-    public static void main(String[] args) throws IOException {
+public class TCPClient{
 
-        Socket echoSocket = null;
+    private Socket echoSocket;
+    private PrintWriter out = null;
+    private BufferedReader in;
+    private BufferedReader stdIn = null;
+    private long lastPongTime = 0;
+
+
+    private void PongListener() {
+        try {
+            String msg;
+            while ((msg = in.readLine()) != null) {
+                if (msg.equals("pong")) {
+                    lastPongTime = System.currentTimeMillis();
+                }
+            }
+        } catch (IOException e) {
+            disconnect();
+        }
+    }
+
+
+    private void PingLoop() {
+        while (!echoSocket.isClosed()) {
+            out.println("ping");
+            System.out.println("ping");
+            try {
+                Thread.sleep(5000);
+
+                if (System.currentTimeMillis() - lastPongTime > 15000) {
+                    System.out.println("Connection timed out. Disconnecting...");
+                    disconnect();
+                    break;
+                }
+
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+    }
+
+
+    public void disconnect(){
+        try {
+            echoSocket.close();
+            System.out.println("\nServer Disconnected.");
+            System.exit(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+    public void main() throws IOException {
+
 
         try {
             echoSocket = new Socket(Settings.SERVER_NAME, Settings.TCP_PORT);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println(e.toString() + " " + Settings.SERVER_NAME);
             System.exit(1);
         }
 
-        PrintWriter out = null;
-        BufferedReader in;
-        BufferedReader stdIn = null;
+
 
         try {
             out = new PrintWriter(echoSocket.getOutputStream(), true);
@@ -38,8 +89,15 @@ public class TCPClient {
             System.exit(1);
         }
 
+
+        PrintWriter finalOut = out;
+
+        new Thread(this::PongListener).start();
+        new Thread(this::PingLoop).start();
+
+
         Gson gson = new Gson();
-        CommandInterpreter commandInterpreter ;
+        CommandInterpreter commandInterpreter;
 
         System.out.println("Connection started\n");
 
@@ -50,8 +108,8 @@ public class TCPClient {
         System.out.print("Inserisci il livello della partita (livello): ");
         String gameLevel = stdIn.readLine();
 
-        String loginString = "Login"+ " " + playerId + " " + gameId + " " + gameLevel;
-        commandInterpreter = new CommandInterpreter(playerId,gameId);
+        String loginString = "Login" + " " + playerId + " " + gameId + " " + gameLevel;
+        commandInterpreter = new CommandInterpreter(playerId, gameId);
         Command loginCommand = commandInterpreter.interpret(loginString);
 
         String jsonLogin = gson.toJson(loginCommand);
@@ -78,4 +136,7 @@ public class TCPClient {
     }
 
 
+
 }
+
+

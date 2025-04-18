@@ -126,10 +126,10 @@ public class GameHandlerTest {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
             GameLists gl = new GameLists();
-            GameHandler gh = new GameHandler(gl);
+            GameHandler gh = new GameHandler();
 
-            gh.Receive(br2.readLine());
-            gh.Receive(br.readLine());
+//            gh.Receive(br2.readLine());
+//            gh.Receive(br.readLine());
 
             assertEquals(PrepController.class, gh.getGameMap().get("num1").get("paolo").getClass());
 

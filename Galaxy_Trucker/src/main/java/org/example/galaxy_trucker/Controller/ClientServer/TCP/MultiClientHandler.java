@@ -17,6 +17,8 @@ public class MultiClientHandler implements Runnable {
     private Socket clientSocket;
     private GameHandler gameHandler;
 
+    private long lastPingTime;
+
     public MultiClientHandler(Socket clientSocket, GameHandler gameHandler) {
         this.clientSocket = clientSocket;
         this.gameHandler = gameHandler;
@@ -43,15 +45,33 @@ public class MultiClientHandler implements Runnable {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             while ((s = in.readLine()) != null) {
-                System.out.println("Received: " + s);
 
-                Command command = objectMapper.readValue(s, Command.class);
+                if(s.equals("ping")){
+                    lastPingTime = System.currentTimeMillis();
+                    out.println("pong");
+                    System.out.println("pong");
+                }
+                else{
+                    System.out.println("Received: " + s);
 
-                System.out.println("Deserialized command: " + command.getTitle());
-                gameHandler.receive(command);
+                    Command command = objectMapper.readValue(s, Command.class);
+
+                    System.out.println("Deserialized command: " + command.getTitle());
+                    gameHandler.receive(command);
+                }
+
+                if (System.currentTimeMillis() - lastPingTime > 15000) {
+                    System.out.println("Timeout client: " + clientSocket.getInetAddress());
+                    break;
+                }
+
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try{
+                clientSocket.close();
+            } catch (IOException ignored) {}
         }
     }
 
