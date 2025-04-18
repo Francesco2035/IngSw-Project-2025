@@ -31,15 +31,29 @@ public class TileSets {
 
 
     public Tile getNewTile(int index){
-        Tile SelectedTile = UncoveredTiles.get(index);
 
-        UncoveredTiles.remove(SelectedTile);
+        Tile SelectedTile = null;
 
-        return SelectedTile;
+        try {
+            SelectedTile = UncoveredTiles.get(index);
+        }catch (IndexOutOfBoundsException e){
+            System.out.println("No valid tile selected!");
+            return null;
+        }
+
+        if (SelectedTile.isAvailable()){
+            SelectedTile.setAvailable(false);
+            return SelectedTile;
+        }
+
+        throw new RuntimeException("Tile not available, someone else took it!");
     }
 
     public void AddUncoveredTile(Tile tile){
-        UncoveredTiles.add(tile);
+        tile.setAvailable(true);
+
+        if(!UncoveredTiles.contains(tile))
+            UncoveredTiles.add(tile);
     }
 
     public ArrayList<Tile> getUncoveredTiles(){return UncoveredTiles;}

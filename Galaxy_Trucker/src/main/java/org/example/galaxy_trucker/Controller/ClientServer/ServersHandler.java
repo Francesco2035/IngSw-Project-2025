@@ -36,7 +36,6 @@ public class ServersHandler implements Runnable {
         Thread ThreadRMI = new Thread(RMI);
         ThreadRMI.start();
 
-
     }
 
 }

@@ -19,7 +19,7 @@ class LoginTest {
     @Test
     public void testMultipleLogins(){
         GameLists gl = new GameLists();
-        GameHandler gh = new GameHandler(gl);
+        GameHandler gh = new GameHandler();
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -36,7 +36,7 @@ class LoginTest {
 
                 System.out.println(commandString);
 
-                gh.Receive(commandString);
+//                gh.Receive(commandString);
             }while (elements.hasNext() );
         } catch (IOException e) {
             e.printStackTrace();

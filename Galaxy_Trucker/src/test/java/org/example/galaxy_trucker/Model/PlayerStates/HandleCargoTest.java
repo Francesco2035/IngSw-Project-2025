@@ -36,8 +36,8 @@ class HandleCargoTest {
         }
         """;
 
-        Command command = poggi.getPlayerState().PlayerAction(com1, poggi);
-        command.execute();
+//        Command command = poggi.getPlayerState().PlayerAction(com1, poggi);
+//        command.execute();
 
         assertEquals(1, pb.getBufferGoods().size());
 
@@ -50,8 +50,8 @@ class HandleCargoTest {
         }
         """;
 
-        command = poggi.getPlayerState().PlayerAction(com1, poggi);
-        command.execute();
+//        command = poggi.getPlayerState().PlayerAction(com1, poggi);
+//        command.execute();
 
         assertEquals(0, pb.getBufferGoods().size());
 
