@@ -55,9 +55,42 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         this.inputLoop(br.readLine().equals("true"));
     }
 
-    private void inputLoop() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+
+
+
+//
+//    private void inputLoop() throws IOException {
+//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//        String cmd;
+//        while (!Objects.equals(cmd = br.readLine(), "end")) {
+//            try{
+//                Command command = commandInterpreter.interpret(cmd);
+//                server.command(command);
+//
+//            }
+//            catch (Exception e){
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//    }
+
+
+
+
+    private void inputLoop(boolean fromConsole) throws IOException {
+        BufferedReader br;
         String cmd;
+
+        if (fromConsole) {
+            br = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Inserisci comandi JSON:");
+        } else {
+            InputStream commandFile = getClass().getClassLoader().getResourceAsStream("commands_output.txt");
+            assert commandFile != null;
+            br = new BufferedReader(new InputStreamReader(commandFile));
+        }
+
         while (!Objects.equals(cmd = br.readLine(), "end")) {
             try{
                 Command command = commandInterpreter.interpret(cmd);
@@ -68,39 +101,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                 System.out.println(e.getMessage());
             }
         }
+        System.out.println("Fine input.");
     }
-
-
-
-
-
-
-
-private void inputLoop(boolean fromConsole) throws IOException {
-    BufferedReader br;
-
-    if (fromConsole) {
-        br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Inserisci comandi JSON:");
-    } else {
-        InputStream commandFile = getClass().getClassLoader().getResourceAsStream("building_commands_inline.json");
-        if (commandFile == null) {
-            throw new FileNotFoundException("File building_commands_inline.json non trovato nel classpath.");
-        }
-        br = new BufferedReader(new InputStreamReader(commandFile));
-        System.out.println("Lettura dei comandi dal file building_commands_inline.json");
-    }
-
-    String cmd;
-    while ((cmd = br.readLine()) != null) {
-        if (cmd.equals("[") || cmd.equals("]")) continue;
-//        System.out.println("Comando ricevuto: " + cmd);
-        Command command = commandInterpreter.interpret(cmd);
-        server.command(command);
-    }
-
-    System.out.println("Fine input.");
-}
 
 
 
