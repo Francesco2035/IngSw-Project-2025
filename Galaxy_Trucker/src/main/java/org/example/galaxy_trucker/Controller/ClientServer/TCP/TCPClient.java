@@ -38,7 +38,7 @@ public class TCPClient{
     private void PingLoop() {
         while (!echoSocket.isClosed()) {
             out.println("ping");
-            System.out.println("ping");
+            //System.out.println("ping");
             try {
                 Thread.sleep(5000);
 

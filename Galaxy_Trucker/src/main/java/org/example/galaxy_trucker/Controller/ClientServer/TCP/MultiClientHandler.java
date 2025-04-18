@@ -49,7 +49,7 @@ public class MultiClientHandler implements Runnable {
                 if(s.equals("ping")){
                     lastPingTime = System.currentTimeMillis();
                     out.println("pong");
-                    System.out.println("pong");
+                    //System.out.println("pong");
                 }
                 else{
                     System.out.println("Received: " + s);

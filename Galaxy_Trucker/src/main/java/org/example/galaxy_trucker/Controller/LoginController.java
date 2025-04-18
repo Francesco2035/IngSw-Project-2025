@@ -12,10 +12,10 @@ public class LoginController extends Controller {
     }
 
     @Override
-    public void nextState(GameHandler gh) {
+    public void nextState(GameController gc) {
         curPlayer.setState(new BuildingShip());
-        PrepController prep  = new PrepController(curPlayer, gameId, gh);
+        PrepController prep  = new PrepController(curPlayer, gameId, gc);
         curPlayer.getCommonBoard().getHourglass().setListener(prep);
-        gh.setGameMap(gameId,curPlayer,prep);
+        gc.setControllerMap(curPlayer,prep);
     }
 }

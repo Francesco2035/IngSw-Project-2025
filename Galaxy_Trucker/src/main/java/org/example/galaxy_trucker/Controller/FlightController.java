@@ -13,9 +13,10 @@ public class FlightController extends Controller {
     }
 
 
+
     @Override
-    public void nextState(GameHandler gh) {
+    public void nextState(GameController gc) {
         curPlayer.getCommonBoard().NewCard();
-        gh.setGameMap(gameId,curPlayer,new CardsController(curPlayer, gameId));
+        gc.setControllerMap(curPlayer, new CardsController(curPlayer, gameId));
     }
 }
