@@ -3,70 +3,70 @@ PickTile -1
 InsertTile 8 5 180
 PickTile -1
 Hourglass
-Discard 0
+Discard
 PickTile -1
 Hourglass
 ToBuffer 180
 FromBuffer 0
-Discard 1
+Discard
 PickTile -1
-Discard 2
+Discard
 PickTile 2
 InsertTile 8 6 90
 PickTile -1
 InsertTile 5 7 270
 PickTile -1
-Discard 2
+Discard
 PickTile -1
-Discard 3
+Discard
 PickTile -1
-Discard 4
+Discard
 PickTile -1
 ToBuffer 180
 FromBuffer 0
-Discard 5
+Discard
 PickTile 3
 InsertTile 5 5 0
 PickTile -1
 Hourglass
-Discard 5
+Discard
 PickTile 0
 InsertTile 8 5 270
 PickTile 3
 ToBuffer 180
 PickTile -1
 Hourglass
-Discard 4
+Discard
 PickTile -1
-Discard 5
+Discard
 PickTile -1
 Hourglass
 InsertTile 8 5 90
 PickTile -1
 InsertTile 8 6 90
 FromBuffer 0
-Discard 6
+Discard
 PickTile -1
-Discard 7
+Discard
 PickTile -1
-Discard 8
+Discard
 PickTile -1
-Discard 9
+Discard
 PickTile -1
-Discard 10
+Discard
 PickTile 9
 Hourglass
 InsertTile 7 8 180
 PickTile 1
 ToBuffer 180
 FromBuffer 0
-Discard 9
+Discard
 PickTile -1
 Hourglass
 InsertTile 7 6 90
 PickTile 2
 Hourglass
-Discard 9
+Discard
 PickTile -1
 ToBuffer 0
 FromBuffer 0
@@ -77,12 +77,12 @@ ToBuffer 90
 FromBuffer 0
 InsertTile 8 8 90
 PickTile 1
-Discard 9
+Discard
 PickTile -1
 ToBuffer 180
 FromBuffer 0
 Hourglass
-Discard 10
+Discard
 PickTile -1
 ToBuffer 270
 PickTile -1
@@ -90,12 +90,12 @@ InsertTile 5 6 180
 FromBuffer 0
 ToBuffer 180
 PickTile -1
-Discard 11
+Discard
 PickTile -1
 Hourglass
 InsertTile 6 8 180
 FromBuffer 0
-Discard 12
+Discard
 PickTile -1
 Hourglass
 Hourglass
@@ -104,12 +104,12 @@ PickTile -1
 Hourglass
 ToBuffer 90
 PickTile -1
-Discard 13
+Discard
 FromBuffer 1
-Discard 14
+Discard
 FromBuffer 0
 Hourglass
-Discard 15
+Discard
 PickTile -1
 Hourglass
 Hourglass
@@ -117,9 +117,9 @@ ToBuffer 270
 FromBuffer 0
 InsertTile 5 5 270
 PickTile -1
-Discard 16
+Discard
 PickTile -1
-Discard 17
+Discard
 PickTile -1
 Hourglass
 ToBuffer 90
@@ -138,16 +138,16 @@ PickTile 13
 Hourglass
 InsertTile 8 7 180
 PickTile 6
-Discard 15
+Discard
 PickTile -1
 Hourglass
 ToBuffer 0
 PickTile 12
 InsertTile 6 8 270
 PickTile -1
-Discard 15
+Discard
 FromBuffer 0
-Discard 16
+Discard
 PickTile -1
 Hourglass
 InsertTile 8 7 90
@@ -159,47 +159,47 @@ ToBuffer 0
 FromBuffer 0
 ToBuffer 270
 FromBuffer 0
-Discard 17
+Discard
 PickTile -1
-Discard 18
+Discard
 PickTile 16
 ToBuffer 270
 PickTile 2
-Discard 17
+Discard
 FromBuffer 0
-Discard 18
+Discard
 PickTile 2
-Discard 18
+Discard
 PickTile -1
 Hourglass
-Discard 19
+Discard
 PickTile 6
 InsertTile 8 7 0
 PickTile -1
 Hourglass
-Discard 19
+Discard
 PickTile -1
 InsertTile 5 7 90
 PickTile -1
-Discard 20
+Discard
 PickTile 10
 ToBuffer 270
 FromBuffer 0
-Discard 20
+Discard
 PickTile -1
 Hourglass
 InsertTile 5 6 0
 PickTile 1
-Discard 20
+Discard
 PickTile -1
 ToBuffer 180
 FromBuffer 0
 Hourglass
 ToBuffer 270
 FromBuffer 0
-Discard 21
+Discard
 PickTile -1
-Discard 22
+Discard
 PickTile -1
 InsertTile 6 7 0
 PickTile -1
@@ -211,14 +211,14 @@ Hourglass
 Hourglass
 InsertTile 5 5 270
 PickTile 18
-Discard 21
+Discard
 FromBuffer 0
-Discard 22
+Discard
 FromBuffer 0
 ToBuffer 180
 FromBuffer 0
 Hourglass
-Discard 23
+Discard
 PickTile 12
 ToBuffer 180
 FromBuffer 0
@@ -235,15 +235,15 @@ FromBuffer 0
 ToBuffer 180
 PickTile -1
 Hourglass
-Discard 23
+Discard
 PickTile 5
-Discard 23
+Discard
 PickTile -1
-Discard 24
+Discard
 FromBuffer 0
 InsertTile 8 5 270
 PickTile -1
-Discard 25
+Discard
 PickTile -1
 Hourglass
 InsertTile 7 8 270
@@ -257,18 +257,18 @@ PickTile 18
 InsertTile 5 5 90
 FromBuffer 0
 Hourglass
-Discard 24
+Discard
 PickTile -1
 Hourglass
 ToBuffer 90
 PickTile -1
 InsertTile 5 7 180
 PickTile -1
-Discard 25
+Discard
 FromBuffer 0
 InsertTile 7 5 0
 PickTile 4
-Discard 25
+Discard
 PickTile -1
 ToBuffer 90
 PickTile -1
@@ -276,17 +276,17 @@ ToBuffer 180
 PickTile -1
 InsertTile 7 7 180
 PickTile 25
-Discard 25
+Discard
 FromBuffer 0
-Discard 26
+Discard
 FromBuffer 0
 InsertTile 6 8 0
 PickTile 7
 Hourglass
-Discard 26
+Discard
 PickTile -1
 Hourglass
-Discard 27
+Discard
 PickTile -1
 InsertTile 5 6 0
 PickTile -1
@@ -299,7 +299,7 @@ ToBuffer 270
 PickTile 0
 InsertTile 5 6 180
 FromBuffer 0
-Discard 26
+Discard
 PickTile 5
 ToBuffer 90
 PickTile -1
@@ -310,24 +310,24 @@ FromBuffer 0
 Hourglass
 Hourglass
 Hourglass
-Discard 25
+Discard
 PickTile -1
 InsertTile 6 7 180
 PickTile -1
 Hourglass
 Hourglass
-Discard 26
+Discard
 PickTile -1
 InsertTile 6 5 90
 PickTile -1
 ToBuffer 0
 FromBuffer 0
 Hourglass
-Discard 27
+Discard
 PickTile 9
 ToBuffer 180
 PickTile -1
-Discard 27
+Discard
 FromBuffer 0
 ToBuffer 270
 FromBuffer 0
@@ -344,19 +344,19 @@ PickTile -1
 Hourglass
 InsertTile 7 7 270
 FromBuffer 0
-Discard 27
+Discard
 PickTile 19
 Hourglass
 Hourglass
-Discard 27
+Discard
 PickTile -1
 Hourglass
 Hourglass
-Discard 28
+Discard
 PickTile -1
 ToBuffer 180
 FromBuffer 0
-Discard 29
+Discard
 PickTile -1
 ToBuffer 90
 FromBuffer 0
@@ -366,10 +366,10 @@ ToBuffer 180
 FromBuffer 0
 InsertTile 5 8 90
 PickTile -1
-Discard 30
+Discard
 PickTile -1
 Hourglass
-Discard 31
+Discard
 PickTile -1
 InsertTile 7 8 270
 PickTile -1
@@ -379,39 +379,39 @@ InsertTile 8 5 0
 PickTile -1
 Hourglass
 Hourglass
-Discard 31
+Discard
 PickTile -1
 InsertTile 5 5 90
 PickTile -1
 InsertTile 5 7 270
 PickTile 5
-Discard 31
+Discard
 PickTile -1
 Hourglass
 InsertTile 6 7 0
 PickTile -1
-Discard 32
+Discard
 PickTile 2
-Discard 32
+Discard
 PickTile -1
 Hourglass
 Hourglass
-Discard 33
+Discard
 PickTile 6
 Hourglass
 InsertTile 6 8 90
 PickTile -1
-Discard 33
+Discard
 PickTile 25
-Discard 33
+Discard
 PickTile 30
 ToBuffer 90
 FromBuffer 0
-Discard 33
+Discard
 PickTile 24
 ToBuffer 0
 FromBuffer 0
-Discard 33
+Discard
 PickTile 23
 ToBuffer 270
 FromBuffer 0
@@ -424,19 +424,19 @@ PickTile -1
 InsertTile 6 8 0
 PickTile -1
 Hourglass
-Discard 33
+Discard
 FromBuffer 0
 InsertTile 5 8 180
 PickTile 4
 ToBuffer 0
 FromBuffer 0
-Discard 33
+Discard
 PickTile -1
-Discard 34
+Discard
 PickTile 8
 ToBuffer 0
 PickTile -1
-Discard 34
+Discard
 FromBuffer 0
 Hourglass
 ToBuffer 90
@@ -454,19 +454,19 @@ PickTile 25
 InsertTile 6 6 90
 PickTile -1
 Hourglass
-Discard 32
+Discard
 PickTile -1
 InsertTile 6 6 180
 FromBuffer 0
-Discard 33
+Discard
 PickTile -1
-Discard 34
+Discard
 FromBuffer 0
-Discard 35
+Discard
 PickTile -1
 InsertTile 6 8 270
 PickTile -1
-Discard 36
+Discard
 PickTile -1
 InsertTile 5 5 0
 PickTile -1
@@ -483,31 +483,31 @@ ToBuffer 180
 PickTile -1
 Hourglass
 Hourglass
-Discard 35
+Discard
 PickTile 17
 ToBuffer 270
 PickTile -1
-Discard 35
+Discard
 FromBuffer 0
-Discard 36
+Discard
 PickTile -1
 Hourglass
-Discard 37
+Discard
 FromBuffer 0
-Discard 38
+Discard
 PickTile -1
 Hourglass
 Hourglass
-Discard 39
+Discard
 PickTile -1
 Hourglass
-Discard 40
+Discard
 PickTile -1
 InsertTile 5 6 180
 PickTile -1
 InsertTile 8 6 180
 PickTile -1
-Discard 41
+Discard
 PickTile -1
 InsertTile 7 7 0
 PickTile 15
@@ -517,7 +517,7 @@ InsertTile 7 5 180
 PickTile -1
 InsertTile 6 5 270
 FromBuffer 0
-Discard 40
+Discard
 PickTile -1
 ToBuffer 0
 FromBuffer 0
@@ -528,19 +528,19 @@ InsertTile 8 6 0
 PickTile -1
 InsertTile 6 7 270
 PickTile -1
-Discard 40
+Discard
 PickTile 16
 InsertTile 6 5 270
 PickTile 36
-Discard 39
+Discard
 PickTile 28
 ToBuffer 0
 PickTile 35
 ToBuffer 270
 FromBuffer 0
-Discard 38
+Discard
 PickTile -1
-Discard 39
+Discard
 FromBuffer 0
 Hourglass
 InsertTile 8 5 0
@@ -568,7 +568,7 @@ PickTile -1
 Hourglass
 InsertTile 5 6 90
 PickTile -1
-Discard 37
+Discard
 PickTile -1
 Hourglass
 InsertTile 7 6 90
@@ -588,7 +588,7 @@ Hourglass
 ToBuffer 0
 PickTile -1
 Hourglass
-Discard 37
+Discard
 FromBuffer 0
 Hourglass
 ToBuffer 180
@@ -606,18 +606,18 @@ FromBuffer 0
 ToBuffer 0
 PickTile -1
 Hourglass
-Discard 37
+Discard
 FromBuffer 1
-Discard 38
+Discard
 FromBuffer 0
-Discard 39
+Discard
 PickTile -1
 Hourglass
-Discard 40
+Discard
 PickTile -1
 InsertTile 8 6 270
 PickTile 31
-Discard 40
+Discard
 PickTile 5
 ToBuffer 270
 FromBuffer 0
@@ -625,14 +625,14 @@ ToBuffer 270
 FromBuffer 0
 ToBuffer 180
 PickTile 14
-Discard 39
+Discard
 PickTile -1
 Hourglass
 InsertTile 8 6 90
 PickTile -1
-Discard 40
+Discard
 FromBuffer 0
-Discard 41
+Discard
 PickTile -1
 ToBuffer 0
 FromBuffer 0
@@ -640,24 +640,24 @@ ToBuffer 270
 FromBuffer 0
 ToBuffer 270
 PickTile 1
-Discard 41
+Discard
 PickTile -1
 Hourglass
 Hourglass
-Discard 42
+Discard
 FromBuffer 0
 ToBuffer 90
 FromBuffer 0
 Hourglass
 InsertTile 8 7 180
 PickTile -1
-Discard 43
+Discard
 PickTile -1
-Discard 44
+Discard
 PickTile -1
 InsertTile 7 8 270
 PickTile 14
-Discard 44
+Discard
 PickTile -1
 InsertTile 6 7 0
 PickTile -1
@@ -667,12 +667,12 @@ InsertTile 6 5 270
 PickTile -1
 ToBuffer 90
 FromBuffer 0
-Discard 45
+Discard
 PickTile -1
-Discard 46
+Discard
 PickTile -1
 Hourglass
-Discard 47
+Discard
 PickTile -1
 InsertTile 8 7 90
 PickTile -1
@@ -680,19 +680,19 @@ InsertTile 8 7 270
 PickTile 1
 Hourglass
 Hourglass
-Discard 47
+Discard
 PickTile 11
 ToBuffer 270
 FromBuffer 0
 InsertTile 5 8 0
 PickTile -1
-Discard 47
+Discard
 PickTile -1
 Hourglass
 Hourglass
 InsertTile 6 6 0
 PickTile -1
-Discard 48
+Discard
 PickTile -1
 Hourglass
 Hourglass
@@ -703,7 +703,7 @@ ToBuffer 270
 FromBuffer 0
 InsertTile 8 8 180
 PickTile 27
-Discard 47
+Discard
 PickTile -1
 Hourglass
 Hourglass
@@ -721,25 +721,25 @@ ToBuffer 270
 PickTile -1
 ToBuffer 180
 PickTile -1
-Discard 45
+Discard
 FromBuffer 1
 Hourglass
-Discard 46
+Discard
 PickTile 22
 InsertTile 6 6 90
 FromBuffer 0
-Discard 46
+Discard
 PickTile 35
 ToBuffer 90
 FromBuffer 0
 Hourglass
-Discard 46
+Discard
 PickTile 37
 ToBuffer 90
 FromBuffer 0
-Discard 46
+Discard
 PickTile 6
-Discard 46
+Discard
 PickTile 41
 ToBuffer 0
 FromBuffer 0
@@ -752,7 +752,7 @@ Hourglass
 Hourglass
 ToBuffer 0
 FromBuffer 0
-Discard 45
+Discard
 PickTile 3
 Hourglass
 ToBuffer 90
@@ -763,19 +763,19 @@ InsertTile 6 8 180
 PickTile 9
 ToBuffer 180
 FromBuffer 0
-Discard 43
+Discard
 FromBuffer 0
 ToBuffer 0
 PickTile 28
 InsertTile 6 6 270
 PickTile 21
-Discard 42
+Discard
 FromBuffer 0
 InsertTile 5 5 0
 PickTile 29
 InsertTile 8 5 180
 PickTile 11
-Discard 41
+Discard
 PickTile 2
 ToBuffer 270
 PickTile 20
@@ -784,11 +784,11 @@ FromBuffer 0
 ToBuffer 90
 FromBuffer 0
 Hourglass
-Discard 40
+Discard
 FromBuffer 0
-Discard 41
+Discard
 PickTile 39
-Discard 41
+Discard
 PickTile 0
 Hourglass
 ToBuffer 270
@@ -797,9 +797,9 @@ ToBuffer 90
 PickTile 21
 InsertTile 6 6 90
 FromBuffer 1
-Discard 39
+Discard
 FromBuffer 0
-Discard 40
+Discard
 PickTile 10
 InsertTile 7 5 180
 PickTile 29
@@ -812,12 +812,12 @@ FromBuffer 0
 Hourglass
 InsertTile 6 5 0
 PickTile 29
-Discard 38
+Discard
 PickTile 23
 Hourglass
 ToBuffer 90
 FromBuffer 0
-Discard 38
+Discard
 PickTile 5
 Hourglass
 InsertTile 7 7 180
@@ -837,12 +837,12 @@ PickTile 28
 Hourglass
 InsertTile 6 8 90
 PickTile 10
-Discard 33
+Discard
 PickTile 24
-Discard 33
+Discard
 PickTile 31
 Hourglass
-Discard 33
+Discard
 PickTile 27
 Hourglass
 ToBuffer 180
@@ -851,21 +851,21 @@ ToBuffer 0
 FromBuffer 1
 Hourglass
 Hourglass
-Discard 32
+Discard
 FromBuffer 0
 ToBuffer 90
 FromBuffer 0
-Discard 33
+Discard
 PickTile 4
 Hourglass
 Hourglass
 ToBuffer 90
 FromBuffer 0
-Discard 33
+Discard
 PickTile 6
 ToBuffer 90
 FromBuffer 0
-Discard 33
+Discard
 PickTile 26
 Hourglass
 InsertTile 7 8 270
@@ -889,44 +889,44 @@ ToBuffer 270
 PickTile 16
 ToBuffer 180
 PickTile 17
-Discard 27
+Discard
 PickTile 3
 ToBuffer 180
 FromBuffer 1
 ToBuffer 0
 FromBuffer 0
-Discard 27
+Discard
 FromBuffer 0
-Discard 28
+Discard
 PickTile 25
 InsertTile 6 6 0
 PickTile 6
 Hourglass
 InsertTile 5 8 0
 PickTile 1
-Discard 26
+Discard
 PickTile 8
-Discard 26
+Discard
 PickTile 10
 ToBuffer 270
 FromBuffer 0
-Discard 26
+Discard
 PickTile 3
 InsertTile 7 6 270
 PickTile 21
 ToBuffer 180
 FromBuffer 0
 Hourglass
-Discard 25
+Discard
 PickTile 15
 Hourglass
-Discard 25
+Discard
 PickTile 9
 InsertTile 8 8 90
 PickTile 6
 InsertTile 6 6 90
 PickTile 16
-Discard 23
+Discard
 PickTile 8
 ToBuffer 180
 FromBuffer 0
@@ -934,11 +934,11 @@ ToBuffer 180
 FromBuffer 0
 InsertTile 7 5 0
 PickTile 5
-Discard 22
+Discard
 PickTile 20
 ToBuffer 90
 FromBuffer 0
-Discard 22
+Discard
 PickTile 1
 InsertTile 7 7 90
 PickTile 18
@@ -949,25 +949,25 @@ FromBuffer 0
 InsertTile 8 5 0
 PickTile 9
 Hourglass
-Discard 19
+Discard
 PickTile 10
 ToBuffer 0
 FromBuffer 0
-Discard 19
+Discard
 PickTile 17
-Discard 19
+Discard
 PickTile 2
 ToBuffer 90
 FromBuffer 0
-Discard 19
+Discard
 PickTile 15
 ToBuffer 0
 FromBuffer 0
 ToBuffer 270
 FromBuffer 0
-Discard 19
+Discard
 PickTile 18
-Discard 19
+Discard
 PickTile 3
 InsertTile 8 7 90
 PickTile 13
@@ -977,9 +977,9 @@ ToBuffer 180
 PickTile 11
 InsertTile 8 6 90
 FromBuffer 0
-Discard 17
+Discard
 PickTile 3
-Discard 17
+Discard
 PickTile 12
 ToBuffer 90
 FromBuffer 0
@@ -992,15 +992,15 @@ PickTile 3
 Hourglass
 ToBuffer 180
 FromBuffer 0
-Discard 15
+Discard
 PickTile 1
-Discard 15
+Discard
 PickTile 0
 InsertTile 8 8 270
 PickTile 6
 ToBuffer 90
 FromBuffer 0
-Discard 14
+Discard
 PickTile 5
 Hourglass
 InsertTile 7 6 180
@@ -1008,7 +1008,7 @@ PickTile 12
 Hourglass
 Hourglass
 Hourglass
-Discard 13
+Discard
 PickTile 7
 ToBuffer 180
 FromBuffer 0
@@ -1017,15 +1017,15 @@ FromBuffer 0
 Hourglass
 Hourglass
 Hourglass
-Discard 13
+Discard
 PickTile 12
 ToBuffer 180
 FromBuffer 0
-Discard 13
+Discard
 PickTile 3
 ToBuffer 180
 FromBuffer 0
-Discard 13
+Discard
 PickTile 4
 ToBuffer 180
 FromBuffer 0
@@ -1036,17 +1036,17 @@ PickTile 5
 InsertTile 6 8 90
 PickTile 3
 Hourglass
-Discard 11
+Discard
 PickTile 5
 InsertTile 8 8 270
 PickTile 1
-Discard 10
+Discard
 PickTile 3
 ToBuffer 270
 FromBuffer 0
-Discard 10
+Discard
 PickTile 5
-Discard 10
+Discard
 PickTile 1
 InsertTile 8 6 90
 PickTile 8
@@ -1070,7 +1070,7 @@ ToBuffer 180
 FromBuffer 0
 ToBuffer 270
 FromBuffer 0
-Discard 5
+Discard
 PickTile 4
 InsertTile 7 6 90
 PickTile 3
@@ -1080,12 +1080,12 @@ ToBuffer 180
 PickTile 0
 InsertTile 8 6 180
 FromBuffer 0
-Discard 3
+Discard
 PickTile 2
 InsertTile 7 8 180
 PickTile 1
 Hourglass
-Discard 2
+Discard
 PickTile 0
 InsertTile 7 7 0
 PickTile 1
@@ -1099,7 +1099,7 @@ ToBuffer 270
 FromBuffer 0
 ToBuffer 270
 FromBuffer 0
-Discard 0
+Discard
 PickTile 0
 ToBuffer 180
 FromBuffer 0

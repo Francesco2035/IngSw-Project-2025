@@ -123,7 +123,7 @@ public class CommandInterpreter {
             }
             case "Hourglass", "Discard":{
                 if (parts.length != 1) {
-                    throw new IllegalArgumentException("Comando Hourglass e Discard non richiedono nesusn argomento");
+                    throw new IllegalArgumentException("Comando Hourglass e Discard non richiedono nessun argomento");
                 }
                 break;
             }
