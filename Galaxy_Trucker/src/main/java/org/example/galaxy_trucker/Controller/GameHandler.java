@@ -16,7 +16,7 @@ public class GameHandler {
     private final GameLists gameList;
     private final ConcurrentHashMap<String, Controller> controllerMap;
     private final ConcurrentHashMap<String, ConcurrentHashMap<String, Controller>> gameMap;
-    private final ArrayList<Command> commandList = new ArrayList<>();  // Lista di comandi
+    private final ArrayList<Command> commandList = new ArrayList<>();
 
     public GameHandler() {
         this.gameList = new GameLists();

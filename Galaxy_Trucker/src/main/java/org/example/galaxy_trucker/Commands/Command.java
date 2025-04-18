@@ -42,8 +42,7 @@ public class Command implements Serializable {
         this.title = title;
     }
 
-    public void execute(Player player) {
-    }
+    public void execute(Player player) {}
 
     public String getTitle() {
         return title;

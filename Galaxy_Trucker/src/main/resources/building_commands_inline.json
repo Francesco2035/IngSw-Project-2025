@@ -1,12 +1,4 @@
 [
-  {"title":"login", "gameID":"num1", "playerID":"paolo", "lvl":2},
-  {"title":"Ready", "gameID":"num1", "playerID":"paolo", "ready":true},
-  {"title":"login", "gameID":"num1", "playerID":"pietro", "lvl":2},
-  {"title":"Ready", "gameID":"num1", "playerID":"pietro", "ready":true},
-  {"title":"login", "gameID":"num1", "playerID":"gay", "lvl":2},
-  {"title":"Ready", "gameID":"num1", "playerID":"gay", "ready":true},
-  {"title":"login", "gameID":"num1", "playerID":"paluGay", "lvl":2},
-  {"title":"Ready", "gameID":"num1", "playerID":"paluGay", "ready":true},
   {"title":"Pick Tile","gameID":"num1","playerID":"paolo","position":-1},
   {"title":"InsertTile","gameID":"num1","playerID":"paolo","x":8,"y":5,"rotation":180},
   {"title":"Pick Tile","gameID":"num1","playerID":"paolo","position":-1},
