@@ -11,15 +11,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GameHandler {
+public class GamesHandler {
 
-    private final GameLists gameList;
+//    private final GameLists gameList;
 
     private final ArrayList<Command> commandList = new ArrayList<>();  // Lista di comandi
     private final HashMap<String, GameController> gameControllerMap;
 
-    public GameHandler() {
-        this.gameList = new GameLists();
+    public GamesHandler() {
+//        this.gameList = new GameLists();
         this.gameControllerMap = new HashMap<>();
     }
 //

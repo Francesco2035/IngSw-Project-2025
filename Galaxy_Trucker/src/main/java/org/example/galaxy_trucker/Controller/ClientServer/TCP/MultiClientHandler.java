@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
-import org.example.galaxy_trucker.Controller.GameHandler;
+import org.example.galaxy_trucker.Controller.GamesHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,11 +15,11 @@ import java.net.Socket;
 public class MultiClientHandler implements Runnable {
 
     private Socket clientSocket;
-    private GameHandler gameHandler;
+    private GamesHandler gameHandler;
 
     private long lastPingTime;
 
-    public MultiClientHandler(Socket clientSocket, GameHandler gameHandler) {
+    public MultiClientHandler(Socket clientSocket, GamesHandler gameHandler) {
         this.clientSocket = clientSocket;
         this.gameHandler = gameHandler;
     }

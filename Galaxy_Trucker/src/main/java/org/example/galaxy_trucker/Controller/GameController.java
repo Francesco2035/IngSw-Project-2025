@@ -15,10 +15,10 @@ public class GameController {
     private final HashMap<String, BlockingQueue<Command>> commandQueues = new HashMap<>();
     private final HashMap<String, Thread> threads = new HashMap<>();
     final Game game;
-    private GameHandler gh;
+    private GamesHandler gh;
 
 
-    public GameController(String idGame, Game game, GameHandler gh) {
+    public GameController(String idGame, Game game, GamesHandler gh) {
         this.idGame = idGame;
         ControllerMap = new HashMap<>();
         this.game = game;
