@@ -366,7 +366,7 @@ public class Pirates extends Card{
         return Punishment;
     }
 
-    //json reuired
+    //json required
     public Pirates(){}
     public int getRequirement() {return requirement;}
     public void setRequirement(int requirement) {this.requirement = requirement;}

@@ -13,7 +13,7 @@
   {"id":12,  "Card":"AbandonedStation",  "Level" :1 ,  "Time":2 , "rewardGoods":[{ "type": "RED"},{ "type": "RED"}] , "requirement":1  },
   {"id":13,  "Card":"AbandonedStation",  "Level" :2 ,  "Time":1 , "rewardGoods":[{ "type": "RED"},{ "type": "YELLOW"}] , "requirement":7  },
   {"id":14,  "Card":"AbandonedStation", "Level" :2 ,  "Time":2 , "rewardGoods":[{ "type": "YELLOW"},{ "type": "YELLOW"},{ "type": "GREEN"}] , "requirement":8  },
-  {"id":15, "Card":"Meteorites",   "Level" : 1,  "Time": 0, "attacks": [1,1,0,0,2,0] },
+  {"id":15, "Card":"Meteorites",   "Level" : 1,  "Time": 0, "attacks":[1,1,0,0,2,0]},
   {"id":16, "Card":"Meteorites",   "Level" : 1,  "Time": 0, "attacks":[1,0,1,0,0,0,2,0,3,0]},
   {"id":17,  "Card":"Meteorites",  "Level" :1 ,  "Time":0 , "attacks":[1,1,1,0,1,1]},
   {"id":18 , "Card":"Meteorites",   "Level" :2 , "Time":0 , "attacks":[1,0,1,0,0,1,0,0,0,0]},
