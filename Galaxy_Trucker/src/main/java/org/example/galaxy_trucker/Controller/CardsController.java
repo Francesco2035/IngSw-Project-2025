@@ -13,10 +13,10 @@ public class CardsController extends Controller {
     @Override
     public void nextState(GameController gc) {
         if (curPlayer.getCommonBoard().getCardStack().getFullAdventure().isEmpty()){
-            //gestisce la fine del gioco
+            gc.setGameOver();
         }
         else{
-            gc.setControllerMap(curPlayer,new FlightController(curPlayer, gameId));
+            gc.setControllerMap(curPlayer,new FlightController(curPlayer, gameId, gc));
         }
     }
 }

@@ -27,7 +27,7 @@ public class TestBuilding {
 
         InputStream originalIn = System.in;
         GameLists gl = new GameLists();
-        GameHandler gh = new GameHandler();
+        GamesHandler gh = new GamesHandler();
 
         try {
 

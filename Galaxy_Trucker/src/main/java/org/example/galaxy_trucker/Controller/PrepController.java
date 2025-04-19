@@ -19,7 +19,8 @@ public class PrepController extends Controller implements HourGlassListener {
     public void nextState(GameController gc) {
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new Waiting());
-            gc.setControllerMap(curPlayer,new FlightController(curPlayer, gameId));
+            gc.setFlightCount(1);
+            gc.setControllerMap(curPlayer,new FlightController(curPlayer, gameId, gc));
         }
         gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId));
         curPlayer.setState(new CheckValidity());

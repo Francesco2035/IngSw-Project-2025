@@ -32,6 +32,7 @@ public class PlayerBoard {
 
     private boolean purpleAlien;
     private boolean brownAlien;
+    private ArrayList<HousingUnit> connectedHousingUnits;
 
     private ArrayList<Goods> BufferGoods;
 
@@ -77,6 +78,7 @@ public class PlayerBoard {
         this.BufferGoods = new ArrayList<>();
 
         this.ValidPlayerBoard = new int[10][10];
+        this.connectedHousingUnits = new ArrayList<>();
 
 
         this.HousingUnits = new ArrayList<>();
@@ -921,6 +923,10 @@ public class PlayerBoard {
 
     public boolean getValid(){
         return valid;
+    }
+
+    public ArrayList<HousingUnit> getConnectedHousingUnits(){
+        return connectedHousingUnits;
     }
 
 

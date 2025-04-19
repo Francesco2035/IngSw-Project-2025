@@ -17,7 +17,6 @@ public class GameBoard {
 
     // questo arrayList tiene conto della posizione effettiva nel Game
     private ArrayList<Player_IntegerPair> players;
-    //private ArrayList<Pair<Player, Integer>> players;
     private Player[] positions;
     private int nPositions;
     private int[] startPos;
@@ -55,6 +54,7 @@ public class GameBoard {
 
         positions = new Player[nPositions];
         hourglass = new Hourglass(GameLv);
+        this.CardStack = stack;
     }
 
 
@@ -201,7 +201,9 @@ public class GameBoard {
             p.getKey().setCard(CurrentCard);
         }
 
+        CurrentCard.setBoard(this);
         CurrentCard.CardEffect();
+        System.out.println("Id Card: " +CurrentCard.getId());
     }
 
 

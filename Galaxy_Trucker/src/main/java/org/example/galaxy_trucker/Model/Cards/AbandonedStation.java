@@ -8,6 +8,7 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.Accepting;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
+import org.example.galaxy_trucker.Model.PlayerStates.HandleCargo;
 import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
 
@@ -60,6 +61,7 @@ public class AbandonedStation extends Card{
                 this.finishCard();
                 break;
             }
+            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
@@ -88,7 +90,9 @@ public class AbandonedStation extends Card{
     public void continueCard(boolean accepted) {
         if(accepted) {
 
-            currentPlayer.handleCargo(this.rewardGoods);
+
+            currentPlayer.setState(new HandleCargo());
+            currentPlayer.getmyPlayerBoard().setRewards(rewardGoods);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
 
         }

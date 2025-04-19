@@ -56,7 +56,7 @@ public class AbandonedShip extends Card{
                 this.finishCard();
                 break;
             }
-            currentPlayer.setState(new Waiting());
+            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             System.out.println("Cchecking:"+currentPlayer.GetID());

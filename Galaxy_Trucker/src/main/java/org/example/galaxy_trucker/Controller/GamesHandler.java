@@ -15,7 +15,7 @@ public class GamesHandler {
 
 //    private final GameLists gameList;
 
-    private final ArrayList<Command> commandList = new ArrayList<>();  // Lista di comandi
+    //private final ArrayList<Command> commandList = new ArrayList<>();  // Lista di comandi
     private final HashMap<String, GameController> gameControllerMap;
 
     public GamesHandler() {

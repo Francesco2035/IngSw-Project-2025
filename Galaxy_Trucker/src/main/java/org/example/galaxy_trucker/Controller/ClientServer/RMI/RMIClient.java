@@ -52,7 +52,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         server.command(loginCommand);
 
-        this.inputLoop(br.readLine().equals("true"));
+        this.inputLoop(true);
     }
 
 

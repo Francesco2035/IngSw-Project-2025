@@ -14,8 +14,10 @@ public class PostPrepController extends Controller {
     @Override
     public void nextState(GameController gc) {
         if (curPlayer.getmyPlayerBoard().checkValidity()){
-            gc.setControllerMap(curPlayer,new FlightController(curPlayer, gameId));
+            gc.setFlightCount(1);
+            gc.setControllerMap(curPlayer,new FlightController(curPlayer, gameId,gc));
         }
         gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId));
+
     }
 }

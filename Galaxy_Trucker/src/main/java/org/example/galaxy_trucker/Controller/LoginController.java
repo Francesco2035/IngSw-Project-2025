@@ -16,6 +16,7 @@ public class LoginController extends Controller {
         curPlayer.setState(new BuildingShip());
         PrepController prep  = new PrepController(curPlayer, gameId, gc);
         curPlayer.getCommonBoard().getHourglass().setListener(prep);
+        gc.setBuildingCount(1);
         gc.setControllerMap(curPlayer,prep);
     }
 }
