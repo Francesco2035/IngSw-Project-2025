@@ -64,6 +64,9 @@ public class GamesHandler {
     public synchronized void initPlayer(Command command) {
         try {
             String gameID = command.getGameId();
+            if(gameControllerMap.containsKey(gameID) && gameControllerMap.get(gameID).isStarted()) {
+                throw new InvalidInput("Game already started: " + gameID);
+            }
             String playerID = command.getPlayerId();
             int lvl = command.getLv();
 

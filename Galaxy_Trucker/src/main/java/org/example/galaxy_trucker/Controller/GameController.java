@@ -23,6 +23,12 @@ public class GameController {
     int flightCount = 0;
     int buildingCount = 0;
     boolean GameOver = false;
+    private boolean started = false;
+
+    public boolean isStarted() {
+        return started;
+    }
+
 
     public GameController(String idGame, Game game, GamesHandler gh) {
         this.idGame = idGame;
@@ -75,6 +81,7 @@ public class GameController {
                     String playerId = p.GetID();
                     ControllerMap.get(playerId).nextState(this);
                 }
+                started = true;
                 game.getPlayers().values().forEach(p -> p.SetReady(false));
             }
         }
