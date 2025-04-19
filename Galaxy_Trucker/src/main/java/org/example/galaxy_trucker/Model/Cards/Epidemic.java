@@ -132,36 +132,6 @@ public class Epidemic extends Card {
 
     }
 
-//
-//    public void findPaths(int r, int c, ArrayList<IntegerPair> visited, int [][] valid, Tile[][] tiles) {
-//
-//        if (visited.contains(new IntegerPair(r, c))||r < 0 || c < 0 || r > 9 || c > 9 || valid[r][c] == -1) {
-//            return;
-//        }
-//        visited.add(new IntegerPair(r, c));
-//        System.out.println(r + " " + c);
-//
-//        if (valid[r][c-1] == 1 && (tiles[r][c-1].getComponent().getType().equals("modularHousingUnit")||tiles[r][c-1].getComponent().getType().equals("MainCockpit"))&&(tiles[r][c-1].getComponent().isBrownAlien()||tiles[r][c-1].getComponent().isPurpleAlien()||tiles[r][c-1].getComponent().getAbility()>0)) {
-//            System.out.println( "should infect "+r + " " +(c-1));
-//            findPaths(r, c - 1, visited,valid,tiles);
-//        }
-//
-//        if (valid[r-1][c] == 1 && (tiles[r-1][c].getComponent().getType().equals("modularHousingUnit")||tiles[r-1][c].getComponent().getType().equals("MainCockpit"))&&(tiles[r-1][c].getComponent().isBrownAlien()||tiles[r-1][c].getComponent().isPurpleAlien()||tiles[r-1][c].getComponent().getAbility()>0)){
-//            System.out.println( "should infect "+(r-1) + " " +(c));
-//            findPaths(r - 1, c , visited,valid,tiles);
-//        }
-//
-//        if (valid[r][c+1] == 1 && (tiles[r][c+1].getComponent().getType().equals("modularHousingUnit")||tiles[r][c+1].getComponent().getType().equals("MainCockpit"))&&(tiles[r][c+1].getComponent().isBrownAlien()||tiles[r][c+1].getComponent().isPurpleAlien()||tiles[r][c+1].getComponent().getAbility()>0)){
-//            System.out.println( "should infect "+r + " " +(c+1));
-//            findPaths(r, c + 1, visited,valid,tiles);
-//        }
-//
-//        if (valid[r+1][c] == 1 && (tiles[r+1][c].getComponent().getType().equals("modularHousingUnit")||tiles[r+1][c].getComponent().getType().equals("MainCockpit"))&&(tiles[r+1][c].getComponent().isBrownAlien()||tiles[r+1][c].getComponent().isPurpleAlien()||tiles[r+1][c].getComponent().getAbility()>0)){
-//            System.out.println( "should infect "+(r+1) + " " +(c));
-//            findPaths(r +1, c , visited,valid,tiles);
-//        }
-//
-//   }
 
 
     public Epidemic(){}
