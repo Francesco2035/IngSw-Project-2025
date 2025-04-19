@@ -170,6 +170,11 @@ public class ModularHousingUnit extends HousingUnit {
         if ((purple && !nearPurpleAddon ) || (brown && !nearBrownAddon)){
             throw new InvalidInput("There isn't a nearby addon");
         }
+
+        if (humans != 0 && (brownAlien || purpleAlien)){
+            throw new InvalidInput("You can't add humans, there is an alien!");
+        }
+
         if (humans > 2){
             throw new InvalidInput("Input Human amount is greater than 2");
         }

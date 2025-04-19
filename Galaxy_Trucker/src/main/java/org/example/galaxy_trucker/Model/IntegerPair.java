@@ -10,6 +10,10 @@ public class IntegerPair implements Serializable {
         this.first = first;
         this.second = second;
     }
+
+    public IntegerPair() {
+
+    }
     public int getFirst() {
         return first;
     }

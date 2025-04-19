@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
 import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
@@ -18,18 +19,18 @@ public class PrepController extends Controller implements HourGlassListener {
     @Override
     public void nextState(GameController gc) {
         if (curPlayer.getmyPlayerBoard().checkValidity()){
-            curPlayer.setState(new Waiting());
-            gc.setFlightCount(1);
-            gc.setControllerMap(curPlayer,new FlightController(curPlayer, gameId, gc));
+            curPlayer.setState(new AddCrewState());
+            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId));
         }
-        gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId));
-        curPlayer.setState(new CheckValidity());
+        else{
+            gc.setControllerMap(curPlayer,new CheckValidityController(curPlayer, gameId));
+            curPlayer.setState(new CheckValidity());
+        }
     }
 
     @Override
     public void onFinish() {
         curPlayer.SetReady(true);
         gc.changeState();
-
     }
 }

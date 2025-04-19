@@ -93,7 +93,7 @@ public class MainCockpitComp extends HousingUnit {
     @Override
     public void addCrew(int humans, boolean purple, boolean brown){
         if (purple || brown){
-            throw new InvalidInput("This is the mainCockPit you can't add aliens");
+            throw new InvalidInput("This is the mainCockpit you can't add aliens");
         }
 
         if (numHumans + humans > 2){

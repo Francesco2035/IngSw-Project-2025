@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -8,10 +9,20 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 public class AddCrewCommand extends Command {
 
+    @JsonProperty("numHumans")
     int numHumans;
+    @JsonProperty("purpleAlien")
     boolean purpleAlien;
+    @JsonProperty("brownAlien")
     boolean brownAlien;
+    @JsonProperty("coordinate")
     IntegerPair coordinate;
+
+    @JsonProperty("commandType")
+    private final String commandType = "AddCrewCommand";
+
+
+
 
     public AddCrewCommand(int numHumans, boolean purpleAlien, boolean brownAlien, IntegerPair coordinate, String gameId, String playerId, int lv, String title) {
         super(gameId, playerId, lv, title);
@@ -31,6 +42,10 @@ public class AddCrewCommand extends Command {
     @Override
     public boolean allowedIn(PlayerState playerState) {
         return playerState.allows(this);
+    }
+
+    public AddCrewCommand(){
+
     }
 
 }

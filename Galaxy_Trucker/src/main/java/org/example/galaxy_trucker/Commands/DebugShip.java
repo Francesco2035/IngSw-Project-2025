@@ -24,6 +24,10 @@ public class DebugShip extends Command {
         this.title = title;
     }
 
+    public DebugShip() {
+
+    }
+
 
     @Override
     public void execute(Player player) throws IOException {

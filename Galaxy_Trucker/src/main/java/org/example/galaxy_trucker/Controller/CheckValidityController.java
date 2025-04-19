@@ -1,18 +1,15 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
+import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 
-public class PostPrepController extends Controller {
+public class CheckValidityController extends Controller{
 
-    private int count;
 
-    public PostPrepController(Player curPlayer, String gameId) {
-        this.curPlayer = curPlayer;
+    public CheckValidityController( Player player, String gameId) {
         this.gameId = gameId;
-        count = curPlayer.getmyPlayerBoard().getHousingUnits().size();
+        this.curPlayer = player;
     }
 
     @Override
@@ -26,11 +23,7 @@ public class PostPrepController extends Controller {
         try {
             System.out.println("Action called for " + gameId + ": " + command.getTitle() + " "+ command.playerId);
             command.execute(curPlayer);
-            count --;
-            if (count == 0) {
-                nextState(gc);
-            }
-
+            nextState(gc);
         } catch (Exception e) {
             curPlayer.setMyPlance(playerBoardCopy);
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
@@ -42,9 +35,12 @@ public class PostPrepController extends Controller {
 
     @Override
     public void nextState(GameController gc) {
-
-        gc.setFlightCount(1);
-        gc.setControllerMap(curPlayer, new FlightController( curPlayer, gameId, gc));
-
+        if (curPlayer.getmyPlayerBoard().checkValidity()){
+            curPlayer.setState(new AddCrewState());
+            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId));
+        }
+        else {
+            gc.setControllerMap(curPlayer, new CheckValidityController(curPlayer, gameId));
+        }
     }
 }
