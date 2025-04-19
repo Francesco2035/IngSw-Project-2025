@@ -1,21 +1,19 @@
 package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
-import org.example.galaxy_trucker.Controller.GameHandler;
+import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Model.GameLists;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
 public class TCPServer implements  Runnable{
 
-    private static GameLists gameLists;
-    private static GameHandler gameHandler;
+    private static GamesHandler gamesHandler;
 
-    public TCPServer(GameHandler gameHandler) {
-        this.gameHandler = gameHandler;
+    public TCPServer(GamesHandler gamesHandler) {
+        this.gamesHandler = gamesHandler;
     }
 
     public void run() {
@@ -44,7 +42,7 @@ public class TCPServer implements  Runnable{
             }
 
             System.out.println("Accepted");
-            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, gameHandler);
+            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, gamesHandler);
             Thread t = new Thread(clientHandler);
             t.start();
         }

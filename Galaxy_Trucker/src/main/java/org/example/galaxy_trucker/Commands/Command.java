@@ -20,8 +20,9 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = LoginCommand.class, name = "LoginCommand"),
         @JsonSubTypes.Type(value = ReadyCommand.class, name = "ReadyCommand"),
         @JsonSubTypes.Type(value = InsertTileCommand.class, name = "InsertTileCommand"),
-        @JsonSubTypes.Type(value = DebugShip.class, name = "DebugShip")
+        @JsonSubTypes.Type(value = DebugShip.class, name = "DebugShip"),
 
+        @JsonSubTypes.Type(value = RemoveTileCommand.class, name = "RemoveTileCommand")
 })
 public class Command implements Serializable {
 

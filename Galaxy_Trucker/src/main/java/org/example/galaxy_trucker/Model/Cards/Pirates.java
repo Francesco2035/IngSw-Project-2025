@@ -75,7 +75,8 @@ public class Pirates extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         System.out.println("player number "+this.order);
         if(this.order<PlayerList.size() && !this.defeated){
-            currentPlayer.setState(new  Waiting());
+            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
+
             currentPlayer = PlayerList.get(this.order);
             System.out.println("current is:"+currentPlayer.GetID());
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();

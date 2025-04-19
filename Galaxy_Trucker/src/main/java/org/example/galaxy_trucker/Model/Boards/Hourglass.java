@@ -39,6 +39,7 @@ public class Hourglass implements Runnable {
 
         try {
             Thread.sleep(time);
+            System.out.println("Hourglass ended: "+usages);
             usages--;
 
             if(usages>0) {

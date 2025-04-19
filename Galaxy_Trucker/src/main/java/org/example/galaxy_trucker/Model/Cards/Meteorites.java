@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 //import javafx.util.Pair;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
@@ -101,7 +102,8 @@ public class Meteorites extends Card {
             this.CardEffect();
         }
         else {
-            currentPlayer.setState(new Waiting());
+            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
+
             this.currentPlayer = this.getBoard().getPlayers().get(PlayerOrder);
 
             PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard(); //prendo plancia
@@ -369,5 +371,6 @@ public class Meteorites extends Card {
     //json required
     public Meteorites() {}
     public ArrayList<Integer> getAttacks() {return attacks;}
+    @JsonCreator
     public void setAttacks(ArrayList<Integer> attacks) {this.attacks = attacks;}
 }

@@ -27,8 +27,11 @@ import java.util.ArrayList;
 
 //schiaccia contol shif alt freccetta su e giù per dulicare il curosre
 
-//ordine controlli: 1 cannoni,  2 umani, 3 movimento,
-//ordine punizioni: 1 movimento, 2 umani, 3 cargo, 4 spari
+///ordine controlli: 1 cannoni,  2 movimento, 3 umani
+///
+/// CONTROLLA IL JSON TI SCONGIURO
+///
+///ordine punizioni: 1 movimento, 2 umani, 3 cargo, 4 spari
 
 public class Warzone extends Card{
     @JsonProperty("RequirementOrder")
@@ -105,25 +108,28 @@ public class Warzone extends Card{
 
     @Override
     public void updateSates(){
+        System.out.println("challenge number: "+this.ChallengeOrder);
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
+
         if(this.PlayerOrder<PlayerList.size()){
+            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
             currentPlayer = PlayerList.get(this.PlayerOrder);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             if(RequirementsType[ChallengeOrder]==1){
-
+                System.out.println("checking attack of: "+currentPlayer.GetID());
                 this.currentPlayer.setState(new GiveAttack());
                 //this.currentPlayer.setInputHandler(new GiveAttack(this));
 
             }
-            if(RequirementsType[ChallengeOrder]==2){
-
+            else if(RequirementsType[ChallengeOrder]==2){
+                System.out.println("checking speed of: "+currentPlayer.GetID());
                 this.currentPlayer.setState(new GiveSpeed());
                 //this.currentPlayer.setInputHandler(new GiveSpeed(this));
 
             }
             else{
-
+                System.out.println("checking people");
                 this.checkPeople();
             }
 
@@ -131,11 +137,16 @@ public class Warzone extends Card{
             this.PlayerOrder++;
         }
         else{
+            System.out.println("the worst is: "+Worst.GetID());
             this.PlayerOrder=0;
             if(this.PunishmentType[ChallengeOrder]==1){
+                this.Minimum=100000;
+                this.ChallengeOrder++;
                 this.loseTime();
+                return; // serve perché lose time ri attiva update states al completamento quinid devo fare finta di averlo finito prima di chiamarlo e poi terminarlo appena è finitra la chiamat
             }
             else if(this.PunishmentType[ChallengeOrder]==2){
+                System.out.println(Worst.GetID()+" has to kill"+this.PunishmentHumans);
                 this.Worst.setState(new Killing());
                 //this.currentPlayer.setInputHandler(new Killing(this));
             }
@@ -195,15 +206,14 @@ public class Warzone extends Card{
 
         this.currentpower = power;
         this.energyUsage=numofDouble;
-        this.currentPlayer.setState(new ConsumingEnergy());
+        if(numofDouble==0){
+            this.checkStrength();
+        }
+        else {
 
+            this.currentPlayer.setState(new ConsumingEnergy());
+        }
 
-//        if(power<Minimum){
-//                this.Worst=currentPlayer;
-//                this.Minimum=power;
-//            }
-//        this.currentPlayer.setState(new Waiting());
-//        this.updateSates();
     }
 
 
@@ -214,7 +224,13 @@ public class Warzone extends Card{
 //        double movement= currentPlayer.getMyPlance().getEnginePower(coordinates);
         this.currentmovement=movement;
         this.energyUsage=numofDouble;
-        this.currentPlayer.setState(new ConsumingEnergy());
+        if(numofDouble==0){
+            this.checkSpeed();
+        }
+        else {
+
+            this.currentPlayer.setState(new ConsumingEnergy());
+        }
 
 //
 //        if(movement<Minimum){
@@ -229,12 +245,28 @@ public class Warzone extends Card{
 
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
-        if(coordinates.size()!=this.energyUsage){
-            if(RequirementsType[ChallengeOrder]==1){
+        if(coordinates==null) {
+            System.out.println("coordinates is null");
+            if (RequirementsType[ChallengeOrder] == 1) {
                 this.currentPlayer.setState(new GiveAttack());
+                System.out.println("going back to checking atttack of " + currentPlayer.GetID());
+            } else {
+                this.currentPlayer.setState(new GiveSpeed());
+                System.out.println("going back to checking speed of " + currentPlayer.GetID());
+            }
+        }
+
+        if(coordinates.size()!=this.energyUsage){
+
+            if(RequirementsType[ChallengeOrder]==1){
+
+
+                this.currentPlayer.setState(new GiveAttack());
+            System.out.println("going back to checking attack of "+currentPlayer.GetID());
             }
             else {
                 this.currentPlayer.setState(new GiveSpeed());
+            System.out.println("going back to checking speed of "+currentPlayer.GetID());
             }
             throw new WrongNumofEnergyExeption("wrong number of enrgy cells");
             ///  devo fare si che in caso di errore torni alla give attack
@@ -250,11 +282,13 @@ public class Warzone extends Card{
             catch (InvalidInput e){
                 if(RequirementsType[ChallengeOrder]==1){
                     this.currentPlayer.setState(new GiveAttack());
+                    System.out.println("going back to checking attack of "+currentPlayer.GetID());
                 }
                 else {
                     this.currentPlayer.setState(new GiveSpeed());
+                    System.out.println("going back to checking speed of "+currentPlayer.GetID());
                 }
-                throw new WrongNumofEnergyExeption("wrong number of energy cells");
+                throw new WrongNumofEnergyExeption("no energy to consume");
             }
         }
 
@@ -267,15 +301,18 @@ public class Warzone extends Card{
     }
 
     public void checkStrength(){
+        System.out.println("checking strength of "+currentPlayer.GetID()+ " strength is "+this.currentpower);
         if(this.currentpower<Minimum){
             this.Worst=currentPlayer;
             this.Minimum=this.currentpower;
+            System.out.println(currentPlayer.GetID()+" is the worst, the minimum is now"+this.currentpower);
         }
         this.currentPlayer.setState(new Waiting());
         this.updateSates();
     }
 
     public void checkSpeed(){
+        System.out.println("checking speed of "+currentPlayer.GetID()+" speed is: "+this.currentmovement);
         if(this.currentmovement<Minimum){
             this.Worst=currentPlayer;
             this.Minimum=this.currentmovement;
@@ -324,6 +361,10 @@ public class Warzone extends Card{
 
     public void loseTime() {
         this.getBoard().movePlayer(Worst.GetID(),-this.PunishmentMovement);
+        System.out.println(this.Worst.GetID()+" loses the time");
+
+        this.updateSates();
+
         return;
     }
 

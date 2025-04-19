@@ -20,7 +20,7 @@ module org.example.galaxy_trucker {
     exports org.example.galaxy_trucker.Model.Boards;
     opens org.example.galaxy_trucker.Model.Boards to com.fasterxml.jackson.databind, javafx.fxml;
     exports org.example.galaxy_trucker.Model;
-    opens org.example.galaxy_trucker.Model to com.fasterxml.jackson.databind, javafx.fxml;
+    opens org.example.galaxy_trucker.Model to com.google.gson, com.fasterxml.jackson.databind, javafx.fxml;
     exports org.example.galaxy_trucker.Controller.ClientServer to java.rmi;
 //    exports org.example.galaxy_trucker.Model.InputHandlers;
 //    opens org.example.galaxy_trucker.Model.InputHandlers to com.fasterxml.jackson.databind, javafx.fxml;
@@ -40,5 +40,6 @@ module org.example.galaxy_trucker {
 //    opens org.example.galaxy_trucker.Model.Tiles.ComponentCheckers to com.fasterxml.jackson.databind;
 //    exports org.example.galaxy_trucker.Model.Tiles.ComponentCheckers to com.fasterxml.jackson.databind, javafx.fxml;
     opens org.example.galaxy_trucker.Commands to com.google.gson, com.fasterxml.jackson.databind;
+
 
 }
