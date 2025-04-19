@@ -21,9 +21,7 @@ public class InsertTileCommand extends Command{
     @JsonProperty("position")
     int position;
 
-    public InsertTileCommand(){
-
-    }
+    public InsertTileCommand(){}
 
     public InsertTileCommand(int x, int y, int rotation,int position,String gameId, String playerId, int lv, String title) {
         super(gameId, playerId, lv, title);

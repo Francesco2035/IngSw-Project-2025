@@ -28,8 +28,12 @@ public class Meteorites extends Card {
     private int MeteoritesLine;
     private IntegerPair hit;
 
+
+
     @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
     private ArrayList<Integer> attacks;
+
+
 
     public Meteorites(int level, int time, GameBoard board, ArrayList<Integer> attacks) {
         super(level, 0, board);
@@ -46,7 +50,7 @@ public class Meteorites extends Card {
 
     }
 //per adesso hit non fa nulla ma o semplicemente chiamerà posizione + direzione + tipo per sparare
-//o gestisce la cosa e poi nel caso di hit chiama solo la posizione coplita se accade ed è indifesa
+    //o gestisce la cosa e poi nel caso di hit chiama solo la posizione coplita se accade ed è indifesa
     @Override
     public void CardEffect() {
 
@@ -62,16 +66,23 @@ public class Meteorites extends Card {
         if (this.MeteoritesOrder< this.attacks.size()) { //scorre i meteoriti e attacca i player 1 a 1
 
             this.MeteoritesLine = MeteoritesPlayerList.get(0).RollDice()-1; // tira numero
+//            if(this.attacks.get(this.MeteoritesOrder)==0){
+//                this.MeteoritesLine=8;
+//            }
             System.out.println("attacco da "+attacks.get(MeteoritesOrder) +"alla riga:"+this.MeteoritesLine);
             System.out.println("attacco numero: "+(this.MeteoritesOrder/2));
             this.updateSates();
         }
         else {
+//            this.pog=true;
             this.finishCard();
 
         }
     }
 
+//    public boolean isPog() {
+//        return pog;
+//    }
 
     @Override
     public void keepGoing(){

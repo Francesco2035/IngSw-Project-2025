@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.example.galaxy_trucker.Commands.DebugShip;
 import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
@@ -21,4 +22,6 @@ public class BaseState extends PlayerState {
         return true;
     }
 
+    @Override
+    public boolean allows(DebugShip command){return true;}
 }

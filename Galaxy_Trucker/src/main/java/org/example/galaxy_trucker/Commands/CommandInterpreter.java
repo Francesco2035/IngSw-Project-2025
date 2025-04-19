@@ -39,7 +39,10 @@ public class CommandInterpreter {
         commandMap.put("Quit", this::createQuitCommand);
         commandMap.put("Ready", this::createReadyCommand);
         //  altri comandi
+        commandMap.put("DebugShip", this::createDebugShip);
     }
+
+
 
     private Command createReadyCommand(String[] strings) {
 
@@ -151,5 +154,14 @@ public class CommandInterpreter {
     @FunctionalInterface
     public interface CommandCreator {
         Command createCommand(String[] parts);
+    }
+
+
+
+
+    private Command createDebugShip(String[] strings) {
+
+        String title = strings[0];
+        return new DebugShip(gameId,playerId, lv, title);
     }
 }

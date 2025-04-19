@@ -100,6 +100,7 @@ public abstract class PlayerState {
         return false;
     }
 
+    public boolean allows(DebugShip command){return false;}
 
 
 }
