@@ -789,6 +789,7 @@ public class PlayerBoard {
 
 
     public int getEnergy() {
+
         return Energy;
     }
 
@@ -812,9 +813,9 @@ public class PlayerBoard {
         clonedPlayerBoard.damage = damage;
         clonedPlayerBoard.numHumans = numHumans;
         clonedPlayerBoard.exposedConnectors = exposedConnectors;
-        clonedPlayerBoard.EnginePower = EnginePower;
+        //clonedPlayerBoard.EnginePower = EnginePower;
         clonedPlayerBoard.PlasmaDrillsPower = PlasmaDrillsPower;
-        clonedPlayerBoard.Energy = Energy;
+        //clonedPlayerBoard.Energy = Energy;
         clonedPlayerBoard.lv = lv;
         clonedPlayerBoard.valid = valid;
         clonedPlayerBoard.HousingUnits = new ArrayList<>();

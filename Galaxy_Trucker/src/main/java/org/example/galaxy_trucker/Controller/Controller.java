@@ -1,34 +1,37 @@
 package org.example.galaxy_trucker.Controller;
 
-import org.example.galaxy_trucker.Controller.Commands.Command;
+import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;
-
-import java.util.Optional;
 
 
 public abstract class Controller {
 
 
-    Command command;
+    //Command command;
     Player curPlayer;
+    String gameId;
     PlayerBoard playerBoardCopy;
 
-    public void action(String json){
-        try {
-            command = curPlayer.getPlayerState().PlayerAction(json, curPlayer);
-            playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
-        } catch (Exception e) {
-            e.printStackTrace();
+
+    public synchronized void action(Command command, GameHandler gh){
+
+        playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
+        if (!command.allowedIn(curPlayer.getPlayerState())){
+            throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n"+ ReadyCommand.class+" " +curPlayer.getPlayerState());
         }
 
         try {
-            command.execute();
+            System.out.println("Action called for " + gameId + ": " + command.getTitle() + " "+ command.playerId);
+            command.execute(curPlayer);
+            gh.changeState(gameId);
         } catch (Exception e) {
             curPlayer.setMyPlance(playerBoardCopy);
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
             System.out.println(e);
         }
+
     }
 
 

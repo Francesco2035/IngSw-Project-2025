@@ -1,9 +1,10 @@
 package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
-import org.example.galaxy_trucker.Controller.ClientServer.Settings;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.CommandInterpreter;
+import org.example.galaxy_trucker.Controller.GameHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,14 +12,16 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-
-
 public class MultiClientHandler implements Runnable {
 
     private Socket clientSocket;
+    private GameHandler gameHandler;
 
-    public MultiClientHandler(Socket clientSocket) {
+    private long lastPingTime;
+
+    public MultiClientHandler(Socket clientSocket, GameHandler gameHandler) {
         this.clientSocket = clientSocket;
+        this.gameHandler = gameHandler;
     }
 
     @Override
@@ -27,9 +30,6 @@ public class MultiClientHandler implements Runnable {
     }
 
     private void clientLoop() {
-        
-        //String ClientId = "";
-        
         BufferedReader in = null;
         PrintWriter out = null;
         try {
@@ -37,34 +37,42 @@ public class MultiClientHandler implements Runnable {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
 
-        // waits for data and reads it in until connection dies
-        // readLine() blocks until the server receives
-        // a new line from client
-
-        String s = "";
-
-
-//        try {
-//            ClientId = in.readLine();
-//                System.out.println(ClientId + " Joined");
-//                out.println("Hello "+ ClientId);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-
+        String s;
 
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
             while ((s = in.readLine()) != null) {
-                System.out.println(s);
-                out.println(s);
+
+                if(s.equals("ping")){
+                    lastPingTime = System.currentTimeMillis();
+                    out.println("pong");
+                    System.out.println("pong");
+                }
+                else{
+                    System.out.println("Received: " + s);
+
+                    Command command = objectMapper.readValue(s, Command.class);
+
+                    System.out.println("Deserialized command: " + command.getTitle());
+                    gameHandler.receive(command);
+                }
+
+                if (System.currentTimeMillis() - lastPingTime > 15000) {
+                    System.out.println("Timeout client: " + clientSocket.getInetAddress());
+                    break;
+                }
+
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try{
+                clientSocket.close();
+            } catch (IOException ignored) {}
         }
-
     }
+
 }

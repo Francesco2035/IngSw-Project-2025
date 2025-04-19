@@ -28,7 +28,7 @@ class GiveAttackTest {
         Poggi.setId("poggi");
         game.NewPlayer(Poggi);
 
-        state.PlayerAction(json, game.getPlayers().get("poggi"));
+//        state.PlayerAction(json, game.getPlayers().get("poggi"));
 
 
     }

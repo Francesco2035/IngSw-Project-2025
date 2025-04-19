@@ -9,6 +9,7 @@ module org.example.galaxy_trucker {
     requires java.desktop;
     requires jdk.jdi;
     requires java.rmi;
+    requires com.google.gson;
 
     opens org.example.galaxy_trucker to javafx.fxml, com.fasterxml.jackson.databind;
     exports org.example.galaxy_trucker.Exceptions;
@@ -38,5 +39,6 @@ module org.example.galaxy_trucker {
 //    exports org.example.galaxy_trucker.Model.Tiles.ComponentGetters to com.fasterxml.jackson.databind, javafx.fxml;
 //    opens org.example.galaxy_trucker.Model.Tiles.ComponentCheckers to com.fasterxml.jackson.databind;
 //    exports org.example.galaxy_trucker.Model.Tiles.ComponentCheckers to com.fasterxml.jackson.databind, javafx.fxml;
+    opens org.example.galaxy_trucker.Commands to com.google.gson, com.fasterxml.jackson.databind;
 
 }

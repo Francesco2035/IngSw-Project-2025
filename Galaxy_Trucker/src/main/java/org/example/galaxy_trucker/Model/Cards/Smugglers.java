@@ -4,7 +4,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.example.galaxy_trucker.Controller.Commands.Theft;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetGoodAction;
@@ -16,7 +15,6 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.*;
-import org.example.galaxy_trucker.Model.Tiles.Component;
 import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
 import org.example.galaxy_trucker.Model.Tiles.Storage;
 import org.example.galaxy_trucker.Model.Tiles.Tile;

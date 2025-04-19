@@ -1,16 +1,24 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
-import org.example.galaxy_trucker.Model.Cards.Card;
-import org.example.galaxy_trucker.Controller.Commands.Command;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.example.galaxy_trucker.Commands.LoginCommand;
+import org.example.galaxy_trucker.Commands.ReadyCommand;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 
-import java.util.Optional;
 
 public class BaseState extends PlayerState {
+
     @Override
-    public Command PlayerAction(String json, Player player) {
-        //pesca carta, solo il primo può farlo,
-        //abbandona corsa
-        return null;
+    public boolean allows(LoginCommand command){
+        return true;
     }
+
+    @Override
+    public boolean allows(ReadyCommand command){
+        return true;
+    }
+
 }

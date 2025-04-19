@@ -18,6 +18,10 @@ public class Player implements Serializable {
     private boolean ready;
     private int credits;
 
+    public GameBoard getCommonBoard() {
+        return CommonBoard;
+    }
+
     public Tile getCurrentTile() {
         return CurrentTile;
     }
@@ -116,7 +120,15 @@ public class Player implements Serializable {
             if (CurrentTile != null) {
                 throw new IllegalStateException("You can't pick a Tile, you have already one!");
             }
-            CurrentTile = CommonBoard.getTilesSets().getNewTile(index);
+
+            try{
+                CurrentTile = CommonBoard.getTilesSets().getNewTile(index);
+            }catch(RuntimeException e){
+                System.out.println(e);
+                CurrentTile = null;
+            }
+
+
         }
     }
 

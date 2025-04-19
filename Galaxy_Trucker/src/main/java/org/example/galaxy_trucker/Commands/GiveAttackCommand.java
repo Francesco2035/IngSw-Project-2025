@@ -1,25 +1,26 @@
-package org.example.galaxy_trucker.Controller.Commands;
+package org.example.galaxy_trucker.Commands;
 
 import org.example.galaxy_trucker.Model.Boards.Actions.GetPlasmaDrillPower;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 import java.util.ArrayList;
 
-public class GiveAttackCommand implements Command{
+public class GiveAttackCommand extends Command{
 
-    private Card card;
     private ArrayList<IntegerPair> coordinates;
     private Player player;
-    public GiveAttackCommand(Card card, ArrayList<IntegerPair> coordinates, Player player) {
+    public GiveAttackCommand( ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title) {
+        super(gameId, playerId, lv, title);
         this.coordinates = coordinates;
-        this.card = card;
+
     }
 
     @Override
-    public void execute() {
+    public void execute(Player player) {
         PlayerBoard playerBoard = player.getmyPlayerBoard();
         GetPlasmaDrillPower action = new GetPlasmaDrillPower(playerBoard.getEnginePower());
         for (IntegerPair coordinate : coordinates) {
@@ -27,7 +28,12 @@ public class GiveAttackCommand implements Command{
                     action ,player.getPlayerState());
         }
 
-        card.checkPower(action.getPower() ,action.getCountDoublePlasmaDrills());
+        player.getCurrentCard().checkPower(action.getPower() ,action.getCountDoublePlasmaDrills());
+    }
+
+    @Override
+    public boolean allowedIn(PlayerState playerState) {
+        return playerState.allows(this);
     }
 
 }

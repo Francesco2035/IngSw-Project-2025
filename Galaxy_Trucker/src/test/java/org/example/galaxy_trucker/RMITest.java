@@ -1,7 +1,6 @@
 package org.example.galaxy_trucker;
 
-import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientActions;
-import org.example.galaxy_trucker.Controller.ClientServer.RMI.ServerActions;
+import org.example.galaxy_trucker.Controller.ClientServer.RMI.RMIClient;
 import org.junit.jupiter.api.Test;
 
 public class RMITest {
@@ -11,11 +10,11 @@ public class RMITest {
     @Test
     public void Server(){
 
-        try {
-            new ServerActions().StartServer();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            new ServerActions().StartServer();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 
     }
@@ -25,7 +24,7 @@ public class RMITest {
     public void Client(){
 
         try {
-            new ClientActions().StartClient();
+            new RMIClient().StartClient();
         } catch (Exception e) {
             e.printStackTrace();
         }

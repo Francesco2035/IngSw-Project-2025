@@ -6,42 +6,47 @@ import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class GAGen implements Serializable {
 
-    private ObjectMapper mapper = new ObjectMapper();
-    private File TilesJSON = new File("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");
-    private File CardsJSON = new File("src/main/resources/org/example/galaxy_trucker/Cards.JSON");  //add file json
+    private final ObjectMapper mapper = new ObjectMapper();
     private ArrayList<Tile> tilesDeck;
     private ArrayList<Card> cardsDeck;
 
-
-    //parsa json per connectors e component e chiama il builder di tile ripetuto fino a EOF
     public GAGen() throws IOException {
-        this.tilesDeck = mapper.readValue(TilesJSON, new TypeReference<ArrayList<Tile>>() {});
-        this.cardsDeck = mapper.readValue(CardsJSON, new TypeReference<ArrayList<Card>>() {});
-
-
-
-//        try (InputStream tilesStream = getClass().getClassLoader().getResourceAsStream("src/main/resources/org/example/galaxy_trucker/Tiles.JSON");
-//             InputStream cardsStream = getClass().getClassLoader().getResourceAsStream("src/main/resources/org/example/galaxy_trucker/Tiles.JSON")) {
-//
-//            if (tilesStream == null || cardsStream == null) {
-//                throw new FileNotFoundException("Tiles.JSON o Cards.JSON non trovati nel classpath");
-//            }
-//
-//            tilesDeck = mapper.readValue(tilesStream, new TypeReference<>() {});
-//            cardsDeck = mapper.readValue(cardsStream, new TypeReference<>() {});
-//        }
-
+        loadDecks();
     }
 
+    private void loadDecks() throws IOException {
+        try {
+            InputStream tilesStream = getClass().getClassLoader().getResourceAsStream("Tiles.JSON");
+            InputStream cardsStream = getClass().getClassLoader().getResourceAsStream("Cards.JSON");
+//            FileReader fr1 = new FileReader("Tiles.JSON");
+//            FileReader fr2 = new FileReader("resources/org/example/galaxy_trucker/Cards.JSON");
+
+//            if (tilesStream == null) {
+//                throw new IOException("Tiles.JSON non trovato nel classpath");
+//            }
+//            if (cardsStream == null) {
+//                throw new IOException("Cards.JSON non trovato nel classpath");
+//            }
+
+//            tilesDeck = mapper.readValue(fr1, new TypeReference<>() {});
+//            cardsDeck = mapper.readValue(fr2, new TypeReference<>() {});
+
+            tilesDeck = mapper.readValue(tilesStream, new TypeReference<>() {});
+            cardsDeck = mapper.readValue(cardsStream, new TypeReference<>() {});
 
 
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
     public Set<Tile> TileListToSet() {
         return new HashSet<>(tilesDeck);
     }
@@ -50,11 +55,11 @@ public class GAGen implements Serializable {
         return new HashSet<>(cardsDeck);
     }
 
-
-    //getters for tilesdeck and cardsdeck
     public ArrayList<Tile> getTilesDeck() {
         return tilesDeck;
     }
-    public ArrayList<Card> getCardsDeck() {return cardsDeck;}
 
+    public ArrayList<Card> getCardsDeck() {
+        return cardsDeck;
+    }
 }

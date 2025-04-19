@@ -1,22 +1,36 @@
-package org.example.galaxy_trucker.Controller.Commands;
+package org.example.galaxy_trucker.Commands;
 
-import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
-public class InsertTileCommand implements Command{
+public class InsertTileCommand extends Command{
 
+
+    @JsonProperty("commandType")
+    private final String commandType = "InsertTileCommand";
+
+
+    @JsonProperty("x")
     private int x = -1;
+    @JsonProperty("y")
     private int y = -1;
-    private Player player;
+    @JsonProperty("rotation")
     int rotation;
-    String title;
+    @JsonProperty("position")
     int position;
 
-    public InsertTileCommand(Player player, int x, int y, int rotation, String title, int position) {
+    public InsertTileCommand(){
+
+    }
+
+    public InsertTileCommand(int x, int y, int rotation,int position,String gameId, String playerId, int lv, String title) {
+        super(gameId, playerId, lv, title);
         this.x = x;
         this.y = y;
-        this.player = player;
+        this.gameId = gameId;
+        this.playerId = playerId;
         this.rotation = rotation;
         this.title = title;
         this.position = position;
@@ -24,7 +38,7 @@ public class InsertTileCommand implements Command{
 
 
     @Override
-    public void execute() {
+    public void execute(Player player) {
         switch (title){
             case "InsertTile": {
                 Tile tile = player.getCurrentTile();
@@ -50,14 +64,42 @@ public class InsertTileCommand implements Command{
                 player.SelectFromBuffer(position);
                 break;
             }
-            case "Pick Tile":{
+            case "PickTile":{
                 player.PickNewTile(position);
                 break;
             }
             case "Discard":{
                 player.DiscardTile();
             }
+            case "Hourglass":{
+                    try {
+                        player.StartTimer();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+            }break;
         }
 
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public String getPlayerId() {
+        return playerId;
+    }
+
+    @Override
+    public String getGameId() {
+        return gameId;
+    }
+
+    @Override
+    public boolean allowedIn(PlayerState playerState) {
+        return playerState.allows(this);
     }
 }

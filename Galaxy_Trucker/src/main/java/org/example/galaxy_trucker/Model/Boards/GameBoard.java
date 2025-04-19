@@ -5,8 +5,6 @@ package org.example.galaxy_trucker.Model.Boards;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
-import org.example.galaxy_trucker.Model.PlayerStatesss;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
@@ -76,6 +74,7 @@ public class GameBoard {
             hourglass.setLock();
             Thread t1 = new Thread(hourglass);
             t1.start();
+
         }
         else throw new RuntimeException("Cannot start hourglass");
     }
@@ -199,7 +198,7 @@ public class GameBoard {
         CurrentCard = CardStack.PickNewCard();
 
         for(Player_IntegerPair p : players){
-//            p.getKey().setCard(CurrentCard);
+            p.getKey().setCard(CurrentCard);
         }
 
         CurrentCard.CardEffect();

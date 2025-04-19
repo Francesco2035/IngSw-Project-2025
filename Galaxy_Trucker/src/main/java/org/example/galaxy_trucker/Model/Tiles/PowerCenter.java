@@ -4,7 +4,6 @@ import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
-import org.example.galaxy_trucker.Model.PlayerStatesss;
 import org.jetbrains.annotations.NotNull;
 
 public class PowerCenter extends Component{
