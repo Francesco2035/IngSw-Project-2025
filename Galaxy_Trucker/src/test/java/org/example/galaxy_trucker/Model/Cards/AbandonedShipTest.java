@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 //import org.example.galaxy_trucker.Model.InputHandlers.AcceptKilling;
 
 import org.example.galaxy_trucker.Model.Connectors.*;
+import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 import org.example.galaxy_trucker.Model.Tiles.ModularHousingUnit;
@@ -82,9 +83,13 @@ class AbandonedShipTest {
         playerBoard1=Pietro.getmyPlayerBoard();
         playerBoard2=Franci.getmyPlayerBoard();
         playerBoard3= TestSetupHelper.createInitializedBoard1();
+
+
+        Passo.setMyPlance(playerBoard3);
+//        Passo.setState(new AddCrewState());
+
         TestSetupHelper.HumansSetter1(playerBoard3);
         playerBoard3.checkValidity();
-        Passo.setMyPlance(playerBoard3);
 
 
 
@@ -99,6 +104,9 @@ class AbandonedShipTest {
 
         playerBoard1.insertTile(tile1,6,7);
         playerBoard1.insertTile(tile2,7,7);
+
+
+
         TestSetupHelper.HumansSetter1(playerBoard1);
         playerBoard1.checkValidity();
 

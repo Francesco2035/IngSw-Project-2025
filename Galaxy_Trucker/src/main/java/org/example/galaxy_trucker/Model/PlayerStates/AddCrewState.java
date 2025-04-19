@@ -29,8 +29,8 @@ public class AddCrewState extends PlayerState {
 //        return new AddCrewCommand(numHumans,purpleAlien,brownAlien,player,coordsArray);
 //    }
 //
-//    @Override
-//    public boolean allows(AddCrewAction action) {
-//        return true;
-//    }
+    @Override
+    public boolean allows(AddCrewAction action) {
+        return true;
+    }
 }
