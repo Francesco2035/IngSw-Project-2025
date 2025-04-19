@@ -144,13 +144,14 @@ public class GameController {
 
     public void startFlightMode() {
 
+
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         stopAllPlayerThreads();
         flightThread = new Thread(() -> {
 
             while (!checkGameOver()) {
-                game.getGameBoard().NewCard();
                 int index = 0;
+                game.getGameBoard().NewCard();
 
                 while (index < players.size()) {
                     Player currentPlayer = players.get(index);

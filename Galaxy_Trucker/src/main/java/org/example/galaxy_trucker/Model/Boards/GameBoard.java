@@ -203,7 +203,7 @@ public class GameBoard {
 
         CurrentCard.setBoard(this);
         CurrentCard.CardEffect();
-        System.out.println("Id Card: " +CurrentCard.getId());
+        System.out.println("Id Card: " +CurrentCard.getId() + " "+ CurrentCard.getClass().getName());
     }
 
 
