@@ -20,21 +20,15 @@ import java.util.ArrayList;
 
 // direzioni int sinistra 0 sopra 1...
 //0 piccolo 1 grande
-public class Meteorites extends Card {
-
+public class   Meteorites extends Card {
+    @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
+    private ArrayList<Integer> attacks;
     private Player currentPlayer;
     private boolean flag;
     private int PlayerOrder;
     private int MeteoritesOrder;
     private int MeteoritesLine;
     private IntegerPair hit;
-
-
-
-    @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
-    private ArrayList<Integer> attacks;
-
-
 
     public Meteorites(int level, int time, GameBoard board, ArrayList<Integer> attacks) {
         super(level, 0, board);

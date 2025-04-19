@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model.Cards;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 
 import java.util.ArrayList;
 
@@ -30,8 +31,20 @@ public class Stardust extends Card {
             }
             Order--;
         }
+        this.finishCard();
+
 
         return;
+    }
+
+    @Override
+    public void finishCard() {
+        System.out.println("card finished");
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        for(int i=0; i<PlayerList.size(); i++){
+            PlayerList.get(i).setState(new BaseState());
+        }
     }
 
     //json required

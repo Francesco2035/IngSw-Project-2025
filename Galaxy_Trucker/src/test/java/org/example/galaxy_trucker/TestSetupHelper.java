@@ -114,9 +114,9 @@ public class TestSetupHelper {
 
 
         ArrayList<Tile> tiles = gag.getTilesDeck();
-        Tile t1 = tiles.get(39); //House:   double,single,double,none
+        Tile t1 = tiles.get(37); //House:  single,double,single,double
         Tile t2 = tiles.get(35); //House: singe,double,none,none
-        Tile t3 = tiles.get(48);//house: uni,double,double
+        Tile t3 = tiles.get(40);//house: uni,double,double
         Tile t4 = tiles.get(99); //Cannon: none,cannon,none,double
         Tile t5 = tiles.get(117);//Cannon: double, cannon,single,uni
         Tile t6 = tiles.get(137);//BrownAddon: uni,single,none,none
@@ -125,16 +125,15 @@ public class TestSetupHelper {
 
 
         t1.RotateSx();
-        t1.RotateSx();
         t2.RotateDx();
-        t3.RotateDx();
+        t3.RotateSx();
         t5.RotateDx();
         t6.RotateDx();
 
         playerBoard2.insertTile(t1,5,6);
         playerBoard2.insertTile(t7,6,7);
         playerBoard2.insertTile(t2,7,7);
-        playerBoard2.insertTile(t5,7,8); // cannon looking right tipo 2
+        playerBoard2.insertTile(t5,7,8); // cannon looking right tipo 1
         playerBoard2.insertTile(t6,6,5);
         playerBoard2.insertTile(t3,5,5);
         playerBoard2.insertTile(t4,4,5); // cannon looking up tipo1
@@ -162,6 +161,8 @@ public class TestSetupHelper {
     }
 
     public static void HumansSetter1(PlayerBoard playerBoard){
+
+
         ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
         HousingCoords.addAll(playerBoard.getHousingUnits());
         for(HousingUnit housingUnit : HousingCoords){
