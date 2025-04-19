@@ -115,6 +115,7 @@ public class Player implements Serializable {
                 throw new IllegalStateException("You can't pick a Tile, you have already one!");
             }
             CurrentTile = CommonBoard.getTilesSets().getNewTile();
+            System.out.println("Id Tile: " +CurrentTile.getId());
         }
         else {
             if (CurrentTile != null) {
@@ -123,6 +124,7 @@ public class Player implements Serializable {
 
             try{
                 CurrentTile = CommonBoard.getTilesSets().getNewTile(index);
+                System.out.println("Id Tile: " +CurrentTile.getId());
             }catch(RuntimeException e){
                 System.out.println(e);
                 CurrentTile = null;
@@ -230,85 +232,6 @@ public class Player implements Serializable {
 
 
 
-
-
-
-
-
-
-
-//    public ArrayList<IntegerPair> getPower(){
-//        ArrayList<IntegerPair> Power = new ArrayList<>();
-//        IntegerPair coords = new IntegerPair(6, 9);
-//        Power.add(coords);
-//        return Power;
-//    }
-//
-//    public ArrayList<IntegerPair> getEnginePower(){
-//        ArrayList<IntegerPair> Power = new ArrayList<>();
-//        IntegerPair coords = new IntegerPair(4, 2);
-//        Power.add(coords);
-//        return Power;
-//
-//    }
-//    public ArrayList<IntegerPair> getHumanstoKIll(){
-//        ArrayList<IntegerPair> Locations = new ArrayList<>();
-//        IntegerPair coords = new IntegerPair(4, 2);
-//        Locations.add(coords);
-//        return Locations;
-//    }
-
-    //    public ArrayList <IntegerPair> getHumans(){return this.myPlayerBoard.gethousingUnits();}
-    public ArrayList<IntegerPair> getEnergyTiles(){
-//        if(getmyPlayerBoard().getClassifiedTiles().containsKey(PowerCenter.class))
-//            return this.getmyPlayerBoard().getClassifiedTiles().get(PowerCenter.class);
-//        else return null;
-        return null;
-    }
-
-//
-//    // puts the good in index i into the respective coordinates
-//    public void PutGoods(int index, IntegerPair coords){
-//        myPlayerBoard.putGoods(GoodsToHandle.remove(index), coords);
-//    }
-//
-//    // rimuove l'iesimo good in coordinata coords
-//    public void removeGoods(IntegerPair coords,int index){
-//        this.myPlayerBoard.removeGood(coords, index);
-//    }
-
-//
-//    public int getGoodsIndex(){
-//        return 3;
-//    }
-//    public IntegerPair getGoodsCoordinates(){
-//        IntegerPair coords = new IntegerPair(5,5);
-//        return coords;
-//    }
-//
-//    public void switchGoods(int good1, IntegerPair coord1, int good2, IntegerPair coord2){
-//        myPlayerBoard.pullGoods(good1, coord1);
-//        myPlayerBoard.pullGoods(good2, coord2);
-//        //se il buffer è sempre vuoto prima di questa chiamata funziona altrimenti mi serve la size
-//        myPlayerBoard.putGoods(myPlayerBoard.pullFromBuffer(1),coord1);
-//        myPlayerBoard.putGoods(myPlayerBoard.pullFromBuffer(0),coord2);
-//    }
-
-
-    public void handleCargo(ArrayList<Goods> reward){
-//        this.GoodsToHandle.clear();
-//
-//        this.GoodsToHandle.addAll(reward);
-//
-//        this.setState(PlayerStates.HandlingCargo);
-    }
-
-//    public void stopHandlingCargo(){
-//        this.setState(PlayerStates.Waiting);
-//        this.CurrentCard.finishCard();
-//
-//        // controllo che
-//    }
 
     public Card getCurrentCard() {
         return CurrentCard;

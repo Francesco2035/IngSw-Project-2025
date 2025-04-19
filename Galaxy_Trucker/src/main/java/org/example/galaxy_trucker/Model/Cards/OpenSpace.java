@@ -44,7 +44,7 @@ public class OpenSpace extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         currentmovement=0;
         if(this.order<PlayerList.size()){
-            currentPlayer.setState(new Waiting());
+            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 

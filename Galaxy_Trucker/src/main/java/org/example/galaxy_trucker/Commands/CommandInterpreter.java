@@ -38,6 +38,7 @@ public class CommandInterpreter {
         commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
         commandMap.put("Quit", this::createQuitCommand);
         commandMap.put("Ready", this::createReadyCommand);
+        commandMap.put("RemoveTile", this::createRemoveTileCommand);
         //  altri comandi
     }
 
@@ -145,6 +146,15 @@ public class CommandInterpreter {
         }
 
         return new InsertTileCommand(x, y, rotation,position, gameId,playerId, lv, title);
+    }
+
+    private Command createRemoveTileCommand(String[] parts) {
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Comando Hourglass richiede 2 argomenti: x e y");
+        }
+        int x = Integer.parseInt(parts[1]);
+        int y = Integer.parseInt(parts[2]);
+        return new RemoveTileCommand(x,y,gameId,playerId,lv, "RemoveTileCommand");
     }
 
 

@@ -69,7 +69,8 @@ public class Smugglers extends Card{
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.order<PlayerList.size() && !this.defeated){
-            currentPlayer.setState(new Waiting());
+            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
+
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             this.currentpower=0;

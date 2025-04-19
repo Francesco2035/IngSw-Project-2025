@@ -111,7 +111,9 @@ public class Warzone extends Card{
         System.out.println("challenge number: "+this.ChallengeOrder);
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
+
         if(this.PlayerOrder<PlayerList.size()){
+            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
             currentPlayer = PlayerList.get(this.PlayerOrder);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             if(RequirementsType[ChallengeOrder]==1){

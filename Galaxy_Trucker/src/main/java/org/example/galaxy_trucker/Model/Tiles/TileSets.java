@@ -16,47 +16,54 @@ public class TileSets {
     }
 
     public Tile getNewTile(){
-        Random r = new Random();
-        int index = r.nextInt(CoveredTiles.size());
+        synchronized (CoveredTiles) {
+            Random r = new Random();
+            int index = r.nextInt(CoveredTiles.size());
 
-        Tile SelectedTile =  CoveredTiles.stream()
-                                         .skip(index)
-                                         .findFirst()
-                                         .orElseThrow();
+            Tile SelectedTile =  CoveredTiles.stream()
+                    .skip(index)
+                    .findFirst()
+                    .orElseThrow();
 
-        CoveredTiles.remove(SelectedTile);
+            CoveredTiles.remove(SelectedTile);
 
-        return SelectedTile;
+            return SelectedTile;
+        }
     }
 
 
     public Tile getNewTile(int index){
 
         Tile SelectedTile = null;
-
-        try {
-            SelectedTile = UncoveredTiles.get(index);
-        }catch (IndexOutOfBoundsException e){
-            System.out.println("No valid tile selected!");
-            return null;
-        }
-
-        if (SelectedTile.isAvailable()){
-            SelectedTile.setAvailable(false);
+        synchronized (UncoveredTiles) {
+            try {
+                SelectedTile = UncoveredTiles.get(index);
+            }catch (IndexOutOfBoundsException e){
+                System.out.println("No valid tile selected!");
+                return null;
+            }
             return SelectedTile;
+
         }
 
-        throw new RuntimeException("Tile not available, someone else took it!");
+//        if (SelectedTile.isAvailable()){
+//            SelectedTile.setAvailable(false);
+//            return SelectedTile;
+//        }
+//
+//        throw new RuntimeException("Tile not available, someone else took it!");
     }
 
     public void AddUncoveredTile(Tile tile){
-        tile.setAvailable(true);
-
-        if(!UncoveredTiles.contains(tile))
-            UncoveredTiles.add(tile);
+        synchronized (UncoveredTiles) {
+            if(!UncoveredTiles.contains(tile))
+                UncoveredTiles.add(tile);
+        }
     }
+        //tile.setAvailable(true);
 
-    public ArrayList<Tile> getUncoveredTiles(){return UncoveredTiles;}
+
+//    public ArrayList<Tile> getUncoveredTiles(){return UncoveredTiles;}
 
 }
 

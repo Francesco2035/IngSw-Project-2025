@@ -1,16 +1,31 @@
 package org.example.galaxy_trucker.Commands;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 public class RemoveTileCommand extends Command {
 
-    IntegerPair tile;
+    @JsonProperty("commandType")
+    private final String commandType = "RemoveTileCommand";
 
-    public RemoveTileCommand(IntegerPair tile,String gameId, String playerId, int lv, String title) {
+
+    IntegerPair tile;
+    @JsonProperty("x")
+    int x;
+    @JsonProperty("y")
+    int y;
+
+    public RemoveTileCommand(int x, int y,String gameId, String playerId, int lv, String title) {
         super(gameId, playerId, lv, title);
-        this.tile = tile;
+        this.x = x;
+        this.y = y;
+        this.tile = new IntegerPair(x,y);
+    }
+
+    public RemoveTileCommand(){
+
     }
 
     @Override

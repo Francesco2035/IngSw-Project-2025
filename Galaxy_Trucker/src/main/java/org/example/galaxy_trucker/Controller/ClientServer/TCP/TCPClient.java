@@ -38,7 +38,7 @@ public class TCPClient{
     private void PingLoop() {
         while (!echoSocket.isClosed()) {
             out.println("ping");
-            System.out.println("ping");
+            //System.out.println("ping");
             try {
                 Thread.sleep(5000);
 
@@ -98,6 +98,8 @@ public class TCPClient{
 
         Gson gson = new Gson();
         CommandInterpreter commandInterpreter;
+
+        System.out.println("Connection started\n");
 
         System.out.print("Inserisci il tuo nome (player ID): ");
         String playerId = stdIn.readLine();

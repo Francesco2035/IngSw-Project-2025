@@ -43,7 +43,7 @@ public class SolarSystem extends Card {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.order<PlayerList.size()){
-            currentPlayer.setState(new Waiting());
+            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 

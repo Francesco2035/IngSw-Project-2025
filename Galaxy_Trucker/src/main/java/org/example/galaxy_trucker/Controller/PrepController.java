@@ -7,28 +7,29 @@ import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
 public class PrepController extends Controller implements HourGlassListener {
 
-    GameHandler gh;
-    public PrepController(Player currentPlayer, String gameId, GameHandler gh) {
+    GameController gc;
+    public PrepController(Player currentPlayer, String gameId, GameController gc) {
         curPlayer = currentPlayer;
         this.gameId = gameId;
-        this.gh = gh;
+        this.gc = gc;
         System.out.println("Prep Controller " + gameId + " - " + curPlayer);
     }
 
     @Override
-    public void nextState(GameHandler gh) {
+    public void nextState(GameController gc) {
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new Waiting());
-            gh.setGameMap(gameId,curPlayer,new FlightController(curPlayer, gameId));
+            gc.setFlightCount(1);
+            gc.setControllerMap(curPlayer,new FlightController(curPlayer, gameId, gc));
         }
-        gh.setGameMap(gameId,curPlayer,new PostPrepController(curPlayer, gameId));
+        gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId));
         curPlayer.setState(new CheckValidity());
     }
 
     @Override
     public void onFinish() {
         curPlayer.SetReady(true);
-        gh.changeState(gameId);
+        gc.changeState();
 
     }
 }
