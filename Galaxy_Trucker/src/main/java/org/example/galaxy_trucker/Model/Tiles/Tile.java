@@ -2,8 +2,11 @@ package org.example.galaxy_trucker.Model.Tiles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.*;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
 
@@ -15,6 +18,10 @@ public class Tile implements Serializable {
 
     private int id;
     private Component component;
+    private PlayerBoard playerBoard;
+    int x;
+    int y;
+    int rotation = 0;
     @JsonProperty("connectors")
     private ArrayList<Connectors> connectors;
 
@@ -47,13 +54,16 @@ public class Tile implements Serializable {
     public void RotateDx(){
         Collections.rotate(this.connectors, 1);
         this.getComponent().rotate(true);
+        rotation += 90 % 360;
     }
 
 
-    public Tile clone(){
+    public Tile clone(PlayerBoard clonedPlayerBoard){
         Tile clonedTile = new Tile();
         clonedTile.setId(this.id);
-        clonedTile.setComponent(this.component.clone());
+        Component component = this.component.clone(clonedPlayerBoard);
+        component.setTile(clonedTile);
+        clonedTile.setComponent(component);
         clonedTile.setConnectors(new ArrayList<>(this.connectors));
         return clonedTile;
 
@@ -89,9 +99,27 @@ public class Tile implements Serializable {
     }
 
 
-
-
+    public void sendUpdates(ArrayList<Goods> cargo, int humans,boolean purpleAlien, boolean brownAlien, int batteries, String type){
+        playerBoard.sendUpdates(new TileEvent(id,x,y,cargo,humans,purpleAlien,brownAlien,batteries,rotation,  type, connectors));
     }
+
+    public void sendUpdates(RemoveTileEvent event){
+        playerBoard.sendUpdates(new TileEvent(-1,x,y,null, 0,false, false, 0, 0, "", null));
+    }
+
+
+    public void setPlayerBoard(PlayerBoard playerBoard) {
+        this.playerBoard = playerBoard;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+}
 
 
 

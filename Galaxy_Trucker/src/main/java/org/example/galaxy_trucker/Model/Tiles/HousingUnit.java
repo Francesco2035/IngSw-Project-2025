@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
@@ -39,13 +40,14 @@ public abstract class HousingUnit extends Component{
         playerBoard.getHousingUnits().add(this);
         this.x = x;
         this.y = y;
-
+        tile.sendUpdates(null,getNumHumans(),isPurpleAlien(),isBrownAlien(),0, "HousingUnit");
     }
 
     @Override
     public void remove(PlayerBoard playerBoard) {
         playerBoard.getHousingUnits().remove(this);
-
+        playerBoard.getConnectedHousingUnits().remove(this);
+        tile.sendUpdates(new RemoveTileEvent());
     }
 
     public int getX() {

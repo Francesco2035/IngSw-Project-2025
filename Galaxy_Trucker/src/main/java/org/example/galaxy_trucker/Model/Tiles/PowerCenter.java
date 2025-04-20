@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -23,12 +24,16 @@ public class PowerCenter extends Component{
     public void insert(@NotNull PlayerBoard playerBoard, int x, int y) {
         playerBoard.setEnergy(type);
         playerBoard.getPowerCenters().add(this);
+        tile.sendUpdates(null,0, false, false, type, "PowerCenter");
+
     }
 
     @Override
     public void remove(@NotNull PlayerBoard playerBoard) {
         playerBoard.setEnergy(-type);
         playerBoard.getPowerCenters().remove(this);
+        tile.sendUpdates(new RemoveTileEvent());
+
     }
 
 
@@ -43,11 +48,13 @@ public class PowerCenter extends Component{
             throw new InvalidInput("cannot exceed 0 energy");
         }
         this.type = this.type-1;
+        tile.sendUpdates(null,0, false, false, type, "PowerCenter");
+
     }
 
 
     @Override
-    public Component clone(){
+    public Component clone(PlayerBoard clonedPlayerBoard){
         PowerCenter clone = new PowerCenter();
         clone.type = this.type;
         return clone;

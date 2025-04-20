@@ -8,12 +8,14 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 public class ModularHousingUnit extends HousingUnit {
 
+    private boolean connected = false;
 
     protected int numHumans;
     protected boolean purpleAlien;
     protected boolean brownAlien;
     protected boolean nearPurpleAddon;
     protected boolean nearBrownAddon;
+    private PlayerBoard playerBoard;
 
     @Override
     public int getNumHumans() {
@@ -74,8 +76,22 @@ public class ModularHousingUnit extends HousingUnit {
         Tile tile = playerBoard.getTile(x,y);
         nearBrownAddon = false;
         nearPurpleAddon = false;
+        this.playerBoard = playerBoard;
         int[][] vb = playerBoard.getValidPlayerBoard();
         int index = 0;
+
+        if (vb[x-1][y] == 1  && playerBoard.checkConnection(playerBoard.getTile(x,y).getConnectors().get(2), playerBoard.getTile(x,y).getConnectors().get(0))) {
+            connected = true;
+        }
+        if (vb[x+1][y] == 1  && playerBoard.checkConnection(playerBoard.getTile(x,y).getConnectors().get(0), playerBoard.getTile(x,y).getConnectors().get(2))) {
+            connected = true;
+        }
+        if (vb[x][y-1] == 1  && playerBoard.checkConnection(playerBoard.getTile(x,y).getConnectors().get(3), playerBoard.getTile(x,y).getConnectors().get(1))) {
+            connected = true;
+        }
+        if (vb[x][y+1] == 1  && playerBoard.checkConnection(playerBoard.getTile(x,y).getConnectors().get(1), playerBoard.getTile(x,y).getConnectors().get(3))) {
+            connected = true;
+        }
 
         if(vb[x][y-1] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x,y-1).getComponent())){
             index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x,y-1).getComponent());
@@ -148,18 +164,27 @@ public class ModularHousingUnit extends HousingUnit {
         if (numHumans != 0){
             numHumans--;
             System.out.println("killed a human in "+getX()+" "+getY());
+            if (numHumans == 0){
+                playerBoard.getConnectedHousingUnits().remove(this);
+            }
+            tile.sendUpdates(null, numHumans,purpleAlien,brownAlien,0, "HousingUnit");
             return 2;
         }
         else if (purpleAlien){
             purpleAlien = false;
             System.out.println("killed a purple alien in "+getX()+" "+getY());
+            playerBoard.getConnectedHousingUnits().remove(this);
+            tile.sendUpdates(null, numHumans,purpleAlien,brownAlien,0, "HousingUnit");
             return 1;
         }
         else {
             brownAlien = false;
             System.out.println("killed a brown alien in "+getX()+" "+getY());
+            playerBoard.getConnectedHousingUnits().remove(this);
+            tile.sendUpdates(null, numHumans,purpleAlien,brownAlien,0, "HousingUnit");
             return 0;
         }
+
 
 
     }
@@ -190,18 +215,35 @@ public class ModularHousingUnit extends HousingUnit {
         numHumans += humans;
         purpleAlien = purple;
         brownAlien = brown;
+        if (connected){
+            playerBoard.getConnectedHousingUnits().add(this);
+        }
+        tile.sendUpdates(null,numHumans,purpleAlien,brownAlien,0, "HousingUnit");
     }
 
 
     @Override
-    public Component clone(){
+    public Component clone(PlayerBoard clonedPlayerBoard){
         ModularHousingUnit clone = new ModularHousingUnit();
         clone.setBrownAlien(brownAlien);
         clone.setPurpleAlien(purpleAlien);
         clone.setNearPurpleAddon(nearPurpleAddon);
         clone.setNearBrownAddon(nearBrownAddon);
         clone.setNumHumans(numHumans);
+        clone.setConnected(connected);
+        clone.setPlayerBoard(clonedPlayerBoard);
+        if (connected && this.playerBoard.getConnectedHousingUnits().contains(this)){
+            clonedPlayerBoard.getConnectedHousingUnits().add(clone);
+        }
         return clone;
+    }
+
+    public void setConnected(boolean connected){
+        this.connected = connected;
+    }
+
+    public void setPlayerBoard(PlayerBoard playerBoard){
+        this.playerBoard = playerBoard;
     }
 
 }

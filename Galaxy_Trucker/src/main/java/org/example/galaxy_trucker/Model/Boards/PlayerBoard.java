@@ -1,6 +1,8 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
 import org.example.galaxy_trucker.Exceptions.*;
 
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
@@ -15,11 +17,22 @@ import java.util.*;
 
 public class PlayerBoard {
 
+    PlayerBoardListener listener;
+
+    private Tile[][] PlayerBoard;
+    private int damage;
+    private ArrayList<Goods> BufferGoods;
+
+    private HashMap<Integer, ArrayList<IntegerPair>> storedGoods;
+    private ArrayList<Tile> Buffer;
+    private ArrayList<Goods> Rewards;
+
+
+
     private boolean broken;
     private int totalValue;
-    private Tile[][] PlayerBoard;
+
     private int[][] ValidPlayerBoard;
-    private int damage;
     private int exposedConnectors;
     private int[] shield;
     private int numHumans = 0;
@@ -34,7 +47,6 @@ public class PlayerBoard {
     private boolean brownAlien;
     private ArrayList<HousingUnit> connectedHousingUnits;
 
-    private ArrayList<Goods> BufferGoods;
 
     private ArrayList<HousingUnit> HousingUnits;
     HashMap<Integer, ArrayList<IntegerPair>> shipSection;
@@ -47,11 +59,9 @@ public class PlayerBoard {
     private ArrayList<PowerCenter> PowerCenters;
 
 
-    private HashMap<Integer, ArrayList<IntegerPair>> storedGoods;
 
 
-    private ArrayList<Tile> Buffer;
-    private ArrayList<Goods> Rewards;
+
 
     public PlayerBoard(int lv) {
         this.lv = lv;
@@ -134,8 +144,6 @@ public class PlayerBoard {
 
             }
         }
-        this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
-        PlayerBoard[6][6].getComponent().insert(this,6,6);
     }
 
 
@@ -315,11 +323,15 @@ public class PlayerBoard {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (ValidPlayerBoard[x][y] != 0){
+        if (ValidPlayerBoard[x][y] != 0 && x != 6 && y != 6) {
             throw new InvalidInput(x,y, "Invalid input : invalid position, already occupied or spacevoid");
         }
 
         this.PlayerBoard[x][y] = tile;
+        tile.getComponent().setTile(tile);
+        tile.setPlayerBoard(this);
+        tile.setX(x);
+        tile.setY(y);
         tile.getComponent().insert(this,x,y);
         ValidPlayerBoard[x][y] = 1;
 
@@ -827,14 +839,19 @@ public class PlayerBoard {
         clonedPlayerBoard.Storages= new ArrayList<>();
         clonedPlayerBoard.ShieldGenerators= new ArrayList<>();
         clonedPlayerBoard.PowerCenters= new ArrayList<>();
+        clonedPlayerBoard.connectedHousingUnits = new ArrayList<>();
         clonedPlayerBoard.Rewards = new ArrayList<>(this.Rewards);
+        clonedPlayerBoard.setListener(null);
 
         clonedPlayerBoard.PlayerBoard = new Tile[PlayerBoard.length][PlayerBoard[0].length];
         for (int i = 0; i < PlayerBoard.length; i++) {
             for (int j = 0; j < PlayerBoard[i].length; j++) {
                 Tile tile = PlayerBoard[i][j];
-                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone() : null;
+                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone(clonedPlayerBoard) : null;
                 if (tile != null) {
+                    tile.setY(j);
+                    tile.setX(i);
+                    tile.setPlayerBoard(clonedPlayerBoard);
                     tile.getComponent().insert(clonedPlayerBoard, i, j);
                 }
             }
@@ -927,6 +944,22 @@ public class PlayerBoard {
 
     public ArrayList<HousingUnit> getConnectedHousingUnits(){
         return connectedHousingUnits;
+    }
+
+
+    public void setListener(PlayerBoardListener listener){
+        this.listener = listener;
+    }
+
+    public void removeListener(){
+        this.listener = null;
+    }
+
+    public void sendUpdates(TileEvent event){
+        if(listener != null) {
+            System.out.println("Sending updates: " + event.getType());
+            listener.playerBoardChanged(event);
+        }
     }
 
 

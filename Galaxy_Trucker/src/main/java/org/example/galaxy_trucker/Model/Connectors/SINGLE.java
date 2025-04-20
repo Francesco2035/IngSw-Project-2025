@@ -3,8 +3,10 @@ package org.example.galaxy_trucker.Model.Connectors;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+import java.io.Serializable;
+
 @JsonTypeName("SINGLE")
-public class SINGLE implements Connectors {
+public class SINGLE implements Connectors , Serializable {
 
     public static final SINGLE INSTANCE = new SINGLE();
 

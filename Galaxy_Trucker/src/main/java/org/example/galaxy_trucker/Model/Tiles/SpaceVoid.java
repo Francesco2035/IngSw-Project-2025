@@ -18,14 +18,14 @@ public class SpaceVoid extends Component{
 
     @Override
     public void insert(PlayerBoard playerBoard, int x, int y) {
-
+        //tile.sendUpdates(null,0, false, false, 0);
     }
 
     @Override
     public void remove(PlayerBoard playerBoard) {}
 
     @Override
-    public Component clone(){
+    public Component clone(PlayerBoard clonedPlayerBoard){
         return new SpaceVoid();
     }
 

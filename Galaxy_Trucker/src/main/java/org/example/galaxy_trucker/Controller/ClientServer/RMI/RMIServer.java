@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Controller.ClientServer.RMI;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.GamesHandler;
+import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Player;
 
 import java.rmi.RemoteException;
@@ -51,6 +52,9 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 //
     @Override
     public void command(Command cmd) throws RemoteException{
+        if (cmd.getTitle().equals("Login")){
+            gh.initPlayer(cmd, new VirtualView(cmd.getPlayerId(), cmd.getGameId(), cmd.getClient()));
+        }
         gh.receive(cmd);
         System.out.println(cmd);
 
