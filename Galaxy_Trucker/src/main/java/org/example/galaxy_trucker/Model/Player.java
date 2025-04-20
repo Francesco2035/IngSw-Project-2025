@@ -1,4 +1,7 @@
 package org.example.galaxy_trucker.Model;
+import org.example.galaxy_trucker.Controller.Listeners.HandListener;
+import org.example.galaxy_trucker.Controller.Messages.HandEvent;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -12,6 +15,7 @@ import java.util.Random;
 
 public class Player implements Serializable {
 
+    private HandListener handListener;
     private GameBoard CommonBoard;
     private PlayerBoard myPlayerBoard;
     private String ID;
@@ -116,6 +120,7 @@ public class Player implements Serializable {
             }
             CurrentTile = CommonBoard.getTilesSets().getNewTile();
             System.out.println("Id Tile: " +CurrentTile.getId());
+            handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
         }
         else {
             if (CurrentTile != null) {
@@ -125,6 +130,7 @@ public class Player implements Serializable {
             try{
                 CurrentTile = CommonBoard.getTilesSets().getNewTile(index);
                 System.out.println("Id Tile: " +CurrentTile.getId());
+                handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
             }catch(RuntimeException e){
                 System.out.println(e);
                 CurrentTile = null;
@@ -235,6 +241,14 @@ public class Player implements Serializable {
 
     public Card getCurrentCard() {
         return CurrentCard;
+    }
+
+    public void setHandListener(HandListener handListener) {
+        this.handListener = handListener;
+    }
+
+    public void removeHandListener(){
+        this.handListener = null;
     }
 
 

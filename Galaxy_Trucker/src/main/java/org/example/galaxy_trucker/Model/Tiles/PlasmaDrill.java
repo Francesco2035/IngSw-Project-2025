@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
@@ -46,6 +47,8 @@ public class PlasmaDrill extends Component{
             }
         }
         playerBoard.getPlasmaDrills().add(this);
+        tile.sendUpdates(null,0, false, false, 0, "PlasmaDrill");
+
     }
 
     @Override
@@ -59,6 +62,7 @@ public class PlasmaDrill extends Component{
 
             playerBoard.getPlasmaDrills().remove(this);
         }
+        tile.sendUpdates(new RemoveTileEvent());
     }
 
     public double getCannonPower(){
@@ -77,7 +81,7 @@ public class PlasmaDrill extends Component{
     }
 
     @Override
-    public Component clone(){
+    public Component clone(PlayerBoard clonedPlayerBoard){
         PlasmaDrill clone = new PlasmaDrill();
         clone.CannonDirection = CannonDirection;
         clone.type = type;

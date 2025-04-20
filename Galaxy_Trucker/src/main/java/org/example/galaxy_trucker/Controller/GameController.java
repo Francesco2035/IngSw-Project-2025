@@ -1,8 +1,11 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +18,7 @@ public class GameController {
     private final HashMap<String,Controller> ControllerMap;
     private final HashMap<String, BlockingQueue<Command>> commandQueues = new HashMap<>();
     private final HashMap<String, Thread> threads = new HashMap<>();
+    private final HashMap<String, VirtualView> VirtualViewMap = new HashMap<>();
     final Game game;
     private GamesHandler gh;
     private BlockingQueue<Command> flightQueue = new LinkedBlockingQueue<>();
@@ -39,7 +43,7 @@ public class GameController {
 
     }
 
-    public void NewPlayer(Player p){
+    public void NewPlayer(Player p, VirtualView vv) {
         if (ControllerMap.keySet().contains(p.GetID())) {
             throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists");
         }
@@ -51,6 +55,12 @@ public class GameController {
         BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
         commandQueues.put(playerId, queue);
         game.NewPlayer(p);
+        VirtualViewMap.put(playerId,vv);
+        vv.setEventMatrix(game.getGameBoard().getLevel());
+        p.getmyPlayerBoard().setListener(vv);
+        Tile mainCockpitTile = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
+        p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6);
+        p.setHandListener(vv);
 
         Thread t = new Thread(() -> {
             while (true) {
@@ -195,11 +205,11 @@ public class GameController {
     public boolean checkGameOver() {
         return GameOver;
     }
+
     public void setGameOver(){
         GameOver = true;
         System.out.println("Game over the winner is: " + game.getGameBoard().getPlayers().getFirst().GetID());
     }
-
 
     private void stopAllPlayerThreads() {
 
@@ -208,7 +218,6 @@ public class GameController {
         }
         threads.clear();
     }
-
 
     public void setFlightCount(int count) {
         flightCount += count;

@@ -1,6 +1,11 @@
 package org.example.galaxy_trucker.Controller.ClientServer.RMI;
 
+import org.example.galaxy_trucker.Commands.LoginCommand;
+import org.example.galaxy_trucker.Controller.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
+import org.example.galaxy_trucker.Controller.Messages.Event;
+import org.example.galaxy_trucker.Controller.Messages.HandEvent;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
@@ -20,11 +25,16 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     private Player me;
     private Game myGame;
     private CommandInterpreter commandInterpreter;
+    private Client client;
 
-    public RMIClient() throws RemoteException{
+    public RMIClient(Client client) throws RemoteException{
         me =  new Player();
         myGame = null;
+        this.client = client;
+
     }
+
+
 
     @Override
     public void StartClient() throws IOException, NotBoundException {
@@ -43,20 +53,35 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         System.out.println("Insert game ID: ");
         String gameId = br.readLine();
         System.out.println("Insert game level: ");
-        String level = br.readLine();
+        int level = Integer.parseInt(br.readLine());
 
         String fullCommand = "Login " + playerId + " " + gameId + " " + level;
 
         commandInterpreter = new CommandInterpreter(playerId, gameId);
-        Command loginCommand = commandInterpreter.interpret(fullCommand);
+        LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login");
+        loginCommand.setClient(this);
+
 
         server.command(loginCommand);
 
         this.inputLoop(true);
     }
 
+    @Override
+    public void receiveMessage(Event event) throws RemoteException {
+        //System.out.print(event.message());
+        //client.updateBoard(event);
+    }
 
+    @Override
+    public void receiveMessage(HandEvent event) throws RemoteException {
+        client.updateHand(event);
+    }
 
+    @Override
+    public void receiveMessage(TileEvent event) throws RemoteException {
+        client.updateBoard(event);
+    }
 
 
 //
@@ -84,7 +109,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         if (fromConsole) {
             br = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("Inserisci comandi JSON:");
+            System.out.println("\nInserisci comandi: ");
         } else {
             InputStream commandFile = getClass().getClassLoader().getResourceAsStream("commands_output.txt");
             assert commandFile != null;
@@ -110,9 +135,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
 
 
-public static void main(String[] args) throws RemoteException, NotBoundException {
+public void main(String[] args) throws RemoteException, NotBoundException {
         try {
-            new RMIClient().StartClient();
+            StartClient();
         } catch (Exception e) {
             e.printStackTrace();
         }

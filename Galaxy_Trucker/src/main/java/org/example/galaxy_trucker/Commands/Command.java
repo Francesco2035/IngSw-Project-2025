@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Commands;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
@@ -68,5 +69,9 @@ public class Command implements Serializable {
 
     public boolean allowedIn(PlayerState state) {
         return state.allows(this);
+    }
+
+    public ClientInterface getClient() {
+        return null;
     }
 }

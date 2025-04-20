@@ -32,11 +32,8 @@ public class GamesHandler {
 
         System.out.println("Received: " + command.getTitle() + " " + command.getClass().getSimpleName());
         String title = command.getTitle();
-        if ("Login".equals(title)) {
-            initPlayer(command);
-
-        } else if("Quit".equals(title)) {
-            String gameId = command.getGameId();
+        String gameId = command.getGameId();
+        if("Quit".equals(title)) {
             if (gameControllerMap.containsKey(gameId)) {
                 gameControllerMap.get(gameId).removePlayer(command.getPlayerId());
             }
@@ -45,7 +42,6 @@ public class GamesHandler {
             }
         }
         else{
-            String gameId = command.getGameId();
             if (gameControllerMap.containsKey(gameId)) {
                 gameControllerMap.get(gameId).addCommand(command);
             }
@@ -61,7 +57,7 @@ public class GamesHandler {
         gameControllerMap.remove(gameId);
     }
 
-    public synchronized void initPlayer(Command command) {
+    public synchronized void initPlayer(Command command, VirtualView virtualView) {
         try {
             String gameID = command.getGameId();
             if(gameControllerMap.containsKey(gameID) && gameControllerMap.get(gameID).isStarted()) {
@@ -75,12 +71,12 @@ public class GamesHandler {
             temp.setState(new BaseState());
 
             if(gameControllerMap.keySet().contains(gameID)){
-                gameControllerMap.get(gameID).NewPlayer(temp);
+                gameControllerMap.get(gameID).NewPlayer(temp, virtualView);
             }
             else{
                 Game curGame = new Game(lvl, gameID);
                 gameControllerMap.putIfAbsent(gameID, new GameController(gameID, curGame, this));
-                gameControllerMap.get(curGame.getGameID()).NewPlayer(temp);
+                gameControllerMap.get(curGame.getGameID()).NewPlayer(temp, virtualView);
             }
 
 //            try {
