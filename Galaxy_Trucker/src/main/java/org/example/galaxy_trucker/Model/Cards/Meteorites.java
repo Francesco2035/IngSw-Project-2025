@@ -51,6 +51,10 @@ public class   Meteorites extends Card {
     @Override
     public void CardEffect() {
 
+        if (this.hit==null) {
+            this.hit = new IntegerPair(0,0);
+        }
+
         for (Player p: this.getBoard().getPlayers()) {
             p.setState(new Waiting());
         }

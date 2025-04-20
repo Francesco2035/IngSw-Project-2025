@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class Epidemic extends Card {
     private ArrayList<HousingUnit> infected;
-    private ArrayList<IntegerPair> houses;
+
     Player currentPlayer;
 
 
@@ -27,6 +27,9 @@ public class Epidemic extends Card {
 
     public void CardEffect(){
 
+        if(infected==null) {
+            infected = new ArrayList<>();
+        }
 
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();

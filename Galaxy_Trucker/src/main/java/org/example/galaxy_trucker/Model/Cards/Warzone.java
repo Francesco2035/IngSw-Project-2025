@@ -1,10 +1,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
-import org.example.galaxy_trucker.Exceptions.InvalidInput;
-import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
-import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
+import org.example.galaxy_trucker.Exceptions.*;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
@@ -71,7 +68,7 @@ public class Warzone extends Card{
         PunishmentMovement=Punishment1;
         PunishmentHumans=Punishment2;
         PunishmentCargo=Punishment3;
-        PunishmentShots=Punishment4;
+        this.PunishmentShots=Punishment4;
 
         this.PlayerOrder = 0;
         this.ChallengeOrder = 0;
@@ -85,7 +82,7 @@ public class Warzone extends Card{
         for(int i=0;i< PunishmentShots.size()/2;i++){
             lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
         }
-        this.hit = null;
+        this.hit = new IntegerPair(0,0);
         this.currentpower=0;
         this.currentmovement=0;
 
@@ -96,7 +93,10 @@ public class Warzone extends Card{
 
     @Override
     public void CardEffect(){
+        if (this.hit==null) {
+            this.hit = new IntegerPair(0,0);
 
+        }
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
@@ -108,56 +108,61 @@ public class Warzone extends Card{
 
     @Override
     public void updateSates(){
-        System.out.println("challenge number: "+this.ChallengeOrder);
-        GameBoard Board=this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
+        if(ChallengeOrder<3) {
+            System.out.println("challenge number: " + this.ChallengeOrder);
+            GameBoard Board = this.getBoard();
+            ArrayList<Player> PlayerList = Board.getPlayers();
 
-        if(this.PlayerOrder<PlayerList.size()){
-            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
-            currentPlayer = PlayerList.get(this.PlayerOrder);
-            PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
-            if(RequirementsType[ChallengeOrder]==1){
-                System.out.println("checking attack of: "+currentPlayer.GetID());
-                this.currentPlayer.setState(new GiveAttack());
-                //this.currentPlayer.setInputHandler(new GiveAttack(this));
+            if (this.PlayerOrder < PlayerList.size()) {
+                if (currentPlayer != null) {
+                    currentPlayer.setState(new Waiting());
+                }
+                currentPlayer = PlayerList.get(this.PlayerOrder);
+                PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard();
+                if (RequirementsType[ChallengeOrder] == 1) {
+                    System.out.println("checking attack of: " + currentPlayer.GetID());
+                    this.currentPlayer.setState(new GiveAttack());
+                    //this.currentPlayer.setInputHandler(new GiveAttack(this));
 
+                } else if (RequirementsType[ChallengeOrder] == 2) {
+                    System.out.println("checking speed of: " + currentPlayer.GetID());
+                    this.currentPlayer.setState(new GiveSpeed());
+                    //this.currentPlayer.setInputHandler(new GiveSpeed(this));
+
+                } else { //problema qui:)
+                    System.out.println("checking people");
+                    this.checkPeople();
+                }
+
+
+                this.PlayerOrder++;
+            } else {
+                System.out.println("the worst is: " + Worst.GetID());
+                this.PlayerOrder = 0;
+                if (this.PunishmentType[ChallengeOrder] == 1) {
+                    this.Minimum = 100000;
+                    this.ChallengeOrder++;
+                    this.loseTime();
+                    return; // serve perché lose time ri attiva update states al completamento quinid devo fare finta di averlo finito prima di chiamarlo e poi terminarlo appena è finitra la chiamat
+                } else if (this.PunishmentType[ChallengeOrder] == 2) {
+                    System.out.println(Worst.GetID() + " has to kill" + this.PunishmentHumans);
+                    this.Worst.setState(new Killing());
+                    //this.currentPlayer.setInputHandler(new Killing(this));
+                } else if (this.PunishmentType[ChallengeOrder] == 3) {
+                    //  chiamo il metodo di fottitura eterna :)
+                } else {
+                    this.Minimum = 1000000;
+                    this.ChallengeOrder++;
+                    this.continueCard();
+                    return; // stessa cosa di lose time dato che ci torno automaticamente incremento qui che è meglio
+                }
+                this.Minimum = 1000000;
+                this.ChallengeOrder++;
             }
-            else if(RequirementsType[ChallengeOrder]==2){
-                System.out.println("checking speed of: "+currentPlayer.GetID());
-                this.currentPlayer.setState(new GiveSpeed());
-                //this.currentPlayer.setInputHandler(new GiveSpeed(this));
-
-            }
-            else{
-                System.out.println("checking people");
-                this.checkPeople();
-            }
-
-
-            this.PlayerOrder++;
         }
         else{
-            System.out.println("the worst is: "+Worst.GetID());
-            this.PlayerOrder=0;
-            if(this.PunishmentType[ChallengeOrder]==1){
-                this.Minimum=100000;
-                this.ChallengeOrder++;
-                this.loseTime();
-                return; // serve perché lose time ri attiva update states al completamento quinid devo fare finta di averlo finito prima di chiamarlo e poi terminarlo appena è finitra la chiamat
-            }
-            else if(this.PunishmentType[ChallengeOrder]==2){
-                System.out.println(Worst.GetID()+" has to kill"+this.PunishmentHumans);
-                this.Worst.setState(new Killing());
-                //this.currentPlayer.setInputHandler(new Killing(this));
-            }
-            else if(this.PunishmentType[ChallengeOrder]==3){
-              //  chiamo il metodo di fottitura eterna :)
-            }
-            else {
-                this.continueCard();
-            }
-            this.Minimum=1000000;
-            this.ChallengeOrder++;
+            System.out.println("all challenges completed");
+            this.finishCard();
         }
     }
 
@@ -170,14 +175,10 @@ public class Warzone extends Card{
     public void finishCard() {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        if(this.done==PlayerList.size()) {
-            for (int i = 0; i < PlayerList.size(); i++) {
-                PlayerList.get(i).setState(new BaseState());
-            }
+        for(int i=0; i<PlayerList.size(); i++){
+            PlayerList.get(i).setState(new BaseState());
         }
-        else{
-            done++;
-        }
+        System.out.println("card finished");
     }
 //
 //    @Override
@@ -384,42 +385,81 @@ public class Warzone extends Card{
 
     @Override
     public void killHumans(ArrayList<IntegerPair> coordinates){
+
+        System.out.println("killing "+PunishmentHumans+" humans of "+Worst.GetID());
+        /// worst e non current
+
+
         if (coordinates.size() != this.PunishmentHumans) {
-
-            throw new WrongNumofHumansException("Hai sbagliato il numero di umani");
+            //devo dirgli che ha scelto il num sbagliato di persone da shottare
+            throw new WrongNumofHumansException("wrong number of humans");
         }
 
-        PlayerBoard curr= Worst.getmyPlayerBoard();
+        ///  fai l try catch e opera sulla copia :)
+        PlayerBoard curr= this.Worst.getmyPlayerBoard();
         Tile tiles[][]=curr.getPlayerBoard();
-        for (IntegerPair coordinate : coordinates) {
-            System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
+        try{
+            for (IntegerPair coordinate : coordinates) {
+                System.out.println("killing humans in "+coordinate.getFirst()+" "+coordinate.getSecond());
 
-            curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr), Worst.getPlayerState());
+                curr.performAction(tiles[coordinate.getFirst()][coordinate.getSecond()].getComponent(),new KillCrewAction(curr), new Killing());
+            }
         }
+        catch (Exception e){
+            //devo rimanere allo stato di dare gli umani ezzz
+            System.out.println("non ce sta più nessuno qui");
+            throw new ImpossibleBoardChangeException("there was an error in killing humans");
+
+        }
+
+
+
         this.updateSates();
     }
 
 
     @Override
     public void continueCard() {
+
+        /// current player va sostituito con worst
+
+        System.out.println("shooting at "+this.Worst.GetID());
+
         int Movement;
         boolean shotsFlag= false;
         while (this.ShotsOrder < PunishmentShots.size() && shotsFlag == false) {
+
+            System.out.println("attack number: "+this.ShotsOrder/2 +" on: "+Worst.GetID());
 
             PlayerBoard CurrentPlanche = Worst.getmyPlayerBoard(); //prendo plancia
             int[][] MeteoritesValidPlanche = CurrentPlanche.getValidPlayerBoard();//prende matrice validita
             if (PunishmentShots.get(ShotsOrder) == 0) { //sinistra
                 Movement = 0;
-                while (Movement < 10 && shotsFlag == false) {
+                while (Movement < 10  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                            CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
+                            if (CurrentPlanche.getBroken()){
+                                System.out.println("rottura nave");
+                                this.currentPlayer.setState(new HandleDestruction());
+                                return;
+
+                            }
+                            else{
+                                this.ShotsOrder+=2;
+                                this.continueCard();
+                                return;
+                            }
+
+
                         }
                         else {//colpo piccolo
-                            Worst.setState(new DefendingFromSmall());
+                            currentPlayer.setState(new DefendingFromSmall());
                         }
                     }
 
@@ -427,18 +467,33 @@ public class Warzone extends Card{
                     Movement++;
                 }
             }
-            if (PunishmentShots.get(ShotsOrder) == 1) {//sopra
+            else if (PunishmentShots.get(ShotsOrder) == 1) {//sopra
                 Movement = 0;
-                while (Movement < 10 && shotsFlag == false) {
+                while (Movement < 10 && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+
+                            System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                            CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
+                            if (CurrentPlanche.getBroken()){
+                                System.out.println("rottura nave");
+                                this.currentPlayer.setState(new HandleDestruction());
+                                return;
+
+                            }
+                            else{
+                                this.ShotsOrder+=2;
+                                this.continueCard();
+                                return;
+                            }
+
                         }
                         else {//colpo piccolo
-                            Worst.setState(new DefendingFromSmall());
+                            currentPlayer.setState(new DefendingFromSmall());
                         }
 
                     }
@@ -446,18 +501,34 @@ public class Warzone extends Card{
                     Movement++;
                 }
             }
-            if (PunishmentShots.get(ShotsOrder) == 2) {// destra
+            else if (PunishmentShots.get(ShotsOrder) == 2) {// destra
                 Movement = 9;
-                while (Movement >= 0 && shotsFlag == false) {
+                while (Movement >= 0   && lines[ShotsOrder/2]<10&& shotsFlag == false) {
                     if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder/2]);
                         if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+
+                            System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                            CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
+                            if (CurrentPlanche.getBroken()){
+                                System.out.println("rottura nave");
+                                this.currentPlayer.setState(new HandleDestruction());
+                                return;
+
+                            }
+                            else{
+                                System.out.println("non si è rotto nulla");
+                                this.ShotsOrder+=2;
+                                this.continueCard();
+                                return;
+                            }
+
                         }
                         else {//colpo piccolo
-                            Worst.setState(new DefendingFromSmall());
+                            currentPlayer.setState(new DefendingFromSmall());
                         }
 
                     }
@@ -467,19 +538,29 @@ public class Warzone extends Card{
             }
             else { //sotto
                 Movement = 9;
-                while (Movement >= 0 && shotsFlag == false) {
+                while (Movement >= 0  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
+                            System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
+                            CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
+                            if (CurrentPlanche.getBroken()){
+                                System.out.println("rottura nave");
+                                this.currentPlayer.setState(new HandleDestruction());
+                                return;
 
-                            /// IMPORTANTE
-                        /// /devo far eil controllo validity, se invalido va in scelta tronconi, altrimenti va avanti
-                            /// deve andare in scelta tronconi
+                            }
+                            else{
+                                this.ShotsOrder+=2;
+                                this.continueCard();
+                                return;
+                            }
+
                         }
                         else {//colpo piccolo
-                            Worst.setState(new DefendingFromSmall());
+                            currentPlayer.setState(new DefendingFromSmall());
                         }
                     }
 
@@ -488,8 +569,9 @@ public class Warzone extends Card{
                 }
 
             }
-
-            this.ShotsOrder += 2;
+            if(shotsFlag == false){
+                this.ShotsOrder += 2;
+            }
         }
         if(this.ShotsOrder >=PunishmentShots.size() ){
             this.ShotsOrder = 0;
@@ -500,26 +582,38 @@ public class Warzone extends Card{
 
     @Override
     public void DefendFromSmall(IntegerPair energy){
-        PlayerBoard currentBoard =this.Worst.getmyPlayerBoard();
+        PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if (energy!=null){
-            if (PunishmentShots.get(ShotsOrder + 1) == 0 && (currentBoard.getShield()[PunishmentShots.get(ShotsOrder)]==0)){
-                throw new InvalidDefenceEceptiopn("this shield defends the wrong side");
+            if ((currentBoard.getShield()[PunishmentShots.get(ShotsOrder)]==0)){
+                throw new InvalidDefenceEceptiopn("this shield defends the wrong side"+" the side was: "+getPunishmentShots().get(ShotsOrder));
             }
             else {
-                currentBoard.performAction(tiles[hit.getFirst()][hit.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new ConsumingEnergy());
+                try {
+                    currentBoard.performAction(tiles[energy.getFirst()][energy.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new ConsumingEnergy());
+                }
+                catch (Exception e){
+                    throw new ImpossibleBoardChangeException("There was no energy to use here");
+                }
+                System.out.println("DefendFromSmall");
             }
         }
         else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
             currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
             if (currentBoard.getBroken()){
+                System.out.println("rottura nave");
                 this.currentPlayer.setState(new HandleDestruction());
                 return;
+
             }
+            System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
         }
+        this.ShotsOrder+=2;
         this.continueCard();
+
     }
+
 
 
     @Override
