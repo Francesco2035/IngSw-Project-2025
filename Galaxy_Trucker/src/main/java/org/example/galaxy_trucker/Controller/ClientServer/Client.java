@@ -6,6 +6,8 @@ import org.example.galaxy_trucker.Controller.ClientServer.TUI;
 import org.example.galaxy_trucker.Controller.ClientServer.View;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
 
 import java.io.IOException;
@@ -78,5 +80,14 @@ public class Client {
 
     public void setView(View view) {
         this.view = view;
+    }
+
+    public void updateCoveredTilesSet(CoveredTileSetEvent event) {
+        this.view.updateCoveredTilesSet(event);
+    }
+
+
+    public void updateUncoveredTilesSet(UncoverdTileSetEvent event) {
+        this.view.updateUncoveredTilesSet(event);
     }
 }

@@ -5,6 +5,8 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
+import java.rmi.RemoteException;
+
 public class InsertTileCommand extends Command{
 
 
@@ -36,7 +38,7 @@ public class InsertTileCommand extends Command{
 
 
     @Override
-    public void execute(Player player) {
+    public void execute(Player player) throws RemoteException {
         switch (title){
             case "InsertTile": {
                 Tile tile = player.getCurrentTile();
