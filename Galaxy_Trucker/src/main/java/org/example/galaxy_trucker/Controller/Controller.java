@@ -27,6 +27,7 @@ public abstract class Controller {
             command.execute(curPlayer);
             gc.changeState();
         } catch (Exception e) {
+            playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
             curPlayer.setMyPlance(playerBoardCopy);
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
             System.out.println(e);

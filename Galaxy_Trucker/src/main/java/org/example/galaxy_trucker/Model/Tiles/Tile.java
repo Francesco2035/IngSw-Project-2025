@@ -61,8 +61,9 @@ public class Tile implements Serializable {
     public Tile clone(PlayerBoard clonedPlayerBoard){
         Tile clonedTile = new Tile();
         clonedTile.setId(this.id);
-        Component component = this.component.clone(clonedPlayerBoard);
+        clonedTile.setPlayerBoard(clonedPlayerBoard);
         component.setTile(clonedTile);
+        Component component = this.component.clone(clonedPlayerBoard);
         clonedTile.setComponent(component);
         clonedTile.setConnectors(new ArrayList<>(this.connectors));
         return clonedTile;
@@ -104,7 +105,12 @@ public class Tile implements Serializable {
     }
 
     public void sendUpdates(RemoveTileEvent event){
-        playerBoard.sendUpdates(new TileEvent(-1,x,y,null, 0,false, false, 0, 0, null));
+        ArrayList<Connectors> noneConnectors = new ArrayList<>();
+        noneConnectors.add(NONE.INSTANCE);
+        noneConnectors.add(NONE.INSTANCE);
+        noneConnectors.add(NONE.INSTANCE);
+        noneConnectors.add(NONE.INSTANCE);
+        playerBoard.sendUpdates(new TileEvent(157,x,y,null, 0,false, false, 0, 0,  noneConnectors));
     }
 
 

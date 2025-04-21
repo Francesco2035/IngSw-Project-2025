@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 import java.io.Serializable;
+import java.net.Socket;
 
 
 public class LoginCommand extends Command implements Serializable {
@@ -14,7 +15,8 @@ public class LoginCommand extends Command implements Serializable {
     private final String commandType = "LoginCommand";
 
     private ClientInterface client;
-
+    //da parsare
+    private Socket echoSocket;
     public LoginCommand(String gameId, String playerId, int lv, String title) {
         super(gameId, playerId, lv, title);
     }
@@ -37,6 +39,14 @@ public class LoginCommand extends Command implements Serializable {
 
     public void setClient(ClientInterface client) {
         this.client = client;
+    }
+
+    public void setSocket(Socket socket) {
+        this.echoSocket = socket;
+    }
+
+    public Socket getSocket() {
+        return echoSocket;
     }
 
 }

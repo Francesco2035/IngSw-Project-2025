@@ -53,7 +53,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
     @Override
     public void command(Command cmd) throws RemoteException{
         if (cmd.getTitle().equals("Login")){
-            gh.initPlayer(cmd, new VirtualView(cmd.getPlayerId(), cmd.getGameId(), cmd.getClient()));
+            gh.initPlayer(cmd, new VirtualView(cmd.getPlayerId(), cmd.getGameId(), cmd.getClient(), null));
         }
         gh.receive(cmd);
         System.out.println(cmd);
