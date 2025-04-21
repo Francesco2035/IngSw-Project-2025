@@ -10,6 +10,7 @@ import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Connectors.NONE;
 
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -19,13 +20,15 @@ public class VirtualView implements PlayerBoardListener, HandListener {
     private String playerName;
     private String idGame;
     private ClientInterface client;
+    private Socket socket;
 
 
-    public VirtualView(String playerName, String idGame, ClientInterface client) {
+    public VirtualView(String playerName, String idGame, ClientInterface client, Socket echoSocket) {
         this.playerName = playerName;
         this.idGame = idGame;
         this.client = client;
         eventMatrix = new TileEvent[10][10];
+        this.socket = echoSocket;
     }
 
 
@@ -105,12 +108,17 @@ public class VirtualView implements PlayerBoardListener, HandListener {
     }
 
     public void sendEvent(TileEvent event) {
-
-        try {
-            client.receiveMessage(event);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        if (socket != null) {
+            //serializzare e inviare in qualche modo
         }
+        else {
+            try {
+                client.receiveMessage(event);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
 
     }
 

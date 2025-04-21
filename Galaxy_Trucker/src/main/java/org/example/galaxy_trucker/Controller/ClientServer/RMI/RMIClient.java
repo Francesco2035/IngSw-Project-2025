@@ -130,17 +130,4 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         System.out.println("Fine input.");
     }
 
-
-
-
-
-
-
-public void main(String[] args) throws RemoteException, NotBoundException {
-        try {
-            StartClient();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

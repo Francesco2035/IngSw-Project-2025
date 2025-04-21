@@ -29,13 +29,17 @@ public class Client {
         rmiClient.StartClient();
     }
 
+    private void startTCPClient() throws IOException {
+        tcpClient = new TCPClient(this);
+        tcpClient.startClient();
+    }
 
 
 
     public void updateBoard(TileEvent event) {
         System.out.println("Received event: " + event);
         board[event.getX()][event.getY()] = event;
-        view.updateBoard(event); // Invia l'evento alla view (TUI o GUI)
+        view.updateBoard(event);
     }
 
     public void updateHand(HandEvent event) {
@@ -62,9 +66,11 @@ public class Client {
         if (connectionType.equalsIgnoreCase("RMI")) {
             client.startRMIClient();
         } else if (connectionType.equalsIgnoreCase("TCP")) {
-            // client.startTCPClient();
+             client.startTCPClient();
         }
     }
+
+
 
     public View getView() {
         return view;

@@ -418,6 +418,10 @@ public class PlayerBoard {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
+        PlayerBoard[x][y].setX(x);
+
+        PlayerBoard[x][y].setY(y);
+
         PlayerBoard[x][y].getComponent().remove(this);
         PlayerBoard[x][y] = new Tile(new SpaceVoid() ,NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;
@@ -849,10 +853,11 @@ public class PlayerBoard {
                 Tile tile = PlayerBoard[i][j];
                 clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone(clonedPlayerBoard) : null;
                 if (tile != null) {
-                    tile.setY(j);
-                    tile.setX(i);
-                    tile.setPlayerBoard(clonedPlayerBoard);
-                    tile.getComponent().insert(clonedPlayerBoard, i, j);
+                    clonedPlayerBoard.PlayerBoard[i][j].setY(j);
+                    clonedPlayerBoard.PlayerBoard[i][j].setX(i);
+                    clonedPlayerBoard.PlayerBoard[i][j].setPlayerBoard(clonedPlayerBoard);
+                    clonedPlayerBoard.PlayerBoard[i][j].getComponent().setTile(clonedPlayerBoard.PlayerBoard[i][j]);
+                    clonedPlayerBoard.PlayerBoard[i][j].getComponent().insert(clonedPlayerBoard, i, j);
                 }
             }
         }
@@ -863,6 +868,7 @@ public class PlayerBoard {
         }
 
         clonedPlayerBoard.shield = Arrays.copyOf(shield, shield.length);
+        clonedPlayerBoard.setListener(this.getListener());
 
         return clonedPlayerBoard;
 

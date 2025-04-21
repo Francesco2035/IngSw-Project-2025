@@ -42,11 +42,10 @@ public class TUI implements View {
                 for (int k = 0; k < 7; k++) {
                     cachedBoard[event.getX()][event.getY()][k] = "";
                 }
-
-            } else if (event.getId() == -1) {
-                cachedBoard[event.getX()][event.getY()] = emptyCell();
             }
+
         }
+
         else {
             cachedBoard[event.getX()][event.getY()] = formatCell(event);
         }

@@ -9,6 +9,7 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.Socket;
 
 // Aggiungi JsonTypeInfo per discriminare le sottoclassi
 @JsonTypeInfo(
@@ -72,6 +73,10 @@ public class Command implements Serializable {
     }
 
     public ClientInterface getClient() {
+        return null;
+    }
+
+    public Socket getSocket() {
         return null;
     }
 }

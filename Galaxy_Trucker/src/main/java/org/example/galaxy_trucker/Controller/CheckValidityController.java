@@ -26,6 +26,8 @@ public class CheckValidityController extends Controller{
             nextState(gc);
         } catch (Exception e) {
             curPlayer.setMyPlance(playerBoardCopy);
+            playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
+
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
             System.out.println(e);
         }
