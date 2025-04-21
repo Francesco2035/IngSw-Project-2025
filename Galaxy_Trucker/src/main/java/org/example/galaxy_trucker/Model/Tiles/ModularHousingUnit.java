@@ -65,7 +65,7 @@ public class ModularHousingUnit extends HousingUnit {
     }
     
 
-    @Override
+
     public void initType() {
         // if non ci sono alienaddons adiacenti -> numHumans==2
         // if c'è solo un colore -> chiama l'interfaccia per richiedere l'input dal giocatore su human/alien di quel colore
