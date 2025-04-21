@@ -1,7 +1,9 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.Tiles.ComponentCheckers.ModularHousingUnitChecker;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+
 
 public class ModularHousingUnit extends HousingUnit {
 
@@ -77,6 +79,31 @@ public class ModularHousingUnit extends HousingUnit {
     @Override
     public void rotate(Boolean direction) {}
 
+    @Override
+    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        return false;
+    }
+
+    @Override
+    public int kill() {
+        return 0;
+    }
+
+    @Override
+    public void accept(ComponentAction visitor, PlayerState State) {
+
+    }
+
+    @Override
+    public Component clone() {
+        return null;
+    }
+
+    @Override
+    public void addCrew(int humans, boolean purple, boolean brown) {
+
+    }
+
 //    @Override
 //    public int setAbility(int numAbility, boolean purpleAlien, boolean brownAlien){
 //        if(this.numHumans>0) this.numHumans -= numAbility;
@@ -86,13 +113,13 @@ public class ModularHousingUnit extends HousingUnit {
 //    }
 //
 //
-    @Override
-    public boolean controlValidity(PlayerBoard pb, int x, int y) {
-        setComponentChecker(new ModularHousingUnitChecker(pb,x,y, this));
-        return getComponentChecker().Check();
-    }
-//
-//
+//    @Override
+//    public boolean controlValidity(PlayerBoard pb, int x, int y) {
+//        setComponentChecker(new ModularHousingUnitChecker(pb,x,y, this));
+//        return getComponentChecker().Check();
+//    }
+////
+////
 //    @Override
 //    public int setAbility(Goods good, boolean select) {
 //        return 0;
