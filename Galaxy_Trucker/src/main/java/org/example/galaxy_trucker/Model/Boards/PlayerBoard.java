@@ -345,7 +345,7 @@ public class PlayerBoard {
      * @param t2 of type Connector .
      * @return true if the connection is legal, false otherwise.
      */
-    public boolean checkConnection(Connectors t1, Connectors t2 ){
+    public boolean checkConnection(Connectors t1, Connectors t2){
 
         if (!t1.checkLegal(t2)){
             System.out.println("INVALID CONNECTION "+ t1.getClass() + " " + t2.getClass());
@@ -476,21 +476,18 @@ public class PlayerBoard {
 
 
         if (valid && c - 1 >=0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
-
             findPaths(r, c - 1, visited);
         }
 
 
 
         if (valid && r - 1 >=0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
-
             findPaths(r -1,c ,visited);
         }
 
 
 
         if (valid && c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
-
             findPaths(r,c + 1 ,visited);
         }
 
@@ -955,9 +952,12 @@ public class PlayerBoard {
         this.listener = null;
     }
 
+    public PlayerBoardListener getListener(){
+        return listener;
+    }
+
     public void sendUpdates(TileEvent event){
         if(listener != null) {
-            System.out.println("Sending updates: " + event.getType());
             listener.playerBoardChanged(event);
         }
     }

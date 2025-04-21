@@ -68,6 +68,7 @@ public class InsertTileCommand extends Command{
             }
             case "Discard":{
                 player.DiscardTile();
+                break;
             }
             case "Hourglass":{
                     try {

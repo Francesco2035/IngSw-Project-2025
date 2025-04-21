@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
@@ -47,15 +48,11 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        System.out.println("Insert player ID: ");
-        String playerId = br.readLine();
+        String playerId = client.getView().askInput("Insert player ID: ");
+        String gameId = client.getView().askInput("Insert game ID: ");
+        int level = Integer.parseInt(client.getView().askInput("Insert game level: "));
 
-        System.out.println("Insert game ID: ");
-        String gameId = br.readLine();
-        System.out.println("Insert game level: ");
-        int level = Integer.parseInt(br.readLine());
-
-        String fullCommand = "Login " + playerId + " " + gameId + " " + level;
+        //String fullCommand = "Login " + playerId + " " + gameId + " " + level;
 
         commandInterpreter = new CommandInterpreter(playerId, gameId);
         LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login");
@@ -67,11 +64,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         this.inputLoop(true);
     }
 
-    @Override
-    public void receiveMessage(Event event) throws RemoteException {
-        //System.out.print(event.message());
-        //client.updateBoard(event);
-    }
 
     @Override
     public void receiveMessage(HandEvent event) throws RemoteException {
@@ -104,28 +96,36 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
 
     private void inputLoop(boolean fromConsole) throws IOException {
-        BufferedReader br;
-        String cmd;
+        String cmd = "";
 
         if (fromConsole) {
-            br = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("\nInserisci comandi: ");
-        } else {
+            while (cmd != null && !cmd.equals("end")) {
+                try {
+                    cmd = client.getView().askInput("Command: ");
+                    Command command = commandInterpreter.interpret(cmd);
+                    server.command(command);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    cmd = "";
+                }
+            }
+        }
+        else {
             InputStream commandFile = getClass().getClassLoader().getResourceAsStream("commands_output.txt");
             assert commandFile != null;
-            br = new BufferedReader(new InputStreamReader(commandFile));
-        }
-
-        while (!Objects.equals(cmd = br.readLine(), "end")) {
-            try{
-                Command command = commandInterpreter.interpret(cmd);
-                server.command(command);
-
-            }
-            catch (Exception e){
-                System.out.println(e.getMessage());
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(commandFile))) {
+                while ((cmd = br.readLine()) != null && !cmd.equals("end")) {
+                    try {
+                        Command command = commandInterpreter.interpret(cmd);
+                        server.command(command);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
             }
         }
+
+
         System.out.println("Fine input.");
     }
 

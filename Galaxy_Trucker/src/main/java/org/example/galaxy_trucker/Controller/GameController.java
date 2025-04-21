@@ -28,6 +28,7 @@ public class GameController {
     int buildingCount = 0;
     boolean GameOver = false;
     private boolean started = false;
+    private int color = 153;
 
     public boolean isStarted() {
         return started;
@@ -59,6 +60,8 @@ public class GameController {
         vv.setEventMatrix(game.getGameBoard().getLevel());
         p.getmyPlayerBoard().setListener(vv);
         Tile mainCockpitTile = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
+        mainCockpitTile.setId(color);
+        color++;
         p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6);
         p.setHandListener(vv);
 
@@ -143,6 +146,7 @@ public class GameController {
         ControllerMap.put(player.GetID(), controller);
 
         if(buildingCount == ControllerMap.size()){
+            System.out.println("palu gay");
             game.getGameBoard().StartHourglass();
             buildingCount = -1;
         }

@@ -35,7 +35,7 @@ public class SpecialStorageCompartment extends Storage{
         if (position >= goods.size() || position < 0){
             throw new InvalidInput("Cannot remove a good because it is out of bounds");
         }
-        tile.sendUpdates(goods,0, false, false, 0, "SpecialStorageCompartment");
+        tile.sendUpdates(goods,0, false, false, 0);
         return goods.remove(position);
 
 
@@ -49,7 +49,7 @@ public class SpecialStorageCompartment extends Storage{
             throw new InvalidInput("StorageCompartment is full!");
         }
         goods.add(good);
-        tile.sendUpdates(goods,0, false, false, 0, "SpecialStorageCompartment");
+        tile.sendUpdates(goods,0, false, false, 0);
 
     }
 
@@ -58,7 +58,7 @@ public class SpecialStorageCompartment extends Storage{
     public void insert(PlayerBoard playerBoard, int x, int y) {
         playerBoard.getStorages().add(this);
         goods = new ArrayList<>();
-        tile.sendUpdates(goods,0, false, false, 0, "SpecialStorageCompartment");
+        tile.sendUpdates(goods,0, false, false, 0);
 
     }
 

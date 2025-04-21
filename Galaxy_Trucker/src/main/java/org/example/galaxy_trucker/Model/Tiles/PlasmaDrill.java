@@ -47,7 +47,7 @@ public class PlasmaDrill extends Component{
             }
         }
         playerBoard.getPlasmaDrills().add(this);
-        tile.sendUpdates(null,0, false, false, 0, "PlasmaDrill");
+        tile.sendUpdates(null,0, false, false, 0);
 
     }
 

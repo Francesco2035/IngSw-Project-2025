@@ -24,7 +24,7 @@ public class PowerCenter extends Component{
     public void insert(@NotNull PlayerBoard playerBoard, int x, int y) {
         playerBoard.setEnergy(type);
         playerBoard.getPowerCenters().add(this);
-        tile.sendUpdates(null,0, false, false, type, "PowerCenter");
+        tile.sendUpdates(null,0, false, false, type);
 
     }
 
@@ -48,7 +48,7 @@ public class PowerCenter extends Component{
             throw new InvalidInput("cannot exceed 0 energy");
         }
         this.type = this.type-1;
-        tile.sendUpdates(null,0, false, false, type, "PowerCenter");
+        tile.sendUpdates(null,0, false, false, type);
 
     }
 

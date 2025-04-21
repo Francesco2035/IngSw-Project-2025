@@ -105,7 +105,7 @@ public class MainCockpitComp extends HousingUnit {
             if (numHumans == 0){
                 playerBoard.getConnectedHousingUnits().remove(this);
             }
-            tile.sendUpdates(null, numHumans, false, false, 0, "HousingUnit");
+            tile.sendUpdates(null, numHumans, false, false, 0);
             return 2;
 
 
@@ -127,7 +127,8 @@ public class MainCockpitComp extends HousingUnit {
         if (connected) {
             playerBoard.getConnectedHousingUnits().add(this);
         }
-        tile.sendUpdates(null, numHumans, false, false, 0, "HousingUnit");
+        System.out.println("palugay "+ numHumans);
+        tile.sendUpdates(null, numHumans, false, false, 0);
 
     }
 

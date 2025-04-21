@@ -19,7 +19,7 @@ public class SewerPipes extends Component {
 
     @Override
     public void insert(PlayerBoard playerBoard, int x, int y) {
-        tile.sendUpdates(null,0, false, false, 0, "SewerPipes");
+        tile.sendUpdates(null,0, false, false, 0);
 
     }
 
