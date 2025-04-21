@@ -55,7 +55,7 @@ public class HotWaterHeater extends Component{
         }
 
         playerBoard.getHotWaterHeaters().add(this);
-        tile.sendUpdates(null,0, false, false, 0, "HotWaterHeater");
+        tile.sendUpdates(null,0, false, false, 0);
     }
 
 

@@ -19,7 +19,7 @@ public class UNIVERSAL implements Connectors, Serializable {
 
     @Override
     public boolean checkLegal(Connectors Adjacent) {
-        return Adjacent == UNIVERSAL.INSTANCE || Adjacent == SINGLE.INSTANCE || Adjacent == DOUBLE.INSTANCE;
+        return Adjacent == UNIVERSAL.INSTANCE || Adjacent == SINGLE.INSTANCE || Adjacent == DOUBLE.INSTANCE ;
     }
 
     @Override

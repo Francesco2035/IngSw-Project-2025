@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Controller.ClientServer.RMI;
 import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 
@@ -14,9 +15,6 @@ import java.rmi.RemoteException;
 public interface ClientInterface extends Remote {
 
     void StartClient() throws IOException, NotBoundException;
-
-
-    void receiveMessage(Event message) throws RemoteException;
 
     void receiveMessage(HandEvent event) throws RemoteException;
 

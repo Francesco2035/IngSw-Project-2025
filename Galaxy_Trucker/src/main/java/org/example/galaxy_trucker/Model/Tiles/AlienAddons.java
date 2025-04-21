@@ -23,7 +23,7 @@ public class AlienAddons extends Component{
     public void insert(PlayerBoard playerBoard, int x, int y) {
 
         playerBoard.getAlienAddons().add(this);
-        tile.sendUpdates(null, 0,false, false, 0, "AlienAddons");
+        tile.sendUpdates(null, 0,false, false, 0);
 
     }
 

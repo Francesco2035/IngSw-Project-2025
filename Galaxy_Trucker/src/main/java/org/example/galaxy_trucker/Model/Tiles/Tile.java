@@ -99,12 +99,12 @@ public class Tile implements Serializable {
     }
 
 
-    public void sendUpdates(ArrayList<Goods> cargo, int humans,boolean purpleAlien, boolean brownAlien, int batteries, String type){
-        playerBoard.sendUpdates(new TileEvent(id,x,y,cargo,humans,purpleAlien,brownAlien,batteries,rotation,  type, connectors));
+    public void sendUpdates(ArrayList<Goods> cargo, int humans,boolean purpleAlien, boolean brownAlien, int batteries){
+        playerBoard.sendUpdates(new TileEvent(id,x,y,cargo,humans,purpleAlien,brownAlien,batteries,rotation, connectors));
     }
 
     public void sendUpdates(RemoveTileEvent event){
-        playerBoard.sendUpdates(new TileEvent(-1,x,y,null, 0,false, false, 0, 0, "", null));
+        playerBoard.sendUpdates(new TileEvent(-1,x,y,null, 0,false, false, 0, 0, null));
     }
 
 
@@ -119,6 +119,7 @@ public class Tile implements Serializable {
     public void setY(int y) {
         this.y = y;
     }
+
 }
 
 

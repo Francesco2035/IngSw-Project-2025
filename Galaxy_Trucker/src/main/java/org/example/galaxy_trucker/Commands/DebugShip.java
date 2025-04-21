@@ -63,6 +63,7 @@ public class DebugShip extends Command {
         addonspurple.RotateSx();
         plasmaDrill.RotateDx();
 
+        debugShip.setListener(player.getmyPlayerBoard().getListener());
 
         debugShip.insertTile(t1, 6,7);
         t2.RotateSx();
@@ -94,7 +95,7 @@ public class DebugShip extends Command {
         debugShip.insertTile(sewerpipes,7,3);
         debugShip.insertTile(hotWaterHeater,8,3);
 
-
+        debugShip.insertTile(player.getmyPlayerBoard().getTile(6,6),6,6);
         player.setMyPlance(debugShip);
 
     }

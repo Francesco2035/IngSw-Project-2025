@@ -19,7 +19,7 @@ public class Hourglass implements Runnable {
 
     public Hourglass(int lv) {
         this.lv = lv;
-        time = 60000;
+        time = 600;
         startable = true;
         if(lv == 2) usages = 3;
         else usages = 2;

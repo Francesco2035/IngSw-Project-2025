@@ -18,9 +18,9 @@ public class TileEvent implements Event {
     ArrayList<Goods> cargo;
     int rotation;
     ArrayList<Connectors> connectors;
-    String type;
 
-    public TileEvent(int id,int x,int y, ArrayList<Goods> cargo, int humans,boolean purpleAlien, boolean brownAlien, int batteries, int rotation, String type , ArrayList<Connectors> connectors) {
+
+    public TileEvent(int id,int x,int y, ArrayList<Goods> cargo, int humans,boolean purpleAlien, boolean brownAlien, int batteries, int rotation, ArrayList<Connectors> connectors) {
         this.x = x;
         this.y = y;
         this.cargo = cargo;
@@ -30,7 +30,6 @@ public class TileEvent implements Event {
         this.id = id;
         this.rotation = rotation;
         this.humans = humans;
-        this.type = type;
         this.connectors = connectors;
     }
     @Override
@@ -72,9 +71,7 @@ public class TileEvent implements Event {
     public int getRotation() {
         return rotation;
     }
-    public String getType() {
-        return type;
-    }
+
     public ArrayList<Connectors> getConnectors() {
         return connectors;
     }

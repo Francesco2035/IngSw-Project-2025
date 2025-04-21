@@ -40,7 +40,7 @@ public abstract class HousingUnit extends Component{
         playerBoard.getHousingUnits().add(this);
         this.x = x;
         this.y = y;
-        tile.sendUpdates(null,getNumHumans(),isPurpleAlien(),isBrownAlien(),0, "HousingUnit");
+        tile.sendUpdates(null,getNumHumans(),isPurpleAlien(),isBrownAlien(),0);
     }
 
     @Override

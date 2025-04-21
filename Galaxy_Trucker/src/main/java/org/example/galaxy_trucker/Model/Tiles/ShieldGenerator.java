@@ -41,7 +41,7 @@ public class ShieldGenerator extends Component{
     @Override
     public void insert(PlayerBoard playerBoard, int x, int y) {
         playerBoard.getShieldGenerators().add(this);
-        tile.sendUpdates(null,0, false, false, 0, "ShieldGenerator");
+        tile.sendUpdates(null,0, false, false, 0);
 
     }
 
