@@ -55,6 +55,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         //String fullCommand = "Login " + playerId + " " + gameId + " " + level;
 
         commandInterpreter = new CommandInterpreter(playerId, gameId);
+        commandInterpreter.setlv(level);
         LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login");
         loginCommand.setClient(this);
 

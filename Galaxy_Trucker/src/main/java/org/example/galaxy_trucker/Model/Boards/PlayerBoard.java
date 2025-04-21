@@ -103,7 +103,10 @@ public class PlayerBoard {
         if (lv == 2) {
             for (int x = 0; x < 10; x++) {
                 for (int y = 0; y < 10; y++) {
-                    if (x < 4 || y < 3 || (x == 4 && (y == 3 || y == 4 || y == 6 || y == 8 || y == 9)) ||(x == 5 && (y == 3 || y== 9)) || (x == 8 && y == 6) || x ==9) {
+                    if (x < 4 || y < 3 ||
+                            (x == 4 && (y == 3 || y == 4 || y == 6 || y == 8 || y == 9))
+                            ||(x == 5 && (y == 3 || y== 9))
+                            || (x == 8 && y == 6) || x ==9) {
                         ValidPlayerBoard[x][y] = -1;
                     }
                     else if (x == 6 && y == 6) {

@@ -218,6 +218,7 @@ public class ModularHousingUnit extends HousingUnit {
         if (connected){
             playerBoard.getConnectedHousingUnits().add(this);
         }
+        System.out.print("palu morto");
         tile.sendUpdates(null,numHumans,purpleAlien,brownAlien,0);
     }
 
