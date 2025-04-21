@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
+import java.io.Serializable;
+
 @JsonTypeName("ENGINE")
-public class ENGINE implements Connectors {
+public class ENGINE implements Connectors , Serializable {
 
     public static final ENGINE ISTANCE = new ENGINE();
 

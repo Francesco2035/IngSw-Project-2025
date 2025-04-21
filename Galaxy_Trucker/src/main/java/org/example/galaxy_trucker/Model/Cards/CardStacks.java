@@ -14,7 +14,7 @@ public class CardStacks implements Serializable {
     private ArrayList<Card> VisibleCards2;
     private ArrayList<Card> VisibleCards3;
     private ArrayList<Card> HiddenCards;
-    private ArrayList<Card> FullAdventure;
+    private ArrayList<Card> FullAdventure; //prendi questo bro
     private ArrayList<Card> Level1Deck;
     private ArrayList<Card> Level2Deck;
     private GAGen GaG;

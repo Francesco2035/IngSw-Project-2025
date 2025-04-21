@@ -1,13 +1,18 @@
 package org.example.galaxy_trucker.Model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class IntegerPair {
+public class IntegerPair implements Serializable {
     private int first;
     private int second;
     public IntegerPair(int first, int second) {
         this.first = first;
         this.second = second;
+    }
+
+    public IntegerPair() {
+
     }
     public int getFirst() {
         return first;

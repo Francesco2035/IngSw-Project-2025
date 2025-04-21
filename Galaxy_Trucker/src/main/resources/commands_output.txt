@@ -1,0 +1,1107 @@
+Ready true
+PickTile -1
+InsertTile 8 5 180
+PickTile -1
+Hourglass
+Discard
+PickTile -1
+Hourglass
+ToBuffer 180
+FromBuffer 0
+Discard
+PickTile -1
+Discard
+PickTile 2
+InsertTile 8 6 90
+PickTile -1
+InsertTile 5 7 270
+PickTile -1
+Discard
+PickTile -1
+Discard
+PickTile -1
+Discard
+PickTile -1
+ToBuffer 180
+FromBuffer 0
+Discard
+PickTile 3
+InsertTile 5 5 0
+PickTile -1
+Hourglass
+Discard
+PickTile 0
+InsertTile 8 5 270
+PickTile 3
+ToBuffer 180
+PickTile -1
+Hourglass
+Discard
+PickTile -1
+Discard
+PickTile -1
+Hourglass
+InsertTile 8 5 90
+PickTile -1
+InsertTile 8 6 90
+FromBuffer 0
+Discard
+PickTile -1
+Discard
+PickTile -1
+Discard
+PickTile -1
+Discard
+PickTile -1
+Discard
+PickTile 9
+Hourglass
+InsertTile 7 8 180
+PickTile 1
+ToBuffer 180
+FromBuffer 0
+Discard
+PickTile -1
+Hourglass
+InsertTile 7 6 90
+PickTile 2
+Hourglass
+Discard
+PickTile -1
+ToBuffer 0
+FromBuffer 0
+InsertTile 5 8 0
+PickTile -1
+Hourglass
+ToBuffer 90
+FromBuffer 0
+InsertTile 8 8 90
+PickTile 1
+Discard
+PickTile -1
+ToBuffer 180
+FromBuffer 0
+Hourglass
+Discard
+PickTile -1
+ToBuffer 270
+PickTile -1
+InsertTile 5 6 180
+FromBuffer 0
+ToBuffer 180
+PickTile -1
+Discard
+PickTile -1
+Hourglass
+InsertTile 6 8 180
+FromBuffer 0
+Discard
+PickTile -1
+Hourglass
+Hourglass
+ToBuffer 180
+PickTile -1
+Hourglass
+ToBuffer 90
+PickTile -1
+Discard
+FromBuffer 1
+Discard
+FromBuffer 0
+Hourglass
+Discard
+PickTile -1
+Hourglass
+Hourglass
+ToBuffer 270
+FromBuffer 0
+InsertTile 5 5 270
+PickTile -1
+Discard
+PickTile -1
+Discard
+PickTile -1
+Hourglass
+ToBuffer 90
+PickTile -1
+ToBuffer 180
+FromBuffer 0
+Hourglass
+InsertTile 7 6 180
+PickTile -1
+InsertTile 8 7 0
+FromBuffer 0
+InsertTile 8 5 270
+PickTile 11
+ToBuffer 270
+PickTile 13
+Hourglass
+InsertTile 8 7 180
+PickTile 6
+Discard
+PickTile -1
+Hourglass
+ToBuffer 0
+PickTile 12
+InsertTile 6 8 270
+PickTile -1
+Discard
+FromBuffer 0
+Discard
+PickTile -1
+Hourglass
+InsertTile 8 7 90
+FromBuffer 0
+ToBuffer 180
+FromBuffer 0
+Hourglass
+ToBuffer 0
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+Discard
+PickTile -1
+Discard
+PickTile 16
+ToBuffer 270
+PickTile 2
+Discard
+FromBuffer 0
+Discard
+PickTile 2
+Discard
+PickTile -1
+Hourglass
+Discard
+PickTile 6
+InsertTile 8 7 0
+PickTile -1
+Hourglass
+Discard
+PickTile -1
+InsertTile 5 7 90
+PickTile -1
+Discard
+PickTile 10
+ToBuffer 270
+FromBuffer 0
+Discard
+PickTile -1
+Hourglass
+InsertTile 5 6 0
+PickTile 1
+Discard
+PickTile -1
+ToBuffer 180
+FromBuffer 0
+Hourglass
+ToBuffer 270
+FromBuffer 0
+Discard
+PickTile -1
+Discard
+PickTile -1
+InsertTile 6 7 0
+PickTile -1
+ToBuffer 90
+PickTile -1
+ToBuffer 270
+PickTile 3
+Hourglass
+Hourglass
+InsertTile 5 5 270
+PickTile 18
+Discard
+FromBuffer 0
+Discard
+FromBuffer 0
+ToBuffer 180
+FromBuffer 0
+Hourglass
+Discard
+PickTile 12
+ToBuffer 180
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+ToBuffer 0
+FromBuffer 0
+ToBuffer 270
+PickTile -1
+InsertTile 6 6 180
+FromBuffer 0
+ToBuffer 180
+PickTile -1
+Hourglass
+Discard
+PickTile 5
+Discard
+PickTile -1
+Discard
+FromBuffer 0
+InsertTile 8 5 270
+PickTile -1
+Discard
+PickTile -1
+Hourglass
+InsertTile 7 8 270
+PickTile -1
+InsertTile 7 8 0
+PickTile -1
+InsertTile 7 5 270
+PickTile 5
+ToBuffer 0
+PickTile 18
+InsertTile 5 5 90
+FromBuffer 0
+Hourglass
+Discard
+PickTile -1
+Hourglass
+ToBuffer 90
+PickTile -1
+InsertTile 5 7 180
+PickTile -1
+Discard
+FromBuffer 0
+InsertTile 7 5 0
+PickTile 4
+Discard
+PickTile -1
+ToBuffer 90
+PickTile -1
+ToBuffer 180
+PickTile -1
+InsertTile 7 7 180
+PickTile 25
+Discard
+FromBuffer 0
+Discard
+FromBuffer 0
+InsertTile 6 8 0
+PickTile 7
+Hourglass
+Discard
+PickTile -1
+Hourglass
+Discard
+PickTile -1
+InsertTile 5 6 0
+PickTile -1
+InsertTile 6 7 270
+PickTile 20
+InsertTile 6 7 270
+PickTile -1
+Hourglass
+ToBuffer 270
+PickTile 0
+InsertTile 5 6 180
+FromBuffer 0
+Discard
+PickTile 5
+ToBuffer 90
+PickTile -1
+InsertTile 8 5 270
+PickTile 4
+InsertTile 6 6 90
+FromBuffer 0
+Hourglass
+Hourglass
+Hourglass
+Discard
+PickTile -1
+InsertTile 6 7 180
+PickTile -1
+Hourglass
+Hourglass
+Discard
+PickTile -1
+InsertTile 6 5 90
+PickTile -1
+ToBuffer 0
+FromBuffer 0
+Hourglass
+Discard
+PickTile 9
+ToBuffer 180
+PickTile -1
+Discard
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+InsertTile 8 7 0
+PickTile -1
+Hourglass
+ToBuffer 0
+FromBuffer 0
+Hourglass
+InsertTile 8 7 270
+PickTile 12
+ToBuffer 270
+PickTile -1
+Hourglass
+InsertTile 7 7 270
+FromBuffer 0
+Discard
+PickTile 19
+Hourglass
+Hourglass
+Discard
+PickTile -1
+Hourglass
+Hourglass
+Discard
+PickTile -1
+ToBuffer 180
+FromBuffer 0
+Discard
+PickTile -1
+ToBuffer 90
+FromBuffer 0
+InsertTile 8 5 180
+PickTile -1
+ToBuffer 180
+FromBuffer 0
+InsertTile 5 8 90
+PickTile -1
+Discard
+PickTile -1
+Hourglass
+Discard
+PickTile -1
+InsertTile 7 8 270
+PickTile -1
+InsertTile 7 6 180
+PickTile 26
+InsertTile 8 5 0
+PickTile -1
+Hourglass
+Hourglass
+Discard
+PickTile -1
+InsertTile 5 5 90
+PickTile -1
+InsertTile 5 7 270
+PickTile 5
+Discard
+PickTile -1
+Hourglass
+InsertTile 6 7 0
+PickTile -1
+Discard
+PickTile 2
+Discard
+PickTile -1
+Hourglass
+Hourglass
+Discard
+PickTile 6
+Hourglass
+InsertTile 6 8 90
+PickTile -1
+Discard
+PickTile 25
+Discard
+PickTile 30
+ToBuffer 90
+FromBuffer 0
+Discard
+PickTile 24
+ToBuffer 0
+FromBuffer 0
+Discard
+PickTile 23
+ToBuffer 270
+FromBuffer 0
+ToBuffer 0
+FromBuffer 0
+Hourglass
+Hourglass
+ToBuffer 180
+PickTile -1
+InsertTile 6 8 0
+PickTile -1
+Hourglass
+Discard
+FromBuffer 0
+InsertTile 5 8 180
+PickTile 4
+ToBuffer 0
+FromBuffer 0
+Discard
+PickTile -1
+Discard
+PickTile 8
+ToBuffer 0
+PickTile -1
+Discard
+FromBuffer 0
+Hourglass
+ToBuffer 90
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+ToBuffer 0
+PickTile 8
+InsertTile 6 8 0
+FromBuffer 0
+ToBuffer 0
+PickTile 22
+ToBuffer 90
+PickTile 25
+InsertTile 6 6 90
+PickTile -1
+Hourglass
+Discard
+PickTile -1
+InsertTile 6 6 180
+FromBuffer 0
+Discard
+PickTile -1
+Discard
+FromBuffer 0
+Discard
+PickTile -1
+InsertTile 6 8 270
+PickTile -1
+Discard
+PickTile -1
+InsertTile 5 5 0
+PickTile -1
+InsertTile 5 8 270
+PickTile -1
+InsertTile 5 7 270
+PickTile 12
+InsertTile 8 8 270
+PickTile 21
+Hourglass
+ToBuffer 90
+FromBuffer 0
+ToBuffer 180
+PickTile -1
+Hourglass
+Hourglass
+Discard
+PickTile 17
+ToBuffer 270
+PickTile -1
+Discard
+FromBuffer 0
+Discard
+PickTile -1
+Hourglass
+Discard
+FromBuffer 0
+Discard
+PickTile -1
+Hourglass
+Hourglass
+Discard
+PickTile -1
+Hourglass
+Discard
+PickTile -1
+InsertTile 5 6 180
+PickTile -1
+InsertTile 8 6 180
+PickTile -1
+Discard
+PickTile -1
+InsertTile 7 7 0
+PickTile 15
+ToBuffer 270
+PickTile 1
+InsertTile 7 5 180
+PickTile -1
+InsertTile 6 5 270
+FromBuffer 0
+Discard
+PickTile -1
+ToBuffer 0
+FromBuffer 0
+Hourglass
+InsertTile 7 8 180
+PickTile 15
+InsertTile 8 6 0
+PickTile -1
+InsertTile 6 7 270
+PickTile -1
+Discard
+PickTile 16
+InsertTile 6 5 270
+PickTile 36
+Discard
+PickTile 28
+ToBuffer 0
+PickTile 35
+ToBuffer 270
+FromBuffer 0
+Discard
+PickTile -1
+Discard
+FromBuffer 0
+Hourglass
+InsertTile 8 5 0
+PickTile -1
+ToBuffer 90
+PickTile -1
+InsertTile 6 7 180
+FromBuffer 0
+InsertTile 8 7 90
+PickTile 20
+InsertTile 6 7 270
+PickTile -1
+Hourglass
+InsertTile 6 7 90
+PickTile -1
+InsertTile 7 8 90
+PickTile 6
+Hourglass
+InsertTile 5 8 270
+PickTile 20
+ToBuffer 270
+FromBuffer 0
+ToBuffer 270
+PickTile -1
+Hourglass
+InsertTile 5 6 90
+PickTile -1
+Discard
+PickTile -1
+Hourglass
+InsertTile 7 6 90
+PickTile -1
+Hourglass
+ToBuffer 90
+PickTile 26
+Hourglass
+InsertTile 7 5 0
+FromBuffer 0
+Hourglass
+InsertTile 8 6 180
+FromBuffer 0
+InsertTile 8 5 180
+PickTile -1
+Hourglass
+ToBuffer 0
+PickTile -1
+Hourglass
+Discard
+FromBuffer 0
+Hourglass
+ToBuffer 180
+PickTile -1
+ToBuffer 90
+PickTile 30
+Hourglass
+Hourglass
+InsertTile 7 7 0
+FromBuffer 1
+ToBuffer 0
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+ToBuffer 0
+PickTile -1
+Hourglass
+Discard
+FromBuffer 1
+Discard
+FromBuffer 0
+Discard
+PickTile -1
+Hourglass
+Discard
+PickTile -1
+InsertTile 8 6 270
+PickTile 31
+Discard
+PickTile 5
+ToBuffer 270
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+ToBuffer 180
+PickTile 14
+Discard
+PickTile -1
+Hourglass
+InsertTile 8 6 90
+PickTile -1
+Discard
+FromBuffer 0
+Discard
+PickTile -1
+ToBuffer 0
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+ToBuffer 270
+PickTile 1
+Discard
+PickTile -1
+Hourglass
+Hourglass
+Discard
+FromBuffer 0
+ToBuffer 90
+FromBuffer 0
+Hourglass
+InsertTile 8 7 180
+PickTile -1
+Discard
+PickTile -1
+Discard
+PickTile -1
+InsertTile 7 8 270
+PickTile 14
+Discard
+PickTile -1
+InsertTile 6 7 0
+PickTile -1
+InsertTile 8 6 270
+PickTile -1
+InsertTile 6 5 270
+PickTile -1
+ToBuffer 90
+FromBuffer 0
+Discard
+PickTile -1
+Discard
+PickTile -1
+Hourglass
+Discard
+PickTile -1
+InsertTile 8 7 90
+PickTile -1
+InsertTile 8 7 270
+PickTile 1
+Hourglass
+Hourglass
+Discard
+PickTile 11
+ToBuffer 270
+FromBuffer 0
+InsertTile 5 8 0
+PickTile -1
+Discard
+PickTile -1
+Hourglass
+Hourglass
+InsertTile 6 6 0
+PickTile -1
+Discard
+PickTile -1
+Hourglass
+Hourglass
+InsertTile 5 7 90
+PickTile 46
+Hourglass
+ToBuffer 270
+FromBuffer 0
+InsertTile 8 8 180
+PickTile 27
+Discard
+PickTile -1
+Hourglass
+Hourglass
+Hourglass
+Hourglass
+InsertTile 7 8 180
+PickTile 16
+InsertTile 8 6 270
+PickTile -1
+InsertTile 8 7 0
+PickTile 1
+InsertTile 8 7 90
+PickTile 2
+ToBuffer 270
+PickTile -1
+ToBuffer 180
+PickTile -1
+Discard
+FromBuffer 1
+Hourglass
+Discard
+PickTile 22
+InsertTile 6 6 90
+FromBuffer 0
+Discard
+PickTile 35
+ToBuffer 90
+FromBuffer 0
+Hourglass
+Discard
+PickTile 37
+ToBuffer 90
+FromBuffer 0
+Discard
+PickTile 6
+Discard
+PickTile 41
+ToBuffer 0
+FromBuffer 0
+Hourglass
+Hourglass
+Hourglass
+InsertTile 5 7 180
+PickTile 11
+Hourglass
+Hourglass
+ToBuffer 0
+FromBuffer 0
+Discard
+PickTile 3
+Hourglass
+ToBuffer 90
+PickTile 8
+Hourglass
+Hourglass
+InsertTile 6 8 180
+PickTile 9
+ToBuffer 180
+FromBuffer 0
+Discard
+FromBuffer 0
+ToBuffer 0
+PickTile 28
+InsertTile 6 6 270
+PickTile 21
+Discard
+FromBuffer 0
+InsertTile 5 5 0
+PickTile 29
+InsertTile 8 5 180
+PickTile 11
+Discard
+PickTile 2
+ToBuffer 270
+PickTile 20
+ToBuffer 0
+FromBuffer 0
+ToBuffer 90
+FromBuffer 0
+Hourglass
+Discard
+FromBuffer 0
+Discard
+PickTile 39
+Discard
+PickTile 0
+Hourglass
+ToBuffer 270
+PickTile 12
+ToBuffer 90
+PickTile 21
+InsertTile 6 6 90
+FromBuffer 1
+Discard
+FromBuffer 0
+Discard
+PickTile 10
+InsertTile 7 5 180
+PickTile 29
+ToBuffer 180
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+Hourglass
+InsertTile 6 5 0
+PickTile 29
+Discard
+PickTile 23
+Hourglass
+ToBuffer 90
+FromBuffer 0
+Discard
+PickTile 5
+Hourglass
+InsertTile 7 7 180
+PickTile 9
+Hourglass
+Hourglass
+ToBuffer 0
+FromBuffer 0
+ToBuffer 0
+FromBuffer 0
+InsertTile 8 6 90
+PickTile 15
+InsertTile 6 7 180
+PickTile 7
+InsertTile 6 7 180
+PickTile 28
+Hourglass
+InsertTile 6 8 90
+PickTile 10
+Discard
+PickTile 24
+Discard
+PickTile 31
+Hourglass
+Discard
+PickTile 27
+Hourglass
+ToBuffer 180
+PickTile 8
+ToBuffer 0
+FromBuffer 1
+Hourglass
+Hourglass
+Discard
+FromBuffer 0
+ToBuffer 90
+FromBuffer 0
+Discard
+PickTile 4
+Hourglass
+Hourglass
+ToBuffer 90
+FromBuffer 0
+Discard
+PickTile 6
+ToBuffer 90
+FromBuffer 0
+Discard
+PickTile 26
+Hourglass
+InsertTile 7 8 270
+PickTile 18
+ToBuffer 270
+FromBuffer 0
+InsertTile 8 6 0
+PickTile 16
+InsertTile 7 6 0
+PickTile 15
+InsertTile 7 7 90
+PickTile 7
+Hourglass
+ToBuffer 90
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+ToBuffer 0
+FromBuffer 0
+ToBuffer 270
+PickTile 16
+ToBuffer 180
+PickTile 17
+Discard
+PickTile 3
+ToBuffer 180
+FromBuffer 1
+ToBuffer 0
+FromBuffer 0
+Discard
+FromBuffer 0
+Discard
+PickTile 25
+InsertTile 6 6 0
+PickTile 6
+Hourglass
+InsertTile 5 8 0
+PickTile 1
+Discard
+PickTile 8
+Discard
+PickTile 10
+ToBuffer 270
+FromBuffer 0
+Discard
+PickTile 3
+InsertTile 7 6 270
+PickTile 21
+ToBuffer 180
+FromBuffer 0
+Hourglass
+Discard
+PickTile 15
+Hourglass
+Discard
+PickTile 9
+InsertTile 8 8 90
+PickTile 6
+InsertTile 6 6 90
+PickTile 16
+Discard
+PickTile 8
+ToBuffer 180
+FromBuffer 0
+ToBuffer 180
+FromBuffer 0
+InsertTile 7 5 0
+PickTile 5
+Discard
+PickTile 20
+ToBuffer 90
+FromBuffer 0
+Discard
+PickTile 1
+InsertTile 7 7 90
+PickTile 18
+InsertTile 8 5 0
+PickTile 11
+ToBuffer 90
+FromBuffer 0
+InsertTile 8 5 0
+PickTile 9
+Hourglass
+Discard
+PickTile 10
+ToBuffer 0
+FromBuffer 0
+Discard
+PickTile 17
+Discard
+PickTile 2
+ToBuffer 90
+FromBuffer 0
+Discard
+PickTile 15
+ToBuffer 0
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+Discard
+PickTile 18
+Discard
+PickTile 3
+InsertTile 8 7 90
+PickTile 13
+ToBuffer 90
+FromBuffer 0
+ToBuffer 180
+PickTile 11
+InsertTile 8 6 90
+FromBuffer 0
+Discard
+PickTile 3
+Discard
+PickTile 12
+ToBuffer 90
+FromBuffer 0
+InsertTile 5 7 270
+PickTile 8
+ToBuffer 180
+FromBuffer 0
+InsertTile 8 6 0
+PickTile 3
+Hourglass
+ToBuffer 180
+FromBuffer 0
+Discard
+PickTile 1
+Discard
+PickTile 0
+InsertTile 8 8 270
+PickTile 6
+ToBuffer 90
+FromBuffer 0
+Discard
+PickTile 5
+Hourglass
+InsertTile 7 6 180
+PickTile 12
+Hourglass
+Hourglass
+Hourglass
+Discard
+PickTile 7
+ToBuffer 180
+FromBuffer 0
+ToBuffer 180
+FromBuffer 0
+Hourglass
+Hourglass
+Hourglass
+Discard
+PickTile 12
+ToBuffer 180
+FromBuffer 0
+Discard
+PickTile 3
+ToBuffer 180
+FromBuffer 0
+Discard
+PickTile 4
+ToBuffer 180
+FromBuffer 0
+ToBuffer 0
+FromBuffer 0
+InsertTile 5 6 90
+PickTile 5
+InsertTile 6 8 90
+PickTile 3
+Hourglass
+Discard
+PickTile 5
+InsertTile 8 8 270
+PickTile 1
+Discard
+PickTile 3
+ToBuffer 270
+FromBuffer 0
+Discard
+PickTile 5
+Discard
+PickTile 1
+InsertTile 8 6 90
+PickTile 8
+InsertTile 5 7 90
+PickTile 8
+ToBuffer 0
+PickTile 6
+InsertTile 8 8 270
+PickTile 1
+Hourglass
+InsertTile 6 8 0
+FromBuffer 0
+ToBuffer 90
+FromBuffer 0
+InsertTile 6 8 270
+PickTile 0
+ToBuffer 0
+FromBuffer 0
+Hourglass
+ToBuffer 180
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+Discard
+PickTile 4
+InsertTile 7 6 90
+PickTile 3
+ToBuffer 90
+FromBuffer 0
+ToBuffer 180
+PickTile 0
+InsertTile 8 6 180
+FromBuffer 0
+Discard
+PickTile 2
+InsertTile 7 8 180
+PickTile 1
+Hourglass
+Discard
+PickTile 0
+InsertTile 7 7 0
+PickTile 1
+ToBuffer 0
+FromBuffer 0
+InsertTile 6 6 90
+PickTile 0
+Hourglass
+Hourglass
+ToBuffer 270
+FromBuffer 0
+ToBuffer 270
+FromBuffer 0
+Discard
+PickTile 0
+ToBuffer 180
+FromBuffer 0
+InsertTile 6 7 0
+end

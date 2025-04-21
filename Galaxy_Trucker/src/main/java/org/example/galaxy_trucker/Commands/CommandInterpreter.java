@@ -1,5 +1,7 @@
 package org.example.galaxy_trucker.Commands;
 
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.HashMap;
@@ -34,12 +36,18 @@ public class CommandInterpreter {
         commandMap.put("FromBuffer", this::createAcceptCommand);
         commandMap.put("ToBuffer", this::createAcceptCommand);
         commandMap.put("AddCrew", this::createAddCrewCommand);
+        commandMap.put("AddBrownAlien", this::createAddCrewCommand);
+        commandMap.put("AddPurpleAlien", this::createAddCrewCommand);
         commandMap.put("ChoosingPlanet", this::createChoosingPlanetCommand);
         commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
         commandMap.put("Quit", this::createQuitCommand);
         commandMap.put("Ready", this::createReadyCommand);
+        commandMap.put("RemoveTile", this::createRemoveTileCommand);
         //  altri comandi
+        commandMap.put("DebugShip", this::createDebugShip);
     }
+
+
 
     private Command createReadyCommand(String[] strings) {
 
@@ -60,7 +68,24 @@ public class CommandInterpreter {
     }
 
     private Command createAddCrewCommand(String[] strings) {
-        return null;
+
+        if (strings.length != 3) {
+            throw new IllegalArgumentException("Comando AddCrew richiede 3 argomenti: titolo, x e y");
+        }
+        String title = strings[0];
+        int x = Integer.parseInt(strings[1]);
+        int y = Integer.parseInt(strings[2]);
+
+        return switch (title) {
+            case "AddCrew" ->
+                    new AddCrewCommand(2, false, false, new IntegerPair(x, y), gameId, playerId, lv, "AddCrew");
+            case "AddPurpleAlien" ->
+                    new AddCrewCommand(0, true, false, new IntegerPair(x, y), gameId, playerId, lv, "AddPurpleAlien");
+            case "AddBrownAlien" ->
+                    new AddCrewCommand(0, false, true, new IntegerPair(x, y), gameId, playerId, lv, "AddBrownAlien");
+            default -> throw new InvalidInput("invalid input");
+        };
+
     }
 
     private Command createAcceptCommand(String[] strings) {
@@ -123,7 +148,7 @@ public class CommandInterpreter {
             }
             case "Hourglass", "Discard":{
                 if (parts.length != 1) {
-                    throw new IllegalArgumentException("Comando Hourglass e Discard non richiedono nesusn argomento");
+                    throw new IllegalArgumentException("Comando Hourglass e Discard non richiedono nessun argomento");
                 }
                 break;
             }
@@ -147,9 +172,27 @@ public class CommandInterpreter {
         return new InsertTileCommand(x, y, rotation,position, gameId,playerId, lv, title);
     }
 
+    private Command createRemoveTileCommand(String[] parts) {
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Comando Hourglass richiede 2 argomenti: x e y");
+        }
+        int x = Integer.parseInt(parts[1]);
+        int y = Integer.parseInt(parts[2]);
+        return new RemoveTileCommand(x,y,gameId,playerId,lv, "RemoveTileCommand");
+    }
+
 
     @FunctionalInterface
     public interface CommandCreator {
         Command createCommand(String[] parts);
+    }
+
+
+
+
+    private Command createDebugShip(String[] strings) {
+
+        String title = strings[0];
+        return new DebugShip(gameId,playerId, lv, title);
     }
 }

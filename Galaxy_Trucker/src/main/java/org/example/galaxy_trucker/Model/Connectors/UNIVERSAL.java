@@ -3,8 +3,10 @@ package org.example.galaxy_trucker.Model.Connectors;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+import java.io.Serializable;
+
 @JsonTypeName("UNIVERSAL")
-public class UNIVERSAL implements Connectors {
+public class UNIVERSAL implements Connectors, Serializable {
 
     public static final UNIVERSAL INSTANCE = new UNIVERSAL();
 
@@ -17,7 +19,7 @@ public class UNIVERSAL implements Connectors {
 
     @Override
     public boolean checkLegal(Connectors Adjacent) {
-        return Adjacent == UNIVERSAL.INSTANCE || Adjacent == SINGLE.INSTANCE || Adjacent == DOUBLE.INSTANCE;
+        return Adjacent == UNIVERSAL.INSTANCE || Adjacent == SINGLE.INSTANCE || Adjacent == DOUBLE.INSTANCE ;
     }
 
     @Override

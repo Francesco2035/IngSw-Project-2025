@@ -34,7 +34,7 @@ public class Game implements Serializable {
     }
 
 
-    public void NewPlayer(Player newborn)throws IllegalArgumentException, IndexOutOfBoundsException{
+    public synchronized void NewPlayer(Player newborn)throws IllegalArgumentException, IndexOutOfBoundsException{
         if(Players.size() >= 4)
             throw new IndexOutOfBoundsException("Game is full");
 
@@ -47,21 +47,14 @@ public class Game implements Serializable {
         PlayerList.add(newborn);
     }
 
-    public void RemovePlayer(String DeadMan){
+    public synchronized void RemovePlayer(String DeadMan){
         Players.remove(DeadMan);
     }
 
     public String getID(){return GameID;}
 
-//    public State getCurrentState(){
-//        return CurrentState;
-//    }
-//
-//    public void setState(State newState){
-//        CurrentState = newState;
-//    }
 
-    public HashMap<String,Player> getPlayers(){
+    public synchronized HashMap<String,Player> getPlayers(){
         return Players;
     }
 
@@ -83,6 +76,8 @@ public class Game implements Serializable {
     public void setGameID(String gameID) {
         GameID = gameID;
     }
+
+
 
 
 }

@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
-import org.example.galaxy_trucker.Controller.GameHandler;
+import org.example.galaxy_trucker.Controller.GamesHandler;
+import org.example.galaxy_trucker.Controller.VirtualView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,11 +16,11 @@ import java.net.Socket;
 public class MultiClientHandler implements Runnable {
 
     private Socket clientSocket;
-    private GameHandler gameHandler;
+    private GamesHandler gameHandler;
 
     private long lastPingTime;
 
-    public MultiClientHandler(Socket clientSocket, GameHandler gameHandler) {
+    public MultiClientHandler(Socket clientSocket, GamesHandler gameHandler) {
         this.clientSocket = clientSocket;
         this.gameHandler = gameHandler;
     }
@@ -49,7 +50,7 @@ public class MultiClientHandler implements Runnable {
                 if(s.equals("ping")){
                     lastPingTime = System.currentTimeMillis();
                     out.println("pong");
-                    System.out.println("pong");
+                    //System.out.println("pong");
                 }
                 else{
                     System.out.println("Received: " + s);
@@ -57,7 +58,14 @@ public class MultiClientHandler implements Runnable {
                     Command command = objectMapper.readValue(s, Command.class);
 
                     System.out.println("Deserialized command: " + command.getTitle());
-                    gameHandler.receive(command);
+                    if (command.getTitle().equals("Login")){
+                        VirtualView vv = new VirtualView(command.getPlayerId(), command.getGameId(), command.getClient(), command.getSocket());
+                        gameHandler.initPlayer(command,vv);
+                    }
+                    else{
+                        gameHandler.receive(command);
+
+                    }
                 }
 
                 if (System.currentTimeMillis() - lastPingTime > 15000) {

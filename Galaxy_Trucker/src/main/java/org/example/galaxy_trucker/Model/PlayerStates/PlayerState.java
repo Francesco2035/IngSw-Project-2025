@@ -55,11 +55,11 @@ public abstract class PlayerState {
     }
 
     public boolean allows(LoginCommand command) {
+
         return false;
     }
 
     public boolean allows(ReadyCommand command) {
-        System.out.println("deffff");
         return false;
     }
 
@@ -100,6 +100,7 @@ public abstract class PlayerState {
         return false;
     }
 
+    public boolean allows(DebugShip command){return false;}
 
 
 }

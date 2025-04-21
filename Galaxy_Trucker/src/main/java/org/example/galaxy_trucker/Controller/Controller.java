@@ -15,18 +15,19 @@ public abstract class Controller {
     PlayerBoard playerBoardCopy;
 
 
-    public void action(Command command, GameHandler gh){
+    public synchronized void action(Command command, GameController gc) {
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
-            throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n"+ ReadyCommand.class+" " +curPlayer.getPlayerState());
+            throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
         }
 
         try {
             System.out.println("Action called for " + gameId + ": " + command.getTitle() + " "+ command.playerId);
             command.execute(curPlayer);
-            gh.changeState(gameId);
+            gc.changeState();
         } catch (Exception e) {
+            playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
             curPlayer.setMyPlance(playerBoardCopy);
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
             System.out.println(e);
@@ -35,6 +36,6 @@ public abstract class Controller {
     }
 
 
-    public abstract void nextState(GameHandler gh);
+    public abstract void nextState(GameController gc);
 
 }

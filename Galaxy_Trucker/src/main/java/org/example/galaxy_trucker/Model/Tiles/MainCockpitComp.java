@@ -8,6 +8,8 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 public class MainCockpitComp extends HousingUnit {
 
     private int numHumans;
+    private boolean connected = false;
+    private PlayerBoard playerBoard;
 
 
     @Override
@@ -67,6 +69,21 @@ public class MainCockpitComp extends HousingUnit {
 
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
+        this.playerBoard = pb;
+
+        int[][] validPlayerBoard = pb.getValidPlayerBoard();
+        if (validPlayerBoard[x-1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(2), pb.getTile(x,y).getConnectors().get(0))) {
+            connected = true;
+        }
+        if (validPlayerBoard[x+1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(0), pb.getTile(x,y).getConnectors().get(2))) {
+            connected = true;
+        }
+        if (validPlayerBoard[x][y-1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(3), pb.getTile(x,y).getConnectors().get(1))) {
+            connected = true;
+        }
+        if (validPlayerBoard[x][y+1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(1), pb.getTile(x,y).getConnectors().get(3))) {
+            connected = true;
+        }
         return true;
     }
 
@@ -85,7 +102,13 @@ public class MainCockpitComp extends HousingUnit {
             throw new InvalidInput("MainCockPit is empty!");
         }
             numHumans--;
+            if (numHumans == 0){
+                playerBoard.getConnectedHousingUnits().remove(this);
+            }
+            tile.sendUpdates(null, numHumans, false, false, 0);
             return 2;
+
+
     }
 
 
@@ -93,7 +116,7 @@ public class MainCockpitComp extends HousingUnit {
     @Override
     public void addCrew(int humans, boolean purple, boolean brown){
         if (purple || brown){
-            throw new InvalidInput("This is the mainCockPit you can't add aliens");
+            throw new InvalidInput("This is the mainCockpit you can't add aliens");
         }
 
         if (numHumans + humans > 2){
@@ -101,15 +124,39 @@ public class MainCockpitComp extends HousingUnit {
         }
 
         numHumans += humans;
+        if (connected) {
+            playerBoard.getConnectedHousingUnits().add(this);
+        }
+        System.out.println("palugay "+ numHumans);
+        tile.sendUpdates(null, numHumans, false, false, 0);
 
     }
+
+    public void setConnected(boolean connected){
+        this.connected = connected;
+    }
+
 
     @Override
-    public Component clone(){
-        ModularHousingUnit clone = new ModularHousingUnit();
+    public Component clone(PlayerBoard clonedPlayerBoard){
+        MainCockpitComp clone = new MainCockpitComp();
+        clone.setConnected(connected);
         clone.setNumHumans(numHumans);
+        clone.setPlayerBoard(clonedPlayerBoard);
+        if (connected && this.playerBoard.getConnectedHousingUnits().contains(this)){
+            clonedPlayerBoard.getConnectedHousingUnits().add(clone);
+        }
+
         return clone;
     }
+
+    public void setPlayerBoard(PlayerBoard playerBoard){
+        this.playerBoard = playerBoard;
+    }
+
+
+
+
 
 }
 

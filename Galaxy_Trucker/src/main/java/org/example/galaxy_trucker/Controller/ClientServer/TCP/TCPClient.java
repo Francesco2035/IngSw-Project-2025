@@ -3,6 +3,8 @@ package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 import com.google.gson.Gson;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.LoginCommand;
+import org.example.galaxy_trucker.Controller.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 
 import java.io.BufferedReader;
@@ -19,7 +21,11 @@ public class TCPClient{
     private BufferedReader in;
     private BufferedReader stdIn = null;
     private long lastPongTime = 0;
+    private Client client = null;
 
+    public TCPClient(Client c) {
+        this.client = c;
+    }
 
     private void PongListener() {
         try {
@@ -38,7 +44,7 @@ public class TCPClient{
     private void PingLoop() {
         while (!echoSocket.isClosed()) {
             out.println("ping");
-            System.out.println("ping");
+            //System.out.println("ping");
             try {
                 Thread.sleep(5000);
 
@@ -68,11 +74,13 @@ public class TCPClient{
 
 
 
-    public void main() throws IOException {
+
+
+    public void startClient() throws IOException {
 
 
         try {
-            echoSocket = new Socket(Settings.SERVER_NAME, Settings.TCP_PORT);
+            echoSocket = new Socket(Settings.SERVER_NAME, Settings.TCP_PORT); //SOCKET CLIENT
         } catch (IOException e) {
             System.err.println(e.toString() + " " + Settings.SERVER_NAME);
             System.exit(1);
@@ -101,16 +109,20 @@ public class TCPClient{
 
         System.out.println("Connection started\n");
 
+        client.getView().askInput("PlayerID: ");
+
         System.out.print("Inserisci il tuo nome (player ID): ");
         String playerId = stdIn.readLine();
         System.out.print("Inserisci il Game ID: ");
         String gameId = stdIn.readLine();
         System.out.print("Inserisci il livello della partita (livello): ");
-        String gameLevel = stdIn.readLine();
+        int gameLevel = Integer.parseInt(stdIn.readLine());
 
-        String loginString = "Login" + " " + playerId + " " + gameId + " " + gameLevel;
+        LoginCommand loginCommand = new LoginCommand(gameId,playerId, gameLevel, "Login");
+        loginCommand.setSocket(echoSocket);
+
         commandInterpreter = new CommandInterpreter(playerId, gameId);
-        Command loginCommand = commandInterpreter.interpret(loginString);
+        commandInterpreter.setlv(gameLevel);
 
         String jsonLogin = gson.toJson(loginCommand);
         out.println(jsonLogin);

@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Controller.ClientServer;
 
 import org.example.galaxy_trucker.Controller.ClientServer.RMI.RMIServer;
 import org.example.galaxy_trucker.Controller.ClientServer.TCP.TCPServer;
-import org.example.galaxy_trucker.Controller.GameHandler;
+import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Model.GameLists;
 
 import java.rmi.RemoteException;
@@ -19,7 +19,7 @@ public class ServersHandler implements Runnable {
 
     public void run(){
 
-        GameHandler gameHandler = new GameHandler();
+        GamesHandler gameHandler = new GamesHandler();
 
         //start thread server tcp
         TCPServer TCP = new TCPServer(gameHandler);

@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -54,6 +55,7 @@ public class HotWaterHeater extends Component{
         }
 
         playerBoard.getHotWaterHeaters().add(this);
+        tile.sendUpdates(null,0, false, false, 0);
     }
 
 
@@ -66,6 +68,7 @@ public class HotWaterHeater extends Component{
         }
 
         playerBoard.getHotWaterHeaters().remove(this);
+        tile.sendUpdates(new RemoveTileEvent());
     }
 
 
@@ -79,7 +82,7 @@ public class HotWaterHeater extends Component{
     }
 
     @Override
-    public Component clone(){
+    public Component clone(PlayerBoard clonedPlayerBoard){
         HotWaterHeater clone = new HotWaterHeater();
         clone.type = this.type;
         return clone;

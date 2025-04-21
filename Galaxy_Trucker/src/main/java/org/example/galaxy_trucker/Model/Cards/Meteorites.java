@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 //import javafx.util.Pair;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
@@ -19,15 +20,21 @@ import java.util.ArrayList;
 
 // direzioni int sinistra 0 sopra 1...
 //0 piccolo 1 grande
-public class   Meteorites extends Card {
-    @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
-    private ArrayList<Integer> attacks;
+public class Meteorites extends Card {
+
     private Player currentPlayer;
     private boolean flag;
     private int PlayerOrder;
     private int MeteoritesOrder;
     private int MeteoritesLine;
     private IntegerPair hit;
+
+
+
+    @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
+    private ArrayList<Integer> attacks;
+
+
 
     public Meteorites(int level, int time, GameBoard board, ArrayList<Integer> attacks) {
         super(level, 0, board);
@@ -95,7 +102,8 @@ public class   Meteorites extends Card {
             this.CardEffect();
         }
         else {
-            currentPlayer.setState(new Waiting());
+            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
+
             this.currentPlayer = this.getBoard().getPlayers().get(PlayerOrder);
 
             PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard(); //prendo plancia
@@ -363,5 +371,6 @@ public class   Meteorites extends Card {
     //json required
     public Meteorites() {}
     public ArrayList<Integer> getAttacks() {return attacks;}
-    public void setAttacks(ArrayList<Integer> attacks) {attacks = attacks;}
+    @JsonCreator
+    public void setAttacks(ArrayList<Integer> attacks) {this.attacks = attacks;}
 }
