@@ -3,10 +3,10 @@ package org.example.galaxy_trucker.Controller.ClientServer.RMI;
 import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.Controller.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
-import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
@@ -18,7 +18,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Objects;
 
 public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
@@ -74,6 +73,16 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     @Override
     public void receiveMessage(TileEvent event) throws RemoteException {
         client.updateBoard(event);
+    }
+
+    @Override
+    public void receiveMessage(UncoverdTileSetEvent event) {
+        client.updateUncoveredTilesSet(event);
+    }
+
+    @Override
+    public void receiveMessage(CoveredTileSetEvent event) throws RemoteException {
+        client.updateCoveredTilesSet(event);
     }
 
 

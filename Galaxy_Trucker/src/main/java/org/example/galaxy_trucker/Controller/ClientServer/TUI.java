@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 
@@ -12,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 
@@ -22,6 +25,10 @@ public class TUI implements View {
     private final int contentWidth = 33;
     private String[][][] cachedBoard;
     private final String border = "+---------------------------------+";
+    private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
+    private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap();
+    private int setup = 101;
+
 
     public TUI() {
         loadComponentNames();
@@ -32,6 +39,10 @@ public class TUI implements View {
 
     @Override
     public void updateBoard(TileEvent event) {
+        if (setup!=0){
+            setup--;
+
+        }
         board[event.getX()][event.getY()] = event;
         if (event == null) {
             cachedBoard[event.getX()][event.getY()] = emptyCell();
@@ -49,7 +60,9 @@ public class TUI implements View {
         else {
             cachedBoard[event.getX()][event.getY()] = formatCell(event);
         }
-        printBoard();
+        if (setup == 0){
+            printBoard();
+        }
     }
 
     private String[] emptyCell() {
@@ -174,10 +187,6 @@ public class TUI implements View {
     }
 
 
-
-
-
-
     private String centerText(String text, int width) {
         int padding = Math.max(0, (width - text.length()) / 2);
         return " ".repeat(padding) + text + " ".repeat(width - padding - text.length());
@@ -236,4 +245,44 @@ public class TUI implements View {
         for (String l : lines) System.out.println(l);
         System.out.println(border + "\n");
     }
+
+    @Override
+    public void updateCoveredTilesSet(CoveredTileSetEvent event) {
+        System.out.println("\n CoveredTileSet size: "+ event.getSize());
+    }
+
+    @Override
+    public void updateUncoveredTilesSet(UncoverdTileSetEvent event) {
+        uncoveredTilesId.remove(event.getId());
+        uncoverdTileSetCache.remove(event.getId());
+        if(event.getConnectors() != null) {
+            uncoveredTilesId.add(event.getId());
+            String[] cache = formatCell(new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors()));
+            uncoverdTileSetCache.put(event.getId(), cache);
+        }
+        showUncoveredTiles();
+    }
+
+    private void showUncoveredTiles() {
+        System.out.println("######################## UNCOVERED TILES ###########################");
+
+        StringBuilder line = new StringBuilder();
+        StringBuilder topLine = new StringBuilder();
+        for (int j = 0; j < uncoveredTilesId.size(); j++) {
+            topLine.append("Position ").append(j).append("                          ");
+        }
+        for (int i = 0; i < 7; i++){
+
+            for (Integer id : uncoveredTilesId) {
+                line.append(uncoverdTileSetCache.get(id)[i]).append(" ");
+            }
+            line.append("\n");
+
+        }
+        System.out.println(topLine);
+        System.out.println(line);
+
+    }
+
+
 }

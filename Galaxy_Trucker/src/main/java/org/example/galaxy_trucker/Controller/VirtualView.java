@@ -3,24 +3,28 @@ package org.example.galaxy_trucker.Controller;
 import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
-import org.example.galaxy_trucker.Controller.Messages.Event;
+import org.example.galaxy_trucker.Controller.Listeners.TileSestListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Connectors.NONE;
 
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class VirtualView implements PlayerBoardListener, HandListener {
+public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener {
 
     private TileEvent[][] eventMatrix;
     private String playerName;
     private String idGame;
     private ClientInterface client;
     private Socket socket;
+    private int coveredTiles= 0;
+    private HashMap<Integer, ArrayList<Connectors>> uncoveredTilesMap = new HashMap<>();
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, Socket echoSocket) {
@@ -131,5 +135,36 @@ public class VirtualView implements PlayerBoardListener, HandListener {
     @Override
     public void handChanged(HandEvent event) {
         sendEvent(event);
+    }
+
+    @Override
+    public void tilesSetChanged(CoveredTileSetEvent event) {
+        if (socket != null) {
+            //serializzare e inviare in qualche modo
+        }
+        else {
+            coveredTiles  = event.getSize();
+            try {
+                client.receiveMessage(event);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public void tilesSetChanged(UncoverdTileSetEvent event) throws RemoteException {
+        if (socket != null) {
+            //serializzare e inviare in qualche modo
+        }
+        else {
+            if (uncoveredTilesMap.containsKey(event.getId())){
+                uncoveredTilesMap.remove(event.getId());
+            }
+            else {
+                uncoveredTilesMap.put(event.getId(), event.getConnectors());
+            }
+            client.receiveMessage(event);
+        }
     }
 }

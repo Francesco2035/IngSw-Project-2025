@@ -10,6 +10,7 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -143,7 +144,7 @@ public class Player implements Serializable {
     /**
      * discards the current tile and places it back in the uncovered tiles list
      */
-    public void DiscardTile(){
+    public void DiscardTile() throws RemoteException {
         if (CurrentTile == null) {
             throw new IllegalStateException("You can't discard a Tile, you don't have one!");
         }
