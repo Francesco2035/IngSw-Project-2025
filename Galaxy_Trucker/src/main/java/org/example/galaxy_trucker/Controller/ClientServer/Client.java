@@ -39,7 +39,7 @@ public class Client {
 
 
     public void updateBoard(TileEvent event) {
-        System.out.println("Received event: " + event);
+        //System.out.println(event.message());
         board[event.getX()][event.getY()] = event;
         view.updateBoard(event);
     }

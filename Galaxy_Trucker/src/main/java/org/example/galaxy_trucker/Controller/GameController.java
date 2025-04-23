@@ -149,7 +149,6 @@ public class GameController {
         ControllerMap.put(player.GetID(), controller);
 
         if(buildingCount == ControllerMap.size()){
-            System.out.println("palu gay");
             game.getGameBoard().StartHourglass();
             buildingCount = -1;
         }

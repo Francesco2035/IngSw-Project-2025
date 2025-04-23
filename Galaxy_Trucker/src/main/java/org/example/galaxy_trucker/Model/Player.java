@@ -165,7 +165,11 @@ public class Player implements Serializable {
      * @param index of the tile to pick
      */
     public void SelectFromBuffer(int index){
+        if (CurrentTile != null) {
+            throw new IllegalStateException("You can't select a Tile, you have already one!");
+        }
         CurrentTile = myPlayerBoard.getTileFromBuffer(index);
+        handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
       }
 
 

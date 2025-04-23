@@ -33,8 +33,8 @@ public class CommandInterpreter {
         commandMap.put("Hourglass", this::createInsertTileCommand);
         commandMap.put("Accept", this::createAcceptCommand);
         commandMap.put("Discard", this::createInsertTileCommand);
-        commandMap.put("FromBuffer", this::createAcceptCommand);
-        commandMap.put("ToBuffer", this::createAcceptCommand);
+        commandMap.put("FromBuffer", this::createInsertTileCommand);
+        commandMap.put("ToBuffer", this::createInsertTileCommand);
         commandMap.put("AddCrew", this::createAddCrewCommand);
         commandMap.put("AddBrownAlien", this::createAddCrewCommand);
         commandMap.put("AddPurpleAlien", this::createAddCrewCommand);
@@ -153,11 +153,10 @@ public class CommandInterpreter {
                 break;
             }
             case "ToBuffer" :{
-                if (parts.length != 3) {
-                    throw new IllegalArgumentException("Comando Hourglass richiede 2 argomenti: posizione e rotazione");
+                if (parts.length != 2) {
+                    throw new IllegalArgumentException("Comando ToBuffer richiede 1 argomento: rotazione");
                 }
                 rotation = Integer.parseInt(parts[1]);
-                position = Integer.parseInt(parts[2]);
                 break;
             }
             case "FromBuffer" :{

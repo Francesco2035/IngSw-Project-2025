@@ -10,6 +10,7 @@ module org.example.galaxy_trucker {
     requires jdk.jdi;
     requires java.rmi;
     requires com.google.gson;
+    requires org.fusesource.jansi;
 
     opens org.example.galaxy_trucker to javafx.fxml, com.fasterxml.jackson.databind;
     exports org.example.galaxy_trucker.Exceptions;
