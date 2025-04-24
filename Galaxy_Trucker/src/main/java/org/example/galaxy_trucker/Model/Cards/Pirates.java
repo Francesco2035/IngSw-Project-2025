@@ -60,6 +60,7 @@ public class Pirates extends Card{
  @Override
     public void CardEffect(){
 
+        this.hit =new IntegerPair(0,0);
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){

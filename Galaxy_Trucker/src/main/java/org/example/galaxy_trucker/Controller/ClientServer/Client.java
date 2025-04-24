@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Controller.ClientServer.TUI;
 import org.example.galaxy_trucker.Controller.ClientServer.View;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
@@ -13,6 +14,7 @@ import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Client {
@@ -39,7 +41,7 @@ public class Client {
 
 
     public void updateBoard(TileEvent event) {
-        System.out.println("Received event: " + event);
+        //System.out.println(event.message());
         board[event.getX()][event.getY()] = event;
         view.updateBoard(event);
     }
@@ -89,5 +91,9 @@ public class Client {
 
     public void updateUncoveredTilesSet(UncoverdTileSetEvent event) {
         this.view.updateUncoveredTilesSet(event);
+    }
+
+    public void seeDeck(ArrayList<CardEvent> deck) {
+        this.view.seeDeck(deck);
     }
 }

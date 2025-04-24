@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Controller.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Model.Game;
@@ -18,6 +19,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
@@ -83,6 +85,11 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     @Override
     public void receiveMessage(CoveredTileSetEvent event) throws RemoteException {
         client.updateCoveredTilesSet(event);
+    }
+
+    @Override
+    public void receiveDeck(ArrayList<CardEvent> deck) throws RemoteException {
+        client.seeDeck(deck);
     }
 
 

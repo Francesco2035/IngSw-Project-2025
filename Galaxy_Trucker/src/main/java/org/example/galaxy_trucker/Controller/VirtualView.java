@@ -1,11 +1,13 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
+import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
 import org.example.galaxy_trucker.Controller.Listeners.TileSestListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
@@ -16,7 +18,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener {
+public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner {
 
     private TileEvent[][] eventMatrix;
     private String playerName;
@@ -166,5 +168,24 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             }
             client.receiveMessage(event);
         }
+    }
+
+    @Override
+    public void seeDeck(ArrayList<CardEvent> deck) {
+        if (socket != null) {
+            //serializzare e inviare in qualche modo
+        }
+        else {
+            try {
+                client.receiveDeck(deck);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public void newCard(CardEvent cardEvent) {
+
     }
 }

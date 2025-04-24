@@ -109,9 +109,7 @@ public class PlayerBoard {
                             || (x == 8 && y == 6) || x ==9) {
                         ValidPlayerBoard[x][y] = -1;
                     }
-                    else if (x == 6 && y == 6) {
-                        ValidPlayerBoard[x][y] = 1;
-                    }
+
                     else {
                         ValidPlayerBoard[x][y] = 0;
                     }
@@ -125,9 +123,7 @@ public class PlayerBoard {
                     if(y <= 3 ||x == 9 || y == 9|| x <4 || ( x == 4 && (y != 6)) || (x== 5 &&(y <5 || y>7)) || (x==8 && y == 6))  {
                         ValidPlayerBoard[x][y] = -1;
                     }
-                    else if (x == 6 && y == 6) {
-                        ValidPlayerBoard[x][y] = 1;
-                    }
+
                     else {
                         ValidPlayerBoard[x][y] = 0;
                     }
@@ -168,6 +164,7 @@ public class PlayerBoard {
         if (Buffer.size() >= 2) {
             throw new IllegalStateException("Buffer is full");
         }
+        sendUpdates(new TileEvent(t.getId(), 3, 8 + Buffer.size() , null, 0, false, false, 0, 0, t.getConnectors()));
         Buffer.add(t);
     }
 
@@ -178,6 +175,8 @@ public class PlayerBoard {
         if (Buffer.isEmpty()) {
             throw new InvalidInput("Buffer is empty");
         }
+
+        sendUpdates(new TileEvent(158, 3, 8 + i , null, 0, false, false, 0, 0, Buffer.get(i).getConnectors()));
         return Buffer.remove(i);
     }
 
@@ -326,10 +325,13 @@ public class PlayerBoard {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (ValidPlayerBoard[x][y] != 0 && x != 6 && y != 6) {
+        if (ValidPlayerBoard[x][y] != 0) {
             throw new InvalidInput(x,y, "Invalid input : invalid position, already occupied or spacevoid");
-        }
 
+        }
+//
+//        if (ValidPlayerBoard[x][y] != 0 && x != 6 && y != 6) {
+//        }
         this.PlayerBoard[x][y] = tile;
         tile.getComponent().setTile(tile);
         tile.setPlayerBoard(this);
@@ -969,6 +971,12 @@ public class PlayerBoard {
         if(listener != null) {
             listener.playerBoardChanged(event);
         }
+    }
+
+    public void clearBuffer(){
+        Buffer.clear();
+        sendUpdates( new TileEvent(159 , 7, 8, null, 0, false, false, 0, 0, null));
+
     }
 
 

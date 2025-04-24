@@ -72,16 +72,16 @@ public class MainCockpitComp extends HousingUnit {
         this.playerBoard = pb;
 
         int[][] validPlayerBoard = pb.getValidPlayerBoard();
-        if (validPlayerBoard[x-1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(2), pb.getTile(x,y).getConnectors().get(0))) {
+        if (validPlayerBoard[x-1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(1), pb.getTile(x-1,y).getConnectors().get(3))) {
             connected = true;
         }
-        if (validPlayerBoard[x+1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(0), pb.getTile(x,y).getConnectors().get(2))) {
+        if (validPlayerBoard[x+1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(3), pb.getTile(x+1,y).getConnectors().get(1))) {
             connected = true;
         }
-        if (validPlayerBoard[x][y-1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(3), pb.getTile(x,y).getConnectors().get(1))) {
+        if (validPlayerBoard[x][y-1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(0), pb.getTile(x,y-1).getConnectors().get(2))) {
             connected = true;
         }
-        if (validPlayerBoard[x][y+1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(1), pb.getTile(x,y).getConnectors().get(3))) {
+        if (validPlayerBoard[x][y+1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(2), pb.getTile(x,y+1).getConnectors().get(0))) {
             connected = true;
         }
         return true;
@@ -127,7 +127,6 @@ public class MainCockpitComp extends HousingUnit {
         if (connected) {
             playerBoard.getConnectedHousingUnits().add(this);
         }
-        System.out.println("palugay "+ numHumans);
         tile.sendUpdates(null, numHumans, false, false, 0);
 
     }
