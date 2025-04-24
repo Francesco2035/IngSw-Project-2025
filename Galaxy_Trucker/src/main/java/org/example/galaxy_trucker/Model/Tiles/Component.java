@@ -34,6 +34,7 @@ public abstract class Component implements Serializable {
 
 
     int type;
+    Tile tile;
     public Component() {}
 
     public abstract void rotate(Boolean direction);
@@ -53,7 +54,11 @@ public abstract class Component implements Serializable {
         throw new InvalidInput("Invalid input for the specific action");
     };
 
-    public abstract Component clone();
+    public abstract Component clone(PlayerBoard playerBoard);
+
+    public void setTile(Tile tile) {
+        this.tile = tile;
+    }
 
 
 

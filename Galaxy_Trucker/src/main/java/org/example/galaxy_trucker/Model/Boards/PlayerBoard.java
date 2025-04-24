@@ -1,6 +1,8 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
 import org.example.galaxy_trucker.Exceptions.*;
 
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
@@ -15,11 +17,22 @@ import java.util.*;
 
 public class PlayerBoard {
 
+    PlayerBoardListener listener;
+
+    private Tile[][] PlayerBoard;
+    private int damage;
+    private ArrayList<Goods> BufferGoods;
+
+    private HashMap<Integer, ArrayList<IntegerPair>> storedGoods;
+    private ArrayList<Tile> Buffer;
+    private ArrayList<Goods> Rewards;
+
+
+
     private boolean broken;
     private int totalValue;
-    private Tile[][] PlayerBoard;
+
     private int[][] ValidPlayerBoard;
-    private int damage;
     private int exposedConnectors;
     private int[] shield;
     private int numHumans = 0;
@@ -34,7 +47,6 @@ public class PlayerBoard {
     private boolean brownAlien;
     private ArrayList<HousingUnit> connectedHousingUnits;
 
-    private ArrayList<Goods> BufferGoods;
 
     private ArrayList<HousingUnit> HousingUnits;
     HashMap<Integer, ArrayList<IntegerPair>> shipSection;
@@ -47,11 +59,9 @@ public class PlayerBoard {
     private ArrayList<PowerCenter> PowerCenters;
 
 
-    private HashMap<Integer, ArrayList<IntegerPair>> storedGoods;
 
 
-    private ArrayList<Tile> Buffer;
-    private ArrayList<Goods> Rewards;
+
 
     public PlayerBoard(int lv) {
         this.lv = lv;
@@ -93,12 +103,13 @@ public class PlayerBoard {
         if (lv == 2) {
             for (int x = 0; x < 10; x++) {
                 for (int y = 0; y < 10; y++) {
-                    if (x < 4 || y < 3 || (x == 4 && (y == 3 || y == 4 || y == 6 || y == 8 || y == 9)) ||(x == 5 && (y == 3 || y== 9)) || (x == 8 && y == 6) || x ==9) {
+                    if (x < 4 || y < 3 ||
+                            (x == 4 && (y == 3 || y == 4 || y == 6 || y == 8 || y == 9))
+                            ||(x == 5 && (y == 3 || y== 9))
+                            || (x == 8 && y == 6) || x ==9) {
                         ValidPlayerBoard[x][y] = -1;
                     }
-                    else if (x == 6 && y == 6) {
-                        ValidPlayerBoard[x][y] = 1;
-                    }
+
                     else {
                         ValidPlayerBoard[x][y] = 0;
                     }
@@ -112,9 +123,7 @@ public class PlayerBoard {
                     if(y <= 3 ||x == 9 || y == 9|| x <4 || ( x == 4 && (y != 6)) || (x== 5 &&(y <5 || y>7)) || (x==8 && y == 6))  {
                         ValidPlayerBoard[x][y] = -1;
                     }
-                    else if (x == 6 && y == 6) {
-                        ValidPlayerBoard[x][y] = 1;
-                    }
+
                     else {
                         ValidPlayerBoard[x][y] = 0;
                     }
@@ -134,8 +143,6 @@ public class PlayerBoard {
 
             }
         }
-        this.PlayerBoard[6][6] = new Tile(new MainCockpitComp(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
-        PlayerBoard[6][6].getComponent().insert(this,6,6);
     }
 
 
@@ -157,6 +164,7 @@ public class PlayerBoard {
         if (Buffer.size() >= 2) {
             throw new IllegalStateException("Buffer is full");
         }
+        sendUpdates(new TileEvent(t.getId(), 3, 8 + Buffer.size() , null, 0, false, false, 0, 0, t.getConnectors()));
         Buffer.add(t);
     }
 
@@ -167,6 +175,8 @@ public class PlayerBoard {
         if (Buffer.isEmpty()) {
             throw new InvalidInput("Buffer is empty");
         }
+
+        sendUpdates(new TileEvent(158, 3, 8 + i , null, 0, false, false, 0, 0, Buffer.get(i).getConnectors()));
         return Buffer.remove(i);
     }
 
@@ -315,11 +325,18 @@ public class PlayerBoard {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
 
-        if (ValidPlayerBoard[x][y] != 0){
+        if (ValidPlayerBoard[x][y] != 0) {
             throw new InvalidInput(x,y, "Invalid input : invalid position, already occupied or spacevoid");
-        }
 
+        }
+//
+//        if (ValidPlayerBoard[x][y] != 0 && x != 6 && y != 6) {
+//        }
         this.PlayerBoard[x][y] = tile;
+        tile.getComponent().setTile(tile);
+        tile.setPlayerBoard(this);
+        tile.setX(x);
+        tile.setY(y);
         tile.getComponent().insert(this,x,y);
         ValidPlayerBoard[x][y] = 1;
 
@@ -333,7 +350,7 @@ public class PlayerBoard {
      * @param t2 of type Connector .
      * @return true if the connection is legal, false otherwise.
      */
-    public boolean checkConnection(Connectors t1, Connectors t2 ){
+    public boolean checkConnection(Connectors t1, Connectors t2){
 
         if (!t1.checkLegal(t2)){
             System.out.println("INVALID CONNECTION "+ t1.getClass() + " " + t2.getClass());
@@ -403,6 +420,10 @@ public class PlayerBoard {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
+        PlayerBoard[x][y].setX(x);
+
+        PlayerBoard[x][y].setY(y);
+
         PlayerBoard[x][y].getComponent().remove(this);
         PlayerBoard[x][y] = new Tile(new SpaceVoid() ,NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;
@@ -464,21 +485,18 @@ public class PlayerBoard {
 
 
         if (valid && c - 1 >=0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
-
             findPaths(r, c - 1, visited);
         }
 
 
 
         if (valid && r - 1 >=0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
-
             findPaths(r -1,c ,visited);
         }
 
 
 
         if (valid && c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
-
             findPaths(r,c + 1 ,visited);
         }
 
@@ -827,15 +845,21 @@ public class PlayerBoard {
         clonedPlayerBoard.Storages= new ArrayList<>();
         clonedPlayerBoard.ShieldGenerators= new ArrayList<>();
         clonedPlayerBoard.PowerCenters= new ArrayList<>();
+        clonedPlayerBoard.connectedHousingUnits = new ArrayList<>();
         clonedPlayerBoard.Rewards = new ArrayList<>(this.Rewards);
+        clonedPlayerBoard.setListener(null);
 
         clonedPlayerBoard.PlayerBoard = new Tile[PlayerBoard.length][PlayerBoard[0].length];
         for (int i = 0; i < PlayerBoard.length; i++) {
             for (int j = 0; j < PlayerBoard[i].length; j++) {
                 Tile tile = PlayerBoard[i][j];
-                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone() : null;
+                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone(clonedPlayerBoard) : null;
                 if (tile != null) {
-                    tile.getComponent().insert(clonedPlayerBoard, i, j);
+                    clonedPlayerBoard.PlayerBoard[i][j].setY(j);
+                    clonedPlayerBoard.PlayerBoard[i][j].setX(i);
+                    clonedPlayerBoard.PlayerBoard[i][j].setPlayerBoard(clonedPlayerBoard);
+                    clonedPlayerBoard.PlayerBoard[i][j].getComponent().setTile(clonedPlayerBoard.PlayerBoard[i][j]);
+                    clonedPlayerBoard.PlayerBoard[i][j].getComponent().insert(clonedPlayerBoard, i, j);
                 }
             }
         }
@@ -846,6 +870,7 @@ public class PlayerBoard {
         }
 
         clonedPlayerBoard.shield = Arrays.copyOf(shield, shield.length);
+        clonedPlayerBoard.setListener(this.getListener());
 
         return clonedPlayerBoard;
 
@@ -927,6 +952,31 @@ public class PlayerBoard {
 
     public ArrayList<HousingUnit> getConnectedHousingUnits(){
         return connectedHousingUnits;
+    }
+
+
+    public void setListener(PlayerBoardListener listener){
+        this.listener = listener;
+    }
+
+    public void removeListener(){
+        this.listener = null;
+    }
+
+    public PlayerBoardListener getListener(){
+        return listener;
+    }
+
+    public void sendUpdates(TileEvent event){
+        if(listener != null) {
+            listener.playerBoardChanged(event);
+        }
+    }
+
+    public void clearBuffer(){
+        Buffer.clear();
+        sendUpdates( new TileEvent(159 , 7, 8, null, 0, false, false, 0, 0, null));
+
     }
 
 

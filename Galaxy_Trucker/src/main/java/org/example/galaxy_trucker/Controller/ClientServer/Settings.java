@@ -5,15 +5,16 @@ import java.net.InetAddress;
 public class Settings {
     public static int TCP_PORT = 6969;
     public static int RMI_PORT = 1109;
-    public static String SERVER_NAME;
+    public static String SERVER_NAME = "192.168.0.109";
 
-    static {
-        try {
-            InetAddress localHost = InetAddress.getLocalHost();
-            SERVER_NAME = localHost.getHostAddress();
-        } catch (java.net.UnknownHostException e) {
-            SERVER_NAME = "127.0.0.1"; // fallback
-            System.err.println("Errore indirizzo ip; uso 127.0.0.1.");
-        }
-    }
+
+//    static {
+//        try {
+//            InetAddress localHost = InetAddress.getLocalHost();
+//            SERVER_NAME = localHost.getHostAddress();
+//        } catch (java.net.UnknownHostException e) {
+//            SERVER_NAME = "127.0.0.1"; // fallback
+//            System.err.println("Errore indirizzo ip; uso 127.0.0.1.");
+//        }
+//    }
 }

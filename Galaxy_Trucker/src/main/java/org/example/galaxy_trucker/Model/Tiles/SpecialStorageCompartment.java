@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
@@ -34,7 +35,10 @@ public class SpecialStorageCompartment extends Storage{
         if (position >= goods.size() || position < 0){
             throw new InvalidInput("Cannot remove a good because it is out of bounds");
         }
+        tile.sendUpdates(goods,0, false, false, 0);
         return goods.remove(position);
+
+
 
     }
 
@@ -45,6 +49,8 @@ public class SpecialStorageCompartment extends Storage{
             throw new InvalidInput("StorageCompartment is full!");
         }
         goods.add(good);
+        tile.sendUpdates(goods,0, false, false, 0);
+
     }
 
 
@@ -52,16 +58,20 @@ public class SpecialStorageCompartment extends Storage{
     public void insert(PlayerBoard playerBoard, int x, int y) {
         playerBoard.getStorages().add(this);
         goods = new ArrayList<>();
+        tile.sendUpdates(goods,0, false, false, 0);
+
     }
 
 
     @Override
     public void remove(PlayerBoard playerBoard) {
         playerBoard.getStorages().remove(this);
+        tile.sendUpdates(new RemoveTileEvent());
+
     }
 
     @Override
-    public Component clone(){
+    public Component clone(PlayerBoard clonedPlayerBoard){
         SpecialStorageCompartment clone = new SpecialStorageCompartment();
         clone.goods = new ArrayList<>(goods);
         clone.type = this.type;

@@ -1,9 +1,14 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
@@ -15,6 +20,7 @@ public class GameController {
     private final HashMap<String,Controller> ControllerMap;
     private final HashMap<String, BlockingQueue<Command>> commandQueues = new HashMap<>();
     private final HashMap<String, Thread> threads = new HashMap<>();
+    private final HashMap<String, VirtualView> VirtualViewMap = new HashMap<>();
     final Game game;
     private GamesHandler gh;
     private BlockingQueue<Command> flightQueue = new LinkedBlockingQueue<>();
@@ -23,6 +29,13 @@ public class GameController {
     int flightCount = 0;
     int buildingCount = 0;
     boolean GameOver = false;
+    private boolean started = false;
+    private int color = 153;
+
+    public boolean isStarted() {
+        return started;
+    }
+
 
     public GameController(String idGame, Game game, GamesHandler gh) {
         this.idGame = idGame;
@@ -33,7 +46,7 @@ public class GameController {
 
     }
 
-    public void NewPlayer(Player p){
+    public void NewPlayer(Player p, VirtualView vv) throws IOException {
         if (ControllerMap.keySet().contains(p.GetID())) {
             throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists");
         }
@@ -45,6 +58,16 @@ public class GameController {
         BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
         commandQueues.put(playerId, queue);
         game.NewPlayer(p);
+        VirtualViewMap.put(playerId,vv);
+        vv.setEventMatrix(game.getGameBoard().getLevel());
+        p.getmyPlayerBoard().setListener(vv);
+        p.getCommonBoard().getCardStack().addListener(p.GetID(),vv);
+        Tile mainCockpitTile = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
+        mainCockpitTile.setId(color);
+        color++;
+        p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6);
+        p.setHandListener(vv);
+        p.getCommonBoard().getTilesSets().setListeners(vv);
 
         Thread t = new Thread(() -> {
             while (true) {
@@ -75,6 +98,7 @@ public class GameController {
                     String playerId = p.GetID();
                     ControllerMap.get(playerId).nextState(this);
                 }
+                started = true;
                 game.getPlayers().values().forEach(p -> p.SetReady(false));
             }
         }
@@ -144,13 +168,14 @@ public class GameController {
 
     public void startFlightMode() {
 
+
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         stopAllPlayerThreads();
         flightThread = new Thread(() -> {
 
             while (!checkGameOver()) {
-                game.getGameBoard().NewCard();
                 int index = 0;
+                game.getGameBoard().NewCard();
 
                 while (index < players.size()) {
                     Player currentPlayer = players.get(index);
@@ -187,11 +212,11 @@ public class GameController {
     public boolean checkGameOver() {
         return GameOver;
     }
+
     public void setGameOver(){
         GameOver = true;
         System.out.println("Game over the winner is: " + game.getGameBoard().getPlayers().getFirst().GetID());
     }
-
 
     private void stopAllPlayerThreads() {
 
@@ -200,7 +225,6 @@ public class GameController {
         }
         threads.clear();
     }
-
 
     public void setFlightCount(int count) {
         flightCount += count;

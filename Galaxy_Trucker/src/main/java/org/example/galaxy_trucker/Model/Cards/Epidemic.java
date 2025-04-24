@@ -20,8 +20,6 @@ public class Epidemic extends Card {
 
     public Epidemic(int level, int time, GameBoard board) {
         super(level, time, board);
-        this.infected = new ArrayList<>();
-
 
     }
 
@@ -36,6 +34,7 @@ public class Epidemic extends Card {
         PlayerBoard CurrentPlanche;
         int Len= PlayerList.size(); // quanti player ho
         ArrayList<HousingUnit> HousingCoords= new ArrayList<>();
+        infected = new ArrayList<>();
 
         Tile[][] tiles;
         for(int i=0;i<Len;i++){

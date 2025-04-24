@@ -1,4 +1,7 @@
 package org.example.galaxy_trucker.Model;
+import org.example.galaxy_trucker.Controller.Listeners.HandListener;
+import org.example.galaxy_trucker.Controller.Messages.HandEvent;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -7,11 +10,13 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Player implements Serializable {
 
+    private HandListener handListener;
     private GameBoard CommonBoard;
     private PlayerBoard myPlayerBoard;
     private String ID;
@@ -116,6 +121,7 @@ public class Player implements Serializable {
             }
             CurrentTile = CommonBoard.getTilesSets().getNewTile();
             System.out.println("Id Tile: " +CurrentTile.getId());
+            handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
         }
         else {
             if (CurrentTile != null) {
@@ -125,6 +131,7 @@ public class Player implements Serializable {
             try{
                 CurrentTile = CommonBoard.getTilesSets().getNewTile(index);
                 System.out.println("Id Tile: " +CurrentTile.getId());
+                handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
             }catch(RuntimeException e){
                 System.out.println(e);
                 CurrentTile = null;
@@ -137,7 +144,7 @@ public class Player implements Serializable {
     /**
      * discards the current tile and places it back in the uncovered tiles list
      */
-    public void DiscardTile(){
+    public void DiscardTile() throws RemoteException {
         if (CurrentTile == null) {
             throw new IllegalStateException("You can't discard a Tile, you don't have one!");
         }
@@ -158,7 +165,11 @@ public class Player implements Serializable {
      * @param index of the tile to pick
      */
     public void SelectFromBuffer(int index){
+        if (CurrentTile != null) {
+            throw new IllegalStateException("You can't select a Tile, you have already one!");
+        }
         CurrentTile = myPlayerBoard.getTileFromBuffer(index);
+        handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
       }
 
 
@@ -235,6 +246,14 @@ public class Player implements Serializable {
 
     public Card getCurrentCard() {
         return CurrentCard;
+    }
+
+    public void setHandListener(HandListener handListener) {
+        this.handListener = handListener;
+    }
+
+    public void removeHandListener(){
+        this.handListener = null;
     }
 
 

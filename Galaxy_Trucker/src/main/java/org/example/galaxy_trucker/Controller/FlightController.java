@@ -13,7 +13,6 @@ public class FlightController extends Controller {
         this.curPlayer = curPlayer;
         this.gameId = gameId;
         curPlayer.setState(new BaseState());
-        gc.startFlightMode();
     }
 
 

@@ -3,8 +3,10 @@ package org.example.galaxy_trucker.Model.Connectors;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+import java.io.Serializable;
+
 @JsonTypeName("CANNON")
-public class CANNON implements Connectors {
+public class CANNON implements Connectors, Serializable {
 
     public static final CANNON INSTANCE = new CANNON();
 

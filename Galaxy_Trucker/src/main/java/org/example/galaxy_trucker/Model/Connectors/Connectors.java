@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
+import java.io.Serializable;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -24,7 +26,7 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 
 
-public interface Connectors {
+public interface Connectors extends Serializable {
 
     public boolean checkLegal(Connectors Adjacent);
 

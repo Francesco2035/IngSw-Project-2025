@@ -3,10 +3,13 @@ package org.example.galaxy_trucker.Commands;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.Socket;
 
 // Aggiungi JsonTypeInfo per discriminare le sottoclassi
 @JsonTypeInfo(
@@ -18,8 +21,12 @@ import java.io.Serializable;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = LoginCommand.class, name = "LoginCommand"),
         @JsonSubTypes.Type(value = ReadyCommand.class, name = "ReadyCommand"),
-        @JsonSubTypes.Type(value = InsertTileCommand.class, name = "InsertTileCommand"),
+        @JsonSubTypes.Type(value = BuildingCommand.class, name = "BuildingCommand"),
+        @JsonSubTypes.Type(value = DebugShip.class, name = "DebugShip"),
+        @JsonSubTypes.Type(value = AddCrewCommand.class, name = "AddCrewCommand"),
+
         @JsonSubTypes.Type(value = RemoveTileCommand.class, name = "RemoveTileCommand")
+
 })
 public class Command implements Serializable {
 
@@ -43,7 +50,7 @@ public class Command implements Serializable {
         this.title = title;
     }
 
-    public void execute(Player player) {}
+    public void execute(Player player) throws IOException {}
 
     public String getTitle() {
         return title;
@@ -63,5 +70,13 @@ public class Command implements Serializable {
 
     public boolean allowedIn(PlayerState state) {
         return state.allows(this);
+    }
+
+    public ClientInterface getClient() {
+        return null;
+    }
+
+    public Socket getSocket() {
+        return null;
     }
 }
