@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 // direzioni int sinistra 0 sopra 1...
 //0 piccolo 1 grande
-public class Meteorites extends Card {
+public class   Meteorites extends Card {
 
     private Player currentPlayer;
     private boolean flag;
@@ -29,12 +29,8 @@ public class Meteorites extends Card {
     private int MeteoritesLine;
     private IntegerPair hit;
 
-
-
     @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
     private ArrayList<Integer> attacks;
-
-
 
     public Meteorites(int level, int time, GameBoard board, ArrayList<Integer> attacks) {
         super(level, 0, board);
@@ -54,6 +50,10 @@ public class Meteorites extends Card {
     //o gestisce la cosa e poi nel caso di hit chiama solo la posizione coplita se accade ed è indifesa
     @Override
     public void CardEffect() {
+
+        if (this.hit==null) {
+            this.hit = new IntegerPair(0,0);
+        }
 
         for (Player p: this.getBoard().getPlayers()) {
             p.setState(new Waiting());

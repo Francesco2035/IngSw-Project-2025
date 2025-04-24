@@ -169,12 +169,20 @@ class WarzoneTest {
         assertEquals(new Waiting().getClass(),Passo.getPlayerState().getClass());
         assertEquals(new Waiting().getClass(),Pietro.getPlayerState().getClass());
 
-        carta.checkMovement(1,0);
         carta.checkMovement(4,0);
+        carta.checkMovement(1,0);
 
-        assertEquals(new Killing().getClass(),Franci.getPlayerState().getClass());
+        assertEquals(new Waiting().getClass(),Franci.getPlayerState().getClass());
         assertEquals(new Waiting().getClass(),Passo.getPlayerState().getClass());
-        assertEquals(new Waiting().getClass(),Pietro.getPlayerState().getClass());
+        assertEquals(new Killing().getClass(),Pietro.getPlayerState().getClass());
+
+           ArrayList<IntegerPair> umani=new ArrayList<IntegerPair>();
+
+           umani.clear();
+           umani.add(new IntegerPair(6,7));
+           umani.add(new IntegerPair(6,6));
+
+        carta.killHumans(umani);
 
     }
 
