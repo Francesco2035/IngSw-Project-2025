@@ -2,10 +2,13 @@ package org.example.galaxy_trucker.Controller.ClientServer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.stream.JsonReader;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
+import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 
@@ -210,13 +213,13 @@ public class TUI implements View {
 
         String leftPart = "" + event.getId();
         String centeredPart = centerText(leftPart, contentWidth - 8);
-        cellLines[3] = "| ← "+ left + centeredPart + right + " → |";
+        cellLines[3] = "| < "+ left + centeredPart + right + " > |";
 
         cellLines[4] = "|" + centerText(extra, contentWidth) + "|";
 
         String position = " " + event.getX() + " : " + event.getY();
 
-        String arrow = "↓";
+        String arrow = "v";
 
         int availableSpace = contentWidth - (position.length() + arrow.length() + bottom.length());
 
@@ -224,7 +227,7 @@ public class TUI implements View {
         int spaceAfterArrow = availableSpace - spaceBeforeArrow;
 
         String finalRow = position + " ".repeat(spaceBeforeArrow -4) + arrow + " "+ bottom + " ".repeat(spaceAfterArrow );
-        cellLines[1] = "|" + centerTextAnsi("↑ " + top, contentWidth) + "|";
+        cellLines[1] = "|" + centerTextAnsi("^ " + top, contentWidth) + "|";
 
         cellLines[5] = "|" + centerTextAnsi(finalRow, contentWidth) + "|";
 
@@ -252,7 +255,7 @@ public class TUI implements View {
     private String getConnectorSymbol(Connectors c) {
         if (c == null) return ".";
         return switch (c.getClass().getSimpleName()) {
-            case "NONE"      -> ".";
+            case "NONE"      -> "°";
             case "SINGLE"    -> "S";
             case "DOUBLE"    -> "D";
             case "UNIVERSAL" -> "U";
@@ -276,8 +279,7 @@ public class TUI implements View {
 
     private void loadComponentNames() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-
-        System.out.println( getClass().getClassLoader());
+        //System.out.println( getClass().getClassLoader().getResource("ClientTiles.json"));
         try (InputStream tilesStream = getClass().getClassLoader().getResourceAsStream("ClientTiles.json")) {
             if (tilesStream == null) {
                 System.err.println("File ClientTiles.JSON non found!");
@@ -320,6 +322,13 @@ public class TUI implements View {
             uncoverdTileSetCache.put(event.getId(), cache);
         }
         showTUI();
+    }
+
+    @Override
+    public void seeDeck(ArrayList<CardEvent> deck) {
+        for (CardEvent e : deck) {
+            System.out.println(e.getId());
+        }
     }
 
     private void showUncoveredTiles() {

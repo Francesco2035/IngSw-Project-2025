@@ -2,9 +2,12 @@ package org.example.galaxy_trucker.Controller.ClientServer;
 
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
+
+import java.util.ArrayList;
 
 public interface View {
 
@@ -23,4 +26,6 @@ public interface View {
     void updateCoveredTilesSet(CoveredTileSetEvent event);
 
     void updateUncoveredTilesSet(UncoverdTileSetEvent event);
+
+    void seeDeck(ArrayList<CardEvent> deck);
 }

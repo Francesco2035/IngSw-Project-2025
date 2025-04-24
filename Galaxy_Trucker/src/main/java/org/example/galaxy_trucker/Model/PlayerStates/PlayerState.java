@@ -46,7 +46,7 @@ public abstract class PlayerState {
         return false;
     }
 
-    public boolean allows(InsertTileCommand command) {
+    public boolean allows(BuildingCommand command) {
         return false;
     }
 

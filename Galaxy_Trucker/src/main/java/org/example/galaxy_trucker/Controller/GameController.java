@@ -61,6 +61,7 @@ public class GameController {
         VirtualViewMap.put(playerId,vv);
         vv.setEventMatrix(game.getGameBoard().getLevel());
         p.getmyPlayerBoard().setListener(vv);
+        p.getCommonBoard().getCardStack().addListener(p.GetID(),vv);
         Tile mainCockpitTile = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
         mainCockpitTile.setId(color);
         color++;

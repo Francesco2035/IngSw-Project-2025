@@ -2,7 +2,6 @@ package org.example.galaxy_trucker.Commands;
 
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,13 +27,14 @@ public class CommandInterpreter {
     private void initializeCommandMap() {
         commandMap = new HashMap<>();
         commandMap.put("Login", this::createLoginCommand);
-        commandMap.put("InsertTile", this::createInsertTileCommand);
-        commandMap.put("PickTile", this::createInsertTileCommand);
-        commandMap.put("Hourglass", this::createInsertTileCommand);
+        commandMap.put("InsertTile", this::createBuildingCommand);
+        commandMap.put("PickTile", this::createBuildingCommand);
+        commandMap.put("Hourglass", this::createBuildingCommand);
+        commandMap.put("SeeDeck", this::createBuildingCommand);
         commandMap.put("Accept", this::createAcceptCommand);
-        commandMap.put("Discard", this::createInsertTileCommand);
-        commandMap.put("FromBuffer", this::createInsertTileCommand);
-        commandMap.put("ToBuffer", this::createInsertTileCommand);
+        commandMap.put("Discard", this::createBuildingCommand);
+        commandMap.put("FromBuffer", this::createBuildingCommand);
+        commandMap.put("ToBuffer", this::createBuildingCommand);
         commandMap.put("AddCrew", this::createAddCrewCommand);
         commandMap.put("AddBrownAlien", this::createAddCrewCommand);
         commandMap.put("AddPurpleAlien", this::createAddCrewCommand);
@@ -121,7 +121,7 @@ public class CommandInterpreter {
         return new LoginCommand(gameId,playerId, levelInt, "Login");
     }
 
-    private Command createInsertTileCommand(String[] parts) {
+    private Command createBuildingCommand(String[] parts) {
 
         String title = parts[0];
         int x = -1;
@@ -129,6 +129,15 @@ public class CommandInterpreter {
         int rotation = 0;
         int position =-1;
         switch (title){
+
+            case "SeeDeck":{
+                if (parts.length != 2) {
+                    throw new IllegalArgumentException("Comando SeeDeck richiede 1 argomento: numero deck scelto");
+                }
+                x = Integer.parseInt(parts[1]);
+                break;
+            }
+
             case "InsertTile":{
                 if (parts.length != 4) {
                     throw new IllegalArgumentException("Comando InsertTile richiede 4 argomenti: x, y, rotazione");
@@ -168,7 +177,7 @@ public class CommandInterpreter {
             }
         }
 
-        return new InsertTileCommand(x, y, rotation,position, gameId,playerId, lv, title);
+        return new BuildingCommand(x, y, rotation,position, gameId,playerId, lv, title);
     }
 
     private Command createRemoveTileCommand(String[] parts) {
