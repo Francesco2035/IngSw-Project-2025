@@ -28,6 +28,7 @@ public class TUI implements View {
     private final String border = "+---------------------------------+";
     private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
     private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap();
+    private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
     private int setup = 101;
     private boolean fase = false;
     private int CoveredTileSet = 152;
@@ -35,12 +36,38 @@ public class TUI implements View {
 
     public TUI() throws IOException {
         loadComponentNames();
+        loadCardsDescriptions();
+        for (String s : CardsDescriptions.values()) {
+            System.out.println(s);
+        }
         cachedBoard = new String[10][10][7];
         cacheHand = new String[7];
         for (int i = 0; i < 7; i++) {
             cacheHand[i] = "";
         }
 
+    }
+
+    private void loadCardsDescriptions() {
+        ObjectMapper mapper = new ObjectMapper();
+        //System.out.println( getClass().getClassLoader().getResource("ClientTiles.json"));
+        try (InputStream cardsStream = getClass().getClassLoader().getResourceAsStream("ClientCards.json")) {
+            if (cardsStream == null) {
+                System.err.println("File ClientTiles.JSON non found!");
+                return;
+            }
+
+            JsonNode root = mapper.readTree(cardsStream);
+
+            root.fields().forEachRemaining(entry -> {
+                String description = entry.getValue().get("description").asText();
+                int id = Integer.parseInt(entry.getKey());
+                CardsDescriptions.put(id, description);
+            });
+
+        } catch (IOException e) {
+            System.err.println("Error loading names: " + e.getMessage());
+        }
     }
 
 
