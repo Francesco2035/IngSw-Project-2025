@@ -2,7 +2,6 @@ package org.example.galaxy_trucker.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
@@ -33,6 +32,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private PrintWriter out ;
     private int coveredTiles= 0;
     private HashMap<Integer, ArrayList<Connectors>> uncoveredTilesMap = new HashMap<>();
+    private HandEvent hand;
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, PrintWriter echoSocket) {
@@ -145,8 +145,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     @Override
     public void handChanged(HandEvent event)  {
-
-
+        hand = event;
         sendEvent(event);
     }
 
@@ -194,21 +193,20 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
     @Override
-    public void seeDeck(DeckEvent deck) {
+    public void seeDeck(DeckEvent event) {
         if (out != null) {
             try{
                 ObjectMapper objectMapper = new ObjectMapper();
-                out.println(objectMapper.writeValueAsString(deck));
+                out.println(objectMapper.writeValueAsString(event));
             }
             catch (JsonProcessingException e){
                 e.printStackTrace();
             }
 
-
         }
         else {
             try {
-                client.receiveMessage(deck);
+                client.receiveMessage(event);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
@@ -216,8 +214,24 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
     @Override
-    public void newCard(CardEvent cardEvent) {
+    public void newCard(CardEvent event) {
+        if (out != null) {
+            try{
+                ObjectMapper objectMapper = new ObjectMapper();
+                out.println(objectMapper.writeValueAsString(event));
+            }
+            catch (JsonProcessingException e){
+                e.printStackTrace();
+            }
 
+        }
+        else {
+            try {
+                client.receiveMessage(event);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 

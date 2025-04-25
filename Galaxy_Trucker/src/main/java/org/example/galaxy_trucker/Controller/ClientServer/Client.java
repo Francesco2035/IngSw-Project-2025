@@ -97,7 +97,6 @@ public class Client implements EventVisitor {
     }
 
     public void receiveEvent(Event event) {
-
         event.accept(this);
     }
 

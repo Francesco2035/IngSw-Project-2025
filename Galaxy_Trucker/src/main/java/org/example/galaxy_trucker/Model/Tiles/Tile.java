@@ -23,6 +23,7 @@ public class Tile implements Serializable {
     int x;
     int y;
     int rotation = 0;
+    private boolean chosen = false;
     @JsonProperty("connectors")
     private ArrayList<Connectors> connectors;
 
@@ -67,6 +68,7 @@ public class Tile implements Serializable {
         Component component = this.component.clone(clonedPlayerBoard);
         clonedTile.setComponent(component);
         clonedTile.setConnectors(new ArrayList<>(this.connectors));
+        clonedTile.chosen = this.chosen;
         return clonedTile;
 
     }
@@ -125,6 +127,13 @@ public class Tile implements Serializable {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void setChosen(){
+        chosen = true;
+    }
+    public boolean getChosen(){
+        return chosen;
     }
 
 }

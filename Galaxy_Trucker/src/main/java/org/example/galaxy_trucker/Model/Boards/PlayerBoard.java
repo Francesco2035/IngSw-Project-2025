@@ -165,6 +165,7 @@ public class PlayerBoard {
         if (Buffer.size() >= 2) {
             throw new IllegalStateException("Buffer is full");
         }
+        t.setChosen();
         sendUpdates(new TileEvent(t.getId(), 3, 8 + Buffer.size() , null, 0, false, false, 0, 0, t.getConnectors()));
         Buffer.add(t);
     }

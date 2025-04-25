@@ -68,6 +68,7 @@ public class GameController {
         p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6);
         p.setHandListener(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);
+        p.setCardListner(vv);
 
         Thread t = new Thread(() -> {
             while (true) {

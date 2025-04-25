@@ -317,8 +317,13 @@ public class TUI implements View {
 
     public void updateHand(HandEvent event) {
         System.out.println("\n" + border);
-        TileEvent temp = new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors());
-        cacheHand = formatCell(temp);
+        if(event.getId() == 158){
+            cacheHand = emptyCell();
+        }
+        else {
+            TileEvent temp = new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors());
+            cacheHand = formatCell(temp);
+        }
         showTUI();
     }
 

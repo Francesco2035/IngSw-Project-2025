@@ -1,8 +1,10 @@
 package org.example.galaxy_trucker.Model;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -23,6 +25,7 @@ public class Player implements Serializable {
     private String ID;
     private boolean ready;
     private int credits;
+    private CardListner cardListner;
 
     public GameBoard getCommonBoard() {
         return CommonBoard;
@@ -149,8 +152,12 @@ public class Player implements Serializable {
         if (CurrentTile == null) {
             throw new IllegalStateException("You can't discard a Tile, you don't have one!");
         }
+        if (CurrentTile.getChosen()){
+            throw new IllegalStateException("You can't discard this Tile!");
+        }
         CommonBoard.getTilesSets().AddUncoveredTile(CurrentTile);
         CurrentTile = null;
+        handListener.handChanged(new HandEvent(158, null));
     }
 
     /**
@@ -159,6 +166,7 @@ public class Player implements Serializable {
     public void PlaceInBuffer()  {
         myPlayerBoard.insertBuffer(CurrentTile);
         CurrentTile = null;
+        handListener.handChanged(new HandEvent(158, null));
     }
 
     /**
@@ -180,32 +188,10 @@ public class Player implements Serializable {
      * @param coords where the tile will be placed
      */
     public void PlaceTile(IntegerPair coords) {
+
         this.myPlayerBoard.insertTile(CurrentTile, coords.getFirst(), coords.getSecond());
         CurrentTile = null;
     }
-
-    /**
-     * rotates the current tile 90° right
-     */
-    public void RightRotate() {CurrentTile.RotateDx();}
-
-    /**
-     * rotates the current tile 90° left
-     */
-    public void LeftRotate() {CurrentTile.RotateSx();}
-
-
-    public void SpyDeck(int index){
-
-        ArrayList<Card> observedDeck = switch (index) {
-            case 1 -> CommonBoard.getCardStack().getVisibleCards1();
-            case 2 -> CommonBoard.getCardStack().getVisibleCards2();
-            case 3 -> CommonBoard.getCardStack().getVisibleCards3();
-            default -> throw new IllegalArgumentException("Invalid index");
-        };
-
-    }
-
 
     public void IncreaseCredits(int num){
         credits += num;
@@ -213,6 +199,7 @@ public class Player implements Serializable {
 
     public void setCard(Card NewCard){
         CurrentCard = NewCard;
+        cardListner.newCard(new CardEvent(NewCard.getId()));
     }
 
 
@@ -242,9 +229,6 @@ public class Player implements Serializable {
     public boolean GetReady() {return this.ready;}
     public PlayerBoard getmyPlayerBoard() {return myPlayerBoard;}
 
-
-
-
     public Card getCurrentCard() {
         return CurrentCard;
     }
@@ -257,6 +241,13 @@ public class Player implements Serializable {
         this.handListener = null;
     }
 
+    public void setCardListner(CardListner cardListner) {
+        this.cardListner = cardListner;
+    }
+
+    public void removeCardListener(){
+        this.cardListner = null;
+    }
 
     //DOVREI AGGIUNGERE UN MODO PER ARRIVARE A CARD DA PLAYER DIREI :)
     //principalmente per chiamare i metodi di card dopo l'input

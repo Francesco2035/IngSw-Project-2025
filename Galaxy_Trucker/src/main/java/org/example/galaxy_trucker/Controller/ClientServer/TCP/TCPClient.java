@@ -29,7 +29,7 @@ public class TCPClient{
         this.client = c;
     }
 
-    private void PingListener() {
+    private void EventListener() {
         try {
             String msg;
             while ((msg = in.readLine()) != null) {
@@ -111,7 +111,7 @@ public class TCPClient{
 
         PrintWriter finalOut = out;
 
-        new Thread(this::PingListener).start();
+        new Thread(this::EventListener).start();
         new Thread(this::PingLoop).start();
 
 
@@ -120,14 +120,11 @@ public class TCPClient{
 
         System.out.println("Connection started\n");
 
-        client.getView().askInput("PlayerID: ");
+        String playerId = client.getView().askInput("PlayerID: ");
 
-        System.out.print("Inserisci il tuo nome (player ID): ");
-        String playerId = stdIn.readLine();
-        System.out.print("Inserisci il Game ID: ");
-        String gameId = stdIn.readLine();
-        System.out.print("Inserisci il livello della partita (livello): ");
-        int gameLevel = Integer.parseInt(stdIn.readLine());
+        String gameId = client.getView().askInput("GameID: ");
+
+        int gameLevel = Integer.parseInt( client.getView().askInput("Game level: "));
 
         LoginCommand loginCommand = new LoginCommand(gameId,playerId, gameLevel, "Login");
 
@@ -136,20 +133,17 @@ public class TCPClient{
 
         String jsonLogin = gson.toJson(loginCommand);
         out.println(jsonLogin);
-        System.out.println("Comando di login inviato: " + jsonLogin);
+        //System.out.println("Comando di login inviato: " + jsonLogin);
 
         String userInput;
-        while ((userInput = stdIn.readLine()) != null) {
-            System.out.println("Input ricevuto: " + userInput);
+        while (!(userInput = client.getView().askInput("Enter command: ")).equals("end")) {
             try {
                 Command command = commandInterpreter.interpret(userInput);
 
                 String json = gson.toJson(command);
 
                 out.println(json);
-                System.out.println("Comando inviato: " + json);
-
-                System.out.println("Nuovo loop");
+                System.out.println("CommandSent: " + json);
 
             } catch (Exception e) {
                 e.printStackTrace();
