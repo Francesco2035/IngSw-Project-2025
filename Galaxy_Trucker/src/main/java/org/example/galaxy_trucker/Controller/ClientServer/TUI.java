@@ -38,9 +38,6 @@ public class TUI implements View {
     public TUI() throws IOException {
         loadComponentNames();
         loadCardsDescriptions();
-        for (String s : CardsDescriptions.values()) {
-            System.out.println(s);
-        }
         cachedBoard = new String[10][10][7];
         cacheHand = new String[7];
         for (int i = 0; i < 7; i++) {
