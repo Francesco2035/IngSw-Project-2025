@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Commands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
@@ -38,7 +39,7 @@ public class BuildingCommand extends Command{
 
 
     @Override
-    public void execute(Player player) throws RemoteException {
+    public void execute(Player player) throws RemoteException, JsonProcessingException {
         switch (title){
 
             case "SeeDeck": {

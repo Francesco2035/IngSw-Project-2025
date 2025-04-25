@@ -1,4 +1,5 @@
 package org.example.galaxy_trucker.Model;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
@@ -114,7 +115,7 @@ public class Player implements Serializable {
     
 
 
-    public void PickNewTile(int index){
+    public void PickNewTile(int index)  {
         if (index == -1){
             if (CurrentTile != null) {
                 throw new IllegalStateException("You can't pick a Tile, you have already one!");
@@ -144,7 +145,7 @@ public class Player implements Serializable {
     /**
      * discards the current tile and places it back in the uncovered tiles list
      */
-    public void DiscardTile() throws RemoteException {
+    public void DiscardTile() throws RemoteException, JsonProcessingException {
         if (CurrentTile == null) {
             throw new IllegalStateException("You can't discard a Tile, you don't have one!");
         }
@@ -155,7 +156,7 @@ public class Player implements Serializable {
     /**
      * places the current tile in the buffer
      */
-    public void PlaceInBuffer(){
+    public void PlaceInBuffer()  {
         myPlayerBoard.insertBuffer(CurrentTile);
         CurrentTile = null;
     }
@@ -164,7 +165,7 @@ public class Player implements Serializable {
      * takes a tile from the buffer
      * @param index of the tile to pick
      */
-    public void SelectFromBuffer(int index){
+    public void SelectFromBuffer(int index) {
         if (CurrentTile != null) {
             throw new IllegalStateException("You can't select a Tile, you have already one!");
         }
@@ -178,7 +179,7 @@ public class Player implements Serializable {
      * this action is definitive: the tile cannot be moved or rotated after it is settled
      * @param coords where the tile will be placed
      */
-    public void PlaceTile(IntegerPair coords){
+    public void PlaceTile(IntegerPair coords) {
         this.myPlayerBoard.insertTile(CurrentTile, coords.getFirst(), coords.getSecond());
         CurrentTile = null;
     }

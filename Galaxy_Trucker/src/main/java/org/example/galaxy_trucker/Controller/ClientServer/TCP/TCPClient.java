@@ -1,11 +1,13 @@
 package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.Controller.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
+import org.example.galaxy_trucker.Controller.Messages.Event;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,15 +29,24 @@ public class TCPClient{
         this.client = c;
     }
 
-    private void PongListener() {
+    private void PingListener() {
         try {
             String msg;
             while ((msg = in.readLine()) != null) {
                 if (msg.equals("pong")) {
                     lastPongTime = System.currentTimeMillis();
+
+                    //System.out.println("Pong");
                 }
+            else {
+                   // System.out.println("Received msg: " + msg);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Event event = objectMapper.readValue(msg, Event.class);
+                    client.receiveEvent(event);
+            }
             }
         } catch (IOException e) {
+            System.out.println("IOException in PingListener " + e.getMessage());
             disconnect();
         }
     }
@@ -100,7 +111,7 @@ public class TCPClient{
 
         PrintWriter finalOut = out;
 
-        new Thread(this::PongListener).start();
+        new Thread(this::PingListener).start();
         new Thread(this::PingLoop).start();
 
 
@@ -119,7 +130,6 @@ public class TCPClient{
         int gameLevel = Integer.parseInt(stdIn.readLine());
 
         LoginCommand loginCommand = new LoginCommand(gameId,playerId, gameLevel, "Login");
-        loginCommand.setSocket(echoSocket);
 
         commandInterpreter = new CommandInterpreter(playerId, gameId);
         commandInterpreter.setlv(gameLevel);
@@ -146,6 +156,8 @@ public class TCPClient{
             }
         }
     }
+
+
 
 
 

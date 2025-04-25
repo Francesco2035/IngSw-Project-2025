@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Controller.ClientServer.RMI;
 import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.Controller.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
+import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -67,47 +68,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
 
-    @Override
-    public void receiveMessage(HandEvent event) throws RemoteException {
-        client.updateHand(event);
-    }
 
     @Override
-    public void receiveMessage(TileEvent event) throws RemoteException {
-        client.updateBoard(event);
-    }
+    public void receiveMessage(Event event) {
 
-    @Override
-    public void receiveMessage(UncoverdTileSetEvent event) {
-        client.updateUncoveredTilesSet(event);
-    }
-
-    @Override
-    public void receiveMessage(CoveredTileSetEvent event) throws RemoteException {
-        client.updateCoveredTilesSet(event);
-    }
-
-    @Override
-    public void receiveDeck(ArrayList<CardEvent> deck) throws RemoteException {
-        client.seeDeck(deck);
+        client.receiveEvent(event);
     }
 
 
-//
-//    private void inputLoop() throws IOException {
-//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//        String cmd;
-//        while (!Objects.equals(cmd = br.readLine(), "end")) {
-//            try{
-//                Command command = commandInterpreter.interpret(cmd);
-//                server.command(command);
-//
-//            }
-//            catch (Exception e){
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//    }
 
 
 
