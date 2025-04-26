@@ -33,9 +33,9 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
     @Override
     public void StartServer() throws RemoteException {
-        Registry registry = LocateRegistry.createRegistry(Settings.RMI_PORT);
         try {
             System.setProperty("java.rmi.server.hostname",Settings.SERVER_NAME);
+            Registry registry = LocateRegistry.createRegistry(Settings.RMI_PORT);
             registry.bind("CommandReader", this);
         }
         catch (Exception e){
