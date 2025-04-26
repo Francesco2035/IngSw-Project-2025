@@ -61,11 +61,14 @@ public class GameController {
         VirtualViewMap.put(playerId,vv);
         vv.setEventMatrix(game.getGameBoard().getLevel());
         p.getmyPlayerBoard().setListener(vv);
+        p.getCommonBoard().getCardStack().addListener(p.GetID(),vv);
         Tile mainCockpitTile = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
         mainCockpitTile.setId(color);
         color++;
         p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6);
         p.setHandListener(vv);
+        p.getCommonBoard().getTilesSets().setListeners(vv);
+        p.setCardListner(vv);
 
         Thread t = new Thread(() -> {
             while (true) {
@@ -148,7 +151,6 @@ public class GameController {
         ControllerMap.put(player.GetID(), controller);
 
         if(buildingCount == ControllerMap.size()){
-            System.out.println("palu gay");
             game.getGameBoard().StartHourglass();
             buildingCount = -1;
         }

@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
@@ -22,6 +23,7 @@ public class Tile implements Serializable {
     int x;
     int y;
     int rotation = 0;
+    private boolean chosen = false;
     @JsonProperty("connectors")
     private ArrayList<Connectors> connectors;
 
@@ -66,6 +68,7 @@ public class Tile implements Serializable {
         Component component = this.component.clone(clonedPlayerBoard);
         clonedTile.setComponent(component);
         clonedTile.setConnectors(new ArrayList<>(this.connectors));
+        clonedTile.chosen = this.chosen;
         return clonedTile;
 
     }
@@ -100,11 +103,11 @@ public class Tile implements Serializable {
     }
 
 
-    public void sendUpdates(ArrayList<Goods> cargo, int humans,boolean purpleAlien, boolean brownAlien, int batteries){
+    public void sendUpdates(ArrayList<Goods> cargo, int humans,boolean purpleAlien, boolean brownAlien, int batteries)  {
         playerBoard.sendUpdates(new TileEvent(id,x,y,cargo,humans,purpleAlien,brownAlien,batteries,rotation, connectors));
     }
 
-    public void sendUpdates(RemoveTileEvent event){
+    public void sendUpdates(RemoveTileEvent event) {
         ArrayList<Connectors> noneConnectors = new ArrayList<>();
         noneConnectors.add(NONE.INSTANCE);
         noneConnectors.add(NONE.INSTANCE);
@@ -124,6 +127,13 @@ public class Tile implements Serializable {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void setChosen(){
+        chosen = true;
+    }
+    public boolean getChosen(){
+        return chosen;
     }
 
 }

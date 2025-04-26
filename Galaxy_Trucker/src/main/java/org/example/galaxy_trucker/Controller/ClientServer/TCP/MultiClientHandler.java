@@ -59,7 +59,7 @@ public class MultiClientHandler implements Runnable {
 
                     System.out.println("Deserialized command: " + command.getTitle());
                     if (command.getTitle().equals("Login")){
-                        VirtualView vv = new VirtualView(command.getPlayerId(), command.getGameId(), command.getClient(), command.getSocket());
+                        VirtualView vv = new VirtualView(command.getPlayerId(), command.getGameId(), command.getClient(), new PrintWriter(clientSocket.getOutputStream(), true));
                         gameHandler.initPlayer(command,vv);
                     }
                     else{

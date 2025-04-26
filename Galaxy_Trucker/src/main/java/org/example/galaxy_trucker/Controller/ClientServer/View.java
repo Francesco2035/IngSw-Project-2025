@@ -2,7 +2,13 @@ package org.example.galaxy_trucker.Controller.ClientServer;
 
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
+
+import java.util.ArrayList;
 
 public interface View {
 
@@ -17,4 +23,12 @@ public interface View {
     String askInput(String message);
 
     void updateHand(HandEvent event);
+
+    void updateCoveredTilesSet(CoveredTileSetEvent event);
+
+    void updateUncoveredTilesSet(UncoverdTileSetEvent event);
+
+    void showDeck(DeckEvent event);
+
+    void showCard(int id);
 }

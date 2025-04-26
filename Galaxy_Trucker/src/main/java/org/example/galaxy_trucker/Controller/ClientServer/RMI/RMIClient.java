@@ -6,7 +6,9 @@ import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
@@ -18,7 +20,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
@@ -66,32 +68,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
 
-    @Override
-    public void receiveMessage(HandEvent event) throws RemoteException {
-        client.updateHand(event);
-    }
 
     @Override
-    public void receiveMessage(TileEvent event) throws RemoteException {
-        client.updateBoard(event);
+    public void receiveMessage(Event event) {
+
+        client.receiveEvent(event);
     }
 
 
-//
-//    private void inputLoop() throws IOException {
-//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//        String cmd;
-//        while (!Objects.equals(cmd = br.readLine(), "end")) {
-//            try{
-//                Command command = commandInterpreter.interpret(cmd);
-//                server.command(command);
-//
-//            }
-//            catch (Exception e){
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//    }
 
 
 

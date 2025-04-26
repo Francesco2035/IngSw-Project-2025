@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model.Tiles;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -41,7 +42,7 @@ public abstract class Component implements Serializable {
     public abstract boolean controlValidity(PlayerBoard pb, int x, int y);
 
     public abstract void insert(PlayerBoard playerBoard, int x, int y);
-    public abstract void remove(PlayerBoard playerBoard);
+    public abstract void remove(PlayerBoard playerBoard) ;
 
 //  metodi per json
     public int getType() {return type;}

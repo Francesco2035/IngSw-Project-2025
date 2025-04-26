@@ -1,6 +1,8 @@
 package org.example.galaxy_trucker.Model.Connectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.io.Serializable;
@@ -13,6 +15,8 @@ public class CANNON implements Connectors, Serializable {
     private CANNON() {}
 
     @JsonCreator
+    @JsonIgnoreProperties(ignoreUnknown = true)
+
     public static CANNON getInstance() {
         return INSTANCE;
     }
@@ -27,6 +31,8 @@ public class CANNON implements Connectors, Serializable {
         return false;
     }
 
+
+    @JsonIgnore
     @Override
     public boolean isExposed() {
         return false;

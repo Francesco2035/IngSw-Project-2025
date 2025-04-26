@@ -2,15 +2,19 @@ package org.example.galaxy_trucker.Controller.ClientServer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.stream.JsonReader;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
+import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,24 +25,68 @@ public class TUI implements View {
     private final HashMap<Integer, String> idToNameMap = new HashMap<>();
     private final int contentWidth = 33;
     private String[][][] cachedBoard;
+    private String[] cacheHand;
     private final String border = "+---------------------------------+";
+    private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
+    private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap();
+    private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
+    private int setup = 101;
+    private boolean fase = false;
+    private int CoveredTileSet = 152;
 
-    public TUI() {
+
+    public TUI() throws IOException {
         loadComponentNames();
+        loadCardsDescriptions();
         cachedBoard = new String[10][10][7];
+        cacheHand = new String[7];
+        for (int i = 0; i < 7; i++) {
+            cacheHand[i] = "";
+        }
 
+    }
+
+    private void loadCardsDescriptions() {
+        ObjectMapper mapper = new ObjectMapper();
+        //System.out.println( getClass().getClassLoader().getResource("ClientTiles.json"));
+        try (InputStream cardsStream = getClass().getClassLoader().getResourceAsStream("ClientCards.json")) {
+            if (cardsStream == null) {
+                System.err.println("File ClientTiles.JSON non found!");
+                return;
+            }
+
+            JsonNode root = mapper.readTree(cardsStream);
+
+            root.fields().forEachRemaining(entry -> {
+                String description = entry.getValue().get("description").asText();
+                int id = Integer.parseInt(entry.getKey());
+                CardsDescriptions.put(id, description);
+            });
+
+        } catch (IOException e) {
+            System.err.println("Error loading names: " + e.getMessage());
+        }
     }
 
 
     @Override
     public void updateBoard(TileEvent event) {
+        if (setup!=0){
+            setup--;
+
+        }
         board[event.getX()][event.getY()] = event;
         if (event == null) {
             cachedBoard[event.getX()][event.getY()] = emptyCell();
         }
         else if (event.getId() == 158) {
             cachedBoard[event.getX()][event.getY()] = emptyCell();
-            if (event.getX() < 4 || event.getY() < 3) {
+            if (setup == 0 && event.getX() == 3 && event.getY() == 8){
+                cachedBoard[3][8] = cachedBoard[3][9];
+                cachedBoard[3][9] = emptyCell();
+            }
+            else if (!(event.getX() == 3 && event.getY() == 8) && (event.getX() < 3 || event.getY() < 3)) {
+
                 for (int k = 0; k < 7; k++) {
                     cachedBoard[event.getX()][event.getY()][k] = "";
                 }
@@ -46,10 +94,19 @@ public class TUI implements View {
 
         }
 
+        else if (event.getId() == 159) {
+            cachedBoard[7][8] = emptyCell();
+            cachedBoard[7][9] = emptyCell();
+        }
+
+
         else {
             cachedBoard[event.getX()][event.getY()] = formatCell(event);
         }
-        printBoard();
+        if (setup == 0){
+            cacheHand = emptyCell();
+            showTUI();
+        }
     }
 
     private String[] emptyCell() {
@@ -82,7 +139,7 @@ public class TUI implements View {
     public void printBoard() {
         int rows = 10;
         int cols = 10;
-
+        System.out.println("############################ BOARD ############################\n");
         for (int y = 0; y < rows; y++) {
 
 
@@ -93,17 +150,24 @@ public class TUI implements View {
 
             for (int i = 0; i < 7; i++) {
                 for (int x = 0; x < cols; x++) {
-                    System.out.print(formattedRow[x][i]);
+                    if (y > 2 && x > 1){
+                        System.out.print(formattedRow[x][i]);
+                    }
                 }
-                System.out.println();
+                if (y > 2 ){
+                    System.out.println();
+                }
+
             }
         }
 
         System.out.println();
+        System.out.println("\n############################ ##### ############################");
     }
 
     public String[] formatCell(TileEvent event) {
         String[] cellLines = new String[7];
+
 
         if (event == null) {
             for (int i = 0; i < 7; i++) {
@@ -118,10 +182,12 @@ public class TUI implements View {
         String right  = getConnectorSymbol(conns.get(2));
         String bottom = getConnectorSymbol(conns.get(3));
 
-        cellLines[1] = "|" + centerText("\u2191 " + top, contentWidth) + "|";
 
         String colored = idToNameMap.getOrDefault(event.getId(), "Unknown");
         String name = colored.replaceAll("\u001B\\[[;\\d]*m", "");
+        if(event.getX() == 3 && (event.getY() == 8 || event.getY() == 9)){
+            colored = "\u001B[35m" + colored + "\u001B[0m";
+        }
 
         cellLines[2] = "|" + centerTextAnsi(colored, contentWidth) + "|";
 
@@ -147,16 +213,38 @@ public class TUI implements View {
                     extra = sb.toString().trim();
                 }
             }
+
+            case "shieldGenerator" -> {
+                int rot = event.getRotation() % 360;
+                if (rot == 0){
+                    top ="\u001B[33m" + top + "\u001B[0m";
+                    right ="\u001B[33m" + right + "\u001B[0m";
+                }
+                else if (rot == 1){
+                    right ="\u001B[33m" + right + "\u001B[0m";
+                    bottom ="\u001B[33m" + bottom + "\u001B[0m";
+                } else if (rot == 2) {
+                    bottom ="\u001B[33m" + bottom + "\u001B[0m";
+                    left ="\u001B[33m" + left + "\u001B[0m";
+                }
+                else {
+                    left ="\u001B[33m" + left + "\u001B[0m";
+                    top ="\u001B[33m" + top + "\u001B[0m";
+                }
+            }
         }
+
+
 
         String leftPart = "" + event.getId();
         String centeredPart = centerText(leftPart, contentWidth - 8);
-        cellLines[3] = "| \u2190 "+ left + centeredPart + right + " \u2192 |";
+        cellLines[3] = "| < "+ left + centeredPart + right + " > |";
+
         cellLines[4] = "|" + centerText(extra, contentWidth) + "|";
 
         String position = " " + event.getX() + " : " + event.getY();
 
-        String arrow = "\u2193";
+        String arrow = "v";
 
         int availableSpace = contentWidth - (position.length() + arrow.length() + bottom.length());
 
@@ -164,6 +252,7 @@ public class TUI implements View {
         int spaceAfterArrow = availableSpace - spaceBeforeArrow;
 
         String finalRow = position + " ".repeat(spaceBeforeArrow -4) + arrow + " "+ bottom + " ".repeat(spaceAfterArrow );
+        cellLines[1] = "|" + centerTextAnsi("^ " + top, contentWidth) + "|";
 
         cellLines[5] = "|" + centerTextAnsi(finalRow, contentWidth) + "|";
 
@@ -174,10 +263,6 @@ public class TUI implements View {
     }
 
 
-
-
-
-
     private String centerText(String text, int width) {
         int padding = Math.max(0, (width - text.length()) / 2);
         return " ".repeat(padding) + text + " ".repeat(width - padding - text.length());
@@ -186,7 +271,7 @@ public class TUI implements View {
     private String getConnectorSymbol(Connectors c) {
         if (c == null) return ".";
         return switch (c.getClass().getSimpleName()) {
-            case "NONE"      -> ".";
+            case "NONE"      -> "°";
             case "SINGLE"    -> "S";
             case "DOUBLE"    -> "D";
             case "UNIVERSAL" -> "U";
@@ -208,9 +293,10 @@ public class TUI implements View {
         return " ".repeat(Math.max(0, padLeft)) + s + " ".repeat(Math.max(0, padRight));
     }
 
-    private void loadComponentNames() {
+    private void loadComponentNames() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        try (InputStream tilesStream = getClass().getClassLoader().getResourceAsStream("ClientTiles.JSON")) {
+        //System.out.println( getClass().getClassLoader().getResource("ClientTiles.json"));
+        try (InputStream tilesStream = getClass().getClassLoader().getResourceAsStream("ClientTiles.json")) {
             if (tilesStream == null) {
                 System.err.println("File ClientTiles.JSON non found!");
                 return;
@@ -231,9 +317,95 @@ public class TUI implements View {
 
     public void updateHand(HandEvent event) {
         System.out.println("\n" + border);
-        TileEvent temp = new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors());
-        String[] lines = formatCell(temp);
-        for (String l : lines) System.out.println(l);
-        System.out.println(border + "\n");
+        if(event.getId() == 158){
+            cacheHand = emptyCell();
+        }
+        else {
+            TileEvent temp = new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors());
+            cacheHand = formatCell(temp);
+        }
+        showTUI();
     }
+
+    @Override
+    public void updateCoveredTilesSet(CoveredTileSetEvent event) {
+        CoveredTileSet = event.getSize();
+        showTUI();
+    }
+
+    @Override
+    public void updateUncoveredTilesSet(UncoverdTileSetEvent event) {
+        uncoveredTilesId.remove(event.getId());
+        uncoverdTileSetCache.remove(event.getId());
+        if(event.getConnectors() != null) {
+            uncoveredTilesId.add(event.getId());
+            String[] cache = formatCell(new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors()));
+            uncoverdTileSetCache.put(event.getId(), cache);
+        }
+        showTUI();
+    }
+
+
+    private void showUncoveredTiles() {
+        System.out.println("############################ UNCOVERED TILES ############################\n");
+
+        StringBuilder line = new StringBuilder();
+        StringBuilder topLine = new StringBuilder();
+        for (int j = 0; j < uncoveredTilesId.size(); j++) {
+            topLine.append("Position ").append(j).append("                          ");
+        }
+        for (int i = 0; i < 7; i++){
+
+            for (Integer id : uncoveredTilesId) {
+                line.append(uncoverdTileSetCache.get(id)[i]).append(" ");
+            }
+            line.append("\n");
+
+        }
+        System.out.println(topLine);
+        System.out.println(line);
+        System.out.println("\n############################ ############## ############################");
+
+    }
+
+    private void printTilesSet(){
+        showUncoveredTiles();
+        System.out.println();
+    }
+
+    private void printHand(){
+        System.out.println("############################ HAND ############################\n");
+        for (String l : cacheHand) System.out.println(l);
+        System.out.println(border + "\n");
+        System.out.println("\n############################ #### ############################");
+    }
+
+    private void showTUI(){
+        if (!fase){
+            System.out.println("############################ COVERED TILES SET ############################\n");
+            System.out.println("\n CoveredTileSet size: "+ CoveredTileSet);
+            showUncoveredTiles();
+            printHand();
+            printBoard();
+            System.out.println("\n############################ ################# ############################");
+        }
+        else {
+            //
+        }
+    }
+
+    @Override
+    public void showCard(int id){
+        System.out.println("\n");
+        System.out.println(CardsDescriptions.get(id));
+    }
+
+    @Override
+    public void showDeck(DeckEvent deck){
+        for (Integer e : deck.getIds()) {
+            showCard(e);
+        }
+    }
+
+
 }

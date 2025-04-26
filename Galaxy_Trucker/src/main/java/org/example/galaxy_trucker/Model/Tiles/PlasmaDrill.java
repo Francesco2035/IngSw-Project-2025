@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -37,7 +38,7 @@ public class PlasmaDrill extends Component{
 
 
     @Override
-    public void insert(PlayerBoard playerBoard, int x, int y) {
+    public void insert(PlayerBoard playerBoard, int x, int y)  {
         if (type == 1) {
             if (CannonDirection == 1){
                 playerBoard.setPlasmaDrillsPower(1);

@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -44,7 +45,7 @@ public abstract class HousingUnit extends Component{
     }
 
     @Override
-    public void remove(PlayerBoard playerBoard) {
+    public void remove(PlayerBoard playerBoard)  {
         playerBoard.getHousingUnits().remove(this);
         playerBoard.getConnectedHousingUnits().remove(this);
         tile.sendUpdates(new RemoveTileEvent());

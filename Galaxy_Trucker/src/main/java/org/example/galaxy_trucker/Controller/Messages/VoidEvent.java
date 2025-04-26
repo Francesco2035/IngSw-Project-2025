@@ -1,14 +1,23 @@
 package org.example.galaxy_trucker.Controller.Messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class VoidEvent implements Event {
 
-    int x;
-    int y;
-    public VoidEvent(int x, int y) {
+    private int x;
+    private int y;
+
+    @JsonCreator
+    public VoidEvent(
+            @JsonProperty("x") int x,
+            @JsonProperty("y") int y
+    ) {
         this.x = x;
         this.y = y;
-
     }
+
+    public VoidEvent() {}
 
     public int getX() {
         return x;
@@ -22,4 +31,10 @@ public class VoidEvent implements Event {
     public String message() {
         return "VirtualView settata";
     }
+
+    @Override
+    public void accept(EventVisitor visitor) {
+        visitor.visit(this);
+    }
+
 }
