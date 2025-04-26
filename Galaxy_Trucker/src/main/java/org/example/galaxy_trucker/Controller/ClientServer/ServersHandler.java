@@ -16,10 +16,10 @@ public class ServersHandler implements Runnable {
 
 
 
-    public static void main(String[] args){
-        ServersHandler handler = new ServersHandler();
-        handler.run();
-    }
+//    public void main(String[] args){
+//        ServersHandler handler = new ServersHandler();
+//        handler.run();
+//    }
 
     public void run(){
 

@@ -31,48 +31,50 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
         this.tokenMap = tokenMap;
         gh = gamesHandler;
         clients = new HashMap<>();
-        Thread pingThread = new Thread(() -> {
-            System.out.println("Ping Thread started");
-            ArrayList<ClientInterface> toRemove = new ArrayList<>();
-            while(true) {
-                for (ClientInterface client : clients.keySet()) {
-                    try {
-                        client.receivePing();
-                    } catch (RemoteException e) {
-                        System.out.println("Client disconnesso: " + client);
-                        UUID token = clients.get(client);
-                        if (token != null) {
-                            VirtualView vv = tokenMap.get(token);
-                            if (vv != null) vv.setDisconnected(true);
-                            handleDisconnection(client);
-                        }
-                        toRemove.add(client);
-                    } catch (Exception ex) {
-                        System.out.println("Errore generico con il client: " + client);
-                        ex.printStackTrace();
-                    }
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+//        Thread pingThread = new Thread(() -> {
+//            System.out.println("Ping Thread started");
+//            ArrayList<ClientInterface> toRemove = new ArrayList<>();
+//            while(true) {
+//                for (ClientInterface client : clients.keySet()) {
+//                    try {
+//                        client.receivePing();
+//                    } catch (RemoteException e) {
+//                        System.out.println("Client disconnesso: " + client);
+//                        UUID token = clients.get(client);
+//                        if (token != null) {
+//                            VirtualView vv = tokenMap.get(token);
+//                            if (vv != null) vv.setDisconnected(true);
+//                            handleDisconnection(client);
+//                        }
+//                        toRemove.add(client);
+//                    } catch (Exception ex) {
+//                        System.out.println("Errore generico con il client: " + client);
+//                        ex.printStackTrace();
+//                    }
+//                    try {
+//                        Thread.sleep(5000);
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
+//
+//                for (ClientInterface c : toRemove) {
+//                    clients.remove(c);
+//                }
+//            }
+//
+//
+//        });
 
-                for (ClientInterface c : toRemove) {
-                    clients.remove(c);
-                }
-            }
-
-
-        });
-
-        pingThread.start();
+        //pingThread.start();
     }
 
 
     @Override
     public void StartServer() throws RemoteException {
+
         System.setProperty("java.rmi.server.hostname",Settings.SERVER_NAME);
+
         Registry registry = LocateRegistry.createRegistry(Settings.RMI_PORT);
         try {
             registry.bind("CommandReader", this);

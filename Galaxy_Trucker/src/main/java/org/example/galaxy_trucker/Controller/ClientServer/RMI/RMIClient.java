@@ -46,6 +46,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.RMI_PORT);
 
         this.server = (ServerInterface) registry.lookup("CommandReader");
+        System.out.println(server);
 //       this.server.login(this);
 
         System.out.println("Server started");
@@ -62,8 +63,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login");
         loginCommand.setClient(this);
 
-
+        System.out.println(loginCommand);
         server.command(loginCommand);
+        System.out.println("Sent login command");
 
         this.inputLoop(true);
     }
@@ -78,7 +80,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     @Override
     public void receivePing() throws RemoteException {
-        //System.out.println("Ping Received");
+        System.out.println("Ping Received");
     }
 
 
