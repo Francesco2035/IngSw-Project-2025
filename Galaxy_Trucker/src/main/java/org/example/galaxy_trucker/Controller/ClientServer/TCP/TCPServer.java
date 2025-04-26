@@ -1,19 +1,25 @@
 package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
+import org.example.galaxy_trucker.Controller.GameController;
 import org.example.galaxy_trucker.Controller.GamesHandler;
+import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.GameLists;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TCPServer implements  Runnable{
 
     private static GamesHandler gamesHandler;
+    private ConcurrentHashMap<UUID, VirtualView> tokenMap;
 
-    public TCPServer(GamesHandler gamesHandler) {
+    public TCPServer(GamesHandler gamesHandler, ConcurrentHashMap<UUID, VirtualView> tokenMap) {
         this.gamesHandler = gamesHandler;
+        this.tokenMap = tokenMap;
     }
 
     public void run() {
@@ -42,7 +48,7 @@ public class TCPServer implements  Runnable{
             }
 
             System.out.println("Accepted");
-            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, gamesHandler);
+            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, gamesHandler, tokenMap);
             Thread t = new Thread(clientHandler);
             t.start();
         }

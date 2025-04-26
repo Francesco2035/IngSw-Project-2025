@@ -42,5 +42,4 @@ public class LoginCommand extends Command implements Serializable {
     }
 
 
-
 }

@@ -25,6 +25,7 @@ import java.util.HashMap;
 
 public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner {
 
+    private boolean Disconnected = false;
     private TileEvent[][] eventMatrix;
     private String playerName;
     private String idGame;
@@ -99,41 +100,47 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     public void sendEvent(HandEvent event)  {
-        if (out != null) {
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                out.println(objectMapper.writeValueAsString(event));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
+        if (!Disconnected) {
+            if (out != null) {
+                try{
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    out.println(objectMapper.writeValueAsString(event));
+                }
+                catch (JsonProcessingException e){
+                    e.printStackTrace();
+                }
+
             }
-        }
-        else {
-            try {
-                client.receiveMessage(event);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            else {
+                try {
+                    client.receiveMessage(event);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
 
     public void sendEvent(TileEvent event) {
-        if (out != null) {
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                out.println(objectMapper.writeValueAsString(event));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+        if (!Disconnected) {
+            if (out != null) {
+                try{
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    out.println(objectMapper.writeValueAsString(event));
+                }
+                catch (JsonProcessingException e){
+                    e.printStackTrace();
+                }
 
-        }
-        else {
-            try {
-                client.receiveMessage(event);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            }
+            else {
+                try {
+                    client.receiveMessage(event);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
-
 
     }
 
@@ -151,88 +158,105 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     @Override
     public void tilesSetChanged(CoveredTileSetEvent event)  {
-        if (out != null) {
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                out.println(objectMapper.writeValueAsString(event));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+        if (!Disconnected) {
+            if (out != null) {
+                try{
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    out.println(objectMapper.writeValueAsString(event));
+                }
+                catch (JsonProcessingException e){
+                    e.printStackTrace();
+                }
 
-        }
-        else {
-            coveredTiles  = event.getSize();
-            try {
-                client.receiveMessage(event);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            }
+            else {
+                try {
+                    client.receiveMessage(event);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
 
     @Override
     public void tilesSetChanged(UncoverdTileSetEvent event) throws RemoteException {
-        if (out != null) {
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                out.println(objectMapper.writeValueAsString(event));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+        if (!Disconnected) {
+            if (out != null) {
+                try{
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    out.println(objectMapper.writeValueAsString(event));
+                }
+                catch (JsonProcessingException e){
+                    e.printStackTrace();
+                }
 
-        }
-        else {
-            if (uncoveredTilesMap.containsKey(event.getId())){
-                uncoveredTilesMap.remove(event.getId());
             }
             else {
-                uncoveredTilesMap.put(event.getId(), event.getConnectors());
+                try {
+                    client.receiveMessage(event);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
-            client.receiveMessage(event);
         }
     }
 
     @Override
     public void seeDeck(DeckEvent event) {
-        if (out != null) {
-            try{
-                ObjectMapper objectMapper = new ObjectMapper();
-                out.println(objectMapper.writeValueAsString(event));
-            }
-            catch (JsonProcessingException e){
-                e.printStackTrace();
-            }
+        if (!Disconnected) {
+            if (out != null) {
+                try{
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    out.println(objectMapper.writeValueAsString(event));
+                }
+                catch (JsonProcessingException e){
+                    e.printStackTrace();
+                }
 
-        }
-        else {
-            try {
-                client.receiveMessage(event);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            }
+            else {
+                try {
+                    client.receiveMessage(event);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
 
     @Override
     public void newCard(CardEvent event) {
-        if (out != null) {
-            try{
-                ObjectMapper objectMapper = new ObjectMapper();
-                out.println(objectMapper.writeValueAsString(event));
-            }
-            catch (JsonProcessingException e){
-                e.printStackTrace();
-            }
+        if (!Disconnected) {
+            if (out != null) {
+                try{
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    out.println(objectMapper.writeValueAsString(event));
+                }
+                catch (JsonProcessingException e){
+                    e.printStackTrace();
+                }
 
-        }
-        else {
-            try {
-                client.receiveMessage(event);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            }
+            else {
+                try {
+                    client.receiveMessage(event);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
+
+    public void setDisconnected(boolean disconnected) {
+        Disconnected = disconnected;
+    }
+
+
+    public boolean getDisconnected(){
+        return Disconnected;
+    }
+
 
 
 }
