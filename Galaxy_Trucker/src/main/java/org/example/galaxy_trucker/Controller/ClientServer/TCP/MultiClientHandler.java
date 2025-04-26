@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
+import org.example.galaxy_trucker.Controller.GameController;
 import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Controller.VirtualView;
 
@@ -12,17 +13,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MultiClientHandler implements Runnable {
 
     private Socket clientSocket;
     private GamesHandler gameHandler;
+    private ConcurrentHashMap<UUID, VirtualView> tokenMap;
 
     private long lastPingTime;
 
-    public MultiClientHandler(Socket clientSocket, GamesHandler gameHandler) {
+    public MultiClientHandler(Socket clientSocket, GamesHandler gameHandler, ConcurrentHashMap<UUID, VirtualView> tokenMap) {
         this.clientSocket = clientSocket;
         this.gameHandler = gameHandler;
+        this.tokenMap = tokenMap;
     }
 
     @Override
@@ -59,7 +64,14 @@ public class MultiClientHandler implements Runnable {
 
                     System.out.println("Deserialized command: " + command.getTitle());
                     if (command.getTitle().equals("Login")){
+                        UUID token  = null;
                         VirtualView vv = new VirtualView(command.getPlayerId(), command.getGameId(), command.getClient(), new PrintWriter(clientSocket.getOutputStream(), true));
+                        synchronized (tokenMap){
+                            do{
+                                token = UUID.randomUUID();
+                            }while(tokenMap.containsKey(token));
+                            tokenMap.put(token, vv);
+                        }
                         gameHandler.initPlayer(command,vv);
                     }
                     else{

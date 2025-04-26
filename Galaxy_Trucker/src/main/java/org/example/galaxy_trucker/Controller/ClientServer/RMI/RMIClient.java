@@ -41,13 +41,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     @Override
     public void StartClient() throws IOException, NotBoundException {
-
+        System.out.println("Starting Client");
         Registry registry;
         registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.RMI_PORT);
 
         this.server = (ServerInterface) registry.lookup("CommandReader");
-//        this.server.login(this);
+//       this.server.login(this);
 
+        System.out.println("Server started");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String playerId = client.getView().askInput("Insert player ID: ");
@@ -75,9 +76,10 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         client.receiveEvent(event);
     }
 
-
-
-
+    @Override
+    public void receivePing() throws RemoteException {
+        //System.out.println("Ping Received");
+    }
 
 
     private void inputLoop(boolean fromConsole) throws IOException {
