@@ -207,9 +207,17 @@ public class Player implements Serializable {
      * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
      */
     public void EndConstruction(){
-        CommonBoard.SetStartingPosition(this.ID);
-//        this.setState(new FinishedBuilding());
-       }
+        if(getCommonBoard().getLevel() ==1)
+            CommonBoard.SetStartingPosition(this);
+        else throw new IllegalStateException("Called a lv 1 command in a lv 2 game!");
+    }
+
+
+    public void EndConstruction(int index) throws IllegalStateException, IllegalAccessException{
+        if(getCommonBoard().getLevel() ==2)
+            CommonBoard.SetStartingPosition(this, index);
+        else throw new IllegalStateException("Called a lv 2 command in a lv 1 game!");
+    }
 
 
     public void SetReady(boolean ready){

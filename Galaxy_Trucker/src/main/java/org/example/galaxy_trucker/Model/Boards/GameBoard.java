@@ -69,6 +69,7 @@ public class GameBoard {
 //        NewPlayer.setState(new BuildingShip());
     }
 
+
     public void StartHourglass() {
         if(hourglass.isStartable() && hourglass.getUsages() > 0){
             hourglass.setLock();
@@ -94,18 +95,34 @@ public class GameBoard {
      * sets the starting position of a player on the common board:
      * the position players[0] corresponds to the starting position of the 1st player
      * the leader (1st player) will be in the first position of the arraylist
-     * @param ID of the player
+     * @param pl reference to the player
      */
-    public void SetStartingPosition(String ID){
+    public void SetStartingPosition(Player pl){
 
         Player_IntegerPair cur = players.stream()
-                .filter(p -> ID.equals( p.getKey().GetID()) )
+                .filter(p -> pl.equals( p.getKey()) )
                 .findFirst().orElseThrow();
 
         SetNewPosition(cur, startPos[PlayersOnBoard], startPos[PlayersOnBoard]);
 
         PlayersOnBoard++;
     }
+
+
+    public void SetStartingPosition(Player pl, int index){
+
+        Player_IntegerPair cur = players.stream()
+                .filter(p -> pl.equals( p.getKey()) )
+                .findFirst().orElseThrow();
+
+        if(positions[startPos[index]] != null) {
+            SetNewPosition(cur, startPos[index], startPos[index]);
+
+            PlayersOnBoard++;
+        }
+        else throw new IllegalArgumentException("Starting position alredy taken!");
+    }
+
 
 
     /**
