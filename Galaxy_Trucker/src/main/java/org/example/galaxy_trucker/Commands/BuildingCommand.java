@@ -23,6 +23,8 @@ public class BuildingCommand extends Command{
     int rotation;
     @JsonProperty("position")
     int position;
+    @JsonProperty("index")
+    private int index = -1;
 
     public BuildingCommand(){}
 
@@ -40,54 +42,68 @@ public class BuildingCommand extends Command{
 
     @Override
     public void execute(Player player) throws RemoteException, JsonProcessingException {
-        switch (title){
 
-            case "SeeDeck": {
-                player.getCommonBoard().getCardStack().notify(playerId, x);
-            }
+        if(!player.GetReady()) {
+            switch (title) {
 
-            case "InsertTile": {
-                Tile tile = player.getCurrentTile();
-                int rotations = (rotation % 360) / 90;
-                for (int i = 0; i < rotations; i++) {
-                    tile.RotateDx();
+                case "SeeDeck": {
+                    player.getCommonBoard().getCardStack().notify(playerId, x);
                 }
-                player.getmyPlayerBoard().insertTile(tile, x, y);
-                player.setCurrentTile(null);
-                break;
-            }
-            case "ToBuffer" :{
-                Tile tile = player.getCurrentTile();
-                int rotations = (rotation % 360) / 90;
-                for (int i = 0; i < rotations; i++) {
-                    tile.RotateDx();
-                }
-                player.PlaceInBuffer();
-                break;
-            }
-            case "FromBuffer" :{
 
-                player.SelectFromBuffer(position);
-                break;
-            }
-            case "PickTile":{
-                player.PickNewTile(position);
-                break;
-            }
-            case "Discard":{
-                player.DiscardTile();
-                break;
-            }
-            case "Hourglass":{
+                case "InsertTile": {
+                    Tile tile = player.getCurrentTile();
+                    int rotations = (rotation % 360) / 90;
+                    for (int i = 0; i < rotations; i++) {
+                        tile.RotateDx();
+                    }
+                    player.getmyPlayerBoard().insertTile(tile, x, y);
+                    player.setCurrentTile(null);
+                    break;
+                }
+                case "ToBuffer": {
+                    Tile tile = player.getCurrentTile();
+                    int rotations = (rotation % 360) / 90;
+                    for (int i = 0; i < rotations; i++) {
+                        tile.RotateDx();
+                    }
+                    player.PlaceInBuffer();
+                    break;
+                }
+                case "FromBuffer": {
+
+                    player.SelectFromBuffer(position);
+                    break;
+                }
+                case "PickTile": {
+                    player.PickNewTile(position);
+                    break;
+                }
+                case "Discard": {
+                    player.DiscardTile();
+                    break;
+                }
+                case "Hourglass": {
                     try {
                         player.StartTimer();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+                    break;
+                }
+                case "FinishBuilding": {
+                    try {
+                        if (player.getCommonBoard().getLevel() == 1)
+                            player.EndConstruction();
+                        else
+                            player.EndConstruction(index);
 
-            }break;
+                        player.SetReady(true);
+                    } catch (IllegalArgumentException | IllegalStateException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
         }
-
     }
 
     @Override

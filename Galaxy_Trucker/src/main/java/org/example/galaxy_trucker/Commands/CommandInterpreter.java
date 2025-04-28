@@ -135,6 +135,7 @@ public class CommandInterpreter {
         int y = -1;
         int rotation = 0;
         int position =-1;
+        int index = -1;
         switch (title){
 
             case "SeeDeck":{

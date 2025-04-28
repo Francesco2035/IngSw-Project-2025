@@ -1,10 +1,9 @@
 package org.example.galaxy_trucker.Controller;
 
-import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Controller.Listeners.HourGlassListener;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
-import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
 public class PrepController extends Controller implements HourGlassListener {
 

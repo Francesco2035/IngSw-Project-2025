@@ -41,8 +41,8 @@ class GameBoardTest {
         gb.addPlayer(p1);
         gb.addPlayer(p2);
 
-        gb.SetStartingPosition("Player1");
-        gb.SetStartingPosition("Player2");
+        gb.SetStartingPosition(p1);
+        gb.SetStartingPosition(p2);
 
         assertEquals("Player1", gb.getPositions()[6].GetID());
         assertEquals("Player2", gb.getPositions()[3].GetID());
@@ -70,9 +70,9 @@ class GameBoardTest {
         gb.addPlayer(p2);
         gb.addPlayer(p3);
 
-        gb.SetStartingPosition("Player1");
-        gb.SetStartingPosition("Player2");
-        gb.SetStartingPosition("Player3");
+        gb.SetStartingPosition(p1);
+        gb.SetStartingPosition(p2);
+        gb.SetStartingPosition(p3);
 
 
         assertEquals("Player1", gb.getPositions()[6].GetID());
@@ -117,9 +117,9 @@ class GameBoardTest {
         gb.addPlayer(p2);
         gb.addPlayer(p3);
 
-        gb.SetStartingPosition("Player1");
-        gb.SetStartingPosition("Player2");
-        gb.SetStartingPosition("Player3");
+        gb.SetStartingPosition(p1);
+        gb.SetStartingPosition(p2);
+        gb.SetStartingPosition(p3);
 
         assertEquals("Player1", gb.getPositions()[6].GetID());
         assertEquals("Player2", gb.getPositions()[3].GetID());
