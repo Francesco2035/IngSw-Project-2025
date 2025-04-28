@@ -36,7 +36,7 @@ public class CommandInterpreter {
         commandMap.put("Discard", this::createBuildingCommand);
         commandMap.put("FromBuffer", this::createBuildingCommand);
         commandMap.put("ToBuffer", this::createBuildingCommand);
-        commandMap.put("FinishBuilding", this::createBuildingCommand);
+        commandMap.put("FinishBuilding", this::createFinishBuildingCommand);
         commandMap.put("AddCrew", this::createAddCrewCommand);
         commandMap.put("AddBrownAlien", this::createAddCrewCommand);
         commandMap.put("AddPurpleAlien", this::createAddCrewCommand);
@@ -184,20 +184,27 @@ public class CommandInterpreter {
                 position = Integer.parseInt(parts[1]);
                 break;
             }
-            case "FinishBuilding":{
-                if (parts.length != 2 && lv == 2) {
-                    throw new IllegalArgumentException("Comando FinishBuilding richiede 1 argomento: Posizione iniziale scelta");
-                }
-                else if (parts.length != 1 && lv == 1)
-                    throw new IllegalArgumentException("Comando FinishBuilding non richiede argomenti");
-                index = Integer.parseInt(parts[1]);
-        return new BuildingCommand(x, y, rotation,position, gameId,playerId, lv, title, token);
-
-            }
         }
 
         return new BuildingCommand(x, y, rotation,position, gameId,playerId, lv, title, token);
     }
+
+
+    private Command createFinishBuildingCommand(String[] parts) {
+        int index = -1;
+
+        if (lv == 2) {
+            if(parts.length != 2 )
+                throw new IllegalArgumentException("Comando FinishBuilding richiede 1 argomento: Posizione iniziale scelta");
+            else
+                index = Integer.parseInt(parts[1]);
+        }
+        else if (parts.length != 1 && lv == 1)
+            throw new IllegalArgumentException("Comando FinishBuilding non richiede argomenti");
+
+        return new FinishBuildingCommand(index, gameId,playerId, lv, "FinishBuilding", token);
+    }
+
 
     private Command createRemoveTileCommand(String[] parts) {
         if (parts.length != 3) {

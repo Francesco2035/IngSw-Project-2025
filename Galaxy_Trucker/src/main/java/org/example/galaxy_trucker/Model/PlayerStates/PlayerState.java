@@ -34,6 +34,10 @@ public abstract class PlayerState {
         return false;
     }
 
+    public boolean allows(FinishBuildingCommand command) {
+        return false;
+    }
+
     public boolean allows(GiveAttackCommand command) {
         return false;
     }

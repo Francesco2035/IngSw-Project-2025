@@ -23,8 +23,7 @@ public class BuildingCommand extends Command{
     int rotation;
     @JsonProperty("position")
     int position;
-    @JsonProperty("index")
-    private int index = -1;
+
 
     public BuildingCommand(){}
 
@@ -89,18 +88,6 @@ public class BuildingCommand extends Command{
                         throw new RuntimeException(e);
                     }
                     break;
-                }
-                case "FinishBuilding": {
-                    try {
-                        if (player.getCommonBoard().getLevel() == 1)
-                            player.EndConstruction();
-                        else
-                            player.EndConstruction(index);
-
-                        player.SetReady(true);
-                    } catch (IllegalArgumentException | IllegalStateException e) {
-                        System.out.println(e.getMessage());
-                    }
                 }
             }
         }

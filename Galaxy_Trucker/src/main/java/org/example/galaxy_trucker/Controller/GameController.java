@@ -86,7 +86,6 @@ public class GameController {
         });
         t.start();
         threads.put(playerId, t);
-
     }
 
 
