@@ -26,8 +26,8 @@ public class BuildingCommand extends Command{
 
     public BuildingCommand(){}
 
-    public BuildingCommand(int x, int y, int rotation, int position, String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public BuildingCommand(int x, int y, int rotation, int position, String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.x = x;
         this.y = y;
         this.gameId = gameId;

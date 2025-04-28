@@ -17,8 +17,8 @@ public class DebugShip extends Command {
     private final String commandType = "DebugShip";
 
 
-    public DebugShip(String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public DebugShip(String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.gameId = gameId;
         this.playerId = playerId;
         this.title = title;

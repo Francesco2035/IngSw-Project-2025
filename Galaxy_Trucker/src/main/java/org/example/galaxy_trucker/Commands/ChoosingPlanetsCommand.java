@@ -9,8 +9,8 @@ public class ChoosingPlanetsCommand extends Command{
 
 
 
-    public ChoosingPlanetsCommand(int planet , String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public ChoosingPlanetsCommand(int planet , String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.planet = planet;
     }
 

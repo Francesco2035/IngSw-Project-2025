@@ -21,4 +21,6 @@ public interface ClientInterface extends Remote {
     void receiveMessage(Event event) throws RemoteException;
 
     void receivePing() throws  RemoteException;
+
+    void receiveToken(String token) throws RemoteException;
 }

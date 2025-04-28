@@ -72,7 +72,7 @@ public class MultiClientHandler implements Runnable {
                             }while(tokenMap.containsKey(token));
                             tokenMap.put(token, vv);
                         }
-                        gameHandler.initPlayer(command,vv);
+                        gameHandler.enqueuePlayerInit(command,vv);
                     }
                     else{
                         gameHandler.receive(command);

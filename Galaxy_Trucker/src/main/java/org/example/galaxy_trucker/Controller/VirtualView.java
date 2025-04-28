@@ -22,6 +22,7 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner {
 
@@ -34,6 +35,8 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private int coveredTiles= 0;
     private HashMap<Integer, ArrayList<Connectors>> uncoveredTilesMap = new HashMap<>();
     private HandEvent hand;
+    private UUID token;
+    private CardEvent card;
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, PrintWriter echoSocket) {
@@ -227,6 +230,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     @Override
     public void newCard(CardEvent event) {
+        card = event;
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -258,5 +262,23 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
+    public void reconnect() {
+        for (int i = 0; i < 10; i ++){
+            for(int j = 0; j < 10; j ++){
+                sendEvent(eventMatrix[i][j]);
+            }
+        }
+        sendEvent(hand);
+        if (card != null){
+            newCard(card);
+        }
 
+    }
+
+    public void setToken(UUID token) {
+        this.token = token;
+    }
+    public UUID getToken() {
+        return token;
+    }
 }

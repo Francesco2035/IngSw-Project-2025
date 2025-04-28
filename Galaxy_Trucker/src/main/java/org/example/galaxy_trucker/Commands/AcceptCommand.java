@@ -9,8 +9,8 @@ public class AcceptCommand extends Command {
     boolean accepting;
 
 
-    public AcceptCommand(String gameId, String playerId, int lv, String title,boolean accepting) {
-        super(gameId, playerId, lv, title);
+    public AcceptCommand(String gameId, String playerId, int lv, String title,boolean accepting, String token) {
+        super(gameId, playerId, lv, title, token);
         this.accepting = accepting;
     }
 

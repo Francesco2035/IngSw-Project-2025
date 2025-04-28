@@ -11,8 +11,8 @@ public class DefendFromLargeCommand extends Command{
     private IntegerPair batteryComp;
 
 
-    public DefendFromLargeCommand(IntegerPair plasmaDrill, IntegerPair batteryComp,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public DefendFromLargeCommand(IntegerPair plasmaDrill, IntegerPair batteryComp,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.plasmaDrill = plasmaDrill;
         this.batteryComp = batteryComp;
     }
