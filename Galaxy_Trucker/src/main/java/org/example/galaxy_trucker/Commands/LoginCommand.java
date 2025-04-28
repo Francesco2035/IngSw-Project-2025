@@ -18,7 +18,7 @@ public class LoginCommand extends Command implements Serializable {
     //da parsare
     //private Socket echoSocket;
     public LoginCommand(String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+        super(gameId, playerId, lv, title, "");
     }
 
 

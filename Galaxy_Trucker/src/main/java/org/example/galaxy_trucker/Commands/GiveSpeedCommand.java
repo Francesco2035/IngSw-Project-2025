@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class GiveSpeedCommand extends Command {
 
     private ArrayList<IntegerPair> coordinates;
-    public GiveSpeedCommand( ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public GiveSpeedCommand( ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.coordinates = coordinates;
 
     }

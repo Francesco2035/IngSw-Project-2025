@@ -25,7 +25,9 @@ import java.net.Socket;
         @JsonSubTypes.Type(value = DebugShip.class, name = "DebugShip"),
         @JsonSubTypes.Type(value = AddCrewCommand.class, name = "AddCrewCommand"),
 
-        @JsonSubTypes.Type(value = RemoveTileCommand.class, name = "RemoveTileCommand")
+        @JsonSubTypes.Type(value = RemoveTileCommand.class, name = "RemoveTileCommand"),
+
+        @JsonSubTypes.Type(value = ReconnectCommand.class, names = "ReconnectCommand")
 
 })
 public class Command implements Serializable {
@@ -38,16 +40,19 @@ public class Command implements Serializable {
     public int lv;
     @JsonProperty("title")
     public String title;
+    @JsonProperty("token")
+    public String token;
 
     public Command() {
         System.out.println("Command default called");
     }
 
-    public Command(String gameId, String playerId, int lv, String title) {
+    public Command(String gameId, String playerId, int lv, String title, String token) {
         this.gameId = gameId;
         this.playerId = playerId;
         this.lv = lv;
         this.title = title;
+        this.token = token;
     }
 
     public void execute(Player player) throws IOException {}
@@ -78,5 +83,9 @@ public class Command implements Serializable {
 
     public Socket getSocket() {
         return null;
+    }
+
+    public String getToken() {
+        return token;
     }
 }

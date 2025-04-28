@@ -11,6 +11,7 @@ public class CommandInterpreter {
     private String playerId;
     private String gameId;
     private int lv;
+    private String token;
 
     private Map<String, CommandCreator> commandMap;
 
@@ -46,18 +47,24 @@ public class CommandInterpreter {
         commandMap.put("RemoveTile", this::createRemoveTileCommand);
         //  altri comandi
         commandMap.put("DebugShip", this::createDebugShip);
+
+        commandMap.put("Reconnect", this::createReconnectCommand);
     }
 
+    private Command createReconnectCommand(String[] strings) {
+        ReconnectCommand CMD = new ReconnectCommand(token, gameId, playerId,lv, "Reconnect");
+        return CMD;
+    }
 
 
     private Command createReadyCommand(String[] strings) {
 
         boolean accepted = Boolean.parseBoolean(strings[1]);
-        return new ReadyCommand(gameId, playerId,lv, "Ready", accepted);
+        return new ReadyCommand(gameId, playerId,lv, "Ready", accepted, token);
     }
 
     private Command createQuitCommand(String[] strings) {
-        return new ReadyCommand(gameId,playerId,lv,"Quit",false);
+        return new ReadyCommand(gameId,playerId,lv,"Quit",false, token);
     }
 
     private Command createConsumeEnergyCommand(String[] strings) {
@@ -79,11 +86,11 @@ public class CommandInterpreter {
 
         return switch (title) {
             case "AddCrew" ->
-                    new AddCrewCommand(2, false, false, new IntegerPair(x, y), gameId, playerId, lv, "AddCrew");
+                    new AddCrewCommand(2, false, false, new IntegerPair(x, y), gameId, playerId, lv, "AddCrew", token);
             case "AddPurpleAlien" ->
-                    new AddCrewCommand(0, true, false, new IntegerPair(x, y), gameId, playerId, lv, "AddPurpleAlien");
+                    new AddCrewCommand(0, true, false, new IntegerPair(x, y), gameId, playerId, lv, "AddPurpleAlien", token);
             case "AddBrownAlien" ->
-                    new AddCrewCommand(0, false, true, new IntegerPair(x, y), gameId, playerId, lv, "AddBrownAlien");
+                    new AddCrewCommand(0, false, true, new IntegerPair(x, y), gameId, playerId, lv, "AddBrownAlien", token);
             default -> throw new InvalidInput("invalid input");
         };
 
@@ -183,13 +190,13 @@ public class CommandInterpreter {
                 }
                 else if (parts.length != 1 && lv == 1)
                     throw new IllegalArgumentException("Comando FinishBuilding non richiede argomenti");
-
                 index = Integer.parseInt(parts[1]);
-                break;
+        return new BuildingCommand(x, y, rotation,position, gameId,playerId, lv, title, token);
+
             }
         }
 
-        return new BuildingCommand(x, y, rotation,position, gameId,playerId, lv, title, index);
+        return new BuildingCommand(x, y, rotation,position, gameId,playerId, lv, title, token);
     }
 
     private Command createRemoveTileCommand(String[] parts) {
@@ -198,7 +205,7 @@ public class CommandInterpreter {
         }
         int x = Integer.parseInt(parts[1]);
         int y = Integer.parseInt(parts[2]);
-        return new RemoveTileCommand(x,y,gameId,playerId,lv, "RemoveTileCommand");
+        return new RemoveTileCommand(x,y,gameId,playerId,lv, "RemoveTileCommand", token);
     }
 
 
@@ -213,6 +220,10 @@ public class CommandInterpreter {
     private Command createDebugShip(String[] strings) {
 
         String title = strings[0];
-        return new DebugShip(gameId,playerId, lv, title);
+        return new DebugShip(gameId,playerId, lv, title, token);
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

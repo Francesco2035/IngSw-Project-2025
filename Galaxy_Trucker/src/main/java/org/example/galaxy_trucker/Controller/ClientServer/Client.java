@@ -49,7 +49,7 @@ public class Client implements EventVisitor {
         view.updateHand(event);
     }
 
-    public static void main(String[] args) throws Exception {
+    public  void run(String[] args) throws Exception {
         if (args.length < 2) {
             System.out.println("java Client <RMI|TCP> <TUI|GUI>");
             return;

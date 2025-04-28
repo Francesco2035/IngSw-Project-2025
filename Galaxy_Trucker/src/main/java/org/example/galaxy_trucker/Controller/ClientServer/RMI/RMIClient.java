@@ -29,6 +29,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     private Game myGame;
     private CommandInterpreter commandInterpreter;
     private Client client;
+    private String token;
 
     public RMIClient(Client client) throws RemoteException{
         me =  new Player();
@@ -46,6 +47,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.RMI_PORT);
 
         this.server = (ServerInterface) registry.lookup("CommandReader");
+        System.out.println(server);
 //       this.server.login(this);
 
         System.out.println("Server started");
@@ -62,8 +64,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login");
         loginCommand.setClient(this);
 
-
+        System.out.println(loginCommand);
         server.command(loginCommand);
+        System.out.println("Sent login command");
 
         this.inputLoop(true);
     }
@@ -79,6 +82,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     @Override
     public void receivePing() throws RemoteException {
         //System.out.println("Ping Received");
+        //qui calcolo il tempo per capire se mi sono disconnesso
+    }
+
+    @Override
+    public void receiveToken(String token) throws RemoteException {
+        this.token = token;
+        this.commandInterpreter.setToken(token);
+        System.out.println(token);
     }
 
 
@@ -115,5 +126,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         System.out.println("Fine input.");
     }
+
+
 
 }

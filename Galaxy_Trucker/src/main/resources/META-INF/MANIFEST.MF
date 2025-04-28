@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: org.example.galaxy_trucker.Controller.ClientServer.Client
+Main-Class: org.example.galaxy_trucker.View.Launcher
 

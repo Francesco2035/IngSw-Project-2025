@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -21,6 +22,7 @@ public class GameController {
     private final HashMap<String, BlockingQueue<Command>> commandQueues = new HashMap<>();
     private final HashMap<String, Thread> threads = new HashMap<>();
     private final HashMap<String, VirtualView> VirtualViewMap = new HashMap<>();
+    private final HashMap<UUID, String> tokenToPlayerId = new HashMap<>();
     final Game game;
     private GamesHandler gh;
     private BlockingQueue<Command> flightQueue = new LinkedBlockingQueue<>();
@@ -46,7 +48,7 @@ public class GameController {
 
     }
 
-    public void NewPlayer(Player p, VirtualView vv) throws IOException {
+    public void NewPlayer(Player p, VirtualView vv, UUID token){
         if (ControllerMap.keySet().contains(p.GetID())) {
             throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists");
         }
@@ -54,7 +56,7 @@ public class GameController {
         Controller controller = new LoginController(p, idGame);
         ControllerMap.put(playerId, controller);
         System.out.println("New player " + playerId+" in "+ this);
-
+        tokenToPlayerId.put(token, playerId);
         BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
         commandQueues.put(playerId, queue);
         game.NewPlayer(p);
@@ -119,8 +121,9 @@ public class GameController {
         }
     }
 
-    public void removePlayer(String playerId) {
-        if (!ControllerMap.keySet().contains(playerId)) {
+    public void removePlayer(UUID token) {
+        String playerId = tokenToPlayerId.get(token);
+        if (playerId == null || !ControllerMap.keySet().contains(playerId)) {
             throw new IllegalArgumentException("Player ID " + playerId + " non found");
         }
         System.out.println("Player removed: " + playerId);
@@ -129,11 +132,11 @@ public class GameController {
         if (t != null) {
             t.interrupt();
         }
-
         commandQueues.remove(playerId);
         ControllerMap.remove(playerId);
         game.RemovePlayer(playerId);
         if (game.getPlayers().isEmpty()) {
+            System.out.println("Stop game");
             stopGame();
         }
     }
@@ -234,7 +237,5 @@ public class GameController {
     public void setBuildingCount(int count) {
         buildingCount += count;
     }
-
-
 
 }

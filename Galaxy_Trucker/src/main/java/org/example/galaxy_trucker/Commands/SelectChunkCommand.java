@@ -10,8 +10,8 @@ public class SelectChunkCommand extends Command {
 
     IntegerPair chunk;
 
-    public SelectChunkCommand(IntegerPair chunk,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public SelectChunkCommand(IntegerPair chunk,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.chunk = chunk;
     }
 

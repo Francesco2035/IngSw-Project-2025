@@ -11,8 +11,8 @@ public class ConsumeEnergyCommand extends Command {
 
     private ArrayList<IntegerPair> coordinate;
 
-    public ConsumeEnergyCommand(ArrayList<IntegerPair> coordinate,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public ConsumeEnergyCommand(ArrayList<IntegerPair> coordinate,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.coordinate = coordinate;
     }
 

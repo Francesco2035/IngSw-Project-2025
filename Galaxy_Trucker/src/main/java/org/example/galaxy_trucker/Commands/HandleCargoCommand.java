@@ -16,8 +16,8 @@ public class HandleCargoCommand extends Command {
     IntegerPair coordinate;
 
 
-    public HandleCargoCommand(int position, IntegerPair coordinate,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public HandleCargoCommand(int position, IntegerPair coordinate,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.title = title;
         this.position = position;
         this.coordinate = coordinate;

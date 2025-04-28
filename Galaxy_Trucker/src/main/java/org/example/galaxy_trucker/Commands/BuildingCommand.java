@@ -28,8 +28,8 @@ public class BuildingCommand extends Command{
 
     public BuildingCommand(){}
 
-    public BuildingCommand(int x, int y, int rotation, int position, String gameId, String playerId, int lv, String title, int GbIndex) {
-        super(gameId, playerId, lv, title);
+    public BuildingCommand(int x, int y, int rotation, int position, String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.x = x;
         this.y = y;
         this.gameId = gameId;
@@ -46,43 +46,43 @@ public class BuildingCommand extends Command{
         if(!player.GetReady()) {
             switch (title) {
 
-                case "SeeDeck": {
-                    player.getCommonBoard().getCardStack().notify(playerId, x);
-                }
+            case "SeeDeck": {
+                player.getCommonBoard().getCardStack().notify(playerId, x);
+            }
 
-                case "InsertTile": {
-                    Tile tile = player.getCurrentTile();
-                    int rotations = (rotation % 360) / 90;
-                    for (int i = 0; i < rotations; i++) {
-                        tile.RotateDx();
-                    }
-                    player.getmyPlayerBoard().insertTile(tile, x, y);
-                    player.setCurrentTile(null);
-                    break;
+            case "InsertTile": {
+                Tile tile = player.getCurrentTile();
+                int rotations = (rotation % 360) / 90;
+                for (int i = 0; i < rotations; i++) {
+                    tile.RotateDx();
                 }
-                case "ToBuffer": {
-                    Tile tile = player.getCurrentTile();
-                    int rotations = (rotation % 360) / 90;
-                    for (int i = 0; i < rotations; i++) {
-                        tile.RotateDx();
-                    }
-                    player.PlaceInBuffer();
-                    break;
+                player.getmyPlayerBoard().insertTile(tile, x, y);
+                player.setCurrentTile(null);
+                break;
+            }
+            case "ToBuffer" :{
+                Tile tile = player.getCurrentTile();
+                int rotations = (rotation % 360) / 90;
+                for (int i = 0; i < rotations; i++) {
+                    tile.RotateDx();
                 }
-                case "FromBuffer": {
+                player.PlaceInBuffer();
+                break;
+            }
+            case "FromBuffer" :{
 
-                    player.SelectFromBuffer(position);
-                    break;
-                }
-                case "PickTile": {
-                    player.PickNewTile(position);
-                    break;
-                }
-                case "Discard": {
-                    player.DiscardTile();
-                    break;
-                }
-                case "Hourglass": {
+                player.SelectFromBuffer(position);
+                break;
+            }
+            case "PickTile":{
+                player.PickNewTile(position);
+                break;
+            }
+            case "Discard":{
+                player.DiscardTile();
+                break;
+            }
+            case "Hourglass":{
                     try {
                         player.StartTimer();
                     } catch (InterruptedException e) {
@@ -104,6 +104,7 @@ public class BuildingCommand extends Command{
                 }
             }
         }
+
     }
 
     @Override
