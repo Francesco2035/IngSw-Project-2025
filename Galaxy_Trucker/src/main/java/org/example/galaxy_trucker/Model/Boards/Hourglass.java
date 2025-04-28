@@ -1,8 +1,7 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.example.galaxy_trucker.Controller.HourGlassListener;
+import org.example.galaxy_trucker.Controller.Listeners.HourGlassListener;
 
 import java.lang.Thread;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class Hourglass implements Runnable {
 
         try {
             Thread.sleep(time);
-            System.out.println("Hourglass ended: "+usages);
+            System.out.println("Hourglass ended: "+ usages + " usages left");
             usages--;
 
             if(usages>0) {

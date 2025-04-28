@@ -35,6 +35,7 @@ public class CommandInterpreter {
         commandMap.put("Discard", this::createBuildingCommand);
         commandMap.put("FromBuffer", this::createBuildingCommand);
         commandMap.put("ToBuffer", this::createBuildingCommand);
+        commandMap.put("FinishBuilding", this::createBuildingCommand);
         commandMap.put("AddCrew", this::createAddCrewCommand);
         commandMap.put("AddBrownAlien", this::createAddCrewCommand);
         commandMap.put("AddPurpleAlien", this::createAddCrewCommand);
@@ -128,6 +129,7 @@ public class CommandInterpreter {
         int y = -1;
         int rotation = 0;
         int position =-1;
+        int index = -1;
         switch (title){
 
             case "SeeDeck":{
@@ -175,9 +177,19 @@ public class CommandInterpreter {
                 position = Integer.parseInt(parts[1]);
                 break;
             }
+            case "FinishBuilding":{
+                if (parts.length != 2 && lv == 2) {
+                    throw new IllegalArgumentException("Comando FinishBuilding richiede 1 argomento: Posizione iniziale scelta");
+                }
+                else if (parts.length != 1 && lv == 1)
+                    throw new IllegalArgumentException("Comando FinishBuilding non richiede argomenti");
+
+                index = Integer.parseInt(parts[1]);
+                break;
+            }
         }
 
-        return new BuildingCommand(x, y, rotation,position, gameId,playerId, lv, title);
+        return new BuildingCommand(x, y, rotation,position, gameId,playerId, lv, title, index);
     }
 
     private Command createRemoveTileCommand(String[] parts) {

@@ -1,4 +1,4 @@
-package org.example.galaxy_trucker.Controller;
+package org.example.galaxy_trucker.Controller.Listeners;
 
 public interface HourGlassListener {
 
