@@ -11,9 +11,6 @@ public interface ServerInterface extends Remote {
 
     void StartServer() throws RemoteException;
 
-//    public void login(ClientInterface client) throws RemoteException;
-//
-//    public void JoinGame(ClientInterface joiner, String playerName, String GameName) throws RemoteException;
-//
-//    public void CreateGame(ClientInterface joiner, String playerName, String GameName, int lv) throws RemoteException;
+
+    void receivePong() throws RemoteException;
 }

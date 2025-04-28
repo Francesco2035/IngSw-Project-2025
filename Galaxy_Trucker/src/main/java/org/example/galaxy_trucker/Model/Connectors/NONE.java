@@ -1,11 +1,14 @@
 package org.example.galaxy_trucker.Model.Connectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.io.Serializable;
 
 @JsonTypeName("NONE")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NONE implements Connectors , Serializable {
 
     public static final NONE INSTANCE = new NONE();
@@ -27,6 +30,8 @@ public class NONE implements Connectors , Serializable {
         return false;
     }
 
+
+    @JsonIgnore
     @Override
     public boolean isExposed() {
         return false;

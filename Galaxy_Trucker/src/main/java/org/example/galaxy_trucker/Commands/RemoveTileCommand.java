@@ -17,8 +17,8 @@ public class RemoveTileCommand extends Command {
     @JsonProperty("y")
     int y;
 
-    public RemoveTileCommand(int x, int y,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public RemoveTileCommand(int x, int y,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.x = x;
         this.y = y;
         this.tile = new IntegerPair(x,y);

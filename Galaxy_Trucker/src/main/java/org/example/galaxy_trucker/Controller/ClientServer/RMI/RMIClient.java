@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Controller.ClientServer.RMI;
 import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.Controller.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
+import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -28,6 +29,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     private Game myGame;
     private CommandInterpreter commandInterpreter;
     private Client client;
+    private String token;
 
     public RMIClient(Client client) throws RemoteException{
         me =  new Player();
@@ -40,13 +42,15 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     @Override
     public void StartClient() throws IOException, NotBoundException {
-
+        System.out.println("Starting Client");
         Registry registry;
         registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.RMI_PORT);
 
         this.server = (ServerInterface) registry.lookup("CommandReader");
-//        this.server.login(this);
+        System.out.println(server);
+//       this.server.login(this);
 
+        System.out.println("Server started");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String playerId = client.getView().askInput("Insert player ID: ");
@@ -60,56 +64,33 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login");
         loginCommand.setClient(this);
 
-
+        System.out.println(loginCommand);
         server.command(loginCommand);
+        System.out.println("Sent login command");
 
         this.inputLoop(true);
     }
 
 
+
     @Override
-    public void receiveMessage(HandEvent event) throws RemoteException {
-        client.updateHand(event);
+    public void receiveMessage(Event event) {
+
+        client.receiveEvent(event);
     }
 
     @Override
-    public void receiveMessage(TileEvent event) throws RemoteException {
-        client.updateBoard(event);
+    public void receivePing() throws RemoteException {
+        //System.out.println("Ping Received");
+        //qui calcolo il tempo per capire se mi sono disconnesso
     }
 
     @Override
-    public void receiveMessage(UncoverdTileSetEvent event) {
-        client.updateUncoveredTilesSet(event);
+    public void receiveToken(String token) throws RemoteException {
+        this.token = token;
+        this.commandInterpreter.setToken(token);
+        System.out.println(token);
     }
-
-    @Override
-    public void receiveMessage(CoveredTileSetEvent event) throws RemoteException {
-        client.updateCoveredTilesSet(event);
-    }
-
-    @Override
-    public void receiveDeck(ArrayList<CardEvent> deck) throws RemoteException {
-        client.seeDeck(deck);
-    }
-
-
-//
-//    private void inputLoop() throws IOException {
-//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//        String cmd;
-//        while (!Objects.equals(cmd = br.readLine(), "end")) {
-//            try{
-//                Command command = commandInterpreter.interpret(cmd);
-//                server.command(command);
-//
-//            }
-//            catch (Exception e){
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//    }
-
-
 
 
     private void inputLoop(boolean fromConsole) throws IOException {
@@ -145,5 +126,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         System.out.println("Fine input.");
     }
+
+
 
 }

@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.Connectors;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
@@ -32,6 +33,8 @@ public interface Connectors extends Serializable {
 
     public boolean checkAdjacent(Connectors Adjacent);
 
+
+    @JsonIgnore
     public boolean isExposed();
 
 }

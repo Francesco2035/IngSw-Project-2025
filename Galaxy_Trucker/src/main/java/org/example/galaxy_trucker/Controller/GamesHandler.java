@@ -1,6 +1,9 @@
 package org.example.galaxy_trucker.Controller;
 
+import javafx.util.Pair;
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.LoginCommand;
+import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.GameLists;
@@ -11,22 +14,43 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class GamesHandler {
 
-//    private final GameLists gameList;
-
-    //private final ArrayList<Command> commandList = new ArrayList<>();  // Lista di comandi
+    private final HashMap<UUID, String> tokenToGame = new HashMap<>();
     private final HashMap<String, GameController> gameControllerMap;
+    private final BlockingQueue<Pair<Command, VirtualView>> pendingLogins;
 
     public GamesHandler() {
-//        this.gameList = new GameLists();
         this.gameControllerMap = new HashMap<>();
+        this.pendingLogins = new LinkedBlockingQueue<>();
+
+
+        Thread loginWorker = new Thread(this::processPendingLogins);
+        loginWorker.setDaemon(true);
+        loginWorker.start();
     }
-//
-//    public ConcurrentHashMap<String, ConcurrentHashMap<String, Controller>> getGameMap() {
-//        return gameMap;
-//    }
+    public void enqueuePlayerInit(Command command, VirtualView virtualView) {
+        pendingLogins.offer(new Pair<>(command, virtualView));
+    }
+
+    private void processPendingLogins() {
+        while (true) {
+            try {
+                Pair<Command, VirtualView> entry = pendingLogins.take();
+                initPlayer(entry.getKey(), entry.getValue());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            } catch (Exception e) {
+                System.out.println("Error while initializing player: " + e.getMessage());
+            }
+        }
+    }
 
 
     public void receive(Command command) {
@@ -36,12 +60,13 @@ public class GamesHandler {
         String gameId = command.getGameId();
         if("Quit".equals(title)) {
             if (gameControllerMap.containsKey(gameId)) {
-                gameControllerMap.get(gameId).removePlayer(command.getPlayerId());
+                gameControllerMap.get(gameId).removePlayer(UUID.fromString(command.getToken()));
             }
             else{
                 throw new InvalidInput("GameId doesn't exist: " + gameId);
             }
         }
+
         else{
             if (gameControllerMap.containsKey(gameId)) {
                 gameControllerMap.get(gameId).addCommand(command);
@@ -54,11 +79,17 @@ public class GamesHandler {
     }
 
 
-    public synchronized void removeGame(String gameId) {
+    public  void removeGame(String gameId) {
+        System.out.println("Removin game: " + gameId);
+        for (UUID token : tokenToGame.keySet()) {
+            if (tokenToGame.get(token).equals(gameId)) {
+                tokenToGame.remove(token);
+            }
+        }
         gameControllerMap.remove(gameId);
     }
 
-    public synchronized void initPlayer(Command command, VirtualView virtualView) {
+    public  void initPlayer(Command command, VirtualView virtualView){
         try {
             String gameID = command.getGameId();
             if(gameControllerMap.containsKey(gameID) && gameControllerMap.get(gameID).isStarted()) {
@@ -70,37 +101,67 @@ public class GamesHandler {
             Player temp = new Player();
             temp.setId(playerID);
             temp.setState(new BaseState());
+            synchronized (tokenToGame) {
+                tokenToGame.putIfAbsent(virtualView.getToken(), gameID);
+            }
 
-            if(gameControllerMap.keySet().contains(gameID)){
-                gameControllerMap.get(gameID).NewPlayer(temp, virtualView);
+            if(gameControllerMap.containsKey(gameID)){
+                System.out.println("Game exists: " + gameID);
+                gameControllerMap.get(gameID).NewPlayer(temp, virtualView, virtualView.getToken());
             }
             else{
+                System.out.println("Game doesn't exist: " + gameID);
                 Game curGame = new Game(lvl, gameID);
-                gameControllerMap.putIfAbsent(gameID, new GameController(gameID, curGame, this));
-                gameControllerMap.get(curGame.getGameID()).NewPlayer(temp, virtualView);
+                synchronized (gameControllerMap) {
+                    gameControllerMap.putIfAbsent(gameID, new GameController(gameID, curGame, this));
+                    gameControllerMap.get(curGame.getGameID()).NewPlayer(temp, virtualView, virtualView.getToken());
+                }
+
             }
 
-//            try {
-//                System.out.println(this);
-//                Game curGame = gameList.CreateNewGame(gameID, temp, lvl);
-//                System.out.println(curGame);
-//                gameControllerMap.putIfAbsent(gameID, new GameController(gameID, curGame));
-//                gameControllerMap.get(curGame.getGameID()).NewPlayer(temp);
-//            } catch (IllegalArgumentException e) {
-//                try {
-//                    Game existingGame = gameList.getGames().stream()
-//                            .filter(g -> g.getGameID().equals(gameID))
-//                            .findFirst()
-//                            .orElseThrow();
-//                    gameList.JoinGame(existingGame, temp);
-//                    gameControllerMap.get(existingGame.getGameID()).NewPlayer(temp);
-//                } catch (Exception ex) {
-//                    System.out.println("Join error: " + ex.getMessage());
-//                }
-//            }
-//
         } catch (IOException e) {
             throw new InvalidInput("Malformed JSON input");
         }
+    }
+
+    public synchronized HashMap<String, GameController> getGameControllerMap() {
+        return gameControllerMap;
+    }
+
+    public  void removePlayerDisconnected(UUID token) {
+
+//
+//            synchronized (gameControllerMap) {
+//                String gameId = tokenToGame.get(token);
+//                if (gameId == null) {
+//                    System.out.println("Token not associated with any game: " + token);
+//                    return;
+//                }
+//                GameController controller = gameControllerMap.get(gameId);
+//                if (controller == null) {
+//                    System.out.println("No GameController found for gameId: " + gameId);
+//                    return;
+//                }
+//                controller.removePlayer(token);
+//                if (controller.getNumPlayer() == 0) {
+//                    removeGame(gameId);
+//                }
+//            }
+        String game;
+
+        synchronized (tokenToGame){
+            game = tokenToGame.get(token);
+        }
+        if (game == null) {
+            throw new InvalidInput("game null: ");
+        }
+
+        synchronized (gameControllerMap) {
+            gameControllerMap.get(game).removePlayer(token);
+//            if (gameControllerMap.get(tokenToGame.get(token)).getNumPlayer() == 0) {
+//                removeGame(tokenToGame.get(token));
+//            }
+        }
+
     }
 }

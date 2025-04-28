@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
 import org.example.galaxy_trucker.Exceptions.*;
@@ -160,15 +161,16 @@ public class PlayerBoard {
      * @param t of type Tile .
      * @throws IllegalStateException if the buffer's size is = 2
      */
-    public void insertBuffer(Tile t) throws IllegalStateException {
+    public void insertBuffer(Tile t) throws IllegalStateException{
         if (Buffer.size() >= 2) {
             throw new IllegalStateException("Buffer is full");
         }
+        t.setChosen();
         sendUpdates(new TileEvent(t.getId(), 3, 8 + Buffer.size() , null, 0, false, false, 0, 0, t.getConnectors()));
         Buffer.add(t);
     }
 
-    public Tile getTileFromBuffer(int i){
+    public Tile getTileFromBuffer(int i) {
         if (i > Buffer.size()) {
             throw new InvalidInput("This position in the Buffer does not exist");
         }
@@ -515,7 +517,7 @@ public class PlayerBoard {
      * @param x of type int - x coordinate.
      * @param y of type int - y coordinate.
      */
-    public void destroy(int x, int y){
+    public void destroy(int x, int y) {
 
         PlayerBoard[x][y].getComponent().remove(this);
         damage++;
@@ -554,7 +556,7 @@ public class PlayerBoard {
      *
      * @param newPlayerBoard of type ArrayList<IntegerPair> - x coordinate.
      */
-    public void modifyPlayerBoard(ArrayList<IntegerPair> newPlayerBoard){
+    public void modifyPlayerBoard(ArrayList<IntegerPair> newPlayerBoard)  {
         for (int x = 0; x <10; x++ ){
             for(int y = 0; y <10; y++){
                 if (ValidPlayerBoard[x][y] == 1){
@@ -973,7 +975,7 @@ public class PlayerBoard {
         }
     }
 
-    public void clearBuffer(){
+    public void clearBuffer() {
         Buffer.clear();
         sendUpdates( new TileEvent(159 , 7, 8, null, 0, false, false, 0, 0, null));
 

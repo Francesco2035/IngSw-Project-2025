@@ -2,22 +2,21 @@ package org.example.galaxy_trucker.Controller.ClientServer;
 
 import org.example.galaxy_trucker.Controller.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Controller.ClientServer.TCP.TCPClient;
-import org.example.galaxy_trucker.Controller.ClientServer.TUI;
-import org.example.galaxy_trucker.Controller.ClientServer.View;
+import org.example.galaxy_trucker.Controller.Messages.Event;
+import org.example.galaxy_trucker.Controller.Messages.EventVisitor;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class Client {
+public class Client implements EventVisitor {
 
     private View view;
     private RMIClient rmiClient;
@@ -50,9 +49,9 @@ public class Client {
         view.updateHand(event);
     }
 
-    public static void main(String[] args) throws Exception {
+    public  void run(String[] args) throws Exception {
         if (args.length < 2) {
-            System.out.println("Usage: java Client <RMI|TCP> <TUI|GUI>");
+            System.out.println("java Client <RMI|TCP> <TUI|GUI>");
             return;
         }
 
@@ -93,7 +92,46 @@ public class Client {
         this.view.updateUncoveredTilesSet(event);
     }
 
-    public void seeDeck(ArrayList<CardEvent> deck) {
-        this.view.seeDeck(deck);
+    public void seeDeck(DeckEvent deck) {
+        this.view.showDeck(deck);
+    }
+
+    public void receiveEvent(Event event) {
+        event.accept(this);
+    }
+
+    @Override
+    public void visit(DeckEvent event) {
+        this.view.showDeck(event);
+    }
+
+    @Override
+    public void visit(CardEvent event) {
+        this.view.showCard(event.getId());
+    }
+
+    @Override
+    public void visit(HandEvent event) {
+        this.view.updateHand(event);
+    }
+
+    @Override
+    public void visit(VoidEvent event) {
+        System.out.println("non so a cosa serve, vediamo se arriva un void");
+    }
+
+    @Override
+    public void visit(TileEvent event) {
+        this.view.updateBoard(event);
+    }
+
+    @Override
+    public void visit(UncoverdTileSetEvent event) {
+        this.view.updateUncoveredTilesSet(event);
+    }
+
+    @Override
+    public void visit(CoveredTileSetEvent event) {
+        this.view.updateCoveredTilesSet(event);
     }
 }
