@@ -115,7 +115,7 @@ public class GameBoard {
                 .filter(p -> pl.equals( p.getKey()) )
                 .findFirst().orElseThrow();
 
-        if(positions[startPos[index]] != null) {
+        if(positions[startPos[index]] == null) {
             SetNewPosition(cur, startPos[index], startPos[index]);
 
             PlayersOnBoard++;

@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Commands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 public class FinishBuildingCommand extends Command {
 
@@ -31,4 +32,10 @@ public class FinishBuildingCommand extends Command {
             System.out.println(e.getMessage());
         }
     }
+
+    @Override
+    public boolean allowedIn(PlayerState playerState) {
+        return playerState.allows(this);
+    }
+
 }

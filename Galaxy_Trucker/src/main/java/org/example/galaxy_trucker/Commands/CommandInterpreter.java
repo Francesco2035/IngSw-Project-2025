@@ -55,7 +55,11 @@ public class CommandInterpreter {
         commandMap.put("ChoosingPlanet", this::createChoosingPlanetsCommand); // il command usa planets con la s ma tu più volte lo hai scritto senza che faccio?
         commandMap.put("DefendFromLarge",this::createDefendFromLargeCommand);
         commandMap.put("DefendFromSmall",this::createDefendFromSmallCommand);
+        commandMap.put("Kill", this::createKillCommand);
+        commandMap.put("GiveAttack", this::createGiveAttackCommand);
+        commandMap.put("GiveSpeed", this::createGiveSpeedCommand);
     }
+
 
     private Command createReconnectCommand(String[] strings) {
         ReconnectCommand CMD = new ReconnectCommand(token, gameId, playerId,lv, "Reconnect");
