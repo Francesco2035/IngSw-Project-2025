@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Controller.Listeners.HourGlassListener;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
+import org.example.galaxy_trucker.Model.PlayerStates.ChoosePosition;
 
 public class PrepController extends Controller implements HourGlassListener {
 
@@ -33,5 +34,9 @@ public class PrepController extends Controller implements HourGlassListener {
         //dove è acconsentito un solo tipo di comando che è la Finish Building
         //curPlayer.SetReady(true);
         //gc.changeState();
+
+        gc.getGame().getPlayers().values()
+                .stream().filter(p -> !p.GetReady())
+                .forEach(p -> p.setState(new ChoosePosition()));
     }
 }

@@ -237,4 +237,9 @@ public class GameController {
         buildingCount += count;
     }
 
+
+    public Game getGame() {
+        return game;
+    }
+
 }
