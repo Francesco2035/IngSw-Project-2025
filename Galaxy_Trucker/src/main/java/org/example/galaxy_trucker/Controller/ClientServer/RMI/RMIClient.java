@@ -35,7 +35,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         me =  new Player();
         myGame = null;
         this.client = client;
-
     }
 
 
@@ -50,7 +49,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         System.out.println(server);
 //       this.server.login(this);
 
-        System.out.println("Server started");
+        System.out.println("Connected to server: " + server);
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String playerId = client.getView().askInput("Insert player ID: ");
