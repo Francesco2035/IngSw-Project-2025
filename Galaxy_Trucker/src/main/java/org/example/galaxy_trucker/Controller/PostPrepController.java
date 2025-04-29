@@ -16,7 +16,7 @@ public class PostPrepController extends Controller {
     }
 
     @Override
-    public synchronized void action(Command command, GameController gc) {
+    public synchronized void action(Command command, GameController gc,boolean disconnected) {
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
@@ -46,7 +46,7 @@ public class PostPrepController extends Controller {
     public void nextState(GameController gc) {
 
         gc.setFlightCount(1);
-        gc.setControllerMap(curPlayer, new FlightController( curPlayer, gameId, gc));
+        gc.setControllerMap(curPlayer, new FlightController( curPlayer, gameId, gc,this.disconnected));
 
     }
 }

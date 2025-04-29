@@ -18,6 +18,9 @@ public class SolarSystem extends Card {
     private int order;
     private int done;
 
+
+
+    /// caso base è non scendere sui pianeti
     public SolarSystem(int lv, int time, GameBoard board, ArrayList<Planet> planets) {
         super(lv, time,board);
         this.planets = planets;

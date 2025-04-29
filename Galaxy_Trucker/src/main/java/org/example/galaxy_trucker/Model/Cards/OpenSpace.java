@@ -19,6 +19,9 @@ public class OpenSpace extends Card{
     private int currentmovement;
     private int energyUsage;
 
+
+
+    ///  in caso di disconnessione non attiva motori doppi ma avanza lo stesso
     public OpenSpace(int level, GameBoard board){
 
         super(level, 0 ,board);

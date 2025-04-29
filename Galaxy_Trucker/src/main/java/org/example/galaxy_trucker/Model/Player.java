@@ -2,6 +2,8 @@ package org.example.galaxy_trucker.Model;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -156,6 +158,9 @@ public class Player implements Serializable {
      * places the current tile in the buffer
      */
     public void PlaceInBuffer(){
+        if(CommonBoard.getLevel()==1){
+            throw new ImpossibleActionException("there is no buffer in the tutorial");
+        }
         myPlayerBoard.insertBuffer(CurrentTile);
         CurrentTile = null;
     }

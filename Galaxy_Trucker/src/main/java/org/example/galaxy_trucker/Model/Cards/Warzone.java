@@ -61,6 +61,7 @@ public class Warzone extends Card{
 
 
 
+    /// caso base è che non attiva nulla, e per le punizioni prendi le prime cose che trovi e non si difende
     public Warzone(int level, int time, GameBoard board, int RequirementOrder[], int PunishmentOrder[], int Punishment1, int Punishment2, int Punishment3, ArrayList<Integer> Punishment4) {
         super(level, time, board);
         RequirementsType=RequirementOrder;

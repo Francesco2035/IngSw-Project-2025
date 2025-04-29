@@ -13,26 +13,30 @@ public abstract class Controller {
     Player curPlayer;
     String gameId;
     PlayerBoard playerBoardCopy;
+    boolean disconnected;
 
 
-    public synchronized void action(Command command, GameController gc) {
-
-        playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
-        if (!command.allowedIn(curPlayer.getPlayerState())){
-            throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
+    public synchronized void action(Command command, GameController gc,boolean disconnected) {
+        if (!disconnected){
+            /// /devo fare il default aaargerfertin skask
         }
+        else {
+            playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
+            if (!command.allowedIn(curPlayer.getPlayerState())) {
+                throw new IllegalStateException("Command not accepted: " + command.getClass() + " \n" + curPlayer.getPlayerState());
+            }
 
-        try {
-            System.out.println("Action called for " + gameId + ": " + command.getTitle() + " "+ command.playerId);
-            command.execute(curPlayer);
-            gc.changeState();
-        } catch (Exception e) {
-            playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
-            curPlayer.setMyPlance(playerBoardCopy);
-            //throw new IllegalCallerException("illegal execution of command" + command.toString());
-            System.out.println(e);
+            try {
+                System.out.println("Action called for " + gameId + ": " + command.getTitle() + " " + command.playerId);
+                command.execute(curPlayer);
+                gc.changeState();
+            } catch (Exception e) {
+                playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
+                curPlayer.setMyPlance(playerBoardCopy);
+                //throw new IllegalCallerException("illegal execution of command" + command.toString());
+                System.out.println(e);
+            }
         }
-
     }
 
 

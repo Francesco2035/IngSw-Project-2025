@@ -7,13 +7,13 @@ import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 public class CheckValidityController extends Controller{
 
 
-    public CheckValidityController( Player player, String gameId) {
+    public CheckValidityController( Player player, String gameId,boolean disconnected) {
         this.gameId = gameId;
         this.curPlayer = player;
     }
 
     @Override
-    public synchronized void action(Command command, GameController gc) {
+    public synchronized void action(Command command, GameController gc,boolean disconnected) {
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
@@ -42,7 +42,7 @@ public class CheckValidityController extends Controller{
             gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId));
         }
         else {
-            gc.setControllerMap(curPlayer, new CheckValidityController(curPlayer, gameId));
+            gc.setControllerMap(curPlayer, new CheckValidityController(curPlayer, gameId,this.disconnected));
         }
     }
 }

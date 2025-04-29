@@ -9,16 +9,17 @@ import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 public class FlightController extends Controller {
 
 
-    public FlightController(Player curPlayer, String gameId, GameController gc) {
+    public FlightController(Player curPlayer, String gameId, GameController gc,boolean disconnected) {
         this.curPlayer = curPlayer;
         this.gameId = gameId;
         curPlayer.setState(new BaseState());
+        this.disconnected = disconnected;
     }
 
 
 
     @Override
     public void nextState(GameController gc) {
-        gc.setControllerMap(curPlayer, new CardsController(curPlayer, gameId));
+        gc.setControllerMap(curPlayer, new CardsController(curPlayer, gameId,disconnected));
     }
 }

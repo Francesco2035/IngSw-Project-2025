@@ -27,6 +27,8 @@ public class Slavers extends Card{
 
     // conviene creare una classe che lista gli attacchi o in qualche modo chiama solo una volta
     //il player da attaccare cambia Attack
+
+    /// caso base come pirati però per gli umani semplicemente uccido i primi che becco e bona così
     public Slavers(int level, int time, GameBoard board, int Reward, int Requirement, int Punsihment){
         super(level, time, board);
         this.requirement = Requirement;

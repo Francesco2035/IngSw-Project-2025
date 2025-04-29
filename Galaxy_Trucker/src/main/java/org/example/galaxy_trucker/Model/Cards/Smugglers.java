@@ -38,6 +38,8 @@ public class Smugglers extends Card{
     private boolean isaPunishment;
     // conviene creare una classe che lista gli attacchi o in qualche modo chiama solo una volta
     //il player da attaccare cambia Attack
+
+    ///  come pirati e per fottere prendo le prime cose che trovo e bona così
     Smugglers(int level, int time, GameBoard board, ArrayList<Goods> Reward, int Requirement, int Punsihment){
         super(level, time, board);
         this.requirement = Requirement;
