@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Commands;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,20 +32,24 @@ public class CommandInterpreter {
         commandMap.put("PickTile", this::createBuildingCommand);
         commandMap.put("Hourglass", this::createBuildingCommand);
         commandMap.put("SeeDeck", this::createBuildingCommand);
-        commandMap.put("Accept", this::createAcceptCommand);
+
         commandMap.put("Discard", this::createBuildingCommand);
         commandMap.put("FromBuffer", this::createBuildingCommand);
         commandMap.put("ToBuffer", this::createBuildingCommand);
         commandMap.put("AddCrew", this::createAddCrewCommand);
         commandMap.put("AddBrownAlien", this::createAddCrewCommand);
         commandMap.put("AddPurpleAlien", this::createAddCrewCommand);
-        commandMap.put("ChoosingPlanet", this::createChoosingPlanetCommand);
-        commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
         commandMap.put("Quit", this::createQuitCommand);
         commandMap.put("Ready", this::createReadyCommand);
         commandMap.put("RemoveTile", this::createRemoveTileCommand);
         //  altri comandi
         commandMap.put("DebugShip", this::createDebugShip);
+
+        commandMap.put("Accept", this::createAcceptCommand);
+        commandMap.put("ChoosingPlanet", this::createChoosingPlanetsCommand); // il command usa planets con la s ma tu più volte lo hai scritto senza che faccio?
+        commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
+        commandMap.put("DefendFromLarge",this::createDefendFromLargeCommand);
+        commandMap.put("DefendFromSmall",this::createDefendFromSmallCommand);
     }
 
 
@@ -59,13 +64,8 @@ public class CommandInterpreter {
         return new ReadyCommand(gameId,playerId,lv,"Quit",false);
     }
 
-    private Command createConsumeEnergyCommand(String[] strings) {
-        return null;
-    }
 
-    private Command createChoosingPlanetCommand(String[] strings) {
-        return null;
-    }
+
 
     private Command createAddCrewCommand(String[] strings) {
 
@@ -88,9 +88,6 @@ public class CommandInterpreter {
 
     }
 
-    private Command createAcceptCommand(String[] strings) {
-        return null;
-    }
 
     public Command interpret(String commandString) {
         String[] parts = commandString.split(" ");
@@ -188,6 +185,146 @@ public class CommandInterpreter {
         int y = Integer.parseInt(parts[2]);
         return new RemoveTileCommand(x,y,gameId,playerId,lv, "RemoveTileCommand");
     }
+
+
+    private Command createAcceptCommand(String[] parts){
+        boolean accept;
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Comando Accept richiede 1 argomento: se si accetta o meno");
+        }
+        accept = Boolean.parseBoolean(parts[1]);
+        return new AcceptCommand(gameId,playerId,lv,"AcceptCommand",accept);
+    }
+
+    private Command createChoosingPlanetsCommand(String[] parts) {
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Comando ChoosingPlanets richiede 1 argomento: numero del pianeta");
+        }
+        int x = Integer.parseInt(parts[1]);
+        return new ChoosingPlanetsCommand(x,gameId,playerId,lv, "ChoosingPlanetsCommand");
+    }
+    /// per gli integer pair pretendo un numero pari di stringhe + il title o altre cose da includere, quindi ogni coordinata è due stringhe separate di parts
+    /// si può assolutyamente cambiare se non piace :)
+    /// sempre arboitrariamente ho deciso che per leggere null possiamo passare semplicemente -1 come coordinata perché sicuro insensata altrimenti
+    /// questo lo faccio solo se ha senso che il player dia null come coordinata, altrimenti la considero -1 -1 e lancerà poi errore
+    private Command createConsumeEnergyCommand(String[] parts) {
+        int x;
+        int y;
+        ArrayList<IntegerPair> coordinates = new ArrayList<>();
+        if ((parts.length-1)%2 != 0) {
+            throw new IllegalArgumentException("Comando ConsumeEnergy richiede un numero pari di argomenti: le coordinate"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+        }
+        for (int i = 1; i < parts.length; i+=2) {
+            x = Integer.parseInt(parts[i]);
+            y = Integer.parseInt(parts[i+1]);
+            coordinates.add(new IntegerPair(x,y));
+        }
+        return new ConsumeEnergyCommand(coordinates,gameId,playerId,lv, "ConsumeEnergyCommand");
+    }
+
+    private Command createDefendFromLargeCommand(String[] parts) {
+        int x;
+        int y;
+        IntegerPair plasmaDrill;
+        IntegerPair energyStorage;
+        if (parts.length != 5) {
+            throw new IllegalArgumentException("Comando DefendFromLarge richiede 4 argomenti: le due coordinate del cannone e dell'eventuale energia da consumare"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+        }
+        x= Integer.parseInt(parts[1]);
+        y= Integer.parseInt(parts[2]);
+        if(x==-1 && y==-1){
+            plasmaDrill = null;
+        }
+        else {
+            plasmaDrill = new IntegerPair(x,y);
+        }
+        if(x==-1 && y==-1){
+             energyStorage = null;
+        }
+        else {
+            energyStorage = new IntegerPair(x,y);
+        }
+        return new DefendFromLargeCommand(plasmaDrill,energyStorage,gameId,playerId,lv, "DefendFromLargeCommand");
+    }
+
+    private Command createDefendFromSmallCommand(String[] parts) {
+        int x;
+        int y;
+        IntegerPair energyStorage;
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Comando DefendFromSmall richiede 2 argomenti: le due coordinate dell'energia da consumare"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+        }
+        x=Integer.parseInt(parts[1]);
+        y=Integer.parseInt(parts[2]);
+        if(x==-1 && y==-1){
+            energyStorage = null;
+        }
+        else {
+            energyStorage = new IntegerPair(x,y);
+        }
+        return new DefendFromSmallCommand(energyStorage,gameId,playerId,lv, "DefendFromSmallCommand");
+    }
+
+    private Command createGiveAttackCommand(String[] parts) {
+        int x;
+        int y;
+        ArrayList<IntegerPair> coordinates = new ArrayList<>();
+        if ((parts.length-1)%2 != 0) {
+            throw new IllegalArgumentException("Comando GiveAttack richiede un numero pari di argomenti: le coordinate"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+        }
+        for (int i = 1; i < parts.length; i+=2) {
+            x = Integer.parseInt(parts[i]);
+            y = Integer.parseInt(parts[i+1]);
+            coordinates.add(new IntegerPair(x,y));
+        }
+        return new GiveAttackCommand(coordinates,gameId,playerId,lv,"GiveAttackCommand");
+    }
+
+    private Command createGiveSpeedCommand(String[] parts) {
+        int x;
+        int y;
+        ArrayList<IntegerPair> coordinates = new ArrayList<>();
+        if ((parts.length-1)%2 != 0) {
+            throw new IllegalArgumentException("Comando GiveSpeed richiede un numero pari di argomenti: le coordinate"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+        }
+        for (int i = 1; i < parts.length; i+=2) {
+            x = Integer.parseInt(parts[i]);
+            y = Integer.parseInt(parts[i+1]);
+            coordinates.add(new IntegerPair(x,y));
+        }
+        return new GiveSpeedCommand(coordinates,gameId,playerId,lv,"GiveSpeedCommand");
+    }
+
+    private Command createKillCommand(String[] parts) {
+        int x;
+        int y;
+        ArrayList<IntegerPair> coordinates = new ArrayList<>();
+        if ((parts.length-1)%2 != 0) {
+            throw new IllegalArgumentException("Comando Kill richiede un numero pari di argomenti: le coordinate"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+        }
+        if (parts.length == 3) { // caso in cui il player dia null per non accettare in AbadonedShip dovrei cambialrla leggermente mettendo prima la accept per modularità
+           x = Integer.parseInt(parts[1]);
+           y = Integer.parseInt(parts[2]);
+            if(x==-1 && y==-1){
+                coordinates = null;
+            }
+            else {
+                coordinates .add(new IntegerPair(x,y));
+            }
+        }
+        else {
+            for (int i = 1; i < parts.length; i+=2) {
+                x = Integer.parseInt(parts[i]);
+                y = Integer.parseInt(parts[i+1]);
+                coordinates.add(new IntegerPair(x,y));
+            }
+        }
+        return new KillCommand(coordinates,gameId,playerId,lv,"KillCommand");
+    }
+
+
+
+
 
 
     @FunctionalInterface
