@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
@@ -7,6 +8,8 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 public class DefendFromSmallCommand extends Command {
 
+    @JsonProperty("commandType")
+    private final String commandType = "DefendFromSmallCommand";
 
     private IntegerPair batteryComp;
 

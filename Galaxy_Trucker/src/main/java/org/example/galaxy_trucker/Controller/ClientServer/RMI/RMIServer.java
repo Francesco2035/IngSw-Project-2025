@@ -37,7 +37,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
 
         Thread pingThread = new Thread(() -> {
-            System.out.println("Ping Thread started");
+            //System.out.println("Ping Thread started");
 
             while (true) {
                 try {
