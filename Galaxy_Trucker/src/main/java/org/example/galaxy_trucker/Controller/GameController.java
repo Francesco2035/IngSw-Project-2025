@@ -38,6 +38,9 @@ public class GameController {
         return started;
     }
 
+    public synchronized HashMap<String, VirtualView> getVirtualViewMap() {
+        return VirtualViewMap;
+    }
 
     public GameController(String idGame, Game game, GamesHandler gh) {
         this.idGame = idGame;
@@ -53,6 +56,8 @@ public class GameController {
             throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists");
         }
         String playerId = p.GetID();
+        System.out.println("Player ID: " + playerId);
+        System.out.println("Token: " + token.toString());
         Controller controller = new LoginController(p, idGame);
         ControllerMap.put(playerId, controller);
         System.out.println("New player " + playerId+" in "+ this);
@@ -75,9 +80,13 @@ public class GameController {
         Thread t = new Thread(() -> {
             while (true) {
                 try {
-                    Command cmd = queue.take();
                     Controller current = ControllerMap.get(playerId);
+                    //vedi se è connesso
+                    //se è connesso prendi dalla coda e chiami il metodo
+                    Command cmd = queue.take();
                     current.action(cmd, this);
+
+                    //se non è connesso chiami defaultaction
                 } catch (InterruptedException e) {
                     System.out.println("Thread interrupted: " + playerId);
                     break;
@@ -110,14 +119,16 @@ public class GameController {
     public void addCommand(Command command) {
         if(!flightMode) {
             BlockingQueue<Command> queue = commandQueues.get(command.getPlayerId());
-            if (queue != null) {
+            if (queue != null && !VirtualViewMap.get(command.getPlayerId()).getDisconnected()) {
                 queue.offer(command);
             } else {
                 System.out.println("Empty queue for: " + command.getPlayerId());
             }
         }
         else {
-            this.flightQueue.offer(command);
+            if (!VirtualViewMap.get(command.getPlayerId()).getDisconnected()){
+                this.flightQueue.offer(command);
+            }
         }
     }
 
@@ -172,7 +183,7 @@ public class GameController {
 
     public void startFlightMode() {
 
-
+//client si riconnete ma non può inviare input fino a che non si ricambia il controller
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         stopAllPlayerThreads();
         flightThread = new Thread(() -> {
@@ -183,6 +194,10 @@ public class GameController {
 
                 while (index < players.size()) {
                     Player currentPlayer = players.get(index);
+                    //prendi controller
+                    //se è disconnesso chiami def action
+                    //altrimenti esegui il blocco try
+                    //TODO : aggiungere se detto da cugola timout
                     try {
                         Command cmd = flightQueue.take();
 
@@ -238,4 +253,42 @@ public class GameController {
         buildingCount += count;
     }
 
+    public void stopPlayer(UUID token) {
+        String playerId = tokenToPlayerId.get(token);
+        ControllerMap.get(playerId);
+        //setto booleano del controller
+
+        if (!flightMode){
+            System.out.println("Player ID " + playerId + " not in flight mode, interrupting thread");
+            threads.get(playerId).interrupt();
+            threads.remove(playerId);
+        }
+
+    }
+
+    public void startPlayer(UUID token) {
+        String playerId = tokenToPlayerId.get(token);
+        //setto booleano del controler
+        if (!flightMode){
+            System.out.println("Player ID " + playerId + " not in flight mode, starting thread");
+
+            BlockingQueue<Command> queue = commandQueues.get(playerId);
+            Thread t = new Thread(() -> {
+                while (true) {
+                    try {
+                        Command cmd = queue.take();
+                        Controller current = ControllerMap.get(playerId);
+                        current.action(cmd, this);
+                    } catch (InterruptedException e) {
+                        System.out.println("Thread interrupted: " + playerId);
+                        break;
+                    }
+                }
+            });
+            t.start();
+            threads.put(playerId, t);
+
+        }
+
+    }
 }

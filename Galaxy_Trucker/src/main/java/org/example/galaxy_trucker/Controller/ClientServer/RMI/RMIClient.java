@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller.ClientServer.RMI;
 
 import org.example.galaxy_trucker.Commands.LoginCommand;
+import org.example.galaxy_trucker.Commands.ReconnectCommand;
 import org.example.galaxy_trucker.Controller.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.Event;
@@ -38,6 +39,25 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     }
 
+    public RMIClient(Client client, CommandInterpreter commandInterpreter) throws RemoteException, NotBoundException {
+        this.client = client;
+        this.commandInterpreter = commandInterpreter;
+        System.out.println("Starting Client");
+        Registry registry;
+        registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.RMI_PORT);
+        commandInterpreter.setClient(this);
+
+        this.server = (ServerInterface) registry.lookup("CommandReader");
+        System.out.println(server);
+
+        Command command = commandInterpreter.interpret("Reconnect");
+
+        server.command(command);
+        System.out.println("Server started");
+
+
+    }
+
 
 
     @Override
@@ -61,6 +81,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         commandInterpreter = new CommandInterpreter(playerId, gameId);
         commandInterpreter.setlv(level);
+        commandInterpreter.setClient(this);
         LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login");
         loginCommand.setClient(this);
 
@@ -93,15 +114,24 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
 
-    private void inputLoop(boolean fromConsole) throws IOException {
+    public void inputLoop(boolean fromConsole) throws IOException {
         String cmd = "";
 
+        boolean running = true;
         if (fromConsole) {
-            while (cmd != null && !cmd.equals("end")) {
+            while (running && !cmd.equals("end")) {
                 try {
-                    cmd = client.getView().askInput("Command: ");
-                    Command command = commandInterpreter.interpret(cmd);
-                    server.command(command);
+                    cmd = client.getView().askInput("Command <RMI>: ");
+                    if (cmd.equals("ChangeConnection")) {
+                        changeConnection();
+                        running = false;
+                        break;
+                    }
+                    else {
+                        Command command = commandInterpreter.interpret(cmd);
+                        server.command(command);
+                    }
+
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     cmd = "";
@@ -126,6 +156,21 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         System.out.println("Fine input.");
     }
+
+
+    public void changeConnection() throws NotBoundException, IOException {
+        try {
+            UnicastRemoteObject.unexportObject(this, true);
+            System.out.println("RMI connection closed.");
+        } catch (Exception e) {
+            System.out.println("Error RMI: " + e.getMessage());
+        }
+
+        client.getView().disconnect();
+        client.changeConnection("TCP", commandInterpreter);
+    }
+
+
 
 
 

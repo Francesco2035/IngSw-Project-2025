@@ -25,16 +25,23 @@ public class ServersHandler implements Runnable {
 
         GamesHandler gameHandler = new GamesHandler();
 
+        ArrayList<UUID> DisconnectedClients = new ArrayList<>();
+
         //start thread server tcp
         ConcurrentHashMap<UUID, VirtualView> tokenMap = new ConcurrentHashMap<UUID, VirtualView>();
-        TCPServer TCP = new TCPServer(gameHandler, tokenMap);
+        TCPServer TCP = null;
+        try {
+            TCP = new TCPServer(gameHandler, tokenMap, DisconnectedClients);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
         Thread ThreadTCP = new Thread(TCP);
         ThreadTCP.start();
 
         //start thread server rmi
         RMIServer RMI = null;
         try {
-            RMI = new RMIServer(gameHandler, tokenMap);
+            RMI = new RMIServer(gameHandler, tokenMap, DisconnectedClients);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

@@ -6,12 +6,10 @@ import java.util.UUID;
 
 public class DisconnectedClient {
     public UUID token;
-    public long deadline;
     public ClientInterface client;
 
-    public DisconnectedClient(UUID token, long deadline, ClientInterface client) {
+    public DisconnectedClient(UUID token, ClientInterface client) {
         this.token = token;
-        this.deadline = deadline;
         this.client = client;
     }
 

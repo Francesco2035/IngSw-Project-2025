@@ -34,7 +34,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private PrintWriter out ;
     private int coveredTiles= 0;
     private HashMap<Integer, ArrayList<Connectors>> uncoveredTilesMap = new HashMap<>();
-    private HandEvent hand;
+    private HandEvent hand ;
     private UUID token;
     private CardEvent card;
 
@@ -104,7 +104,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     public void sendEvent(HandEvent event)  {
         if (!Disconnected) {
-            if (out != null) {
+            if (out != null ) {
                 try{
                     ObjectMapper objectMapper = new ObjectMapper();
                     out.println(objectMapper.writeValueAsString(event));
@@ -268,7 +268,10 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 sendEvent(eventMatrix[i][j]);
             }
         }
-        sendEvent(hand);
+        if(hand != null) {
+            sendEvent(hand);
+
+        }
         if (card != null){
             newCard(card);
         }
@@ -280,5 +283,13 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
     public UUID getToken() {
         return token;
+    }
+
+    public void setPrintWriter(PrintWriter printWriter) {
+        this.out = printWriter;
+    }
+
+    public void setClient(ClientInterface client){
+        this.client = client;
     }
 }

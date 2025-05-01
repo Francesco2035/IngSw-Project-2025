@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
@@ -12,6 +13,11 @@ public class CommandInterpreter {
     private String gameId;
     private int lv;
     private String token;
+    private ClientInterface client;
+
+    public void setClient(ClientInterface client) {
+        this.client = client;
+    }
 
     private Map<String, CommandCreator> commandMap;
 
@@ -52,6 +58,7 @@ public class CommandInterpreter {
 
     private Command createReconnectCommand(String[] strings) {
         ReconnectCommand CMD = new ReconnectCommand(token, gameId, playerId,lv, "Reconnect");
+        CMD.setClient(client);
         return CMD;
     }
 

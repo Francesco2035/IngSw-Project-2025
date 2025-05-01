@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Controller.ClientServer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.stream.JsonReader;
+import org.example.galaxy_trucker.Commands.InputReader;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -17,6 +18,9 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class TUI implements View {
@@ -33,6 +37,11 @@ public class TUI implements View {
     private int setup = 101;
     private boolean fase = false;
     private int CoveredTileSet = 152;
+    private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
+    private InputReader inputReader;
+    private Thread inputThread;
+    private Boolean connected = false;
+
 
 
     public TUI() throws IOException {
@@ -43,6 +52,11 @@ public class TUI implements View {
         for (int i = 0; i < 7; i++) {
             cacheHand[i] = "";
         }
+        inputReader = new InputReader(inputQueue);
+        inputThread = new Thread(inputReader);
+        inputThread.setDaemon(true); // opzionale, per terminare col processo principale
+        inputThread.start();
+
 
     }
 
@@ -123,17 +137,6 @@ public class TUI implements View {
         System.out.println(message);
     }
 
-    @Override
-    public String askInput(String message) {
-        System.out.print(message);
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            return reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
 
 
     public void printBoard() {
@@ -401,11 +404,48 @@ public class TUI implements View {
     }
 
     @Override
+    public void disconnect() {
+        inputReader.stop();
+        inputThread.interrupt();
+        try {
+            inputThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        System.out.println("Disconnected cleanly.");
+    }
+
+    @Override
+    public void connect() {
+        inputReader = new InputReader(inputQueue);
+        inputThread = new Thread(inputReader);
+        inputThread.setDaemon(true);
+        inputThread.start();
+    }
+
+    @Override
+    public String askInput(String message) {
+        System.out.print(message);
+        try {
+            String toSend = inputQueue.take();
+            System.out.println("ask input: " + toSend);
+            return toSend;
+        } catch (InterruptedException e) {
+            //Thread.currentThread().interrupt();
+            System.out.println("Input interrupted");
+            return "";
+        }
+    }
+
+
+    @Override
     public void showDeck(DeckEvent deck){
         for (Integer e : deck.getIds()) {
             showCard(e);
         }
     }
+
+
 
 
 }

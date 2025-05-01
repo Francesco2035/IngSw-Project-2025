@@ -31,4 +31,8 @@ public interface View {
     void showDeck(DeckEvent event);
 
     void showCard(int id);
+
+    void disconnect();
+
+    void connect();
 }
