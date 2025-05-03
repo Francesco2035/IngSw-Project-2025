@@ -5,7 +5,9 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class RemoveTileCommand extends Command {
+import java.io.Serializable;
+
+public class RemoveTileCommand extends Command implements Serializable {
 
     @JsonProperty("commandType")
     private final String commandType = "RemoveTileCommand";
@@ -17,8 +19,8 @@ public class RemoveTileCommand extends Command {
     @JsonProperty("y")
     int y;
 
-    public RemoveTileCommand(int x, int y,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public RemoveTileCommand(int x, int y,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.x = x;
         this.y = y;
         this.tile = new IntegerPair(x,y);

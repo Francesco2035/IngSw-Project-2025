@@ -16,9 +16,9 @@ public class LoginCommand extends Command implements Serializable {
 
     private ClientInterface client;
     //da parsare
-    private Socket echoSocket;
+    //private Socket echoSocket;
     public LoginCommand(String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+        super(gameId, playerId, lv, title, "");
     }
 
 
@@ -41,12 +41,5 @@ public class LoginCommand extends Command implements Serializable {
         this.client = client;
     }
 
-    public void setSocket(Socket socket) {
-        this.echoSocket = socket;
-    }
-
-    public Socket getSocket() {
-        return echoSocket;
-    }
 
 }

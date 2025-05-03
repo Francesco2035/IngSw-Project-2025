@@ -1,6 +1,9 @@
 package org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.Messages.Event;
+import org.example.galaxy_trucker.Controller.Messages.EventVisitor;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 
@@ -8,33 +11,49 @@ import java.util.ArrayList;
 
 public class TileEvent implements Event {
 
-    int id;
-    int humans;
-    int x;
-    int y;
-    boolean purpleAlien;
-    boolean brownAlien;
-    int batteries;
-    ArrayList<Goods> cargo;
-    int rotation;
-    ArrayList<Connectors> connectors;
+    private int id;
+    private int humans;
+    private int x;
+    private int y;
+    private boolean purpleAlien;
+    private boolean brownAlien;
+    private int batteries;
+    private ArrayList<Goods> cargo;
+    private int rotation;
+    private ArrayList<Connectors> connectors;
 
-
-    public TileEvent(int id,int x,int y, ArrayList<Goods> cargo, int humans,boolean purpleAlien, boolean brownAlien, int batteries, int rotation, ArrayList<Connectors> connectors) {
+    @JsonCreator
+    public TileEvent(
+            @JsonProperty("id") int id,
+            @JsonProperty("x") int x,
+            @JsonProperty("y") int y,
+            @JsonProperty("cargo") ArrayList<Goods> cargo,
+            @JsonProperty("humans") int humans,
+            @JsonProperty("purpleAlien") boolean purpleAlien,
+            @JsonProperty("brownAlien") boolean brownAlien,
+            @JsonProperty("batteries") int batteries,
+            @JsonProperty("rotation") int rotation,
+            @JsonProperty("connectors") ArrayList<Connectors> connectors
+    ) {
+        this.id = id;
         this.x = x;
         this.y = y;
         this.cargo = cargo;
+        this.humans = humans;
         this.purpleAlien = purpleAlien;
         this.brownAlien = brownAlien;
         this.batteries = batteries;
-        this.id = id;
         this.rotation = rotation;
-        this.humans = humans;
         this.connectors = connectors;
     }
+
     @Override
     public String message() {
         return "";
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getHumans() {
@@ -65,9 +84,6 @@ public class TileEvent implements Event {
         return cargo;
     }
 
-    public int getId() {
-        return id;
-    }
     public int getRotation() {
         return rotation;
     }
@@ -76,4 +92,11 @@ public class TileEvent implements Event {
         return connectors;
     }
 
+    @Override
+    public void accept(EventVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public TileEvent() {
+    }
 }

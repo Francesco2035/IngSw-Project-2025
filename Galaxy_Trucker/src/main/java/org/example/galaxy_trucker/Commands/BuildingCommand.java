@@ -1,13 +1,15 @@
 package org.example.galaxy_trucker.Commands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class BuildingCommand extends Command{
+public class BuildingCommand extends Command implements Serializable {
 
 
     @JsonProperty("commandType")
@@ -25,8 +27,8 @@ public class BuildingCommand extends Command{
 
     public BuildingCommand(){}
 
-    public BuildingCommand(int x, int y, int rotation, int position, String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public BuildingCommand(int x, int y, int rotation, int position, String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.x = x;
         this.y = y;
         this.gameId = gameId;
@@ -38,7 +40,7 @@ public class BuildingCommand extends Command{
 
 
     @Override
-    public void execute(Player player) throws RemoteException {
+    public void execute(Player player) throws RemoteException, JsonProcessingException {
         switch (title){
 
             case "SeeDeck": {

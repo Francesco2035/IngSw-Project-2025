@@ -20,6 +20,9 @@ public class FlightController extends Controller {
 
     @Override
     public void nextState(GameController gc) {
-        gc.setControllerMap(curPlayer, new CardsController(curPlayer, gameId,disconnected));
+        if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){
+            //setti booleano controller a false
+        }
+        gc.setControllerMap(curPlayer, new CardsController(curPlayer, gameId));
     }
 }

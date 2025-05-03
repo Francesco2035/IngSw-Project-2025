@@ -4,13 +4,15 @@ import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class AcceptCommand extends Command {
+import java.io.Serializable;
+
+public class AcceptCommand extends Command implements Serializable {
 
     boolean accepting;
 
 
-    public AcceptCommand(String gameId, String playerId, int lv, String title,boolean accepting) {
-        super(gameId, playerId, lv, title);
+    public AcceptCommand(String gameId, String playerId, int lv, String title,boolean accepting, String token) {
+        super(gameId, playerId, lv, title, token);
         this.accepting = accepting;
     }
 

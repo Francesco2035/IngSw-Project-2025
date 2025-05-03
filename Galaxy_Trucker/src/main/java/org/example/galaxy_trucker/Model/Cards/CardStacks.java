@@ -1,8 +1,10 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sun.nio.sctp.AbstractNotificationHandler;
 import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.GAGen;
 
@@ -127,26 +129,27 @@ public class CardStacks implements Serializable {
         cardListnerHashMap.remove(player);
     }
 
-    public void notify(String player, int i){
+    public void notify(String player, int i) {
         if (i > 3 || i < 1){
             throw new InvalidInput("Selected deck doesnt exists or you are not allow to see it");
         }
-        ArrayList<CardEvent> deck = new ArrayList<>();
+        ArrayList<Integer> ids = new ArrayList<>();
         if (i == 1){
             for (Card card : VisibleCards1) {
-                deck.add(new CardEvent(card.getId()));
+                ids.add(card.getId());
             }
         }
         if (i == 2){
             for (Card card : VisibleCards2) {
-                deck.add(new CardEvent(card.getId()));
+                ids.add(card.getId());
             }
         }
         if (i == 3){
             for (Card card : VisibleCards3) {
-                deck.add(new CardEvent(card.getId()));
+                ids.add(card.getId());
             }
         }
+        DeckEvent deck = new DeckEvent(ids);
         cardListnerHashMap.get(player).seeDeck(deck);
     }
 

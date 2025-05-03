@@ -32,7 +32,9 @@ public class PrepController extends Controller implements HourGlassListener {
 
     @Override
     public void onFinish() {
-        curPlayer.SetReady(true);
-        gc.changeState();
+        //settiamo player a choosePosition
+        //dove è acconsentito un solo tipo di comando che è la Finish Building
+        //curPlayer.SetReady(true);
+        //gc.changeState();
     }
 }

@@ -1,6 +1,8 @@
 package org.example.galaxy_trucker.Model.Connectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.io.Serializable;
@@ -13,6 +15,8 @@ public class DOUBLE implements Connectors, Serializable {
     private DOUBLE() {}
 
     @JsonCreator
+    @JsonIgnoreProperties(ignoreUnknown = true)
+
     public static DOUBLE getInstance() {
         return INSTANCE;
     }
@@ -27,6 +31,8 @@ public class DOUBLE implements Connectors, Serializable {
         return Adjacent == DOUBLE.INSTANCE || Adjacent == UNIVERSAL.INSTANCE;
     }
 
+
+    @JsonIgnore
     @Override
     public boolean isExposed() {
         return true;

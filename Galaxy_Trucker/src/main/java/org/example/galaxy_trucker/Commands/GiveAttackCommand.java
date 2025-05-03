@@ -7,14 +7,15 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GiveAttackCommand extends Command{
+public class GiveAttackCommand extends Command implements Serializable {
 
     private ArrayList<IntegerPair> coordinates;
     private Player player;
-    public GiveAttackCommand( ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public GiveAttackCommand( ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.coordinates = coordinates;
 
     }

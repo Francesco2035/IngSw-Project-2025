@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
 
@@ -27,5 +28,11 @@ public interface View {
 
     void updateUncoveredTilesSet(UncoverdTileSetEvent event);
 
-    void seeDeck(ArrayList<CardEvent> deck);
+    void showDeck(DeckEvent event);
+
+    void showCard(int id);
+
+    void disconnect();
+
+    void connect();
 }

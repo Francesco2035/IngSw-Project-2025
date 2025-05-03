@@ -5,13 +5,14 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class KillCommand extends Command {
+public class KillCommand extends Command implements Serializable {
     ArrayList<IntegerPair> coordinates;
 
-    public KillCommand(ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public KillCommand(ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.coordinates = coordinates;
     }
 

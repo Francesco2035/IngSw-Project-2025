@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Listeners.TileSestListener;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
@@ -22,7 +23,7 @@ public class TileSets {
         UncoveredTiles = new ArrayList<>();
     }
 
-    public Tile getNewTile(){
+    public Tile getNewTile() {
         synchronized (CoveredTiles) {
             Random r = new Random();
             int index = r.nextInt(CoveredTiles.size());
@@ -71,7 +72,7 @@ public class TileSets {
 //        throw new RuntimeException("Tile not available, someone else took it!");
     }
 
-    public void AddUncoveredTile(Tile tile) throws RemoteException {
+    public void AddUncoveredTile(Tile tile) throws RemoteException{
         synchronized (UncoveredTiles) {
             if(!UncoveredTiles.contains(tile))
                 UncoveredTiles.add(tile);

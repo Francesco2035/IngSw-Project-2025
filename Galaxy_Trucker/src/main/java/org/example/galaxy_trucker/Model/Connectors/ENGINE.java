@@ -1,6 +1,8 @@
 package org.example.galaxy_trucker.Model.Connectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
@@ -14,6 +16,8 @@ public class ENGINE implements Connectors , Serializable {
     private ENGINE() {}
 
     @JsonCreator
+    @JsonIgnoreProperties(ignoreUnknown = true)
+
     public static ENGINE getInstance() {
         return ISTANCE;
     }
@@ -28,6 +32,8 @@ public class ENGINE implements Connectors , Serializable {
         return false;
     }
 
+
+    @JsonIgnore
     @Override
     public boolean isExposed() {
         return false;

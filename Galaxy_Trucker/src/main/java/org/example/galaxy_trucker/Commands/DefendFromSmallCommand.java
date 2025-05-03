@@ -5,14 +5,16 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class DefendFromSmallCommand extends Command {
+import java.io.Serializable;
+
+public class DefendFromSmallCommand extends Command implements Serializable {
 
 
     private IntegerPair batteryComp;
 
 
-    public DefendFromSmallCommand(IntegerPair batteryComp,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public DefendFromSmallCommand(IntegerPair batteryComp,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.batteryComp = batteryComp;
     }
 

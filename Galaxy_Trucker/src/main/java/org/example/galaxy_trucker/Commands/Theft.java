@@ -4,13 +4,15 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class Theft extends Command {
+import java.io.Serializable;
+
+public class Theft extends Command implements Serializable {
 
     IntegerPair pair;
     int position;
 
-    public Theft(int position,IntegerPair pair,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public Theft(int position,IntegerPair pair,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.pair = pair;
         this.position = position;
     }

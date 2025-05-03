@@ -31,7 +31,7 @@ public class GameBoard {
 
     public GameBoard(TileSets list, int lv, CardStacks stack) {
         this.players = new ArrayList<>();
-        GameLv = lv; //the GameBoard class learns the current game level from Game anc will extend it to players and other objects
+        GameLv = lv;
         tileSets = list;
         startPos = new int[4];
         PlayersOnBoard = 0;

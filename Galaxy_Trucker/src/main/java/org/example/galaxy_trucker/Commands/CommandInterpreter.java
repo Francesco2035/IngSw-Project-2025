@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
@@ -12,6 +13,16 @@ public class CommandInterpreter {
     private String playerId;
     private String gameId;
     private int lv;
+    private String token;
+    private ClientInterface client;
+
+    public void setClient(ClientInterface client) {
+        this.client = client;
+    }
+
+    public ClientInterface getClient() {
+        return client;
+    }
 
     private Map<String, CommandCreator> commandMap;
 
@@ -50,18 +61,25 @@ public class CommandInterpreter {
         commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
         commandMap.put("DefendFromLarge",this::createDefendFromLargeCommand);
         commandMap.put("DefendFromSmall",this::createDefendFromSmallCommand);
+
+        commandMap.put("Reconnect", this::createReconnectCommand);
     }
 
+    private Command createReconnectCommand(String[] strings) {
+        ReconnectCommand CMD = new ReconnectCommand(token, gameId, playerId,lv, "Reconnect");
+        CMD.setClient(client);
+        return CMD;
+    }
 
 
     private Command createReadyCommand(String[] strings) {
 
         boolean accepted = Boolean.parseBoolean(strings[1]);
-        return new ReadyCommand(gameId, playerId,lv, "Ready", accepted);
+        return new ReadyCommand(gameId, playerId,lv, "Ready", accepted, token);
     }
 
     private Command createQuitCommand(String[] strings) {
-        return new ReadyCommand(gameId,playerId,lv,"Quit",false);
+        return new ReadyCommand(gameId,playerId,lv,"Quit",false, token);
     }
 
 
@@ -78,11 +96,11 @@ public class CommandInterpreter {
 
         return switch (title) {
             case "AddCrew" ->
-                    new AddCrewCommand(2, false, false, new IntegerPair(x, y), gameId, playerId, lv, "AddCrew");
+                    new AddCrewCommand(2, false, false, new IntegerPair(x, y), gameId, playerId, lv, "AddCrew", token);
             case "AddPurpleAlien" ->
-                    new AddCrewCommand(0, true, false, new IntegerPair(x, y), gameId, playerId, lv, "AddPurpleAlien");
+                    new AddCrewCommand(0, true, false, new IntegerPair(x, y), gameId, playerId, lv, "AddPurpleAlien", token);
             case "AddBrownAlien" ->
-                    new AddCrewCommand(0, false, true, new IntegerPair(x, y), gameId, playerId, lv, "AddBrownAlien");
+                    new AddCrewCommand(0, false, true, new IntegerPair(x, y), gameId, playerId, lv, "AddBrownAlien", token);
             default -> throw new InvalidInput("invalid input");
         };
 
@@ -174,7 +192,7 @@ public class CommandInterpreter {
             }
         }
 
-        return new BuildingCommand(x, y, rotation,position, gameId,playerId, lv, title);
+        return new BuildingCommand(x, y, rotation,position, gameId,playerId, lv, title, token);
     }
 
     private Command createRemoveTileCommand(String[] parts) {
@@ -183,7 +201,7 @@ public class CommandInterpreter {
         }
         int x = Integer.parseInt(parts[1]);
         int y = Integer.parseInt(parts[2]);
-        return new RemoveTileCommand(x,y,gameId,playerId,lv, "RemoveTileCommand");
+        return new RemoveTileCommand(x,y,gameId,playerId,lv, "RemoveTileCommand", token);
     }
 
 
@@ -193,7 +211,7 @@ public class CommandInterpreter {
             throw new IllegalArgumentException("Comando Accept richiede 1 argomento: se si accetta o meno");
         }
         accept = Boolean.parseBoolean(parts[1]);
-        return new AcceptCommand(gameId,playerId,lv,"AcceptCommand",accept);
+        return new AcceptCommand(gameId,playerId,lv,"AcceptCommand",accept,token);
     }
 
     private Command createChoosingPlanetsCommand(String[] parts) {
@@ -201,7 +219,7 @@ public class CommandInterpreter {
             throw new IllegalArgumentException("Comando ChoosingPlanets richiede 1 argomento: numero del pianeta");
         }
         int x = Integer.parseInt(parts[1]);
-        return new ChoosingPlanetsCommand(x,gameId,playerId,lv, "ChoosingPlanetsCommand");
+        return new ChoosingPlanetsCommand(x,gameId,playerId,lv, "ChoosingPlanetsCommand",token);
     }
     /// per gli integer pair pretendo un numero pari di stringhe + il title o altre cose da includere, quindi ogni coordinata è due stringhe separate di parts
     /// si può assolutyamente cambiare se non piace :)
@@ -219,7 +237,7 @@ public class CommandInterpreter {
             y = Integer.parseInt(parts[i+1]);
             coordinates.add(new IntegerPair(x,y));
         }
-        return new ConsumeEnergyCommand(coordinates,gameId,playerId,lv, "ConsumeEnergyCommand");
+        return new ConsumeEnergyCommand(coordinates,gameId,playerId,lv, "ConsumeEnergyCommand",token);
     }
 
     private Command createDefendFromLargeCommand(String[] parts) {
@@ -244,7 +262,7 @@ public class CommandInterpreter {
         else {
             energyStorage = new IntegerPair(x,y);
         }
-        return new DefendFromLargeCommand(plasmaDrill,energyStorage,gameId,playerId,lv, "DefendFromLargeCommand");
+        return new DefendFromLargeCommand(plasmaDrill,energyStorage,gameId,playerId,lv, "DefendFromLargeCommand",token);
     }
 
     private Command createDefendFromSmallCommand(String[] parts) {
@@ -262,7 +280,7 @@ public class CommandInterpreter {
         else {
             energyStorage = new IntegerPair(x,y);
         }
-        return new DefendFromSmallCommand(energyStorage,gameId,playerId,lv, "DefendFromSmallCommand");
+        return new DefendFromSmallCommand(energyStorage,gameId,playerId,lv, "DefendFromSmallCommand",token);
     }
 
     private Command createGiveAttackCommand(String[] parts) {
@@ -277,7 +295,7 @@ public class CommandInterpreter {
             y = Integer.parseInt(parts[i+1]);
             coordinates.add(new IntegerPair(x,y));
         }
-        return new GiveAttackCommand(coordinates,gameId,playerId,lv,"GiveAttackCommand");
+        return new GiveAttackCommand(coordinates,gameId,playerId,lv,"GiveAttackCommand",token);
     }
 
     private Command createGiveSpeedCommand(String[] parts) {
@@ -292,7 +310,7 @@ public class CommandInterpreter {
             y = Integer.parseInt(parts[i+1]);
             coordinates.add(new IntegerPair(x,y));
         }
-        return new GiveSpeedCommand(coordinates,gameId,playerId,lv,"GiveSpeedCommand");
+        return new GiveSpeedCommand(coordinates,gameId,playerId,lv,"GiveSpeedCommand",token);
     }
 
     private Command createKillCommand(String[] parts) {
@@ -319,7 +337,7 @@ public class CommandInterpreter {
                 coordinates.add(new IntegerPair(x,y));
             }
         }
-        return new KillCommand(coordinates,gameId,playerId,lv,"KillCommand");
+        return new KillCommand(coordinates,gameId,playerId,lv,"KillCommand",token);
     }
 
 
@@ -338,6 +356,10 @@ public class CommandInterpreter {
     private Command createDebugShip(String[] strings) {
 
         String title = strings[0];
-        return new DebugShip(gameId,playerId, lv, title);
+        return new DebugShip(gameId,playerId, lv, title, token);
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

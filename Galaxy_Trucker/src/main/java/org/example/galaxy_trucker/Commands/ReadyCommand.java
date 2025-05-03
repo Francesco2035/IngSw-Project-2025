@@ -17,8 +17,8 @@ public class ReadyCommand extends Command implements Serializable {
     @JsonProperty("ready")
     boolean ready;
 
-    public ReadyCommand(String gameId, String playerId, int lv, String title, boolean ready) {
-        super(gameId, playerId, lv, title);
+    public ReadyCommand(String gameId, String playerId, int lv, String title, boolean ready, String token) {
+        super(gameId, playerId, lv, title, token);
         this.ready = ready;
     }
 

@@ -1,9 +1,10 @@
 package org.example.galaxy_trucker.Model;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
-import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -24,6 +25,7 @@ public class Player implements Serializable {
     private String ID;
     private boolean ready;
     private int credits;
+    private CardListner cardListner;
 
     public GameBoard getCommonBoard() {
         return CommonBoard;
@@ -116,7 +118,7 @@ public class Player implements Serializable {
     
 
 
-    public void PickNewTile(int index){
+    public void PickNewTile(int index)  {
         if (index == -1){
             if (CurrentTile != null) {
                 throw new IllegalStateException("You can't pick a Tile, you have already one!");
@@ -146,30 +148,32 @@ public class Player implements Serializable {
     /**
      * discards the current tile and places it back in the uncovered tiles list
      */
-    public void DiscardTile() throws RemoteException {
+    public void DiscardTile() throws RemoteException, JsonProcessingException {
         if (CurrentTile == null) {
             throw new IllegalStateException("You can't discard a Tile, you don't have one!");
         }
+        if (CurrentTile.getChosen()){
+            throw new IllegalStateException("You can't discard this Tile!");
+        }
         CommonBoard.getTilesSets().AddUncoveredTile(CurrentTile);
         CurrentTile = null;
+        handListener.handChanged(new HandEvent(158, null));
     }
 
     /**
      * places the current tile in the buffer
      */
-    public void PlaceInBuffer(){
-        if(CommonBoard.getLevel()==1){
-            throw new ImpossibleActionException("there is no buffer in the tutorial");
-        }
+    public void PlaceInBuffer()  {
         myPlayerBoard.insertBuffer(CurrentTile);
         CurrentTile = null;
+        handListener.handChanged(new HandEvent(158, null));
     }
 
     /**
      * takes a tile from the buffer
      * @param index of the tile to pick
      */
-    public void SelectFromBuffer(int index){
+    public void SelectFromBuffer(int index) {
         if (CurrentTile != null) {
             throw new IllegalStateException("You can't select a Tile, you have already one!");
         }
@@ -183,33 +187,11 @@ public class Player implements Serializable {
      * this action is definitive: the tile cannot be moved or rotated after it is settled
      * @param coords where the tile will be placed
      */
-    public void PlaceTile(IntegerPair coords){
+    public void PlaceTile(IntegerPair coords) {
+
         this.myPlayerBoard.insertTile(CurrentTile, coords.getFirst(), coords.getSecond());
         CurrentTile = null;
     }
-
-    /**
-     * rotates the current tile 90° right
-     */
-    public void RightRotate() {CurrentTile.RotateDx();}
-
-    /**
-     * rotates the current tile 90° left
-     */
-    public void LeftRotate() {CurrentTile.RotateSx();}
-
-
-    public void SpyDeck(int index){
-
-        ArrayList<Card> observedDeck = switch (index) {
-            case 1 -> CommonBoard.getCardStack().getVisibleCards1();
-            case 2 -> CommonBoard.getCardStack().getVisibleCards2();
-            case 3 -> CommonBoard.getCardStack().getVisibleCards3();
-            default -> throw new IllegalArgumentException("Invalid index");
-        };
-
-    }
-
 
     public void IncreaseCredits(int num){
         credits += num;
@@ -217,6 +199,7 @@ public class Player implements Serializable {
 
     public void setCard(Card NewCard){
         CurrentCard = NewCard;
+        cardListner.newCard(new CardEvent(NewCard.getId()));
     }
 
 
@@ -246,9 +229,6 @@ public class Player implements Serializable {
     public boolean GetReady() {return this.ready;}
     public PlayerBoard getmyPlayerBoard() {return myPlayerBoard;}
 
-
-
-
     public Card getCurrentCard() {
         return CurrentCard;
     }
@@ -261,6 +241,13 @@ public class Player implements Serializable {
         this.handListener = null;
     }
 
+    public void setCardListner(CardListner cardListner) {
+        this.cardListner = cardListner;
+    }
+
+    public void removeCardListener(){
+        this.cardListner = null;
+    }
 
     //DOVREI AGGIUNGERE UN MODO PER ARRIVARE A CARD DA PLAYER DIREI :)
     //principalmente per chiamare i metodi di card dopo l'input

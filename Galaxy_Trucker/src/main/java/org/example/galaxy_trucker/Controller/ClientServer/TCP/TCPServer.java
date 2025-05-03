@@ -1,19 +1,30 @@
 package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
+import org.example.galaxy_trucker.Controller.GameController;
 import org.example.galaxy_trucker.Controller.GamesHandler;
+import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.GameLists;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TCPServer implements  Runnable{
 
     private static GamesHandler gamesHandler;
+    private ConcurrentHashMap<UUID, VirtualView> tokenMap;
+    private ArrayList<UUID> DisconnectedClients;
 
-    public TCPServer(GamesHandler gamesHandler) {
+    public TCPServer(GamesHandler gamesHandler, ConcurrentHashMap<UUID, VirtualView> tokenMap, ArrayList<UUID> DisconnectedClients) throws RemoteException {
         this.gamesHandler = gamesHandler;
+        this.tokenMap = tokenMap;
+        this.DisconnectedClients = DisconnectedClients;
     }
 
     public void run() {
@@ -29,9 +40,6 @@ public class TCPServer implements  Runnable{
         //System.out.println("Listening on port " + Settings.TCP_PORT + "...");
 
 
-
-
-        // loop forever accepting...
         while (true) {
             Socket clientSocket = null;
             try {
@@ -42,7 +50,7 @@ public class TCPServer implements  Runnable{
             }
 
             System.out.println("Accepted");
-            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, gamesHandler);
+            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, gamesHandler, tokenMap, DisconnectedClients);
             Thread t = new Thread(clientHandler);
             t.start();
         }

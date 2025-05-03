@@ -8,17 +8,18 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DebugShip extends Command {
+public class DebugShip extends Command implements Serializable {
 
 
     @JsonProperty("commandType")
     private final String commandType = "DebugShip";
 
 
-    public DebugShip(String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public DebugShip(String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.gameId = gameId;
         this.playerId = playerId;
         this.title = title;

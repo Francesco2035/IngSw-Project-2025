@@ -7,7 +7,9 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class AddCrewCommand extends Command {
+import java.io.Serializable;
+
+public class AddCrewCommand extends Command implements Serializable {
 
     @JsonProperty("numHumans")
     int numHumans;
@@ -24,8 +26,8 @@ public class AddCrewCommand extends Command {
 
 
 
-    public AddCrewCommand(int numHumans, boolean purpleAlien, boolean brownAlien, IntegerPair coordinate, String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public AddCrewCommand(int numHumans, boolean purpleAlien, boolean brownAlien, IntegerPair coordinate, String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.numHumans = numHumans;
         this.purpleAlien = purpleAlien;
         this.brownAlien = brownAlien;

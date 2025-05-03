@@ -7,13 +7,14 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GiveSpeedCommand extends Command {
+public class GiveSpeedCommand extends Command implements Serializable {
 
     private ArrayList<IntegerPair> coordinates;
-    public GiveSpeedCommand( ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    public GiveSpeedCommand( ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token);
         this.coordinates = coordinates;
 
     }

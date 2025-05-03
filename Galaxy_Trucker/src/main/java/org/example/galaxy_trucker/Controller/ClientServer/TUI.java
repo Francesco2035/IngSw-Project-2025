@@ -2,11 +2,12 @@ package org.example.galaxy_trucker.Controller.ClientServer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.stream.JsonReader;
+import org.example.galaxy_trucker.Commands.InputReader;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
@@ -16,6 +17,9 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class TUI implements View {
@@ -32,19 +36,26 @@ public class TUI implements View {
     private int setup = 101;
     private boolean fase = false;
     private int CoveredTileSet = 152;
+    private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
+    private InputReader inputReader;
+    private Thread inputThread;
+    private Boolean connected = false;
+
 
 
     public TUI() throws IOException {
         loadComponentNames();
         loadCardsDescriptions();
-        for (String s : CardsDescriptions.values()) {
-            System.out.println(s);
-        }
         cachedBoard = new String[10][10][7];
         cacheHand = new String[7];
         for (int i = 0; i < 7; i++) {
             cacheHand[i] = "";
         }
+        inputReader = new InputReader(inputQueue);
+        inputThread = new Thread(inputReader);
+        inputThread.setDaemon(true); // opzionale, per terminare col processo principale
+        inputThread.start();
+
 
     }
 
@@ -125,17 +136,6 @@ public class TUI implements View {
         System.out.println(message);
     }
 
-    @Override
-    public String askInput(String message) {
-        System.out.print(message);
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            return reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
 
 
     public void printBoard() {
@@ -264,15 +264,6 @@ public class TUI implements View {
         return cellLines;
     }
 
-//    private String coloredArrow(String arrow, String connector) {
-//        if (connector.contains("\u001B[")) {
-//            String colorCode = connector.substring(0, connector.indexOf('m') + 1);
-//            return colorCode + arrow + "\u001B[0m";
-//        } else {
-//            return arrow;
-//        }
-//    }
-
 
     private String centerText(String text, int width) {
         int padding = Math.max(0, (width - text.length()) / 2);
@@ -328,8 +319,13 @@ public class TUI implements View {
 
     public void updateHand(HandEvent event) {
         System.out.println("\n" + border);
-        TileEvent temp = new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors());
-        cacheHand = formatCell(temp);
+        if(event.getId() == 158){
+            cacheHand = emptyCell();
+        }
+        else {
+            TileEvent temp = new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors());
+            cacheHand = formatCell(temp);
+        }
         showTUI();
     }
 
@@ -351,12 +347,6 @@ public class TUI implements View {
         showTUI();
     }
 
-    @Override
-    public void seeDeck(ArrayList<CardEvent> deck) {
-        for (CardEvent e : deck) {
-            System.out.println(e.getId());
-        }
-    }
 
     private void showUncoveredTiles() {
         System.out.println("############################ UNCOVERED TILES ############################\n");
@@ -405,6 +395,56 @@ public class TUI implements View {
             //
         }
     }
+
+    @Override
+    public void showCard(int id){
+        System.out.println("\n");
+        System.out.println(CardsDescriptions.get(id));
+    }
+
+    @Override
+    public void disconnect() {
+        inputReader.stop();
+        inputThread.interrupt();
+        try {
+            inputThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        System.out.println("Disconnected cleanly.");
+    }
+
+    @Override
+    public void connect() {
+        inputReader = new InputReader(inputQueue);
+        inputThread = new Thread(inputReader);
+        inputThread.setDaemon(true);
+        inputThread.start();
+    }
+
+    @Override
+    public String askInput(String message) {
+        System.out.print(message);
+        try {
+            String toSend = inputQueue.take();
+            System.out.println("ask input: " + toSend);
+            return toSend;
+        } catch (InterruptedException e) {
+            //Thread.currentThread().interrupt();
+            System.out.println("Input interrupted");
+            return "";
+        }
+    }
+
+
+    @Override
+    public void showDeck(DeckEvent deck){
+        for (Integer e : deck.getIds()) {
+            showCard(e);
+        }
+    }
+
+
 
 
 }

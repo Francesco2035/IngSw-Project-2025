@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
@@ -62,7 +63,7 @@ public class HotWaterHeater extends Component{
 
 
     @Override
-    public void remove(PlayerBoard playerBoard) {
+    public void remove(PlayerBoard playerBoard)  {
         if (type == 1) {
             playerBoard.setEnginePower(-1);
         }
