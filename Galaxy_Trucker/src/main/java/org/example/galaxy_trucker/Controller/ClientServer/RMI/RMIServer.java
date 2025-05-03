@@ -28,21 +28,11 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
     private  ArrayList<UUID> DisconnectedClients = new ArrayList<>();
     private final HashMap<ClientInterface, Integer> attempts = new HashMap<>();
 
-    //ArrayList<ClientInterface> clients;
-
     public RMIServer(GamesHandler gamesHandler, ConcurrentHashMap<UUID, VirtualView> tokenMap, ArrayList<UUID> DisconnectedClients) throws RemoteException {
         this.tokenMap = tokenMap;
         gh = gamesHandler;
         clients = new HashMap<>();
         this.DisconnectedClients = DisconnectedClients;
-//        System.setProperty("sun.rmi.transport.tcp.responseTimeout", "3000");
-//        System.setProperty("sun.rmi.transport.tcp.readTimeout", "3000");
-//        System.setProperty("sun.rmi.transport.connectionTimeout", "2000");
-//        System.setProperty("java.rmi.server.disableHttp", "true");
-//        System.setProperty("java.rmi.dgc.leaseValue", "10000");
-//        System.setProperty("sun.rmi.dgc.checkInterval", "5000");
-//        System.setProperty("sun.rmi.dgc.ackTimeout", "3000");
-
 
         Thread pingThread = new Thread(() -> {
             System.out.println("Ping Thread started");
@@ -54,12 +44,9 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
                     e.printStackTrace();
                 }
 
-                //System.out.println("Ping Thread loop started");
 
-                // copia dei client
                 Map<ClientInterface, UUID> clientsSnapshot;
                 synchronized (clients) {
-                   // System.out.println("size "+ clients.size());
                     clientsSnapshot = new HashMap<>(clients);
                 }
 
@@ -78,21 +65,21 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
                         });
 
 
-                        future.get(1, TimeUnit.SECONDS);
+                        future.get(1500, TimeUnit.MILLISECONDS);
 
                         System.out.println("Ping successful for client: " + client);
 
                         executor.shutdown();
 
                     } catch (TimeoutException e) {
-                        System.out.println("Ping timed out for client: " + client);
-                        attempts.putIfAbsent(client, 3);
-                        int currentAttempts = attempts.get(client);
-                        attempts.put(client, currentAttempts - 1);
-                        if (attempts.get(client) <= 0) {
+//                        System.out.println("Ping timed out for client: " + client);
+//                        attempts.putIfAbsent(client, 3);
+//                        int currentAttempts = attempts.get(client);
+//                        attempts.put(client, currentAttempts - 1);
+                        //if (attempts.get(client) <= 0) {
                             UUID token = clientsSnapshot.get(client);
                             if (token != null) {
-                                attempts.remove(client);
+                                //attempts.remove(client);
                                 VirtualView vv = tokenMap.get(token);
 
 
@@ -101,7 +88,6 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
                                     vv.setClient(null);
 
                                     System.out.println("Client disconnected: " + client);
-                                    //TODO bloccare thread del player,bloccare coda del player, settare una varibile in modo tale che il controller capisce che deve fare azioni di default
                                         synchronized (DisconnectedClients) {
                                             DisconnectedClients.add(token);
                                         }
@@ -112,14 +98,14 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
                                 }
                             }
-                        }
+                        //}
                     }
                     catch (ExecutionException | InterruptedException e) {
                         UUID token = clientsSnapshot.get(client);
                         if (token != null ) {
 
                             VirtualView vv = tokenMap.get(token);
-                            attempts.remove(client);
+                            //attempts.remove(client);
 
                             if (vv != null && !vv.getDisconnected()) {
                                 vv.setDisconnected(true);
@@ -229,115 +215,5 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
         }
     }
 
-
-
-
-
-
-    //        Thread pingThread = new Thread(() -> {
-//            System.out.println("Ping Thread started");
-//            while (true) {
-//                System.out.println("Ping Thread loop started");
-//                Map<ClientInterface, UUID> clientsSnapshot;
-//                synchronized (clients) {
-//                    clientsSnapshot = new HashMap<>(clients);
-//                }
-//                    for (ClientInterface client : clientsSnapshot.keySet()) {
-//                        try {
-//                            client.receivePing();
-//                            Thread.sleep(1000);
-//                        } catch (RemoteException e) {
-//                            UUID token = clientsSnapshot.get(client);
-//                            if (token != null ) {
-//
-//                                VirtualView vv = tokenMap.get(token);
-//
-//                                if (vv != null && !vv.getDisconnected()) {
-//                                    System.out.println("Client disconnected: " + client);
-//                                    vv.setDisconnected(true);
-//                                    DisconnectedClients.add(new DisconnectedClient(token, System.currentTimeMillis() + 50000, client));
-//                                }
-//                            }
-//
-//
-//                        } catch (Exception ex) {
-//                            System.out.println("Error: " + client);
-//                            ex.printStackTrace();
-//                        }
-//                }
-//
-//                long currentTime = System.currentTimeMillis();
-//                ArrayList<DisconnectedClient> toRemove = new ArrayList<>();
-//                ArrayList<DisconnectedClient> copy = new ArrayList<>();
-//                synchronized (DisconnectedClients) {
-//                    copy.addAll(DisconnectedClients);
-//                }
-//                    for (DisconnectedClient dc : copy) {
-//                        if (currentTime  > dc.deadline) {
-//                            VirtualView vv = tokenMap.get(dc.token);
-//
-//                            if (vv != null && vv.getDisconnected()) {
-//
-//                                System.out.println("Removing client with token " + dc.token);
-//                                toRemove.add(dc);
-//                            }
-//                        }
-//
-//                    ArrayList<DisconnectedClient> toActuallyRemove = new ArrayList<>();
-//                    synchronized (DisconnectedClients) {
-//                            for (DisconnectedClient dc2 : toRemove) {
-//                                if (DisconnectedClients.contains(dc2)){
-//                                    toActuallyRemove.add(dc2);
-//                                }
-//                            }
-//                    }
-//                    for (DisconnectedClient dc2 : toActuallyRemove){
-//                        handleDisconnection(dc2);
-//                    }
-//                }
-//
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        });
-//        pingThread.start();
-
-
-
-
-
-    //                    long currentTime = System.currentTimeMillis();
-//                    ArrayList<DisconnectedClient> toRemove = new ArrayList<>();
-//                    ArrayList<DisconnectedClient> copy = new ArrayList<>();
-//                    synchronized (DisconnectedClients) {
-//                        copy.addAll(DisconnectedClients);
-//                    }
-//                    for (DisconnectedClient dc : copy) {
-//                        if (currentTime  > dc.deadline) {
-//                            VirtualView vv = tokenMap.get(dc.token);
-//
-//                            if (vv != null && vv.getDisconnected()) {
-//
-//                                System.out.println("Removing client with token " + dc.token);
-//                                toRemove.add(dc);
-//                            }
-//                        }
-//
-//                        ArrayList<DisconnectedClient> toActuallyRemove = new ArrayList<>();
-//                        synchronized (DisconnectedClients) {
-//                            for (DisconnectedClient dc2 : toRemove) {
-//                                if (DisconnectedClients.contains(dc2)){
-//                                    toActuallyRemove.add(dc2);
-//                                }
-//                            }
-//                        }
-//                        for (DisconnectedClient dc2 : toActuallyRemove){
-//                            handleDisconnection(dc2);
-//                        }
-//                    }
-//
 
 }

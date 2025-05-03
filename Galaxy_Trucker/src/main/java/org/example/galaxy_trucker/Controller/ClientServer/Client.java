@@ -154,11 +154,11 @@ public class Client implements EventVisitor {
         this.view.updateCoveredTilesSet(event);
     }
 
-    public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException {
+    public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException, InterruptedException {
         if (connection.equals("RMI")) {
             RMIClient rmiClient = new RMIClient(this, interpreter);
 
-            rmiClient.inputLoop(true);
+
         }
         if (connection.equals("TCP")) {
             TCPClient tcpClient = new TCPClient(this, interpreter);

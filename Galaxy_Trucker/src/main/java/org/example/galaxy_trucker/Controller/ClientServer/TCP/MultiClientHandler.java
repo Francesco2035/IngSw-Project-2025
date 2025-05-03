@@ -1,7 +1,6 @@
 package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import javafx.scene.chart.ScatterChart;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;

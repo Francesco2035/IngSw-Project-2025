@@ -2,7 +2,6 @@ package org.example.galaxy_trucker.Controller.ClientServer.TCP;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.LoginCommand;
@@ -10,11 +9,9 @@ import org.example.galaxy_trucker.Controller.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.Event;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.rmi.NotBoundException;
 import java.util.UUID;
 
@@ -41,47 +38,23 @@ public class TCPClient{
     public TCPClient(Client c, CommandInterpreter commandInterpreter) throws JsonProcessingException {
         this.client = c;
         this.commandInterpreter = commandInterpreter;
-        try {
-            echoSocket = new Socket(Settings.SERVER_NAME, Settings.TCP_PORT); //SOCKET CLIENT
-        } catch (IOException e) {
-            System.err.println(e.toString() + " " + Settings.SERVER_NAME);
-            System.exit(1);
+        if (!setup()){
+            disconnect();
         }
-
-
-
-        try {
-            out = new PrintWriter(echoSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-            stdIn = new BufferedReader(new InputStreamReader(System.in));
-        } catch (IOException e) {
-            System.err.println(e.toString() + " " + Settings.SERVER_NAME);
-            System.exit(1);
-        }
-
-
-        PrintWriter finalOut = out;
-
-        eventThread = new Thread(this::EventListener);
-        pingThread = new Thread(this::PingLoop);
-        //clientLoop = new Thread(this::clientLoop);
-        System.out.println("Connected to " + Settings.SERVER_NAME + ":" + Settings.TCP_PORT + ", starting Threads");
-        eventThread.start();
-        pingThread.start();
-        connected = true;
-
-
-        Gson gson = new Gson();
-
+        System.out.println("Connection TCP started\n");
+        startThread();
         client.getView().connect();
-        client.getView().askInput("Connection TCP started\n");
+        sendReconnect();
+        clientLoop();
+
+    }
+
+    private void sendReconnect() throws JsonProcessingException {
         Command command = commandInterpreter.interpret("Reconnect");
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(command);
         out.println(json);
         System.out.println("CommandSent: " + json);
-        clientLoop();
-
     }
 
     private void EventListener() {
@@ -108,21 +81,57 @@ public class TCPClient{
                     client.receiveEvent(event);
             }
             }
+        } catch (SocketException e) {
+            System.out.println("Socket closed, stopping EventListener: " + e.getMessage());
+        } catch (EOFException e) {
+            System.out.println("End of stream reached: " + e.getMessage());
         } catch (IOException e) {
-            System.out.println("IOException in PingListener " + e.getMessage());
-            disconnect();
+            System.out.println("IOException in EventListener: " + e.getMessage());
         }
+
     }
 
+
+
+    private void startThread(){
+        eventThread = new Thread(this::EventListener);
+        pingThread = new Thread(this::PingLoop);
+        eventThread.start();
+        pingThread.start();
+    }
+
+
+    private boolean setup(){
+        try {
+            echoSocket = new Socket(Settings.SERVER_NAME, Settings.TCP_PORT);
+        } catch (IOException e) {
+            System.err.println(e.toString() + " " + Settings.SERVER_NAME);
+            return false;
+        }
+
+        try {
+            out = new PrintWriter(echoSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+            stdIn = new BufferedReader(new InputStreamReader(System.in));
+        } catch (IOException e) {
+            System.err.println(e.toString() + " " + Settings.SERVER_NAME);
+            return false;
+        }
+
+        System.out.println("Connected to " + Settings.SERVER_NAME + ":" + Settings.TCP_PORT + ", starting Threads");
+        connected = true;
+        return true;
+
+    }
 
     private void PingLoop() {
         while (!echoSocket.isClosed()) {
             out.println("ping");
             //System.out.println("ping");
             try {
-                Thread.sleep(5000);
+                Thread.sleep(3500);
 
-                if (System.currentTimeMillis() - lastPongTime > 15000) {
+                if (System.currentTimeMillis() - lastPongTime > 10000) {
                     System.out.println("Connection timed out. Disconnecting...");
                     disconnect();
                     break;
@@ -138,27 +147,61 @@ public class TCPClient{
     public void disconnect(){
 
         client.getView().disconnect();
-        client.getView().connect();
+
+
         connected = false;
-        pingThread.interrupt();
-        eventThread.interrupt();
-        //clientLoop.interrupt();
         try {
-            echoSocket.close();
-            client.getView().askInput("\nServer Disconnected.");
-            switch (client.getView().askInput("<Reconnect> | <ChangeConnection> | <Exit>")){
-                case "Reconnect":{reconnect();
-                break;}
-                case "ChangeConnection":{
-                    changeConnection();
-                    break;
-                }
-                case "Exit":{
-                    System.exit(0);
-                    break;
+            if (echoSocket != null && !echoSocket.isClosed()) {
+                echoSocket.close();
+            }
+        } catch (IOException e) {
+            System.err.println("Socket close error: " + e.getMessage());
+        }
+
+        if (eventThread != null) {
+            eventThread.interrupt();
+            try {
+                eventThread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        if (pingThread != null) {
+            pingThread.interrupt();
+            try {
+                pingThread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+
+        client.getView().connect();
+
+        try {
+            System.out.println("\nServer Disconnected.");
+
+            while (true) {
+                String whatNow = client.getView().askInput("<Reconnect> | <ChangeConnection> | <Exit> :");
+                switch (whatNow) {
+                    case "Reconnect":
+                        reconnect();
+                        return;
+                    case "ChangeConnection":
+                        changeConnection();
+                        return;
+                    case "Exit":
+                        System.exit(0);
+                        return;
+                    default:
+                        System.out.println("Invalid input: " + whatNow);
+                        break;
                 }
 
             }
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -166,10 +209,7 @@ public class TCPClient{
 
 
 
-
-
     public void clientLoop() {
-        Gson gson = new Gson();
         String userInput;
         while (true) {
             if (!connected) {
@@ -189,19 +229,21 @@ public class TCPClient{
                 }
 
                 if (userInput.equals("ChangeConnection")) {
-                    changeConnection();
+                    System.out.println("No need to changeConnection!");
+                    break;
+                }
+
+                if (userInput.equals("")){
                     break;
                 }
 
                 Command command = commandInterpreter.interpret(userInput);
-                String json = gson.toJson(command);
+                ObjectMapper mapper = new ObjectMapper();
+                String json = mapper.writeValueAsString(command);
+
                 out.println(json);
                 System.out.println("CommandSent: " + json);
 
-            } catch (IOException e) {
-                System.out.println("IOException in clientLoop: " + e.getMessage());
-                disconnect();
-                break;
             } catch (Exception e) {
                 System.out.println("Error interpreting or sending command: " + e.getMessage());
                 e.printStackTrace();
@@ -213,36 +255,13 @@ public class TCPClient{
 
     public void startClient() throws IOException {
 
-        try {
-            echoSocket = new Socket(Settings.SERVER_NAME, Settings.TCP_PORT); //SOCKET CLIENT
-        } catch (IOException e) {
-            System.err.println(e.toString() + " " + Settings.SERVER_NAME);
-            System.exit(1);
+        if (!setup()){
+            disconnect();
         }
+        startThread();
 
 
 
-        try {
-            out = new PrintWriter(echoSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-            stdIn = new BufferedReader(new InputStreamReader(System.in));
-        } catch (IOException e) {
-            System.err.println(e.toString() + " " + Settings.SERVER_NAME);
-            System.exit(1);
-        }
-
-
-        PrintWriter finalOut = out;
-
-        eventThread = new Thread(this::EventListener);
-        pingThread = new Thread(this::PingLoop);
-        //clientLoop = new Thread(this::clientLoop);
-        eventThread.start();
-        pingThread.start();
-        connected = true;
-
-
-        Gson gson = new Gson();
 
         System.out.println("Connection started\n");
 
@@ -256,11 +275,10 @@ public class TCPClient{
 
         commandInterpreter = new CommandInterpreter(playerId, gameId);
         commandInterpreter.setlv(gameLevel);
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonLogin = mapper.writeValueAsString(loginCommand);
 
-        String jsonLogin = gson.toJson(loginCommand);
         out.println(jsonLogin);
-        //System.out.println("Comando di login inviato: " + jsonLogin);
-//        clientLoop.start();
         clientLoop();
 
     }
@@ -289,10 +307,10 @@ public class TCPClient{
                 if (response != null && response.equals("pong")) {
                     System.out.println("Server responded to ping. Connection is active.");
                     connected = true;
+                    ObjectMapper mapper = new ObjectMapper();
 
-                    Gson gson = new Gson();
-                    String jsonLogin = gson.toJson(commandInterpreter.interpret("Reconnect"));
-                    out.println(jsonLogin);
+                    String reconnect = mapper.writeValueAsString(commandInterpreter.interpret("Reconnect"));
+                    out.println(reconnect);
 
                     eventThread  = new Thread(this::EventListener);
                     pingThread = new Thread(this::PingLoop);
@@ -335,7 +353,7 @@ public class TCPClient{
             client.changeConnection("RMI", commandInterpreter);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch ( NotBoundException e) {
+        } catch (NotBoundException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 

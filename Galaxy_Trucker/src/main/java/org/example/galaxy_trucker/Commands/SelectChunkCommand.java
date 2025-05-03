@@ -5,7 +5,9 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class SelectChunkCommand extends Command {
+import java.io.Serializable;
+
+public class SelectChunkCommand extends Command implements Serializable {
 
 
     IntegerPair chunk;

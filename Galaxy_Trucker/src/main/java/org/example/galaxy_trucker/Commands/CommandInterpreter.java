@@ -19,6 +19,10 @@ public class CommandInterpreter {
         this.client = client;
     }
 
+    public ClientInterface getClient() {
+        return client;
+    }
+
     private Map<String, CommandCreator> commandMap;
 
     public CommandInterpreter(String playerId, String gameId) {

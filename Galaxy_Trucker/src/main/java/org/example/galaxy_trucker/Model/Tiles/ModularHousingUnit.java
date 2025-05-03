@@ -77,9 +77,11 @@ public class ModularHousingUnit extends HousingUnit {
         Tile tile = playerBoard.getTile(x,y);
         nearBrownAddon = false;
         nearPurpleAddon = false;
+        connected = false;
 
         int[][] validPlayerBoard = playerBoard.getValidPlayerBoard();
         int index = 0;
+
 
         if (validPlayerBoard[x-1][y] == 1  && playerBoard.checkConnection(playerBoard.getTile(x,y).getConnectors().get(1), playerBoard.getTile(x-1,y).getConnectors().get(3))) {
             connected = true;
@@ -147,6 +149,16 @@ public class ModularHousingUnit extends HousingUnit {
                 }
             }
         }
+
+        if (!nearPurpleAddon && purpleAlien){
+            kill();
+            pb.setPurpleAlien(false);
+        }
+        if (!nearBrownAddon && brownAlien){
+            kill();
+            pb.setBrownAlien(false);
+        }
+
         return true;
     }
 

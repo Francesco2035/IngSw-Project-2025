@@ -8,9 +8,10 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DebugShip extends Command {
+public class DebugShip extends Command implements Serializable {
 
 
     @JsonProperty("commandType")

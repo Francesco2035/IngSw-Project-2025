@@ -9,7 +9,9 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class HandleCargoCommand extends Command {
+import java.io.Serializable;
+
+public class HandleCargoCommand extends Command implements Serializable {
 
     String title;
     int position;

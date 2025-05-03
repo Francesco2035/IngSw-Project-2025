@@ -3,7 +3,9 @@ package org.example.galaxy_trucker.Commands;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class ChoosingPlanetsCommand extends Command{
+import java.io.Serializable;
+
+public class ChoosingPlanetsCommand extends Command implements Serializable {
 
     int planet;
 

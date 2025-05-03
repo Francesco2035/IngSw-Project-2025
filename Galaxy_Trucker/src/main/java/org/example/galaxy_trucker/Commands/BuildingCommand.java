@@ -6,9 +6,10 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class BuildingCommand extends Command{
+public class BuildingCommand extends Command implements Serializable {
 
 
     @JsonProperty("commandType")

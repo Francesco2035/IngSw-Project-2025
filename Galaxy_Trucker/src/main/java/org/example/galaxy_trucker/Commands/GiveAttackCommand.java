@@ -7,9 +7,10 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GiveAttackCommand extends Command{
+public class GiveAttackCommand extends Command implements Serializable {
 
     private ArrayList<IntegerPair> coordinates;
     private Player player;

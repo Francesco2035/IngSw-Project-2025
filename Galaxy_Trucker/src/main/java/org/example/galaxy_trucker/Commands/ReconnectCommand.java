@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ReconnectCommand extends Command{
+import java.io.Serial;
+import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ReconnectCommand extends Command implements Serializable {
     @JsonProperty("commandType")
     private final String commandType = "ReconnectCommand";
 
