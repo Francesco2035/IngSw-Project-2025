@@ -8,7 +8,8 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.jetbrains.annotations.NotNull;
 
 public class PowerCenter extends Component{
-
+    int x;
+    int y;
 
     public PowerCenter() {}
 
@@ -25,6 +26,8 @@ public class PowerCenter extends Component{
         playerBoard.setEnergy(type);
         playerBoard.getPowerCenters().add(this);
         tile.sendUpdates(null,0, false, false, type);
+        this.x = x;
+        this.y = y;
 
     }
 
@@ -52,6 +55,13 @@ public class PowerCenter extends Component{
 
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 
     @Override
     public Component clone(PlayerBoard clonedPlayerBoard){

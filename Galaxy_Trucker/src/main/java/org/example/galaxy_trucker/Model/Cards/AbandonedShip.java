@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 
 /// in caso di disconnession il player sempluicemente non accetta se deve accttare la nave
-
+/// devo dividere la accept e la kill
 
 public class AbandonedShip extends Card{
     private int requirement;

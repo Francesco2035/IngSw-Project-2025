@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.example.galaxy_trucker.Commands.DefendFromLargeCommand;
 import org.example.galaxy_trucker.Commands.DefendFromSmallCommand;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Commands.Command;
@@ -26,4 +27,13 @@ public class DefendingFromSmall extends PlayerState{
 //        Card card = player.getCurrentCard();
 //        return new DefendFromSmallCommand(card, batteryComp);
 //    }
+    @Override
+    public boolean allows(DefendFromSmallCommand command) {
+        return true;
+    }
+    @Override
+    public Command createDefaultCommand(String gameId, Player player) {
+        int lv= player.getCurrentCard().getLevel();
+        return new DefendFromSmallCommand(null,gameId,player.GetID(),lv,"DefendingFromSmallCommand","placeholder"); /// devo mettere il token
+    }
 }

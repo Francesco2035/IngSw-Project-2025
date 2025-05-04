@@ -96,6 +96,9 @@ public class Slavers extends Card{
 
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
+        if (coordinates==null){
+            throw new IllegalArgumentException("you must give coordinates to consumeEnergy");
+        }
         if(coordinates.size()!=this.energyUsage){
             currentPlayer.setState(new GiveAttack());
             throw new WrongNumofEnergyExeption("wrong number of energy cells");
@@ -127,6 +130,7 @@ public class Slavers extends Card{
             System.out.println("defeated");
         }
         else if(this.currentpower<this.getRequirement()){
+            this.setDefaultPunishment(this.Punishment);
             this.currentPlayer.setState(new Killing());
             //this.currentPlayer.setInputHandler(new Killing(this));
         }
@@ -197,7 +201,7 @@ public class Slavers extends Card{
 
     //json required
     public Slavers(){}
-    public int getPunishment() {return Punishment;}
+    public int getDefaultPunishment() {return Punishment;}
     public void setPunishment(int punishment) {Punishment = punishment;}
     public int getReward() {return reward;}
     public void setReward(int reward) {this.reward = reward;}

@@ -61,6 +61,7 @@ public class CommandInterpreter {
         commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
         commandMap.put("DefendFromLarge",this::createDefendFromLargeCommand);
         commandMap.put("DefendFromSmall",this::createDefendFromSmallCommand);
+        commandMap.put("Theft",this::createTheftCommand);
 
         commandMap.put("Reconnect", this::createReconnectCommand);
     }
@@ -338,6 +339,20 @@ public class CommandInterpreter {
             }
         }
         return new KillCommand(coordinates,gameId,playerId,lv,"KillCommand",token);
+    }
+
+    private Command createTheftCommand(String[] parts) {
+        if (parts.length != 4) {
+            throw new IllegalArgumentException("Comando theft richiede 3 argomenti le coordinate dello storage e l'indice del good nello storage");
+        }
+        int index= Integer.parseInt(parts[1]);
+
+        int x= Integer.parseInt(parts[2]);
+        int y= Integer.parseInt(parts[3]);
+        IntegerPair storage = new IntegerPair(x,y);
+
+        return new Theft(index,storage,gameId,playerId,lv,"TheftCommand",token);
+
     }
 
 

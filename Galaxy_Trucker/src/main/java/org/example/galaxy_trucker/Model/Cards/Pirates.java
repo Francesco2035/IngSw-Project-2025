@@ -109,6 +109,9 @@ public class Pirates extends Card{
 
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
+        if (coordinates==null){
+            throw new IllegalArgumentException("you must give coordinates to consumeEnergy");
+        }
         if(coordinates.size()!=this.energyUsage){
             currentPlayer.setState(new GiveAttack());
             throw new WrongNumofEnergyExeption("wrong number of energy cells");
@@ -364,10 +367,6 @@ public class Pirates extends Card{
 
     public int getShotsOrder() {
         return ShotsOrder;
-    }
-
-    public ArrayList<Integer> getPunishment() {
-        return Punishment;
     }
 
     //json required

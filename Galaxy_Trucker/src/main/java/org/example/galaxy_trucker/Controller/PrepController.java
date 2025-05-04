@@ -22,7 +22,7 @@ public class PrepController extends Controller implements HourGlassListener {
     public void nextState(GameController gc) {
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new AddCrewState());
-            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId));
+            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId,this.disconnected));
         }
         else{
             gc.setControllerMap(curPlayer,new CheckValidityController(curPlayer, gameId,this.disconnected));

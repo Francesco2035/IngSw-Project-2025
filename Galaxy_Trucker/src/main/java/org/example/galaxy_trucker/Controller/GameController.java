@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
@@ -190,6 +191,7 @@ public class GameController {
 
             while (!checkGameOver()) {
                 int index = 0;
+                /// il game pesca la carta automaticamente
                 game.getGameBoard().NewCard();
 
                 while (index < players.size()) {
@@ -197,24 +199,46 @@ public class GameController {
                     //prendi controller
                     //se è disconnesso chiami def action
                     //altrimenti esegui il blocco try
-                    //TODO : aggiungere se detto da cugola timout
-                    try {
-                        Command cmd = flightQueue.take();
+                    Controller cur = ControllerMap.get(currentPlayer.GetID());
+                    if (cur.disconnected==true){ // se è disconnesso chiamo il comando di default
+                        try {
+                            cur.DefaultAction(this);
+                        } catch (Exception e) {
+                            throw new ImpossibleActionException("errore nell'azione di default, che dio ci aiuti");
+                        }
+                        ///  credo ci vada una thìry ctch ma non la stava lanciando :)
 
-                        if (cmd.getPlayerId().equals(currentPlayer.GetID())) {
-                            Controller controller = ControllerMap.get(cmd.getPlayerId());
-                            controller.action(cmd, this);
-
+                            ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
                             if (currentPlayer.GetReady()) {
                                 index++;
                             }
-                        } else {
 
-                            flightQueue.offer(cmd);
+
+                    }
+
+                    else { // se il player  non è disconneso prendo icommand dalla queue
+                        //TODO : aggiungere se detto da cugola timout
+
+                        try {
+                            Command cmd = flightQueue.take();
+
+                            if (cmd.getPlayerId().equals(currentPlayer.GetID())) {
+                                Controller controller = ControllerMap.get(cmd.getPlayerId());
+                                controller.action(cmd, this);
+
+
+                                ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
+                                if (currentPlayer.GetReady()) {
+                                    index++;
+                                }
+                            } else {
+
+                                flightQueue.offer(cmd);
+                            }
+
+                        } catch (InterruptedException e) {
+                            break;
                         }
-
-                    } catch (InterruptedException e) {
-                        break;
                     }
                 }
 
@@ -255,7 +279,8 @@ public class GameController {
 
     public void stopPlayer(UUID token) {
         String playerId = tokenToPlayerId.get(token);
-        ControllerMap.get(playerId);
+        Controller curr = ControllerMap.get(playerId);
+        curr.setDisconnected(true);
         //setto booleano del controller
 
         if (!flightMode){

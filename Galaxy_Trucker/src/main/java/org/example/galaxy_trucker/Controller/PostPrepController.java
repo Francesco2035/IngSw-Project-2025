@@ -8,15 +8,17 @@ import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
 public class PostPrepController extends Controller {
 
     private int count;
+    private boolean disconnected;
 
-    public PostPrepController(Player curPlayer, String gameId) {
+    public PostPrepController(Player curPlayer, String gameId, boolean disconnected) {
         this.curPlayer = curPlayer;
         this.gameId = gameId;
+        this.disconnected = disconnected;
         count = curPlayer.getmyPlayerBoard().getHousingUnits().size();
     }
 
     @Override
-    public synchronized void action(Command command, GameController gc,boolean disconnected) {
+    public synchronized void action(Command command, GameController gc) {
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
