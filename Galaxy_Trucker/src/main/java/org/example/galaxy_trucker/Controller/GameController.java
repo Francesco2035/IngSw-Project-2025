@@ -164,7 +164,13 @@ public class GameController {
         ControllerMap.put(player.GetID(), controller);
 
         if(buildingCount == ControllerMap.size()){
-            game.getGameBoard().StartHourglass();
+
+            try {
+                game.getGameBoard().StartHourglass();
+            }catch(RuntimeException e){
+                System.out.println(e.getMessage());
+            }
+
             buildingCount = -1;
         }
 

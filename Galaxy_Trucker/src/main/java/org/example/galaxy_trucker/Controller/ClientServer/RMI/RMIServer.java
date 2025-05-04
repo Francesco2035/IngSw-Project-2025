@@ -35,7 +35,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
         this.DisconnectedClients = DisconnectedClients;
 
         Thread pingThread = new Thread(() -> {
-            System.out.println("Ping Thread started");
+            //System.out.println("Ping Thread started");
 
             while (true) {
                 try {

@@ -107,15 +107,10 @@ public class Player implements Serializable {
         this.CurrentCard.ActivateCard();
     }
 
-    public void StartTimer() throws InterruptedException {
-        CommonBoard.StartHourglass();
+    public void StartTimer() throws RuntimeException, IllegalStateException {
+        CommonBoard.callHourglass(this);
     }
 
-    
-    public void useEnergy(int x, int y){
-
-    }
-    
 
 
     public void PickNewTile(int index)  {
@@ -257,7 +252,5 @@ public class Player implements Serializable {
         this.cardListner = null;
     }
 
-    //DOVREI AGGIUNGERE UN MODO PER ARRIVARE A CARD DA PLAYER DIREI :)
-    //principalmente per chiamare i metodi di card dopo l'input
 
 }

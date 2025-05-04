@@ -5,6 +5,7 @@ package org.example.galaxy_trucker.Model.Boards;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
@@ -70,14 +71,30 @@ public class GameBoard {
     }
 
 
-    public void StartHourglass() {
-        if(hourglass.isStartable() && hourglass.getUsages() > 0){
-            hourglass.setLock();
-            Thread t1 = new Thread(hourglass);
-            t1.start();
-
+    public void callHourglass(Player player) throws RuntimeException{
+        if(hourglass.getUsages() == 1 && !player.GetReady())
+            throw new RuntimeException("You need to finish your ship before using the hourglass");
+        else try{
+            StartHourglass();
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
         }
-        else throw new RuntimeException("Cannot start hourglass");
+    }
+
+
+    public void StartHourglass() throws RuntimeException{
+
+        if(this.GameLv == 1){
+            throw new IllegalStateException("Cannot use Hourglass in a level 1 game!");
+        }
+        else if(!hourglass.isStartable())
+            throw new  IllegalStateException("Hourglass is already running.");
+        else if(hourglass.getUsages() <= 0)
+            throw new RuntimeException("No Hourglass usages left.");
+        else{
+            hourglass.setLock();
+            hourglass.startHourglass();
+        }
     }
 
 
