@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.GiveAttackCommand;
 import org.example.galaxy_trucker.Commands.HandleCargoCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddGoodAction;
@@ -48,6 +49,13 @@ public class HandleCargo extends PlayerState {
     @Override
     public boolean allows(GetGoodAction action) {
         return true;
+    }
+
+    @Override
+    public Command createDefaultCommand(String gameId, Player player) {
+        int lv= player.getCurrentCard().getLevel();
+    /// il default è il basta gestione cargo anche se non dovrebbero esistere casi in cui capita da disconnessi
+        return  null;
     }
 
 }

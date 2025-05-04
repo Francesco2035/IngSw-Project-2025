@@ -9,10 +9,11 @@ import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 public class FlightController extends Controller {
 
 
-    public FlightController(Player curPlayer, String gameId, GameController gc) {
+    public FlightController(Player curPlayer, String gameId, GameController gc,boolean disconnected) {
         this.curPlayer = curPlayer;
         this.gameId = gameId;
         curPlayer.setState(new BaseState());
+        this.disconnected = disconnected;
     }
 
 
@@ -22,6 +23,6 @@ public class FlightController extends Controller {
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){
             //setti booleano controller a false
         }
-        gc.setControllerMap(curPlayer, new CardsController(curPlayer, gameId));
+        gc.setControllerMap(curPlayer, new CardsController(curPlayer, gameId, this.disconnected));
     }
 }

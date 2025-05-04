@@ -25,4 +25,15 @@ public class Accepting extends PlayerState{
 //
 //
 //    }
+    @Override
+    public boolean allows(AcceptCommand command) {
+        return true;
+    }
+    @Override
+    public Command createDefaultCommand(String gameId,Player player) {
+        int lv= player.getCurrentCard().getLevel();
+        return new AcceptCommand(gameId,player.GetID(),lv,"AcceptCommand",false,"placeholder"); /// devo mettere il token
+    }
 }
+
+

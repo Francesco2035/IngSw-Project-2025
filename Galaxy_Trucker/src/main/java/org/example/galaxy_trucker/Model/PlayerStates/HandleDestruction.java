@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.GiveAttackCommand;
 import org.example.galaxy_trucker.Commands.SelectChunkCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.JsonHelper;
@@ -25,4 +26,11 @@ public class HandleDestruction extends PlayerState {
 //
 //        return new SelectChunkCommand(player, chunk);
 //    }
+
+    @Override
+    public Command createDefaultCommand(String gameId, Player player) {
+        int lv = player.getCurrentCard().getLevel();
+        /// prendi i tronconi e scegli il primo non ricordo come se fa
+        return null;
+    }
 }

@@ -19,6 +19,9 @@ public class OpenSpace extends Card{
     private int currentmovement;
     private int energyUsage;
 
+
+
+    ///  in caso di disconnessione non attiva motori doppi ma avanza lo stesso
     public OpenSpace(int level, GameBoard board){
 
         super(level, 0 ,board);
@@ -83,6 +86,9 @@ public class OpenSpace extends Card{
 
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
+        if (coordinates==null){
+            throw new IllegalArgumentException("you must give coordinates to consumeEnergy");
+        }
         if(coordinates.size()!=this.energyUsage){
             currentPlayer.setState(new GiveSpeed());
             throw new WrongNumofEnergyExeption("wrong number of enrgy cells");

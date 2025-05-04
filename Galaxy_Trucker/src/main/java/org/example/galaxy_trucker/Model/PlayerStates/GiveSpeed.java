@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.example.galaxy_trucker.Commands.GiveAttackCommand;
 import org.example.galaxy_trucker.Commands.GiveSpeedCommand;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
 import org.example.galaxy_trucker.Model.Cards.Card;
@@ -28,6 +29,12 @@ public class GiveSpeed  extends PlayerState{
     @Override
     public boolean allows(GetEnginePower action){
         return true;
+    }
+
+    @Override
+    public Command createDefaultCommand(String gameId, Player player) {
+        int lv= player.getCurrentCard().getLevel();
+        return new GiveSpeedCommand(null,gameId,player.GetID(),lv,"GiveSpeedCommand","placeholder"); /// devo mettere il token
     }
 
 }

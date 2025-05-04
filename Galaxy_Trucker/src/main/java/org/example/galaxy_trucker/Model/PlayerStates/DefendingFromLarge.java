@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.example.galaxy_trucker.Commands.ChoosingPlanetsCommand;
 import org.example.galaxy_trucker.Commands.DefendFromLargeCommand;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Commands.Command;
@@ -32,4 +33,14 @@ public class DefendingFromLarge extends PlayerState{
 //        return new DefendFromLargeCommand(card,plasmaDrill,batteryComp);
 //
 //    }
+    @Override
+    public boolean allows(DefendFromLargeCommand command) {
+        return true;
+    }
+
+    @Override
+    public Command createDefaultCommand(String gameId, Player player) {
+        int lv= player.getCurrentCard().getLevel();
+        return new DefendFromLargeCommand(null,null,gameId,player.GetID(),lv,"DefendingFromLargeCommand","placeholder"); /// devo mettere il token
+    }
 }

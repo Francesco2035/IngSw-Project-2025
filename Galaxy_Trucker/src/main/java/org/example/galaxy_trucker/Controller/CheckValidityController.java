@@ -7,7 +7,7 @@ import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 public class CheckValidityController extends Controller{
 
 
-    public CheckValidityController( Player player, String gameId) {
+    public CheckValidityController( Player player, String gameId,boolean disconnected) {
         this.gameId = gameId;
         this.curPlayer = player;
     }
@@ -39,10 +39,10 @@ public class CheckValidityController extends Controller{
     public void nextState(GameController gc) {
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new AddCrewState());
-            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId));
+            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId, disconnected));
         }
         else {
-            gc.setControllerMap(curPlayer, new CheckValidityController(curPlayer, gameId));
+            gc.setControllerMap(curPlayer, new CheckValidityController(curPlayer, gameId,this.disconnected));
         }
     }
 }

@@ -53,7 +53,7 @@ public class CardStacks implements Serializable {
         }
 
         if(level==1){
-            HiddenCards = Level1Deck;
+            HiddenCards = Level1Deck; /// non è proprio l'intero level 1 deck ma una specifica sezione
         }
 
         else{

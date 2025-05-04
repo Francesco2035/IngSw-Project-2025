@@ -8,10 +8,12 @@ import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
 public class PostPrepController extends Controller {
 
     private int count;
+    private boolean disconnected;
 
-    public PostPrepController(Player curPlayer, String gameId) {
+    public PostPrepController(Player curPlayer, String gameId, boolean disconnected) {
         this.curPlayer = curPlayer;
         this.gameId = gameId;
+        this.disconnected = disconnected;
         count = curPlayer.getmyPlayerBoard().getHousingUnits().size();
     }
 
@@ -46,7 +48,7 @@ public class PostPrepController extends Controller {
     public void nextState(GameController gc) {
 
         gc.setFlightCount(1);
-        gc.setControllerMap(curPlayer, new FlightController( curPlayer, gameId, gc));
+        gc.setControllerMap(curPlayer, new FlightController( curPlayer, gameId, gc,this.disconnected));
 
     }
 }

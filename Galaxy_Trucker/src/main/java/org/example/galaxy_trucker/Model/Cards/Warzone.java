@@ -61,6 +61,8 @@ public class Warzone extends Card{
 
 
 
+
+    /// caso base è che non attiva nulla, e per le punizioni prendi le prime cose che trovi e non si difende
     public Warzone(int level, int time, GameBoard board, int RequirementOrder[], int PunishmentOrder[], int Punishment1, int Punishment2, int Punishment3, ArrayList<Integer> Punishment4) {
         super(level, time, board);
         RequirementsType=RequirementOrder;
@@ -146,6 +148,7 @@ public class Warzone extends Card{
                     return; // serve perché lose time ri attiva update states al completamento quinid devo fare finta di averlo finito prima di chiamarlo e poi terminarlo appena è finitra la chiamat
                 } else if (this.PunishmentType[ChallengeOrder] == 2) {
                     System.out.println(Worst.GetID() + " has to kill" + this.PunishmentHumans);
+                    this.setDefaultPunishment(this.PunishmentHumans);
                     this.Worst.setState(new Killing());
                     //this.currentPlayer.setInputHandler(new Killing(this));
                 } else if (this.PunishmentType[ChallengeOrder] == 3) {

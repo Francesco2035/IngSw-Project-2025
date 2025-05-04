@@ -32,6 +32,10 @@ public class   Meteorites extends Card {
     @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
     private ArrayList<Integer> attacks;
 
+
+
+
+    ///  in caso di disconnessione semplicemente non si difende da ncazzoz che lo colpisce
     public Meteorites(int level, int time, GameBoard board, ArrayList<Integer> attacks) {
         super(level, 0, board);
 
@@ -248,6 +252,8 @@ public class   Meteorites extends Card {
     /// //dividi la defend tu in shield e in cannone a seconda del tipo di meteorite così è piu facile il controllo di correttezza e il passaggio di input
 
         // DEVO NON ANDAR SUBITO IN UPDATE STATES MA IN SCELTA TRONCONI! UPSIE :)
+
+
 
     @Override
     public void DefendFromSmall(IntegerPair energy){

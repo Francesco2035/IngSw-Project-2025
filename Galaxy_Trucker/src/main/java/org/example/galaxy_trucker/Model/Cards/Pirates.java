@@ -36,6 +36,9 @@ public class Pirates extends Card{
     private ArrayList<Integer> Punishment;
     // conviene creare una classe che lista gli attacchi o in qualche modo chiama solo una volta
     //il player da attaccare cambia Attack
+
+
+    /// il caso base è che non attivi mai cannoni doppi e chenon si difenda dagli spari in caso di sconfitta, in caso di vittoria non accetta la ricompensa
     public Pirates(int level, int time, GameBoard board, int Reward, int Requirement, ArrayList<Integer> Punsihment){
         super(level, time, board);
         this.requirement = Requirement;
@@ -68,7 +71,6 @@ public class Pirates extends Card{
         }
         this.updateSates();
     }
-
 
     @Override
     public void updateSates(){
@@ -107,6 +109,9 @@ public class Pirates extends Card{
 
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
+        if (coordinates==null){
+            throw new IllegalArgumentException("you must give coordinates to consumeEnergy");
+        }
         if(coordinates.size()!=this.energyUsage){
             currentPlayer.setState(new GiveAttack());
             throw new WrongNumofEnergyExeption("wrong number of energy cells");
@@ -362,10 +367,6 @@ public class Pirates extends Card{
 
     public int getShotsOrder() {
         return ShotsOrder;
-    }
-
-    public ArrayList<Integer> getPunishment() {
-        return Punishment;
     }
 
     //json required
