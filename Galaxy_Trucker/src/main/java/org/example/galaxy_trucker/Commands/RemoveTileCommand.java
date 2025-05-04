@@ -5,7 +5,9 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class RemoveTileCommand extends Command {
+import java.io.Serializable;
+
+public class RemoveTileCommand extends Command implements Serializable {
 
     @JsonProperty("commandType")
     private final String commandType = "RemoveTileCommand";

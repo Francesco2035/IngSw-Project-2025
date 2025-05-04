@@ -5,7 +5,9 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class DefendFromLargeCommand extends Command{
+import java.io.Serializable;
+
+public class DefendFromLargeCommand extends Command implements Serializable {
 
     private IntegerPair plasmaDrill;
     private IntegerPair batteryComp;

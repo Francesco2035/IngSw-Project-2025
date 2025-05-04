@@ -5,9 +5,10 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ConsumeEnergyCommand extends Command {
+public class ConsumeEnergyCommand extends Command implements Serializable {
 
     private ArrayList<IntegerPair> coordinate;
 

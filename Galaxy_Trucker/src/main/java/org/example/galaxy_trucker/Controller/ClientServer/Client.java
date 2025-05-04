@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Controller.ClientServer;
 
+import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.Controller.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Controller.ClientServer.TCP.TCPClient;
 import org.example.galaxy_trucker.Controller.Messages.Event;
@@ -14,7 +15,9 @@ import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Client implements EventVisitor {
 
@@ -22,6 +25,7 @@ public class Client implements EventVisitor {
     private RMIClient rmiClient;
     private TCPClient tcpClient;
     private TileEvent[][] board;
+    private UUID token;
 
     public Client() {
         board = new TileEvent[10][10];
@@ -72,6 +76,21 @@ public class Client implements EventVisitor {
              client.startTCPClient();
         }
     }
+
+//    public void disconnected(UUID token){
+//        this.token = token;
+//        String s = view.askInput("Choose connection type or EXIT");
+//        if (s.equalsIgnoreCase("EXIT")) {
+//            System.exit(0);
+//        }
+//        if (s.equals("RMI")) {
+//            System.exit(0);
+//        }
+//        if (s.equals("TCP")) {
+//            tcpClient = new TCPClient(this);
+//            tcpClient.reconnect(token);
+//        }
+//    }
 
 
 
@@ -133,5 +152,18 @@ public class Client implements EventVisitor {
     @Override
     public void visit(CoveredTileSetEvent event) {
         this.view.updateCoveredTilesSet(event);
+    }
+
+    public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException, InterruptedException {
+        if (connection.equals("RMI")) {
+            RMIClient rmiClient = new RMIClient(this, interpreter);
+
+
+        }
+        if (connection.equals("TCP")) {
+            TCPClient tcpClient = new TCPClient(this, interpreter);
+
+        }
+
     }
 }

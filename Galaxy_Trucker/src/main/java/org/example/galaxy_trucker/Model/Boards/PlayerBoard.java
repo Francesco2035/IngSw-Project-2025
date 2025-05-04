@@ -29,7 +29,6 @@ public class PlayerBoard {
     private ArrayList<Goods> Rewards;
 
 
-
     private boolean broken;
     private int totalValue;
 
@@ -571,6 +570,9 @@ public class PlayerBoard {
         }
         updateAttributes(newPlayerBoard.getFirst().getFirst(),newPlayerBoard.getFirst().getSecond());
         broken = false;
+        for(HousingUnit Unit : HousingUnits){
+            Unit.controlValidity(this, Unit.getX(), Unit.getY());
+        }
 
     }
 

@@ -34,6 +34,7 @@ public class GamesHandler {
         loginWorker.setDaemon(true);
         loginWorker.start();
     }
+
     public void enqueuePlayerInit(Command command, VirtualView virtualView) {
         pendingLogins.offer(new Pair<>(command, virtualView));
     }
@@ -58,20 +59,16 @@ public class GamesHandler {
         System.out.println("Received: " + command.getTitle() + " " + command.getClass().getSimpleName());
         String title = command.getTitle();
         String gameId = command.getGameId();
-        if("Quit".equals(title)) {
+        if ("Quit".equals(title)) {
             if (gameControllerMap.containsKey(gameId)) {
                 gameControllerMap.get(gameId).removePlayer(UUID.fromString(command.getToken()));
-            }
-            else{
+            } else {
                 throw new InvalidInput("GameId doesn't exist: " + gameId);
             }
-        }
-
-        else{
+        } else {
             if (gameControllerMap.containsKey(gameId)) {
                 gameControllerMap.get(gameId).addCommand(command);
-            }
-            else{
+            } else {
                 throw new InvalidInput("GameId doesn't exist: " + gameId);
             }
         }
@@ -79,7 +76,7 @@ public class GamesHandler {
     }
 
 
-    public  void removeGame(String gameId) {
+    public void removeGame(String gameId) {
         System.out.println("Removin game: " + gameId);
         for (UUID token : tokenToGame.keySet()) {
             if (tokenToGame.get(token).equals(gameId)) {
@@ -89,10 +86,10 @@ public class GamesHandler {
         gameControllerMap.remove(gameId);
     }
 
-    public  void initPlayer(Command command, VirtualView virtualView){
+    public void initPlayer(Command command, VirtualView virtualView) {
         try {
             String gameID = command.getGameId();
-            if(gameControllerMap.containsKey(gameID) && gameControllerMap.get(gameID).isStarted()) {
+            if (gameControllerMap.containsKey(gameID) && gameControllerMap.get(gameID).isStarted()) {
                 throw new InvalidInput("Game already started: " + gameID);
             }
             String playerID = command.getPlayerId();
@@ -105,11 +102,10 @@ public class GamesHandler {
                 tokenToGame.putIfAbsent(virtualView.getToken(), gameID);
             }
 
-            if(gameControllerMap.containsKey(gameID)){
+            if (gameControllerMap.containsKey(gameID)) {
                 System.out.println("Game exists: " + gameID);
                 gameControllerMap.get(gameID).NewPlayer(temp, virtualView, virtualView.getToken());
-            }
-            else{
+            } else {
                 System.out.println("Game doesn't exist: " + gameID);
                 Game curGame = new Game(lvl, gameID);
                 synchronized (gameControllerMap) {
@@ -128,28 +124,12 @@ public class GamesHandler {
         return gameControllerMap;
     }
 
-    public  void removePlayerDisconnected(UUID token) {
+    public void PlayerDisconnected(UUID token) {
 
-//
-//            synchronized (gameControllerMap) {
-//                String gameId = tokenToGame.get(token);
-//                if (gameId == null) {
-//                    System.out.println("Token not associated with any game: " + token);
-//                    return;
-//                }
-//                GameController controller = gameControllerMap.get(gameId);
-//                if (controller == null) {
-//                    System.out.println("No GameController found for gameId: " + gameId);
-//                    return;
-//                }
-//                controller.removePlayer(token);
-//                if (controller.getNumPlayer() == 0) {
-//                    removeGame(gameId);
-//                }
-//            }
+
         String game;
 
-        synchronized (tokenToGame){
+        synchronized (tokenToGame) {
             game = tokenToGame.get(token);
         }
         if (game == null) {
@@ -157,11 +137,27 @@ public class GamesHandler {
         }
 
         synchronized (gameControllerMap) {
-            gameControllerMap.get(game).removePlayer(token);
+            gameControllerMap.get(game).stopPlayer(token);
 //            if (gameControllerMap.get(tokenToGame.get(token)).getNumPlayer() == 0) {
 //                removeGame(tokenToGame.get(token));
 //            }
         }
 
     }
+
+    public void PlayerReconnected(UUID token) {
+        String game;
+
+        synchronized (tokenToGame) {
+            game = tokenToGame.get(token);
+        }
+        if (game == null) {
+            throw new InvalidInput("game null: ");
+        }
+
+        synchronized (gameControllerMap) {
+            gameControllerMap.get(game).startPlayer(token);
+        }
+    }
+
 }

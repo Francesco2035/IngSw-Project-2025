@@ -4,7 +4,9 @@ import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
-public class AcceptCommand extends Command {
+import java.io.Serializable;
+
+public class AcceptCommand extends Command implements Serializable {
 
     boolean accepting;
 
