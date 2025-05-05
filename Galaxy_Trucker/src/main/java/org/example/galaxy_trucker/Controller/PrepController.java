@@ -23,6 +23,9 @@ public class PrepController extends Controller implements HourGlassListener {
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
             this.disconnected = false;
         }
+        synchronized (gc) {
+            curPlayer.getCommonBoard().getHourglass().stopHourglass();
+        }
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new AddCrewState());
             gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId,this.disconnected));
@@ -31,6 +34,8 @@ public class PrepController extends Controller implements HourGlassListener {
             gc.setControllerMap(curPlayer,new CheckValidityController(curPlayer, gameId,this.disconnected));
             curPlayer.setState(new CheckValidity());
         }
+
+
     }
 
     @Override
@@ -40,8 +45,10 @@ public class PrepController extends Controller implements HourGlassListener {
         //curPlayer.SetReady(true);
         //gc.changeState();
 
-        gc.getGame().getPlayers().values()
-                .stream().filter(p -> !p.GetReady())
-                .forEach(p -> p.setState(new ChoosePosition()));
+        synchronized (gc){
+            gc.getGame().getPlayers().values()
+                    .stream().filter(p -> !p.GetReady())
+                    .forEach(p -> p.setState(new ChoosePosition()));
+        }
     }
 }
