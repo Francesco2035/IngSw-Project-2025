@@ -2,6 +2,9 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 
+import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
+import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;
@@ -27,6 +30,9 @@ public class GameBoard {
     private int PlayersOnBoard;
     private CardStacks CardStack;
     private Card CurrentCard;
+
+
+    private GameBoardListener listener;
 
 
 
@@ -224,6 +230,11 @@ public class GameBoard {
             OrderedPlayers.add(players.get(i));
         }
         players = OrderedPlayers;
+
+
+        //listener
+        sendUpdates(new GameBoardEvent(NewIndex, cur.getKey().GetID()));
+
     }
 
 
@@ -281,9 +292,13 @@ public class GameBoard {
         total-= playerBoard.getDamage();
         Tile[][] tiles = playerBoard.getPlayerBoard();
 
+    }
 
 
-
+    public void sendUpdates(GameBoardEvent event){
+        if(listener != null) {
+            listener.gameBoardChanged(event);
+        }
     }
 
 
