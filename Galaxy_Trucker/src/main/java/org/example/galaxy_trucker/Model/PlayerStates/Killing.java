@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.example.galaxy_trucker.Commands.KillCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 
 import java.util.ArrayList;
 
@@ -33,5 +35,36 @@ public class Killing extends PlayerState {
     @Override
     public boolean allows(KillCrewAction action) {
         return true;
+    }
+
+    @Override // dovrei magari prima controllar che sia possibile uccidere quel numero di persone senno il player perde sksk
+    public Command createDefaultCommand(String gameId, Player player) {
+        int lv= player.getCurrentCard().getLevel();
+        PlayerBoard board=player.getmyPlayerBoard();
+        int punishment = player.getCurrentCard().getDefaultPunishment();
+
+        int i=0;
+        int j=0;
+        ArrayList<IntegerPair> coords =new ArrayList<>();
+
+        ArrayList< HousingUnit> housingUnits = board.getHousingUnits();
+        while (i<punishment){
+            if(housingUnits.get(j).isPurpleAlien()){
+                coords.add(new IntegerPair(housingUnits.get(j).getX(),housingUnits.get(j).getY()));
+                i++;
+            }
+            else if(housingUnits.get(j).isBrownAlien()){
+                coords.add(new IntegerPair(housingUnits.get(j).getX(),housingUnits.get(j).getY()));
+                i++;
+            }
+            else{
+                for( int z=0;z<housingUnits.get(j).getNumHumans() && i<punishment;z++){
+                    coords.add(new IntegerPair(housingUnits.get(j).getX(),housingUnits.get(j).getY()));
+                    i++;
+                }
+            }
+            j++;
+        }
+        return new KillCommand(coords,gameId,player.GetID(),lv,"KillCommand","placeholder");
     }
 }

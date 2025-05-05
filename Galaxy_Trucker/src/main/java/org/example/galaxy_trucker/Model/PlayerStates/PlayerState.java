@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.Model.Boards.Actions.*;
+import org.example.galaxy_trucker.Model.Player;
 
 public abstract class PlayerState {
 
@@ -102,5 +103,7 @@ public abstract class PlayerState {
 
     public boolean allows(DebugShip command){return false;}
 
-
+    public Command createDefaultCommand(String gameId,Player player) {
+        return null;
+    }
 }

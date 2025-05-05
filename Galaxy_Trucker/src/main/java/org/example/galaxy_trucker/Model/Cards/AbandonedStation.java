@@ -25,6 +25,8 @@ public class AbandonedStation extends Card{
 
 
 
+
+    /// in caso di disconnession il player sempluicemente non accetta se deve accttare la nave
     public AbandonedStation(int requirement, ArrayList<Goods> reward, int level, int time, GameBoard board) {
         super(level, time, board);
         this.requirement = requirement;
@@ -70,6 +72,9 @@ public class AbandonedStation extends Card{
                 this.flag = true;
                 currentPlayer.setState(new Accepting());
                 //currentPlayer.setInputHandler(new Accept(this));
+                currentPlayer.setCard(this
+
+                );
 
             }
 

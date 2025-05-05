@@ -17,6 +17,10 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 import java.util.ArrayList;
 
 
+
+/// in caso di disconnession il player sempluicemente non accetta se deve accttare la nave
+/// devo dividere la accept e la kill
+
 public class AbandonedShip extends Card{
     private int requirement;
     private int reward;
@@ -48,7 +52,6 @@ public class AbandonedShip extends Card{
     }
     @Override
     public void updateSates(){
-
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         while(this.order<=PlayerList.size()&& !this.flag) {

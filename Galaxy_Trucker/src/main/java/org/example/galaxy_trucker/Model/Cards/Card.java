@@ -42,6 +42,7 @@ public class Card implements Serializable {
     @JsonProperty("Time")
     private int Time;
     private GameBoard Board;
+    private int DefaultPunishment;
     // IMPORTANTE ESERCITATORE DICE DI ATTIVARE EFFETTI DELLE CARTE A POSTERIORI DELLE SCELTE DEI PLAYER
     // NON SO SE HA SENSO MA LUI DICE DI FARE COSI, QUINDI I METODI DI CARD EFFECT DOVREBBERO ESSERE
     //INTERAMENTE DEFINITI SENZA CHIEDERE ALTRI IMPUT AI PLAYER, SEMPLICEMENTE MODIFICHERANNO IL MODELLO
@@ -80,7 +81,8 @@ public class Card implements Serializable {
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {}
     public void loseCargo(IntegerPair pair, int position){}
     public void ActivateCard(){}
-
+    public int getDefaultPunishment(){return DefaultPunishment;}
+    public void setDefaultPunishment(int p){DefaultPunishment = p;}
 
     //json required
     public Card() {}

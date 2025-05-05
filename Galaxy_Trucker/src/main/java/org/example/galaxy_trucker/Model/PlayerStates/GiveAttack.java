@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.DefendFromSmallCommand;
 import org.example.galaxy_trucker.Commands.GiveAttackCommand;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetPlasmaDrillPower;
 import org.example.galaxy_trucker.Model.Cards.Card;
@@ -35,5 +36,11 @@ public class GiveAttack extends PlayerState {
     @Override
     public boolean allows(GetPlasmaDrillPower action){
         return true;
+    }
+
+    @Override
+    public Command createDefaultCommand(String gameId, Player player) {
+        int lv= player.getCurrentCard().getLevel();
+        return new GiveAttackCommand(null,gameId,player.GetID(),lv,"GiveAttackCommand","placeholder"); /// devo mettere il token
     }
 }

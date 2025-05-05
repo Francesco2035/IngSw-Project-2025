@@ -129,6 +129,7 @@ public class Tile implements Serializable {
         this.y = y;
     }
 
+
     public void setChosen(){
         chosen = true;
     }

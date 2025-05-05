@@ -9,21 +9,23 @@ import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 public class PrepController extends Controller implements HourGlassListener {
 
     GameController gc;
-    public PrepController(Player currentPlayer, String gameId, GameController gc) {
+    public PrepController(Player currentPlayer, String gameId, GameController gc, boolean disconnected) {
         curPlayer = currentPlayer;
         this.gameId = gameId;
         this.gc = gc;
         System.out.println("Prep Controller " + gameId + " - " + curPlayer);
+        this.playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
+        this.disconnected = disconnected;
     }
 
     @Override
     public void nextState(GameController gc) {
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new AddCrewState());
-            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId));
+            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId,this.disconnected));
         }
         else{
-            gc.setControllerMap(curPlayer,new CheckValidityController(curPlayer, gameId));
+            gc.setControllerMap(curPlayer,new CheckValidityController(curPlayer, gameId,this.disconnected));
             curPlayer.setState(new CheckValidity());
         }
     }

@@ -38,6 +38,8 @@ public class Smugglers extends Card{
     private boolean isaPunishment;
     // conviene creare una classe che lista gli attacchi o in qualche modo chiama solo una volta
     //il player da attaccare cambia Attack
+
+    ///  come pirati e per fottere prendo le prime cose che trovo e bona così
     Smugglers(int level, int time, GameBoard board, ArrayList<Goods> Reward, int Requirement, int Punsihment){
         super(level, time, board);
         this.requirement = Requirement;
@@ -106,6 +108,9 @@ public class Smugglers extends Card{
 
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
+        if (coordinates==null){
+            throw new IllegalArgumentException("you must give coordinates to consumeEnergy");
+        }
         if(isaPunishment){
             this.consumeEnergy2(coordinates);
         }
@@ -231,23 +236,26 @@ public class Smugglers extends Card{
 
         HashMap<Integer,ArrayList<IntegerPair>> cargoH= CurrentPlanche.getStoredGoods();
 
+        if(cargoH.isEmpty()){
+            energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
+            this.isaPunishment=true;
+            currentPlayer.setState(new ConsumingEnergy()); // potrebbe non fare l'update?
+            this.setDefaultPunishment(energyUsage);
+            return;
+        }
+
         if(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond())==null ){
             throw new InvalidInput("there is nothing here ");
         }
         else {
             if (storages.contains(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond()).getComponent())){
-                int i=storages.indexOf(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond()).getComponent());
+                int i=storages.indexOf(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
                 Storage currStorage=storages.get(i);
-                if(currStorage.getValue(index)==cargoH.keySet().iterator().next()){//iterator.next da il primo elemento non chiederti perché
+                if(currStorage.getValue(index)==cargoH.keySet().iterator().next() ){//iterator.next da il primo elemento non chiederti perché
                    CurrentPlanche.performAction(tiles[coord.getFirst()][coord.getSecond()].getComponent(), new GetGoodAction(index,CurrentPlanche,coord.getFirst(),coord.getSecond()),new HandleTheft());///prega dio sia giusto :)
                     this.tmpPunishment--;
 
-                    if(cargoH.isEmpty()){
-                        energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
-                        this.isaPunishment=true;
-                        currentPlayer.setState(new ConsumingEnergy()); // potrebbe non fare l'update?
 
-                    }
 
                 }
                 else {
@@ -286,6 +294,6 @@ public class Smugglers extends Card{
     public void setRequirement(int requirement) {this.requirement = requirement;}
     public ArrayList<Goods> getReward() {return rewardGoods;}
     public void setReward(ArrayList<Goods> reward) {this.rewardGoods = reward;}
-    public int getPunishment() {return Punishment;}
+    public int getDefaultPunishment() {return Punishment;}
     public void setPunishment(int punishment) {Punishment = punishment;}
 }
