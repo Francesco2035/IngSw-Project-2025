@@ -22,6 +22,7 @@ public class FlightController extends Controller {
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){
             //setti booleano controller a false
         }
+        gc.setFlightCount(1);
         gc.setControllerMap(curPlayer, new CardsController(curPlayer, gameId));
     }
 }

@@ -522,6 +522,9 @@ public class PlayerBoard {
         damage++;
         PlayerBoard[x][y] = new Tile(new SpaceVoid(),NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;
+        for(HousingUnit Unit : HousingUnits){
+            Unit.controlValidity(this, Unit.getX(), Unit.getY());
+        }
         updateStoredGoods();
     }
 

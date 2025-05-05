@@ -3,15 +3,12 @@ package org.example.galaxy_trucker.Controller.ClientServer;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.Controller.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Controller.ClientServer.TCP.TCPClient;
-import org.example.galaxy_trucker.Controller.Messages.Event;
-import org.example.galaxy_trucker.Controller.Messages.EventVisitor;
-import org.example.galaxy_trucker.Controller.Messages.HandEvent;
+import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
-import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -144,6 +141,9 @@ public class Client implements EventVisitor {
         this.view.updateBoard(event);
     }
 
+    //public void visit(GameBoard event)
+    //this.view.updateGameboard
+
     @Override
     public void visit(UncoverdTileSetEvent event) {
         this.view.updateUncoveredTilesSet(event);
@@ -152,6 +152,11 @@ public class Client implements EventVisitor {
     @Override
     public void visit(CoveredTileSetEvent event) {
         this.view.updateCoveredTilesSet(event);
+    }
+
+    @Override
+    public void visit(GameBoardEvent gameBoardEvent) {
+        this.view.updateGameboard();
     }
 
     public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException, InterruptedException {

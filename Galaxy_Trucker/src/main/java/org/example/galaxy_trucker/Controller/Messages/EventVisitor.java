@@ -20,4 +20,8 @@ public interface EventVisitor {
     public void visit(UncoverdTileSetEvent event);
 
     public void visit(CoveredTileSetEvent event);
+
+    public void visit(GameBoardEvent gameBoardEvent);
+
+    //public void visit(GameBoardEvent event);
 }
