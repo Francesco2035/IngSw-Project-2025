@@ -147,6 +147,37 @@ public class GameBoard {
     }
 
 
+    public void removePlayerAndShift(Player pl){
+
+        Player_IntegerPair cur = players.stream()
+                .filter(p -> pl.equals(p.getKey()) )
+                .findFirst().orElseThrow();
+
+        ArrayList<Player_IntegerPair> newList = new ArrayList<>();
+
+        int[] shiftedPositions = new int[players.size()];
+
+        int i=0;
+        for(Player_IntegerPair p : players){
+            if(!p.equals(cur))
+                newList.add(p);
+
+            shiftedPositions[i] = p.getValue();
+            i++;
+        }
+
+        i=0;
+        for(Player_IntegerPair p : newList){
+            SetNewPosition(p, shiftedPositions[i], shiftedPositions[i]);
+            i++;
+        }
+
+        players = newList;
+
+
+    }
+
+
 
     /**
      * moves the player forward or backwards on the board of a selected number of steps
