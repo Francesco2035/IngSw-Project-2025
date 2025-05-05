@@ -18,7 +18,7 @@ public class PostPrepController extends Controller {
     }
 
     @Override
-    public synchronized void action(Command command, GameController gc) {
+    public synchronized void action(Command command, GameController gc) {/// devo fare la default anche quas
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
@@ -46,6 +46,10 @@ public class PostPrepController extends Controller {
 
     @Override
     public void nextState(GameController gc) {
+
+        if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
+            this.disconnected = false;
+        }
 
         gc.setFlightCount(1);
         gc.setControllerMap(curPlayer, new FlightController( curPlayer, gameId, gc,this.disconnected));
