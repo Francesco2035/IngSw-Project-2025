@@ -18,14 +18,19 @@ public class PrepController extends Controller implements HourGlassListener {
 
     @Override
     public void nextState(GameController gc) {
-        if (curPlayer.getmyPlayerBoard().checkValidity()){
-            curPlayer.setState(new AddCrewState());
-            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId));
+
+        synchronized (gc) {
+            curPlayer.getCommonBoard().getHourglass().stopHourglass();
         }
-        else{
-            gc.setControllerMap(curPlayer,new CheckValidityController(curPlayer, gameId));
-            curPlayer.setState(new CheckValidity());
-        }
+
+            if (curPlayer.getmyPlayerBoard().checkValidity()) {
+                curPlayer.setState(new AddCrewState());
+                gc.setControllerMap(curPlayer, new PostPrepController(curPlayer, gameId));
+            } else {
+                gc.setControllerMap(curPlayer, new CheckValidityController(curPlayer, gameId));
+                curPlayer.setState(new CheckValidity());
+            }
+
     }
 
     @Override
@@ -35,8 +40,10 @@ public class PrepController extends Controller implements HourGlassListener {
         //curPlayer.SetReady(true);
         //gc.changeState();
 
-        gc.getGame().getPlayers().values()
-                .stream().filter(p -> !p.GetReady())
-                .forEach(p -> p.setState(new ChoosePosition()));
+        synchronized (gc){
+            gc.getGame().getPlayers().values()
+                    .stream().filter(p -> !p.GetReady())
+                    .forEach(p -> p.setState(new ChoosePosition()));
+        }
     }
 }

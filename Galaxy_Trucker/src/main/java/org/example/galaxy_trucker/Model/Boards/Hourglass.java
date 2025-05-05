@@ -15,6 +15,7 @@ public class Hourglass{
     private int usages;
     private boolean startable;
     private ArrayList<HourGlassListener> listeners;
+    private Timer hourglass;
 
     public Hourglass(){}
 
@@ -29,8 +30,7 @@ public class Hourglass{
 
     public synchronized void  startHourglass() {
 
-
-        Timer hourglass = new Timer();
+        hourglass = new Timer();
 
         hourglass.schedule(new TimerTask(){
             @Override
@@ -53,6 +53,11 @@ public class Hourglass{
     }
 
 
+    public synchronized void stopHourglass() {
+        if(hourglass != null && !startable && usages > 0){
+            hourglass.cancel();
+        }
+    }
 
 
     public void setListener(HourGlassListener listener){
