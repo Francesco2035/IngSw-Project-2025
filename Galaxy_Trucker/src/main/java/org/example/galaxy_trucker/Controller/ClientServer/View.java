@@ -24,6 +24,8 @@ public interface View {
 
     void updateHand(HandEvent event);
 
+    void updateGameboard();
+
     void updateCoveredTilesSet(CoveredTileSetEvent event);
 
     void updateUncoveredTilesSet(UncoverdTileSetEvent event);

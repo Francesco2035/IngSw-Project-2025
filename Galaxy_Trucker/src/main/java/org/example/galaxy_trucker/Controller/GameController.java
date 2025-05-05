@@ -77,6 +77,7 @@ public class GameController {
         p.setHandListener(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);
         p.setCardListner(vv);
+        //p.getGmaebord.setVrtualview(vv);
 
         Thread t = new Thread(() -> {
             while (true) {
@@ -183,7 +184,7 @@ public class GameController {
 
             flightMode = true;
             startFlightMode();
-            flightCount = -1;
+            flightCount = 0;
         }
     }
 

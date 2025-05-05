@@ -13,7 +13,7 @@ public class CheckValidityController extends Controller{
     }
 
     @Override
-    public synchronized void action(Command command, GameController gc) {
+    public synchronized void action(Command command, GameController gc) { ///  devo overridare anche qui ok
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
@@ -39,7 +39,7 @@ public class CheckValidityController extends Controller{
     public void nextState(GameController gc) {
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new AddCrewState());
-            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId, disconnected));
+            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId,disconnected));
         }
         else {
             gc.setControllerMap(curPlayer, new CheckValidityController(curPlayer, gameId,this.disconnected));

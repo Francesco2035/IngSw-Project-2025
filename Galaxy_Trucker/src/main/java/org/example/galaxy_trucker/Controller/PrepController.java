@@ -20,6 +20,9 @@ public class PrepController extends Controller implements HourGlassListener {
 
     @Override
     public void nextState(GameController gc) {
+        if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
+            this.disconnected = false;
+        }
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new AddCrewState());
             gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId,this.disconnected));

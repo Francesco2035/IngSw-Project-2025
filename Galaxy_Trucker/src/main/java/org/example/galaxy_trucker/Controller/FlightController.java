@@ -20,9 +20,10 @@ public class FlightController extends Controller {
 
     @Override
     public void nextState(GameController gc) {
-        if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){
-            //setti booleano controller a false
+        if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
+           this.disconnected = false;
         }
         gc.setControllerMap(curPlayer, new CardsController(curPlayer, gameId, this.disconnected));
+        gc.setFlightCount(1);
     }
 }

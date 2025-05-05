@@ -5,4 +5,7 @@ import org.example.galaxy_trucker.Model.Player;
 
 public class Waiting extends PlayerState{
 
+
+
+
 }

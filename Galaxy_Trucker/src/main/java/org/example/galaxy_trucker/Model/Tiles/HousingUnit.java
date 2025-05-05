@@ -6,11 +6,15 @@ import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+import java.util.ArrayList;
+
 public abstract class HousingUnit extends Component{
 
 
     private int x;
     private int y;
+    private ArrayList<HousingUnit> nearbyHousingUnits = new ArrayList<>();
+    private ArrayList<HousingUnit> unitsListeners = new ArrayList<>();
 
     public abstract int getNumHumans();
     public abstract void setNumHumans(int numHumans);
@@ -27,8 +31,26 @@ public abstract class HousingUnit extends Component{
 
 
 
+
     @Override
     public void rotate(Boolean direction){}
+
+    public ArrayList<HousingUnit> getNearbyHousingUnits() {
+        return nearbyHousingUnits;
+    }
+
+    public ArrayList<HousingUnit> getUnitsListeners() {
+        return unitsListeners;
+    }
+
+    public void setUnitsListeners(HousingUnit unitListener) {
+        unitsListeners.add(unitListener);
+    }
+
+    //true addcrew
+    public void notifyUnit(boolean type){
+
+    }
 
     public abstract int kill();
 
@@ -58,4 +80,6 @@ public abstract class HousingUnit extends Component{
     public int getY() {
         return y;
     }
+
+
 }

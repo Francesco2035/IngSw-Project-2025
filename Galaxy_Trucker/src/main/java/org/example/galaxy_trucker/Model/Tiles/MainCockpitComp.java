@@ -5,6 +5,8 @@ import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+import java.util.ArrayList;
+
 public class MainCockpitComp extends HousingUnit {
 
     private int numHumans;
@@ -70,19 +72,36 @@ public class MainCockpitComp extends HousingUnit {
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
         this.playerBoard = pb;
+        this.connected = false;
+        playerBoard.getConnectedHousingUnits().remove(this);
+        ArrayList<HousingUnit> nearbyunits = getNearbyHousingUnits();
 
         int[][] validPlayerBoard = pb.getValidPlayerBoard();
         if (validPlayerBoard[x-1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(1), pb.getTile(x-1,y).getConnectors().get(3))) {
+            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x-1,y).getComponent()))));
             connected = true;
         }
         if (validPlayerBoard[x+1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(3), pb.getTile(x+1,y).getConnectors().get(1))) {
+            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x+1,y).getComponent()))));
             connected = true;
         }
         if (validPlayerBoard[x][y-1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(0), pb.getTile(x,y-1).getConnectors().get(2))) {
+            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y-1).getComponent()))));
             connected = true;
         }
         if (validPlayerBoard[x][y+1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(2), pb.getTile(x,y+1).getConnectors().get(0))) {
+            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y+1).getComponent()))));
             connected = true;
+        }
+
+        if (!nearbyunits.isEmpty() && numHumans > 0){
+            for (HousingUnit housingUnit : nearbyunits) {
+                if (housingUnit.getNumHumans() > numHumans || housingUnit.isBrownAlien() || housingUnit.isPurpleAlien()) {
+                    playerBoard.getConnectedHousingUnits().remove(this);
+                    playerBoard.getConnectedHousingUnits().add(this);
+                    break;
+                }
+            }
         }
         return true;
     }
