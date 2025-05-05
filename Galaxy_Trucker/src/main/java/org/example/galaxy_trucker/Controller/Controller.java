@@ -13,7 +13,7 @@ import java.io.IOException;
 public abstract class Controller {
 
 
-    
+
     //Command command;
     Player curPlayer;
     String gameId;
