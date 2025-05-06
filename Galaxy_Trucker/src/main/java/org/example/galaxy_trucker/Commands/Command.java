@@ -31,7 +31,7 @@ import java.net.Socket;
         @JsonSubTypes.Type(value = ReconnectCommand.class, names = "ReconnectCommand")
 
 })
-public class Command implements Serializable {
+public abstract class Command implements Serializable {
 
     @JsonProperty("gameId")
     public String gameId;
@@ -56,7 +56,7 @@ public class Command implements Serializable {
         this.token = token;
     }
 
-    public void execute(Player player) throws IOException {}
+    public abstract void execute(Player player) throws IOException;
 
     public String getTitle() {
         return title;
