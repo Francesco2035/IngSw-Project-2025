@@ -17,7 +17,6 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -165,6 +164,18 @@ public class TUI implements View {
 
         System.out.println();
         System.out.println("\n############################ ##### ############################");
+    }
+
+
+    public String[] formatCell(){
+        String[] cellLines = new String[7];
+
+        for (int i = 0; i < 7; i++) {
+            cellLines[i] = "+                                 +";
+        }
+        cellLines[0] = border;
+        cellLines[6] = border;
+        return cellLines;
     }
 
     public String[] formatCell(TileEvent event) {
@@ -327,6 +338,11 @@ public class TUI implements View {
             cacheHand = formatCell(temp);
         }
         showTUI();
+    }
+
+    @Override
+    public void updateGameboard() {
+
     }
 
     @Override

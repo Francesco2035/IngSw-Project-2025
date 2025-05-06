@@ -3,10 +3,8 @@ package org.example.galaxy_trucker.Controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
-import org.example.galaxy_trucker.Controller.Listeners.CardListner;
-import org.example.galaxy_trucker.Controller.Listeners.HandListener;
-import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
-import org.example.galaxy_trucker.Controller.Listeners.TileSestListener;
+import org.example.galaxy_trucker.Controller.Listeners.*;
+import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -24,7 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner {
+public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener {
 
     private boolean Disconnected = false;
     private TileEvent[][] eventMatrix;
@@ -251,6 +249,32 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             }
         }
     }
+
+
+    @Override
+    public void gameBoardChanged(GameBoardEvent event)  {
+        if (!Disconnected) {
+            if (out != null) {
+                try{
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    out.println(objectMapper.writeValueAsString(event));
+                }
+                catch (JsonProcessingException e){
+                    e.printStackTrace();
+                }
+
+            }
+            else {
+                try {
+                    client.receiveMessage(event);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+
 
     public void setDisconnected(boolean disconnected) {
         Disconnected = disconnected;

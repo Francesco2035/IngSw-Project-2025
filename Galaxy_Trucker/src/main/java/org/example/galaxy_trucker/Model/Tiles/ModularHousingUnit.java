@@ -6,6 +6,8 @@ import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
+import java.util.ArrayList;
+
 public class ModularHousingUnit extends HousingUnit {
 
     private boolean connected = false;
@@ -83,18 +85,22 @@ public class ModularHousingUnit extends HousingUnit {
         int index = 0;
 
 
-        if (validPlayerBoard[x-1][y] == 1  && playerBoard.checkConnection(playerBoard.getTile(x,y).getConnectors().get(1), playerBoard.getTile(x-1,y).getConnectors().get(3))) {
-            connected = true;
+        playerBoard.getConnectedHousingUnits().remove(this);
+        ArrayList<HousingUnit> nearbyunits = getNearbyHousingUnits();
+
+        if (validPlayerBoard[x-1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(1), pb.getTile(x-1,y).getConnectors().get(3)) && playerBoard.getHousingUnits().contains(pb.getTile(x-1,y).getComponent())) {
+            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x-1,y).getComponent()))));
         }
-        if (validPlayerBoard[x+1][y] == 1  && playerBoard.checkConnection(playerBoard.getTile(x,y).getConnectors().get(3), playerBoard.getTile(x+1,y).getConnectors().get(1))) {
-            connected = true;
+        if (validPlayerBoard[x+1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(3), pb.getTile(x+1,y).getConnectors().get(1)) && playerBoard.getHousingUnits().contains( pb.getTile(x+1,y).getComponent())) {
+            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x+1,y).getComponent()))));
         }
-        if (validPlayerBoard[x][y-1] == 1  && playerBoard.checkConnection(playerBoard.getTile(x,y).getConnectors().get(0), playerBoard.getTile(x,y-1).getConnectors().get(2))) {
-            connected = true;
+        if (validPlayerBoard[x][y-1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(0), pb.getTile(x,y-1).getConnectors().get(2)) && playerBoard.getHousingUnits().contains( pb.getTile(x,y-1).getComponent())) {
+            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y-1).getComponent()))));
         }
-        if (validPlayerBoard[x][y+1] == 1  && playerBoard.checkConnection(playerBoard.getTile(x,y).getConnectors().get(2), playerBoard.getTile(x,y+1).getConnectors().get(0))) {
-            connected = true;
+        if (validPlayerBoard[x][y+1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(2), pb.getTile(x,y+1).getConnectors().get(0)) && playerBoard.getHousingUnits().contains( pb.getTile(x,y+1).getComponent())) {
+            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y+1).getComponent()))));
         }
+
 
         if(validPlayerBoard[x][y-1] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x,y-1).getComponent())){
             index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x,y-1).getComponent());
@@ -148,15 +154,20 @@ public class ModularHousingUnit extends HousingUnit {
                     nearBrownAddon = true;
                 }
             }
+
         }
 
-        if (!nearPurpleAddon && purpleAlien){
-            kill();
-            pb.setPurpleAlien(false);
+        if(numHumans > 0 || isBrownAlien() || isPurpleAlien()){
+            for (HousingUnit unit : getNearbyHousingUnits()){
+                if(unit.getNumHumans() > 0 || unit.isBrownAlien() || unit.isPurpleAlien()){
+                    playerBoard.getConnectedHousingUnits().remove(unit);
+                    playerBoard.getConnectedHousingUnits().add(unit);
+                }
+            }
         }
-        if (!nearBrownAddon && brownAlien){
+
+        if((!nearPurpleAddon && purpleAlien) || (brownAlien && !nearBrownAddon)){
             kill();
-            pb.setBrownAlien(false);
         }
 
         return true;
@@ -180,6 +191,12 @@ public class ModularHousingUnit extends HousingUnit {
             if (numHumans == 0){
                 playerBoard.getConnectedHousingUnits().remove(this);
             }
+            if(numHumans == 0 && !getNearbyHousingUnits().isEmpty()){
+                playerBoard.getConnectedHousingUnits().remove(this);
+                for (HousingUnit housingUnit : getNearbyHousingUnits()) {
+                    housingUnit.notifyUnit(false, this);
+                }
+            }
             tile.sendUpdates(null, numHumans,purpleAlien,brownAlien,0);
             return 2;
         }
@@ -187,14 +204,28 @@ public class ModularHousingUnit extends HousingUnit {
             purpleAlien = false;
             System.out.println("killed a purple alien in "+getX()+" "+getY());
             playerBoard.getConnectedHousingUnits().remove(this);
+            if(!getNearbyHousingUnits().isEmpty()){
+                for (HousingUnit housingUnit : getNearbyHousingUnits()) {
+                    housingUnit.notifyUnit(false, this);
+                }
+            }
             tile.sendUpdates(null, numHumans,purpleAlien,brownAlien,0);
+
+
             return 1;
+
         }
         else {
             brownAlien = false;
             System.out.println("killed a brown alien in "+getX()+" "+getY());
             playerBoard.getConnectedHousingUnits().remove(this);
+            if(!getNearbyHousingUnits().isEmpty()){
+                for (HousingUnit housingUnit : getNearbyHousingUnits()) {
+                    housingUnit.notifyUnit(false, this);
+                }
+            }
             tile.sendUpdates(null, numHumans,purpleAlien,brownAlien,0);
+
             return 0;
         }
 
@@ -228,9 +259,13 @@ public class ModularHousingUnit extends HousingUnit {
         numHumans += humans;
         purpleAlien = purple;
         brownAlien = brown;
-        if (connected){
-            playerBoard.getConnectedHousingUnits().add(this);
+        if(!getNearbyHousingUnits().isEmpty()){
+            for (HousingUnit housingUnit : getNearbyHousingUnits()) {
+                housingUnit.notifyUnit(true, this);
+            }
         }
+
+
         tile.sendUpdates(null,numHumans,purpleAlien,brownAlien,0);
     }
 
@@ -257,6 +292,24 @@ public class ModularHousingUnit extends HousingUnit {
 
     public void setPlayerBoard(PlayerBoard playerBoard){
         this.playerBoard = playerBoard;
+    }
+
+
+    @Override
+    public void notifyUnit(boolean type, HousingUnit unit){
+        if (type){
+            if (numHumans > 0 || purpleAlien || brownAlien){
+                playerBoard.getConnectedHousingUnits().remove(this);
+                playerBoard.getConnectedHousingUnits().add(this);
+            }
+        }
+        else {
+            getNearbyHousingUnits().remove(unit);
+            if(getNearbyHousingUnits().isEmpty()){
+                playerBoard.getConnectedHousingUnits().remove(this);
+            }
+
+        }
     }
 
 }

@@ -24,5 +24,6 @@ public class FlightController extends Controller {
            this.disconnected = false;
         }
         gc.setControllerMap(curPlayer, new CardsController(curPlayer, gameId, this.disconnected));
+        gc.setFlightCount(1);
     }
 }

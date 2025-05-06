@@ -29,6 +29,8 @@ public class Accepting extends PlayerState{
     public boolean allows(AcceptCommand command) {
         return true;
     }
+
+
     @Override
     public Command createDefaultCommand(String gameId,Player player) {
         int lv= player.getCurrentCard().getLevel();

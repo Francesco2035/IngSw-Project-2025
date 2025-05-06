@@ -97,6 +97,6 @@ public class TileEvent implements Event {
         visitor.visit(this);
     }
 
-    public TileEvent() {
-    }
+    public TileEvent() {}
+
 }

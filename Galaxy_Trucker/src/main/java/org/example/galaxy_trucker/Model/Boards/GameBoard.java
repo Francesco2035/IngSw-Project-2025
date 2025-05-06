@@ -2,9 +2,13 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 
+import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
+import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
@@ -26,6 +30,9 @@ public class GameBoard {
     private int PlayersOnBoard;
     private CardStacks CardStack;
     private Card CurrentCard;
+
+
+    private GameBoardListener listener;
 
 
 
@@ -69,14 +76,31 @@ public class GameBoard {
 //        NewPlayer.setState(new BuildingShip());
     }
 
-    public void StartHourglass() {
-        if(hourglass.isStartable() && hourglass.getUsages() > 0){
-            hourglass.setLock();
-            Thread t1 = new Thread(hourglass);
-            t1.start();
 
+    public void callHourglass(Player player) throws RuntimeException{
+        if(hourglass.getUsages() == 1 && !player.GetReady())
+            throw new RuntimeException("You need to finish your ship before using the hourglass");
+        else try{
+            StartHourglass();
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
         }
-        else throw new RuntimeException("Cannot start hourglass");
+    }
+
+
+    public void StartHourglass() throws RuntimeException{
+
+        if(this.GameLv == 1){
+            throw new IllegalStateException("Cannot use Hourglass in a level 1 game!");
+        }
+        else if(!hourglass.isStartable())
+            throw new  IllegalStateException("Hourglass is already running.");
+        else if(hourglass.getUsages() <= 0)
+            throw new RuntimeException("No Hourglass usages left.");
+        else{
+            hourglass.setLock();
+            hourglass.startHourglass();
+        }
     }
 
 
@@ -94,18 +118,65 @@ public class GameBoard {
      * sets the starting position of a player on the common board:
      * the position players[0] corresponds to the starting position of the 1st player
      * the leader (1st player) will be in the first position of the arraylist
-     * @param ID of the player
+     * @param pl reference to the player
      */
-    public void SetStartingPosition(String ID){
+    public void SetStartingPosition(Player pl){
 
         Player_IntegerPair cur = players.stream()
-                .filter(p -> ID.equals( p.getKey().GetID()) )
+                .filter(p -> pl.equals( p.getKey()) )
                 .findFirst().orElseThrow();
 
         SetNewPosition(cur, startPos[PlayersOnBoard], startPos[PlayersOnBoard]);
 
         PlayersOnBoard++;
     }
+
+
+    public void SetStartingPosition(Player pl, int index){
+
+        Player_IntegerPair cur = players.stream()
+                .filter(p -> pl.equals( p.getKey()) )
+                .findFirst().orElseThrow();
+
+        if(positions[startPos[index]] == null) {
+            SetNewPosition(cur, startPos[index], startPos[index]);
+
+            PlayersOnBoard++;
+        }
+        else throw new IllegalArgumentException("Starting position alredy taken!");
+    }
+
+
+    public void removePlayerAndShift(Player pl){
+
+        Player_IntegerPair cur = players.stream()
+                .filter(p -> pl.equals(p.getKey()) )
+                .findFirst().orElseThrow();
+
+        ArrayList<Player_IntegerPair> newList = new ArrayList<>();
+
+        int[] shiftedPositions = new int[players.size()];
+
+        int i=0;
+        for(Player_IntegerPair p : players){
+            if(!p.equals(cur))
+                newList.add(p);
+
+            shiftedPositions[i] = p.getValue();
+            i++;
+        }
+
+        i=0;
+        for(Player_IntegerPair p : newList){
+            SetNewPosition(p, shiftedPositions[i], shiftedPositions[i]);
+            i++;
+        }
+
+        players = newList;
+
+
+    }
+
 
 
     /**
@@ -190,6 +261,11 @@ public class GameBoard {
             OrderedPlayers.add(players.get(i));
         }
         players = OrderedPlayers;
+
+
+        //listener
+        sendUpdates(new GameBoardEvent(NewIndex, cur.getKey().GetID()));
+
     }
 
 
@@ -247,9 +323,13 @@ public class GameBoard {
         total-= playerBoard.getDamage();
         Tile[][] tiles = playerBoard.getPlayerBoard();
 
+    }
 
 
-
+    public void sendUpdates(GameBoardEvent event){
+        if(listener != null) {
+            listener.gameBoardChanged(event);
+        }
     }
 
 
