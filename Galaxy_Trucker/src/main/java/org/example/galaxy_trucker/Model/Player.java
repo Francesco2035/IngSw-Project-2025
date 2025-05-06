@@ -10,6 +10,7 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.io.Serializable;
@@ -96,7 +97,10 @@ public class Player implements Serializable {
 
 
     public void setState(PlayerState state) {
+
         this.PlayerState = state;
+        
+
     }
 
     public void setMyPlance(PlayerBoard myPlance) {

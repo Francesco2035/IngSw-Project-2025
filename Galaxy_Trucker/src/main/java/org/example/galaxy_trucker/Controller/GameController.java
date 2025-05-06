@@ -182,7 +182,7 @@ public class GameController {
         }
     }
 
-    public void startFlightMode() {
+    public void startFlightMode() {  ///  per aggiornare il
 
 //client si riconnete ma non può inviare input fino a che non si ricambia il controller
         ArrayList<Player> players = game.getGameBoard().getPlayers();
@@ -212,7 +212,6 @@ public class GameController {
                             if (currentPlayer.GetReady()) {
                                 index++;
                             }
-
 
                     }
 
