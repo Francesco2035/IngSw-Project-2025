@@ -45,7 +45,6 @@ public class Game implements Serializable {
         this.GameBoard.addPlayer(newborn);
         Players.put(newborn.GetID(), newborn);
         PlayerList.add(newborn);
-
     }
 
     public synchronized void RemovePlayer(String DeadMan){

@@ -107,15 +107,10 @@ public class Player implements Serializable {
         this.CurrentCard.ActivateCard();
     }
 
-    public void StartTimer() throws InterruptedException {
-        CommonBoard.StartHourglass();
+    public void StartTimer() throws RuntimeException, IllegalStateException {
+        CommonBoard.callHourglass(this);
     }
 
-    
-    public void useEnergy(int x, int y){
-
-    }
-    
 
 
     public void PickNewTile(int index)  {
@@ -206,10 +201,18 @@ public class Player implements Serializable {
     /**
      * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
      */
-    public void EndConstruction(){
-        CommonBoard.SetStartingPosition(this.ID);
-//        this.setState(new FinishedBuilding());
-       }
+    public void EndConstruction() throws IllegalStateException{
+        if(getCommonBoard().getLevel() ==1)
+            CommonBoard.SetStartingPosition(this);
+        else throw new IllegalStateException("Called a lv 1 command in a lv 2 game!");
+    }
+
+
+    public void EndConstruction(int index) throws IllegalStateException, IllegalArgumentException{
+        if(getCommonBoard().getLevel() ==2)
+            CommonBoard.SetStartingPosition(this, index);
+        else throw new IllegalStateException("Called a lv 2 command in a lv 1 game!");
+    }
 
 
     public void SetReady(boolean ready){
@@ -249,7 +252,5 @@ public class Player implements Serializable {
         this.cardListner = null;
     }
 
-    //DOVREI AGGIUNGERE UN MODO PER ARRIVARE A CARD DA PLAYER DIREI :)
-    //principalmente per chiamare i metodi di card dopo l'input
 
 }

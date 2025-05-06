@@ -47,24 +47,29 @@ public class CommandInterpreter {
         commandMap.put("Discard", this::createBuildingCommand);
         commandMap.put("FromBuffer", this::createBuildingCommand);
         commandMap.put("ToBuffer", this::createBuildingCommand);
+        commandMap.put("FinishBuilding", this::createFinishBuildingCommand);
         commandMap.put("AddCrew", this::createAddCrewCommand);
         commandMap.put("AddBrownAlien", this::createAddCrewCommand);
         commandMap.put("AddPurpleAlien", this::createAddCrewCommand);
+        commandMap.put("ChoosingPlanet", this::createChoosingPlanetCommand);
+        commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
         commandMap.put("Quit", this::createQuitCommand);
         commandMap.put("Ready", this::createReadyCommand);
         commandMap.put("RemoveTile", this::createRemoveTileCommand);
         //  altri comandi
         commandMap.put("DebugShip", this::createDebugShip);
 
+        commandMap.put("Reconnect", this::createReconnectCommand);
+
         commandMap.put("Accept", this::createAcceptCommand);
         commandMap.put("ChoosingPlanet", this::createChoosingPlanetsCommand); // il command usa planets con la s ma tu più volte lo hai scritto senza che faccio?
-        commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
         commandMap.put("DefendFromLarge",this::createDefendFromLargeCommand);
         commandMap.put("DefendFromSmall",this::createDefendFromSmallCommand);
-        commandMap.put("Theft",this::createTheftCommand);
-
-        commandMap.put("Reconnect", this::createReconnectCommand);
+        commandMap.put("Kill", this::createKillCommand);
+        commandMap.put("GiveAttack", this::createGiveAttackCommand);
+        commandMap.put("GiveSpeed", this::createGiveSpeedCommand);
     }
+
 
     private Command createReconnectCommand(String[] strings) {
         ReconnectCommand CMD = new ReconnectCommand(token, gameId, playerId,lv, "Reconnect");
@@ -84,7 +89,9 @@ public class CommandInterpreter {
     }
 
 
-
+    private Command createChoosingPlanetCommand(String[] strings) {
+        return null;
+    }
 
     private Command createAddCrewCommand(String[] strings) {
 
@@ -195,6 +202,23 @@ public class CommandInterpreter {
 
         return new BuildingCommand(x, y, rotation,position, gameId,playerId, lv, title, token);
     }
+
+
+    private Command createFinishBuildingCommand(String[] parts) {
+        int index = -1;
+
+        if (lv == 2) {
+            if(parts.length != 2 )
+                throw new IllegalArgumentException("Comando FinishBuilding richiede 1 argomento: Posizione iniziale scelta");
+            else
+                index = Integer.parseInt(parts[1]);
+        }
+        else if (parts.length != 1 && lv == 1)
+            throw new IllegalArgumentException("Comando FinishBuilding non richiede argomenti");
+
+        return new FinishBuildingCommand(index, gameId,playerId, lv, "FinishBuilding", token);
+    }
+
 
     private Command createRemoveTileCommand(String[] parts) {
         if (parts.length != 3) {
@@ -339,20 +363,6 @@ public class CommandInterpreter {
             }
         }
         return new KillCommand(coordinates,gameId,playerId,lv,"KillCommand",token);
-    }
-
-    private Command createTheftCommand(String[] parts) {
-        if (parts.length != 4) {
-            throw new IllegalArgumentException("Comando theft richiede 3 argomenti le coordinate dello storage e l'indice del good nello storage");
-        }
-        int index= Integer.parseInt(parts[1]);
-
-        int x= Integer.parseInt(parts[2]);
-        int y= Integer.parseInt(parts[3]);
-        IntegerPair storage = new IntegerPair(x,y);
-
-        return new Theft(index,storage,gameId,playerId,lv,"TheftCommand",token);
-
     }
 
 

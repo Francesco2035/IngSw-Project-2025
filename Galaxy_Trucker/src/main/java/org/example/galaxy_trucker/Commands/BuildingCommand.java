@@ -8,6 +8,7 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.Objects;
 
 public class BuildingCommand extends Command implements Serializable {
 
@@ -25,6 +26,7 @@ public class BuildingCommand extends Command implements Serializable {
     @JsonProperty("position")
     int position;
 
+
     public BuildingCommand(){}
 
     public BuildingCommand(int x, int y, int rotation, int position, String gameId, String playerId, int lv, String title, String token) {
@@ -41,7 +43,9 @@ public class BuildingCommand extends Command implements Serializable {
 
     @Override
     public void execute(Player player) throws RemoteException, JsonProcessingException {
-        switch (title){
+
+        if(!player.GetReady() || (Objects.equals(title, "Hourglass"))){
+            switch (title) {
 
             case "SeeDeck": {
                 player.getCommonBoard().getCardStack().notify(playerId, x);
@@ -82,11 +86,12 @@ public class BuildingCommand extends Command implements Serializable {
             case "Hourglass":{
                     try {
                         player.StartTimer();
-                    } catch (InterruptedException e) {
+                    } catch (RuntimeException e) {
                         throw new RuntimeException(e);
                     }
-
-            }break;
+                    break;
+                }
+            }
         }
 
     }

@@ -97,7 +97,6 @@ public class GameController {
         });
         t.start();
         threads.put(playerId, t);
-
     }
 
 
@@ -167,7 +166,13 @@ public class GameController {
         ControllerMap.put(player.GetID(), controller);
 
         if(buildingCount == ControllerMap.size()){
-            game.getGameBoard().StartHourglass();
+
+            try {
+                game.getGameBoard().StartHourglass();
+            }catch(RuntimeException e){
+                System.out.println(e.getMessage());
+            }
+
             buildingCount = -1;
         }
 
@@ -276,6 +281,11 @@ public class GameController {
 
     public void setBuildingCount(int count) {
         buildingCount += count;
+    }
+
+
+    public Game getGame() {
+        return game;
     }
 
     public void stopPlayer(UUID token) {
