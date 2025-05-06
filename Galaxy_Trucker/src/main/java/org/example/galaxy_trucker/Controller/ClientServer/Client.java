@@ -140,10 +140,7 @@ public class Client implements EventVisitor {
     public void visit(TileEvent event) {
         this.view.updateBoard(event);
     }
-
-    //public void visit(GameBoard event)
-    //this.view.updateGameboard
-
+    
     @Override
     public void visit(UncoverdTileSetEvent event) {
         this.view.updateUncoveredTilesSet(event);

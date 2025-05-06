@@ -3,13 +3,12 @@ package org.example.galaxy_trucker.Controller.ClientServer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Commands.InputReader;
+import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
-import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 
@@ -364,6 +363,7 @@ public class TUI implements View {
     }
 
 
+
     private void showUncoveredTiles() {
         System.out.println("############################ UNCOVERED TILES ############################\n");
 
@@ -460,7 +460,10 @@ public class TUI implements View {
         }
     }
 
-
+    @Override
+    public void updateGameBoard(GameBoardEvent event) {
+        // aggiungere implementazione di grafica di gioco
+    }
 
 
 }

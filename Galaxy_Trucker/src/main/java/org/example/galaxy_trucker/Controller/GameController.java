@@ -78,6 +78,7 @@ public class GameController {
         p.getCommonBoard().getTilesSets().setListeners(vv);
         p.setCardListner(vv);
         //p.getGmaebord.setVrtualview(vv);
+        p.getCommonBoard().addListener(p.GetID(),vv);
 
         Thread t = new Thread(() -> {
             while (true) {

@@ -2,7 +2,9 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 
+import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
+import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
 import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Cards.Card;
@@ -15,6 +17,7 @@ import org.example.galaxy_trucker.Model.Tiles.TileSets;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 
 
 public class GameBoard {
@@ -32,8 +35,10 @@ public class GameBoard {
     private Card CurrentCard;
 
 
+    //usare una lista di listener al posto di un singolo listener
     private GameBoardListener listener;
 
+    private HashMap<String, GameBoardListener> gameBoardListenerHashMap;
 
 
     public GameBoard(TileSets list, int lv, CardStacks stack) {
@@ -326,11 +331,38 @@ public class GameBoard {
     }
 
 
+    public void setListener(GameBoardListener listener){
+        this.listener = listener;
+    }
+
+    public GameBoardListener getListener(){
+        return listener;
+    }
+
     public void sendUpdates(GameBoardEvent event){
         if(listener != null) {
             listener.gameBoardChanged(event);
         }
+
+        if(!this.gameBoardListenerHashMap.isEmpty()){
+            this.gameBoardListenerHashMap.values().forEach(listener -> listener.gameBoardChanged(event));
+        }
     }
 
+
+
+    public void addListener(String player, GameBoardListener listener){
+        this.gameBoardListenerHashMap.putIfAbsent(player,listener);
+    }
+
+    public void removeListener(String player){
+        this.gameBoardListenerHashMap.remove(player);
+    }
+
+
+//
+//    public void notify(String player, int i) {
+//
+//    }
 
 }
