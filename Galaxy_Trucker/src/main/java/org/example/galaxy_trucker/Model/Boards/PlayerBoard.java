@@ -456,7 +456,7 @@ public class PlayerBoard {
         }
 
         else {
-            if (checkIllegal(visitedPositions)){ //secondo me si può togliere
+            if (checkIllegal(visitedPositions)){
                 updateAttributes(r,c);
                 return true;
             }
@@ -877,6 +877,9 @@ public class PlayerBoard {
         }
 
         clonedPlayerBoard.shield = Arrays.copyOf(shield, shield.length);
+        for(HousingUnit unit : clonedPlayerBoard.getHousingUnits()){
+            unit.checkNearbyUnits(clonedPlayerBoard);
+        }
         clonedPlayerBoard.setListener(this.getListener());
 
         return clonedPlayerBoard;
