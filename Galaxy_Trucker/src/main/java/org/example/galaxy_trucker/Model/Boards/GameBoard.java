@@ -132,7 +132,7 @@ public class GameBoard {
     }
 
 
-    public void SetStartingPosition(Player pl, int index){
+    public void SetStartingPosition (Player pl, int index) throws IllegalArgumentException{
 
         Player_IntegerPair cur = players.stream()
                 .filter(p -> pl.equals( p.getKey()) )
@@ -147,6 +147,7 @@ public class GameBoard {
     }
 
 
+    
     public void removePlayerAndShift(Player pl){
 
         Player_IntegerPair cur = players.stream()
