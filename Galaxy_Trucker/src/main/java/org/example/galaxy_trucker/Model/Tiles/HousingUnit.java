@@ -84,6 +84,14 @@ public abstract class HousingUnit extends Component{
         return y;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
 
     public boolean isPopulated(){
         return getNumHumans() > 0 || isBrownAlien() || isPurpleAlien();
@@ -91,8 +99,8 @@ public abstract class HousingUnit extends Component{
 
     public void checkNearbyUnits(PlayerBoard pb){
         if(getNumHumans() > 0 || isBrownAlien() || isPurpleAlien()){
-            int x = 0;
-            int y = 0;
+            int x = getX();
+            int y = getY();
             int[][] validPlayerBoard = pb.getValidPlayerBoard();
             int index = 0;
             pb.getConnectedHousingUnits().remove(this);
@@ -117,6 +125,11 @@ public abstract class HousingUnit extends Component{
                 if (pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y+1).getComponent()))).isPopulated()){
                     nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y+1).getComponent()))));
                 }
+            }
+
+            if(!nearbyunits.isEmpty()){
+                pb.getConnectedHousingUnits().remove(this);
+                pb.getConnectedHousingUnits().add(this);
             }
         }
     }

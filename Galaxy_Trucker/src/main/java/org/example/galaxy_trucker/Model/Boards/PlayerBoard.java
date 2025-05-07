@@ -877,6 +877,12 @@ public class PlayerBoard {
         }
 
         clonedPlayerBoard.shield = Arrays.copyOf(shield, shield.length);
+
+//        for(HousingUnit unit : clonedPlayerBoard.getHousingUnits()){
+//            unit.controlValidity(clonedPlayerBoard, unit.getX(), unit.getY());
+//        }
+        clonedPlayerBoard.setListener(this.getListener());
+
         for(HousingUnit unit : clonedPlayerBoard.getHousingUnits()){
             unit.checkNearbyUnits(clonedPlayerBoard);
         }
