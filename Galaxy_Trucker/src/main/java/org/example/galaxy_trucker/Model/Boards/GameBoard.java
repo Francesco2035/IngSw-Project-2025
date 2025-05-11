@@ -149,32 +149,56 @@ public class GameBoard {
 
     
     public void removePlayerAndShift(Player pl){
+        ArrayList<Player_IntegerPair> newList = new ArrayList<>();
+
+        int[] shiftedPositions = new int[players.size()];
 
         Player_IntegerPair cur = players.stream()
                 .filter(p -> pl.equals(p.getKey()) )
                 .findFirst().orElseThrow();
 
-        ArrayList<Player_IntegerPair> newList = new ArrayList<>();
 
-        int[] shiftedPositions = new int[players.size()];
+        if(cur.equals(players.getLast())) {
+            positions[cur.getValue()] = null;
+            players.remove(cur);
+            System.out.println("diocan");
+        }
+        else{
+            int i=0;
+            for(Player_IntegerPair p : players){
+                shiftedPositions[i] = p.getValue();
+                positions[shiftedPositions[i]] = null;
+                i++;
+            }
 
-        int i=0;
-        for(Player_IntegerPair p : players){
-            if(!p.equals(cur))
-                newList.add(p);
+            i=0;
+            for(Player_IntegerPair p : players)
+                if(!p.equals(cur)){
+                    newList.add(new Player_IntegerPair(p.getKey(), shiftedPositions[i]));
+                    positions[shiftedPositions[i]] = p.getKey();
+                    i++;
+                }
 
-            shiftedPositions[i] = p.getValue();
-            i++;
+//        i=0;
+//        for(Player_IntegerPair p : newList){
+//            SetNewPosition(p, shiftedPositions[i], shiftedPositions[i]);
+//            i++;
+//        }
+
+//            for(int j=0; j<newList.size(); j++){
+//                SetNewPosition(newList.get(j), shiftedPositions[j], shiftedPositions[j]);
+//            }
+            System.out.println("\nprima\n");
+            for(Player_IntegerPair p : players)
+                System.out.println(p.getKey().GetID() + " pos: "+p.getValue());
+
+            players = newList;
         }
 
-        i=0;
-        for(Player_IntegerPair p : newList){
-            SetNewPosition(p, shiftedPositions[i], shiftedPositions[i]);
-            i++;
-        }
 
-        players = newList;
-
+        System.out.println("\ndopo\n");
+        for(Player_IntegerPair p : players)
+            System.out.println(p.getKey().GetID() + " pos: "+p.getValue());
 
     }
 
