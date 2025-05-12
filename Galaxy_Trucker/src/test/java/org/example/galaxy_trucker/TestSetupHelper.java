@@ -4,12 +4,11 @@ import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.DOUBLE;
 import org.example.galaxy_trucker.Model.Connectors.SINGLE;
+import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.GAGen;
 
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
-import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.SewerPipes;
+import org.example.galaxy_trucker.Model.Tiles.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -94,6 +93,7 @@ public class TestSetupHelper {
         playerBoard.insertTile(modular1,7,4);
         playerBoard.insertTile(sewerpipes,7,3);
         playerBoard.insertTile(hotWaterHeater,8,3);
+        playerBoard.insertTile(modular1,5,6);
 //        playerBoard.insertTile(modular2,8,4);
 //        playerBoard.insertTile(modular3,8,5);
 //        playerBoard.insertTile(shield,6,3);
@@ -145,6 +145,40 @@ public class TestSetupHelper {
     }
 
     public static PlayerBoard createInitializedBoard3(){
+        //test housing unit
+        Tile modular1 = new Tile(new ModularHousingUnit(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        Tile modular2 = new Tile(new ModularHousingUnit(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        Tile modular3 = new Tile(new ModularHousingUnit(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        Tile modular4 = new Tile(new ModularHousingUnit(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        Tile modular5 = new Tile(new ModularHousingUnit(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        Tile modular6 = new Tile(new ModularHousingUnit(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        Tile modular7 = new Tile(new ModularHousingUnit(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        Tile modular8 = new Tile(new ModularHousingUnit(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        Tile sewerPipes = new Tile(new SewerPipes(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        AlienAddons alienAddonsBrown = new AlienAddons();
+        alienAddonsBrown.setType(0);
+        Tile brown1 = new Tile(alienAddonsBrown,UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        Tile brown2 = new Tile(alienAddonsBrown,UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        AlienAddons alienAddonsPurple = new AlienAddons();
+        alienAddonsPurple.setType(1);
+        Tile purple = new Tile(alienAddonsPurple,UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        playerBoard3.insertTile(modular1, 7, 8);
+        playerBoard3.insertTile(modular2, 6, 7);
+        playerBoard3.insertTile(modular3, 5, 7);
+        playerBoard3.insertTile(modular4, 4, 7);
+        playerBoard3.insertTile(modular5, 5, 6);
+        playerBoard3.insertTile(modular6, 7, 5);
+        playerBoard3.insertTile(modular7, 6, 4);
+        playerBoard3.insertTile(modular8, 5, 4);
+        playerBoard3.insertTile(purple, 7, 7);
+        playerBoard3.insertTile(brown1, 6, 5);
+        playerBoard3.insertTile(brown2, 8, 5);
+        playerBoard3.insertTile(sewerPipes,6,8);
+        playerBoard3.insertTile(sewerPipes,7,6);
+
+        playerBoard3.insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6, 6);
+
+
         return playerBoard3;
     }
 

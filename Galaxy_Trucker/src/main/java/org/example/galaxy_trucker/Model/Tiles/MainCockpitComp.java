@@ -73,25 +73,29 @@ public class MainCockpitComp extends HousingUnit {
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
         this.playerBoard = pb;
         this.connected = false;
-        playerBoard.getConnectedHousingUnits().remove(this);
+        //playerBoard.getConnectedHousingUnits().remove(this);
         ArrayList<HousingUnit> nearbyunits = getNearbyHousingUnits();
 
         int[][] validPlayerBoard = pb.getValidPlayerBoard();
         if (validPlayerBoard[x-1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(1), pb.getTile(x-1,y).getConnectors().get(3)) && playerBoard.getHousingUnits().contains(pb.getTile(x-1,y).getComponent())) {
-            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x-1,y).getComponent()))));
-            connected = true;
+            HousingUnit u = pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x-1,y).getComponent())));
+            nearbyunits.remove(u);
+            nearbyunits.add(u);
         }
         if (validPlayerBoard[x+1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(3), pb.getTile(x+1,y).getConnectors().get(1))&& playerBoard.getHousingUnits().contains(pb.getTile(x+1,y).getComponent())) {
-            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x+1,y).getComponent()))));
-            connected = true;
+            HousingUnit u = pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x+1,y).getComponent())));
+            nearbyunits.remove(u);
+            nearbyunits.add(u);
         }
         if (validPlayerBoard[x][y-1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(0), pb.getTile(x,y-1).getConnectors().get(2))&& playerBoard.getHousingUnits().contains(pb.getTile(x,y-1).getComponent())) {
-            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y-1).getComponent()))));
-            connected = true;
+            HousingUnit u = pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y-1).getComponent())));
+            nearbyunits.remove(u);
+            nearbyunits.add(u);
         }
         if (validPlayerBoard[x][y+1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(2), pb.getTile(x,y+1).getConnectors().get(0))&& playerBoard.getHousingUnits().contains(pb.getTile(x,y+1).getComponent())) {
-            nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y+1).getComponent()))));
-            connected = true;
+            HousingUnit u = pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y+1).getComponent())));
+            nearbyunits.remove(u);
+            nearbyunits.add(u);
         }
 
         return true;
@@ -161,6 +165,8 @@ public class MainCockpitComp extends HousingUnit {
         clone.setConnected(connected);
         clone.setNumHumans(numHumans);
         clone.setPlayerBoard(clonedPlayerBoard);
+        clone.setX(6);
+        clone.setY(6);
         if (connected && this.playerBoard.getConnectedHousingUnits().contains(this)){
             clonedPlayerBoard.getConnectedHousingUnits().add(clone);
         }
