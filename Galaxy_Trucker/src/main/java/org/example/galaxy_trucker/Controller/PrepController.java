@@ -31,6 +31,11 @@ public class PrepController extends Controller implements HourGlassListener {
             gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId,this.disconnected));
         }
         else{
+            //se la nave non è valida tolgo il razzo dalla gameboard, va ancora sistemato il fatto del cambio di stato/comandi chiamabili
+            synchronized (curPlayer.getCommonBoard()) {
+                curPlayer.getCommonBoard().removePlayerAndShift(curPlayer);
+            }
+
             gc.setControllerMap(curPlayer,new CheckValidityController(curPlayer, gameId,this.disconnected));
             curPlayer.setState(new CheckValidity());
         }
@@ -42,8 +47,7 @@ public class PrepController extends Controller implements HourGlassListener {
     public void onFinish() {
         //settiamo player a choosePosition
         //dove è acconsentito un solo tipo di comando che è la Finish Building
-        //curPlayer.SetReady(true);
-        //gc.changeState();
+        //che setta curPlayer ready true
 
         synchronized (gc){
             gc.getGame().getPlayers().values()

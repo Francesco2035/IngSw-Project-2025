@@ -131,4 +131,56 @@ class GameBoardTest {
 //        gb.movePlayer("Player1", 16);
     }
 
+
+    @Test
+    void RemoveAndShiftTest() throws IOException {
+
+        GAGen gag = new GAGen();
+        TileSets tileSets = new TileSets(gag);
+        GameBoard gb = new GameBoard(tileSets, 2, null);
+
+        Player p1 = new Player();
+        p1.setId("Player1");
+        Player p2 = new Player();
+        p2.setId("Player2");
+        Player p3 = new Player();
+        p3.setId("Player3");
+        Player p4 = new Player();
+        p4.setId("Player4");
+
+        gb.addPlayer(p1);
+        gb.addPlayer(p2);
+        gb.addPlayer(p3);
+        gb.addPlayer(p4);
+
+        p1.EndConstruction(0);
+        p2.EndConstruction(1);
+        p3.EndConstruction(2);
+        p4.EndConstruction(3);
+
+        assertEquals(p1, gb.getPositions()[6]);
+        assertEquals(p2, gb.getPositions()[3]);
+        assertEquals(p3, gb.getPositions()[1]);
+        assertEquals(p4, gb.getPositions()[0]);
+
+
+        gb.removePlayerAndShift(p3);
+        assertEquals(p1, gb.getPositions()[6]);
+        assertEquals(p2, gb.getPositions()[3]);
+        assertEquals(p4, gb.getPositions()[1]);
+        assertNull(gb.getPositions()[0]);
+
+        gb.removePlayerAndShift(p4);
+        assertEquals(p1, gb.getPositions()[6]);
+        assertEquals(p2, gb.getPositions()[3]);
+        assertNull(gb.getPositions()[1]);
+
+        gb.removePlayerAndShift(p1);
+        assertEquals(p2, gb.getPositions()[6]);
+        assertNull(gb.getPositions()[3]);
+
+        gb.removePlayerAndShift(p2);
+        assertNull(gb.getPositions()[6]);
+
+    }
 }
