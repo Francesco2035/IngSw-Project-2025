@@ -4,14 +4,14 @@ import org.example.galaxy_trucker.Model.Player;
 
 public class Player_IntegerPair {
     Player player;
-    Integer number;
+    Integer score;
 
     Player_IntegerPair(Player player, Integer number) {
         this.player = player;
-        this.number = number;
+        this.score = number;
     }
 
     public Player getKey(){return player;}
-    public Integer getValue(){return number;}
-
+    public Integer getValue(){return score;}
+    public void setValue(Integer value){this.score=value;}
 }

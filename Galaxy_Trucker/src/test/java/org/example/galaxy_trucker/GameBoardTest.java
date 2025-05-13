@@ -175,12 +175,19 @@ class GameBoardTest {
         assertEquals(p2, gb.getPositions()[3]);
         assertNull(gb.getPositions()[1]);
 
+        p3.EndConstruction(3);
+        assertEquals(p1, gb.getPositions()[6]);
+        assertEquals(p2, gb.getPositions()[3]);
+        assertEquals(p3, gb.getPositions()[0]);
+
         gb.removePlayerAndShift(p1);
         assertEquals(p2, gb.getPositions()[6]);
-        assertNull(gb.getPositions()[3]);
+        assertEquals(p3, gb.getPositions()[3]);
+        assertNull(gb.getPositions()[0]);
 
         gb.removePlayerAndShift(p2);
-        assertNull(gb.getPositions()[6]);
+        assertEquals(p3, gb.getPositions()[6]);
+        assertNull(gb.getPositions()[3]);
 
     }
 }
