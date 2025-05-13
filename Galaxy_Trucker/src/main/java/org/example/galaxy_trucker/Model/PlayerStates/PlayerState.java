@@ -110,4 +110,8 @@ public abstract class PlayerState {
     public Command createDefaultCommand(String gameId,Player player) {
         return null;
     }
+
+    public void shouldAct(Player player) {
+        player.SetHasActed(false);
+    }
 }

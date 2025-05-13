@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
+import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
@@ -85,8 +86,14 @@ public class GameController {
                     Controller current = ControllerMap.get(playerId);
                     //vedi se è connesso
                     //se è connesso prendi dalla coda e chiami il metodo
-                    Command cmd = queue.take();
-                    current.action(cmd, this);
+
+                    if(current.disconnected==true){ //questo è il thread  dei command fuori dalla flight mode giusto?
+                        current.DefaultAction(this);
+                    }
+                    else{
+                        Command cmd = queue.take(); // se questa è esclusiva del player si potrebbe svuotare in caso di disconnessione
+                        current.action(cmd, this);
+                    }
 
                     //se non è connesso chiami defaultaction
                 } catch (InterruptedException e) {
@@ -194,11 +201,13 @@ public class GameController {
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         stopAllPlayerThreads();
         flightThread = new Thread(() -> {
+                   Card card= game.getGameBoard().NewCard();
+                    //game.getGameBoard().getPlayers().getFirst()
+            while (!card.isFinished()) {
 
-            while (!checkGameOver()) {
                 int index = 0;
                 /// il game pesca la carta automaticamente
-                game.getGameBoard().NewCard();
+                //game.getGameBoard().NewCard();
 
                 while (index < players.size()) {
                     Player currentPlayer = players.get(index);
@@ -215,7 +224,7 @@ public class GameController {
                         ///  credo ci vada una thìry ctch ma non la stava lanciando :)
 
                             ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
-                            if (currentPlayer.GetReady()) {
+                            if (currentPlayer.GetHasActed()) {
                                 index++;
                             }
 
@@ -233,7 +242,7 @@ public class GameController {
 
 
                                 ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
-                                if (currentPlayer.GetReady()) {
+                                if (currentPlayer.GetHasActed()) {
                                     index++;
                                 }
                             } else {
@@ -251,7 +260,8 @@ public class GameController {
                 System.out.println("Flight phase complete");
 
             }
-            stopGame();
+            /// non deve finire il game ma semplicemente questo thread
+            //stopGame();
         });
         flightThread.start();
 

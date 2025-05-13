@@ -39,7 +39,7 @@ public class Killing extends PlayerState {
 
     @Override // dovrei magari prima controllar che sia possibile uccidere quel numero di persone senno il player perde sksk
     public Command createDefaultCommand(String gameId, Player player) {
-        int lv= player.getCurrentCard().getLevel();
+        int lv= player.getCommonBoard().getLevel();
         PlayerBoard board=player.getmyPlayerBoard();
         int punishment = player.getCurrentCard().getDefaultPunishment();
 

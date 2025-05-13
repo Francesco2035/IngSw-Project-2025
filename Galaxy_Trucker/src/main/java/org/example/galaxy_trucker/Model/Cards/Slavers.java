@@ -193,6 +193,7 @@ public class Slavers extends Card{
         for (int i = 0; i < PlayerList.size(); i++) {
             PlayerList.get(i).setState(new BaseState());
         }
+        this.setFinished(true);
     }
 
     public Player getCurrentPlayer() {

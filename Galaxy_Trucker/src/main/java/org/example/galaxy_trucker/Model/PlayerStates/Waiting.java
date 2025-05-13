@@ -5,7 +5,16 @@ import org.example.galaxy_trucker.Model.Player;
 
 public class Waiting extends PlayerState{
 
+@Override
+    public Command createDefaultCommand(String gameId,Player player) { // facendo così non dovrebbe agire nel caso il thread continui a chiamare
+        player.SetHasActed(true);
+        return null;
+    }
 
+@Override
+public void shouldAct(Player player) {
+    player.SetHasActed(true);
+}
 
 
 }

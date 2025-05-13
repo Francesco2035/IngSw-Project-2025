@@ -51,7 +51,6 @@ public class CommandInterpreter {
         commandMap.put("AddCrew", this::createAddCrewCommand);
         commandMap.put("AddBrownAlien", this::createAddCrewCommand);
         commandMap.put("AddPurpleAlien", this::createAddCrewCommand);
-        commandMap.put("ChoosingPlanet", this::createChoosingPlanetCommand);
         commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
         commandMap.put("Quit", this::createQuitCommand);
         commandMap.put("Ready", this::createReadyCommand);
@@ -89,9 +88,7 @@ public class CommandInterpreter {
     }
 
 
-    private Command createChoosingPlanetCommand(String[] strings) {
-        return null;
-    }
+
 
     private Command createAddCrewCommand(String[] strings) {
 

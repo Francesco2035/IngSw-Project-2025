@@ -53,9 +53,11 @@ public class HandleCargo extends PlayerState {
 
     @Override
     public Command createDefaultCommand(String gameId, Player player) {
-        int lv= player.getCurrentCard().getLevel();
+        int lv= player.getCommonBoard().getLevel();
+
+
     /// il default è il basta gestione cargo anche se non dovrebbero esistere casi in cui capita da disconnessi
-        return  null;
+      return new HandleCargoCommand(0,null,gameId, player.GetID(), lv,"Finish","placeholder");
     }
 
 }

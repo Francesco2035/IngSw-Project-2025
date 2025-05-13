@@ -270,7 +270,7 @@ public class GameBoard {
 
 
 
-    public void NewCard(){
+    public Card NewCard(){
         CurrentCard = CardStack.PickNewCard();
 
         for(Player_IntegerPair p : players){
@@ -280,6 +280,7 @@ public class GameBoard {
         CurrentCard.setBoard(this);
         CurrentCard.CardEffect();
         System.out.println("Id Card: " +CurrentCard.getId() + " "+ CurrentCard.getClass().getName());
+        return CurrentCard;
     }
 
 

@@ -25,6 +25,7 @@ public class Player implements Serializable {
     private PlayerBoard myPlayerBoard;
     private String ID;
     private boolean ready;
+    private  boolean HasActed;
     private int credits;
     private CardListner cardListner;
 
@@ -53,6 +54,7 @@ public class Player implements Serializable {
     public Player()  {
         credits = 0;
         ready = false;
+        HasActed = false;
         CurrentTile = null;
         PlayerState= null;
         GoodsToHandle = new ArrayList<>();
@@ -99,7 +101,7 @@ public class Player implements Serializable {
     public void setState(PlayerState state) {
 
         this.PlayerState = state;
-        
+        state.shouldAct(this);
 
     }
 
@@ -222,6 +224,9 @@ public class Player implements Serializable {
     public void SetReady(boolean ready){
         this.ready = ready;
     }
+    public void SetHasActed(boolean hasActed){
+        this.HasActed = hasActed;
+    }
     public void setId(String id){this.ID = id;}
 
     public void setBoards(GameBoard CommonBoard) {
@@ -234,6 +239,11 @@ public class Player implements Serializable {
     public String GetID() {return this.ID;}
     public int GetCredits() {return this.credits;}
     public boolean GetReady() {return this.ready;}
+
+    public boolean GetHasActed() {
+        return HasActed;
+    }
+
     public PlayerBoard getmyPlayerBoard() {return myPlayerBoard;}
 
     public Card getCurrentCard() {

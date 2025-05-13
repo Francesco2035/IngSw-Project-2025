@@ -24,4 +24,10 @@ public class BaseState extends PlayerState {
 
     @Override
     public boolean allows(DebugShip command){return true;}
+
+    @Override
+    public Command createDefaultCommand(String gameId,Player player) {
+        int lv= player.getCommonBoard().getLevel();
+        return new ReadyCommand(gameId,player.GetID(),lv,"ready",true,"placeholder");
+    }
 }
