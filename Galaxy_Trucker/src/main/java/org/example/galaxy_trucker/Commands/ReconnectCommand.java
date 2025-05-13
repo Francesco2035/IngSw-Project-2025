@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
+import org.example.galaxy_trucker.Model.Player;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -23,6 +25,11 @@ public class ReconnectCommand extends Command implements Serializable {
     }
 
     public ReconnectCommand() {
+
+    }
+
+    @Override
+    public void execute(Player player) throws IOException {
 
     }
 
