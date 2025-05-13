@@ -71,7 +71,7 @@ public class GameBoard {
      */
     public void addPlayer(Player NewPlayer){
         NewPlayer.setBoards(this);
-        Player_IntegerPair NewPair = new Player_IntegerPair(NewPlayer, 0);
+        Player_IntegerPair NewPair = new Player_IntegerPair(NewPlayer, -1);
         this.players.add(NewPair);
 //        NewPlayer.setState(new BuildingShip());
     }
@@ -107,7 +107,7 @@ public class GameBoard {
     public void removePlayer(Player DeadMan){
 
         Player_IntegerPair eliminated = players.stream()
-                .filter(p -> DeadMan.equals( p.getKey()) )
+                .filter(p -> DeadMan.equals( p.getKey()))
                 .findFirst().orElseThrow();
 
         players.remove(eliminated);
@@ -148,8 +148,7 @@ public class GameBoard {
 
 
     
-    public void removePlayerAndShift(Player pl){
-        ArrayList<Player_IntegerPair> newList = new ArrayList<>();
+    public void removePlayerAndShift(Player pl) throws  RuntimeException{
 
         int[] shiftedPositions = new int[players.size()];
 
@@ -158,23 +157,27 @@ public class GameBoard {
                 .findFirst().orElseThrow();
 
 
+
         if(cur.equals(players.getLast())) {
             positions[cur.getValue()] = null;
-            players.remove(cur);
-            System.out.println("diocan");
+            cur.setValue(-1);
         }
         else{
             int i=0;
             for(Player_IntegerPair p : players){
-                shiftedPositions[i] = p.getValue();
-                positions[shiftedPositions[i]] = null;
-                i++;
+                if(p.getValue() >=0){
+                    shiftedPositions[i] = p.getValue();
+                    positions[shiftedPositions[i]] = null;
+                    i++;
+                }
             }
+
+            cur.setValue(-1);
 
             i=0;
             for(Player_IntegerPair p : players)
-                if(!p.equals(cur)){
-                    newList.add(new Player_IntegerPair(p.getKey(), shiftedPositions[i]));
+                if(p.getValue() >=0){
+                    p.setValue(shiftedPositions[i]);
                     positions[shiftedPositions[i]] = p.getKey();
                     i++;
                 }
@@ -188,17 +191,10 @@ public class GameBoard {
 //            for(int j=0; j<newList.size(); j++){
 //                SetNewPosition(newList.get(j), shiftedPositions[j], shiftedPositions[j]);
 //            }
-            System.out.println("\nprima\n");
-            for(Player_IntegerPair p : players)
-                System.out.println(p.getKey().GetID() + " pos: "+p.getValue());
 
-            players = newList;
         }
 
 
-        System.out.println("\ndopo\n");
-        for(Player_IntegerPair p : players)
-            System.out.println(p.getKey().GetID() + " pos: "+p.getValue());
 
     }
 
