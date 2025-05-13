@@ -345,7 +345,7 @@ public class GameBoard {
         }
 
         if(!this.gameBoardListenerHashMap.isEmpty()){
-            this.gameBoardListenerHashMap.values().forEach(listener -> listener.gameBoardChanged(event));
+            this.gameBoardListenerHashMap.values().forEach(l -> l.gameBoardChanged(event));
         }
     }
 
