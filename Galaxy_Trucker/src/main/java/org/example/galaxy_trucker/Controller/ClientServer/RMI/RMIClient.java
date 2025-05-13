@@ -37,6 +37,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
 
 
+
     public RMIClient(Client client) throws RemoteException{
         me =  new Player();
         myGame = null;
@@ -116,6 +117,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         commandInterpreter = new CommandInterpreter(playerId, gameId);
         commandInterpreter.setlv(level);
+
         commandInterpreter.setClient(this);
         LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login");
         loginCommand.setClient(this);
@@ -155,7 +157,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     @Override
     public void receiveToken(String token) throws RemoteException {
+
         this.commandInterpreter.setToken(token);
+        this.client.getView().setGameboard(commandInterpreter.getLv());
         System.out.println(token);
     }
 

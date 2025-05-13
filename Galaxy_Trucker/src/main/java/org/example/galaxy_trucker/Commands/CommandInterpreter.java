@@ -16,6 +16,10 @@ public class CommandInterpreter {
     private String token;
     private ClientInterface client;
 
+    public int getLv(){
+        return lv;
+    }
+
     public void setClient(ClientInterface client) {
         this.client = client;
     }

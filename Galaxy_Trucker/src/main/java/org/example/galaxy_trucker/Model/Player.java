@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Listeners.CardListner;
+import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
@@ -30,6 +31,8 @@ public class Player implements Serializable {
     public GameBoard getCommonBoard() {
         return CommonBoard;
     }
+
+
 
     public Tile getCurrentTile() {
         return CurrentTile;
@@ -213,6 +216,7 @@ public class Player implements Serializable {
             try {
                 CommonBoard.SetStartingPosition(this, index);
             }catch(IllegalStateException e){
+                System.out.println("BRO ESPLOSA END OF CONSTRUCTION");
                 throw e;
             }
         else throw new IllegalStateException("Called a lv 2 command in a lv 1 game!");

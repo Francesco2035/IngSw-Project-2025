@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Controller.ClientServer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Commands.InputReader;
+import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -45,8 +46,9 @@ public class TUI implements View {
     private Thread inputThread;
     private Boolean connected = false;
     private HashMap<Integer, IntegerPair> positionToGameboard = new HashMap<>();
+    private HashMap<String,Integer > PlayerToPosition = new HashMap<>();
 
-
+    @Override
     public void setGameboard(int lv) {
         this.lv = lv;
         int position = 4;
@@ -151,6 +153,8 @@ public class TUI implements View {
             System.err.println("Error loading names: " + e.getMessage());
         }
     }
+
+
 
 
     @Override
@@ -435,7 +439,18 @@ public class TUI implements View {
     }
 
     @Override
-    public void updateGameboard() {
+    public void updateGameboard(GameBoardEvent event) {
+
+        int x = positionToGameboard.get(event.getPosition()).getFirst();
+        int y = positionToGameboard.get(event.getPosition()).getSecond();
+        if(PlayerToPosition.containsKey(event.getPlayerID())){
+
+        }
+        else{
+            PlayerToPosition.put(event.getPlayerID(), event.getPosition());
+            Gameboard[x][y][3] = "|"+centerTextAnsi(event.getPlayerID(),23) + "|";
+        }
+        printGameboard();
 
     }
 

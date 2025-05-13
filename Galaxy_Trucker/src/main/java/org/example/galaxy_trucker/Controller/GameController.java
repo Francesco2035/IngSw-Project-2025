@@ -75,6 +75,7 @@ public class GameController {
         color++;
         p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6);
         p.setHandListener(vv);
+        p.getCommonBoard().setListeners(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);
         p.setCardListner(vv);
         //p.getGmaebord.setVrtualview(vv);

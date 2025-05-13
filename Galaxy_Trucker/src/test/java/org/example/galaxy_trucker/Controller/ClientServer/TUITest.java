@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Controller.ClientServer;
 
+import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -13,6 +14,12 @@ class TUITest {
         TUI tui = new TUI();
         tui.setGameboard(2);
         tui.printGameboard();
+
+        tui.updateGameboard(new GameBoardEvent(0, "paluGay"));
+        tui.updateGameboard(new GameBoardEvent(1, "paluMorto"));
+        tui.updateGameboard(new GameBoardEvent(2    , "paluSuperMorto"));
+
+
     }
 
 }

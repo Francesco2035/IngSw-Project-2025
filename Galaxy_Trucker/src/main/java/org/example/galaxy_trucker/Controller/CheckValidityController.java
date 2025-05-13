@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Controller;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
+import org.example.galaxy_trucker.Model.PlayerStates.ChoosePosition;
 
 public class CheckValidityController extends Controller{
 
@@ -38,8 +39,9 @@ public class CheckValidityController extends Controller{
     @Override
     public void nextState(GameController gc) {
         if (curPlayer.getmyPlayerBoard().checkValidity()){
-            curPlayer.setState(new AddCrewState());
-            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId,disconnected));
+            curPlayer.setState(new ChoosePosition());
+            gc.setControllerMap(curPlayer,new PrepController(curPlayer, gameId,gc,disconnected));
+
         }
         else {
             gc.setControllerMap(curPlayer, new CheckValidityController(curPlayer, gameId,this.disconnected));

@@ -32,7 +32,7 @@ public class GameBoard {
     private Card CurrentCard;
 
 
-    private GameBoardListener listener;
+    private ArrayList<GameBoardListener> listeners = new ArrayList<>();
 
 
 
@@ -128,6 +128,7 @@ public class GameBoard {
 
         SetNewPosition(cur, startPos[PlayersOnBoard], startPos[PlayersOnBoard]);
 
+
         PlayersOnBoard++;
     }
 
@@ -140,7 +141,7 @@ public class GameBoard {
 
         if(positions[startPos[index]] == null) {
             SetNewPosition(cur, startPos[index], startPos[index]);
-
+            sendUpdates(new GameBoardEvent(startPos[index], pl.GetID()));
             PlayersOnBoard++;
         }
         else throw new IllegalArgumentException("Starting position alredy taken!");
@@ -161,7 +162,6 @@ public class GameBoard {
         if(cur.equals(players.getLast())) {
             positions[cur.getValue()] = null;
             players.remove(cur);
-            System.out.println("diocan");
         }
         else{
             int i=0;
@@ -352,9 +352,16 @@ public class GameBoard {
 
 
     public void sendUpdates(GameBoardEvent event){
-        if(listener != null) {
-            listener.gameBoardChanged(event);
+        if(listeners != null) {
+            for (GameBoardListener listener :listeners) {
+                listener.gameBoardChanged(event);
+
+            }
         }
+    }
+
+    public void setListeners(GameBoardListener listener) {
+        listeners.add(listener);
     }
 
 

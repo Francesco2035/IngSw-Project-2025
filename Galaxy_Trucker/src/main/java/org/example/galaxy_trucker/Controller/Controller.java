@@ -35,8 +35,9 @@ public abstract class Controller {
         } catch (Exception e) {
             playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
             curPlayer.setMyPlance(playerBoardCopy);
+            e.printStackTrace();
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
-            System.out.println(e);
+            System.out.println("mi ammazzo " + e);
         }
     }
 
