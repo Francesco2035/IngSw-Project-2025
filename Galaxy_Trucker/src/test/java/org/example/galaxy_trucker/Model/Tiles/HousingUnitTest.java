@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 import org.example.galaxy_trucker.TestSetupHelper;
@@ -47,6 +48,15 @@ class HousingUnitTest {
         System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         printNearby(pb);
 
+        playerBoard.destroy(7,6);
+
+
+        playerBoard.destroy(6,6);
+
+        playerBoard.handleAttack(6,6);
+        playerBoard.modifyPlayerBoard(playerBoard.choosePlayerBoard(new IntegerPair(5,4)));
+        printUnits(playerBoard);
+        printNearby(playerBoard);
 
 
         //printUnits(playerBoard);
