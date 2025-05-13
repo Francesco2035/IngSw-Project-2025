@@ -172,16 +172,18 @@ public class Smugglers extends Card{
             System.out.println("defeated");
 
         }
-        else if(this.currentpower<this.getRequirement()){
+        else if(this.currentpower<this.getRequirement()) {
 
             System.out.println("hai perso :3");
+            PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard();
+            HashMap<Integer, ArrayList<IntegerPair>> cargoH = CurrentPlanche.getStoredGoods();
+            if (!cargoH.isEmpty()) {
+                this.tmpPunishment = Punishment;
+                this.setDefaultPunishment(tmpPunishment);
                 this.currentPlayer.setState(new HandleTheft());
-                this.tmpPunishment=Punishment;
 
-
-            PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
-            HashMap<Integer,ArrayList<IntegerPair>> cargoH= CurrentPlanche.getStoredGoods();
-            if(cargoH.isEmpty()) {
+             }
+            else {
                 System.out.println("no goods found");
 
                 int totenergy=0;
@@ -191,7 +193,9 @@ public class Smugglers extends Card{
                 }
 
                 energyUsage = min(tmpPunishment, CurrentPlanche.getEnergy());
-                currentPlayer.setState(new ConsumingEnergy());
+                this.setDefaultPunishment(energyUsage);
+                currentPlayer.setState(new ConsumingEnergy()); /// se il player va in consuming energy e poi si disconnette ma non ha abbastanza energie  sei fottuto
+            /// non dovrebbe succedere perche prendo il minimo tra i due ma non si sa mai :)
             }
 
 
@@ -238,6 +242,7 @@ public class Smugglers extends Card{
 
         if(cargoH.isEmpty()){
             energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
+            this.setDefaultPunishment(energyUsage);
             this.isaPunishment=true;
             currentPlayer.setState(new ConsumingEnergy()); // potrebbe non fare l'update?
             this.setDefaultPunishment(energyUsage);
@@ -254,6 +259,7 @@ public class Smugglers extends Card{
                 if(currStorage.getValue(index)==cargoH.keySet().iterator().next() ){//iterator.next da il primo elemento non chiederti perché
                    CurrentPlanche.performAction(tiles[coord.getFirst()][coord.getSecond()].getComponent(), new GetGoodAction(index,CurrentPlanche,coord.getFirst(),coord.getSecond()),new HandleTheft());///prega dio sia giusto :)
                     this.tmpPunishment--;
+                   this.setDefaultPunishment(tmpPunishment);
 
 
 

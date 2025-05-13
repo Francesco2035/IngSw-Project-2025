@@ -57,7 +57,6 @@ public class ConsumingEnergy extends PlayerState {
             ArrayList<PowerCenter> powerCenters= board.getPowerCenters();
             while (i<p){
                 for (int z=0; (z<powerCenters.get(j).getType() )&&i<p;z++){
-
                     coords.add(new IntegerPair(powerCenters.get(j).getX(),powerCenters.get(j).getY()));
                     i++;
                 }
