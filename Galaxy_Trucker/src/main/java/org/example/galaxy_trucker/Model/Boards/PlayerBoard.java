@@ -360,6 +360,16 @@ public class PlayerBoard {
         return t1.checkAdjacent(t2);
     }
 
+    public boolean checkConnection(Connectors t1, Connectors t2, int x, int y){
+
+        if (!t1.checkLegal(t2)){
+            System.out.println("INVALID CONNECTION "+ t1.getClass() + " " + t2.getClass());
+            valid = false;
+            ValidPlayerBoard[x][y] = -2;
+        }
+        return t1.checkAdjacent(t2);
+    }
+
 
     /**
      * Method PathNotVisited checks if there are any tiles that have not been reached by the findPaths method.
@@ -368,17 +378,19 @@ public class PlayerBoard {
      * @return returns true if there is at least one unreached tile, false otherwise.
      */
     public boolean PathNotVisited(ArrayList<IntegerPair> visited){
-
+        boolean findOne = false;
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
 
                 if (ValidPlayerBoard[x][y] == 1 && !visited.contains(new IntegerPair(x,y))){
-                    return true;
+                    ValidPlayerBoard[x][y] = -2;
+                    findOne = true;
                 }
+
             }
 
         }
-        return false;
+        return findOne;
 
     }
 
@@ -393,6 +405,7 @@ public class PlayerBoard {
         System.out.println("controllo illegalità");
         int x;
         int y;
+        boolean legal = true;
 
         for (IntegerPair pair : visited) {
 
@@ -401,10 +414,11 @@ public class PlayerBoard {
             System.out.println(x+ " " + y);
 
             if(!PlayerBoard[x][y].controlDirections(this,x,y)){
-                return false;
+                legal = false;
+                ValidPlayerBoard[x][y] = -2;
             }
         }
-        return true;
+        return legal;
 
     }
 
@@ -429,6 +443,7 @@ public class PlayerBoard {
         PlayerBoard[x][y] = new Tile(new SpaceVoid() ,NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;
     }
+
 
 
     /**
@@ -456,7 +471,7 @@ public class PlayerBoard {
         }
 
         else {
-            if (checkIllegal(visitedPositions)){ //secondo me si può togliere
+            if (checkIllegal(visitedPositions)){
                 updateAttributes(r,c);
                 return true;
             }
@@ -485,24 +500,24 @@ public class PlayerBoard {
         System.out.println(r + " " + c);
 
 
-        if (valid && c - 1 >=0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2))) {
+        if (valid && c - 1 >=0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2), r, c -1)) {
             findPaths(r, c - 1, visited);
         }
 
 
 
-        if (valid && r - 1 >=0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3))){
+        if (valid && r - 1 >=0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3), r-1, c )){
             findPaths(r -1,c ,visited);
         }
 
 
 
-        if (valid && c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
+        if (valid && c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0), r, c + 1)){
             findPaths(r,c + 1 ,visited);
         }
 
 
-        if (valid && r + 1 <= 9 && ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1))){
+        if (valid && r + 1 <= 9 && ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1), r + 1, c)){
 
             findPaths(r +1,c ,visited);
         }
@@ -877,6 +892,15 @@ public class PlayerBoard {
         }
 
         clonedPlayerBoard.shield = Arrays.copyOf(shield, shield.length);
+
+//        for(HousingUnit unit : clonedPlayerBoard.getHousingUnits()){
+//            unit.controlValidity(clonedPlayerBoard, unit.getX(), unit.getY());
+//        }
+        clonedPlayerBoard.setListener(this.getListener());
+
+        for(HousingUnit unit : clonedPlayerBoard.getHousingUnits()){
+            unit.checkNearbyUnits(clonedPlayerBoard);
+        }
         clonedPlayerBoard.setListener(this.getListener());
 
         return clonedPlayerBoard;

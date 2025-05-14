@@ -34,6 +34,8 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
         clients = new HashMap<>();
         this.DisconnectedClients = DisconnectedClients;
 
+        //se lato client termino il programma, il server lancia remoteException, se semplicemente spengo il wifi del client, il server si blocca su quella chiamata del  receive ping, pertanto devo usare il timeout
+
         Thread pingThread = new Thread(() -> {
             //System.out.println("Ping Thread started");
 

@@ -48,7 +48,7 @@ public abstract class HousingUnit extends Component{
     }
 
     //true addcrew
-    public void notifyUnit(boolean type){
+    public void notifyUnit(boolean type, HousingUnit unit){
 
     }
 
@@ -70,6 +70,9 @@ public abstract class HousingUnit extends Component{
     public void remove(PlayerBoard playerBoard)  {
         playerBoard.getHousingUnits().remove(this);
         playerBoard.getConnectedHousingUnits().remove(this);
+        for (HousingUnit unit : nearbyHousingUnits){
+            unit.notifyUnit(false, this);
+        }
         tile.sendUpdates(new RemoveTileEvent());
     }
 
@@ -81,5 +84,54 @@ public abstract class HousingUnit extends Component{
         return y;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+
+    public boolean isPopulated(){
+        return getNumHumans() > 0 || isBrownAlien() || isPurpleAlien();
+    }
+
+    public void checkNearbyUnits(PlayerBoard pb){
+        if(getNumHumans() > 0 || isBrownAlien() || isPurpleAlien()){
+            int x = getX();
+            int y = getY();
+            int[][] validPlayerBoard = pb.getValidPlayerBoard();
+            int index = 0;
+            pb.getConnectedHousingUnits().remove(this);
+            ArrayList<HousingUnit> nearbyunits = getNearbyHousingUnits();
+
+            if (validPlayerBoard[x-1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(1), pb.getTile(x-1,y).getConnectors().get(3)) && pb.getHousingUnits().contains(pb.getTile(x-1,y).getComponent())) {
+                if (pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x-1,y).getComponent()))).isPopulated()){
+                    nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x-1,y).getComponent()))));
+                }
+            }
+            if (validPlayerBoard[x+1][y] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(3), pb.getTile(x+1,y).getConnectors().get(1)) && pb.getHousingUnits().contains( pb.getTile(x+1,y).getComponent())) {
+                if (pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x+1,y).getComponent()))).isPopulated()){
+                    nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x+1,y).getComponent()))));
+                }
+            }
+            if (validPlayerBoard[x][y-1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(0), pb.getTile(x,y-1).getConnectors().get(2)) && pb.getHousingUnits().contains( pb.getTile(x,y-1).getComponent())) {
+                if (pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y-1).getComponent()))).isPopulated()){
+                    nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y-1).getComponent()))));
+                }
+            }
+            if (validPlayerBoard[x][y+1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(2), pb.getTile(x,y+1).getConnectors().get(0)) && pb.getHousingUnits().contains( pb.getTile(x,y+1).getComponent())) {
+                if (pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y+1).getComponent()))).isPopulated()){
+                    nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y+1).getComponent()))));
+                }
+            }
+
+            if(!nearbyunits.isEmpty()){
+                pb.getConnectedHousingUnits().remove(this);
+                pb.getConnectedHousingUnits().add(this);
+            }
+        }
+    }
 
 }

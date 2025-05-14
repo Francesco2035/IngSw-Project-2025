@@ -5,7 +5,9 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.Killing;
+import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
@@ -40,6 +42,7 @@ public class Epidemic extends Card {
         for(int i=0;i<Len;i++){
             this.infected.clear();
             this.currentPlayer = PlayerList.get(i);
+            this.currentPlayer.setState(new Waiting());
             CurrentPlanche=this.currentPlayer.getmyPlayerBoard();
             tiles = CurrentPlanche.getPlayerBoard();
             HousingCoords.addAll(CurrentPlanche.getHousingUnits());
@@ -65,6 +68,21 @@ public class Epidemic extends Card {
 
 
         }
+        this.finishCard();
+    }
+
+    @Override
+    public void finishCard() {
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        for(int i=0; i<PlayerList.size(); i++){
+            PlayerList.get(i).setState(new BaseState());
+        }
+        System.out.println("FINE");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println(" ");
+        this.setFinished(true);
     }
 
     public void findInfected(HousingUnit house,PlayerBoard playerBoard) {

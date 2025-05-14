@@ -106,7 +106,6 @@ public class MultiClientHandler implements Runnable {
                                 attempts = -1;
                             }
                         } else {
-                            System.out.println("noooo");
                             gameHandler.receive(command);
                         }
                     }

@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Controller.ClientServer;
 
+import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -24,7 +25,7 @@ public interface View {
 
     void updateHand(HandEvent event);
 
-    void updateGameboard();
+    void updateGameboard(GameBoardEvent event);
 
     void updateCoveredTilesSet(CoveredTileSetEvent event);
 
@@ -32,9 +33,13 @@ public interface View {
 
     void showDeck(DeckEvent event);
 
+//    void updateGameBoard(GameBoardEvent event);
+
     void showCard(int id);
 
     void disconnect();
 
     void connect();
+
+    public void setGameboard(int lv);
 }

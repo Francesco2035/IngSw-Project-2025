@@ -182,6 +182,7 @@ public class Warzone extends Card{
             PlayerList.get(i).setState(new BaseState());
         }
         System.out.println("card finished");
+        this.setFinished(true);
     }
 //
 //    @Override

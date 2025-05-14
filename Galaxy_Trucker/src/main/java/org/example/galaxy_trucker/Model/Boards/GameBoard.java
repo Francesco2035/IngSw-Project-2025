@@ -32,7 +32,7 @@ public class GameBoard {
     private Card CurrentCard;
 
 
-    private GameBoardListener listener;
+    private ArrayList<GameBoardListener> listeners = new ArrayList<>();
 
 
 
@@ -143,7 +143,7 @@ public class GameBoard {
 
         if(positions[startPos[index]] == null) {
             SetNewPosition(cur, startPos[index], startPos[index]);
-
+            sendUpdates(new GameBoardEvent(startPos[index], pl.GetID()));
             PlayersOnBoard++;
         }
         else throw new IllegalArgumentException("This cell is alredy taken!");
@@ -152,7 +152,7 @@ public class GameBoard {
 
     
     public void removePlayerAndShift(Player pl) throws  RuntimeException{
-
+        sendUpdates(new GameBoardEvent(-1, pl.GetID()));
         int[] shiftedPositions = new int[players.size()];
 
         Player_IntegerPair cur = players.stream()
@@ -194,6 +194,8 @@ public class GameBoard {
 //            for(int j=0; j<newList.size(); j++){
 //                SetNewPosition(newList.get(j), shiftedPositions[j], shiftedPositions[j]);
 //            }
+
+            //for (>)
 
         }
 
@@ -294,7 +296,7 @@ public class GameBoard {
 
 
 
-    public void NewCard(){
+    public Card NewCard(){
         CurrentCard = CardStack.PickNewCard();
 
         for(Player_IntegerPair p : players){
@@ -304,6 +306,7 @@ public class GameBoard {
         CurrentCard.setBoard(this);
         CurrentCard.CardEffect();
         System.out.println("Id Card: " +CurrentCard.getId() + " "+ CurrentCard.getClass().getName());
+        return CurrentCard;
     }
 
 
@@ -351,9 +354,16 @@ public class GameBoard {
 
 
     public void sendUpdates(GameBoardEvent event){
-        if(listener != null) {
-            listener.gameBoardChanged(event);
+        if(listeners != null) {
+            for (GameBoardListener listener :listeners) {
+                listener.gameBoardChanged(event);
+
+            }
         }
+    }
+
+    public void setListeners(GameBoardListener listener) {
+        listeners.add(listener);
     }
 
 

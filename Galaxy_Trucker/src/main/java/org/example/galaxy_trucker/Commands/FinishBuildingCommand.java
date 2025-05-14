@@ -29,7 +29,8 @@ public class FinishBuildingCommand extends Command {
 
             player.SetReady(true);
         } catch (IllegalArgumentException | IllegalStateException e) {
-            System.out.println(e.getMessage());
+
+            System.out.println("FINISH ESPLOSA "+e.getMessage());
         }
     }
 

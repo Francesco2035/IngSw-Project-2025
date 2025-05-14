@@ -348,6 +348,7 @@ public class   Meteorites extends Card {
         System.out.println(" ");
         System.out.println(" ");
         System.out.println(" ");
+        this.setFinished(true);
     }
 
     public void setMeteoritesOrder(int meteoritesOrder) {

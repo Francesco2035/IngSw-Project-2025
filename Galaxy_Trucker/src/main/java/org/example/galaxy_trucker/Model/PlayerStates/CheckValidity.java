@@ -9,6 +9,8 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 
+import java.io.IOException;
+
 public class CheckValidity extends PlayerState{
 
 
@@ -20,6 +22,25 @@ public class CheckValidity extends PlayerState{
     @Override
     public boolean allows(ReadyCommand command) {
         return true;
+    }
+
+    @Override
+    public Command createDefaultCommand(String gameId,Player player) {
+        System.out.println("mannaggia i mortengueri de pietro");
+        return new Command() {
+            @Override
+            public void execute(Player player) throws IOException {
+                while (!player.getmyPlayerBoard().checkValidity()){
+                    for (int i = 0; i < 10 ; i ++){
+                        for (int j = 0; j < 10 ; j ++){
+                            if (player.getmyPlayerBoard().getValidPlayerBoard()[i][j] == -2){
+                                player.getmyPlayerBoard().removeTile(i, j);
+                            }
+                        }
+                    }
+                }
+            }
+        };
     }
 
 }

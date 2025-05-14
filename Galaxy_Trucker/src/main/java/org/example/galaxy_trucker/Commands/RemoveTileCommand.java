@@ -13,7 +13,7 @@ public class RemoveTileCommand extends Command implements Serializable {
     private final String commandType = "RemoveTileCommand";
 
 
-    IntegerPair tile;
+    //IntegerPair tile;
     @JsonProperty("x")
     int x;
     @JsonProperty("y")
@@ -23,7 +23,7 @@ public class RemoveTileCommand extends Command implements Serializable {
         super(gameId, playerId, lv, title, token);
         this.x = x;
         this.y = y;
-        this.tile = new IntegerPair(x,y);
+        //this.tile = new IntegerPair(x,y);
     }
 
     public RemoveTileCommand(){
@@ -37,6 +37,6 @@ public class RemoveTileCommand extends Command implements Serializable {
 
     @Override
     public void execute(Player player) {
-        player.getmyPlayerBoard().removeTile(tile.getFirst(), tile.getSecond());
+        player.getmyPlayerBoard().removeTile(x, y);
     }
 }
