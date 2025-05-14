@@ -27,7 +27,7 @@ public class ChoosingPlanet extends PlayerState{
 
     @Override
     public Command createDefaultCommand(String gameId, Player player) {
-        int lv= player.getCurrentCard().getLevel();
+        int lv= player.getCommonBoard().getLevel();
         return new ChoosingPlanetsCommand(-1,gameId,player.GetID(),lv,"ChoosingPlanetsCommand","placeholder"); /// devo mettere il token
     }
 }

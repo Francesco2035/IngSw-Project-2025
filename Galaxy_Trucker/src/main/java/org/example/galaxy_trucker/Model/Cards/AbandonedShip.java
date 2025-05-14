@@ -8,6 +8,7 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.PlayerStates.Accepting;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.Killing;
 import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
@@ -67,7 +68,7 @@ public class AbandonedShip extends Card{
                 this.totHumans=CurrentPlanche.getNumHumans();
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
-                currentPlayer.setState(new Killing());
+                currentPlayer.setState(new Accepting());
                 //currentPlayer.setInputHandler(new AcceptKilling(this));
                 currentPlayer.setCard(this);
             }
@@ -75,6 +76,17 @@ public class AbandonedShip extends Card{
             this.order++;
         }
 
+    }
+    @Override
+    public void continueCard(boolean accepted) {
+        if(accepted){
+            this.currentPlayer.setState(new Killing());
+        }
+        else{
+            currentPlayer.setState(new Waiting());
+            this.flag = false;
+            this.updateSates();
+        }
     }
 //    @Override
 //    public  void  ActivateCard() {
@@ -91,6 +103,7 @@ public class AbandonedShip extends Card{
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
         }
+        this.setFinished(true);
     }
 
     @Override
@@ -98,6 +111,7 @@ public class AbandonedShip extends Card{
         if(coordinates!=null) {
             if (coordinates.size() != this.requirement) {
                 //devo dirgli che ha scelto il num sbagliato di persone da shottare
+                this.currentPlayer.setState(new Accepting());
                 throw new WrongNumofHumansException("wrong number of humans");
             }
 
@@ -114,6 +128,7 @@ public class AbandonedShip extends Card{
             catch (Exception e){
                 //devo rimanere allo stato di dare gli umani ezzz
                 System.out.println("non ce sta più nessuno qui");
+                this.currentPlayer.setState(new Accepting());
                 throw new ImpossibleBoardChangeException("there was an error in killing humans");
 
             }
@@ -122,11 +137,11 @@ public class AbandonedShip extends Card{
 
             this.finishCard();
         }
-        else{
-            currentPlayer.setState(new Waiting());
-            this.flag = false;
-            this.updateSates();
-        }
+//        else{
+//            currentPlayer.setState(new Waiting());
+//            this.flag = false;
+//            this.updateSates();
+//        }
     }
 
     public int getTotHumans() {

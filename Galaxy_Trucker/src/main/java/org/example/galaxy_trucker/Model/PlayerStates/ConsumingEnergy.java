@@ -40,7 +40,7 @@ public class ConsumingEnergy extends PlayerState {
 
     @Override /// potrebbe esserci un problema se
     public Command createDefaultCommand(String gameId, Player player) { // questo stato dovrebbe accadere se e solo se non hai cargo da farti rubare quind ti ruibano le energie
-        int lv= player.getCurrentCard().getLevel();
+        int lv= player.getCommonBoard().getLevel();
 
         Card card = player.getCurrentCard();
         PlayerBoard board= player.getmyPlayerBoard();

@@ -39,6 +39,7 @@ public abstract class Controller {
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
             System.out.println("mi ammazzo " + e);
         }
+       // this.curPlayer.SetHasActed(true);
     }
 
     public  void  DefaultAction(GameController gc) {
@@ -46,14 +47,19 @@ public abstract class Controller {
        PlayerState state = curPlayer.getPlayerState();
        Command cmd =state.createDefaultCommand(gameId,curPlayer);
        playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
-       try {
-           cmd.execute(curPlayer);
-           gc.changeState();
-       } catch (IOException e) {
-           playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
-           curPlayer.setMyPlance(playerBoardCopy);
-           throw new ImpossibleActionException("errore nelle azioni di default :)");
+       if (!curPlayer.GetHasActed()) { //has acted non dovrebbe servire nelle azioni non automatiche, potrebbe anche non servire in generale tbh
+           try {
+               //this.curPlayer.SetHasActed(true);
+               cmd.execute(curPlayer);
+               gc.changeState();
+           } catch (IOException e) {
+               playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
+               curPlayer.setMyPlance(playerBoardCopy);
+              // this.curPlayer.SetHasActed(false);
+               throw new ImpossibleActionException("errore nelle azioni di default :)");
+           }
        }
+
     }
 
     public void setDisconnected(boolean disconnected) {
