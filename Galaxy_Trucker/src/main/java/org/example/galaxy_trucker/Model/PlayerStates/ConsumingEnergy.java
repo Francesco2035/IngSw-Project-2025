@@ -47,7 +47,7 @@ public class ConsumingEnergy extends PlayerState {
         int p= card.getDefaultPunishment();
         ArrayList<IntegerPair> coords = new ArrayList<>();
 
-        if(board.getEnergy()<p){
+        if(board.getEnergy()<p){ ///  possibile e il player sceglie più cannoni doppi ch energie che possiede e poi si disconnette
             //madona come sia sucesso non lo so dovrebbe essere la piu impossibile delle cose
             throw new ImpossibleActionException("non ci sono abbasatanza energie da rubare");
         }
