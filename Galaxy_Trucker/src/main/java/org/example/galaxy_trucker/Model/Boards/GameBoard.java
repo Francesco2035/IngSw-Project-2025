@@ -149,7 +149,7 @@ public class GameBoard {
 
     
     public void removePlayerAndShift(Player pl) throws  RuntimeException{
-
+        sendUpdates(new GameBoardEvent(-1, pl.GetID()));
         int[] shiftedPositions = new int[players.size()];
 
         Player_IntegerPair cur = players.stream()
@@ -191,6 +191,8 @@ public class GameBoard {
 //            for(int j=0; j<newList.size(); j++){
 //                SetNewPosition(newList.get(j), shiftedPositions[j], shiftedPositions[j]);
 //            }
+
+            //for (>)
 
         }
 

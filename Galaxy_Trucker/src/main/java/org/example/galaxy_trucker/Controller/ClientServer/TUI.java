@@ -10,6 +10,7 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
+import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
@@ -76,6 +77,7 @@ public class TUI implements View {
                     }
                 }
             }
+            positionToGameboard.put(-1, new IntegerPair(-1,-1));
             positionToGameboard.put(0, new IntegerPair(0,2));
             positionToGameboard.put(1, new IntegerPair(0,3));
             positionToGameboard.put(2, new IntegerPair(0,4));
@@ -444,12 +446,24 @@ public class TUI implements View {
         int x = positionToGameboard.get(event.getPosition()).getFirst();
         int y = positionToGameboard.get(event.getPosition()).getSecond();
         if(PlayerToPosition.containsKey(event.getPlayerID())){
+            int pos = PlayerToPosition.get(event.getPlayerID());
+            int x1 = positionToGameboard.get(pos).getFirst();
+            int y1 = positionToGameboard.get(pos).getSecond();
+            Gameboard[x1][y1][3] = "|                       |";
 
+            PlayerToPosition.remove(event.getPlayerID());
+            if(x != -1){
+                Gameboard[x][y][3] = "|"+centerTextAnsi(event.getPlayerID(),23) + "|";
+                PlayerToPosition.put(event.getPlayerID(), event.getPosition());
+            }
         }
         else{
             PlayerToPosition.put(event.getPlayerID(), event.getPosition());
             Gameboard[x][y][3] = "|"+centerTextAnsi(event.getPlayerID(),23) + "|";
         }
+
+
+
         printGameboard();
 
     }
@@ -570,6 +584,7 @@ public class TUI implements View {
     }
 
     public void printGameboard(){
+        System.out.println("\n\n");
         if (lv == 2){
             StringBuilder toPrint = new StringBuilder();
             for (int i = 0; i < 6; i++) {
