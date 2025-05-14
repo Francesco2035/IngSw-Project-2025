@@ -71,66 +71,67 @@ public class HandleTheft extends PlayerState {
                 int b=0;
                 IntegerPair coord=new IntegerPair(0,0);
 
-                while() {
-                    if (cargoH.isEmpty()){
-                        ArrayList<PowerCenter> powerCenters= board.getPowerCenters();
-                        if(board.getEnergy()==0){
-                            return;
-                        }
-                        if(powerCenters.get(a).getType()>0){
-                            coord.setValue(powerCenters.get(a).getX(),powerCenters.get(a).getY());
-                            board.performAction(powerCenters.get(a),new UseEnergyAction(board),new ConsumingEnergy());
-                            z--;
-                        }
-                    }
-//                        for (int z=0; (z<powerCenters.get(j).getType() )&&i<p;z++){
-//                            coords.add(new IntegerPair(powerCenters.get(j).getX(),powerCenters.get(j).getY()));
-//                            i++;
+
+//                while() {
+//                    if (cargoH.isEmpty()){
+//                        ArrayList<PowerCenter> powerCenters= board.getPowerCenters();
+//                        if(board.getEnergy()==0){
+//                            return;
 //                        }
-                        //ruba energie
-                    }
-                    else {
-                        // prende la coordinata del primo elemeto di max valore
-                        int maxValue = cargoH.keySet().iterator().next();
-                        IntegerPair coord = cargoH.get(maxValue).getFirst();// cargoH è sempre aggiornata no?
-                        int index=0;
-                        ArrayList<Storage> storages = board.getStorages();
-                        int i=storages.indexOf(board.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
-                        Storage currStorage=storages.get(i);
-                        for(int j=0;j<currStorage.getType();j++){
-                            if(currStorage.getValue(j)==maxValue){
-                                index=j;
-                            }
-                    }
-                }
+//                        if(powerCenters.get(a).getType()>0){
+//                            coord.setValue(powerCenters.get(a).getX(),powerCenters.get(a).getY());
+//                            board.performAction(powerCenters.get(a),new UseEnergyAction(board),new ConsumingEnergy());
+//                            z--;
+//                        }
+//                    }
+////                        for (int z=0; (z<powerCenters.get(j).getType() )&&i<p;z++){
+////                            coords.add(new IntegerPair(powerCenters.get(j).getX(),powerCenters.get(j).getY()));
+////                            i++;
+////                        }
+//                        //ruba energie
+//                    }
+//                    else {
+//                        // prende la coordinata del primo elemeto di max valore
+//                        int maxValue = cargoH.keySet().iterator().next();
+//                        IntegerPair coord = cargoH.get(maxValue).getFirst();// cargoH è sempre aggiornata no?
+//                        int index=0;
+//                        ArrayList<Storage> storages = board.getStorages();
+//                        int i=storages.indexOf(board.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
+//                        Storage currStorage=storages.get(i);
+//                        for(int j=0;j<currStorage.getType();j++){
+//                            if(currStorage.getValue(j)==maxValue){
+//                                index=j;
+//                            }
+//                    }
+//                }
             }
         };
 
-        int lv= player.getCommonBoard().getLevel();
-
-
-
-
-        if (cargoH.isEmpty()){
-            ///  chiama con coord null e index 0 tanto si andrà in consume energy
-            return  new Theft(0,null,gameId,player.GetID(),lv,"TheftCommand","placeholder");
-        }
-        else {
-            // prende la coordinata del primo elemeto di max valore
-            int maxValue = cargoH.keySet().iterator().next();
-            IntegerPair coord = cargoH.get(maxValue).getFirst();// cargoH è sempre aggiornata no?
-
-            //prendo a che indice del
-            int index=0;
-            ArrayList<Storage> storages = board.getStorages();
-            int i=storages.indexOf(board.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
-            Storage currStorage=storages.get(i);
-            for(int j=0;j<currStorage.getType();j++){
-                if(currStorage.getValue(j)==maxValue){
-                    index=j;
-                }
-            }
-            return  new Theft(index,coord,gameId,player.GetID(),lv,"TheftCommand","placeholder");
-        }
+//        int lv= player.getCommonBoard().getLevel();
+//
+//
+//
+//
+//        if (cargoH.isEmpty()){
+//            ///  chiama con coord null e index 0 tanto si andrà in consume energy
+//            return  new Theft(0,null,gameId,player.GetID(),lv,"TheftCommand","placeholder");
+//        }
+//        else {
+//            // prende la coordinata del primo elemeto di max valore
+//            int maxValue = cargoH.keySet().iterator().next();
+//            IntegerPair coord = cargoH.get(maxValue).getFirst();// cargoH è sempre aggiornata no?
+//
+//            //prendo a che indice del
+//            int index=0;
+//            ArrayList<Storage> storages = board.getStorages();
+//            int i=storages.indexOf(board.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
+//            Storage currStorage=storages.get(i);
+//            for(int j=0;j<currStorage.getType();j++){
+//                if(currStorage.getValue(j)==maxValue){
+//                    index=j;
+//                }
+//            }
+//            return  new Theft(index,coord,gameId,player.GetID(),lv,"TheftCommand","placeholder");
+        //}
     }
 }

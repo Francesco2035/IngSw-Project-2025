@@ -16,7 +16,7 @@ import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-
+//TODO: vincolo player non può scegliere posizione nella gameboard se pos > numPlayer
 public class GameBoard {
 
     // questo arrayList tiene conto della posizione effettiva nel Game
@@ -181,23 +181,19 @@ public class GameBoard {
                     positions[shiftedPositions[i]] = p.getKey();
                     i++;
                 }
-
-//        i=0;
-//        for(Player_IntegerPair p : newList){
-//            SetNewPosition(p, shiftedPositions[i], shiftedPositions[i]);
-//            i++;
-//        }
-
-//            for(int j=0; j<newList.size(); j++){
-//                SetNewPosition(newList.get(j), shiftedPositions[j], shiftedPositions[j]);
-//            }
-
-            //for (>)
+            updateAllPosition();
 
         }
 
 
 
+    }
+
+
+    public void updateAllPosition(){
+        for(Player_IntegerPair p : players)
+            if(p.getValue() >=0)
+                sendUpdates(new GameBoardEvent(p.getValue(), p.getKey().GetID()));
     }
 
 

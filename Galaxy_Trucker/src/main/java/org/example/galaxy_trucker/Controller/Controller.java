@@ -48,11 +48,11 @@ public abstract class Controller {
        playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
        if (!curPlayer.GetHasActed()) { //has acted non dovrebbe servire nelle azioni non automatiche, potrebbe anche non servire in generale tbh
            try {
-               //this.curPlayer.SetHasActed(true);
+               this.curPlayer.SetHasActed(true);
                System.out.println("DefaultAction called for " + curPlayer.GetID());
 
                cmd.execute(curPlayer);
-               curPlayer.SetReady(true);
+              // curPlayer.SetReady(true);
                gc.changeState();
            } catch (IOException e) {
                playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());

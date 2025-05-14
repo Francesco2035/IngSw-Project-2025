@@ -13,8 +13,8 @@ public class ChoosePosition extends PlayerState {
     public boolean allows(FinishBuildingCommand command){return true;}
 
     @Override
-    public Command createDefaultCommand(String gameId, Player player) { // dovrebbe andare bene?
-
+    public Command createDefaultCommand(String gameId, Player player) {
+        System.out.println("CHOOSEPOSITION");
         return new Command() {
             @Override
             public void execute(Player player) throws IOException {

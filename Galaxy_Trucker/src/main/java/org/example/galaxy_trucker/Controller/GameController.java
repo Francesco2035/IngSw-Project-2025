@@ -202,7 +202,9 @@ public class GameController {
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         stopAllPlayerThreads();
         flightThread = new Thread(() -> {
-                   Card card= game.getGameBoard().NewCard();
+            System.out.println("PESCO CARTA!");
+            Card card= game.getGameBoard().NewCard();
+
                     //game.getGameBoard().getPlayers().getFirst()
             while (!card.isFinished()) {
 
@@ -258,7 +260,7 @@ public class GameController {
                 }
 
 
-                System.out.println("Flight phase complete");
+                //System.out.println("Flight phase complete");
 
             }
             /// non deve finire il game ma semplicemente questo thread
@@ -310,8 +312,11 @@ public class GameController {
             threads.remove(playerId);
             Thread t = new Thread(()->{
                 while (true) {
-                    Controller current = ControllerMap.get(playerId);
-                    current.DefaultAction(this);
+                    if (!game.getPlayers().get(playerId).GetHasActed()){
+                        Controller current = ControllerMap.get(playerId);
+                        current.DefaultAction(this);
+                    }
+
                 }
             });            ;
             t.start();
