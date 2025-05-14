@@ -43,6 +43,7 @@ public class Card implements Serializable {
     private int Time;
     private GameBoard Board;
     private int DefaultPunishment;
+    private  boolean finished;
     // IMPORTANTE ESERCITATORE DICE DI ATTIVARE EFFETTI DELLE CARTE A POSTERIORI DELLE SCELTE DEI PLAYER
     // NON SO SE HA SENSO MA LUI DICE DI FARE COSI, QUINDI I METODI DI CARD EFFECT DOVREBBERO ESSERE
     //INTERAMENTE DEFINITI SENZA CHIEDERE ALTRI IMPUT AI PLAYER, SEMPLICEMENTE MODIFICHERANNO IL MODELLO
@@ -83,6 +84,14 @@ public class Card implements Serializable {
     public void ActivateCard(){}
     public int getDefaultPunishment(){return DefaultPunishment;}
     public void setDefaultPunishment(int p){DefaultPunishment = p;}
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
 
     //json required
     public Card() {}

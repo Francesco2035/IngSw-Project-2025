@@ -25,7 +25,7 @@ public interface View {
 
     void updateHand(HandEvent event);
 
-    void updateGameboard();
+    void updateGameboard(GameBoardEvent event);
 
     void updateCoveredTilesSet(CoveredTileSetEvent event);
 
@@ -33,11 +33,13 @@ public interface View {
 
     void showDeck(DeckEvent event);
 
-    void updateGameBoard(GameBoardEvent event);
+//    void updateGameBoard(GameBoardEvent event);
 
     void showCard(int id);
 
     void disconnect();
 
     void connect();
+
+    public void setGameboard(int lv);
 }

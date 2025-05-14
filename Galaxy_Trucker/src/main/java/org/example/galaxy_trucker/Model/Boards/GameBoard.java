@@ -2,9 +2,7 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 
-import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
-import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
 import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Cards.Card;
@@ -17,7 +15,6 @@ import org.example.galaxy_trucker.Model.Tiles.TileSets;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 
 
 public class GameBoard {
@@ -35,10 +32,8 @@ public class GameBoard {
     private Card CurrentCard;
 
 
-    //usare una lista di listener al posto di un singolo listener
-    private GameBoardListener listener;
+    private ArrayList<GameBoardListener> listeners = new ArrayList<>();
 
-    private HashMap<String, GameBoardListener> gameBoardListenerHashMap;
 
 
     public GameBoard(TileSets list, int lv, CardStacks stack) {
@@ -76,7 +71,7 @@ public class GameBoard {
      */
     public void addPlayer(Player NewPlayer){
         NewPlayer.setBoards(this);
-        Player_IntegerPair NewPair = new Player_IntegerPair(NewPlayer, 0);
+        Player_IntegerPair NewPair = new Player_IntegerPair(NewPlayer, -1);
         this.players.add(NewPair);
 //        NewPlayer.setState(new BuildingShip());
     }
@@ -112,7 +107,7 @@ public class GameBoard {
     public void removePlayer(Player DeadMan){
 
         Player_IntegerPair eliminated = players.stream()
-                .filter(p -> DeadMan.equals( p.getKey()) )
+                .filter(p -> DeadMan.equals( p.getKey()))
                 .findFirst().orElseThrow();
 
         players.remove(eliminated);
@@ -145,7 +140,7 @@ public class GameBoard {
 
         if(positions[startPos[index]] == null) {
             SetNewPosition(cur, startPos[index], startPos[index]);
-
+            sendUpdates(new GameBoardEvent(startPos[index], pl.GetID()));
             PlayersOnBoard++;
         }
         else throw new IllegalArgumentException("Starting position alredy taken!");
@@ -153,9 +148,8 @@ public class GameBoard {
 
 
     
-    public void removePlayerAndShift(Player pl){
-        ArrayList<Player_IntegerPair> newList = new ArrayList<>();
-
+    public void removePlayerAndShift(Player pl) throws  RuntimeException{
+        sendUpdates(new GameBoardEvent(-1, pl.GetID()));
         int[] shiftedPositions = new int[players.size()];
 
         Player_IntegerPair cur = players.stream()
@@ -163,23 +157,27 @@ public class GameBoard {
                 .findFirst().orElseThrow();
 
 
+
         if(cur.equals(players.getLast())) {
             positions[cur.getValue()] = null;
-            players.remove(cur);
-            System.out.println("diocan");
+            cur.setValue(-1);
         }
         else{
             int i=0;
             for(Player_IntegerPair p : players){
-                shiftedPositions[i] = p.getValue();
-                positions[shiftedPositions[i]] = null;
-                i++;
+                if(p.getValue() >=0){
+                    shiftedPositions[i] = p.getValue();
+                    positions[shiftedPositions[i]] = null;
+                    i++;
+                }
             }
+
+            cur.setValue(-1);
 
             i=0;
             for(Player_IntegerPair p : players)
-                if(!p.equals(cur)){
-                    newList.add(new Player_IntegerPair(p.getKey(), shiftedPositions[i]));
+                if(p.getValue() >=0){
+                    p.setValue(shiftedPositions[i]);
                     positions[shiftedPositions[i]] = p.getKey();
                     i++;
                 }
@@ -193,17 +191,12 @@ public class GameBoard {
 //            for(int j=0; j<newList.size(); j++){
 //                SetNewPosition(newList.get(j), shiftedPositions[j], shiftedPositions[j]);
 //            }
-            System.out.println("\nprima\n");
-            for(Player_IntegerPair p : players)
-                System.out.println(p.getKey().GetID() + " pos: "+p.getValue());
 
-            players = newList;
+            //for (>)
+
         }
 
 
-        System.out.println("\ndopo\n");
-        for(Player_IntegerPair p : players)
-            System.out.println(p.getKey().GetID() + " pos: "+p.getValue());
 
     }
 
@@ -300,7 +293,7 @@ public class GameBoard {
 
 
 
-    public void NewCard(){
+    public Card NewCard(){
         CurrentCard = CardStack.PickNewCard();
 
         for(Player_IntegerPair p : players){
@@ -310,6 +303,7 @@ public class GameBoard {
         CurrentCard.setBoard(this);
         CurrentCard.CardEffect();
         System.out.println("Id Card: " +CurrentCard.getId() + " "+ CurrentCard.getClass().getName());
+        return CurrentCard;
     }
 
 
@@ -356,38 +350,18 @@ public class GameBoard {
     }
 
 
-    public void setListener(GameBoardListener listener){
-        this.listener = listener;
-    }
-
-    public GameBoardListener getListener(){
-        return listener;
-    }
-
     public void sendUpdates(GameBoardEvent event){
-        if(listener != null) {
-            listener.gameBoardChanged(event);
+        if(listeners != null) {
+            for (GameBoardListener listener :listeners) {
+                listener.gameBoardChanged(event);
+
+            }
         }
-
-        if(!this.gameBoardListenerHashMap.isEmpty()){
-            this.gameBoardListenerHashMap.values().forEach(l -> l.gameBoardChanged(event));
-        }
     }
 
-
-
-    public void addListener(String player, GameBoardListener listener){
-        this.gameBoardListenerHashMap.putIfAbsent(player,listener);
+    public void setListeners(GameBoardListener listener) {
+        listeners.add(listener);
     }
 
-    public void removeListener(String player){
-        this.gameBoardListenerHashMap.remove(player);
-    }
-
-
-//
-//    public void notify(String player, int i) {
-//
-//    }
 
 }

@@ -153,7 +153,7 @@ public class Client implements EventVisitor {
 
     @Override
     public void visit(GameBoardEvent gameBoardEvent) {
-        this.view.updateGameboard();
+        this.view.updateGameboard(gameBoardEvent);
     }
 
     public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException, InterruptedException {

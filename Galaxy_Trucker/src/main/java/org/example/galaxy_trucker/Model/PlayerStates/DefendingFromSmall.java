@@ -33,7 +33,7 @@ public class DefendingFromSmall extends PlayerState{
     }
     @Override
     public Command createDefaultCommand(String gameId, Player player) {
-        int lv= player.getCurrentCard().getLevel();
+        int lv= player.getCommonBoard().getLevel();
         return new DefendFromSmallCommand(null,gameId,player.GetID(),lv,"DefendingFromSmallCommand","placeholder"); /// devo mettere il token
     }
 }

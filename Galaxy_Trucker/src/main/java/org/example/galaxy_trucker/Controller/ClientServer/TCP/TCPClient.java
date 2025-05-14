@@ -72,6 +72,7 @@ public class TCPClient{
                 UUID token = UUID.fromString(tokenStr);
                 System.out.println("Token received: " + token);
                 this.token = token;
+                this.client.getView().setGameboard(commandInterpreter.getLv());
                 commandInterpreter.setToken(tokenStr);
             }
             else {
