@@ -43,7 +43,7 @@ public abstract class Controller {
     }
 
     public  void  DefaultAction(GameController gc) {
-
+        System.out.println("DefaultAction called for " + curPlayer.GetID());
        PlayerState state = curPlayer.getPlayerState();
        Command cmd =state.createDefaultCommand(gameId,curPlayer);
        playerBoardCopy = curPlayer.getmyPlayerBoard().clone();

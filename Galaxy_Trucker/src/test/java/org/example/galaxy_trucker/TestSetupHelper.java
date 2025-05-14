@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker;
 
+import com.sun.tools.javac.Main;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.DOUBLE;
@@ -20,6 +21,8 @@ public class TestSetupHelper {
     static PlayerBoard playerBoard2 = new PlayerBoard(2);
     static PlayerBoard playerBoard3 = new PlayerBoard(2);
     static PlayerBoard playerBoard4 = new PlayerBoard(2);
+    static PlayerBoard playerBoard5 = new PlayerBoard(2);
+
     static GAGen gag;
 
     static {
@@ -192,6 +195,39 @@ public class TestSetupHelper {
         playerBoard4.insertTile(dd,7,6);
 
         return playerBoard4;
+    }
+
+    public static PlayerBoard createInitializedBoard5(){
+        //invalid
+
+        //posizione non visitata
+        //cannone adiacente a una tile
+        //razzo adiacente a una tile
+        //razzo ruotato
+        //connessiojne illegae
+        //connessione none none
+        //connessione single none
+        ArrayList<Tile> tiles = gag.getTilesDeck();
+        Tile tile1 = tiles.get(20); //UNIVERSAL, NONE, NONE, NONE
+        Tile tile2 = tiles.get(105);//CANNONE: NONE, CANNON, DOUBLE, UNIVERSAL
+        Tile tile3 = tiles.get(70);//MOTORE: NONE, SINGLE, NONE, ENGINE
+        Tile tile4 = tiles.get(54);//SEWERPIPES: UNIVERSAL, DOUBLE, UNIVERSAL, NONE
+        Tile tile5 = tiles.get(94);//MOTORE: DOUBLE, UNIVERSAL, NONE, ENGINE
+        Tile tile6 = tiles.get(57);//SEWERPIPES: UNIVERSAL,UNIVERSAL, DOUBLE, DOUBLE
+        Tile tile7 = tiles.get(64);//SPCOMP: SINGLE, NONE, NONE, NONE
+        Tile tile8 = tiles.get(21);
+        Tile tile9 = tiles.get(21);
+        Tile tile10 = tiles.get(21);
+        playerBoard5.insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE),6,6);
+        playerBoard5.insertTile(tile1,8,8); //non connesso
+        playerBoard5.insertTile(tile2,6,5); //cannone connesso ma illegale
+        playerBoard5.insertTile(tile4,5,5);
+        tile5.RotateSx(); //engine a dx
+        playerBoard5.insertTile(tile5,5,6);
+        playerBoard5.insertTile(tile6,7,6);
+        playerBoard5.insertTile(tile7,7,7);
+
+        return playerBoard5;
     }
 
     public static void HumansSetter1(PlayerBoard playerBoard){
