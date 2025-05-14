@@ -138,12 +138,15 @@ public class GameBoard {
                 .filter(p -> pl.equals( p.getKey()) )
                 .findFirst().orElseThrow();
 
+        if(index +1 > players.size())
+            throw new IllegalArgumentException("Cell not available!");
+
         if(positions[startPos[index]] == null) {
             SetNewPosition(cur, startPos[index], startPos[index]);
 
             PlayersOnBoard++;
         }
-        else throw new IllegalArgumentException("Starting position alredy taken!");
+        else throw new IllegalArgumentException("This cell is alredy taken!");
     }
 
 
