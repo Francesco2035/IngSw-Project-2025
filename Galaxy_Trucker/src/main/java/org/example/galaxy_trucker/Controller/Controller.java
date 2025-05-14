@@ -43,14 +43,16 @@ public abstract class Controller {
     }
 
     public  void  DefaultAction(GameController gc) {
-        System.out.println("DefaultAction called for " + curPlayer.GetID());
        PlayerState state = curPlayer.getPlayerState();
        Command cmd =state.createDefaultCommand(gameId,curPlayer);
        playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
        if (!curPlayer.GetHasActed()) { //has acted non dovrebbe servire nelle azioni non automatiche, potrebbe anche non servire in generale tbh
            try {
                //this.curPlayer.SetHasActed(true);
+               System.out.println("DefaultAction called for " + curPlayer.GetID());
+
                cmd.execute(curPlayer);
+               curPlayer.SetReady(true);
                gc.changeState();
            } catch (IOException e) {
                playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
