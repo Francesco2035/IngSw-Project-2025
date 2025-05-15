@@ -112,7 +112,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 }
 
             }
-            else {
+            else if(client!= null) {
                 try {
                     client.receiveMessage(event);
                 } catch (RemoteException e) {
@@ -134,7 +134,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 }
 
             }
-            else {
+            else if(client!= null) {
                 try {
                     client.receiveMessage(event);
                 } catch (RemoteException e) {
@@ -170,7 +170,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 }
 
             }
-            else {
+            else if(client!= null) {
                 try {
                     client.receiveMessage(event);
                 } catch (RemoteException e) {
@@ -193,7 +193,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 }
 
             }
-            else {
+            else if(client!= null) {
                 try {
                     client.receiveMessage(event);
                 } catch (RemoteException e) {
@@ -216,7 +216,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 }
 
             }
-            else {
+            else if(client!= null) {
                 try {
                     client.receiveMessage(event);
                 } catch (RemoteException e) {
@@ -240,7 +240,8 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 }
 
             }
-            else {
+            else if(client!= null) {
+
                 try {
                     client.receiveMessage(event);
                 } catch (RemoteException e) {
@@ -264,7 +265,8 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 }
 
             }
-            else {
+            else if(client!= null) {
+
                 try {
                     client.receiveMessage(event);
                 } catch (RemoteException e) {

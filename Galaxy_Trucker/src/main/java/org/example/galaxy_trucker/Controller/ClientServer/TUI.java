@@ -566,7 +566,7 @@ public class TUI implements View {
         System.out.print(message);
         try {
             String toSend = inputQueue.take();
-            System.out.println("ask input: " + toSend);
+            //System.out.println("ask input: " + toSend);
             return toSend;
         } catch (InterruptedException e) {
             //Thread.currentThread().interrupt();

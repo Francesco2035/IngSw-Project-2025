@@ -17,13 +17,9 @@ public class InputReader implements Runnable {
     public void run() {
         while (running) {
             try {
-                if (reader.ready()) {
-                    String line = reader.readLine();
-                    if (line != null) {
-                        inputQueue.put(line);
-                    }
-                } else {
-                    Thread.sleep(100);
+                String line = reader.readLine();
+                if (line != null) {
+                    inputQueue.put(line);
                 }
             } catch (Exception e) {
                 break;
