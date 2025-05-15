@@ -84,6 +84,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         try{
             System.out.println("Starting Client");
             Registry registry;
+            System.out.println(Settings.SERVER_NAME + " " + Settings.RMI_PORT);
             registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.RMI_PORT);
 
             this.server = (ServerInterface) registry.lookup("CommandReader");
@@ -102,7 +103,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     @Override
     public void StartClient() throws IOException, NotBoundException {
-        System.out.println("Starting Client");
+        //System.out.println("Starting Client");
 
         if (!setup()){
             exit(1);

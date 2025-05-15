@@ -27,7 +27,8 @@ public class BaseState extends PlayerState {
 
     @Override
     public Command createDefaultCommand(String gameId,Player player) {
+        //tecnicamente potremmo aspettare una decina di secondi, anche se in realtà potrebbero decidere gli altri di aspettare il bro
         int lv= player.getCommonBoard().getLevel();
-        return new ReadyCommand(gameId,player.GetID(),lv,"ready",true,"placeholder");
+        return new ReadyCommand(gameId,player.GetID(),lv,"Ready",true,"placeholder");
     }
 }

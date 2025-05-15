@@ -41,6 +41,7 @@ public class GiveAttack extends PlayerState {
     @Override
     public Command createDefaultCommand(String gameId, Player player) {
         int lv= player.getCommonBoard().getLevel();
+
         return new GiveAttackCommand(null,gameId,player.GetID(),lv,"GiveAttackCommand","placeholder"); /// devo mettere il token
     }
 }

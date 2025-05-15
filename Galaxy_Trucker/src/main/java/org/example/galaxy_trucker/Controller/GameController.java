@@ -89,8 +89,8 @@ public class GameController {
                     //vedi se è connesso
                     //se è connesso prendi dalla coda e chiami il metodo
 
-                    if(current.disconnected==true){ //questo è il thread  dei command fuori dalla flight mode giusto?
-                        current.DefaultAction(this);
+                    if(current.disconnected){ //questo è il thread  dei command fuori dalla flight mode giusto?
+                        //current.DefaultAction(this);
                     }
                     else{
                         Command cmd = queue.take(); // se questa è esclusiva del player si potrebbe svuotare in caso di disconnessione
@@ -203,7 +203,9 @@ public class GameController {
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         stopAllPlayerThreads();
         flightThread = new Thread(() -> {
-                   Card card= game.getGameBoard().NewCard();
+            System.out.println("PESCO CARTA!");
+            Card card= game.getGameBoard().NewCard();
+
                     //game.getGameBoard().getPlayers().getFirst()
             while (!card.isFinished()) {
 
@@ -259,7 +261,7 @@ public class GameController {
                 }
 
 
-                System.out.println("Flight phase complete");
+                //System.out.println("Flight phase complete");
 
             }
             /// non deve finire il game ma semplicemente questo thread
@@ -305,17 +307,31 @@ public class GameController {
         curr.setDisconnected(true);
         //setto booleano del controller
 
-        if (!flightMode){
+        if (!flightMode) {
             System.out.println("Player ID " + playerId + " not in flight mode, interrupting thread");
             threads.get(playerId).interrupt();
             threads.remove(playerId);
+            Thread t = new Thread(()->{
+                while (true) {
+                    if (!game.getPlayers().get(playerId).GetHasActed()){
+                        Controller current = ControllerMap.get(playerId);
+                        current.DefaultAction(this);
+                    }
+
+                }
+            });            ;
+            t.start();
+            threads.put(playerId, t);
         }
 
     }
 
     public void startPlayer(UUID token) {
         String playerId = tokenToPlayerId.get(token);
+        threads.get(playerId).interrupt();
         //setto booleano del controler
+        threads.remove(playerId);
+
         if (!flightMode){
             System.out.println("Player ID " + playerId + " not in flight mode, starting thread");
 

@@ -50,26 +50,38 @@ public class Client implements EventVisitor {
         view.updateHand(event);
     }
 
-    public  void run(String[] args) throws Exception {
-        if (args.length < 2) {
-            System.out.println("java Client <RMI|TCP> <TUI|GUI>");
-            return;
+    public  void run() throws Exception {
+        view = new TUI();
+        Settings.setIp(view.askInput("Please enter server ip address: "));
+        String Connection = "";
+        while(!Connection.equals("TCP") && !Connection.equals("RMI")) {
+
+            Connection = getView().askInput("Please enter type of connection <TCP|RMI> [exit]: ").toUpperCase();
+            if (Connection.equals("EXIT")) {
+                System.exit(1);
+            }
+
+        }
+        String view1 = "";
+        while(!view1.equals("GUI") && !view1.equals("TUI")) {
+            view1 = getView().askInput("Choose GUI | TUI [exit]: ").toUpperCase();
+            if (view1.equals("EXIT")) {
+                System.exit(1);
+            }
         }
 
-        String connectionType = args[0];
-        String uiType = args[1];
 
         Client client = new Client();
 
-        if (uiType.equalsIgnoreCase("TUI")) {
+        if (view1.equals("TUI")) {
             client.setView(new TUI());
-        } else if (uiType.equalsIgnoreCase("GUI")) {
+        } else if (view1.equals("GUI")) {
             //client.setView(new GUI());
         }
 
-        if (connectionType.equalsIgnoreCase("RMI")) {
+        if (Connection.equals("RMI")) {
             client.startRMIClient();
-        } else if (connectionType.equalsIgnoreCase("TCP")) {
+        } else if (Connection.equals("TCP")) {
              client.startTCPClient();
         }
     }

@@ -21,8 +21,8 @@ public class Launcher {
                 break;
             case "client":
                 Client client = new Client();
-                String[] clientArgs = Arrays.copyOfRange(args, 1, args.length);
-                client.run(clientArgs);
+                //String[] clientArgs = Arrays.copyOfRange(args, 1, args.length);
+                client.run();
                 break;
             default:
                 System.err.println("Unknown mode: " + mode);
