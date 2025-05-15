@@ -57,46 +57,43 @@ class GameBoardTest {
     void movePlayer() throws IOException {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
-        GameBoard gb = new GameBoard(tileSets, 2, null);
+        GameBoard gb = new GameBoard(tileSets, 1, null);
         Player p1 = new Player();
         p1.setId("Player1");
         Player p2 = new Player();
         p2.setId("Player2");
         Player p3 = new Player();
-        p2.setId("Player3");
+        p3.setId("Player3");
 
 
         gb.addPlayer(p1);
         gb.addPlayer(p2);
         gb.addPlayer(p3);
 
-        gb.SetStartingPosition(p1);
-        gb.SetStartingPosition(p2);
-        gb.SetStartingPosition(p3);
+        p1.EndConstruction();
+        p2.EndConstruction();
+        p3.EndConstruction();
 
 
-        assertEquals("Player1", gb.getPositions()[6].GetID());
-        assertEquals("Player2", gb.getPositions()[3].GetID());
+        assertEquals("Player1", gb.getPositions()[4].GetID());
+        assertEquals("Player2", gb.getPositions()[2].GetID());
         assertEquals("Player3", gb.getPositions()[1].GetID());
 
 
         gb.movePlayer("Player3", 2);
-        assertEquals("Player2", gb.getPositions()[3].GetID());
-        assertEquals("Player3", gb.getPositions()[4].GetID());
+        assertEquals("Player2", gb.getPositions()[2].GetID());
+        assertEquals("Player3", gb.getPositions()[5].GetID());
         assertNull(gb.getPositions()[1]);
 
         gb.movePlayer("Player3", -2);
         assertEquals("Player3", gb.getPositions()[1].GetID());
-        assertNull(gb.getPositions()[4]);
+        assertNull(gb.getPositions()[5]);
 
         gb.movePlayer("Player3", 5);
 
-        assertEquals("Player1", gb.getPositions()[6].GetID());
+        assertEquals("Player1", gb.getPositions()[4].GetID());
         assertEquals("Player3", gb.getPositions()[8].GetID());
-        assertNull(gb.getPositions()[4]);
-
-
-
+        assertNull(gb.getPositions()[1]);
 
     }
 
@@ -110,16 +107,16 @@ class GameBoardTest {
         Player p2 = new Player();
         p2.setId("Player2");
         Player p3 = new Player();
-        p2.setId("Player3");
+        p3.setId("Player3");
 
 
         gb.addPlayer(p1);
         gb.addPlayer(p2);
         gb.addPlayer(p3);
 
-        gb.SetStartingPosition(p1);
-        gb.SetStartingPosition(p2);
-        gb.SetStartingPosition(p3);
+        p1.EndConstruction(1);
+        p2.EndConstruction(2);
+        p3.EndConstruction(3);
 
         assertEquals("Player1", gb.getPositions()[6].GetID());
         assertEquals("Player2", gb.getPositions()[3].GetID());
@@ -153,10 +150,10 @@ class GameBoardTest {
         gb.addPlayer(p3);
         gb.addPlayer(p4);
 
-        p1.EndConstruction(0);
-        p2.EndConstruction(1);
-        p3.EndConstruction(2);
-        p4.EndConstruction(3);
+        p1.EndConstruction(1);
+        p2.EndConstruction(2);
+        p3.EndConstruction(3);
+        p4.EndConstruction(4);
 
         assertEquals(p1, gb.getPositions()[6]);
         assertEquals(p2, gb.getPositions()[3]);
@@ -175,7 +172,7 @@ class GameBoardTest {
         assertEquals(p2, gb.getPositions()[3]);
         assertNull(gb.getPositions()[1]);
 
-        p3.EndConstruction(3);
+        p3.EndConstruction(4);
         assertEquals(p1, gb.getPositions()[6]);
         assertEquals(p2, gb.getPositions()[3]);
         assertEquals(p3, gb.getPositions()[0]);

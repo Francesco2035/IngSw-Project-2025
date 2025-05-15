@@ -47,7 +47,6 @@ public class CommandInterpreter {
         commandMap.put("PickTile", this::createBuildingCommand);
         commandMap.put("Hourglass", this::createBuildingCommand);
         commandMap.put("SeeDeck", this::createBuildingCommand);
-
         commandMap.put("Discard", this::createBuildingCommand);
         commandMap.put("FromBuffer", this::createBuildingCommand);
         commandMap.put("ToBuffer", this::createBuildingCommand);
