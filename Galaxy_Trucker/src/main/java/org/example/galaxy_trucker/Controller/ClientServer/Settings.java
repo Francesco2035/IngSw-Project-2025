@@ -17,7 +17,7 @@ public class Settings {
 //        }
 //    }
 
-    public void setIp(String ip) {
+    public static void setIp(String ip) {
         SERVER_NAME = ip;
     }
 }
