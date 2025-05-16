@@ -45,14 +45,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     }
 
-    public RMIClient(Client client, CommandInterpreter commandInterpreter) throws RemoteException, NotBoundException, InterruptedException {
+    public RMIClient(Client client, CommandInterpreter commandInterpreter) throws IOException, NotBoundException, InterruptedException {
         this.client = client;
         this.commandInterpreter = commandInterpreter;
         reconnect();
 
     }
 
-    private void reconnect() throws RemoteException, InterruptedException {
+    private void reconnect() throws IOException, InterruptedException {
         if (!setup()){
             handleDisconnection();
             return;
@@ -114,7 +114,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         String gameId = client.getView().askInput("Insert game ID: ");
         int level = Integer.parseInt(client.getView().askInput("Insert game level: "));
 
-        //String fullCommand = "Login " + playerId + " " + gameId + " " + level;
+        String fullCommand = "Login " + playerId + " " + gameId + " " + level;
+        System.out.println(fullCommand);
 
         commandInterpreter = new CommandInterpreter(playerId, gameId);
         commandInterpreter.setlv(level);
@@ -253,7 +254,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                     running = false;
                                     try {
                                         handleDisconnection();
-                                    } catch (InterruptedException ex) {
+                                    } catch (InterruptedException | IOException ex) {
                                         throw new RuntimeException(ex);
                                     }
                                 } else {
@@ -273,7 +274,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     }
 
-    private void handleDisconnection() throws InterruptedException {
+    private void handleDisconnection() throws InterruptedException, IOException {
         running = false;
         client.getView().disconnect();
         if (inputLoop != null && inputLoop.isAlive()) {
@@ -281,7 +282,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
             //inputLoop.join();
         }
 
-        client.getView().connect();
+        //client.getView().connect();
         try{
             while(true) {
                 String whatNow = client.getView().askInput("<Reconnect> | <Exit> | <ChangeConnection> :");

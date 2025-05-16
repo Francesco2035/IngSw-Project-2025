@@ -9,6 +9,10 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -51,12 +55,14 @@ public class Client implements EventVisitor {
     }
 
     public  void run() throws Exception {
-        view = new TUI();
-        Settings.setIp(view.askInput("Please enter server ip address: "));
+        Terminal terminal = TerminalBuilder.builder().build();
+        LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
+        //view = new TUI();
+        Settings.setIp(reader.readLine("Please enter server ip address: "));
         String Connection = "";
         while(!Connection.equals("TCP") && !Connection.equals("RMI")) {
 
-            Connection = getView().askInput("Please enter type of connection <TCP|RMI> [exit]: ").toUpperCase();
+            Connection = reader.readLine("Please enter type of connection <TCP|RMI> [exit]: ").toUpperCase();
             if (Connection.equals("EXIT")) {
                 System.exit(1);
             }
@@ -64,11 +70,12 @@ public class Client implements EventVisitor {
         }
         String view1 = "";
         while(!view1.equals("GUI") && !view1.equals("TUI")) {
-            view1 = getView().askInput("Choose GUI | TUI [exit]: ").toUpperCase();
+            view1 = reader.readLine("Choose GUI | TUI [exit]: ").toUpperCase();
             if (view1.equals("EXIT")) {
                 System.exit(1);
             }
         }
+        terminal.close();
 
 
         Client client = new Client();

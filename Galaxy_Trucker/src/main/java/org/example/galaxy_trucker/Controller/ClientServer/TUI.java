@@ -103,14 +103,6 @@ public class TUI implements View {
             positionToGameboard.put(22, new IntegerPair(2,0));
             positionToGameboard.put(23, new IntegerPair(1,1));
 
-            for (int k = 0; k < 24; k++){
-                //System.out.println( positionToGameboard.get(k).getFirst() + " " + positionToGameboard.get(k).getSecond());
-                for (int l = 0; l < 7; l++){
-                    //System.out.println(positionToGameboard.containsKey(k) + " " + k );
-
-                    System.out.println(Gameboard[positionToGameboard.get(k).getFirst()][positionToGameboard.get(k).getSecond()][l]);
-                }
-            }
         }
         else{
             Gameboard = new String[10][5][7];
@@ -130,6 +122,7 @@ public class TUI implements View {
         inputThread = new Thread(inputReader);
         inputThread.setDaemon(true); // opzionale, per terminare col processo principale
         inputThread.start();
+        //inputReader.clearScreen();
 
 
     }
@@ -163,7 +156,6 @@ public class TUI implements View {
     public void updateBoard(TileEvent event) {
         if (setup!=0){
             setup--;
-
         }
         board[event.getX()][event.getY()] = event;
         if (event == null) {
@@ -195,6 +187,7 @@ public class TUI implements View {
         }
         if (setup == 0){
             cacheHand = emptyCell();
+            inputReader.clearScreen();
             showTUI();
         }
     }
@@ -488,7 +481,7 @@ public class TUI implements View {
 
 
     private void showUncoveredTiles() {
-        System.out.println("############################ UNCOVERED TILES ############################\n");
+        inputReader.printServerMessage("############################ UNCOVERED TILES ############################\n");
 
         StringBuilder line = new StringBuilder();
         StringBuilder topLine = new StringBuilder();
@@ -503,32 +496,34 @@ public class TUI implements View {
             line.append("\n");
 
         }
-        System.out.println(topLine);
-        System.out.println(line);
-        System.out.println("\n############################ ############## ############################");
+        inputReader.printServerMessage(String.valueOf(topLine));
+        inputReader.printServerMessage(String.valueOf(line));
+        inputReader.printServerMessage("\n############################ ############## ############################");
 
     }
 
     private void printTilesSet(){
         showUncoveredTiles();
-        System.out.println();
+        inputReader.printServerMessage("\n");
     }
 
     private void printHand(){
-        System.out.println("############################ HAND ############################\n");
-        for (String l : cacheHand) System.out.println(l);
-        System.out.println(border + "\n");
-        System.out.println("\n############################ #### ############################");
+        //inputReader.clearScreen();
+        inputReader.printServerMessage("############################ HAND ############################\n");
+        for (String l : cacheHand) inputReader.printServerMessage(l);
+        inputReader.printServerMessage(border + "\n");
+        inputReader.printServerMessage("\n############################ #### ############################");
     }
 
     private void showTUI(){
         if (!fase){
-            System.out.println("############################ COVERED TILES SET ############################\n");
-            System.out.println("\n CoveredTileSet size: "+ CoveredTileSet);
+            inputReader.clearScreen();
+            inputReader.printServerMessage("############################ COVERED TILES SET ############################\n");
+            inputReader.printServerMessage("\n CoveredTileSet size: "+ CoveredTileSet);
             showUncoveredTiles();
             printHand();
             printBoard();
-            System.out.println("\n############################ ################# ############################");
+            inputReader.printServerMessage("\n############################ ################# ############################");
         }
         else {
             //
@@ -537,40 +532,42 @@ public class TUI implements View {
 
     @Override
     public void showCard(int id){
-        System.out.println("\n");
-        System.out.println(CardsDescriptions.get(id));
+        inputReader.printServerMessage("\n");
+        inputReader.printServerMessage(CardsDescriptions.get(id));
+        //System.out.println(CardsDescriptions.get(id));
     }
 
     @Override
     public void disconnect() {
+//        inputReader.stop();
+//        inputThread.interrupt();
+//        try {
+//            inputThread.join();
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
         inputReader.stop();
-        inputThread.interrupt();
-        try {
-            inputThread.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        System.out.println("Disconnected cleanly.");
+        inputReader.printServerMessage("Disconnected cleanly.");
     }
 
     @Override
-    public void connect() {
-        inputReader = new InputReader(inputQueue);
-        inputThread = new Thread(inputReader);
-        inputThread.setDaemon(true);
-        inputThread.start();
+    public void connect() throws IOException {
+//        inputReader = new InputReader(inputQueue);
+//        inputThread = new Thread(inputReader);
+//        inputThread.setDaemon(true);
+//        inputThread.start();
     }
 
     @Override
     public String askInput(String message) {
-        System.out.print(message);
+        inputReader.printServerMessage(message);
         try {
             String toSend = inputQueue.take();
             //System.out.println("ask input: " + toSend);
             return toSend;
         } catch (InterruptedException e) {
             //Thread.currentThread().interrupt();
-            System.out.println("Input interrupted");
+            inputReader.printServerMessage("Input interrupted");
             return "";
         }
     }
@@ -584,7 +581,8 @@ public class TUI implements View {
     }
 
     public void printGameboard(){
-        System.out.println("\n\n");
+        inputReader.clearScreen();
+        inputReader.printServerMessage("\n\n");
         if (lv == 2){
             StringBuilder toPrint = new StringBuilder();
             for (int i = 0; i < 6; i++) {
@@ -592,7 +590,7 @@ public class TUI implements View {
                     for (int j = 0; j < 12; j++) {
                         toPrint.append(Gameboard[i][j][k]);
                     }
-                    System.out.println(toPrint.toString());
+                    inputReader.printServerMessage(toPrint.toString());
                     toPrint = new StringBuilder();
 
                 }

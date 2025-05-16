@@ -9,6 +9,7 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.VoidEvent;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public interface View {
@@ -37,7 +38,7 @@ public interface View {
 
     void disconnect();
 
-    void connect();
+    void connect() throws IOException;
 
     public void setGameboard(int lv);
 }

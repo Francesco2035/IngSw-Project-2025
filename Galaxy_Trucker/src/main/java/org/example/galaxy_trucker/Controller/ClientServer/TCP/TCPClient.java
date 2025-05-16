@@ -35,7 +35,7 @@ public class TCPClient{
         this.client = c;
     }
 
-    public TCPClient(Client c, CommandInterpreter commandInterpreter) throws JsonProcessingException {
+    public TCPClient(Client c, CommandInterpreter commandInterpreter) throws IOException {
         this.client = c;
         this.commandInterpreter = commandInterpreter;
         if (!setup()){
@@ -140,12 +140,14 @@ public class TCPClient{
 
             } catch (InterruptedException e) {
                 break;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }
 
 
-    public void disconnect(){
+    public void disconnect() throws IOException {
 
         client.getView().disconnect();
 
@@ -284,7 +286,7 @@ public class TCPClient{
 
     }
 
-    private void reconnect() {
+    private void reconnect() throws IOException {
         try {
             try {
                 echoSocket = new Socket(Settings.SERVER_NAME, Settings.TCP_PORT);
