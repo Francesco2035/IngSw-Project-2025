@@ -39,4 +39,5 @@ module org.example.galaxy_trucker {
     exports org.example.galaxy_trucker.Model.PlayerStates;
     exports org.example.galaxy_trucker.Controller.ClientServer.RMI to java.rmi;
     opens org.example.galaxy_trucker.Commands to com.google.gson, com.fasterxml.jackson.databind;
+    exports org.example.galaxy_trucker.View.GUI;
 }
