@@ -1,6 +1,10 @@
 package org.example.galaxy_trucker;
 
 import com.sun.tools.javac.Main;
+import org.example.galaxy_trucker.Controller.GameController;
+import org.example.galaxy_trucker.Controller.GameHandlerTest;
+import org.example.galaxy_trucker.Controller.GamesHandler;
+import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.DOUBLE;
@@ -8,12 +12,15 @@ import org.example.galaxy_trucker.Model.Connectors.SINGLE;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.GAGen;
 
+import org.example.galaxy_trucker.Model.Game;
+import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class TestSetupHelper {
 
@@ -251,6 +258,25 @@ public class TestSetupHelper {
                 playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),new AddCrewState());
             }
         }
+
+    }
+
+
+    public static GameController GameControllerSetup() throws IOException {
+        Game game = new Game(2, "poggi");
+        GamesHandler gh = new GamesHandler();
+        GameController gc = new GameController(game.getGameID(), game, gh);
+        Player p1 = new Player();
+        p1.setId("player1");
+        Player p2 = new Player();
+        p2.setId("player2");
+        VirtualView v1 = new VirtualView(p1.GetID(), "poggi", null, null);
+
+        VirtualView v2 = new VirtualView(p1.GetID(), "poggi", null, null);
+
+        gc.NewPlayer(p1, v1, UUID.randomUUID());
+        gc.NewPlayer(p2, v2, UUID.randomUUID());
+        return gc;
 
     }
 

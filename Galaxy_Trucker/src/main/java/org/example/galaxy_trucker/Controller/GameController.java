@@ -1,6 +1,8 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
+import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
@@ -35,6 +37,12 @@ public class GameController {
     boolean GameOver = false;
     private boolean started = false;
     private int color = 153;
+
+    private LobbyListener lobbyListener;
+
+    public void setLobbyListener(LobbyListener lobbyListener) {
+        this.lobbyListener = lobbyListener;
+    }
 
     public boolean isStarted() {
         return started;
@@ -79,6 +87,8 @@ public class GameController {
         p.getCommonBoard().setListeners(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);
         p.setCardListner(vv);
+
+
         //p.getGmaebord.setVrtualview(vv);
 //        p.getCommonBoard().addListener(p.GetID(),vv);
 
@@ -106,6 +116,8 @@ public class GameController {
         });
         t.start();
         threads.put(playerId, t);
+        ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
+        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players));
     }
 
 
@@ -160,6 +172,8 @@ public class GameController {
             System.out.println("Stop game");
             stopGame();
         }
+        ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
+        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players));
     }
 
     public void stopGame() {
