@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
+//TODO: impostare vincolo lunghezza nome e gameid (anche lato server)
+//TODO: stampare games per righe e non in colonna perchè mi da fastidio, oppure farlo su più righe
+//TODO: rimozione game se tutti i player quittano oppure se il game è partito
 
 public class TUI implements View {
 
@@ -116,16 +118,18 @@ public class TUI implements View {
         lobby.put(event.getGameId(), formatCell(event));
         inputReader.clearScreen();
         for (String[] game : lobby.values()) {
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 8; i++) {
                 inputReader.printServerMessage(game[i]);
             }
             inputReader.printServerMessage("\n\n");
-
+        }
+        if (event.getGameId().equals("EMPTY CREATE NEW GAME")){
+            lobby.remove(event.getGameId());
         }
     }
 
     public String[] formatCell(LobbyEvent event) {
-        String[] cell = new String[7];
+        String[] cell = new String[8];
         cell[0] = "+"+centerTextAnsi(event.getGameId(),25, "-")+"+";
         cell[1] = "+                         +";
         int k = 1;
@@ -133,11 +137,14 @@ public class TUI implements View {
         cell[3] = "+                         +";
         cell[4] = "+                         +";
         cell[5] = "+                         +";
-        cell[6] = "+-------------------------+";
+        cell[6] = "+                         +";
+        cell[7] = "+-------------------------+";
         if (!event.getGameId().equals("EMPTY CREATE NEW GAME")){
             ArrayList<String> players = event.getPlayers();
+            cell[6] = "+"+centerTextAnsi("Game level: "+ event.getLv(),25, "-")+"+";
             for (String player : players) {
-                cell[2+ k -1] = "+"+centerTextAnsi("p"+k+ ": "+player, 25, " ")+"+";
+                cell[2+ k -1] = "+"+centerTextAnsi("p"+k+ ": "+player, 25)+"+";
+                k++;
             }
         }
 
