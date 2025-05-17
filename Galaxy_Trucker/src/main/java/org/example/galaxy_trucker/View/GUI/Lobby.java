@@ -8,8 +8,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.example.galaxy_trucker.Commands.CommandInterpreter;
+import org.example.galaxy_trucker.Controller.ClientServer.View;
 
-public class Lobby extends Application {
+public class Lobby extends Application{
+
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -20,7 +24,7 @@ public class Lobby extends Application {
         // Lista giocatori
         ListView<String> gamesList = new ListView<>();
         gamesList.setPrefHeight(150);
-        gamesList.setPlaceholder(new Label("No existing games"));
+        gamesList.setPlaceholder(new Label("No active games"));
 
         // Area messaggi console/chat (opzionale)
         TextArea messageArea = new TextArea();
@@ -32,6 +36,7 @@ public class Lobby extends Application {
         // Bottone per avviare la partita (solo host)
         Button newGame = new Button("New Game");
         newGame.setStyle("-fx-font-size: 14px;");
+
         newGame.setOnAction(e -> {
             Stage newGameStage = new Stage();
             newGameStage.setTitle("New Game");
@@ -66,6 +71,8 @@ public class Lobby extends Application {
                 if(level.equals("Tutorial"))
                     gameLv = 1;
                 else gameLv = 2;
+
+
 
                 newGameStage.close();
 

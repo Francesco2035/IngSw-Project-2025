@@ -188,6 +188,11 @@ public class GameBoard {
 
 
 
+            for(Player_IntegerPair p : players)
+                if(p.getValue() >=0)
+                    sendUpdates(new GameBoardEvent(p.getValue(), pl.GetID()));
+
+
         }
 
 

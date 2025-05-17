@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Controller.ClientServer;
 
+import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
@@ -42,4 +43,5 @@ public interface View {
     void connect();
 
     public void setGameboard(int lv);
+
 }
