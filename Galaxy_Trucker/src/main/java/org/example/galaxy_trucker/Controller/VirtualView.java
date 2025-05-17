@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
+import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Controller.Listeners.*;
 import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
@@ -14,9 +14,7 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEv
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Connectors.NONE;
 
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;

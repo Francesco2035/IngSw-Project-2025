@@ -23,5 +23,7 @@ public interface EventVisitor {
 
     public void visit(GameBoardEvent gameBoardEvent);
 
+    void visit(LobbyEvent lobbyEvent);
+
     //public void visit(GameBoardEvent event);
 }

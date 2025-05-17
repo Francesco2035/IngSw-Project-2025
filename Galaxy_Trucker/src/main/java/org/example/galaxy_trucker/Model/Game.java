@@ -78,7 +78,8 @@ public class Game implements Serializable {
     }
 
 
-
-
+    public int getLv() {
+        return lv;
+    }
 }
 
