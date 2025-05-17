@@ -132,16 +132,16 @@ public class TUI implements View {
         String[] cell = new String[8];
         cell[0] = "+"+centerTextAnsi(event.getGameId(),25, "-")+"+";
         cell[1] = "+                         +";
-        int k = 1;
         cell[2] = "+                         +";
         cell[3] = "+                         +";
         cell[4] = "+                         +";
         cell[5] = "+                         +";
         cell[6] = "+                         +";
         cell[7] = "+-------------------------+";
+        int k = 1;
         if (!event.getGameId().equals("EMPTY CREATE NEW GAME")){
             ArrayList<String> players = event.getPlayers();
-            cell[6] = "+"+centerTextAnsi("Game level: "+ event.getLv(),25, "-")+"+";
+            cell[7] = "+"+centerTextAnsi("Game level: "+ event.getLv(),25, "-")+"+";
             for (String player : players) {
                 cell[2+ k -1] = "+"+centerTextAnsi("p"+k+ ": "+player, 25)+"+";
                 k++;
