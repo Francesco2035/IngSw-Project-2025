@@ -31,7 +31,6 @@ public class GuiMain extends Application {
     public static void launchApp(GuiRoot guiRootInstance) {
         guiRoot = guiRootInstance;
         Application.launch(GuiMain.class);
-
     }
 
     /**
@@ -41,8 +40,9 @@ public class GuiMain extends Application {
      */
     @Override
     public void start(Stage stage) throws IOException {
-        this.primaryStage = new Stage();
+        this.primaryStage = stage;
         guiRoot.setGuiMain(this);
+        guiRoot.setStage(primaryStage);
         guiRoot.goToFirstScene(primaryStage);
 
     }
