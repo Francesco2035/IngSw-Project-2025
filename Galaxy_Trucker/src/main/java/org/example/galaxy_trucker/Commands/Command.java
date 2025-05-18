@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
+import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.Socket;
 
 // Aggiungi JsonTypeInfo per discriminare le sottoclassi
 @JsonTypeInfo(
@@ -28,6 +27,7 @@ import java.net.Socket;
         @JsonSubTypes.Type(value = AddCrewCommand.class, name = "AddCrewCommand"),
 
         @JsonSubTypes.Type(value = RemoveTileCommand.class, name = "RemoveTileCommand"),
+        @JsonSubTypes.Type(value = LoginCommand.class, names = "LobbyCommand"),
 
         @JsonSubTypes.Type(value = ReconnectCommand.class, names = "ReconnectCommand")
 

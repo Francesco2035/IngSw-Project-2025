@@ -138,12 +138,15 @@ public class GameBoard {
                 .filter(p -> pl.equals( p.getKey()) )
                 .findFirst().orElseThrow();
 
-        if(positions[startPos[index]] == null) {
-            SetNewPosition(cur, startPos[index], startPos[index]);
-            sendUpdates(new GameBoardEvent(startPos[index], pl.GetID()));
+        if(index > players.size())
+            throw new IllegalArgumentException("Cell not available!");
+
+        if(positions[startPos[index-1]] == null) {
+            SetNewPosition(cur, startPos[index-1], startPos[index-1]);
+            sendUpdates(new GameBoardEvent(startPos[index-1], pl.GetID()));
             PlayersOnBoard++;
         }
-        else throw new IllegalArgumentException("Starting position alredy taken!");
+        else throw new IllegalArgumentException("This cell is alredy taken!");
     }
 
 
@@ -182,6 +185,8 @@ public class GameBoard {
                     i++;
                 }
             updateAllPosition();
+
+
 
         }
 

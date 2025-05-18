@@ -1,13 +1,12 @@
 package org.example.galaxy_trucker.Commands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
+import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.Socket;
 
 
 public class LoginCommand extends Command implements Serializable {

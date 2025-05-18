@@ -2,28 +2,31 @@ package org.example.galaxy_trucker.Controller;
 
 import javafx.util.Pair;
 import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Commands.LoginCommand;
-import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
+import org.example.galaxy_trucker.Controller.Listeners.GhListener;
+import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
+import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Game;
-import org.example.galaxy_trucker.Model.GameLists;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class GamesHandler {
+public class GamesHandler implements LobbyListener {
 
     private final HashMap<UUID, String> tokenToGame = new HashMap<>();
     private final HashMap<String, GameController> gameControllerMap;
     private final BlockingQueue<Pair<Command, VirtualView>> pendingLogins;
+    private ArrayList<GhListener> listeners = new ArrayList<>();
+
+    public void setListeners(GhListener listener) {
+        this.listeners.add(listener);
+    }
 
     public GamesHandler() {
         this.gameControllerMap = new HashMap<>();
@@ -109,7 +112,9 @@ public class GamesHandler {
                 System.out.println("Game doesn't exist: " + gameID);
                 Game curGame = new Game(lvl, gameID);
                 synchronized (gameControllerMap) {
-                    gameControllerMap.putIfAbsent(gameID, new GameController(gameID, curGame, this));
+                    GameController gameController = new GameController(gameID, curGame, this);
+                    gameController.setLobbyListener(this);
+                    gameControllerMap.putIfAbsent(gameID, gameController);
                     gameControllerMap.get(curGame.getGameID()).NewPlayer(temp, virtualView, virtualView.getToken());
                 }
 
@@ -160,4 +165,14 @@ public class GamesHandler {
         }
     }
 
+    @Override
+    public void sendEvent(LobbyEvent event) {
+        for (GhListener listener : listeners) {
+            listener.sendEvent(event);
+        }
+    }
+
+    public ArrayList<GhListener> getListeners() {
+        return listeners;
+    }
 }

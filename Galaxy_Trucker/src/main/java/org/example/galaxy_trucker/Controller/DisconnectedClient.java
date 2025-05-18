@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Controller;
 
-import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
+import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 
 import java.util.UUID;
 

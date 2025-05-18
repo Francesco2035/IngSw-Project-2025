@@ -1,9 +1,7 @@
 package org.example.galaxy_trucker.View;
 
-import org.example.galaxy_trucker.Controller.ClientServer.Client;
-import org.example.galaxy_trucker.Controller.ClientServer.ServersHandler;
-
-import java.util.Arrays;
+import org.example.galaxy_trucker.ClientServer.Client;
+import org.example.galaxy_trucker.ClientServer.ServersHandler;
 
 public class Launcher {
     public static void main(String[] args) throws Exception {
