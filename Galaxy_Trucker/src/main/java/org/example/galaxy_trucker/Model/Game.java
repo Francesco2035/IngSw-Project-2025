@@ -68,6 +68,9 @@ public class Game implements Serializable {
     }
 
 
+    public void setGameBoard(GameBoard gameBoard) {
+        GameBoard = gameBoard;
+    }
 
     public String getGameID() {
         return GameID;

@@ -73,6 +73,7 @@ public class OpenSpace extends Card{
 
     @Override
     public void checkMovement(int enginePower, int numofDouble) {
+            System.out.println("checkMovement of "+currentPlayer.GetID()+" "+enginePower+" "+numofDouble);
             this.currentmovement=enginePower;
             this.energyUsage=numofDouble;
             if(this.energyUsage==0){

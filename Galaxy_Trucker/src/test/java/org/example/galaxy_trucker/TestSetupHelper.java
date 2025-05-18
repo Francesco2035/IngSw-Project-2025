@@ -50,12 +50,13 @@ public class TestSetupHelper {
         Tile powerCenter2 = tiles.get(5);
         Tile plasmaDrill = tiles.get(130);
         Tile addonspurple = tiles.get(142);
-        Tile modular1 = tiles.get(39);
-        Tile sewerpipes = tiles.get(52);
+        Tile modular1 = tiles.get(39); // double , single double, none
+        Tile sewerpipes = tiles.get(52); // uni, sigle ,uni , double
         Tile modular2 = tiles.get(47);
         Tile modular3 = tiles.get(48);
         Tile hotWaterHeater = tiles.get(92);
         Tile shield = tiles.get(151);
+        Tile replacement_house= tiles.get(44);
 
 
         shield.RotateSx();
@@ -93,13 +94,16 @@ public class TestSetupHelper {
         playerBoard.insertTile(powerCenter2, 5,4);
         playerBoard.insertTile(plasmaDrill,8,9);
         playerBoard.insertTile(addonspurple,6,4);
-        playerBoard.insertTile(modular1,7,4);
+        playerBoard.insertTile(replacement_house,7,4);
         playerBoard.insertTile(sewerpipes,7,3);
         playerBoard.insertTile(hotWaterHeater,8,3);
-        playerBoard.insertTile(modular1,5,6);
+      //  playerBoard.insertTile(modular1,5,6);
 //        playerBoard.insertTile(modular2,8,4);
 //        playerBoard.insertTile(modular3,8,5);
 //        playerBoard.insertTile(shield,6,3);
+        MainCockpitComp mp = new MainCockpitComp();
+        Tile mc = new Tile(mp, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        playerBoard.insertTile(mc,6,6);
         return playerBoard;
 
     }
@@ -119,7 +123,7 @@ public class TestSetupHelper {
         ArrayList<Tile> tiles = gag.getTilesDeck();
         Tile t1 = tiles.get(37); //House:  single,double,single,double
         Tile t2 = tiles.get(35); //House: singe,double,none,none
-        Tile t3 = tiles.get(40);//house: uni,double,double
+        Tile t3 = tiles.get(40);//house: double,double,single,double
         Tile t4 = tiles.get(99); //Cannon: none,cannon,none,double
         Tile t5 = tiles.get(117);//Cannon: double, cannon,single,uni
         Tile t6 = tiles.get(137);//BrownAddon: uni,single,none,none
@@ -129,6 +133,7 @@ public class TestSetupHelper {
 
         t1.RotateSx();
         t2.RotateDx();
+        t3.RotateSx();
         t3.RotateSx();
         t5.RotateDx();
         t6.RotateDx();
@@ -141,6 +146,9 @@ public class TestSetupHelper {
         playerBoard2.insertTile(t3,5,5);
         playerBoard2.insertTile(t4,4,5); // cannon looking up tipo1
         playerBoard2.insertTile(t8,8,8);
+        MainCockpitComp mk = new MainCockpitComp();
+        Tile mkk = new Tile(mk, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        playerBoard2.insertTile(mkk,6,6);
         return playerBoard2;
 
 
@@ -235,9 +243,12 @@ public class TestSetupHelper {
 
         ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
         HousingCoords.addAll(playerBoard.getHousingUnits());
-        for(HousingUnit housingUnit : HousingCoords){
+        for(HousingUnit housingUnit : playerBoard.getHousingUnits()){
+            System.out.println("added 2 humans in  "+housingUnit.getX()+" "+housingUnit.getY());
+
            playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),new AddCrewState());
         }
+        HousingCoords.clear();
     }
 
 

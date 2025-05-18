@@ -89,6 +89,7 @@ public class AbandonedStation extends Card{
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
         }
+        System.out.println("card finished!");
         this.setFinished(true);
     }
 
@@ -109,6 +110,9 @@ public class AbandonedStation extends Card{
         }
     }
 
+    public void keepGoing(){
+        this.finishCard();
+    }
 
     //json required
     public AbandonedStation() {}

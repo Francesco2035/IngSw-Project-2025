@@ -63,7 +63,7 @@ public class   Meteorites extends Card {
             p.setState(new Waiting());
         }
 
-        System.out.println("SIZE OF ATTACK:"+attacks.size());
+        System.out.println("SIZE OF ATTACK:"+attacks.size()/2);
 
         GameBoard MeteoritesBoard = super.getBoard();
         ArrayList<Player> MeteoritesPlayerList = MeteoritesBoard.getPlayers();
@@ -74,7 +74,7 @@ public class   Meteorites extends Card {
 //            if(this.attacks.get(this.MeteoritesOrder)==0){
 //                this.MeteoritesLine=8;
 //            }
-            System.out.println("attacco da "+attacks.get(MeteoritesOrder) +"alla riga:"+this.MeteoritesLine);
+            System.out.println("attacco da "+attacks.get(MeteoritesOrder) +" alla riga:"+this.MeteoritesLine);
             System.out.println("attacco numero: "+(this.MeteoritesOrder/2));
             this.updateSates();
         }
@@ -128,7 +128,7 @@ public class   Meteorites extends Card {
                             MeteoritesFlag = true;
                             DamageFlag=true;
                             hit.setValue(MeteoritesLine,Movement);
-                            System.out.println("Meteorites hit in: " + Movement + " " + MeteoritesLine);
+                            System.out.println("Meteorites hit in: " + MeteoritesLine + " " + Movement);
                             currentPlayer.setState(new DefendingFromSmall());
 
                         }
@@ -257,6 +257,7 @@ public class   Meteorites extends Card {
 
     @Override
     public void DefendFromSmall(IntegerPair energy){
+        System.out.println(currentPlayer.GetID()+ "is defending from small");
         PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if (energy!=null){
@@ -277,11 +278,13 @@ public class   Meteorites extends Card {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
             currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
             if (currentBoard.getBroken()){
-                System.out.println("rottura nave");
+
+                System.out.println("\nrottura nave\n");
                 this.currentPlayer.setState(new HandleDestruction());
                 return;
 
             }
+            System.out.println("Stato del player "+ currentPlayer.getPlayerState().getClass().getName());
             System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
         }
         this.updateSates();
