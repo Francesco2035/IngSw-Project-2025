@@ -280,7 +280,11 @@ public class   Meteorites extends Card {
             if (currentBoard.getBroken()){
 
                 System.out.println("\nrottura nave\n");
+
+                System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
+
                 this.currentPlayer.setState(new HandleDestruction());
+                System.out.println("Stato del player "+ currentPlayer.getPlayerState().getClass().getName());
                 return;
 
             }
@@ -333,7 +337,11 @@ public class   Meteorites extends Card {
             currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
             System.out.println("destryoyed: "+hit.getFirst()+" "+hit.getSecond()+" of:"+currentPlayer.GetID());
             if (currentBoard.getBroken()){
+                System.out.println("\nrottura nave\n");
+
+                System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
                 this.currentPlayer.setState(new HandleDestruction());
+                System.out.println("Stato del player "+ currentPlayer.getPlayerState().getClass().getName());
                 return;
 
             }

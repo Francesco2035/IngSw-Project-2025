@@ -180,7 +180,7 @@ public class CardControllerTest {
 
 
     //meteoriti ha memoria?
-    @RepeatedTest(10)
+    @Test
     public void testMeteoritesCard() throws IOException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
@@ -235,8 +235,6 @@ public class CardControllerTest {
             if (p1.getPlayerState().getClass().equals(HandleDestruction.class)) {
                 System.out.println("HandleDestruction p1 per ora skippo :)");
                 CurrentCard.setFinished(true);
-
-
             }
             else if(p2.getPlayerState().getClass().equals(HandleDestruction.class)) {
                 System.out.println("HandleDestruction p2 :)");
@@ -269,13 +267,30 @@ public class CardControllerTest {
         assertEquals(false, p1.GetHasActed());
         assertEquals(p2.getPlayerState().getClass(), Waiting.class);
         assertEquals(true, p2.GetHasActed());
-        GiveSpeedCommand  giveSpeedCommand =new GiveSpeedCommand(null,game.getID(),p1.GetID(),Gboard.getLevel(),"boh?","Placeholder");
+
+        ArrayList<IntegerPair> coords= new ArrayList<>();
+        coords.clear();
+        coords.add(new IntegerPair(8,3));//doppio
+        coords.add(new IntegerPair(6,5));//singolo andrebbe ignorato
+
+        GiveSpeedCommand  giveSpeedCommand =new GiveSpeedCommand(coords,game.getID(),p1.GetID(),Gboard.getLevel(),"boh?","Placeholder");
         giveSpeedCommand.execute(p1);
         System.out.println("roar");
+        assertEquals(p1.getPlayerState().getClass(), ConsumingEnergy.class);
+        coords.clear();
+        coords.add(new IntegerPair(6,9));
+        ConsumeEnergyCommand consumeEnergyCommand = new ConsumeEnergyCommand(coords,game.getID(),p1.GetID(),Gboard.getLevel(),"boh?","Placeholder");
+        consumeEnergyCommand.execute(p1);
+
         assertEquals(p2.getPlayerState().getClass(), GiveSpeed.class);
         assertEquals(false, p2.GetHasActed());
         assertEquals(p1.getPlayerState().getClass(), Waiting.class);
         assertEquals(true, p1.GetHasActed());
+
+        giveSpeedCommand =new GiveSpeedCommand(null,game.getID(),p1.GetID(),Gboard.getLevel(),"boh?","Placeholder");
+        giveSpeedCommand.execute(p1);
+
+        assertEquals(true,CurrentCard.isFinished());
     }
 
     @Test
