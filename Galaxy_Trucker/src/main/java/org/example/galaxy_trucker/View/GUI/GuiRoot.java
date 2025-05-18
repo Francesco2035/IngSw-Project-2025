@@ -19,12 +19,14 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class GuiRoot implements View {
 
     private Thread guiThread;
+    private HashMap<String,LobbyEvent> lobbyEventHashMap = new HashMap<>();
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     @Override
     public void updateBoard(TileEvent tileEvent) {
@@ -100,6 +102,14 @@ public class GuiRoot implements View {
 
     @Override
     public void showLobby(LobbyEvent event) {
+        lobbyEventHashMap.remove(event.getGameId());
+        lobbyEventHashMap.put(event.getGameId(), event);
+        //stampi for tutti i cazzi in lobby
+        //se il player clicca un game devi
+        //metti nella coda Login
+        //metti nella coda playerid
+        //metti nella coda gameId
+        //metti nella coda livello (1/2)
 
     }
 
@@ -108,6 +118,9 @@ public class GuiRoot implements View {
 
     public void goToFirstScene(Stage primaryStage) {
         Label titleLabel = new Label("GALAXY TRUCKERS");
+        //se ha premuto
+        String cmd = "Lobby";
+        inputQueue.add(cmd);
         titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
 
         // Lista giocatori
@@ -209,4 +222,6 @@ public class GuiRoot implements View {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+    //public gameboard scene(scena)
 }

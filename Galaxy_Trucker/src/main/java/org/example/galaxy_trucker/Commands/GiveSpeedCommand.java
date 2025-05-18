@@ -23,6 +23,7 @@ public class GiveSpeedCommand extends Command implements Serializable {
     public void execute(Player player) {
         if (coordinates!= null){
             PlayerBoard playerBoard = player.getmyPlayerBoard();
+            //action si salva la potenza singola
             GetEnginePower action = new GetEnginePower(playerBoard.getEnginePower());
             for (IntegerPair coordinate : coordinates) {
                 playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),

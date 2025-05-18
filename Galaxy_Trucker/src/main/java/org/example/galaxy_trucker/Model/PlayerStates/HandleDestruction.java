@@ -1,12 +1,8 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Commands.GiveAttackCommand;
 import org.example.galaxy_trucker.Commands.SelectChunkCommand;
-import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
@@ -58,6 +54,11 @@ public class HandleDestruction extends PlayerState {
             //board.choosePlayerBoard(coord);
 
         return new SelectChunkCommand(coord,gameId, player.GetID(),lv,"SelectChunkCommand","placeholder");
+    }
+
+    @Override
+    public boolean allows(SelectChunkCommand command){
+        return true;
     }
 
 

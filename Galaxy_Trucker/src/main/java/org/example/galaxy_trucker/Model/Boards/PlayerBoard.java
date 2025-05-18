@@ -794,7 +794,9 @@ public class PlayerBoard {
         return PowerCenters;
     }
 
-
+    /*
+        ritorna la potenza singola (+2 se alieno)
+     */
     public int getEnginePower() {
         if (brownAlien){
             return EnginePower +2;

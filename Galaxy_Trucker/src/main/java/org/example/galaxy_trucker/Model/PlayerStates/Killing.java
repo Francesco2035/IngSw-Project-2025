@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.example.galaxy_trucker.Commands.GiveSpeedCommand;
 import org.example.galaxy_trucker.Commands.KillCommand;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
@@ -31,6 +32,11 @@ public class Killing extends PlayerState {
 //        Card card = player.getCurrentCard();
 //        return new KillCommand(card, coordinates);
 //    }
+
+    @Override
+    public boolean allows(KillCommand command){
+        return true;
+    }
 
     @Override
     public boolean allows(KillCrewAction action) {

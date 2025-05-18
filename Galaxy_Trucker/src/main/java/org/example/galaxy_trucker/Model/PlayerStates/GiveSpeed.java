@@ -32,6 +32,11 @@ public class GiveSpeed  extends PlayerState{
     }
 
     @Override
+    public boolean allows(GiveSpeedCommand command){
+        return true;
+    }
+
+    @Override
     public Command createDefaultCommand(String gameId, Player player) {
         int lv= player.getCommonBoard().getLevel();
         return new GiveSpeedCommand(null,gameId,player.GetID(),lv,"GiveSpeedCommand","placeholder"); /// devo mettere il token

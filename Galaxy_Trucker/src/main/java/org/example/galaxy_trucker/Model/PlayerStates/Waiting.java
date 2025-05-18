@@ -11,10 +11,10 @@ public class Waiting extends PlayerState{
         return null;
     }
 
-@Override
-public void shouldAct(Player player) {
-    player.SetHasActed(true);
-}
+    @Override
+    public void shouldAct(Player player) {
+        player.SetHasActed(true);
+    }
 
 
 }

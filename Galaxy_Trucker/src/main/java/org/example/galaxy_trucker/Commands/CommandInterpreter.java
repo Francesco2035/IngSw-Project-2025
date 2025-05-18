@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandInterpreter {
-
+//TODO: creare i comandi di rifiuto senza dover passare -1 -1
     private String playerId;
     private String gameId;
     private int lv;
@@ -54,7 +54,6 @@ public class CommandInterpreter {
         commandMap.put("AddCrew", this::createAddCrewCommand);
         commandMap.put("AddBrownAlien", this::createAddCrewCommand);
         commandMap.put("AddPurpleAlien", this::createAddCrewCommand);
-        commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
         commandMap.put("Quit", this::createQuitCommand);
         commandMap.put("Ready", this::createReadyCommand);
         commandMap.put("RemoveTile", this::createRemoveTileCommand);
@@ -63,13 +62,19 @@ public class CommandInterpreter {
 
         commandMap.put("Reconnect", this::createReconnectCommand);
 
+        commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
         commandMap.put("Accept", this::createAcceptCommand);
+        commandMap.put("Decline", this::createAcceptCommand);
         commandMap.put("ChoosingPlanet", this::createChoosingPlanetsCommand); // il command usa planets con la s ma tu più volte lo hai scritto senza che faccio?
         commandMap.put("DefendFromLarge",this::createDefendFromLargeCommand);
         commandMap.put("DefendFromSmall",this::createDefendFromSmallCommand);
         commandMap.put("Kill", this::createKillCommand);
         commandMap.put("GiveAttack", this::createGiveAttackCommand);
         commandMap.put("GiveSpeed", this::createGiveSpeedCommand);
+
+
+        //cargo
+        //theft
     }
 
 
@@ -232,10 +237,17 @@ public class CommandInterpreter {
 
     private Command createAcceptCommand(String[] parts){
         boolean accept;
-        if (parts.length != 2) {
+        if (parts.length != 1) {
             throw new IllegalArgumentException("Comando Accept richiede 1 argomento: se si accetta o meno");
         }
-        accept = Boolean.parseBoolean(parts[1]);
+        if(parts[0].equals("Accept")){
+            accept = true;
+        } else if (parts[0].equals("Decline")) {
+            accept = false;
+        }
+        else{
+            throw new IllegalArgumentException("Accept | Decline");
+        }
         return new AcceptCommand(gameId,playerId,lv,"AcceptCommand",accept,token);
     }
 
@@ -281,6 +293,8 @@ public class CommandInterpreter {
         else {
             plasmaDrill = new IntegerPair(x,y);
         }
+        x= Integer.parseInt(parts[3]);
+        y= Integer.parseInt(parts[4]);
         if(x==-1 && y==-1){
              energyStorage = null;
         }
@@ -345,22 +359,11 @@ public class CommandInterpreter {
         if ((parts.length-1)%2 != 0) {
             throw new IllegalArgumentException("Comando Kill richiede un numero pari di argomenti: le coordinate"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
-        if (parts.length == 3) { // caso in cui il player dia null per non accettare in AbadonedShip dovrei cambialrla leggermente mettendo prima la accept per modularità
-           x = Integer.parseInt(parts[1]);
-           y = Integer.parseInt(parts[2]);
-            if(x==-1 && y==-1){
-                coordinates = null;
-            }
-            else {
-                coordinates .add(new IntegerPair(x,y));
-            }
-        }
-        else {
-            for (int i = 1; i < parts.length; i+=2) {
-                x = Integer.parseInt(parts[i]);
-                y = Integer.parseInt(parts[i+1]);
-                coordinates.add(new IntegerPair(x,y));
-            }
+
+        for (int i = 1; i < parts.length; i+=2) {
+            x = Integer.parseInt(parts[i]);
+            y = Integer.parseInt(parts[i+1]);
+            coordinates.add(new IntegerPair(x,y));
         }
         return new KillCommand(coordinates,gameId,playerId,lv,"KillCommand",token);
     }

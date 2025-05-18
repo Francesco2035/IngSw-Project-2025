@@ -186,6 +186,7 @@ public class GameController {
     }
 
     public void setControllerMap(Player player, Controller controller) {
+        System.out.println(player.GetID() + " : "+ controller.getClass());
         ControllerMap.put(player.GetID(), controller);
 
         if(buildingCount == ControllerMap.size()){

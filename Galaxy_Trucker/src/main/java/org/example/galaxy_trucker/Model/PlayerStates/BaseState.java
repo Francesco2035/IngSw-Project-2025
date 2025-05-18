@@ -9,7 +9,7 @@ import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 
-
+//TODO: da aggiungere quit
 public class BaseState extends PlayerState {
 
     @Override

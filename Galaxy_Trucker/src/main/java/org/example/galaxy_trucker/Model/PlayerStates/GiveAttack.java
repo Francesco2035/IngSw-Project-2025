@@ -44,4 +44,11 @@ public class GiveAttack extends PlayerState {
 
         return new GiveAttackCommand(null,gameId,player.GetID(),lv,"GiveAttackCommand","placeholder"); /// devo mettere il token
     }
+
+    @Override
+    public boolean allows(GiveAttackCommand action) {
+        return true;
+    }
+
+
 }

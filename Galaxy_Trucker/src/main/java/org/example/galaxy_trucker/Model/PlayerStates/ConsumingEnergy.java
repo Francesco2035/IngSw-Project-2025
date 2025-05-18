@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.example.galaxy_trucker.Commands.ChoosingPlanetsCommand;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.ConsumeEnergyCommand;
+import org.example.galaxy_trucker.Commands.GiveSpeedCommand;
 import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
@@ -18,6 +19,10 @@ import java.util.ArrayList;
 
 public class ConsumingEnergy extends PlayerState {
 
+    @Override
+    public boolean allows(ConsumeEnergyCommand command){
+        return true;
+    }
 //    @Override
 //    public Command PlayerAction(String json, Player player) {
 //        JsonNode root = JsonHelper.parseJson(json);

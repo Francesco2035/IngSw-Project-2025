@@ -114,4 +114,6 @@ public abstract class PlayerState {
     public void shouldAct(Player player) {
         player.SetHasActed(false);
     }
+
+    public  boolean allows(SelectChunkCommand command){return false;};
 }
