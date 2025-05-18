@@ -31,7 +31,7 @@ public abstract class Controller {
         try {
             System.out.println("Action called for " + gameId + ": " + command.getTitle() + " " + command.playerId);
             command.execute(curPlayer);
-            gc.changeState();
+           // gc.changeState(); ///da scommentare era per fare i tests skskk
         } catch (Exception e) {
             playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
             curPlayer.setMyPlance(playerBoardCopy);

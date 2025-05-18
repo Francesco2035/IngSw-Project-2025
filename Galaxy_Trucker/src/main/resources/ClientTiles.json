@@ -150,10 +150,10 @@
    "150" : {"componentType": "shieldGenerator"}                    ,
    "151" : {"componentType": "shieldGenerator"}                    ,
    "152" : {"componentType": "shieldGenerator"}                    ,
-     "153": {"componentType": "\u001B[34mMainCockpit\u001B[0m"},
-     "154": {"componentType": "\u001B[32mMainCockpit\u001B[0m"},
-     "155": {"componentType": "\u001B[31mMainCockpit\u001B[0m"},
-     "156": {"componentType": "\u001B[33mMainCockpit\u001B[0m"},
-     "157": {"componentType":  "spaceVoid"}
+  "153": {"componentType": "\u001B[34mMainCockpit\u001B[0m"},
+  "154": {"componentType": "\u001B[32mMainCockpit\u001B[0m"},
+  "155": {"componentType": "\u001B[31mMainCockpit\u001B[0m"},
+  "156": {"componentType": "\u001B[33mMainCockpit\u001B[0m"},
+  "157": {"componentType":  "spaceVoid"}
 
   }

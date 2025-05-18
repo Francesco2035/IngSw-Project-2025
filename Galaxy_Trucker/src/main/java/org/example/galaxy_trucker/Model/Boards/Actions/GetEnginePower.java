@@ -5,7 +5,7 @@ import org.example.galaxy_trucker.Model.Tiles.HotWaterHeater;
 
 
 public class GetEnginePower extends ComponentAction {
-    private int power;
+    private int power =0;
     private int countDoubleEngine = 0;
     public GetEnginePower(int singlePower) {
         power = singlePower;

@@ -32,7 +32,13 @@ public class GiveSpeedCommand extends Command implements Serializable {
 
             player.getCurrentCard().checkMovement(action.getPower(),action.getCountDoubleEngine());
         }
+        else{
 
+            PlayerBoard playerBoard = player.getmyPlayerBoard();
+            GetEnginePower action = new GetEnginePower(playerBoard.getEnginePower());
+            player.getCurrentCard().checkMovement(action.getPower(),action.getCountDoubleEngine());
+        }
+        // eroorino sksk
     }
 
     @Override

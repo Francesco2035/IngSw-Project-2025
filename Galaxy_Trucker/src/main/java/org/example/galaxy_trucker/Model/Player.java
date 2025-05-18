@@ -203,7 +203,11 @@ public class Player implements Serializable {
 
     public void setCard(Card NewCard){
         CurrentCard = NewCard;
-        cardListner.newCard(new CardEvent(NewCard.getId()));
+
+        if (cardListner!=null){
+            cardListner.newCard(new CardEvent(NewCard.getId()));
+        }
+
     }
 
 
