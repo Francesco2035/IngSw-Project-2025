@@ -147,7 +147,12 @@ public class Client implements EventVisitor {
 
     @Override
     public void visit(CardEvent event) {
-        this.view.showCard(event.getId());
+        this.view.showCard(event);
+    }
+
+    @Override
+    public void visit(GameLobbyEvent event){
+        this.view.showLobbyGame(event);
     }
 
     @Override

@@ -9,7 +9,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.example.galaxy_trucker.Controller.Messages.GameLobbyEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
@@ -81,9 +83,10 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void showCard(int id) {
+    public void showCard(CardEvent event) {
 
     }
+
 
     @Override
     public void disconnect() {
@@ -110,6 +113,11 @@ public class GuiRoot implements View {
         //metti nella coda playerid
         //metti nella coda gameId
         //metti nella coda livello (1/2)
+
+    }
+
+    @Override
+    public void showLobbyGame(GameLobbyEvent event) {
 
     }
 

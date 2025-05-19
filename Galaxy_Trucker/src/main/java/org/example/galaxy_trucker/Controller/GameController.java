@@ -1,7 +1,9 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Controller.Listeners.GameLobbyListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
+import org.example.galaxy_trucker.Controller.Messages.GameLobbyEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
 import org.example.galaxy_trucker.Model.Cards.Card;
@@ -11,6 +13,7 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
+import javax.swing.text.StyledEditorKit;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -19,7 +22,8 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-
+//TODO: rimozione dei player e notifica con -1 al posto del nome del player
+//TODO: aggiungere listener dei ready per il momento vedo se me la cavo senza listener: fare GameController un listener dei ready e semplicemente quando c'è un nuovo ready chiamare updatePlayers
 public class GameController {
     String idGame;
     private final HashMap<String,Controller> ControllerMap;
@@ -39,6 +43,7 @@ public class GameController {
     private int color = 153;
 
     private LobbyListener lobbyListener;
+    private ArrayList<GameLobbyListener> gameLobbyListeners = new ArrayList<>();
 
     public void setLobbyListener(LobbyListener lobbyListener) {
         this.lobbyListener = lobbyListener;
@@ -87,6 +92,9 @@ public class GameController {
         p.getCommonBoard().setListeners(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);
         p.setCardListner(vv);
+        gameLobbyListeners.add(vv);
+        updatePlayers();
+
 
 
         //p.getGmaebord.setVrtualview(vv);
@@ -116,12 +124,16 @@ public class GameController {
         });
         t.start();
         threads.put(playerId, t);
-        ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
+        ArrayList<String> players = new ArrayList<>(VirtualViewMap.keySet());
         lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players));
     }
 
 
     public synchronized void changeState() {
+
+        //TODO: questo potrebbe essere molto pericoloso
+        updatePlayers();
+
         long readyCount = game.getPlayers().values().stream()
                 .filter(Player::GetReady)
                 .count();
@@ -174,6 +186,7 @@ public class GameController {
         }
         ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
         lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players));
+
     }
 
     public void stopGame() {
@@ -205,7 +218,10 @@ public class GameController {
                 p.SetReady(false);
             }
             game.getGameBoard().getCardStack().mergeDecks();
+            if (!flightMode){
+                stopAllPlayerThreads();
 
+            }
             flightMode = true;
             startFlightMode();
             flightCount = 0;
@@ -216,7 +232,6 @@ public class GameController {
 
 //client si riconnete ma non può inviare input fino a che non si ricambia il controller
         ArrayList<Player> players = game.getGameBoard().getPlayers();
-        stopAllPlayerThreads();
         flightThread = new Thread(() -> {
             System.out.println("PESCO CARTA!");
             Card card= game.getGameBoard().NewCard();
@@ -283,6 +298,8 @@ public class GameController {
             //stopGame();
         });
         flightThread.start();
+        System.out.println("Thread volo finito");
+        changeState();
 
     }
 
@@ -368,5 +385,20 @@ public class GameController {
 
         }
 
+    }
+
+    public void updatePlayers(){
+        ArrayList<Boolean> ready = new ArrayList<>();
+        ArrayList<String> players = new ArrayList<>(VirtualViewMap.keySet());
+        for (String player : players) {
+            ready.add(game.getPlayers().get(player).GetReady());
+        }
+        sendGameLobbyUpdate(new GameLobbyEvent(players,ready));
+    }
+
+    public void sendGameLobbyUpdate(GameLobbyEvent event){
+        for (GameLobbyListener listener : gameLobbyListeners) {
+            listener.GameLobbyChanged(event);
+        }
     }
 }

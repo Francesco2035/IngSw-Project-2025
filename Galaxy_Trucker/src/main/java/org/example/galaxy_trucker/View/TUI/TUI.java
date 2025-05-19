@@ -3,7 +3,9 @@ package org.example.galaxy_trucker.View.TUI;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Commands.InputReader;
+import org.example.galaxy_trucker.Controller.Messages.GameLobbyEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
@@ -14,6 +16,7 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEv
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.View.ViewPhase;
 
 
 import java.io.*;
@@ -21,6 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+//TODO: non è ancora gestita la print del lv 1
+//TODO: mostrare che si è avviata la building phase
+//TODO: salvare lo stesso in virtualview per il momento non sto gestendo f.a. del tutto
 //TODO: impostare vincolo lunghezza nome e gameid (anche lato server)
 //TODO: stampare games per righe e non in colonna perchè mi da fastidio, oppure farlo su più righe
 //TODO: rimozione game se tutti i player quittano oppure se il game è partito
@@ -28,11 +34,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class TUI implements View {
 
+    private int CardId = -1;
+    private ArrayList<String> players = null;
+    private ArrayList<Boolean> ready;
     private final TileEvent[][] board = new TileEvent[10][10];
     private final HashMap<Integer, String> idToNameMap = new HashMap<>();
     private final int contentWidth = 33;
     private String[][][] cachedBoard;
-    private String[] cacheHand;
+    private String[] cacheHand = null;
     private final String gamboardBorder = "+-----------------------+";
     private final String border = "+---------------------------------+";
     private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
@@ -42,7 +51,7 @@ public class TUI implements View {
     private int lv;
     private int setup = 102;
     private boolean fase = false;
-    private int CoveredTileSet = 152;
+    private int CoveredTileSet = -1;
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private InputReader inputReader;
     private Thread inputThread;
@@ -50,6 +59,7 @@ public class TUI implements View {
     private HashMap<Integer, IntegerPair> positionToGameboard = new HashMap<>();
     private HashMap<String,Integer > PlayerToPosition = new HashMap<>();
     private HashMap<String, String[]> lobby = new HashMap<>();
+    private ViewPhase phase;
 
 
     @Override
@@ -118,6 +128,24 @@ public class TUI implements View {
         lobby.remove(event.getGameId());
         lobby.put(event.getGameId(), formatCell(event));
         inputReader.clearScreen();
+        showTUI();
+        if (event.getGameId().equals("EMPTY CREATE NEW GAME")){
+            lobby.remove(event.getGameId());
+        }
+    }
+
+    @Override
+    public void showLobbyGame(GameLobbyEvent event) {
+        if(players == null){
+            phase = ViewPhase.LOGIN;
+        }
+
+        players = event.getPlayers();
+        ready = event.getReady();
+        showTUI();
+    }
+
+    public void showLobby(){
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             for (String[] game : lobby.values()) {
@@ -127,9 +155,6 @@ public class TUI implements View {
             sb = new StringBuilder();
         }
         inputReader.printServerMessage("\n\n");
-        if (event.getGameId().equals("EMPTY CREATE NEW GAME")){
-            lobby.remove(event.getGameId());
-        }
     }
 
     public String[] formatCell(LobbyEvent event) {
@@ -167,6 +192,8 @@ public class TUI implements View {
         inputThread = new Thread(inputReader);
         inputThread.setDaemon(true); // opzionale, per terminare col processo principale
         inputThread.start();
+        phase = ViewPhase.LOBBY;
+        inputReader.printServerMessage("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"+ASCII_ART.Title);
         //inputReader.clearScreen();
 
 
@@ -231,8 +258,8 @@ public class TUI implements View {
             cachedBoard[event.getX()][event.getY()] = formatCell(event);
         }
         if (setup == 0){
+
             cacheHand = emptyCell();
-            inputReader.clearScreen();
             showTUI();
         }
     }
@@ -489,6 +516,9 @@ public class TUI implements View {
 
     @Override
     public void updateGameboard(GameBoardEvent event) {
+        if (PlayerToPosition.isEmpty()){
+            phase = ViewPhase.BUILDING_SHIP2;
+        }
 
         int x = positionToGameboard.get(event.getPosition()).getFirst();
         int y = positionToGameboard.get(event.getPosition()).getSecond();
@@ -510,19 +540,22 @@ public class TUI implements View {
         }
 
 
-
-        printGameboard();
+        showTUI();
 
     }
 
     @Override
     public void updateCoveredTilesSet(CoveredTileSetEvent event) {
+        if(CoveredTileSet == -1){
+            phase = ViewPhase.BUILDING_SHIP;
+        }
         CoveredTileSet = event.getSize();
         showTUI();
     }
 
     @Override
     public void updateUncoveredTilesSet(UncoverdTileSetEvent event) {
+
         uncoveredTilesId.remove(event.getId());
         uncoverdTileSetCache.remove(event.getId());
         if(event.getConnectors() != null) {
@@ -570,25 +603,98 @@ public class TUI implements View {
     }
 
     private void showTUI(){
-        if (!fase){
-            inputReader.clearScreen();
-            inputReader.printServerMessage("############################ COVERED TILES SET ############################\n");
-            inputReader.printServerMessage("\n CoveredTileSet size: "+ CoveredTileSet);
-            showUncoveredTiles();
-            printHand();
-            printBoard();
-            inputReader.printServerMessage("\n############################ ################# ############################");
+
+        switch (phase){
+            case LOBBY -> {
+                inputReader.clearScreen();
+                showLobby();
+                break;
+            }
+            case LOGIN -> {
+                inputReader.clearScreen();
+                showPlayers();
+                printBoard();
+                break;
+            }
+            case BUILDING_SHIP -> {
+                inputReader.clearScreen();
+                showPlayers();
+                inputReader.printServerMessage("############################ COVERED TILES SET ############################\n");
+                inputReader.printServerMessage("\n CoveredTileSet size: "+ CoveredTileSet);
+                showUncoveredTiles();
+                printHand();
+                printBoard();
+                inputReader.printServerMessage("\n############################ ################# ############################");
+                break;
+            }
+            case BUILDING_SHIP2 -> {
+                inputReader.clearScreen();
+                showPlayers();
+                printGameboard();
+                inputReader.printServerMessage("############################ COVERED TILES SET ############################\n");
+                inputReader.printServerMessage("\n CoveredTileSet size: "+ CoveredTileSet);
+                showUncoveredTiles();
+                printHand();
+                printBoard();
+                inputReader.printServerMessage("\n############################ ################# ############################");
+                break;
+            }
+            case FLIGHT -> {
+                inputReader.clearScreen();
+                showPlayers();
+                printGameboard();
+                printGameboard();
+
+            }
+
+
         }
-        else {
-            //
-        }
+
+
     }
 
-    @Override
+    private void showPlayers() {
+        StringBuilder line = new StringBuilder();
+        switch (phase){
+            case LOGIN -> {
+                int i = 0;
+                line.append("\n\n");
+                while(i < players.size()){
+                    line.append(players.get(i) + " : ");
+                    if (ready.get(i)){
+                        line.append("Ready");
+                    }
+                    else{
+                        line.append("Not Ready");
+                    }
+                    i++;
+                    line.append("          ");
+                }
+                inputReader.printServerMessage("##################   WELCOME   ##################\n\n");
+                inputReader.printServerMessage(String.valueOf(line));
+                break;
+            }
+        }
+
+    }
+
     public void showCard(int id){
         inputReader.printServerMessage("\n");
         inputReader.printServerMessage(CardsDescriptions.get(id));
-        printBoard();
+        //printBoard();
+        //System.out.println(CardsDescriptions.get(id));
+    }
+
+
+    @Override
+    public void showCard(CardEvent event){
+        if (CardId == -1){
+            phase = ViewPhase.FLIGHT;
+        }
+        CardId = event.getId();
+        inputReader.printServerMessage("\n");
+        inputReader.printServerMessage(CardsDescriptions.get(CardId));
+        //printBoard();
         //System.out.println(CardsDescriptions.get(id));
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Controller.Listeners.*;
 import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
+import org.example.galaxy_trucker.Controller.Messages.GameLobbyEvent;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -20,7 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener {
+//TODO: fare un solo listener, sono scemo non c'era bisogno di crearne 20000 tanto il dispatch viene fatto lato client col pattern, prima finiamo un game e poi cambiamo
+public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener {
 
     private boolean Disconnected = false;
     private TileEvent[][] eventMatrix;
@@ -315,5 +317,29 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     public void setClient(ClientInterface client){
         this.client = client;
+    }
+
+    @Override
+    public void GameLobbyChanged(GameLobbyEvent event) {
+        if (!Disconnected) {
+            if (out != null) {
+                try{
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    out.println(objectMapper.writeValueAsString(event));
+                }
+                catch (JsonProcessingException e){
+                    e.printStackTrace();
+                }
+
+            }
+            else if(client!= null) {
+
+                try {
+                    client.receiveMessage(event);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 }

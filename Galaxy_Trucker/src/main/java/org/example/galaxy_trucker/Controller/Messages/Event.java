@@ -23,6 +23,7 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = UncoverdTileSetEvent.class, name = "UncoveredTileSetEvent"),
         @JsonSubTypes.Type(value = DeckEvent.class, name = "DeckEvent"),
         @JsonSubTypes.Type(value = LobbyEvent.class, name = "LobbyEvent"),
+        @JsonSubTypes.Type(value = GameLobbyEvent.class, name = "GameLobbyEvent"),
         @JsonSubTypes.Type(value = GameBoardEvent.class, name = "GameBoardEvent" )
 
 })

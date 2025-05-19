@@ -1,9 +1,11 @@
 package org.example.galaxy_trucker.View;
 
 import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
+import org.example.galaxy_trucker.Controller.Messages.GameLobbyEvent;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
@@ -34,7 +36,7 @@ public interface View {
 
 //    void updateGameBoard(GameBoardEvent event);
 
-    void showCard(int id);
+    void showCard(CardEvent event);
 
     void disconnect();
 
@@ -43,4 +45,6 @@ public interface View {
     public void setGameboard(int lv);
 
     void showLobby(LobbyEvent event);
+
+    void showLobbyGame(GameLobbyEvent event);
 }
