@@ -40,6 +40,7 @@ public class GameController {
     int buildingCount = 0;
     boolean GameOver = false;
     private boolean started = false;
+    private boolean firtflight = true;
     private int color = 153;
 
     private LobbyListener lobbyListener;
@@ -217,7 +218,7 @@ public class GameController {
             for (Player p : game.getPlayers().values()) {
                 p.SetReady(false);
             }
-            game.getGameBoard().getCardStack().mergeDecks();
+
             if (!flightMode){
                 stopAllPlayerThreads();
 
@@ -231,6 +232,11 @@ public class GameController {
     public void startFlightMode() {  ///  per aggiornare il
 
 //client si riconnete ma non può inviare input fino a che non si ricambia il controller
+        if (firtflight) {
+            System.out.println("MERGE");
+            game.getGameBoard().getCardStack().mergeDecks();
+        }
+        firtflight = false;
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         flightThread = new Thread(() -> {
             System.out.println("PESCO CARTA!");

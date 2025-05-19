@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Controller.Listeners.*;
-import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
-import org.example.galaxy_trucker.Controller.Messages.GameLobbyEvent;
-import org.example.galaxy_trucker.Controller.Messages.HandEvent;
+import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
@@ -22,7 +20,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 //TODO: fare un solo listener, sono scemo non c'era bisogno di crearne 20000 tanto il dispatch viene fatto lato client col pattern, prima finiamo un game e poi cambiamo
-public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener {
+public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener{
 
     private boolean Disconnected = false;
     private TileEvent[][] eventMatrix;
@@ -321,6 +319,34 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     @Override
     public void GameLobbyChanged(GameLobbyEvent event) {
+        if (!Disconnected) {
+            if (out != null) {
+                try{
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    out.println(objectMapper.writeValueAsString(event));
+                }
+                catch (JsonProcessingException e){
+                    e.printStackTrace();
+                }
+
+            }
+            else if(client!= null) {
+
+                try {
+                    client.receiveMessage(event);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void PhaaseChanged(PhaseEvent event) {
+        sendEvent(event);
+    }
+
+    public void sendEvent(Event event) {
         if (!Disconnected) {
             if (out != null) {
                 try{
