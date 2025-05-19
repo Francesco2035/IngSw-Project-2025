@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
-import org.example.galaxy_trucker.Controller.ClientServer.RMI.ClientInterface;
+import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
@@ -47,7 +47,6 @@ public class CommandInterpreter {
         commandMap.put("PickTile", this::createBuildingCommand);
         commandMap.put("Hourglass", this::createBuildingCommand);
         commandMap.put("SeeDeck", this::createBuildingCommand);
-
         commandMap.put("Discard", this::createBuildingCommand);
         commandMap.put("FromBuffer", this::createBuildingCommand);
         commandMap.put("ToBuffer", this::createBuildingCommand);

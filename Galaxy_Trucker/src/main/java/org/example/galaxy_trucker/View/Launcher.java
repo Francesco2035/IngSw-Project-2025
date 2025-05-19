@@ -1,9 +1,7 @@
 package org.example.galaxy_trucker.View;
 
-import org.example.galaxy_trucker.Controller.ClientServer.Client;
-import org.example.galaxy_trucker.Controller.ClientServer.ServersHandler;
-
-import java.util.Arrays;
+import org.example.galaxy_trucker.ClientServer.Client;
+import org.example.galaxy_trucker.ClientServer.ServersHandler;
 
 public class Launcher {
     public static void main(String[] args) throws Exception {
@@ -21,8 +19,8 @@ public class Launcher {
                 break;
             case "client":
                 Client client = new Client();
-                String[] clientArgs = Arrays.copyOfRange(args, 1, args.length);
-                client.run(clientArgs);
+                //String[] clientArgs = Arrays.copyOfRange(args, 1, args.length);
+                client.run();
                 break;
             default:
                 System.err.println("Unknown mode: " + mode);

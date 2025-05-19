@@ -1,6 +1,8 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
+import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
@@ -36,6 +38,12 @@ public class GameController {
     private boolean started = false;
     private int color = 153;
 
+    private LobbyListener lobbyListener;
+
+    public void setLobbyListener(LobbyListener lobbyListener) {
+        this.lobbyListener = lobbyListener;
+    }
+
     public boolean isStarted() {
         return started;
     }
@@ -54,7 +62,7 @@ public class GameController {
     }
 
     public void NewPlayer(Player p, VirtualView vv, UUID token){
-        if (ControllerMap.containsKey(p.GetID())) {
+        if (ControllerMap.keySet().contains(p.GetID())) {
             throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists");
         }
         String playerId = p.GetID();
@@ -79,6 +87,8 @@ public class GameController {
         p.getCommonBoard().setListeners(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);
         p.setCardListner(vv);
+
+
         //p.getGmaebord.setVrtualview(vv);
 //        p.getCommonBoard().addListener(p.GetID(),vv);
 
@@ -90,7 +100,7 @@ public class GameController {
                     //se è connesso prendi dalla coda e chiami il metodo
 
                     if(current.disconnected){ //questo è il thread  dei command fuori dalla flight mode giusto?
-                        current.DefaultAction(this);
+                        //current.DefaultAction(this);
                     }
                     else{
                         Command cmd = queue.take(); // se questa è esclusiva del player si potrebbe svuotare in caso di disconnessione
@@ -106,6 +116,8 @@ public class GameController {
         });
         t.start();
         threads.put(playerId, t);
+        ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
+        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players));
     }
 
 
@@ -160,6 +172,8 @@ public class GameController {
             System.out.println("Stop game");
             stopGame();
         }
+        ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
+        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players));
     }
 
     public void stopGame() {
@@ -203,7 +217,9 @@ public class GameController {
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         stopAllPlayerThreads();
         flightThread = new Thread(() -> {
-                   Card card= game.getGameBoard().NewCard();
+            System.out.println("PESCO CARTA!");
+            Card card= game.getGameBoard().NewCard();
+
                     //game.getGameBoard().getPlayers().getFirst()
             while (!card.isFinished()) {
 
@@ -259,7 +275,7 @@ public class GameController {
                 }
 
 
-                System.out.println("Flight phase complete");
+                //System.out.println("Flight phase complete");
 
             }
             /// non deve finire il game ma semplicemente questo thread
@@ -305,17 +321,31 @@ public class GameController {
         curr.setDisconnected(true);
         //setto booleano del controller
 
-        if (!flightMode){
+        if (!flightMode) {
             System.out.println("Player ID " + playerId + " not in flight mode, interrupting thread");
             threads.get(playerId).interrupt();
             threads.remove(playerId);
+            Thread t = new Thread(()->{
+                while (true) {
+                    if (!game.getPlayers().get(playerId).GetHasActed()){
+                        Controller current = ControllerMap.get(playerId);
+                        current.DefaultAction(this);
+                    }
+
+                }
+            });            ;
+            t.start();
+            threads.put(playerId, t);
         }
 
     }
 
     public void startPlayer(UUID token) {
         String playerId = tokenToPlayerId.get(token);
+        threads.get(playerId).interrupt();
         //setto booleano del controler
+        threads.remove(playerId);
+
         if (!flightMode){
             System.out.println("Player ID " + playerId + " not in flight mode, starting thread");
 

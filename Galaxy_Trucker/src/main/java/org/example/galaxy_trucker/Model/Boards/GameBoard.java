@@ -16,7 +16,7 @@ import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-
+//TODO: vincolo player non può scegliere posizione nella gameboard se pos > numPlayer
 public class GameBoard {
 
     // questo arrayList tiene conto della posizione effettiva nel Game
@@ -138,12 +138,15 @@ public class GameBoard {
                 .filter(p -> pl.equals( p.getKey()) )
                 .findFirst().orElseThrow();
 
-        if(positions[startPos[index]] == null) {
-            SetNewPosition(cur, startPos[index], startPos[index]);
-            sendUpdates(new GameBoardEvent(startPos[index], pl.GetID()));
+        if(index > players.size())
+            throw new IllegalArgumentException("Cell not available!");
+
+        if(positions[startPos[index-1]] == null) {
+            SetNewPosition(cur, startPos[index-1], startPos[index-1]);
+            sendUpdates(new GameBoardEvent(startPos[index-1], pl.GetID()));
             PlayersOnBoard++;
         }
-        else throw new IllegalArgumentException("Starting position alredy taken!");
+        else throw new IllegalArgumentException("This cell is alredy taken!");
     }
 
 
@@ -181,23 +184,26 @@ public class GameBoard {
                     positions[shiftedPositions[i]] = p.getKey();
                     i++;
                 }
+            updateAllPosition();
 
-//        i=0;
-//        for(Player_IntegerPair p : newList){
-//            SetNewPosition(p, shiftedPositions[i], shiftedPositions[i]);
-//            i++;
-//        }
 
-//            for(int j=0; j<newList.size(); j++){
-//                SetNewPosition(newList.get(j), shiftedPositions[j], shiftedPositions[j]);
-//            }
 
-            //for (>)
+            for(Player_IntegerPair p : players)
+                if(p.getValue() >=0)
+                    sendUpdates(new GameBoardEvent(p.getValue(), pl.GetID()));
+
 
         }
 
 
 
+    }
+
+
+    public void updateAllPosition(){
+        for(Player_IntegerPair p : players)
+            if(p.getValue() >=0)
+                sendUpdates(new GameBoardEvent(p.getValue(), p.getKey().GetID()));
     }
 
 

@@ -21,14 +21,17 @@ public class GiveSpeedCommand extends Command implements Serializable {
 
     @Override
     public void execute(Player player) {
-        PlayerBoard playerBoard = player.getmyPlayerBoard();
-        GetEnginePower action = new GetEnginePower(playerBoard.getEnginePower());
-        for (IntegerPair coordinate : coordinates) {
-            playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),
-                    action ,player.getPlayerState());
+        if (coordinates!= null){
+            PlayerBoard playerBoard = player.getmyPlayerBoard();
+            GetEnginePower action = new GetEnginePower(playerBoard.getEnginePower());
+            for (IntegerPair coordinate : coordinates) {
+                playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),
+                        action ,player.getPlayerState());
+            }
+
+            player.getCurrentCard().checkMovement(action.getPower(),action.getCountDoubleEngine());
         }
 
-        player.getCurrentCard().checkMovement(action.getPower(),action.getCountDoubleEngine());
     }
 
     @Override

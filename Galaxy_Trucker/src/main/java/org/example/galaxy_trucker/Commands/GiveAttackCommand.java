@@ -22,14 +22,16 @@ public class GiveAttackCommand extends Command implements Serializable {
 
     @Override
     public void execute(Player player) {
-        PlayerBoard playerBoard = player.getmyPlayerBoard();
-        GetPlasmaDrillPower action = new GetPlasmaDrillPower(playerBoard.getEnginePower());
-        for (IntegerPair coordinate : coordinates) {
-            playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),
-                    action ,player.getPlayerState());
-        }
+        if (coordinates!= null){
+            PlayerBoard playerBoard = player.getmyPlayerBoard();
+            GetPlasmaDrillPower action = new GetPlasmaDrillPower(playerBoard.getEnginePower());
+            for (IntegerPair coordinate : coordinates) {
+                playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),
+                        action ,player.getPlayerState());
+            }
 
-        player.getCurrentCard().checkPower(action.getPower() ,action.getCountDoublePlasmaDrills());
+            player.getCurrentCard().checkPower(action.getPower() ,action.getCountDoublePlasmaDrills());
+        }
     }
 
     @Override

@@ -39,6 +39,7 @@ public class CheckValidity extends PlayerState{
                         }
                     }
                 }
+                player.SetReady(true);
             }
         };
     }
