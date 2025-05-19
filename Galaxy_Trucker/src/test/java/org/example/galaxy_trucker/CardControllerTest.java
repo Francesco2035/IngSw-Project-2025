@@ -287,8 +287,8 @@ public class CardControllerTest {
         assertEquals(p1.getPlayerState().getClass(), Waiting.class);
         assertEquals(true, p1.GetHasActed());
 
-        giveSpeedCommand =new GiveSpeedCommand(null,game.getID(),p1.GetID(),Gboard.getLevel(),"boh?","Placeholder");
-        giveSpeedCommand.execute(p1);
+        giveSpeedCommand =new GiveSpeedCommand(null,game.getID(),p2.GetID(),Gboard.getLevel(),"boh?","Placeholder");
+        giveSpeedCommand.execute(p2);
 
         assertEquals(true,CurrentCard.isFinished());
     }
