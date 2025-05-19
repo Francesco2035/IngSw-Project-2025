@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Commands.ChoosingPlanetsCommand;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.ConsumeEnergyCommand;
 import org.example.galaxy_trucker.Commands.GiveSpeedCommand;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
@@ -14,6 +15,8 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
+import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
+import org.example.galaxy_trucker.View.ClientModel.States.ConsumingEnergyClient;
 
 import java.util.ArrayList;
 
@@ -69,5 +72,10 @@ public class ConsumingEnergy extends PlayerState {
         }
 
         return new ConsumeEnergyCommand(coords,gameId,player.GetID(),lv,"ConsumeEnrgyCommand","placeholder"); /// devo mettere il token
+    }
+
+    @Override
+    public PhaseEvent toClientState() {
+        return new PhaseEvent(new ConsumingEnergyClient());
     }
 }

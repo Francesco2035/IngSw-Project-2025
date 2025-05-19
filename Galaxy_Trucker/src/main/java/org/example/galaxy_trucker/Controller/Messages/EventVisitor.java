@@ -27,5 +27,7 @@ public interface EventVisitor {
 
     void visit(LobbyEvent lobbyEvent);
 
+    void visit(PhaseEvent phaseEvent);
+
     //public void visit(GameBoardEvent event);
 }

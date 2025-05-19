@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.example.galaxy_trucker.Commands.DebugShip;
 import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.Commands.ReadyCommand;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
 
 //TODO: da aggiungere quit
 public class BaseState extends PlayerState {
@@ -30,5 +32,10 @@ public class BaseState extends PlayerState {
         //tecnicamente potremmo aspettare una decina di secondi, anche se in realtà potrebbero decidere gli altri di aspettare il bro
         int lv= player.getCommonBoard().getLevel();
         return new ReadyCommand(gameId,player.GetID(),lv,"Ready",true,"placeholder");
+    }
+
+    @Override
+    public PhaseEvent toClientState() {
+        return new PhaseEvent(new BaseStateClient());
     }
 }

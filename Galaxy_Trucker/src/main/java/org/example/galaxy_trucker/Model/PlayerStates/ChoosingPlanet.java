@@ -3,7 +3,10 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Commands.AcceptCommand;
 import org.example.galaxy_trucker.Commands.ChoosingPlanetsCommand;
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
+import org.example.galaxy_trucker.View.ClientModel.States.ChoosingPlanetClient;
 
 public class ChoosingPlanet extends PlayerState{
 //    @Override
@@ -29,6 +32,11 @@ public class ChoosingPlanet extends PlayerState{
     public Command createDefaultCommand(String gameId, Player player) {
         int lv= player.getCommonBoard().getLevel();
         return new ChoosingPlanetsCommand(-1,gameId,player.GetID(),lv,"ChoosingPlanetsCommand","placeholder"); /// devo mettere il token
+    }
+
+    @Override
+    public PhaseEvent toClientState() {
+        return new PhaseEvent(new ChoosingPlanetClient());
     }
 }
 

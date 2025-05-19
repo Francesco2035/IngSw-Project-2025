@@ -112,6 +112,8 @@ public class Player implements Serializable {
     public void setState(PlayerState state) {
 
         this.PlayerState = state;
+
+        phaseListener.PhaseChanged(state.toClientState());
         state.shouldAct(this);
 
     }

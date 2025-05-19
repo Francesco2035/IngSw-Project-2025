@@ -342,7 +342,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
     @Override
-    public void PhaaseChanged(PhaseEvent event) {
+    public void PhaseChanged(PhaseEvent event) {
         sendEvent(event);
     }
 

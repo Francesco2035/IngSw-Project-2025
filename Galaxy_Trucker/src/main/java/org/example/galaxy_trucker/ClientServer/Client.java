@@ -141,6 +141,11 @@ public class Client implements EventVisitor {
     public void visit(LobbyEvent event){this.view.showLobby(event);}
 
     @Override
+    public void visit(PhaseEvent event) {
+        this.view.phaseChanged(event);
+    }
+
+    @Override
     public void visit(DeckEvent event) {
         this.view.showDeck(event);
     }

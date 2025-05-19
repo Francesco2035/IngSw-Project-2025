@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Commands.*;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Player;
 
@@ -116,4 +117,6 @@ public abstract class PlayerState {
     }
 
     public  boolean allows(SelectChunkCommand command){return false;};
+
+    public abstract PhaseEvent toClientState();
 }
