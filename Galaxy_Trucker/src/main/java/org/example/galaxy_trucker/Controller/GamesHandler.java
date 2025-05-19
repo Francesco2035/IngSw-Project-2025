@@ -77,7 +77,7 @@ public class GamesHandler {
 
 
     public void removeGame(String gameId) {
-        System.out.println("Removin game: " + gameId);
+        System.out.println("Removing game: " + gameId);
         for (UUID token : tokenToGame.keySet()) {
             if (tokenToGame.get(token).equals(gameId)) {
                 tokenToGame.remove(token);

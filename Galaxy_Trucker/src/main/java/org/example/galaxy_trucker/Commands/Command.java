@@ -26,9 +26,7 @@ import java.net.Socket;
         @JsonSubTypes.Type(value = FinishBuildingCommand.class, name = "FinishBuildingCommand"),
         @JsonSubTypes.Type(value = DebugShip.class, name = "DebugShip"),
         @JsonSubTypes.Type(value = AddCrewCommand.class, name = "AddCrewCommand"),
-
         @JsonSubTypes.Type(value = RemoveTileCommand.class, name = "RemoveTileCommand"),
-
         @JsonSubTypes.Type(value = ReconnectCommand.class, names = "ReconnectCommand")
 
 })

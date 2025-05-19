@@ -54,7 +54,7 @@ public class GameController {
     }
 
     public void NewPlayer(Player p, VirtualView vv, UUID token){
-        if (ControllerMap.keySet().contains(p.GetID())) {
+        if (ControllerMap.containsKey(p.GetID())) {
             throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists");
         }
         String playerId = p.GetID();
@@ -89,7 +89,7 @@ public class GameController {
                     //vedi se è connesso
                     //se è connesso prendi dalla coda e chiami il metodo
 
-                    if(current.disconnected==true){ //questo è il thread  dei command fuori dalla flight mode giusto?
+                    if(current.disconnected){ //questo è il thread  dei command fuori dalla flight mode giusto?
                         current.DefaultAction(this);
                     }
                     else{

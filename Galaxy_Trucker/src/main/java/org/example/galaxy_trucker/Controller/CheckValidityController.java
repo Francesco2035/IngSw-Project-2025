@@ -14,7 +14,7 @@ public class CheckValidityController extends Controller{
     }
 
     @Override
-    public synchronized void action(Command command, GameController gc) { ///  devo overridare anche qui ok
+    public synchronized void action(Command command, GameController gc) { //  devo overridare anche qui ok
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
