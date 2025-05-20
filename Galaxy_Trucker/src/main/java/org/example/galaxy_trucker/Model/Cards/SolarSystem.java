@@ -77,7 +77,9 @@ public class SolarSystem extends Card {
         if(this.done==PlayerList.size()-1) {
             for (int i = 0; i < PlayerList.size(); i++) {
                 PlayerList.get(i).setState(new BaseState());
+                PlayerList.get(i).SetReady(true);
             }
+            System.out.println("card finished");
             this.setFinished(true);
         }
         else{
@@ -110,6 +112,11 @@ public class SolarSystem extends Card {
             // se tutti dicono di no tecnicamente fa prima finish card e poi fa anche update state che però non dovrebbe fare nulla
             this.updateSates();
         }
+    }
+
+    @Override
+    public void keepGoing(){
+        this.finishCard();
     }
 
     public Player getCurrentPlayer() {
