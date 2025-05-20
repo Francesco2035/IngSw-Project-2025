@@ -335,6 +335,11 @@ public class GameBoard {
                                          .orElseThrow();
 
         positions[pair.getValue() % nPositions] = null;
+        Player playah = pair.getKey();
+         playah.finishRace(false);
+
+         //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
+        /// todo aggiungere una classifica?
 
         players.remove(pair);
     }

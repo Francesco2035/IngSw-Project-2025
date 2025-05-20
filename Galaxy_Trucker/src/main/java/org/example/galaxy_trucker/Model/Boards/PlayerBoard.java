@@ -1011,5 +1011,32 @@ public class PlayerBoard {
 
     }
 
+    public  int finishRace(boolean finished){
+        int number =0;
+        int result=0;
+        for (int i = 0; i < this.storedGoods.size(); i++) {
+
+        }
+        for (Integer key: storedGoods.keySet()) {
+            number =this.storedGoods.get(key).size();
+            result+= key*number;
+        }
+
+        if(!finished){
+            if(result%2==1){
+                result = result/2;
+                result+=1;
+            }
+            else{
+                result = result/2;
+            }
+        }
+
+        ///  TODO mettere anche i tasselli che rimangono nel buffer nel damage per adesso non è gestityo :)
+        result -= this.damage;
+        return result;
+
+    }
+
 
 }

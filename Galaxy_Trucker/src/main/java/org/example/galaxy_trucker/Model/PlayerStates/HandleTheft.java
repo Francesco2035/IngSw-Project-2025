@@ -48,6 +48,34 @@ public class HandleTheft extends PlayerState {
 
 
 
+
+
+    @Override
+    public  Command createDefaultCommand(String gameId, Player player) { // se nono qui e non in consume energy ho sicuramente il cargo non vuoto
+        PlayerBoard board =player.getmyPlayerBoard();
+        HashMap<Integer, ArrayList<IntegerPair>> cargoH = board.getStoredGoods();
+
+        IntegerPair coord = null;
+        int index;
+
+        // prende la coordinata del primo elemeto di max valore
+        int maxValue = cargoH.keySet().iterator().next();
+        coord = cargoH.get(maxValue).getFirst();// cargoH è sempre aggiornata no?
+
+        ArrayList<Storage> storages = board.getStorages();
+        int i=storages.indexOf(board.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
+        Storage currStorage=storages.get(i);
+        for(int j=0;j<currStorage.getType();j++) {
+            if (currStorage.getValue(j) == maxValue) {
+                index = j;
+            }
+
+        }
+        /// return  new Handlendle theft command
+
+        return  null;
+    }
+
 //
 //    @Override
 //    public Command createDefaultCommand(String gameId, Player player) {
