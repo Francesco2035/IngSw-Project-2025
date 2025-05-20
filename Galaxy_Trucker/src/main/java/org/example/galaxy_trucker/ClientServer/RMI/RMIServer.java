@@ -248,7 +248,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
 
     @Override
-    public void sendEvent(LobbyEvent event) {
+    public void sendEvent(LobbyEvent event){
         System.out.println("Sending event: " + event);
         lobbyEvents.remove("EMPTY CREATE NEW GAME");
         lobbyEvents.remove(event.getGameId());

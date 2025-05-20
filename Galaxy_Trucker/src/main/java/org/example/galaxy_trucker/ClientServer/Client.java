@@ -83,7 +83,7 @@ public class Client implements EventVisitor {
 
         if (view1.equals("TUI")) {
             client.setView(new TUI());
-        } else if (view1.equals("GUI")) {
+        } else if (view1.equals("GUI")){
             GuiRoot gui = new GuiRoot();
             client.setView(gui);
         }
