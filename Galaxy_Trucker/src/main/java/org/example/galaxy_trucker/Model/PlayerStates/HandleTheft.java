@@ -17,8 +17,6 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
 import org.example.galaxy_trucker.Model.Tiles.Storage;
-import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
-import org.example.galaxy_trucker.View.ClientModel.States.HandleTheftClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,34 +46,42 @@ public class HandleTheft extends PlayerState {
     public boolean allows(GetGoodAction action) {
         return true;
     }
+
     @Override
-    public Command createDefaultCommand(String gameId, Player player) {
+    public PhaseEvent toClientState() {
+        return null; //TODO: aggiungere implementazione
+    }
 
 
-
-        return new Command() {
-            @Override
-            public void execute(Player player) throws IOException {
-                ArrayList<HousingUnit> units = player.getmyPlayerBoard().getHousingUnits();
-//                for (HousingUnit unit : units) {
-//                    if(unit.getNumHumans() == 0 && !unit.isPurpleAlien() && !unit.isBrownAlien()) {
-//                        player.getmyPlayerBoard().performAction(unit, new AddCrewAction(2, false, false, player.getmyPlayerBoard()), player.getPlayerState());
-//                    }
-//                }
-//                player.SetReady(true);
-                PlayerBoard board = player.getmyPlayerBoard();
-                HashMap<Integer, ArrayList<IntegerPair>> cargoH = board.getStoredGoods();
-                Card card = player.getCurrentCard();
-                int req = card.getDefaultPunishment();
-                //int i =0;
-                int j =0;
-                int z=0;
-                int a=0;
-                int b=0;
-                IntegerPair coord=new IntegerPair(0,0);
-
-
-//                while() {
+//
+//    @Override
+//    public Command createDefaultCommand(String gameId, Player player) {
+//
+//
+//
+//        return new Command() {
+//            @Override
+//            public void execute(Player player) throws IOException {
+//                ArrayList<HousingUnit> units = player.getmyPlayerBoard().getHousingUnits();
+////                for (HousingUnit unit : units) {
+////                    if(unit.getNumHumans() == 0 && !unit.isPurpleAlien() && !unit.isBrownAlien()) {
+////                        player.getmyPlayerBoard().performAction(unit, new AddCrewAction(2, false, false, player.getmyPlayerBoard()), player.getPlayerState());
+////                    }
+////                }
+////                player.SetReady(true);
+//                PlayerBoard board = player.getmyPlayerBoard();
+//                HashMap<Integer, ArrayList<IntegerPair>> cargoH = board.getStoredGoods();
+//                Card card = player.getCurrentCard();
+//                int req = card.getDefaultPunishment();
+//                //int i =0;
+//                int j =0;
+//                int z=0;
+//                int a=0;
+//                int b=0;
+//                IntegerPair coord=new IntegerPair(0,0);
+//
+//
+//                while() { // manca la condizione per finire sta merda diocanaglia
 //                    if (cargoH.isEmpty()){
 //                        ArrayList<PowerCenter> powerCenters= board.getPowerCenters();
 //                        if(board.getEnergy()==0){
@@ -96,7 +102,7 @@ public class HandleTheft extends PlayerState {
 //                    else {
 //                        // prende la coordinata del primo elemeto di max valore
 //                        int maxValue = cargoH.keySet().iterator().next();
-//                        IntegerPair coord = cargoH.get(maxValue).getFirst();// cargoH è sempre aggiornata no?
+//                        coord = cargoH.get(maxValue).getFirst();// cargoH è sempre aggiornata no?
 //                        int index=0;
 //                        ArrayList<Storage> storages = board.getStorages();
 //                        int i=storages.indexOf(board.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
@@ -107,8 +113,8 @@ public class HandleTheft extends PlayerState {
 //                            }
 //                    }
 //                }
-            }
-        };
+//            }
+//        };
 
 //        int lv= player.getCommonBoard().getLevel();
 //
@@ -136,10 +142,5 @@ public class HandleTheft extends PlayerState {
 //            }
 //            return  new Theft(index,coord,gameId,player.GetID(),lv,"TheftCommand","placeholder");
         //}
-    }
-
-    @Override
-    public PhaseEvent toClientState() {
-        return new PhaseEvent(new HandleTheftClient());
-    }
+ //   }
 }

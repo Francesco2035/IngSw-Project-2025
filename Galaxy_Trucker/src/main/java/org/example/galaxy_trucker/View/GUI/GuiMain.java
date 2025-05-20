@@ -42,7 +42,7 @@ public class GuiMain extends Application {
     public void start(Stage stage) throws IOException {
         this.primaryStage = stage;
         guiRoot.setGuiMain(this);
-        guiRoot.setStage(primaryStage);
+//        guiRoot.setStage(primaryStage);
         guiRoot.goToFirstScene(primaryStage);
 
     }
