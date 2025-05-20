@@ -330,6 +330,7 @@ public class PlayerBoard {
             throw new InvalidInput(x,y, "Invalid input : invalid position, already occupied or spacevoid");
 
         }
+        System.out.println(x + " " +y);
 //
 //        if (ValidPlayerBoard[x][y] != 0 && x != 6 && y != 6) {
 //        }
@@ -794,7 +795,9 @@ public class PlayerBoard {
         return PowerCenters;
     }
 
-
+    /*
+        ritorna la potenza singola (+2 se alieno)
+     */
     public int getEnginePower() {
         if (brownAlien){
             return EnginePower +2;

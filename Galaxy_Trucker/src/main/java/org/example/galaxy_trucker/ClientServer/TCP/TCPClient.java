@@ -30,6 +30,7 @@ public class TCPClient{
     private Thread eventThread = null;
     private Thread pingThread = null;
     //private Thread clientLoop = null;
+    //TODO: modificare input come in RMI
 
     public TCPClient(Client c) {
         this.client = c;

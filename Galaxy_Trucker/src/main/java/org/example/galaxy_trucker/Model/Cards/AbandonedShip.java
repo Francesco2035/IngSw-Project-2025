@@ -79,10 +79,14 @@ public class AbandonedShip extends Card{
     }
     @Override
     public void continueCard(boolean accepted) {
+
+
         if(accepted){
+            System.out.println(currentPlayer.GetID()+" has accepted");
             this.currentPlayer.setState(new Killing());
         }
         else{
+            System.out.println(currentPlayer.GetID()+" has refused");
             currentPlayer.setState(new Waiting());
             this.flag = false;
             this.updateSates();

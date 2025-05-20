@@ -126,8 +126,13 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     @Override
     public void receiveMessage(Event event) {
+        try{
+            client.receiveEvent(event);
 
-        client.receiveEvent(event);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

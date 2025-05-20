@@ -3,7 +3,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
+import org.example.galaxy_trucker.Controller.Listeners.PhaseListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
@@ -29,11 +31,20 @@ public class Player implements Serializable {
     private  boolean HasActed;
     private int credits;
     private CardListner cardListner;
+    private Tile CurrentTile;   //the tile that Player has in his hand
+    private PlayerState PlayerState;
+    private ArrayList<Goods> GoodsToHandle;
+    private Card CurrentCard;
+    private PhaseListener phaseListener;
 
     public GameBoard getCommonBoard() {
         return CommonBoard;
     }
 
+
+    public void setPhaseListener(PhaseListener phaseListener) {
+        this.phaseListener = phaseListener;
+    }
 
 
     public Tile getCurrentTile() {
@@ -47,10 +58,7 @@ public class Player implements Serializable {
         CurrentTile = currentTile;
     }
 
-    private Tile CurrentTile;   //the tile that Player has in his hand
-    private PlayerState PlayerState;
-    private ArrayList<Goods> GoodsToHandle;
-    private Card CurrentCard;
+
 
 
 
@@ -104,6 +112,8 @@ public class Player implements Serializable {
     public void setState(PlayerState state) {
 
         this.PlayerState = state;
+
+        phaseListener.PhaseChanged(state.toClientState());
         state.shouldAct(this);
 
     }
@@ -203,7 +213,11 @@ public class Player implements Serializable {
 
     public void setCard(Card NewCard){
         CurrentCard = NewCard;
-        cardListner.newCard(new CardEvent(NewCard.getId()));
+
+        if (cardListner!=null){
+            cardListner.newCard(new CardEvent(NewCard.getId()));
+        }
+
     }
 
 

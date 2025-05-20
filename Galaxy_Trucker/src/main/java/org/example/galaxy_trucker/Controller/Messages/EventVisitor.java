@@ -11,6 +11,8 @@ public interface EventVisitor {
 
     public void visit(CardEvent event);
 
+    void visit(GameLobbyEvent event);
+
     public void visit(HandEvent event);
 
     public void visit(VoidEvent event);
@@ -24,6 +26,8 @@ public interface EventVisitor {
     public void visit(GameBoardEvent gameBoardEvent);
 
     void visit(LobbyEvent lobbyEvent);
+
+    void visit(PhaseEvent phaseEvent);
 
     //public void visit(GameBoardEvent event);
 }

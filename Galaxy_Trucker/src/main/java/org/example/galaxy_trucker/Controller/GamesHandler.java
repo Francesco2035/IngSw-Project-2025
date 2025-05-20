@@ -45,7 +45,11 @@ public class GamesHandler implements LobbyListener {
     private void processPendingLogins() {
         while (true) {
             try {
+
                 Pair<Command, VirtualView> entry = pendingLogins.take();
+
+                System.out.println(entry.getKey().playerId);
+
                 initPlayer(entry.getKey(), entry.getValue());
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -100,6 +104,7 @@ public class GamesHandler implements LobbyListener {
 
             Player temp = new Player();
             temp.setId(playerID);
+            temp.setPhaseListener(virtualView);
             temp.setState(new BaseState());
             synchronized (tokenToGame) {
                 tokenToGame.putIfAbsent(virtualView.getToken(), gameID);

@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.View.GUI;
 
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,37 +7,26 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Box;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.example.galaxy_trucker.Controller.Messages.Event;
-import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.View.View;
-import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
-import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class GuiRoot implements View {
 
     private Thread guiThread;
+    private HashMap<String,LobbyEvent> lobbyEventHashMap = new HashMap<>();
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
-    private Stage primaryStage;
-
-    private ArrayList<Event> lobbyEvents = new ArrayList<>();
-
-
-    public void setStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
-
     @Override
     public void updateBoard(TileEvent tileEvent) {
 
@@ -92,9 +80,10 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void showCard(int id) {
+    public void showCard(CardEvent event) {
 
     }
+
 
     @Override
     public void disconnect() {
@@ -113,52 +102,41 @@ public class GuiRoot implements View {
 
     @Override
     public void showLobby(LobbyEvent event) {
-        //mi arriva il lobby event ogni volta che qualcuno crea/si aggiunge ad un game
+        lobbyEventHashMap.remove(event.getGameId());
+        lobbyEventHashMap.put(event.getGameId(), event);
+        //stampi for tutti i cazzi in lobby
+        //se il player clicca un game devi
+        //metti nella coda Login
+        //metti nella coda playerid
+        //metti nella coda gameId
+        //metti nella coda livello (1/2)
 
+    }
+
+    @Override
+    public void showLobbyGame(GameLobbyEvent event) {
+
+    }
+
+    @Override
+    public void phaseChanged(PhaseEvent event) {
+
+    }
+
+    public void setGuiMain(GuiMain guiMain) {
+    }
+
+    public void goToFirstScene(Stage primaryStage) {
         Label titleLabel = new Label("GALAXY TRUCKERS");
+        //se ha premuto
+        String cmd = "Lobby";
+        inputQueue.add(cmd);
         titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
 
         // Lista giocatori
-
-        lobbyEvents.add(event);
-
-        ListView<LobbyEvent> gamesList = new ListView<>();
-        if(event.getLv() > 0)
-            gamesList.getItems().add(event);
-
+        ListView<String> gamesList = new ListView<>();
         gamesList.setPrefHeight(150);
         gamesList.setPlaceholder(new Label("No existing games"));
-
-        gamesList.setCellFactory(p -> new ListCell<>() {
-            @Override
-            protected void updateItem(LobbyEvent newGame, boolean empty) {
-                super.updateItem(newGame, empty);
-
-                if(!empty && newGame != null) {
-                    Label gameLabel = new Label("Game: " + newGame.getGameId());
-                    Label playersLabel = new Label("Players: " + String.join(", ", newGame.getPlayers()));
-
-                    Button joinButton = joinButtonMaker(newGame);
-
-                    VBox labels = new VBox(5, gameLabel, playersLabel);
-                    HBox button = new HBox(5, joinButton);
-                    button.setAlignment(Pos.CENTER_RIGHT);
-                    labels.setAlignment(Pos.CENTER_LEFT);
-                    HBox cell = new HBox(248, labels, button);
-                    setText(null);
-                    setGraphic(cell);
-                }
-                else {
-                    setText(null);
-                    setGraphic(null);
-                }
-
-            }
-        });
-
-
-
-
 
         // Area messaggi console/chat (opzionale)
         TextArea messageArea = new TextArea();
@@ -170,13 +148,11 @@ public class GuiRoot implements View {
         // Bottone per avviare la partita (solo host)
         Button newGame = new Button("New Game");
         newGame.setStyle("-fx-font-size: 14px;");
-
         newGame.setOnAction(e -> {
             Stage newGameStage = new Stage();
-            newGameStage.setTitle("Create New Game");
+            newGameStage.setTitle("New Game");
 
-
-            //Campi di input
+            // Campi di input
             TextField usernameField = new TextField();
             usernameField.setPromptText("Player Name");
 
@@ -188,7 +164,7 @@ public class GuiRoot implements View {
             levelBox.setPromptText("Select Game Mode");
 
             Button confirmButton = new Button("Confirm");
-            Button goBackButton = goBackButtonMaker(newGameStage) ;
+            Button GobackButton = new Button("Cancel");
 
             confirmButton.disableProperty().bind(
                     usernameField.textProperty().isEmpty()
@@ -197,6 +173,9 @@ public class GuiRoot implements View {
             );
 
             confirmButton.setOnAction(ev -> {
+                String username = usernameField.getText();
+                String gameName = gameNameField.getText();
+
 
                 String level = levelBox.getValue();
                 int gameLv;
@@ -206,16 +185,19 @@ public class GuiRoot implements View {
                 else gameLv = 2;
 
                 newGameStage.close();
-                inputQueue.add("Login");
-                inputQueue.add(usernameField.getText());
-                inputQueue.add(gameNameField.getText());
+                inputQueue.add(username);
+                inputQueue.add(gameName);
                 inputQueue.add(String.valueOf(gameLv));
 
             });
 
+            GobackButton.setOnAction(ev -> {
+                newGameStage.close();
+
+            });
 
 
-            HBox Buttons = new HBox(50, confirmButton, goBackButton);
+            HBox Buttons = new HBox(50, confirmButton, GobackButton);
 
             Buttons.setAlignment(Pos.CENTER);
             Buttons.setPadding(new Insets(15));
@@ -245,102 +227,11 @@ public class GuiRoot implements View {
         BorderPane root = new BorderPane(centerBox);
         root.setPadding(new Insets(10));
 
-
-        Platform.runLater(() -> {
-            Scene scene = new Scene(root, 600, 400);
-            primaryStage.setTitle("Lobby");
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        });
-    }
-
-
-
-    private Button joinButtonMaker(LobbyEvent joining) {
-        Button joinButton = new Button("Join");
-        joinButton.setOnAction(e -> {
-            Stage InsertNameStage = new Stage();
-            InsertNameStage.setTitle("Insert Username");
-
-            TextField usernameField = new TextField();
-            usernameField.setPromptText("Player Name");
-
-            Button confirmButton = new Button("Confirm");
-            Button goBackButton = goBackButtonMaker(InsertNameStage);
-
-            confirmButton.disableProperty().bind(usernameField.textProperty().isEmpty());
-
-            HBox Buttons = new HBox(50, confirmButton, goBackButton);
-
-            Buttons.setAlignment(Pos.CENTER);
-            Buttons.setPadding(new Insets(15));
-
-            VBox formBox = new VBox(10,
-                    new Label("Insert Username:"), usernameField,
-                    Buttons
-            );
-            formBox.setPadding(new Insets(15));
-            formBox.setAlignment(Pos.CENTER);
-
-            Scene insertNamescene = new Scene(formBox, 300, 150);
-            InsertNameStage.setScene(insertNamescene);
-            InsertNameStage.initOwner(primaryStage);
-            InsertNameStage.initModality(Modality.WINDOW_MODAL);
-            InsertNameStage.show();
-
-
-            confirmButton.setOnAction(ev -> {
-                InsertNameStage.close();
-                inputQueue.add("Login");
-                inputQueue.add(usernameField.getText());
-                inputQueue.add(joining.getGameId());
-                inputQueue.add(String.valueOf(joining.getLv()));
-            });
-        });
-        return joinButton;
-    }
-
-
-    private Button goBackButtonMaker(Stage  stage) {
-        Button GobackButton = new Button("Cancel");
-        GobackButton.setOnAction(ev -> {
-            stage.close();
-        });
-        return GobackButton;
-    }
-
-
-
-
-    public void setGuiMain(GuiMain guiMain) {
-    }
-
-
-    public void goToFirstScene(Stage primaryStage) {
-        Label titleLabel = new Label("GALAXY TRUCKERS");
-        titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
-
-        Button startButton = new Button("Start!");
-        startButton.setStyle("-fx-font-size: 20px;");
-
-        VBox TitleScreenBox = new VBox(10, titleLabel, startButton);
-        TitleScreenBox.setAlignment(Pos.CENTER);
-        TitleScreenBox.setPadding(new Insets(20));
-        //TitleScreenBox.setMaxWidth(400);
-
-        BorderPane root = new BorderPane(TitleScreenBox);
-        root.setPadding(new Insets(10));
-
-        Scene lobbyScene = new Scene(root, 600, 400);
-        primaryStage.setTitle("Galaxy Truckers");
-        primaryStage.setScene(lobbyScene);
+        Scene scene = new Scene(root, 600, 400);
+        primaryStage.setTitle("Lobby");
+        primaryStage.setScene(scene);
         primaryStage.show();
-
-
-        startButton.setOnAction(e -> {
-            inputQueue.add("Lobby");
-        });
     }
 
-
+    //public gameboard scene(scena)
 }

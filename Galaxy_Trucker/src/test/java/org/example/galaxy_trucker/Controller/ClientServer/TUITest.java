@@ -12,7 +12,7 @@ class TUITest {
     void test() throws IOException {
         TUI tui = new TUI();
         tui.setGameboard(2);
-        tui.printGameboard();
+        //tui.printGameboard();
 
         tui.updateGameboard(new GameBoardEvent(0, "paluGay"));
         tui.updateGameboard(new GameBoardEvent(1, "paluMorto"));
