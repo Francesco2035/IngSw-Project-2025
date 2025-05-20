@@ -276,6 +276,18 @@ public class Smugglers extends Card{
         if(tmpPunishment==0){
             System.out.println("finished stealing");
             this.updateSates();
+            return;
+        }
+        if(cargoH.isEmpty()){
+            energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
+            this.setDefaultPunishment(energyUsage);
+            this.isaPunishment=true;
+            currentPlayer.setState(new ConsumingEnergy()); // potrebbe non fare l'update?
+            this.setDefaultPunishment(energyUsage);
+            return;
+        }
+        else {
+            currentPlayer.setState(new HandleTheft());
         }
 
     }
