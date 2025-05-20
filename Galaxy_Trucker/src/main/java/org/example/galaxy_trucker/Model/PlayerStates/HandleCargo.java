@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.GiveAttackCommand;
 import org.example.galaxy_trucker.Commands.HandleCargoCommand;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddGoodAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetGoodAction;
@@ -10,6 +11,8 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
+import org.example.galaxy_trucker.View.ClientModel.States.HandleCargoClient;
 
 public class HandleCargo extends PlayerState {
 
@@ -58,6 +61,11 @@ public class HandleCargo extends PlayerState {
 
     /// il default è il basta gestione cargo anche se non dovrebbero esistere casi in cui capita da disconnessi
       return new HandleCargoCommand(0,null,gameId, player.GetID(), lv,"Finish","placeholder");
+    }
+
+    @Override
+    public PhaseEvent toClientState() {
+        return new PhaseEvent(new HandleCargoClient());
     }
 
 }

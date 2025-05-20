@@ -139,7 +139,7 @@ public class Smugglers extends Card{
 
         if(coordinates.size()!=this.energyUsage){
 
-            throw new WrongNumofEnergyExeption("wrong number of energy cells");
+            throw new WrongNumofEnergyExeption("wrong number of energy cells to steal");
         }
         PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
         Tile[][] tiles = CurrentPlanche.getPlayerBoard();
@@ -185,7 +185,7 @@ public class Smugglers extends Card{
              }
             else {
                 System.out.println("no goods found");
-
+                this.isaPunishment = true;
                 int totenergy=0;
                 for(PowerCenter i: CurrentPlanche.getPowerCenters() ){
                     totenergy+=i.getType();
@@ -193,6 +193,7 @@ public class Smugglers extends Card{
                 }
 
                 energyUsage = min(tmpPunishment, CurrentPlanche.getEnergy());
+                System.out.println("energy usage (Check Strength):" +energyUsage);
                 this.setDefaultPunishment(energyUsage);
                 currentPlayer.setState(new ConsumingEnergy()); /// se il player va in consuming energy e poi si disconnette ma non ha abbastanza energie  sei fottuto
             /// non dovrebbe succedere perche prendo il minimo tra i due ma non si sa mai :)
@@ -242,6 +243,7 @@ public class Smugglers extends Card{
 
         if(cargoH.isEmpty()){
             energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
+            System.out.println("energy usage (lose Cargo) :" +energyUsage);
             this.setDefaultPunishment(energyUsage);
             this.isaPunishment=true;
             currentPlayer.setState(new ConsumingEnergy()); // potrebbe non fare l'update?

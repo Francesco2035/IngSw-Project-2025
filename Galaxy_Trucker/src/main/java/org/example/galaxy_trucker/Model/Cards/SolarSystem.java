@@ -34,7 +34,9 @@ public class SolarSystem extends Card {
 
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
+        System.out.println("playerlist size " + PlayerList.size());
         for(Player p : PlayerList){
+            System.out.println(p.GetID());
             p.setState(new Waiting());
         }
         this.updateSates();
@@ -45,12 +47,14 @@ public class SolarSystem extends Card {
     public void updateSates(){
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
+        System.out.println("playerlist size (update states) " + PlayerList.size());
         if(this.order<PlayerList.size()){
             if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
             this.currentPlayer.setState(new ChoosingPlanet());
+            System.out.println(this.currentPlayer.GetID() + " : "+ this.currentPlayer.getPlayerState());
             //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
 
             this.order++;

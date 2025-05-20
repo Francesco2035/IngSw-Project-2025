@@ -74,7 +74,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
                         future.get(1500, TimeUnit.MILLISECONDS);
 
-                        System.out.println("Ping successful for client: " + client);
+                        //System.out.println("Ping successful for client: " + client);
 
                         executor.shutdown();
 
@@ -248,7 +248,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
 
     @Override
-    public void sendEvent(LobbyEvent event) {
+    public void sendEvent(LobbyEvent event){
         System.out.println("Sending event: " + event);
         lobbyEvents.remove("EMPTY CREATE NEW GAME");
         lobbyEvents.remove(event.getGameId());

@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.example.galaxy_trucker.Commands.AcceptCommand;
 import org.example.galaxy_trucker.Commands.AddCrewCommand;
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
+import org.example.galaxy_trucker.View.ClientModel.States.AddCrewClient;
+import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,4 +46,9 @@ public class AddCrewState extends PlayerState {
         };
     }
 
+
+    @Override
+    public PhaseEvent toClientState() {
+        return new PhaseEvent(new AddCrewClient());
+    }
 }

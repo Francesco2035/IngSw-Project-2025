@@ -83,7 +83,7 @@ public class Client implements EventVisitor {
 
         if (view1.equals("TUI")) {
             client.setView(new TUI());
-        } else if (view1.equals("GUI")) {
+        } else if (view1.equals("GUI")){
             GuiRoot gui = new GuiRoot();
             client.setView(gui);
         }
@@ -141,13 +141,23 @@ public class Client implements EventVisitor {
     public void visit(LobbyEvent event){this.view.showLobby(event);}
 
     @Override
+    public void visit(PhaseEvent event) {
+        this.view.phaseChanged(event);
+    }
+
+    @Override
     public void visit(DeckEvent event) {
         this.view.showDeck(event);
     }
 
     @Override
     public void visit(CardEvent event) {
-        this.view.showCard(event.getId());
+        this.view.showCard(event);
+    }
+
+    @Override
+    public void visit(GameLobbyEvent event){
+        this.view.showLobbyGame(event);
     }
 
     @Override

@@ -1,7 +1,9 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.example.galaxy_trucker.Commands.GiveSpeedCommand;
 import org.example.galaxy_trucker.Commands.KillCommand;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -11,6 +13,8 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
+import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
+import org.example.galaxy_trucker.View.ClientModel.States.KillingClient;
 
 import java.util.ArrayList;
 
@@ -31,6 +35,11 @@ public class Killing extends PlayerState {
 //        Card card = player.getCurrentCard();
 //        return new KillCommand(card, coordinates);
 //    }
+
+    @Override
+    public boolean allows(KillCommand command){
+        return true;
+    }
 
     @Override
     public boolean allows(KillCrewAction action) {
@@ -69,5 +78,10 @@ public class Killing extends PlayerState {
             j++;
         }
         return new KillCommand(coords,gameId,player.GetID(),lv,"KillCommand","placeholder");
+    }
+
+    @Override
+    public PhaseEvent toClientState() {
+        return new PhaseEvent(new KillingClient());
     }
 }

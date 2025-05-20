@@ -1,15 +1,14 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Commands.GiveAttackCommand;
 import org.example.galaxy_trucker.Commands.SelectChunkCommand;
-import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
+import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
+import org.example.galaxy_trucker.View.ClientModel.States.HandleDestructionClient;
 
 import java.util.ArrayList;
 
@@ -60,5 +59,15 @@ public class HandleDestruction extends PlayerState {
         return new SelectChunkCommand(coord,gameId, player.GetID(),lv,"SelectChunkCommand","placeholder");
     }
 
+    @Override
+    public boolean allows(SelectChunkCommand command){
+        return true;
+    }
+
+
+    @Override
+    public PhaseEvent toClientState() {
+        return new PhaseEvent(new HandleDestructionClient());
+    }
 
 }
