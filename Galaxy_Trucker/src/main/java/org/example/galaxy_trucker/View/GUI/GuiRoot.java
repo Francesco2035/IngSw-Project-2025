@@ -157,16 +157,6 @@ public class GuiRoot implements View {
         });
 
 
-
-
-
-        // Area messaggi console/chat (opzionale)
-        TextArea messageArea = new TextArea();
-        messageArea.setEditable(false);
-        messageArea.setWrapText(true);
-        messageArea.setPrefHeight(100);
-        messageArea.setPromptText("Log della lobby...");
-
         // Bottone per avviare la partita (solo host)
         Button newGame = new Button("New Game");
         newGame.setStyle("-fx-font-size: 14px;");
@@ -237,7 +227,7 @@ public class GuiRoot implements View {
         });
 
         // Layout centrale
-        VBox centerBox = new VBox(10, titleLabel, gamesList, messageArea, newGame);
+        VBox centerBox = new VBox(10, titleLabel, gamesList, newGame);
         centerBox.setAlignment(Pos.CENTER);
         centerBox.setPadding(new Insets(20));
         centerBox.setMaxWidth(400);
