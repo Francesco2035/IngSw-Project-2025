@@ -221,11 +221,11 @@ public class GameController  implements ConcurrentCardListener {
             for (Player p : game.getPlayers().values()) {
                 p.SetReady(false);
             }
-
-            if (!flightMode){
-                stopAllPlayerThreads();
-
-            }
+//
+//            if (!flightMode){
+//                stopAllPlayerThreads();
+//
+//            }
             flightMode = true;
             startFlightMode();
             flightCount = 0;
@@ -311,8 +311,12 @@ public class GameController  implements ConcurrentCardListener {
             /// non deve finire il game ma semplicemente questo thread
             //stopGame();
         });
+        for (Player p : game.getPlayers().values()) {
+            p.SetReady(true);
+        }
         flightThread.start();
         System.out.println("Thread volo finito");
+        flightMode = false;
         changeState();
 
     }
@@ -353,7 +357,7 @@ public class GameController  implements ConcurrentCardListener {
         curr.setDisconnected(true);
         //setto booleano del controller
 
-        if (!flightMode) {
+        //if (!flightMode) {
             System.out.println("Player ID " + playerId + " not in flight mode, interrupting thread");
             threads.get(playerId).interrupt();
             threads.remove(playerId);
@@ -368,7 +372,7 @@ public class GameController  implements ConcurrentCardListener {
             });            ;
             t.start();
             threads.put(playerId, t);
-        }
+        //}
 
     }
 
@@ -378,7 +382,7 @@ public class GameController  implements ConcurrentCardListener {
         //setto booleano del controler
         threads.remove(playerId);
 
-        if (!flightMode){
+        //if (!flightMode){
             System.out.println("Player ID " + playerId + " not in flight mode, starting thread");
 
             BlockingQueue<Command> queue = commandQueues.get(playerId);
@@ -397,7 +401,7 @@ public class GameController  implements ConcurrentCardListener {
             t.start();
             threads.put(playerId, t);
 
-        }
+        //}
 
     }
 

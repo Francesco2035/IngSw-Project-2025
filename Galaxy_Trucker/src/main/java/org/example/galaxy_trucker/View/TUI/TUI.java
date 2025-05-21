@@ -147,6 +147,7 @@ public class TUI implements View {
     @Override
     public void phaseChanged(PhaseEvent event) {
         playerClient.setPlayerState(event.getStateClient());
+        out.showGame();
     }
 
 
@@ -541,10 +542,10 @@ public class TUI implements View {
         out.setCardId(event.getId());
         //inputReader.printServerMessage("\n");
         //inputReader.printServerMessage(CardsDescriptions.get(CardId));
-        out.setCacheCard(CardsDescriptions.get(CardId));
+        out.setCacheCard(CardsDescriptions.get(event.getId()));
         //printBoard();
         //System.out.println(CardsDescriptions.get(id));
-        out.showGame();
+        //out.showGame();
     }
 
     @Override

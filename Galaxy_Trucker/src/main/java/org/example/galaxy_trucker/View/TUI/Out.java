@@ -17,8 +17,8 @@ public class Out {
     private PlayerClient playerClient;
 
     private String CacheCard = "";
-    private ArrayList<String> players = null;
-    private ArrayList<Boolean> ready;
+    private ArrayList<String> players = new ArrayList<>();
+    private ArrayList<Boolean> ready = new ArrayList<>();
 
     private final HashMap<Integer, String> idToNameMap = new HashMap<>();
     private final int contentWidth = 33;
@@ -46,6 +46,14 @@ public class Out {
         this.inputReader = inputReader;
         this.lobby = new HashMap<>();
         cachedBoard = new String[10][10][7];
+        for (int k = 0; k < 10; k++) {
+            for (int l = 0; l < 10; l++) {
+                cachedBoard[k][l] = new String[7];
+                for (int m = 0; m < 7; m++) {
+                    cachedBoard[k][l][m] = "";
+                }
+            }
+        }
         cacheHand = new String[7];
         for (int i = 0; i < 7; i++) {
             cacheHand[i] = "";
@@ -215,7 +223,6 @@ public class Out {
                 }
 
             }
-            inputReader.printServerMessage("\n\n");
         }
 
         System.out.println();
@@ -367,6 +374,7 @@ public class Out {
 
     public void setCacheCard(String s){
         CacheCard = s;
+        //printMessage(s);
     }
 
     public void showCovered(){
@@ -375,7 +383,12 @@ public class Out {
     }
 
     public void showCard(){
-        inputReader.printServerMessage("\n\n"+ CacheCard+ "\n\n");
+        if (!CacheCard.equals("")){
+            inputReader.printServerMessage("\n\n"+ CacheCard+ "\n\n");
+        }
+        else{
+            inputReader.printServerMessage("empty bro");
+        }
     }
 
     public void printMessage(String s){
