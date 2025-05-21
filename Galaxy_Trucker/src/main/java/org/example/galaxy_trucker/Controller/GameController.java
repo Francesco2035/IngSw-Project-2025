@@ -308,13 +308,13 @@ public class GameController  implements ConcurrentCardListener {
                 //System.out.println("Flight phase complete");
 
             }
-            /// non deve finire il game ma semplicemente questo thread
-            //stopGame();
+            for (Player p : game.getPlayers().values()) {
+                p.SetReady(true);
+            }
         });
-        for (Player p : game.getPlayers().values()) {
-            p.SetReady(true);
-        }
+
         flightThread.start();
+
         System.out.println("Thread volo finito");
         flightMode = false;
         changeState();

@@ -8,7 +8,12 @@ public class LobbyClient extends PlayerStateClient {
 
     @Override
     public void showGame(Out out) {
-        out.printMessage("Lobby");
-        out.showLobby();
+        StringBuilder toPrint = new StringBuilder();
+        toPrint.append("Lobby\n\n");
+        toPrint.append(out.showLobby());
+        out.render(toPrint);
+        //out.printMessage(toPrint.toString());
+//        out.printMessage("Lobby");
+//        out.showLobby();
     }
 }
