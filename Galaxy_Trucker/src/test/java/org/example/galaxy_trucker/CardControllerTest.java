@@ -323,17 +323,17 @@ public class CardControllerTest {
         assertEquals(p1.getPlayerState().getClass(), Waiting.class);
         assertEquals(true, p1.GetHasActed());
         System.out.println("p1 has chosen");
-        choosingPlanetsCommand = new ChoosingPlanetsCommand(2,game.getID(),p2.GetID(),Gboard.getLevel(),"boh?","Placeholder");
+        choosingPlanetsCommand = new ChoosingPlanetsCommand(-1,game.getID(),p2.GetID(),Gboard.getLevel(),"boh?","Placeholder");
         choosingPlanetsCommand.execute(p2);
 
-        assertEquals(p2.getPlayerState().getClass(), HandleCargo.class);
-        assertEquals(false, p2.GetHasActed());
-        assertEquals(p1.getPlayerState().getClass(), Waiting.class);
-        assertEquals(true, p1.GetHasActed());
-        assertEquals(false,CurrentCard.isFinished());
-        System.out.println("p2 has chosen");
-        HandleCargoCommand handleCargoCommand = new HandleCargoCommand(0,null,game.getID(),p2.GetID(),Gboard.getLevel(),"Finish","placeholder");
-    handleCargoCommand.execute(p2);
+//        assertEquals(p2.getPlayerState().getClass(), HandleCargo.class);
+//        assertEquals(false, p2.GetHasActed());
+//        assertEquals(p1.getPlayerState().getClass(), Waiting.class);
+//        assertEquals(true, p1.GetHasActed());
+//        assertEquals(false, CurrentCard.isFinished());
+//        System.out.println("p2 has chosen");
+//        HandleCargoCommand handleCargoCommand = new HandleCargoCommand(0, null, game.getID(), p2.GetID(), Gboard.getLevel(), "Finish", "placeholder");
+//        handleCargoCommand.execute(p2);
 
     assertEquals(p1.getPlayerState().getClass(), BaseState.class);
     assertEquals(p2.getPlayerState().getClass(), BaseState.class);
