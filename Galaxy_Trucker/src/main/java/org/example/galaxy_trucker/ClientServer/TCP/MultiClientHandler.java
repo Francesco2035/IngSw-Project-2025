@@ -68,24 +68,26 @@ public class MultiClientHandler implements Runnable, GhListener {
                         System.out.println("Client closed the connection.");
                         break;
                     }
-                    System.out.println(s);
+                    //System.out.println(s);
                     if (s.equals("ping")) {
                         attempts = 3;
                         out.println("pong");
                     } else {
                         attempts = 3;
-                        System.out.println("Received: " + s);
+                        //System.out.println("Received: " + s);
 
                         Command command = objectMapper.readValue(s, Command.class);
                         System.out.println("Deserialized command: " + command.getTitle());
 
                         if (command.getTitle().equals("Lobby")){
+                            System.out.println("Lobby received");
                             PrintWriter finalOut = out;
                             new Thread(()->{
                                 synchronized (lobbyEvents) {
                                     for (LobbyEvent event : lobbyEvents.values()) {
                                         ObjectMapper objectMapper1 = new ObjectMapper();
                                         try {
+                                            System.out.println("BROOO " + event + " "+ event.getGameId());
                                             finalOut.println(objectMapper1.writeValueAsString(event));
                                         } catch (JsonProcessingException e) {
                                             e.printStackTrace();
@@ -108,6 +110,8 @@ public class MultiClientHandler implements Runnable, GhListener {
                             gameHandler.enqueuePlayerInit(command, vv);
                             out.println("Token: " + token.toString());
                         }
+
+
                         else if (command.getTitle().equals("Reconnect")) {
                             System.out.println("Reconnecting...");
                             Token = UUID.fromString(command.getToken());
@@ -171,6 +175,7 @@ public class MultiClientHandler implements Runnable, GhListener {
 
     @Override
     public void sendEvent(LobbyEvent event) {
+        System.out.println(event + " " + event.getGameId());
         lobbyEvents.remove(event.getGameId());
         lobbyEvents.put(event.getGameId(), event);
         try{

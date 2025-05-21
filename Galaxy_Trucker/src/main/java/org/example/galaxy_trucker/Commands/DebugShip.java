@@ -66,37 +66,32 @@ public class DebugShip extends Command implements Serializable {
 
         debugShip.setListener(player.getmyPlayerBoard().getListener());
 
-        debugShip.insertTile(t1, 6,7);
         t2.RotateSx();
         t2.RotateSx();
-        //debugShip.insertTile(t2, 7,7);
         t8.RotateDx();
-        debugShip.insertTile(t8, 7,6);
-        debugShip.insertTile(t11, 6,5);
-        debugShip.insertTile(t9, 5,7);
-        //debugShip.insertTile(t3, 5,6);
-
         t4.RotateSx();
-        debugShip.insertTile(t4, 5,5);
         t10.RotateDx();
-        debugShip.insertTile(t10, 4,5);
-
-        debugShip.insertTile(t12, 6,8);
-
         specialStorage.RotateDx();
         specialStorage.RotateDx();
-        debugShip.insertTile(specialStorage, 7,8);
 
-        debugShip.insertTile(normalStorage, 7,9);
-        debugShip.insertTile(powerCenter, 6,9);
-        debugShip.insertTile(powerCenter2, 5,4);
-        debugShip.insertTile(plasmaDrill,8,9);
-        debugShip.insertTile(addonspurple,6,4);
-        debugShip.insertTile(modular1,7,4);
-        debugShip.insertTile(sewerpipes,7,3);
-        debugShip.insertTile(hotWaterHeater,8,3);
 
-        debugShip.insertTile(player.getmyPlayerBoard().getTile(6,6),6,6);
+        debugShip.insertTile(t1, 6,7, false);
+        debugShip.insertTile(t8, 7,6, false);
+        debugShip.insertTile(t11, 6,5, false);
+        debugShip.insertTile(t9, 5,7, false);
+        debugShip.insertTile(t4, 5,5, false);
+        debugShip.insertTile(t10, 4,5, false);
+        debugShip.insertTile(t12, 6,8, false);
+        debugShip.insertTile(specialStorage, 7,8, false);
+        debugShip.insertTile(normalStorage, 7,9, false);
+        debugShip.insertTile(powerCenter, 6,9, false);
+        debugShip.insertTile(powerCenter2, 5,4, false);
+        debugShip.insertTile(plasmaDrill,8,9, false);
+        debugShip.insertTile(addonspurple,6,4, false);
+        debugShip.insertTile(modular1,7,4, false);
+        debugShip.insertTile(sewerpipes,7,3, false);
+        debugShip.insertTile(hotWaterHeater,8,3, false);
+        debugShip.insertTile(player.getmyPlayerBoard().getTile(6,6),6,6, false);
         player.setMyPlance(debugShip);
 
     }

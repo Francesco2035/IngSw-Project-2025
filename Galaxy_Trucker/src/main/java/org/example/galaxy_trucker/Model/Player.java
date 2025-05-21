@@ -203,7 +203,7 @@ public class Player implements Serializable {
      */
     public void PlaceTile(IntegerPair coords) {
 
-        this.myPlayerBoard.insertTile(CurrentTile, coords.getFirst(), coords.getSecond());
+        this.myPlayerBoard.insertTile(CurrentTile, coords.getFirst(), coords.getSecond(), true);
         CurrentTile = null;
     }
 
