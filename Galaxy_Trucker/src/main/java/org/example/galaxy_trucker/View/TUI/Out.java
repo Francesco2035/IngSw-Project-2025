@@ -192,6 +192,7 @@ public class Out {
         int rows = 10;
         int cols = 10;
         //inputReader.printServerMessage("############################ BOARD ############################\n");
+        inputReader.printServerMessage("\n\n");
         System.out.println("############################ BOARD ############################\n");
         for (int y = 0; y < rows; y++) {
 
@@ -214,6 +215,7 @@ public class Out {
                 }
 
             }
+            inputReader.printServerMessage("\n\n");
         }
 
         System.out.println();
@@ -283,6 +285,7 @@ public class Out {
         else{
 
         }
+        inputReader.printServerMessage("\n\n");
         inputReader.printServerMessage("########################## ######### #########################\n");
 
     }
@@ -372,7 +375,7 @@ public class Out {
     }
 
     public void showCard(){
-        inputReader.printServerMessage(CacheCard);
+        inputReader.printServerMessage("\n\n"+ CacheCard+ "\n\n");
     }
 
     public void printMessage(String s){
