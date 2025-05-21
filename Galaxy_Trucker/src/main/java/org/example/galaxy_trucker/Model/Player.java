@@ -242,6 +242,10 @@ public class Player implements Serializable {
         else throw new IllegalStateException("Called a lv 2 command in a lv 1 game!");
     }
 
+    public  int finishRace(boolean finished){
+        return getmyPlayerBoard().finishRace(finished);
+    }
+
 
     public void SetReady(boolean ready){
         this.ready = ready;
