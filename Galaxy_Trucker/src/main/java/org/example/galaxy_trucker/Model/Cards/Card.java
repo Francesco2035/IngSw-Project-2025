@@ -63,6 +63,8 @@ public class Card implements Serializable {
     //toOverride
     public void setConcurrentCardListener(ConcurrentCardListener listener){
         this.concurrentCardListener = listener;
+        this.concurrentCardListener.onConcurrentCard(false);
+
     }
     public void removeConcurrentCardListener(){
         this.concurrentCardListener = null;
@@ -92,6 +94,10 @@ public class Card implements Serializable {
     public void ActivateCard(){}
     public int getDefaultPunishment(){return DefaultPunishment;}
     public void setDefaultPunishment(int p){DefaultPunishment = p;}
+
+    public ConcurrentCardListener getConcurrentCardListener() {
+        return concurrentCardListener;
+    }
 
     public boolean isFinished() {
         return finished;

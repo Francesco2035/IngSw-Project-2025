@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Cards;
 //import javafx.util.Pair;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
@@ -350,11 +351,14 @@ public class   Meteorites extends Card {
     }
     @Override
     public void finishCard() {
+        ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
+        concurrentCardListener.onConcurrentCard(false);
+
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
-            PlayerList.get(i).SetReady(true);
+
         }
         System.out.println("card finished\n");
         this.setFinished(true);
@@ -384,7 +388,17 @@ public class   Meteorites extends Card {
         return MeteoritesOrder;
     }
 
-    //json required
+    @Override
+    public void setConcurrentCardListener(ConcurrentCardListener listener){
+        ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
+
+        concurrentCardListener = listener;
+        concurrentCardListener.onConcurrentCard(true);
+    }
+
+
+
+        //json required
     public Meteorites() {}
     public ArrayList<Integer> getAttacks() {return attacks;}
     @JsonCreator

@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Exceptions.WrongPlanetExeption;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -60,6 +61,11 @@ public class SolarSystem extends Card {
             this.order++;
         }
         else{
+            for(Player p : PlayerList){
+                p.setState(new Waiting());
+            }
+            ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
+            concurrentCardListener.onConcurrentCard(false);
             for(Planet p: this.planets){
                 if(p.isOccupied()){
                     this.getBoard().movePlayer(p.getOccupied().GetID(), -this.getTime());
@@ -75,9 +81,10 @@ public class SolarSystem extends Card {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.done==PlayerList.size()-1) {
+
             for (int i = 0; i < PlayerList.size(); i++) {
                 PlayerList.get(i).setState(new BaseState());
-                PlayerList.get(i).SetReady(true);
+
             }
             System.out.println("card finished");
             this.setFinished(true);
