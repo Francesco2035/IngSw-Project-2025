@@ -113,6 +113,6 @@ public class BuildingCommand extends Command implements Serializable {
 
     @Override
     public boolean allowedIn(PlayerState playerState) {
-        return playerState.allows(this);
+        return playerState.allows(this); //TODO: aggiungere caso per playerstate == null => eccezione
     }
 }

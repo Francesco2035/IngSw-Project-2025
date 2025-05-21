@@ -1,14 +1,9 @@
 package org.example.galaxy_trucker.Controller;
 
-import org.example.galaxy_trucker.Commands.DebugShip;
-import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.Commands.ReadyCommand;
-import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
-import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +19,7 @@ class LoginControllerTest {
 
     static {
         try {
-            game = new Game(2, "testCarteController");
+            game = new Game(2, "testLoginController");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -56,7 +51,7 @@ class LoginControllerTest {
 
 
     @Test
-    public void testLoginController() throws IOException {
+    public void testLoginController() {
 
         ReadyCommand cmd1 = new ReadyCommand("testLoginController", "passos", 2, "Ready", true, null);
         cmd1.execute(p1);
