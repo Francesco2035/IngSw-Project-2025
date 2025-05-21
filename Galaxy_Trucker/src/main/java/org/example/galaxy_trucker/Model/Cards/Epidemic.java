@@ -77,7 +77,7 @@ public class Epidemic extends Card {
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
-            PlayerList.get(i).SetReady(true);
+
         }
         System.out.println("card finished\n");
         this.setFinished(true);
