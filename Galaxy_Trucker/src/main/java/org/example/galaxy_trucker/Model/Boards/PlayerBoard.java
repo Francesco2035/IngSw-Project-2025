@@ -316,24 +316,31 @@ public class PlayerBoard {
      * @throws NullPointerException If the tile is null.
      * @throws InvalidInput If the coordinates are out of bounds or if the target position is invalid.
      */
-    public void insertTile(Tile tile, int x, int y) throws NullPointerException, InvalidInput {
+    public void insertTile(Tile tile, int x, int y, boolean check) throws NullPointerException, InvalidInput {
+        if (check){
+            if (tile == null) {
+                throw new NullPointerException("Tile cannot be null.");
+            }
 
-        if (tile == null) {
-            throw new NullPointerException("Tile cannot be null.");
+            if (x < 0 || x >= PlayerBoard.length || y < 0 || y >= PlayerBoard[0].length || ValidPlayerBoard[x][y] == -1) {
+                throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
+            }
+
+            if (ValidPlayerBoard[x][y] != 0) {
+                throw new InvalidInput(x,y, "Invalid input : invalid position, already occupied or spacevoid");
+
+            }
+
+            if (x != 6 && y != 6){
+                if ((ValidPlayerBoard[x-1][y] != 1) ||(ValidPlayerBoard[x][y-1] != 1) || (ValidPlayerBoard[x+1][y] != 1) || (ValidPlayerBoard[x][y+1] != 1)) {
+                    throw new InvalidInput(x,y, "Invalid input : invalid position, there aren't tiles nearby!");
+                }
+
+            }
         }
 
-        if (x < 0 || x >= PlayerBoard.length || y < 0 || y >= PlayerBoard[0].length || ValidPlayerBoard[x][y] == -1) {
-            throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
-        }
-
-        if (ValidPlayerBoard[x][y] != 0) {
-            throw new InvalidInput(x,y, "Invalid input : invalid position, already occupied or spacevoid");
-
-        }
         System.out.println(x + " " +y);
-//
-//        if (ValidPlayerBoard[x][y] != 0 && x != 6 && y != 6) {
-//        }
+
         this.PlayerBoard[x][y] = tile;
         tile.getComponent().setTile(tile);
         tile.setPlayerBoard(this);
@@ -1010,6 +1017,33 @@ public class PlayerBoard {
     public void clearBuffer() {
         Buffer.clear();
         sendUpdates( new TileEvent(159 , 7, 8, null, 0, false, false, 0, 0, null));
+
+    }
+
+    public  int finishRace(boolean finished){
+        int number =0;
+        int result=0;
+        for (int i = 0; i < this.storedGoods.size(); i++) {
+
+        }
+        for (Integer key: storedGoods.keySet()) {
+            number =this.storedGoods.get(key).size();
+            result+= key*number;
+        }
+
+        if(!finished){
+            if(result%2==1){
+                result = result/2;
+                result+=1;
+            }
+            else{
+                result = result/2;
+            }
+        }
+
+        ///  TODO mettere anche i tasselli che rimangono nel buffer nel damage per adesso non è gestityo :)
+        result -= this.damage;
+        return result;
 
     }
 

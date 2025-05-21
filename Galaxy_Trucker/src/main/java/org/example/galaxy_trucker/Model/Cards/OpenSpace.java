@@ -114,9 +114,15 @@ public class OpenSpace extends Card{
         this.moveplayer();
     }
     public void moveplayer(){
-        getBoard().movePlayer(currentPlayer.GetID(),currentmovement);
-        this.currentPlayer.setState(new Waiting());
+        if(currentmovement==0){
+
+
+        }
+        else {
+            getBoard().movePlayer(currentPlayer.GetID(),currentmovement);
+            this.currentPlayer.setState(new Waiting());
         this.updateSates();
+        }
     }
 
 

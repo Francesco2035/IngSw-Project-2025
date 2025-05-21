@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.LobbyCommand;
 import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.Settings;
@@ -15,9 +16,11 @@ import java.net.SocketException;
 import java.rmi.NotBoundException;
 import java.util.UUID;
 
-
+//TODO: non possiamo far terminare l'input con end
 public class TCPClient{
-
+//TODO: settare lobby e login anche da fuori nel caso il client dovesse cambiare connessione
+    private boolean lobby = false;
+    private boolean login = false;
     private boolean connected = false;
     private Socket echoSocket;
     private PrintWriter out = null;
@@ -227,26 +230,70 @@ public class TCPClient{
                     System.out.println("Null input, closing connection...");
                     return;
                 }
+                else if (userInput.equals("Lobby")) {
+                    if (!lobby) {
+                        lobby = true;
+                        LobbyCommand lobbyCommand = new LobbyCommand("Lobby");
+                        ObjectMapper mapper = new ObjectMapper();
+                        String jsonLogin = mapper.writeValueAsString(lobbyCommand);
 
-                if (userInput.equals("end")) {
+                        out.println(jsonLogin);
+                    }
+                    else{
+                        System.out.println("Lobby is already connected");
+                    }
+                    if (login){
+                        System.out.println("You are already logged in! [quit?]");
+                    }
+
+
+                }
+                else if (userInput.equals("Login")) {
+                    if(!login){
+                        login = true;
+                        String playerId = client.getView().askInput("PlayerID: ");
+
+                        String gameId = client.getView().askInput("GameID: ");
+
+                        int gameLevel = Integer.parseInt( client.getView().askInput("Game level: "));
+
+                        LoginCommand loginCommand = new LoginCommand(gameId,playerId, gameLevel, "Login");
+
+                        commandInterpreter = new CommandInterpreter(playerId, gameId);
+                        commandInterpreter.setlv(gameLevel);
+                        ObjectMapper mapper = new ObjectMapper();
+                        String jsonLogin = mapper.writeValueAsString(loginCommand);
+
+                        out.println(jsonLogin);
+                    }
+                    else{
+                            System.out.println("You are already logged in! [quit?]");
+                    }
+
+                }
+                else if (userInput.equals("end")) {
                     break;
                 }
 
-                if (userInput.equals("ChangeConnection")) {
+                else if (userInput.equals("ChangeConnection")) {
                     System.out.println("No need to changeConnection!");
                     break;
                 }
 
-                if (userInput.equals("")){
+                else if (userInput.equals("")){
                     break;
                 }
 
-                Command command = commandInterpreter.interpret(userInput);
-                ObjectMapper mapper = new ObjectMapper();
-                String json = mapper.writeValueAsString(command);
+                else{
+                    Command command = commandInterpreter.interpret(userInput);
+                    ObjectMapper mapper = new ObjectMapper();
+                    String json = mapper.writeValueAsString(command);
 
-                out.println(json);
-                System.out.println("CommandSent: " + json);
+                    out.println(json);
+                    System.out.println("CommandSent: " + json);
+                }
+
+
 
             } catch (Exception e) {
                 System.out.println("Error interpreting or sending command: " + e.getMessage());
@@ -269,20 +316,7 @@ public class TCPClient{
 
         System.out.println("Connection started\n");
 
-        String playerId = client.getView().askInput("PlayerID: ");
 
-        String gameId = client.getView().askInput("GameID: ");
-
-        int gameLevel = Integer.parseInt( client.getView().askInput("Game level: "));
-
-        LoginCommand loginCommand = new LoginCommand(gameId,playerId, gameLevel, "Login");
-
-        commandInterpreter = new CommandInterpreter(playerId, gameId);
-        commandInterpreter.setlv(gameLevel);
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonLogin = mapper.writeValueAsString(loginCommand);
-
-        out.println(jsonLogin);
         clientLoop();
 
     }

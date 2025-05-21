@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model.Cards;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 
 
 public class Card implements Serializable {
+    private ConcurrentCardListener concurrentCardListener;
     private int id;
     @JsonProperty("Level")
     private int Level;
@@ -59,6 +61,12 @@ public class Card implements Serializable {
 
 
     //toOverride
+    public void setConcurrentCardListener(ConcurrentCardListener listener){
+        this.concurrentCardListener = listener;
+    }
+    public void removeConcurrentCardListener(){
+        this.concurrentCardListener = null;
+    }
     public void CardEffect(){}
     public int getTime() {
         return this.Time;

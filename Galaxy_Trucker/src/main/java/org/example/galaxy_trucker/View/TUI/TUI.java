@@ -37,7 +37,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TUI implements View {
 
     private int CardId = -1;
-    private ArrayList<Boolean> ready;
     private final TileEvent[][] board = new TileEvent[10][10];
     private final HashMap<Integer, String> idToNameMap = new HashMap<>();
     private final int contentWidth = 33;
@@ -51,9 +50,6 @@ public class TUI implements View {
     private String[][][] Gameboard;
     private int lv;
     private int setup = 102;
-    private boolean fase = false;
-    private int CoveredTileSet = -1;
-    private Boolean connected = false;
     private HashMap<Integer, IntegerPair> positionToGameboard = new HashMap<>();
     private HashMap<String,Integer > PlayerToPosition = new HashMap<>();
     private HashMap<String, String[]> lobby = new HashMap<>();
@@ -595,3 +591,5 @@ public class TUI implements View {
     }
 
 }
+
+//riceve eventi e formatta, aggiorna il "client"

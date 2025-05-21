@@ -57,7 +57,7 @@ public class BuildingCommand extends Command implements Serializable {
                 for (int i = 0; i < rotations; i++) {
                     tile.RotateDx();
                 }
-                player.getmyPlayerBoard().insertTile(tile, x, y);
+                player.getmyPlayerBoard().insertTile(tile, x, y, true);
                 player.setCurrentTile(null);
                 break;
             }

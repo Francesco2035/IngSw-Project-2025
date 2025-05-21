@@ -56,12 +56,12 @@ public class PlayerBoardTest {
         System.out.println("Testing InsertTile Exceptions");
         assertThrows(
                 NullPointerException.class,
-                () -> playerBoard.insertTile(null, -1,6),
+                () -> playerBoard.insertTile(null, -1,6, false),
                 "A NullPointerException should be thrown.");
 
         assertThrows(
                 InvalidInput.class,
-                () -> playerBoard.insertTile(gag.getTilesDeck().get(10) , 2,6),
+                () -> playerBoard.insertTile(gag.getTilesDeck().get(10) , 2,6, false),
                 "An InvalidInput should be thrown.");
 
         System.out.println("Testing getTile Exception");

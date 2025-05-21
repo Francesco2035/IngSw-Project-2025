@@ -10,4 +10,5 @@ public class BaseStateClient extends PlayerStateClient{
         out.showPlayers();
         out.printBoard();
     }
+
 }

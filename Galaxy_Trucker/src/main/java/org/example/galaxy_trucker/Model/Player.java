@@ -203,7 +203,7 @@ public class Player implements Serializable {
      */
     public void PlaceTile(IntegerPair coords) {
 
-        this.myPlayerBoard.insertTile(CurrentTile, coords.getFirst(), coords.getSecond());
+        this.myPlayerBoard.insertTile(CurrentTile, coords.getFirst(), coords.getSecond(), true);
         CurrentTile = null;
     }
 
@@ -240,6 +240,10 @@ public class Player implements Serializable {
                 throw e;
             }
         else throw new IllegalStateException("Called a lv 2 command in a lv 1 game!");
+    }
+
+    public  int finishRace(boolean finished){
+        return getmyPlayerBoard().finishRace(finished);
     }
 
 
