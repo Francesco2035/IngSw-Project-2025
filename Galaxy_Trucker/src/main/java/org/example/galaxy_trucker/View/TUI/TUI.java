@@ -195,7 +195,7 @@ public class TUI implements View {
         inputThread.setDaemon(true); // opzionale, per terminare col processo principale
         inputThread.start();
         phase = ViewPhase.LOBBY;
-        inputReader.printServerMessage("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"+ASCII_ART.Title);
+        inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));
         out = new Out(inputReader, playerClient);
         //inputReader.clearScreen();
 

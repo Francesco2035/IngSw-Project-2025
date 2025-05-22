@@ -78,14 +78,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     private boolean setup(){
         try{
-            System.out.println("Starting Client");
+            //System.out.println("Starting Client");
             Registry registry;
-            System.out.println(Settings.SERVER_NAME + " " + Settings.RMI_PORT);
+            //System.out.println(Settings.SERVER_NAME + " " + Settings.RMI_PORT);
             registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.RMI_PORT);
 
             this.server = (ServerInterface) registry.lookup("CommandReader");
 
-            System.out.println(server);
+            //System.out.println(server);
             running = true;
             return true;
         }
@@ -355,8 +355,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     }
 
-
-
-
-
+//TODO: usare metodo input reader per stamapre i messaggi di errore e usare [...] per capire se System o Server
+    //perchè tanto potrei salvarmi l'ultimo StringBuilder usato per il render
 }
