@@ -34,6 +34,7 @@ public class GameController  implements ConcurrentCardListener {
     private final HashMap<UUID, String> tokenToPlayerId = new HashMap<>();
     final Game game;
     private GamesHandler gh;
+    //private BlockingQueue<Command> prepQueue = new LinkedBlockingQueue<>();
     private BlockingQueue<Command> flightQueue = new LinkedBlockingQueue<>();
     private Thread flightThread;
     private boolean flightMode = false;
@@ -44,6 +45,8 @@ public class GameController  implements ConcurrentCardListener {
     private boolean firtflight = true;
     private boolean concurrent = false;
     private int color = 153;
+
+    private Thread prepThread;
 
     private LobbyListener lobbyListener;
     private ArrayList<GameLobbyListener> gameLobbyListeners = new ArrayList<>();
@@ -66,6 +69,11 @@ public class GameController  implements ConcurrentCardListener {
         this.game = game;
         this.gh = gh;
         this.flightQueue = new LinkedBlockingQueue<>();
+//        this.prepThread = new Thread(() -> {
+//            while(true){
+//                Command cmd = prepQueue.poll();
+//            }
+//        });
 
     }
 
@@ -106,24 +114,23 @@ public class GameController  implements ConcurrentCardListener {
 
         Thread t = new Thread(() -> {
             while (true) {
-                try {
+                synchronized (ControllerMap) {
                     Controller current = ControllerMap.get(playerId);
-                    //vedi se è connesso
-                    //se è connesso prendi dalla coda e chiami il metodo
-
                     if(current.disconnected){ //questo è il thread  dei command fuori dalla flight mode giusto?
                         //current.DefaultAction(this);
                     }
                     else{
-                        Command cmd = queue.take(); // se questa è esclusiva del player si potrebbe svuotare in caso di disconnessione
-                        current.action(cmd, this);
+                        Command cmd = queue.poll(); // se questa è esclusiva del player si potrebbe svuotare in caso di disconnessione
+                        if (cmd != null){
+                            current.action(cmd, this);
+                        }
                     }
-
-                    //se non è connesso chiami defaultaction
-                } catch (InterruptedException e) {
-                    System.out.println("Thread interrupted: " + playerId);
-                    break;
                 }
+                //vedi se è connesso
+                //se è connesso prendi dalla coda e chiami il metodo
+
+
+                //se non è connesso chiami defaultaction
             }
         });
         t.start();
@@ -203,33 +210,40 @@ public class GameController  implements ConcurrentCardListener {
     }
 
     public void setControllerMap(Player player, Controller controller) {
-        System.out.println(player.GetID() + " : "+ controller.getClass());
-        ControllerMap.put(player.GetID(), controller);
+        synchronized (ControllerMap) {
+            System.out.println(player.GetID() + " : "+ controller.getClass());
+            ControllerMap.remove(player.GetID());
+            ControllerMap.put(player.GetID(), controller);
 
-        if(buildingCount == ControllerMap.size()){
+            if(buildingCount == ControllerMap.size()){
 
-            try {
-                game.getGameBoard().StartHourglass();
-            }catch(RuntimeException e){
-                System.out.println(e.getMessage());
+                try {
+                    game.getGameBoard().StartHourglass();
+                }catch(RuntimeException e){
+                    System.out.println(e.getMessage());
+                }
+
+                buildingCount = -1;
             }
 
-            buildingCount = -1;
-        }
-
-        if (flightCount == ControllerMap.size()) {
-            for (Player p : game.getPlayers().values()) {
-                p.SetReady(false);
-            }
+            if (flightCount == ControllerMap.size()) {
+                for (Player p : game.getPlayers().values()) {
+                    p.SetReady(false);
+                }
 //
 //            if (!flightMode){
 //                stopAllPlayerThreads();
 //
 //            }
-            flightMode = true;
-            startFlightMode();
-            flightCount = 0;
+                flightMode = true;
+                startFlightMode();
+                flightCount = 0;
+            }
+            for (Controller controller1 : ControllerMap.values()) {
+                System.out.println(controller1.getClass());
+            }
         }
+
     }
 
     public void startFlightMode() {  ///  per aggiornare il
