@@ -60,7 +60,8 @@ public class HandleCargo extends PlayerState {
 
 
     /// il default è il basta gestione cargo anche se non dovrebbero esistere casi in cui capita da disconnessi
-      return new HandleCargoCommand(0,null,gameId, player.GetID(), lv,"Finish","placeholder");
+      return new HandleCargoCommand(0,null,0,null ,
+              gameId, player.GetID(), lv,"FinishCargo","placeholder");
     }
 
     @Override

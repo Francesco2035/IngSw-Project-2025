@@ -24,8 +24,7 @@ import org.example.galaxy_trucker.View.ViewPhase;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 //TODO: non è ancora gestita la print del lv 1
 //TODO: mostrare che si è avviata la building phase
 //TODO: salvare lo stesso in virtualview per il momento non sto gestendo f.a. del tutto
@@ -35,6 +34,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 //TODO: mettere le fasi nella TUI in modo tale che venga chiamato solo showTUI (salvando i dati in cache prime) e in base alle varie fasi chiama i metodi giusti
 
 public class TUI implements View {
+
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture<?> scheduledTask;
+    private final int debounceDelayMs = 200;
 
     private int CardId = -1;
     private final TileEvent[][] board = new TileEvent[10][10];
@@ -127,9 +130,9 @@ public class TUI implements View {
 
     @Override
     public void showLobby(LobbyEvent event) {
-        System.out.println(event.getGameId());
+        //System.out.println(event.getGameId());
         out.setLobby(event.getGameId(),formatCell(event)); //QUI
-        out.showGame();
+        onGameUpdate();
 //        if (event.getGameId().equals("EMPTY CREATE NEW GAME")){
 //            lobby.remove(event.getGameId());
 //        }
@@ -141,12 +144,15 @@ public class TUI implements View {
         out.setPlayers(event.getPlayers());
         out.setReady(event.getReady());
 
-        out.showGame();
+        onGameUpdate();
     }
 
     @Override
     public void phaseChanged(PhaseEvent event) {
+        System.out.println("STATE CHANGED: "+ event.getStateClient().getClass());
         playerClient.setPlayerState(event.getStateClient());
+
+        onGameUpdate();
     }
 
 
@@ -189,7 +195,7 @@ public class TUI implements View {
         inputThread.setDaemon(true); // opzionale, per terminare col processo principale
         inputThread.start();
         phase = ViewPhase.LOBBY;
-        inputReader.printServerMessage("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"+ASCII_ART.Title);
+        inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));
         out = new Out(inputReader, playerClient);
         //inputReader.clearScreen();
 
@@ -255,7 +261,7 @@ public class TUI implements View {
         }
         if (setup == 0){
             out.setCacheHand(emptyCell());
-            out.showGame();
+            onGameUpdate();
         }
     }
 
@@ -279,7 +285,7 @@ public class TUI implements View {
 
     @Override
     public void showMessage(String message) {
-        System.out.println(message);
+        //System.out.println(message);
     }
 
     public String[] formatCell(){
@@ -472,7 +478,7 @@ public class TUI implements View {
             TileEvent temp = new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors());
             out.setCacheHand(formatCell(temp)); //QUI
         }
-        out.showGame();
+        onGameUpdate();
     }
 
     @Override
@@ -498,7 +504,7 @@ public class TUI implements View {
         }
 
 
-        out.showGame();
+        onGameUpdate();
 
     }
 
@@ -506,7 +512,7 @@ public class TUI implements View {
     public void updateCoveredTilesSet(CoveredTileSetEvent event) {
 
         out.setCoveredTileSet(event.getSize()); //QUI
-        out.showGame();
+        onGameUpdate();
     }
 
     @Override
@@ -521,7 +527,7 @@ public class TUI implements View {
 
             out.setUncoverdTileSetCache(event.getId(), cache); //QUI
         }
-        out.showGame();
+        onGameUpdate();
     }
 
 
@@ -541,10 +547,10 @@ public class TUI implements View {
         out.setCardId(event.getId());
         //inputReader.printServerMessage("\n");
         //inputReader.printServerMessage(CardsDescriptions.get(CardId));
-        out.setCacheCard(CardsDescriptions.get(CardId));
+        out.setCacheCard(CardsDescriptions.get(event.getId()));
         //printBoard();
         //System.out.println(CardsDescriptions.get(id));
-        out.showGame();
+        //onGameUpdate();
     }
 
     @Override
@@ -573,7 +579,7 @@ public class TUI implements View {
         inputReader.printServerMessage(message);
         try {
             String toSend = inputQueue.take();
-            System.out.println("to send: " + toSend);
+            //System.out.println("to send: " + toSend);
             return toSend;
         } catch (InterruptedException e) {
             //Thread.currentThread().interrupt();
@@ -589,6 +595,27 @@ public class TUI implements View {
             showCard(e);
         }
     }
+
+
+
+
+    public synchronized void onGameUpdate() {
+        if (scheduledTask != null && !scheduledTask.isDone()) {
+            scheduledTask.cancel(false);
+        }
+
+        scheduledTask = scheduler.schedule(() -> {
+            //inputReader.clearScreen();
+            out.showGame();
+        }, debounceDelayMs, TimeUnit.MILLISECONDS);
+    }
+
+//quando termina tutto chiamo questo anche se non credo dovrebbe particolamente servirmi
+    public void shutdown() {
+        scheduler.shutdown();
+    }
+
+
 
 }
 

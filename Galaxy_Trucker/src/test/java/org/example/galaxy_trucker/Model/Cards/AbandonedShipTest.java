@@ -102,8 +102,8 @@ class AbandonedShipTest {
         Tile tile1 = new Tile(house1, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
         Tile tile2 = new Tile(house2, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
 
-        playerBoard1.insertTile(tile1,6,7);
-        playerBoard1.insertTile(tile2,7,7);
+        playerBoard1.insertTile(tile1,6,7, false);
+        playerBoard1.insertTile(tile2,7,7, false);
 
 
 

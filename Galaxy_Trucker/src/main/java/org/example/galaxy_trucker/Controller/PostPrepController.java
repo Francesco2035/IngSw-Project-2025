@@ -15,11 +15,12 @@ public class PostPrepController extends Controller {
         this.gameId = gameId;
         this.disconnected = disconnected;
         count = curPlayer.getmyPlayerBoard().getHousingUnits().size();
+        System.out.println("Count for "+ curPlayer.GetID() + " : " + count);
     }
 
     @Override
     public synchronized void action(Command command, GameController gc) {/// devo fare la default anche quas
-
+        System.out.println("POST_PREP_CONTROLLER");
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
             throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
@@ -29,7 +30,9 @@ public class PostPrepController extends Controller {
             System.out.println("Action called for " + gameId + ": " + command.getTitle() + " "+ command.playerId);
             command.execute(curPlayer);
             count --;
+            System.out.println("Count for "+ curPlayer.GetID() + " : " + count);
             if (count == 0) {
+                System.out.println("Changing state");
                 nextState(gc);
             }
 
@@ -46,7 +49,7 @@ public class PostPrepController extends Controller {
 
     @Override
     public void nextState(GameController gc) {
-
+        System.out.println("Calling nextState for player: "+ curPlayer.GetID());
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
             this.disconnected = false;
         }

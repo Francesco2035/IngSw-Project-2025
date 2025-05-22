@@ -42,39 +42,111 @@ public class CommandInterpreter {
 
     private void initializeCommandMap() {
         commandMap = new HashMap<>();
-        commandMap.put("Login", this::createLoginCommand);
-        commandMap.put("InsertTile", this::createBuildingCommand);
-        commandMap.put("PickTile", this::createBuildingCommand);
-        commandMap.put("Hourglass", this::createBuildingCommand);
-        commandMap.put("SeeDeck", this::createBuildingCommand);
-        commandMap.put("Discard", this::createBuildingCommand);
-        commandMap.put("FromBuffer", this::createBuildingCommand);
-        commandMap.put("ToBuffer", this::createBuildingCommand);
-        commandMap.put("FinishBuilding", this::createFinishBuildingCommand);
-        commandMap.put("AddCrew", this::createAddCrewCommand);
-        commandMap.put("AddBrownAlien", this::createAddCrewCommand);
-        commandMap.put("AddPurpleAlien", this::createAddCrewCommand);
-        commandMap.put("Quit", this::createQuitCommand);
-        commandMap.put("Ready", this::createReadyCommand);
-        commandMap.put("RemoveTile", this::createRemoveTileCommand);
+        commandMap.put("LOGIN", this::createLoginCommand);
+        commandMap.put("INSERTTILE", this::createBuildingCommand);
+        commandMap.put("PICKTILE", this::createBuildingCommand);
+        commandMap.put("HOURGLASS", this::createBuildingCommand);
+        commandMap.put("SEEDECK", this::createBuildingCommand);
+        commandMap.put("DISCARD", this::createBuildingCommand);
+        commandMap.put("FROMBUFFER", this::createBuildingCommand);
+        commandMap.put("TOBUFFER", this::createBuildingCommand);
+        commandMap.put("FINISHBUILDING", this::createFinishBuildingCommand);
+        commandMap.put("ADDCREW", this::createAddCrewCommand);
+        commandMap.put("ADDBROWNALIEN", this::createAddCrewCommand);
+        commandMap.put("ADDPURPLEALIEN", this::createAddCrewCommand);
+        commandMap.put("QUIT", this::createQuitCommand);
+        commandMap.put("READY", this::createReadyCommand);
+        commandMap.put("NOTREADY", this::createReadyCommand);
+        commandMap.put("REMOVETILE", this::createRemoveTileCommand);
         //  altri comandi
-        commandMap.put("DebugShip", this::createDebugShip);
+        commandMap.put("DEBUGSHIP", this::createDebugShip);
 
-        commandMap.put("Reconnect", this::createReconnectCommand);
+        commandMap.put("RECONNECT", this::createReconnectCommand);
 
-        commandMap.put("ConsumeEnergy", this::createConsumeEnergyCommand);
-        commandMap.put("Accept", this::createAcceptCommand);
-        commandMap.put("Decline", this::createAcceptCommand);
-        commandMap.put("ChoosingPlanet", this::createChoosingPlanetsCommand); // il command usa planets con la s ma tu più volte lo hai scritto senza che faccio?
-        commandMap.put("DefendFromLarge",this::createDefendFromLargeCommand);
-        commandMap.put("DefendFromSmall",this::createDefendFromSmallCommand);
-        commandMap.put("Kill", this::createKillCommand);
-        commandMap.put("GiveAttack", this::createGiveAttackCommand);
-        commandMap.put("GiveSpeed", this::createGiveSpeedCommand);
+        commandMap.put("CONSUMEENERGY", this::createConsumeEnergyCommand);
+        commandMap.put("ACCEPT", this::createAcceptCommand);
+        commandMap.put("DECLINE", this::createAcceptCommand);
+        commandMap.put("CHOOSEPLANET", this::createChoosingPlanetsCommand); // il command usa planets con la s ma tu più volte lo hai scritto senza che faccio?
+        commandMap.put("DEFENDLARGE",this::createDefendFromLargeCommand);
+        commandMap.put("DEFENDSMALL",this::createDefendFromSmallCommand);
+        commandMap.put("KILL", this::createKillCommand);
+        commandMap.put("GIVEATTACK", this::createGiveAttackCommand);
+        commandMap.put("GIVESPEED", this::createGiveSpeedCommand);
 
+        commandMap.put("FINISHCARGO", this::createHandleCargoCommand);
+        //commandMap.put("PUTINSTORAGE", this::createHandleCargoCommand);
+        commandMap.put("GETREWARD", this::createHandleCargoCommand);
+        //commandMap.put("GETFROMSTORAGE", this::createHandleCargoCommand);
+        commandMap.put("DISCARDCARGO", this::createHandleCargoCommand);
+        commandMap.put("SWITCH", this::createHandleCargoCommand);
+        commandMap.put("THEFT", this::createHandleCargoCommand);
 
-        //cargo
-        //theft
+    }
+
+    private Command createHandleCargoCommand(String[] strings) {
+        int x1 = -1;
+        int y1 = -1;
+        int x2 = -1;
+        int y2 = -1;
+        int position1 = -1;
+        int position2 = -1;
+        String title = strings[0];
+        switch (title){
+            case "FINISHCARGO":{
+                if (strings.length != 1) {
+                    throw new IllegalArgumentException("Comando FinishCargo non richiede argomenti");
+                }
+                title = "FinishCargo";
+                break;
+            }
+            case "SWITCH":{
+                if (strings.length != 7) {
+                    throw new IllegalArgumentException("Comando Switch richiede 6 argomenti: x1, y1, pos1, x2, y2, pos2");
+                }
+                title = "Switch";
+                x1 = Integer.parseInt(strings[1]);
+                y1 = Integer.parseInt(strings[2]);
+                x2= Integer.parseInt(strings[4]);
+                y2= Integer.parseInt(strings[5]);
+                position1= Integer.parseInt(strings[3]);
+                position2= Integer.parseInt(strings[6]);
+
+                break;
+            }
+            case "DISCARDCARGO":{
+                if (strings.length != 4) {
+                    throw new IllegalArgumentException("Comando DiscardCargo richiede 3 argomenti: x1, y1, pos1");
+                }
+                title = "Discard";
+                x1 = Integer.parseInt(strings[1]);
+                y1 = Integer.parseInt(strings[2]);
+                position1= Integer.parseInt(strings[3]);
+
+                break;
+            }
+
+            case "THEFT":{
+                if (strings.length != 4) {
+                    throw new IllegalArgumentException("Comando Theft richiede 3 argomenti: x1, y1, pos1");
+                }
+                x1 = Integer.parseInt(strings[1]);
+                y1 = Integer.parseInt(strings[2]);
+                position1= Integer.parseInt(strings[3]);
+                return new TheftCommand(position1,new IntegerPair(x1,y1));
+            }
+            case "GETREWARD":{
+                if (strings.length != 5) {
+                    throw new IllegalArgumentException("Comando Switch richiede 4 argomenti: posRewards, x1, y1, pos1");
+                }
+                title = "GetFromRewards";
+                position2= Integer.parseInt(strings[1]);
+                x1 = Integer.parseInt(strings[2]);
+                y1 = Integer.parseInt(strings[3]);
+                position1= Integer.parseInt(strings[4]);
+                break;
+            }
+        }
+        return new HandleCargoCommand(position1, new IntegerPair(x1,y1),position2, new IntegerPair(x2,y2), gameId, playerId, lv, title, token);
     }
 
 
@@ -123,6 +195,7 @@ public class CommandInterpreter {
     public Command interpret(String commandString) {
         String[] parts = commandString.split(" ");
         String commandTitle = parts[0];
+        commandTitle = commandTitle.toUpperCase();
         CommandCreator creator = commandMap.get(commandTitle);
 
         if (creator == null) {

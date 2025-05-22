@@ -28,9 +28,11 @@ import java.io.Serializable;
 
         @JsonSubTypes.Type(value = RemoveTileCommand.class, name = "RemoveTileCommand"),
         @JsonSubTypes.Type(value = LoginCommand.class, names = "LobbyCommand"),
+        @JsonSubTypes.Type(value = HandleCargoCommand.class, names = "HandleCargoCommand"),
+        @JsonSubTypes.Type(value = TheftCommand.class, names = "TheftCommand"),
 
         @JsonSubTypes.Type(value = ReconnectCommand.class, names = "ReconnectCommand")
-
+//TODO: AGGIUNGERE ALTRI COMANDI IN JSONSUBTYPES PER TCP E LE JSONPROPERY NELLE SOTTOCLASSI: IMPORTANTISSIMO REGA'
 })
 public abstract class Command implements Serializable {
 

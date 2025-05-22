@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import org.jline.jansi.AnsiConsole;
 import org.jline.reader.Highlighter;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -27,6 +28,7 @@ public class InputReader implements Runnable {
     Terminal terminal;
 
     public InputReader(BlockingQueue<String> inputQueue) throws IOException {
+
         this.inputQueue = inputQueue;
         terminal = TerminalBuilder.builder()
                 .name("GalaxyTrucker")
@@ -37,11 +39,10 @@ public class InputReader implements Runnable {
                 .build();
 
 
-
         highlighter = new Highlighter() {
             @Override
             public AttributedString highlight(LineReader lineReader, String s) {
-                return new AttributedString(s, AttributedStyle.DEFAULT.foreground(AttributedStyle.GREEN).background(AttributedStyle.BLUE));
+                return new AttributedString(s, AttributedStyle.DEFAULT.foreground(AttributedStyle.WHITE).background(AttributedStyle.BLUE));
             }
         };
 
@@ -86,19 +87,65 @@ public class InputReader implements Runnable {
         running = true;
     }
 
-    public void printServerMessage(String message) {
+    public synchronized void printServerMessage(String message) {
         //Lreader.callWidget(LineReader.CLEAR);          // Pulisce la riga corrente
-        Lreader.printAbove(message);
+        //String[] lines = message.split("\n");
+        //for (int i = 0; i < lines.length; i++) {
+            Lreader.printAbove(message);
+        //}
+        //Lreader.callWidget("redisplay");
         //Lreader.callWidget("redisplay");               // Ridisegna l'input buffer
     }
 
+
+    public synchronized void printGraphicMessage(String s) {
+//        terminal.puts(InfoCmp.Capability.clear_screen); // pulisce lo schermo
+//        terminal.flush();
+        System.out.print(s); // mantiene spazi, newline, ecc.
+        Lreader.callWidget("redisplay");
+
+    }
+
+
+
+
+
     public synchronized void clearScreen() {
-        // 1) Pulisci tutto il terminale (schermo)
+        System.out.print("\033[3J");
         terminal.puts(InfoCmp.Capability.clear_screen);
         terminal.flush();
-
-        // 2) Ridisegna il prompt e l’input che l’utente aveva scritto (buffer)
         Lreader.callWidget("redisplay");
+
     }
+
+    private int lastRenderHeight = 0;
+
+    public synchronized void renderScreen(StringBuilder content) {
+        String partialInput = Lreader.getBuffer().toString();
+        System.out.print("\033[3J");
+        terminal.puts(InfoCmp.Capability.clear_screen);
+        terminal.flush();
+        terminal.writer().println(content);
+        terminal.flush();
+        Lreader.getBuffer().clear();
+        Lreader.getBuffer().write(partialInput);
+        Lreader.getBuffer().cursor(partialInput.length());
+        AttributedString highlighted = new AttributedString(
+                ">" + partialInput,
+                AttributedStyle.DEFAULT.foreground(AttributedStyle.WHITE).background(AttributedStyle.BLUE)
+        );
+
+        terminal.writer().print(highlighted.toAnsi());
+        terminal.flush();
+
+
+        //Lreader.callWidget("redisplay");
+        Lreader.callWidget("redisplay");
+
+
+    }
+
+
+
 
 }
