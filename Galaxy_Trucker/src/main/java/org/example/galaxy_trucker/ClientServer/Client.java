@@ -18,6 +18,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.rmi.NotBoundException;
 import java.util.UUID;
 
@@ -34,6 +35,9 @@ public class Client implements EventVisitor {
     }
 
     public void startRMIClient() throws IOException, NotBoundException {
+        String ip = NetworkUtils.getLocalIPAddress();
+        System.setProperty("java.rmi.server.hostname", ip);
+        System.out.println("RMI hostname set to: " + ip);
         rmiClient = new RMIClient(this);
         rmiClient.StartClient();
     }
@@ -89,6 +93,7 @@ public class Client implements EventVisitor {
         }
 
         if (Connection.equals("RMI")) {
+
             client.startRMIClient();
         } else if (Connection.equals("TCP")) {
              client.startTCPClient();
@@ -192,6 +197,10 @@ public class Client implements EventVisitor {
 
     public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException, InterruptedException {
         if (connection.equals("RMI")) {
+            String ip = NetworkUtils.getLocalIPAddress();
+            System.setProperty("java.rmi.server.hostname", ip);
+            System.out.println("RMI hostname set to: " + ip);
+
             RMIClient rmiClient = new RMIClient(this, interpreter);
 
 
