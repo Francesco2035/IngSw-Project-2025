@@ -46,35 +46,37 @@ public class SolarSystem extends Card {
 
     @Override
     public void updateSates(){
-        GameBoard Board=this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
-        System.out.println("playerlist size (update states) " + PlayerList.size());
-        if(this.order<PlayerList.size()){
-            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
-            currentPlayer = PlayerList.get(this.order);
-            PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
+        if (!this.isFinished()){
+            GameBoard Board=this.getBoard();
+            ArrayList<Player> PlayerList = Board.getPlayers();
+            System.out.println("playerlist size (update states) " + PlayerList.size());
+            if(this.order<PlayerList.size()){
+                if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
+                currentPlayer = PlayerList.get(this.order);
+                PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
-            this.currentPlayer.setState(new ChoosingPlanet());
-            System.out.println(this.currentPlayer.GetID() + " : "+ this.currentPlayer.getPlayerState());
-            //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
+                this.currentPlayer.setState(new ChoosingPlanet());
+                System.out.println(this.currentPlayer.GetID() + " : "+ this.currentPlayer.getPlayerState());
+                //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
 
-            this.order++;
-        }
-        else{
-            for(Player p : PlayerList){
-                p.setState(new Waiting());
+                this.order++;
             }
-            ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
-            concurrentCardListener.onConcurrentCard(false);
-            for(Planet p: this.planets){
-                if(p.isOccupied()){
-                    this.getBoard().movePlayer(p.getOccupied().GetID(), -this.getTime());
+            else{
+                for(Player p : PlayerList){
+                    p.setState(new Waiting());
+                }
+                ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
+                concurrentCardListener.onConcurrentCard(false);
+                for(Planet p: this.planets){
+                    if(p.isOccupied()){
+                        this.getBoard().movePlayer(p.getOccupied().GetID(), -this.getTime());
 
-                    p.getOccupied().setState(new HandleCargo());
-                    p.getOccupied().getmyPlayerBoard().setRewards(p.getGoods());
+                        p.getOccupied().setState(new HandleCargo());
+                        p.getOccupied().getmyPlayerBoard().setRewards(p.getGoods());
+                    }
                 }
             }
-        }
+            }
     }
     @Override
     public void finishCard() {
