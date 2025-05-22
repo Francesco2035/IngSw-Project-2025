@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
 public class BaseStateClient extends PlayerStateClient{
@@ -9,6 +10,10 @@ public class BaseStateClient extends PlayerStateClient{
         out.printMessage("BaseState");
         out.showPlayers();
         out.printBoard();
+    }
+
+    public void showGame(GuiOut out){
+        out.printGameLobby();
     }
 
 }
