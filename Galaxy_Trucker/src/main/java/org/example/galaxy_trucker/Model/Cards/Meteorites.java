@@ -29,6 +29,8 @@ public class   Meteorites extends Card {
     private int MeteoritesOrder;
     private int MeteoritesLine;
     private IntegerPair hit;
+    private  int SuccessfulDefences;
+    private  int NumofDefences;
 
     @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
     private ArrayList<Integer> attacks;
@@ -68,6 +70,8 @@ public class   Meteorites extends Card {
 
         GameBoard MeteoritesBoard = super.getBoard();
         ArrayList<Player> MeteoritesPlayerList = MeteoritesBoard.getPlayers();
+        this.SuccessfulDefences=0;
+        this.NumofDefences=super.getBoard().getPlayers().size();
 
         if (this.MeteoritesOrder< this.attacks.size()) { //scorre i meteoriti e attacca i player 1 a 1
 
@@ -92,6 +96,8 @@ public class   Meteorites extends Card {
 
     @Override
     public void keepGoing(){
+
+        this.SuccessfulDefences++;
         updateSates();
     }
 
@@ -100,8 +106,8 @@ public class   Meteorites extends Card {
         int Movement;
         boolean MeteoritesFlag=false;
         boolean DamageFlag=false;
-
-        if (PlayerOrder>=this.getBoard().getPlayers().size()){
+        if(this.SuccessfulDefences==NumofDefences) {
+       // if (PlayerOrder>=this.getBoard().getPlayers().size()){
             PlayerOrder=0;
             MeteoritesOrder+=2;
             this.CardEffect();
@@ -243,8 +249,9 @@ public class   Meteorites extends Card {
                 }
 
             }
+            if (!DamageFlag){this.SuccessfulDefences++;}
             this.PlayerOrder++;
-            if (!DamageFlag) {
+            if (PlayerOrder<this.getBoard().getPlayers().size()) {
                 this.updateSates();
             }
         }
@@ -292,6 +299,7 @@ public class   Meteorites extends Card {
             System.out.println("Stato del player "+ currentPlayer.getPlayerState().getClass().getName());
             System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
         }
+        this.SuccessfulDefences++;
         this.updateSates();
     }
 
@@ -347,6 +355,7 @@ public class   Meteorites extends Card {
 
             }
         }
+        this.SuccessfulDefences++;
         this.updateSates();
     }
     @Override
