@@ -180,11 +180,11 @@ public class CommandInterpreter {
         int y = Integer.parseInt(strings[2]);
 
         return switch (title) {
-            case "AddCrew" ->
+            case "ADDCREW" ->
                     new AddCrewCommand(2, false, false, new IntegerPair(x, y), gameId, playerId, lv, "AddCrew", token);
-            case "AddPurpleAlien" ->
+            case "ADDPURPLEALIEN" ->
                     new AddCrewCommand(0, true, false, new IntegerPair(x, y), gameId, playerId, lv, "AddPurpleAlien", token);
-            case "AddBrownAlien" ->
+            case "ADDBROWNALIEN" ->
                     new AddCrewCommand(0, false, true, new IntegerPair(x, y), gameId, playerId, lv, "AddBrownAlien", token);
             default -> throw new InvalidInput("invalid input");
         };
@@ -231,7 +231,7 @@ public class CommandInterpreter {
         int position =-1;
         switch (title){
 
-            case "SeeDeck":{
+            case "SEEDECK":{
                 if (parts.length != 2) {
                     throw new IllegalArgumentException("Comando SeeDeck richiede 1 argomento: numero deck scelto");
                 }
@@ -239,7 +239,7 @@ public class CommandInterpreter {
                 break;
             }
 
-            case "InsertTile":{
+            case "INSERTTILE":{
                 if (parts.length != 4) {
                     throw new IllegalArgumentException("Comando InsertTile richiede 4 argomenti: x, y, rotazione");
                 }
@@ -248,7 +248,7 @@ public class CommandInterpreter {
                 rotation = Integer.parseInt(parts[3]);
                 break;
             }
-            case "PickTile":{
+            case "PICKTILE":{
                 if (parts.length != 2) {
                     throw new IllegalArgumentException("Comando InsertTile richiede 1 argomento: posizione");
                 }
@@ -256,20 +256,20 @@ public class CommandInterpreter {
                 break;
 
             }
-            case "Hourglass", "Discard":{
+            case "HORGLASS", "DISCARD":{
                 if (parts.length != 1) {
                     throw new IllegalArgumentException("Comando Hourglass e Discard non richiedono nessun argomento");
                 }
                 break;
             }
-            case "ToBuffer" :{
+            case "TOBUFFER" :{
                 if (parts.length != 2) {
                     throw new IllegalArgumentException("Comando ToBuffer richiede 1 argomento: rotazione");
                 }
                 rotation = Integer.parseInt(parts[1]);
                 break;
             }
-            case "FromBuffer" :{
+            case "FROMBUFFER" :{
                 if (parts.length != 2) {
                     throw new IllegalArgumentException("Comando FromBuffer richiede 1 argomento: posizione");
                 }
