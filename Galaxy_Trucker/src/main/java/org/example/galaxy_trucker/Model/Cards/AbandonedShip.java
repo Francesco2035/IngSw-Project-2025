@@ -64,7 +64,7 @@ public class AbandonedShip extends Card{
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             System.out.println("Cchecking:"+currentPlayer.GetID());
-            if(CurrentPlanche.getNumHumans()>requirement){
+            if(CurrentPlanche.getNumHumans()>=requirement){
                 this.totHumans=CurrentPlanche.getNumHumans();
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
@@ -106,7 +106,7 @@ public class AbandonedShip extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
-            PlayerList.get(i).SetReady(true);
+
         }
         this.setFinished(true);
 

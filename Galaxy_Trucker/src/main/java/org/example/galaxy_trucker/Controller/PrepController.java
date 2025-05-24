@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Controller;
 
+import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Controller.Listeners.HourGlassListener;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
@@ -17,6 +18,13 @@ public class PrepController extends Controller implements HourGlassListener {
         this.playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         this.disconnected = disconnected;
     }
+
+    @Override
+    public void action(Command cmd, GameController gc){
+        System.out.println("PREP_CONTROLLER");
+        super.action(cmd, gc);
+    }
+
 
     @Override
     public void nextState(GameController gc) {

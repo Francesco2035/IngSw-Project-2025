@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Cards;
 //import javafx.util.Pair;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
@@ -28,6 +29,8 @@ public class   Meteorites extends Card {
     private int MeteoritesOrder;
     private int MeteoritesLine;
     private IntegerPair hit;
+    private  int SuccessfulDefences;
+    private  int NumofDefences;
 
     @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
     private ArrayList<Integer> attacks;
@@ -67,6 +70,8 @@ public class   Meteorites extends Card {
 
         GameBoard MeteoritesBoard = super.getBoard();
         ArrayList<Player> MeteoritesPlayerList = MeteoritesBoard.getPlayers();
+        this.SuccessfulDefences=0;
+        this.NumofDefences=super.getBoard().getPlayers().size();
 
         if (this.MeteoritesOrder< this.attacks.size()) { //scorre i meteoriti e attacca i player 1 a 1
 
@@ -91,6 +96,8 @@ public class   Meteorites extends Card {
 
     @Override
     public void keepGoing(){
+
+        this.SuccessfulDefences++;
         updateSates();
     }
 
@@ -99,8 +106,8 @@ public class   Meteorites extends Card {
         int Movement;
         boolean MeteoritesFlag=false;
         boolean DamageFlag=false;
-
-        if (PlayerOrder>=this.getBoard().getPlayers().size()){
+        if(this.SuccessfulDefences==NumofDefences) {
+       // if (PlayerOrder>=this.getBoard().getPlayers().size()){
             PlayerOrder=0;
             MeteoritesOrder+=2;
             this.CardEffect();
@@ -242,8 +249,9 @@ public class   Meteorites extends Card {
                 }
 
             }
+            if (!DamageFlag){this.SuccessfulDefences++;}
             this.PlayerOrder++;
-            if (!DamageFlag) {
+            if (PlayerOrder<this.getBoard().getPlayers().size()) {
                 this.updateSates();
             }
         }
@@ -291,6 +299,7 @@ public class   Meteorites extends Card {
             System.out.println("Stato del player "+ currentPlayer.getPlayerState().getClass().getName());
             System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
         }
+        this.SuccessfulDefences++;
         this.updateSates();
     }
 
@@ -346,15 +355,19 @@ public class   Meteorites extends Card {
 
             }
         }
+        this.SuccessfulDefences++;
         this.updateSates();
     }
     @Override
     public void finishCard() {
+        ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
+        concurrentCardListener.onConcurrentCard(false);
+
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
-            PlayerList.get(i).SetReady(true);
+
         }
         System.out.println("card finished\n");
         this.setFinished(true);
@@ -384,7 +397,17 @@ public class   Meteorites extends Card {
         return MeteoritesOrder;
     }
 
-    //json required
+    @Override
+    public void setConcurrentCardListener(ConcurrentCardListener listener){
+        ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
+
+        concurrentCardListener = listener;
+        concurrentCardListener.onConcurrentCard(true);
+    }
+
+
+
+        //json required
     public Meteorites() {}
     public ArrayList<Integer> getAttacks() {return attacks;}
     @JsonCreator

@@ -16,13 +16,17 @@ public class HandleCargoCommand extends Command implements Serializable {
     String title;
     int position;
     IntegerPair coordinate;
+    IntegerPair coordinate2;
+    int position2;
 
 
-    public HandleCargoCommand(int position, IntegerPair coordinate,String gameId, String playerId, int lv, String title, String token) {
+    public HandleCargoCommand(int position, IntegerPair coordinate, int position2,IntegerPair coordinate2, String gameId, String playerId, int lv, String title, String token) {
         super(gameId, playerId, lv, title, token);
         this.title = title;
         this.position = position;
         this.coordinate = coordinate;
+        this.coordinate2 = coordinate2;
+        this.position2 = position2;
 
     }
 
@@ -36,28 +40,33 @@ public class HandleCargoCommand extends Command implements Serializable {
         Goods temp;
         switch (title) {
             case "GetFromRewards": {
-                playerBoard.AddGoodInBuffer(playerBoard.getFromRewards(position));
+                playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),
+                        new AddGoodAction(
+                        (playerBoard.getFromRewards(position)), playerBoard, coordinate.getFirst(), coordinate.getSecond()),
+                        player.getPlayerState()
+                );
                 break;
             }
             case "PutInStorage":{
-                int x = coordinate.getFirst();
-                int y = coordinate.getSecond();
-                temp = playerBoard.pullFromBufferGoods(position);
-                playerBoard.performAction(playerBoard.getTile(x, y).getComponent()
-                , new AddGoodAction(temp, playerBoard,x,y),player.getPlayerState());
+//                int x = coordinate.getFirst();
+//                int y = coordinate.getSecond();
+//                temp = playerBoard.pullFromBufferGoods(position);
+//                playerBoard.performAction(playerBoard.getTile(x, y).getComponent()
+//                , new AddGoodAction(temp, playerBoard,x,y),player.getPlayerState());
                 break;
 
             }
             case "GetFromStorage": {
-                int x = coordinate.getFirst();
-                int y = coordinate.getSecond();
-                GetGoodAction action = new GetGoodAction(position,playerBoard,x,y);
-                playerBoard.performAction(playerBoard.getTile(x, y).getComponent(),action,player.getPlayerState());
-                playerBoard.AddGoodInBuffer(action.getGood());
+//                int x = coordinate.getFirst();
+//                int y = coordinate.getSecond();
+//                GetGoodAction action = new GetGoodAction(position,playerBoard,x,y);
+//                playerBoard.performAction(playerBoard.getTile(x, y).getComponent(),action,player.getPlayerState());
+//                playerBoard.AddGoodInBuffer(action.getGood());
                 break;
 
+
             }
-            case "Finish": {
+            case "FinishCargo": {
                 playerBoard.getRewards().clear();
                 playerBoard.getBufferGoods().clear();
                 // non serve base state devi fare n'altra robaaaaa
@@ -65,7 +74,27 @@ public class HandleCargoCommand extends Command implements Serializable {
                 player.getCurrentCard().keepGoing();
 
                 break;
-
+            }
+            case "Switch":{
+                GetGoodAction action = new GetGoodAction(position,playerBoard,coordinate.getFirst(),coordinate.getSecond());
+                 playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()
+                                , action, player.getPlayerState());
+                Goods good1 = action.getGood();
+                GetGoodAction action2 = new GetGoodAction(position2,playerBoard,coordinate2.getFirst(),coordinate2.getSecond());
+                playerBoard.performAction(playerBoard.getTile(coordinate2.getFirst(), coordinate2.getSecond()).getComponent()
+                        , action, player.getPlayerState());
+                Goods good2 = action.getGood();
+                playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()
+                        , new AddGoodAction(good2,playerBoard,coordinate.getFirst(), coordinate.getSecond()), player.getPlayerState());
+                playerBoard.performAction(playerBoard.getTile(coordinate2.getFirst(), coordinate2.getSecond()).getComponent()
+                        , new AddGoodAction(good1,playerBoard,coordinate2.getFirst(), coordinate2.getSecond()), player.getPlayerState());
+                break;
+            }
+            case "Discard":{
+                GetGoodAction action = new GetGoodAction(position,playerBoard,coordinate.getFirst(),coordinate.getSecond());
+                playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()
+                        , action, player.getPlayerState());
+                break;
             }
         }
     }

@@ -16,10 +16,16 @@ public class FlightController extends Controller {
         this.disconnected = disconnected;
     }
 
+    @Override
+    public void action(Command cmd, GameController gc){
+        System.out.println("FLIGHT_CONTROLLER");
+        super.action(cmd, gc);
+    }
 
 
     @Override
     public void nextState(GameController gc) {
+        System.out.println("Calling next state in fc for :" +curPlayer.GetID());
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
            this.disconnected = false;
         }

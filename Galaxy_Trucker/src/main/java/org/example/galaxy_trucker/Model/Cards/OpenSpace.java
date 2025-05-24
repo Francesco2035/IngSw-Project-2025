@@ -67,7 +67,7 @@ public class OpenSpace extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
-            PlayerList.get(i).SetReady(true);
+
         }
         System.out.println("card finished");
         this.setFinished(true);
@@ -114,9 +114,15 @@ public class OpenSpace extends Card{
         this.moveplayer();
     }
     public void moveplayer(){
-        getBoard().movePlayer(currentPlayer.GetID(),currentmovement);
-        this.currentPlayer.setState(new Waiting());
+        if(currentmovement==0){
+
+
+        }
+        else {
+            getBoard().movePlayer(currentPlayer.GetID(),currentmovement);
+            this.currentPlayer.setState(new Waiting());
         this.updateSates();
+        }
     }
 
 

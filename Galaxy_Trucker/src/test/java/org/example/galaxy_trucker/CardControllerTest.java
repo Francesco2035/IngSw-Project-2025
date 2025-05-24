@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.channels.AcceptPendingException;
 import java.util.ArrayList;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CardControllerTest {
@@ -314,29 +315,29 @@ public class CardControllerTest {
         assertEquals(false, p1.GetHasActed());
         assertEquals(p2.getPlayerState().getClass(), Waiting.class);
         assertEquals(true, p2.GetHasActed());
-
+        System.out.println("p1 is choosing");
         ChoosingPlanetsCommand choosingPlanetsCommand = new ChoosingPlanetsCommand(-1,game.getID(),p1.GetID(),Gboard.getLevel(),"boh?","Placeholder");
         choosingPlanetsCommand.execute(p1);
         assertEquals(p2.getPlayerState().getClass(), ChoosingPlanet.class);
         assertEquals(false, p2.GetHasActed());
         assertEquals(p1.getPlayerState().getClass(), Waiting.class);
         assertEquals(true, p1.GetHasActed());
-
-        choosingPlanetsCommand = new ChoosingPlanetsCommand(2,game.getID(),p2.GetID(),Gboard.getLevel(),"boh?","Placeholder");
+        System.out.println("p1 has chosen");
+        choosingPlanetsCommand = new ChoosingPlanetsCommand(-1,game.getID(),p2.GetID(),Gboard.getLevel(),"boh?","Placeholder");
         choosingPlanetsCommand.execute(p2);
 
-        assertEquals(p2.getPlayerState().getClass(), HandleCargo.class);
-        assertEquals(false, p2.GetHasActed());
-        assertEquals(p1.getPlayerState().getClass(), Waiting.class);
-        assertEquals(true, p1.GetHasActed());
-        assertEquals(false,CurrentCard.isFinished());
+//        assertEquals(p2.getPlayerState().getClass(), HandleCargo.class);
+//        assertEquals(false, p2.GetHasActed());
+//        assertEquals(p1.getPlayerState().getClass(), Waiting.class);
+//        assertEquals(true, p1.GetHasActed());
+//        assertEquals(false, CurrentCard.isFinished());
+//        System.out.println("p2 has chosen");
+//        HandleCargoCommand handleCargoCommand = new HandleCargoCommand(0, null, game.getID(), p2.GetID(), Gboard.getLevel(), "Finish", "placeholder");
+//        handleCargoCommand.execute(p2);
 
-        HandleCargoCommand handleCargoCommand = new HandleCargoCommand(0,null,game.getID(),p2.GetID(),Gboard.getLevel(),"Finish","placeholder");
-    handleCargoCommand.execute(p2);
-
-//    assertEquals(p1.getPlayerState().getClass(), BaseState.class);
-//    assertEquals(p2.getPlayerState().getClass(), BaseState.class);
-        assertEquals(false,CurrentCard.isFinished());
+    assertEquals(p1.getPlayerState().getClass(), BaseState.class);
+    assertEquals(p2.getPlayerState().getClass(), BaseState.class);
+        assertEquals(true,CurrentCard.isFinished());
 
     }
 

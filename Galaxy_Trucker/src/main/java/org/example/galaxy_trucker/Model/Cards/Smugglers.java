@@ -278,6 +278,18 @@ public class Smugglers extends Card{
         if(tmpPunishment==0){
             System.out.println("finished stealing");
             this.updateSates();
+            return;
+        }
+        if(cargoH.isEmpty()){
+            energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
+            this.setDefaultPunishment(energyUsage);
+            this.isaPunishment=true;
+            currentPlayer.setState(new ConsumingEnergy()); // potrebbe non fare l'update?
+            this.setDefaultPunishment(energyUsage);
+            return;
+        }
+        else {
+            currentPlayer.setState(new HandleTheft());
         }
 
     }
@@ -289,7 +301,6 @@ public class Smugglers extends Card{
             ArrayList<Player> PlayerList = Board.getPlayers();
             for (int i = 0; i < PlayerList.size(); i++) {
                 PlayerList.get(i).setState(new BaseState());
-                PlayerList.get(i).SetReady(true);
             }
             System.out.println("card finished");
             this.setFinished(true);
