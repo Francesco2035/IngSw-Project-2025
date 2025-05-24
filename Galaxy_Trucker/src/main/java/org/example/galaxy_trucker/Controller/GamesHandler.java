@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller;
 
 import javafx.util.Pair;
+import org.example.galaxy_trucker.ClientServer.RMI.RMIServer;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Controller.Listeners.GhListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
@@ -23,6 +24,11 @@ public class GamesHandler implements LobbyListener {
     private final HashMap<String, GameController> gameControllerMap;
     private final BlockingQueue<Pair<Command, VirtualView>> pendingLogins;
     private ArrayList<GhListener> listeners = new ArrayList<>();
+    private RMIServer rmi;
+
+    public void setRmiServer(RMIServer rmi) {
+        this.rmi = rmi;
+    }
 
     public void setListeners(GhListener listener) {
         this.listeners.add(listener);
@@ -51,6 +57,7 @@ public class GamesHandler implements LobbyListener {
                 System.out.println(entry.getKey().playerId);
 
                 initPlayer(entry.getKey(), entry.getValue());
+
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
@@ -94,6 +101,7 @@ public class GamesHandler implements LobbyListener {
     }
 
     public void initPlayer(Command command, VirtualView virtualView) {
+        System.out.println("initplayer");
         try {
             String gameID = command.getGameId();
             if (gameControllerMap.containsKey(gameID) && gameControllerMap.get(gameID).isStarted()) {
@@ -116,12 +124,15 @@ public class GamesHandler implements LobbyListener {
             } else {
                 System.out.println("Game doesn't exist: " + gameID);
                 Game curGame = new Game(lvl, gameID);
+
                 synchronized (gameControllerMap) {
                     GameController gameController = new GameController(gameID, curGame, this);
                     gameController.setLobbyListener(this);
                     gameControllerMap.putIfAbsent(gameID, gameController);
                     gameControllerMap.get(curGame.getGameID()).NewPlayer(temp, virtualView, virtualView.getToken());
                 }
+                System.out.println("Pending?: ");
+                rmi.addPending(virtualView.getToken());
 
             }
 

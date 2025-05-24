@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 import org.example.galaxy_trucker.View.View;
 
@@ -11,12 +12,14 @@ import java.io.Serializable;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
         property = "type"
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = AcceptClient.class, name = "Accept"),
         @JsonSubTypes.Type(value = AddCrewClient.class, name = "AddCrew"),
         @JsonSubTypes.Type(value = BaseStateClient.class, name = "Base"),
+        @JsonSubTypes.Type(value = BuildingClient.class, name = "Building"),
         @JsonSubTypes.Type(value = CheckValidityClient.class, name = "Validity"),
         @JsonSubTypes.Type(value = ChoosePositionClient.class, name = "Position"),
         @JsonSubTypes.Type(value = ChoosingPlanetClient.class, name = "Planet"),
@@ -41,5 +44,8 @@ public abstract class PlayerStateClient implements Serializable {
     }
 
     public void showGame(Out out) {
+    }
+
+    public void showGame(GuiOut out) {
     }
 }
