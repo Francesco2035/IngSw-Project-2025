@@ -1,8 +1,15 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+
+
 public class BuildingClient  extends PlayerStateClient{
+
+
+    @JsonProperty("type")
+    private final String type = "Building";
 
     @Override
     public void showGame(Out out) {

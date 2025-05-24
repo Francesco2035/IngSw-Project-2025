@@ -35,9 +35,11 @@ public class Client implements EventVisitor {
     }
 
     public void startRMIClient() throws IOException, NotBoundException {
-        String ip = NetworkUtils.getLocalIPAddress();
-        System.setProperty("java.rmi.server.hostname", ip);
-        System.out.println("RMI hostname set to: " + ip);
+//        String ip = NetworkUtils.getLocalIPAddress();
+//
+        System.setProperty("java.rmi.server.hostname", "172.27.31.175");
+
+        System.out.println("RMI hostname set to: " + "172.27.31.175");
         rmiClient = new RMIClient(this);
         rmiClient.StartClient();
     }
@@ -197,9 +199,9 @@ public class Client implements EventVisitor {
 
     public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException, InterruptedException {
         if (connection.equals("RMI")) {
-            String ip = NetworkUtils.getLocalIPAddress();
-            System.setProperty("java.rmi.server.hostname", ip);
-            System.out.println("RMI hostname set to: " + ip);
+//            String ip = NetworkUtils.getLocalIPAddress();
+//            System.setProperty("java.rmi.server.hostname", ip);
+//            System.out.println("RMI hostname set to: " + ip);
 
             RMIClient rmiClient = new RMIClient(this, interpreter);
 
