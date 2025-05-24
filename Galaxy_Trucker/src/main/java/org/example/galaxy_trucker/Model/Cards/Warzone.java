@@ -585,7 +585,7 @@ public class Warzone extends Card{
 
 
     @Override
-    public void DefendFromSmall(IntegerPair energy){
+    public void DefendFromSmall(IntegerPair energy, Player player){
         PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if (energy!=null){

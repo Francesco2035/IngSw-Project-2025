@@ -171,7 +171,7 @@ class PiratesTest {
           else{
               System.out.println("small");
               assertEquals(new DefendingFromSmall().getClass(), Passo.getPlayerState().getClass());
-              carta.DefendFromSmall(null);
+              carta.DefendFromSmall(null,null);
               if (carta.getCurrentPlayer()==Passo) {
                   assertEquals(new HandleDestruction().getClass(), Passo.getPlayerState().getClass());
               }
