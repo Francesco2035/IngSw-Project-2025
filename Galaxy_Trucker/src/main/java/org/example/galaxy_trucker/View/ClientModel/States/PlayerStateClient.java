@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 import org.example.galaxy_trucker.View.View;
 
@@ -43,5 +44,8 @@ public abstract class PlayerStateClient implements Serializable {
     }
 
     public void showGame(Out out) {
+    }
+
+    public void showGame(GuiOut out) {
     }
 }

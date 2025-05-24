@@ -1,25 +1,25 @@
 package org.example.galaxy_trucker.View.GUI;
 
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Box;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
-import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
+import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,10 +34,17 @@ public class GuiRoot implements View {
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private Stage primaryStage;
 
-    private ArrayList<Event> lobbyEvents = new ArrayList<>();
+    private PlayerClient playerClient;
+    private GuiOut printer;
+    private ArrayList<LobbyEvent> lobbyEvents = new ArrayList<>();
 
+    private String myGameName;
+    private String myName;
+    private int myGameLv;
+    private boolean amIReady;
 
     public void setStage(Stage primaryStage) {
+        printer.setStage(primaryStage);
         this.primaryStage = primaryStage;
     }
 
@@ -47,8 +54,13 @@ public class GuiRoot implements View {
     }
 
     public GuiRoot(){
+        printer = new GuiOut();
+        playerClient = new PlayerClient();
+
         guiThread = new Thread(() -> GuiMain.launchApp(this));
         guiThread.start();
+
+
     }
 
     @Override
@@ -124,44 +136,45 @@ public class GuiRoot implements View {
 
         // Lista giocatori
 
-        lobbyEvents.add(event);
+        if(event.getLv() > 0)
+            lobbyEvents.add(event);
 
         ListView<LobbyEvent> gamesList = new ListView<>();
-        if(event.getLv() > 0)
-            gamesList.getItems().add(event);
-
         gamesList.setPrefHeight(150);
         gamesList.setPlaceholder(new Label("No existing games"));
+
+        for(LobbyEvent e : lobbyEvents)
+            gamesList.getItems().add(e);
 
         gamesList.setCellFactory(p -> new ListCell<>() {
             @Override
             protected void updateItem(LobbyEvent newGame, boolean empty) {
                 super.updateItem(newGame, empty);
+                    if(!empty && newGame != null) {
+                        Label gameLabel = new Label("Game: " + newGame.getGameId());
+                        Label playersLabel = new Label("Players: " + String.join(", ", newGame.getPlayers()));
 
-                if(!empty && newGame != null) {
-                    Label gameLabel = new Label("Game: " + newGame.getGameId());
-                    Label playersLabel = new Label("Players: " + String.join(", ", newGame.getPlayers()));
+                        Button joinButton = joinButtonMaker(newGame);
 
-                    Button joinButton = joinButtonMaker(newGame);
+                        VBox labels = new VBox(5, gameLabel, playersLabel);
+                        HBox button = new HBox(5, joinButton);
+                        button.setAlignment(Pos.CENTER_RIGHT);
+                        labels.setAlignment(Pos.CENTER_LEFT);
+                        HBox cell = new HBox(248, labels, button);
+                        setText(null);
+                        setGraphic(cell);
+                    }
+                    else {
+                        setText(null);
+                        setGraphic(null);
+                    }
 
-                    VBox labels = new VBox(5, gameLabel, playersLabel);
-                    HBox button = new HBox(5, joinButton);
-                    button.setAlignment(Pos.CENTER_RIGHT);
-                    labels.setAlignment(Pos.CENTER_LEFT);
-                    HBox cell = new HBox(248, labels, button);
-                    setText(null);
-                    setGraphic(cell);
                 }
-                else {
-                    setText(null);
-                    setGraphic(null);
-                }
-
-            }
-        });
+            });
 
 
-        // Bottone per avviare la partita (solo host)
+
+        // Bottone per avviare la partita
         Button newGame = new Button("New Game");
         newGame.setStyle("-fx-font-size: 14px;");
 
@@ -182,7 +195,7 @@ public class GuiRoot implements View {
             levelBox.setPromptText("Select Game Mode");
 
             Button confirmButton = new Button("Confirm");
-            Button goBackButton = goBackButtonMaker(newGameStage) ;
+            Button goBackButton = goBackButtonMaker(newGameStage);
 
             confirmButton.disableProperty().bind(
                     usernameField.textProperty().isEmpty()
@@ -193,17 +206,21 @@ public class GuiRoot implements View {
             confirmButton.setOnAction(ev -> {
 
                 String level = levelBox.getValue();
-                int gameLv;
+
 
                 if(level.equals("Tutorial"))
-                    gameLv = 1;
-                else gameLv = 2;
+                    myGameLv = 1;
+                else myGameLv = 2;
 
                 newGameStage.close();
+
+                myName = usernameField.getText();
+                myGameName = gameNameField.getText();
+
                 inputQueue.add("Login");
-                inputQueue.add(usernameField.getText());
-                inputQueue.add(gameNameField.getText());
-                inputQueue.add(String.valueOf(gameLv));
+                inputQueue.add(myName);
+                inputQueue.add(myGameName);
+                inputQueue.add(String.valueOf(myGameLv));
 
             });
 
@@ -227,41 +244,153 @@ public class GuiRoot implements View {
             newGameStage.setScene(newGameScene);
             newGameStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
             newGameStage.initModality(Modality.WINDOW_MODAL);
+
+
             newGameStage.show();
         });
 
         // Layout centrale
-        VBox centerBox = new VBox(10, titleLabel, gamesList, newGame);
-        centerBox.setAlignment(Pos.CENTER);
-        centerBox.setPadding(new Insets(20));
-        centerBox.setMaxWidth(400);
+        VBox MainBox = new VBox(10, titleLabel, gamesList, newGame);
+        MainBox.setAlignment(Pos.CENTER);
+        MainBox.setPadding(new Insets(20));
+        MainBox.setMaxWidth(600);
 
-        BorderPane root = new BorderPane(centerBox);
+        BorderPane root = new BorderPane(MainBox);
         root.setPadding(new Insets(10));
 
+        printer.setLobby( new Scene(root, 800, 600));
 
-        Platform.runLater(() -> {
-            Scene scene = new Scene(root, 600, 400);
-            primaryStage.setTitle("Lobby");
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        });
+        playerClient.showGame(printer);
+
     }
 
+
+
     @Override
-    public void showLobbyGame(GameLobbyEvent event) {
+    public void showLobbyGame(GameLobbyEvent event){
+
+
+        Label GameNameLabel = new Label("Game: " + myGameName);
+        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+
+        ListView<String> players = new ListView<>();
+        players.setPrefHeight(100);
+
+        String s;
+        for(int i=0; i< event.getPlayers().size(); i++){
+            if(event.getPlayers().get(i).equals(myName)) {
+                s = event.getPlayers().get(i) + " (You)";
+                amIReady = event.getReady().get(i);
+            }
+            else s= event.getPlayers().get(i);
+
+            if(event.getReady().get(i))
+                players.getItems().add(s + " -> Ready!");
+            else players.getItems().add(s+ " -> Not Ready");
+        }
+
+
+        Image playerBoardImg;
+        if(myGameLv == 1)
+            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/cardboard-lv1.jpg"));
+        else
+            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/cardboard-lv2.jpg"));
+
+        ImageView playerBoard = new ImageView(playerBoardImg);
+        playerBoard.setPreserveRatio(true);
+        playerBoard.setSmooth(true);
+        playerBoard.setFitWidth(400);
+        playerBoard.maxWidth(300);
+
+//        VBox imageBox = new VBox(playerBoard);
+//        imageBox.setAlignment(Pos.CENTER);
+//        imageBox.setPrefSize(40, 30); // iniziale
+//        imageBox.setMaxSize(40, 30); // permette l'espansione
+//
+
+//        playerBoard.fitWidthProperty().bind(imageBox.widthProperty());
+//        playerBoard.fitHeightProperty().bind(imageBox.heightProperty());
+
+
+
+
+        VBox mainBox = new VBox(10, GameNameLabel, players);
+//        VBox.setVgrow(imageBox, Priority.ALWAYS);
+        mainBox.setAlignment(Pos.TOP_CENTER);
+        mainBox.setPadding(new Insets(10));
+
+        Button quitButton = new Button("Quit");
+        Button readyButton = new Button();
+
+        if(amIReady)
+            readyButton.setText("Not Ready");
+        else readyButton.setText("Ready!");
+
+        readyButton.setOnAction(e -> {
+            if(amIReady)
+                inputQueue.add("Ready false");
+            else inputQueue.add("Ready true");
+        });
+
+
+        quitButton.setOnAction(e -> {
+            Stage confirmStage = new Stage();
+            confirmStage.setTitle("Quitting");
+
+            Label quitLabel = new Label("Are You Sure?");
+            quitLabel.setStyle("-fx-font-size: 15px");
+
+            Button confirmButton = new Button("Pretty Sure");
+            Button goBackButton = goBackButtonMaker(confirmStage);
+
+            HBox buttons = new HBox(50, goBackButton, confirmButton);
+            buttons.setAlignment(Pos.CENTER);
+            buttons.setPadding(new Insets(5));
+
+            VBox quitBox = new VBox(3, quitLabel, buttons);
+            quitBox.setAlignment(Pos.CENTER);
+
+            Scene newGameScene = new Scene(quitBox, 250, 80);
+            confirmStage.setScene(newGameScene);
+            confirmStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
+            confirmStage.initModality(Modality.WINDOW_MODAL);
+
+            confirmStage.show();
+
+        });
+
+
+        HBox Buttons = new HBox(50, quitButton, readyButton);
+        Buttons.setPadding(new Insets(15));
+        Buttons.setAlignment(Pos.CENTER);
+
+        StackPane root = new StackPane(mainBox, playerBoard, Buttons);
+        root.setPadding(new Insets(10));
+        root.setAlignment(Pos.TOP_CENTER);
+
+        playerBoard.setTranslateY(200);
+        Buttons.setTranslateY(250);
+
+        Scene scene = new Scene(root, 800, 600);
+
+
+        printer.setGameLobby(scene);
+        playerClient.showGame(printer);
+
         //idplayer li salvo in un arraylist
         //player->playerstate.showGame
     }
 
     @Override
-    public void phaseChanged(PhaseEvent event) {
+    public void phaseChanged(@NotNull PhaseEvent event) {
+        playerClient.setPlayerState(event.getStateClient());
+        playerClient.showGame(printer);
         //player.setstate(event.getpahse)
         //plary.state.showGUI
     }
 
 
-    private Button joinButtonMaker(LobbyEvent joining) {
+    private @NotNull Button joinButtonMaker(LobbyEvent joining) {
         Button joinButton = new Button("Join");
         joinButton.setOnAction(e -> {
             Stage InsertNameStage = new Stage();
@@ -295,18 +424,22 @@ public class GuiRoot implements View {
 
 
             confirmButton.setOnAction(ev -> {
+                myName = usernameField.getText();
+                myGameName = joining.getGameId();
+                myGameLv = joining.getLv();
+
                 InsertNameStage.close();
                 inputQueue.add("Login");
-                inputQueue.add(usernameField.getText());
-                inputQueue.add(joining.getGameId());
-                inputQueue.add(String.valueOf(joining.getLv()));
+                inputQueue.add(myName);
+                inputQueue.add(myGameName);
+                inputQueue.add(String.valueOf(myGameLv));
             });
         });
         return joinButton;
     }
 
 
-    private Button goBackButtonMaker(Stage  stage) {
+    private @NotNull Button goBackButtonMaker(Stage  stage) {
         Button GobackButton = new Button("Cancel");
         GobackButton.setOnAction(ev -> {
             stage.close();
@@ -317,11 +450,9 @@ public class GuiRoot implements View {
 
 
 
-    public void setGuiMain(GuiMain guiMain) {
-    }
+    public void goToFirstScene() {
 
 
-    public void goToFirstScene(Stage primaryStage) {
         Label titleLabel = new Label("GALAXY TRUCKERS");
         titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
 
@@ -336,17 +467,14 @@ public class GuiRoot implements View {
         BorderPane root = new BorderPane(TitleScreenBox);
         root.setPadding(new Insets(10));
 
-        Scene lobbyScene = new Scene(root, 600, 400);
-        primaryStage.setTitle("Galaxy Truckers");
-        primaryStage.setScene(lobbyScene);
-        primaryStage.show();
-
+        printer.setTitleScreen(new Scene(root, 600, 400));
+        printer.printTitleScreen();
 
         startButton.setOnAction(e -> {
             inputQueue.add("Lobby");
+            playerClient.setPlayerState(new LobbyClient());
         });
     }
-
 
     //printplayerboard(){..}
 
