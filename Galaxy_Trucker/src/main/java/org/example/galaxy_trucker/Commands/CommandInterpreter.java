@@ -80,7 +80,21 @@ public class CommandInterpreter {
         commandMap.put("DISCARDCARGO", this::createHandleCargoCommand);
         commandMap.put("SWITCH", this::createHandleCargoCommand);
         commandMap.put("THEFT", this::createHandleCargoCommand);
+        commandMap.put("SELECTCHUNK", this::creatselectchunkCommand);
 
+    }
+
+    private Command creatselectchunkCommand(String[] strings) {
+        int x;
+        int y;
+        ArrayList<IntegerPair> coordinates = new ArrayList<>();
+        if (strings.length != 3) {
+            throw new IllegalArgumentException("Comando selectChunk richiede 2 argomenti: le coordinate");
+        }
+        x = Integer.parseInt(strings[1]);
+        y = Integer.parseInt(strings[2]);
+
+        return new SelectChunkCommand(new IntegerPair(x,y),gameId,playerId,lv, "SelectChunkCommand",token);
     }
 
     private Command createHandleCargoCommand(String[] strings) {
@@ -314,9 +328,9 @@ public class CommandInterpreter {
         if (parts.length != 1) {
             throw new IllegalArgumentException("Comando Accept richiede 1 argomento: se si accetta o meno");
         }
-        if(parts[0].equals("Accept")){
+        if(parts[0].equals("ACCEPT")){
             accept = true;
-        } else if (parts[0].equals("Decline")) {
+        } else if (parts[0].equals("DECLINE")) {
             accept = false;
         }
         else{

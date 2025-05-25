@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.ClientServer.TCP.TCPClient;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
@@ -152,6 +153,9 @@ public class Client implements EventVisitor {
     public void visit(PhaseEvent event) {
         this.view.phaseChanged(event);
     }
+
+    @Override
+    public void visit(RewardsEvent rewardsEvent) {this.view.rewardsChanged(rewardsEvent);}
 
     @Override
     public void visit(DeckEvent event) {

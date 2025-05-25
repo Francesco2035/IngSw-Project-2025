@@ -6,9 +6,16 @@ public class DefendingFromLargeClient  extends PlayerStateClient{
 
     @Override
     public void showGame(Out out) {
-        out.showPlayers();
-        out.printGameboard();
-        out.showCard();
-        out.printBoard();
+//TODO: messaggi della carta
+        StringBuilder sb = new StringBuilder();
+        sb.append("Defending From Large...\n");
+        sb.append(out.showPlayers());
+        sb.append(out.printGameboard());
+        sb.append(out.printBoard());
+//        out.showPlayers();
+//        out.printGameboard();
+//        out.showCard();
+//        out.printBoard();
+        out.render(sb);
     }
 }

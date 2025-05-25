@@ -21,6 +21,7 @@ import java.util.*;
 public class PlayerBoard {
 
     PlayerBoardListener listener;
+    private RewardsListener rewardsListener;
 
     private Tile[][] PlayerBoard;
     private int damage;
@@ -49,7 +50,7 @@ public class PlayerBoard {
     private boolean brownAlien;
     private ArrayList<HousingUnit> connectedHousingUnits;
 
-    private RewardsListener rewardsListener;
+
 
 
     private ArrayList<HousingUnit> HousingUnits;
@@ -184,6 +185,7 @@ public class PlayerBoard {
 
 
     public void setRewardsListener(RewardsListener listener){
+        System.out.println("Setto listner "+ listener);
         this.rewardsListener = listener;
     }
 
@@ -886,6 +888,10 @@ public class PlayerBoard {
         clonedPlayerBoard.PowerCenters= new ArrayList<>();
         clonedPlayerBoard.connectedHousingUnits = new ArrayList<>();
         clonedPlayerBoard.Rewards = new ArrayList<>(this.Rewards);
+        clonedPlayerBoard.rewardsListener = this.getRewardsListener();
+        if (clonedPlayerBoard.rewardsListener == null){
+            System.out.println("sincero non capisco il perchè");
+        }
         clonedPlayerBoard.setListener(null);
 
         clonedPlayerBoard.PlayerBoard = new Tile[PlayerBoard.length][PlayerBoard[0].length];
@@ -918,14 +924,14 @@ public class PlayerBoard {
         for(HousingUnit unit : clonedPlayerBoard.getHousingUnits()){
             unit.checkNearbyUnits(clonedPlayerBoard);
         }
-        clonedPlayerBoard.setListener(this.getListener());
-        clonedPlayerBoard.setRewardsListener(this.getRewardsListener());
+        //clonedPlayerBoard.setListener(this.getListener());
+        //clonedPlayerBoard.setRewardsListener(this.getRewardsListener());
 
         return clonedPlayerBoard;
 
     }
 
-    private RewardsListener getRewardsListener() {
+    public RewardsListener getRewardsListener() {
         return rewardsListener;
     }
 
@@ -957,7 +963,9 @@ public class PlayerBoard {
 
     public void setRewards(ArrayList<Goods> rewards){
         this.Rewards = rewards;
-        rewardsListener.sendEvent(new RewardsEvent(new ArrayList<>(rewards)));
+        if (rewardsListener!= null){
+            rewardsListener.rewardsChanged(new RewardsEvent(new ArrayList<>(Rewards)));
+        }
     }
 
     public ArrayList<Goods> getRewards(){
@@ -972,7 +980,9 @@ public class PlayerBoard {
             throw new InvalidInput("Rewards is empty");
         }
         Goods removed = Rewards.remove(i);
-        rewardsListener.sendEvent(new RewardsEvent(new ArrayList<>(Rewards)));
+        if (rewardsListener!= null){
+            rewardsListener.rewardsChanged(new RewardsEvent(new ArrayList<>(Rewards)));
+        }
         return removed;
     }
 

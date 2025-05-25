@@ -93,6 +93,7 @@ public class GameController  implements ConcurrentCardListener {
         game.NewPlayer(p);
         VirtualViewMap.put(playerId,vv);
         vv.setEventMatrix(game.getGameBoard().getLevel());
+        p.getmyPlayerBoard().setRewardsListener(vv);
         p.getmyPlayerBoard().setListener(vv);
         p.getCommonBoard().getCardStack().addListener(p.GetID(),vv);
         Tile mainCockpitTile = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
@@ -100,7 +101,6 @@ public class GameController  implements ConcurrentCardListener {
         color++;
         p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6, false);
         p.setHandListener(vv);
-        p.getmyPlayerBoard().setRewardsListener(vv);
         //p.setPhaseListener(vv);
         p.getCommonBoard().setListeners(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);
@@ -271,6 +271,7 @@ public class GameController  implements ConcurrentCardListener {
 
                 while (index < players.size()) {
                     Player currentPlayer = players.get(index);
+
                     //prendi controller
                     //se è disconnesso chiami def action
                     //altrimenti esegui il blocco try
@@ -296,6 +297,7 @@ public class GameController  implements ConcurrentCardListener {
                         try {
                             Command cmd = flightQueue.take();
                             //TODO: notify della carta se è fase concorrenziale
+                            //game.getPlayers().get(cmd.getPlayerId()).getmyPlayerBoard().setRewardsListener(VirtualViewMap.get(currentPlayer.GetID()));
                             if(concurrent){
                                 Controller controller = ControllerMap.get(cmd.getPlayerId());
                                 controller.action(cmd, this);

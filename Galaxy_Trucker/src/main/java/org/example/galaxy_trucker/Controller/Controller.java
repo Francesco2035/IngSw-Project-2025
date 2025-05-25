@@ -34,6 +34,10 @@ public abstract class Controller {
             gc.changeState(); ///da scommentare era per fare i tests skskk
         } catch (Exception e) {
             playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
+            playerBoardCopy.setRewardsListener(curPlayer.getmyPlayerBoard().getRewardsListener());
+            if (playerBoardCopy.getRewardsListener() == null) {
+                System.out.println("No rewards listener available mannaggia la democrazia cristiana");
+            }
             curPlayer.setMyPlance(playerBoardCopy);
             e.printStackTrace();
             //throw new IllegalCallerException("illegal execution of command" + command.toString());

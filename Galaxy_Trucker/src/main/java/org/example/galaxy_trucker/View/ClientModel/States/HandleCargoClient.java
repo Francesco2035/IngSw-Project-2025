@@ -10,5 +10,6 @@ public class HandleCargoClient  extends PlayerStateClient{
         stringBuilder.append(out.printGameboard());
         stringBuilder.append(out.showRewards());
         stringBuilder.append(out.printBoard());
+        out.render(stringBuilder);
     }
 }

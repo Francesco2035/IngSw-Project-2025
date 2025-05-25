@@ -103,4 +103,5 @@ public class HandleCargoCommand extends Command implements Serializable {
     public boolean allowedIn(PlayerState playerState) {
         return playerState.allows(this);
     }
+
 }

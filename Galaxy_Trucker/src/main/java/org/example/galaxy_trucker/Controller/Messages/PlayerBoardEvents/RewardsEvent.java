@@ -25,7 +25,7 @@ public class RewardsEvent implements Event {
 
     @Override
     public void accept(EventVisitor visitor) {
-
+        visitor.visit(this);
     }
 
     @Override

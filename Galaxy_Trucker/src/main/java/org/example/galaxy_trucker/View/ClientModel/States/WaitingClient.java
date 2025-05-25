@@ -13,10 +13,12 @@ public class WaitingClient extends PlayerStateClient{
 
     @Override
     public void showGame(Out out) {
-        out.printMessage("\rWaiting for players...");
-        out.showPlayers();
-        out.printGameboard();
-        out.showCard();
-        out.printBoard();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Waiting for players...\n");
+        sb.append(out.showPlayers());
+        sb.append(out.printGameboard());
+        sb.append(out.showCard());
+        sb.append(out.printBoard());
+        out.render(sb);
     }
 }

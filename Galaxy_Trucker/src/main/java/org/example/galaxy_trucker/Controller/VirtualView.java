@@ -38,7 +38,6 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private GameBoardEvent board = null;
     private PhaseEvent phase = null;
     private RewardsEvent rewardsEvent = null;
-    //83.55
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, PrintWriter echoSocket) {
@@ -48,7 +47,6 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         eventMatrix = new TileEvent[10][10];
         this.out = echoSocket;
     }
-
 
 
     public void setEventMatrix(int lv) {
@@ -125,6 +123,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             }
         }
     }
+
 
     public void sendEvent(TileEvent event) {
         if (!Disconnected) {
@@ -390,8 +389,9 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         }
     }
 
+
     @Override
-    public void sendEvent(RewardsEvent e) {
+    public void rewardsChanged(RewardsEvent e) {
         rewardsEvent = e;
         sendEvent(e);
     }

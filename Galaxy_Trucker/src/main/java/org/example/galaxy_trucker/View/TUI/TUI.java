@@ -358,10 +358,10 @@ public class TUI implements View {
                     StringBuilder sb = new StringBuilder();
                     for (Goods g : event.getCargo()) {
                         switch (g.getValue()) {
-                            case 4 -> sb.append("\u001B[31m■\u001B[0m "); // Rosso
-                            case 3 -> sb.append("\u001B[33m■\u001B[0m "); // Giallo
-                            case 2 -> sb.append("\u001B[32m■\u001B[0m "); // Verde
-                            case 1 -> sb.append("\u001B[34m■\u001B[0m "); // Blu
+                            case 4 -> sb.append("\u001B[31m[]\u001B[0m "); // Rosso
+                            case 3 -> sb.append("\u001B[33m[]\u001B[0m "); // Giallo
+                            case 2 -> sb.append("\u001B[32m[]\u001B[0m "); // Verde
+                            case 1 -> sb.append("\u001B[34m[]\u001B[0m "); // Blu
                         }
                     }
                     extra = sb.toString().trim();
@@ -633,10 +633,10 @@ public class TUI implements View {
         for (Goods goods : goodsList) {
             sb.append("| (pos: "+k+") ");
             switch (goods.getValue()){
-                    case 4 -> sb.append("\u001B[31m■\u001B[0m "); // Rosso
-                    case 3 -> sb.append("\u001B[33m■\u001B[0m "); // Giallo
-                    case 2 -> sb.append("\u001B[32m■\u001B[0m "); // Verde
-                    case 1 -> sb.append("\u001B[34m■\u001B[0m "); // Blu
+                    case 4 -> sb.append("\u001B[31m[]\u001B[0m"); // Rosso
+                    case 3 -> sb.append("\u001B[33m[]\u001B[0m"); // Giallo
+                    case 2 -> sb.append("\u001B[32m[]\u001B[0m"); // Verde
+                    case 1 -> sb.append("\u001B[34m[]\u001B[0m"); // Blu
 
             }
             sb.append(" |");

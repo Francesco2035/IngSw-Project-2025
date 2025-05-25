@@ -65,6 +65,7 @@ public class DebugShip extends Command implements Serializable {
         plasmaDrill.RotateDx();
 
         debugShip.setListener(player.getmyPlayerBoard().getListener());
+        debugShip.setRewardsListener(player.getmyPlayerBoard().getRewardsListener());
 
         t2.RotateSx();
         t2.RotateSx();
