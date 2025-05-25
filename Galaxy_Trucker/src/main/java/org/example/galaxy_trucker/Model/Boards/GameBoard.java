@@ -16,11 +16,11 @@ import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-//TODO: vincolo player non può scegliere posizione nella gameboard se pos > numPlayer
 public class GameBoard {
 
     // questo arrayList tiene conto della posizione effettiva nel Game
     private ArrayList<Player_IntegerPair> players;
+    private ArrayList<Player_IntegerPair> scoreboard;
     private Player[] positions;
     private int nPositions;
     private int[] startPos;
@@ -146,7 +146,7 @@ public class GameBoard {
             sendUpdates(new GameBoardEvent(startPos[index-1], pl.GetID()));
             PlayersOnBoard++;
         }
-        else throw new IllegalArgumentException("This cell is alredy taken!");
+        else throw new IllegalArgumentException("This cell is already taken!");
     }
 
 
@@ -341,23 +341,24 @@ public class GameBoard {
 
         positions[pair.getValue() % nPositions] = null;
         Player playah = pair.getKey();
-         playah.finishRace(false);
+        int finalScore = playah.finishRace(false);
+        //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
+        // todo aggiungere una classifica?
 
-         //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
-        /// todo aggiungere una classifica?
+
+        //--> ho fatto metodo finishGame per mettere in classifica anche quelli che vincono alla fine
+        //-palu
+        scoreboard.add(new Player_IntegerPair(playah, finalScore));
 
         players.remove(pair);
     }
 
- // va cambiato se vogliamo fare i controlli di vittoria su tutti i player alla fine
-    public void finishPlayer(int position, Player player){
-        double total=0;
-
-        total += player.GetCredits();
-        PlayerBoard playerBoard= player.getmyPlayerBoard();
-        total-= playerBoard.getDamage();
-        Tile[][] tiles = playerBoard.getPlayerBoard();
-
+    public void finishGame(){
+        int score;
+        for(Player_IntegerPair p : players){
+            score = p.getKey().finishRace(true);
+            scoreboard.add(new Player_IntegerPair(p.getKey(), score));
+        }
     }
 
 
