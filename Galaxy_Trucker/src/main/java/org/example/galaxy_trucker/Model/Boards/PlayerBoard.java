@@ -462,6 +462,11 @@ public class PlayerBoard {
      */
     public boolean checkValidity(){
 
+        if(Buffer.size() != 0){
+            this.damage+=Buffer.size();
+            Buffer.clear();
+        }
+
         int r = 6;
         int c = 6;
         valid = true;

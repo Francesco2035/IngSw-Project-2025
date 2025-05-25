@@ -294,7 +294,7 @@ public class GameController  implements ConcurrentCardListener {
 
                         try {
                             Command cmd = flightQueue.take();
-                            //TODO: notify della carta se è fase concorrenziale
+
                             if(concurrent){
                                 Controller controller = ControllerMap.get(cmd.getPlayerId());
                                 controller.action(cmd, this);

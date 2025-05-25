@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 //TODO: vincolo player non può scegliere posizione nella gameboard se pos > numPlayer
+// dovrebbe essere stato fatto
 public class GameBoard {
 
     // questo arrayList tiene conto della posizione effettiva nel Game
