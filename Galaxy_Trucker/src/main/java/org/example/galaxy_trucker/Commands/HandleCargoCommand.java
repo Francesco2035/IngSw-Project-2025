@@ -82,8 +82,8 @@ public class HandleCargoCommand extends Command implements Serializable {
                 Goods good1 = action.getGood();
                 GetGoodAction action2 = new GetGoodAction(position2,playerBoard,coordinate2.getFirst(),coordinate2.getSecond());
                 playerBoard.performAction(playerBoard.getTile(coordinate2.getFirst(), coordinate2.getSecond()).getComponent()
-                        , action, player.getPlayerState());
-                Goods good2 = action.getGood();
+                        , action2, player.getPlayerState());
+                Goods good2 = action2.getGood();
                 playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()
                         , new AddGoodAction(good2,playerBoard,coordinate.getFirst(), coordinate.getSecond()), player.getPlayerState());
                 playerBoard.performAction(playerBoard.getTile(coordinate2.getFirst(), coordinate2.getSecond()).getComponent()

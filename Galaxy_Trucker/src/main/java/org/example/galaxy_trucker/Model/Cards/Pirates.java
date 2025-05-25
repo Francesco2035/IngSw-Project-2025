@@ -49,10 +49,10 @@ public class Pirates extends Card{
 
         this.defeated = false;
         this.currentPlayer = new Player();
-        this.lines = new int[Punsihment.size()/2];
-        for(int i=0;i< Punishment.size()/2;i++){
-            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
-        }
+//        this.lines = new int[Punsihment.size()/2];
+//        for(int i=0;i< Punishment.size()/2;i++){
+//            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
+//        }
         this.hit = new IntegerPair(0,0);
         this.currentpower = 0;
         this.energyUsage = 0;
@@ -62,6 +62,11 @@ public class Pirates extends Card{
     }
  @Override
     public void CardEffect(){
+
+     this.lines = new int[this.Punishment.size()/2];
+     for(int i=0;i< Punishment.size()/2;i++){
+         lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
+     }
 
         this.hit =new IntegerPair(0,0);
         GameBoard Board=this.getBoard();

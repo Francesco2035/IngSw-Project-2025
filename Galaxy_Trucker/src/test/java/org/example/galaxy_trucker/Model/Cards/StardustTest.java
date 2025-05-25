@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Controller.CardsController;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
@@ -14,105 +15,70 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class StardustTest {
 
 
-    static Game TGame;
+    static Game game;
+    static GameBoard Gboard;
 
     static {
         try {
-            TGame = new Game(2,"test");
+            game = new Game(2, "testCarteController");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    static Player p1 = new Player();
+   // static Player p2 = new Player();
 
-
-    static GameBoard GameBoard=TGame.getGameBoard();
-
-    static GAGen gag=TGame.getGag();
-
-
-
-    static {
-        try {
-            gag = new GAGen();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    static Player Franci;
-    static  Player Pietro;
-    static  Player Passo;
-
-    static PlayerBoard playerBoard1;
-    static PlayerBoard playerBoard2;
-    static PlayerBoard playerBoard3;
-
-
-
-
-    static  AbandonedShip FakeAbandonedShip=new AbandonedShip(3,5,2,5, GameBoard);
+    CardsController c1 = new CardsController(p1, game.getGameID(), false);
+    //CardsController c2 = new CardsController(p2, game.getGameID(), false);
 
 
     @BeforeAll
-    static void setup() {
-        Player p1 = new Player();
-        p1.setId("fGr");
-        Player p2 = new Player();
-        p2.setId("God");
-        Player p3 = new Player();
-        p3.setId("Sgregno");
-
-        TGame.NewPlayer(p1);
-        TGame.NewPlayer(p2);
-        TGame.NewPlayer(p3);
-        Franci = GameBoard.getPlayers().get(0);
-        Pietro = GameBoard.getPlayers().get(1);
-        Passo = GameBoard.getPlayers().get(2);
-        playerBoard1 = Pietro.getmyPlayerBoard();
-        playerBoard2 = Franci.getmyPlayerBoard();
-        playerBoard3 = TestSetupHelper.createInitializedBoard1();
-        TestSetupHelper.HumansSetter1(playerBoard3);
-        playerBoard3.checkValidity();
-        Passo.setMyPlance(playerBoard3);
+    public static void init() throws IOException {
+        Game game = new Game(2, "testCarteController");
 
 
-        ModularHousingUnit house1 = new ModularHousingUnit();
-        ModularHousingUnit house2 = new ModularHousingUnit();
+        p1 = new Player();
+        p1.setId("pietro");
+//        p2 = new Player();
+//        p2.setId("FRA");
+        game.NewPlayer(p1);
+       // game.NewPlayer(p2);
+        p1.setMyPlance(TestSetupHelper.createInitializedBoard1());
+        System.out.println("\n");
+//        p2.setMyPlance(TestSetupHelper.createInitializedBoard2());
+
+        assertEquals(true, p1.getmyPlayerBoard().checkValidity());
+        System.out.println("sksk");
+//        assertEquals(true, p2.getmyPlayerBoard().checkValidity());
+
+        TestSetupHelper.HumansSetter1(p1.getmyPlayerBoard());
+//        TestSetupHelper.HumansSetter1(p2.getmyPlayerBoard());
+        Gboard = game.getGameBoard();
+
+        Gboard.SetStartingPosition(p1);
+//        Gboard.SetStartingPosition(p2);
 
 
-        IntegerPair cord = new IntegerPair(0, 0);
+        // CardsController c1= new CardsController(p1,game.getGameID(),false);
+// CardsController c2= new CardsController(p2,game.getGameID(),false);
 
-        Tile tile1 = new Tile(house1, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
-        Tile tile2 = new Tile(house2, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
-
-        playerBoard1.insertTile(tile1, 6, 7, false);
-        playerBoard1.insertTile(tile2, 7, 7, false);
-        TestSetupHelper.HumansSetter1(playerBoard1);
-        playerBoard1.checkValidity();
-
-//        playerBoard1.setSetter(new HousingUnitSetter(playerBoard1,new IntegerPair(6,7),2,false,false));
-//        playerBoard1.getSetter().set();
-//        playerBoard1.setSetter(new HousingUnitSetter(playerBoard1,new IntegerPair(7,7),2,false,false));
-//        playerBoard1.getSetter().set();
-
-//        TestSetupHelper.HumansSetter1(playerBoard1);
-//
-//        TestSetupHelper.HumansSetter1(playerBoard3);
-        Passo.EndConstruction();
-        Pietro.EndConstruction();
-        Franci.EndConstruction();
     }
     @Test
-    void cardEffect(){
-        Stardust star= new Stardust(1,GameBoard);
-
-        star.CardEffect();
+    void cardEffect() throws IOException {
+        game.setGameBoard(Gboard);
+        GAGen gag = new GAGen();
+        ArrayList<Card> cards = gag.getCardsDeck();
+        Card CurrentCard = cards.get(38);
+        CurrentCard.setBoard(Gboard);
+        CurrentCard.CardEffect();
         System.out.println("fine");
 
 

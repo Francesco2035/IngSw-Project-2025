@@ -33,7 +33,9 @@ public class SpecialStorageCompartment extends Storage{
     @Override
     public Goods removeGood(int position){
         if (position >= goods.size() || position < 0){
-            throw new InvalidInput("Cannot remove a good because it is out of bounds");
+
+            return null;
+            //throw new InvalidInput("Cannot remove a good because it is out of bounds");
         }
         tile.sendUpdates(goods,0, false, false, 0);
         return goods.remove(position);
@@ -45,6 +47,9 @@ public class SpecialStorageCompartment extends Storage{
 
     @Override
     public void addGood(Goods good) {
+        if(good == null){
+            return;
+        }
         if (goods.size() == type){
             throw new InvalidInput("StorageCompartment is full!");
         }

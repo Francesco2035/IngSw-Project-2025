@@ -298,6 +298,7 @@ public class GameController  implements ConcurrentCardListener {
                             Command cmd = flightQueue.take();
                             //TODO: notify della carta se è fase concorrenziale
                             //game.getPlayers().get(cmd.getPlayerId()).getmyPlayerBoard().setRewardsListener(VirtualViewMap.get(currentPlayer.GetID()));
+
                             if(concurrent){
                                 Controller controller = ControllerMap.get(cmd.getPlayerId());
                                 controller.action(cmd, this);
