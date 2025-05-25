@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Player;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
 
 
 public class Card implements Serializable {
-    private ConcurrentCardListener concurrentCardListener;
+    public ConcurrentCardListener concurrentCardListener;
     private int id;
     @JsonProperty("Level")
     private int Level;
@@ -82,8 +83,8 @@ public class Card implements Serializable {
     public void checkPower(double power, int numofDouble) {}
     public void checkMovement(int power, int numofDouble) {}
     public void continueCard(ArrayList<IntegerPair> coordinates, boolean accepted) {}
-    public void DefendFromLarge(IntegerPair CannonCoord,IntegerPair EnergyStorage) {}
-    public void DefendFromSmall(IntegerPair energy) {}
+    public void DefendFromLarge(IntegerPair CannonCoord, IntegerPair EnergyStorage, Player player) {}
+    public void DefendFromSmall(IntegerPair energy, Player player) {}
     public void continueCard(ArrayList<IntegerPair> coordinates) {}
     public void continueCard(){}
     public void killHumans(ArrayList<IntegerPair> coordinates) {}

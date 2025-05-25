@@ -106,14 +106,15 @@ public class   Meteorites extends Card {
         int Movement;
         boolean MeteoritesFlag=false;
         boolean DamageFlag=false;
+        System.out.println("Successfuldefences ="+SuccessfulDefences +" NumofDefences= " +NumofDefences);
         if(this.SuccessfulDefences==NumofDefences) {
        // if (PlayerOrder>=this.getBoard().getPlayers().size()){
             PlayerOrder=0;
             MeteoritesOrder+=2;
             this.CardEffect();
         }
-        else {
-            if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
+        else if (PlayerOrder<this.getBoard().getPlayers().size()){
+            //if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
 
             this.currentPlayer = this.getBoard().getPlayers().get(PlayerOrder);
 
@@ -254,6 +255,9 @@ public class   Meteorites extends Card {
             if (PlayerOrder<this.getBoard().getPlayers().size()) {
                 this.updateSates();
             }
+            else if(this.SuccessfulDefences==NumofDefences){
+                this.updateSates();
+            }
         }
     }
 
@@ -264,9 +268,9 @@ public class   Meteorites extends Card {
 
 
     @Override
-    public void DefendFromSmall(IntegerPair energy){
-        System.out.println(currentPlayer.GetID()+ "is defending from small");
-        PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
+    public void DefendFromSmall(IntegerPair energy, Player player){
+        System.out.println(player.GetID()+ "is defending from small");
+        PlayerBoard currentBoard =player.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if (energy!=null){
             if ((currentBoard.getShield()[attacks.get(MeteoritesOrder)]==0)){
@@ -291,12 +295,12 @@ public class   Meteorites extends Card {
 
                 System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
 
-                this.currentPlayer.setState(new HandleDestruction());
-                System.out.println("Stato del player "+ currentPlayer.getPlayerState().getClass().getName());
+                player.setState(new HandleDestruction());
+                System.out.println("Stato del player "+ player.getPlayerState().getClass().getName());
                 return;
 
             }
-            System.out.println("Stato del player "+ currentPlayer.getPlayerState().getClass().getName());
+            System.out.println("Stato del player "+ player.getPlayerState().getClass().getName());
             System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
         }
         this.SuccessfulDefences++;
@@ -304,8 +308,8 @@ public class   Meteorites extends Card {
     }
 
     @Override
-    public void DefendFromLarge(IntegerPair CannonCoord,IntegerPair EnergyStorage) {
-        PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
+    public void DefendFromLarge(IntegerPair CannonCoord,IntegerPair EnergyStorage, Player player) {
+        PlayerBoard currentBoard =player.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if(CannonCoord !=null) {
             if (attacks.get(MeteoritesOrder) == 0 || attacks.get(MeteoritesOrder) == 2) { // sinistra o destra
@@ -344,13 +348,13 @@ public class   Meteorites extends Card {
         else  {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
             currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
-            System.out.println("destryoyed: "+hit.getFirst()+" "+hit.getSecond()+" of:"+currentPlayer.GetID());
+            System.out.println("destryoyed: "+hit.getFirst()+" "+hit.getSecond()+" of:"+player.GetID());
             if (currentBoard.getBroken()){
                 System.out.println("\nrottura nave\n");
 
-                System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
-                this.currentPlayer.setState(new HandleDestruction());
-                System.out.println("Stato del player "+ currentPlayer.getPlayerState().getClass().getName());
+                System.out.println(" rottura in "+hit.getFirst()+" "+hit.getSecond());
+                player.setState(new HandleDestruction());
+                System.out.println("Stato del player "+ player.getPlayerState().getClass().getName());
                 return;
 
             }
@@ -399,10 +403,12 @@ public class   Meteorites extends Card {
 
     @Override
     public void setConcurrentCardListener(ConcurrentCardListener listener){
-        ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
-
+       // ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
+//         ConcurrentCardListener concurrentCardListener1 =this.getConcurrentCardListener() ;
+//               concurrentCardListener1  = listener;
         concurrentCardListener = listener;
-        concurrentCardListener.onConcurrentCard(true);
+
+        this.getConcurrentCardListener().onConcurrentCard(true);
     }
 
 

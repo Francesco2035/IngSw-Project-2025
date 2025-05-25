@@ -46,7 +46,7 @@ public class CardControllerTest {
 
     @BeforeAll
     public static void init() throws IOException {
-        Game game = new Game(2, "testCarteController");
+         Game game = new Game(2, "testCarteController");
 
 
         p1 = new Player();
