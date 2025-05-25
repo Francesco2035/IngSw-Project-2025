@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.ClientServer.RMI;
 
+import org.example.galaxy_trucker.ClientServer.NetworkUtils;
 import org.example.galaxy_trucker.Commands.LobbyCommand;
 import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.ClientServer.Client;
@@ -35,6 +36,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
 
     public RMIClient(Client client) throws RemoteException{
+        //System.setProperty("java.rmi.server.hostname", "192.168.1.145");
         me =  new Player();
         myGame = null;
         this.client = client;
@@ -81,6 +83,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
             //System.out.println("Starting Client");
             Registry registry;
             //System.out.println(Settings.SERVER_NAME + " " + Settings.RMI_PORT);
+
             registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.RMI_PORT);
 
             this.server = (ServerInterface) registry.lookup("CommandReader");
@@ -148,6 +151,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         this.commandInterpreter.setToken(token);
         this.client.getView().setGameboard(commandInterpreter.getLv());
         System.out.println(token);
+        sendPongs();
+
     }
 
 
@@ -158,13 +163,16 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
             while (running && !cmd.equals("end")) {
                 try {
                     cmd = client.getView().askInput("Command <RMI>: ");
-                    if (cmd.equals("ChangeConnection")) {
+                    if (cmd.equals("")){
+
+                    }
+                    else if (cmd.equals("ChangeConnection")) {
                         System.out.println("No need to change connection!");
                     }
-                    if (cmd.equals("Reconnect")) {
+                    else if (cmd.equals("Reconnect")) {
                         System.out.println("No need to reconnect!");
                     }
-                    if (cmd.equals("Lobby")){
+                    else if (cmd.equals("Lobby")){
                         if (!lobby){
                             lobby = true;
                             LobbyCommand lobby = new LobbyCommand("Lobby");
@@ -182,8 +190,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                         }
 
                     }
-                    if (cmd.equals("Login")){
-                        if (!login){
+                    else if (cmd.equals("Login")){
+
+                         if (!login){
                             login = true;
                             String playerId = client.getView().askInput("Insert player ID: ");
                             String gameId = client.getView().askInput("Insert game ID: ");
@@ -203,7 +212,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             server.command(loginCommand);
                             System.out.println("Sent login command");
 
-                            sendPongs();
                         }
                         else{
                             System.out.println("You are already logged in! [quit?]");
@@ -224,6 +232,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                 }catch (RemoteException ex) {
                     synchronized (running){
                         if(running){
+                            System.out.println(ex.getMessage());
                             running = false;
                             handleDisconnection();
                         }

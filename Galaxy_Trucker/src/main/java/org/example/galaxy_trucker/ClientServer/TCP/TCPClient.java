@@ -80,7 +80,7 @@ public class TCPClient{
                 commandInterpreter.setToken(tokenStr);
             }
             else {
-                   // System.out.println("Received msg: " + msg);
+                   System.out.println("Received msg: " + msg);
                     ObjectMapper objectMapper = new ObjectMapper();
                     Event event = objectMapper.readValue(msg, Event.class);
                     client.receiveEvent(event);

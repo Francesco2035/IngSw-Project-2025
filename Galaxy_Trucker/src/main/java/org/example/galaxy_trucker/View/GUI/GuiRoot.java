@@ -70,12 +70,13 @@ public class GuiRoot implements View {
 
     @Override
     public String askInput(String message) {
-        try {
-            String toSend = inputQueue.take();
-            //System.out.println("ask input: " + toSend);
+        String toSend = inputQueue.poll();
+        //System.out.println("ask input: " + toSend);
+        if (toSend != null) {
             return toSend;
-        } catch (InterruptedException e) {
-            //Thread.currentThread().interrupt();
+
+        }
+        else {
             return "";
         }
     }

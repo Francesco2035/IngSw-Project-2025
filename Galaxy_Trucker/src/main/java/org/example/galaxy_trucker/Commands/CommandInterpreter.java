@@ -196,6 +196,7 @@ public class CommandInterpreter {
         String[] parts = commandString.split(" ");
         String commandTitle = parts[0];
         commandTitle = commandTitle.toUpperCase();
+        parts[0] = commandTitle;
         CommandCreator creator = commandMap.get(commandTitle);
 
         if (creator == null) {

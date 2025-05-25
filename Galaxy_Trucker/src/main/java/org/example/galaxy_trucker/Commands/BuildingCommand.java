@@ -47,11 +47,11 @@ public class BuildingCommand extends Command implements Serializable {
         if(!player.GetReady() || (Objects.equals(title, "Hourglass"))){
             switch (title) {
 
-            case "SeeDeck": {
+            case "SEEDECK": {
                 player.getCommonBoard().getCardStack().notify(playerId, x);
             }
 
-            case "InsertTile": {
+            case "INSERTTILE": {
                 Tile tile = player.getCurrentTile();
                 int rotations = (rotation % 360) / 90;
                 for (int i = 0; i < rotations; i++) {
@@ -61,7 +61,7 @@ public class BuildingCommand extends Command implements Serializable {
                 player.setCurrentTile(null);
                 break;
             }
-            case "ToBuffer" :{
+            case "TOBUFFER" :{
                 Tile tile = player.getCurrentTile();
                 int rotations = (rotation % 360) / 90;
                 for (int i = 0; i < rotations; i++) {
@@ -70,20 +70,20 @@ public class BuildingCommand extends Command implements Serializable {
                 player.PlaceInBuffer();
                 break;
             }
-            case "FromBuffer" :{
+            case "FROMBUFFER" :{
 
                 player.SelectFromBuffer(position);
                 break;
             }
-            case "PickTile":{
+            case "PICKTILE":{
                 player.PickNewTile(position);
                 break;
             }
-            case "Discard":{
+            case "DISCARD":{
                 player.DiscardTile();
                 break;
             }
-            case "Hourglass":{
+            case "HOURGLASS":{
                     try {
                         player.StartTimer();
                     } catch (RuntimeException e) {

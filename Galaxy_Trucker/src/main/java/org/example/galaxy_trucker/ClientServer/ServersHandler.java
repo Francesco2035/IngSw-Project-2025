@@ -21,6 +21,11 @@ public class ServersHandler implements Runnable {
 
     public void run(){
 
+        //TODO:non so se si riesce a trovare l'ip di zero tier in modo dinamico
+        Settings.setIp("172.27.57.89");
+
+        System.out.println("Setting up RMI registry, ip: " + Settings.SERVER_NAME);
+
         GamesHandler gameHandler = new GamesHandler();
 
         ArrayList<UUID> DisconnectedClients = new ArrayList<>();
@@ -40,6 +45,7 @@ public class ServersHandler implements Runnable {
         RMIServer RMI = null;
         try {
             RMI = new RMIServer(gameHandler, tokenMap, DisconnectedClients);
+            gameHandler.setRmiServer(RMI);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

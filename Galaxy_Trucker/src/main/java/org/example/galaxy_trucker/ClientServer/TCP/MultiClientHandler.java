@@ -57,7 +57,7 @@ public class MultiClientHandler implements Runnable, GhListener {
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-            clientSocket.setSoTimeout(3000);
+            clientSocket.setSoTimeout(10000);
             ObjectMapper objectMapper = new ObjectMapper();
             String s;
 
@@ -96,6 +96,7 @@ public class MultiClientHandler implements Runnable, GhListener {
                                 }
                             }).start();
                         }
+
                         else if (command.getTitle().equals("Login")) {
                             UUID token;
                             VirtualView vv = new VirtualView(command.getPlayerId(), command.getGameId(), command.getClient(), out);
