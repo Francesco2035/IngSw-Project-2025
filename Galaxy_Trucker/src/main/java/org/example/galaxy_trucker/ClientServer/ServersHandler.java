@@ -22,7 +22,7 @@ public class ServersHandler implements Runnable {
     public void run(){
 
         //TODO:non so se si riesce a trovare l'ip di zero tier in modo dinamico
-        Settings.setIp("172.27.57.89");
+        Settings.setIp(NetworkUtils.getLocalIPAddress());
 
         System.out.println("Setting up RMI registry, ip: " + Settings.SERVER_NAME);
 

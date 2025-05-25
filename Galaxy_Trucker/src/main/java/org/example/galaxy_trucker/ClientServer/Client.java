@@ -35,13 +35,12 @@ public class Client implements EventVisitor {
     }
 
     public void startRMIClient() throws IOException, NotBoundException {
-//        String ip = NetworkUtils.getLocalIPAddress();
-//
+        String ip = NetworkUtils.getLocalIPAddress();
 
         //TODO: da fare in modo dinamico, non so se la classe networkutils lo trova quello di zerotier
-        System.setProperty("java.rmi.server.hostname", "172.27.31.175");
+        System.setProperty("java.rmi.server.hostname", ip);
 
-        System.out.println("RMI hostname set to: " + "172.27.31.175");
+        System.out.println("RMI hostname set to: " + ip);
         rmiClient = new RMIClient(this);
         rmiClient.StartClient();
     }
