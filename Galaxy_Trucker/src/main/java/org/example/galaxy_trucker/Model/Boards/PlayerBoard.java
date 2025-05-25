@@ -2,6 +2,8 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.example.galaxy_trucker.Controller.Listeners.RewardsListener;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
 import org.example.galaxy_trucker.Exceptions.*;
@@ -47,6 +49,8 @@ public class PlayerBoard {
     private boolean brownAlien;
     private ArrayList<HousingUnit> connectedHousingUnits;
 
+    private RewardsListener rewardsListener;
+
 
     private ArrayList<HousingUnit> HousingUnits;
     HashMap<Integer, ArrayList<IntegerPair>> shipSection;
@@ -57,9 +61,6 @@ public class PlayerBoard {
     private ArrayList<Storage> Storages;
     private ArrayList<ShieldGenerator> ShieldGenerators;
     private ArrayList<PowerCenter> PowerCenters;
-
-
-
 
 
 
@@ -180,6 +181,12 @@ public class PlayerBoard {
         sendUpdates(new TileEvent(158, 3, 8 + i , null, 0, false, false, 0, 0, Buffer.get(i).getConnectors()));
         return Buffer.remove(i);
     }
+
+
+    public void setRewardsListener(RewardsListener listener){
+        this.rewardsListener = listener;
+    }
+
 
 // setter and getters for lists
     public void setBufferGoods(ArrayList<Goods> bufferGoods) {
@@ -912,9 +919,14 @@ public class PlayerBoard {
             unit.checkNearbyUnits(clonedPlayerBoard);
         }
         clonedPlayerBoard.setListener(this.getListener());
+        clonedPlayerBoard.setRewardsListener(this.getRewardsListener());
 
         return clonedPlayerBoard;
 
+    }
+
+    private RewardsListener getRewardsListener() {
+        return rewardsListener;
     }
 
 
@@ -945,6 +957,7 @@ public class PlayerBoard {
 
     public void setRewards(ArrayList<Goods> rewards){
         this.Rewards = rewards;
+        rewardsListener.sendEvent(new RewardsEvent(new ArrayList<>(rewards)));
     }
 
     public ArrayList<Goods> getRewards(){
@@ -958,7 +971,9 @@ public class PlayerBoard {
         if (Rewards.isEmpty()) {
             throw new InvalidInput("Rewards is empty");
         }
-        return Rewards.remove(i);
+        Goods removed = Rewards.remove(i);
+        rewardsListener.sendEvent(new RewardsEvent(new ArrayList<>(Rewards)));
+        return removed;
     }
 
     public void AddGoodInBuffer(Goods good){

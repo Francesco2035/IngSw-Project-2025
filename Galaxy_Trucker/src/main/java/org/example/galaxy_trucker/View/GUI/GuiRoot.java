@@ -10,6 +10,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
@@ -379,6 +380,11 @@ public class GuiRoot implements View {
 
         //idplayer li salvo in un arraylist
         //player->playerstate.showGame
+    }
+
+    @Override
+    public void rewardsChanged(RewardsEvent event) {
+
     }
 
     @Override

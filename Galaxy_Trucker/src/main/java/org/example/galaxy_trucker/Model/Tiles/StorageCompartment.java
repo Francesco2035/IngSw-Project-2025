@@ -28,8 +28,6 @@ public class StorageCompartment extends Storage{
         tile.sendUpdates(goods,0, false, false, 0);
         return goods.remove(i);
 
-
-
     }
 
     @Override

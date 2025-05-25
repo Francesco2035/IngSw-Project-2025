@@ -100,6 +100,7 @@ public class GameController  implements ConcurrentCardListener {
         color++;
         p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6, false);
         p.setHandListener(vv);
+        p.getmyPlayerBoard().setRewardsListener(vv);
         //p.setPhaseListener(vv);
         p.getCommonBoard().setListeners(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);

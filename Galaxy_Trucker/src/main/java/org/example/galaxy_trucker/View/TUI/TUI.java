@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Commands.InputReader;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
@@ -144,6 +145,12 @@ public class TUI implements View {
         out.setPlayers(event.getPlayers());
         out.setReady(event.getReady());
 
+        onGameUpdate();
+    }
+
+    @Override
+    public void rewardsChanged(RewardsEvent event) {
+        out.setRewards(formatRewards(event));
         onGameUpdate();
     }
 
@@ -351,10 +358,10 @@ public class TUI implements View {
                     StringBuilder sb = new StringBuilder();
                     for (Goods g : event.getCargo()) {
                         switch (g.getValue()) {
-                            case 4 -> sb.append("\u001B[31mR\u001B[0m ");
-                            case 3 -> sb.append("\u001B[33mY\u001B[0m ");
-                            case 2 -> sb.append("\u001B[32mG\u001B[0m ");
-                            case 1 -> sb.append("\u001B[34mB\u001B[0m ");
+                            case 4 -> sb.append("\u001B[31m■\u001B[0m "); // Rosso
+                            case 3 -> sb.append("\u001B[33m■\u001B[0m "); // Giallo
+                            case 2 -> sb.append("\u001B[32m■\u001B[0m "); // Verde
+                            case 1 -> sb.append("\u001B[34m■\u001B[0m "); // Blu
                         }
                     }
                     extra = sb.toString().trim();
@@ -613,6 +620,31 @@ public class TUI implements View {
 //quando termina tutto chiamo questo anche se non credo dovrebbe particolamente servirmi
     public void shutdown() {
         scheduler.shutdown();
+    }
+
+    public StringBuilder formatRewards(RewardsEvent event) {
+        ArrayList<Goods> goodsList = event.getRewards();
+        StringBuilder sb = new StringBuilder();
+
+        int size = goodsList.size();
+
+        sb.append("REWARDS\n");
+        int k = 0;
+        for (Goods goods : goodsList) {
+            sb.append("| (pos: "+k+") ");
+            switch (goods.getValue()){
+                    case 4 -> sb.append("\u001B[31m■\u001B[0m "); // Rosso
+                    case 3 -> sb.append("\u001B[33m■\u001B[0m "); // Giallo
+                    case 2 -> sb.append("\u001B[32m■\u001B[0m "); // Verde
+                    case 1 -> sb.append("\u001B[34m■\u001B[0m "); // Blu
+
+            }
+            sb.append(" |");
+            k++;
+        }
+        sb.append("\n");
+
+        return sb;
     }
 
 

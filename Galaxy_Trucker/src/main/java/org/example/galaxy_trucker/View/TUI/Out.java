@@ -39,6 +39,7 @@ public class Out {
     private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap();
     private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
     private String[][][] Gameboard;
+    private StringBuilder Rewards;
     private int lv;
     private int setup = 102;
     private boolean fase = false;
@@ -51,6 +52,8 @@ public class Out {
     private HashMap<String,Integer > PlayerToPosition = new HashMap<>();
     private HashMap<String, String[]> lobby = new HashMap<>();
     private ViewPhase phase;
+
+
 
     public Out(InputReader inputReader, PlayerClient playerClient) {
         this.inputReader = inputReader;
@@ -405,6 +408,10 @@ public class Out {
         //printMessage(s);
     }
 
+    public void setRewards(StringBuilder rewards){
+        Rewards = rewards;
+    }
+
     public StringBuilder showCovered(){
         StringBuilder toPrint = new StringBuilder();
         toPrint.append("\n\n############################ COVERED TILES SET ############################\n\n");
@@ -434,7 +441,7 @@ public class Out {
     }
 
 
-
-
-
+    public StringBuilder showRewards() {
+        return Rewards;
+    }
 }

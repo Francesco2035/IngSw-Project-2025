@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Controller.Messages;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
@@ -25,6 +26,7 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = LobbyEvent.class, name = "LobbyEvent"),
         @JsonSubTypes.Type(value = GameLobbyEvent.class, name = "GameLobbyEvent"),
         @JsonSubTypes.Type(value = PhaseEvent.class, name = "PhaseEvent"),
+        @JsonSubTypes.Type(value = RewardsEvent.class, name = "RewardsEvent"),
         @JsonSubTypes.Type(value = GameBoardEvent.class, name = "GameBoardEvent" )
 
 })
