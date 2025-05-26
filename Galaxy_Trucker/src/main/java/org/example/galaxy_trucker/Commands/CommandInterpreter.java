@@ -264,10 +264,12 @@ public class CommandInterpreter {
                 break;
             }
             case "PICKTILE":{
-                if (parts.length != 2) {
-                    throw new IllegalArgumentException("Comando InsertTile richiede 1 argomento: posizione");
+                if (parts.length != 2 && parts.length != 1) {
+                    throw new IllegalArgumentException("picktile -> covered, picktile i -> uncovered ");
                 }
-                position = Integer.parseInt(parts[1]);
+                if (parts.length == 2) {
+                    position = Integer.parseInt(parts[1]);
+                }
                 break;
 
             }

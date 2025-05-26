@@ -121,6 +121,8 @@ public class InputReader implements Runnable {
     private int lastRenderHeight = 0;
 
     public synchronized void renderScreen(StringBuilder content) {
+
+        //TODO: capire quale sistema operativo è e fare clean di conseguenza
         String partialInput = Lreader.getBuffer().toString();
         System.out.print("\033[3J");
         terminal.puts(InfoCmp.Capability.clear_screen);

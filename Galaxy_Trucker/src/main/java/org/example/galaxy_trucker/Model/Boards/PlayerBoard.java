@@ -341,14 +341,14 @@ public class PlayerBoard {
             }
 
             if (x != 6 && y != 6){
-                if ((ValidPlayerBoard[x-1][y] != 1) ||(ValidPlayerBoard[x][y-1] != 1) || (ValidPlayerBoard[x+1][y] != 1) || (ValidPlayerBoard[x][y+1] != 1)) {
+                if ((ValidPlayerBoard[x-1][y] != 1) && (ValidPlayerBoard[x][y-1] != 1) && (ValidPlayerBoard[x+1][y] != 1) && (ValidPlayerBoard[x][y+1] != 1)) {
                     throw new InvalidInput(x,y, "Invalid input : invalid position, there aren't tiles nearby!");
                 }
 
             }
         }
 
-        System.out.println(x + " " +y);
+        //System.out.println(x + " " +y);
 
         this.PlayerBoard[x][y] = tile;
         tile.getComponent().setTile(tile);

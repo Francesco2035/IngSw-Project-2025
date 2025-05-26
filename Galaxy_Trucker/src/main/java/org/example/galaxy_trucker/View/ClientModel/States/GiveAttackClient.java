@@ -7,7 +7,7 @@ public class GiveAttackClient  extends PlayerStateClient{
     @Override
     public void showGame(Out out) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Giving attack Planet...\n");
+        sb.append("Giving attack...\n");
         sb.append(out.showPlayers());
         sb.append(out.printGameboard());
         sb.append(out.showCard());

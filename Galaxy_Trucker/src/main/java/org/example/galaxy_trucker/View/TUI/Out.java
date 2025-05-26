@@ -115,21 +115,23 @@ public class Out {
 
 
     public void setUncoveredTilesId(int id) {
-        if (uncoveredTilesId.contains(id)) {
-            uncoveredTilesId.remove(id);
+        if (uncoveredTilesId.contains((Integer)id)) {
+            uncoveredTilesId.remove(Integer.valueOf(id));
         }
         else{
             uncoveredTilesId.add(id);
         }
+
     }
 
     public void setUncoverdTileSetCache(int i, String[] cache) {
-        //if (!uncoverdTileSetCache.containsKey(i)) {
-            uncoverdTileSetCache.put(i, cache);
-        //}
-//        else{
-//            this.uncoverdTileSetCache.remove(i);
-//        }
+        if (cache != null) {
+            uncoverdTileSetCache.put((Integer)i, cache);
+        }
+        else{
+
+            this.uncoverdTileSetCache.remove((Integer) i);
+        }
 
     }
 
@@ -257,6 +259,7 @@ public class Out {
 
 
     public StringBuilder showUncoveredTiles() {
+        //TODO: spezzare le uncovered in %6, sarà ncasino
         StringBuilder toPrint = new StringBuilder();
         toPrint.append("\n############################ UNCOVERED TILES ############################\n");
 
@@ -269,7 +272,7 @@ public class Out {
 
         for (int i = 0; i < 7; i++){
             for (Integer id : uncoveredTilesId) {
-                line.append(uncoverdTileSetCache.get(id)[i]).append(" ");
+                line.append(uncoverdTileSetCache.get((Integer)id)[i]).append(" ");
             }
             line.append("\n");
 

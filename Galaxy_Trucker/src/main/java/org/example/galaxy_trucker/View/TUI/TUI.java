@@ -20,6 +20,7 @@ import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ViewPhase;
+import org.jline.nativ.Kernel32;
 
 
 import java.io.*;
@@ -477,7 +478,7 @@ public class TUI implements View {
     }
 
     public void updateHand(HandEvent event) {
-        inputReader.printServerMessage("\n" + border);
+        //inputReader.printServerMessage("\n" + border);
         if(event.getId() == 158){
             out.setCacheHand(emptyCell());
         }
@@ -524,16 +525,21 @@ public class TUI implements View {
 
     @Override
     public void updateUncoveredTilesSet(UncoverdTileSetEvent event) {
-        out.setUncoveredTilesId(event.getId()); //QUI
-        out.setUncoverdTileSetCache(event.getId(), null);//QUI
-
         if(event.getConnectors() != null) {
-            uncoveredTilesId.add(event.getId());
+            out.setUncoveredTilesId(event.getId());
 
             String[] cache = formatCell(new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors()));
 
             out.setUncoverdTileSetCache(event.getId(), cache); //QUI
         }
+        else{
+
+            out.setUncoveredTilesId(event.getId()); //QUI
+            out.setUncoverdTileSetCache(event.getId(), null);//QUI
+        }
+
+
+
         onGameUpdate();
     }
 
@@ -607,13 +613,19 @@ public class TUI implements View {
 
 
     public synchronized void onGameUpdate() {
+        System.out.println("waiting all package");
         if (scheduledTask != null && !scheduledTask.isDone()) {
             scheduledTask.cancel(false);
         }
 
         scheduledTask = scheduler.schedule(() -> {
             //inputReader.clearScreen();
-            out.showGame();
+            try{
+                out.showGame();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }, debounceDelayMs, TimeUnit.MILLISECONDS);
     }
 
@@ -650,5 +662,5 @@ public class TUI implements View {
 
 
 }
-
+//TODO: utilizzare strip ansi suppongo per formattare il cargo
 //riceve eventi e formatta, aggiorna il "client"
