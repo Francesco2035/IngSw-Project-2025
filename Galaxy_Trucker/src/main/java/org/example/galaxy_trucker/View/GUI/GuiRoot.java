@@ -7,6 +7,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.galaxy_trucker.Controller.Messages.*;
@@ -21,7 +24,6 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEve
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -460,7 +462,7 @@ public class GuiRoot implements View {
 
 
         Label titleLabel = new Label("GALAXY TRUCKERS");
-        titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+        titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
         Button startButton = new Button("Start!");
         startButton.setStyle("-fx-font-size: 20px;");
@@ -470,8 +472,11 @@ public class GuiRoot implements View {
         TitleScreenBox.setPadding(new Insets(20));
         //TitleScreenBox.setMaxWidth(400);
 
-        BorderPane root = new BorderPane(TitleScreenBox);
-        root.setPadding(new Insets(10));
+        StackPane root = backgroundMaker();
+
+
+        root.getChildren().addAll(TitleScreenBox);
+//        root.setPadding(new Insets(10));
 
         printer.setTitleScreen(new Scene(root, 600, 400));
         printer.printTitleScreen();
@@ -480,6 +485,22 @@ public class GuiRoot implements View {
             inputQueue.add("Lobby");
             playerClient.setPlayerState(new LobbyClient());
         });
+    }
+
+    public StackPane backgroundMaker(){
+        Media media = new Media(getClass().getResource("/GUI/space-background.mp4").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setAutoPlay(true);
+
+        MediaView background = new MediaView(mediaPlayer);
+        background.setPreserveRatio(false);
+
+        background.fitHeightProperty().bind(primaryStage.heightProperty());
+        background.fitWidthProperty().bind(primaryStage.widthProperty());
+
+        return new StackPane(background);
     }
 
     //printplayerboard(){..}
