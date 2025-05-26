@@ -82,6 +82,7 @@ public class BuildingCommand extends Command implements Serializable {
                         break;
                     }
                     case "DISCARD": {
+                        System.out.println(player.GetID()+" sta scartando");
                         player.DiscardTile();
                         break;
                     }

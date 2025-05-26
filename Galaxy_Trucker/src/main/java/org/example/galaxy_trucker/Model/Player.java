@@ -169,6 +169,8 @@ public class Player implements Serializable {
         if (CurrentTile.getChosen()){
             throw new IllegalStateException("You can't discard this Tile!");
         }
+
+        System.out.println("\n discarding tile\n");
         CommonBoard.getTilesSets().AddUncoveredTile(CurrentTile);
         CurrentTile = null;
         handListener.handChanged(new HandEvent(158, null));
