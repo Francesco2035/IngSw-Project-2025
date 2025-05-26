@@ -80,10 +80,10 @@ public class Warzone extends Card{
         this.Minimum = 10000000;
         this.ShotsOrder = 0;
         this.ShotsLine = 0;
-        this.lines = new int[PunishmentShots.size()/2];
-        for(int i=0;i< PunishmentShots.size()/2;i++){
-            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
-        }
+//        this.lines = new int[PunishmentShots.size()/2];
+//        for(int i=0;i< PunishmentShots.size()/2;i++){
+//            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
+//        }
         this.hit = new IntegerPair(0,0);
         this.currentpower=0;
         this.currentmovement=0;
@@ -95,6 +95,10 @@ public class Warzone extends Card{
 
     @Override
     public void CardEffect(){
+        this.lines = new int[PunishmentShots.size()/2];
+        for(int i=0;i< PunishmentShots.size()/2;i++){
+            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
+        }
         if (this.hit==null) {
             this.hit = new IntegerPair(0,0);
 

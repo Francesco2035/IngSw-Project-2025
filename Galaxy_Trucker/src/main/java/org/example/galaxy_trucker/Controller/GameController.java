@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Controller.Listeners.GameLobbyListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
@@ -322,8 +323,16 @@ public class GameController  implements ConcurrentCardListener {
                 //System.out.println("Flight phase complete");
 
             }
+            Controller ReadySetter;
             for (Player p : game.getPlayers().values()) {
-                p.SetReady(true);
+
+                System.out.println(p.GetID()+ " is in this state: "+ p.getPlayerState().getClass());
+                ReadySetter =ControllerMap.get(p.GetID());
+                ReadyCommand readyCommand = new ReadyCommand(game.getID(),p.GetID(),game.getLv(),"Ready",true,"placeholder");
+                ReadySetter.action(readyCommand, this);
+                ///  senno invece che mettere tutti a ready posso frli direttamente andare nell'altro contrpoller??
+
+//                p.SetReady(true);
             }
         });
 
