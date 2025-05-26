@@ -372,6 +372,9 @@ public class CommandInterpreter {
         int y;
         IntegerPair plasmaDrill;
         IntegerPair energyStorage;
+        if(parts[1].equals("DoNothing")){
+            return new DefendFromLargeCommand(null,null,gameId,playerId,lv, "DefendFromLargeCommand",token);
+        }
         if (parts.length != 5) {
             throw new IllegalArgumentException("Comando DefendFromLarge richiede 4 argomenti: le due coordinate del cannone e dell'eventuale energia da consumare"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
@@ -398,6 +401,9 @@ public class CommandInterpreter {
         int x;
         int y;
         IntegerPair energyStorage;
+        if(parts[1].equals("DoNothing")){
+            return new DefendFromSmallCommand(null,gameId,playerId,lv, "DefendFromSmallCommand",token);
+        }
         if (parts.length != 3) {
             throw new IllegalArgumentException("Comando DefendFromSmall richiede 2 argomenti: le due coordinate dell'energia da consumare"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
@@ -416,6 +422,9 @@ public class CommandInterpreter {
         int x;
         int y;
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
+        if(parts[1].equals("DoNothing")){
+            return new GiveAttackCommand(coordinates,gameId,playerId,lv,"GiveAttackCommand",token);
+        }
         if ((parts.length-1)%2 != 0) {
             throw new IllegalArgumentException("Comando GiveAttack richiede un numero pari di argomenti: le coordinate"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
@@ -431,6 +440,9 @@ public class CommandInterpreter {
         int x;
         int y;
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
+        if(parts[1].equals("DoNothing")){
+            return new GiveSpeedCommand(coordinates,gameId,playerId,lv,"GiveAttackCommand",token);
+        }
         if ((parts.length-1)%2 != 0) {
             throw new IllegalArgumentException("Comando GiveSpeed richiede un numero pari di argomenti: le coordinate"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
