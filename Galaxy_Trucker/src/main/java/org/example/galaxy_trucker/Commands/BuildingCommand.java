@@ -73,7 +73,6 @@ public class BuildingCommand extends Command implements Serializable {
                         break;
                     }
                     case "FROMBUFFER": {
-
                         player.SelectFromBuffer(position);
                         break;
                     }

@@ -102,17 +102,12 @@ public class GameController  implements ConcurrentCardListener {
         color++;
         p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6, false);
         p.setHandListener(vv);
-        //p.setPhaseListener(vv);
         p.getCommonBoard().setListeners(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);
         p.setCardListner(vv);
         gameLobbyListeners.add(vv);
         updatePlayers();
 
-
-
-        //p.getGmaebord.setVrtualview(vv);
-//        p.getCommonBoard().addListener(p.GetID(),vv);
 
         Thread t = new Thread(() -> {
             while (true) {

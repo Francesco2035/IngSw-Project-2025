@@ -43,9 +43,7 @@ public class ReadyCommand extends Command implements Serializable {
         }
     }
 
-    public ReadyCommand() {
-
-    }
+    public ReadyCommand() {}
 
     @Override
     public boolean allowedIn(PlayerState playerState) {

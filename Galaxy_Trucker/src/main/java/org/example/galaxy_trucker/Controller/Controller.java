@@ -39,7 +39,7 @@ public abstract class Controller {
                 System.out.println("No rewards listener available mannaggia la democrazia cristiana");
             }
             curPlayer.setMyPlance(playerBoardCopy);
-            e.printStackTrace();
+//            e.printStackTrace();
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
             System.out.println("mi ammazzo " + e);
         }
