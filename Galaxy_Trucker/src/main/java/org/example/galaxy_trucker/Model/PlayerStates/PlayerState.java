@@ -61,7 +61,6 @@ public abstract class PlayerState {
     }
 
     public boolean allows(LoginCommand command) {
-
         return false;
     }
 
@@ -72,6 +71,10 @@ public abstract class PlayerState {
     public boolean allows(RemoveTileCommand command) {
         return false;
     }
+
+    public  boolean allows(SelectChunkCommand command){return false;};
+
+
 
 
 
@@ -116,7 +119,7 @@ public abstract class PlayerState {
         player.SetHasActed(false);
     }
 
-    public  boolean allows(SelectChunkCommand command){return false;};
+
 
     public abstract PhaseEvent toClientState();
 }

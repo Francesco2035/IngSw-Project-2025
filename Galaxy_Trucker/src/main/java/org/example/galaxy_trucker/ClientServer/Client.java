@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.ClientServer.TCP.TCPClient;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
@@ -18,6 +19,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.rmi.NotBoundException;
 import java.util.UUID;
 
@@ -34,6 +36,12 @@ public class Client implements EventVisitor {
     }
 
     public void startRMIClient() throws IOException, NotBoundException {
+        //String ip = NetworkUtils.getLocalIPAddress();
+
+        //TODO: da fare in modo dinamico, non so se la classe networkutils lo trova quello di zerotier
+        //System.setProperty("java.rmi.server.hostname", ip);
+
+        //System.out.println("RMI hostname set to: " + ip);
         rmiClient = new RMIClient(this);
         rmiClient.StartClient();
     }
@@ -89,6 +97,7 @@ public class Client implements EventVisitor {
         }
 
         if (Connection.equals("RMI")) {
+
             client.startRMIClient();
         } else if (Connection.equals("TCP")) {
              client.startTCPClient();
@@ -146,6 +155,9 @@ public class Client implements EventVisitor {
     }
 
     @Override
+    public void visit(RewardsEvent rewardsEvent) {this.view.rewardsChanged(rewardsEvent);}
+
+    @Override
     public void visit(DeckEvent event) {
         this.view.showDeck(event);
     }
@@ -192,6 +204,10 @@ public class Client implements EventVisitor {
 
     public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException, InterruptedException {
         if (connection.equals("RMI")) {
+//            String ip = NetworkUtils.getLocalIPAddress();
+//            System.setProperty("java.rmi.server.hostname", ip);
+//            System.out.println("RMI hostname set to: " + ip);
+
             RMIClient rmiClient = new RMIClient(this, interpreter);
 
 

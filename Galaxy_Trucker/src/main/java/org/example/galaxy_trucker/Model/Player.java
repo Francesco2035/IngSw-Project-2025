@@ -144,7 +144,7 @@ public class Player implements Serializable {
                 handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
             }
         }
-        else {
+        else if (index >= 0 ){
             if (CurrentTile != null) {
                 throw new IllegalStateException("You can't pick a Tile, you have already one!");
             }
@@ -158,8 +158,9 @@ public class Player implements Serializable {
                 System.out.println(e);
                 CurrentTile = null;
             }
-
-
+        }
+        else {
+            System.out.println("mbà non va bene minore di 0");
         }
     }
 
@@ -173,8 +174,11 @@ public class Player implements Serializable {
         if (CurrentTile.getChosen()){
             throw new IllegalStateException("You can't discard this Tile!");
         }
+
+        System.out.println("\n discarding tile\n");
         CommonBoard.getTilesSets().AddUncoveredTile(CurrentTile);
         CurrentTile = null;
+        System.out.println("listener hand");
         handListener.handChanged(new HandEvent(158, null));
     }
 

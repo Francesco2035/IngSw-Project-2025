@@ -16,6 +16,8 @@ public class CheckValidityController extends Controller{
     @Override
     public synchronized void action(Command command, GameController gc) { //  devo overridare anche qui ok
 
+        System.out.println("CHECK_CONTROLLER");
+
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
             throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
@@ -38,8 +40,10 @@ public class CheckValidityController extends Controller{
 
     @Override
     public void nextState(GameController gc) {
+        System.out.println("CHECK_CONTROLLER callign next state for " + curPlayer.GetID());
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new ChoosePosition());
+            System.out.print("ops");
             gc.setControllerMap(curPlayer,new PrepController(curPlayer, gameId,gc,disconnected));
 
         }

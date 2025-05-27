@@ -14,6 +14,7 @@ public class LoginController extends Controller {
 
     @Override
     public void nextState(GameController gc) {
+        System.out.println("login change state for "+ curPlayer.GetID());
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
             this.disconnected = false;
         }

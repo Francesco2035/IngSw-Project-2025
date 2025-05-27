@@ -78,6 +78,11 @@ public class HandleTheft extends PlayerState {
         return  null;
     }
 
+    @Override
+    public PhaseEvent toClientState() {
+        return new PhaseEvent(new HandleTheftClient());
+    }
+
 //
 //    @Override
 //    public Command createDefaultCommand(String gameId, Player player) {
@@ -168,12 +173,4 @@ public class HandleTheft extends PlayerState {
 //            return  new Theft(index,coord,gameId,player.GetID(),lv,"TheftCommand","placeholder");
         //}
  //   }
-
-
-
-    @Override
-    public PhaseEvent toClientState() {
-        return new PhaseEvent(new HandleTheftClient());
-    }
-
 }

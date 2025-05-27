@@ -258,6 +258,9 @@ public class Smugglers extends Card{
             if (storages.contains(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond()).getComponent())){
                 int i=storages.indexOf(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
                 Storage currStorage=storages.get(i);
+                if (index>=currStorage.getGoodsArray().size() || index<0){
+                    throw new InvalidInput("there is nothing at this position in the storage");
+                }
                 if(currStorage.getValue(index)==cargoH.keySet().iterator().next() ){//iterator.next da il primo elemento non chiederti perché
                    CurrentPlanche.performAction(tiles[coord.getFirst()][coord.getSecond()].getComponent(), new GetGoodAction(index,CurrentPlanche,coord.getFirst(),coord.getSecond()),new HandleTheft());///prega dio sia giusto :)
                     this.tmpPunishment--;
@@ -301,7 +304,6 @@ public class Smugglers extends Card{
             ArrayList<Player> PlayerList = Board.getPlayers();
             for (int i = 0; i < PlayerList.size(); i++) {
                 PlayerList.get(i).setState(new BaseState());
-                PlayerList.get(i).SetReady(true);
             }
             System.out.println("card finished");
             this.setFinished(true);

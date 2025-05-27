@@ -48,6 +48,10 @@ public abstract class Storage extends Component{
 
     }
 
+    public ArrayList<Goods> getGoodsArray() {
+        return goods;
+    }
+
 
     private void orderGoods() {
         this.goods.sort(Comparator.comparingInt(Goods::getValue));

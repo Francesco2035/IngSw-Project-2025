@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Controller.Listeners.GameLobbyListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
@@ -34,6 +35,7 @@ public class GameController  implements ConcurrentCardListener {
     private final HashMap<UUID, String> tokenToPlayerId = new HashMap<>();
     final Game game;
     private GamesHandler gh;
+    //private BlockingQueue<Command> prepQueue = new LinkedBlockingQueue<>();
     private BlockingQueue<Command> flightQueue = new LinkedBlockingQueue<>();
     private Thread flightThread;
     private boolean flightMode = false;
@@ -44,6 +46,8 @@ public class GameController  implements ConcurrentCardListener {
     private boolean firtflight = true;
     private boolean concurrent = false;
     private int color = 153;
+
+    private Thread prepThread;
 
     private LobbyListener lobbyListener;
     private ArrayList<GameLobbyListener> gameLobbyListeners = new ArrayList<>();
@@ -66,6 +70,11 @@ public class GameController  implements ConcurrentCardListener {
         this.game = game;
         this.gh = gh;
         this.flightQueue = new LinkedBlockingQueue<>();
+//        this.prepThread = new Thread(() -> {
+//            while(true){
+//                Command cmd = prepQueue.poll();
+//            }
+//        });
 
     }
 
@@ -85,6 +94,7 @@ public class GameController  implements ConcurrentCardListener {
         game.NewPlayer(p);
         VirtualViewMap.put(playerId,vv);
         vv.setEventMatrix(game.getGameBoard().getLevel());
+        p.getmyPlayerBoard().setRewardsListener(vv);
         p.getmyPlayerBoard().setListener(vv);
         p.getCommonBoard().getCardStack().addListener(p.GetID(),vv);
         Tile mainCockpitTile = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
@@ -106,24 +116,23 @@ public class GameController  implements ConcurrentCardListener {
 
         Thread t = new Thread(() -> {
             while (true) {
-                try {
+                synchronized (ControllerMap) {
                     Controller current = ControllerMap.get(playerId);
-                    //vedi se è connesso
-                    //se è connesso prendi dalla coda e chiami il metodo
-
                     if(current.disconnected){ //questo è il thread  dei command fuori dalla flight mode giusto?
                         //current.DefaultAction(this);
                     }
                     else{
-                        Command cmd = queue.take(); // se questa è esclusiva del player si potrebbe svuotare in caso di disconnessione
-                        current.action(cmd, this);
+                        Command cmd = queue.poll(); // se questa è esclusiva del player si potrebbe svuotare in caso di disconnessione
+                        if (cmd != null){
+                            current.action(cmd, this);
+                        }
                     }
-
-                    //se non è connesso chiami defaultaction
-                } catch (InterruptedException e) {
-                    System.out.println("Thread interrupted: " + playerId);
-                    break;
                 }
+                //vedi se è connesso
+                //se è connesso prendi dalla coda e chiami il metodo
+
+
+                //se non è connesso chiami defaultaction
             }
         });
         t.start();
@@ -203,33 +212,40 @@ public class GameController  implements ConcurrentCardListener {
     }
 
     public void setControllerMap(Player player, Controller controller) {
-        System.out.println(player.GetID() + " : "+ controller.getClass());
-        ControllerMap.put(player.GetID(), controller);
+        synchronized (ControllerMap) {
+            System.out.println(player.GetID() + " : "+ controller.getClass());
+            ControllerMap.remove(player.GetID());
+            ControllerMap.put(player.GetID(), controller);
 
-        if(buildingCount == ControllerMap.size()){
+            if(buildingCount == ControllerMap.size()){
 
-            try {
-                game.getGameBoard().StartHourglass();
-            }catch(RuntimeException e){
-                System.out.println(e.getMessage());
+                try {
+                    game.getGameBoard().StartHourglass();
+                }catch(RuntimeException e){
+                    System.out.println(e.getMessage());
+                }
+
+                buildingCount = -1;
             }
 
-            buildingCount = -1;
+            if (flightCount == ControllerMap.size()) {
+                for (Player p : game.getPlayers().values()) {
+                    p.SetReady(false);
+                }
+//
+//            if (!flightMode){
+//                stopAllPlayerThreads();
+//
+//            }
+                flightMode = true;
+                startFlightMode();
+                flightCount = 0;
+            }
+            for (Controller controller1 : ControllerMap.values()) {
+                System.out.println(controller1.getClass());
+            }
         }
 
-        if (flightCount == ControllerMap.size()) {
-            for (Player p : game.getPlayers().values()) {
-                p.SetReady(false);
-            }
-
-            if (!flightMode){
-                stopAllPlayerThreads();
-
-            }
-            flightMode = true;
-            startFlightMode();
-            flightCount = 0;
-        }
     }
 
     public void startFlightMode() {  ///  per aggiornare il
@@ -256,6 +272,7 @@ public class GameController  implements ConcurrentCardListener {
 
                 while (index < players.size()) {
                     Player currentPlayer = players.get(index);
+
                     //prendi controller
                     //se è disconnesso chiami def action
                     //altrimenti esegui il blocco try
@@ -281,6 +298,8 @@ public class GameController  implements ConcurrentCardListener {
                         try {
                             Command cmd = flightQueue.take();
                             //TODO: notify della carta se è fase concorrenziale
+                            //game.getPlayers().get(cmd.getPlayerId()).getmyPlayerBoard().setRewardsListener(VirtualViewMap.get(currentPlayer.GetID()));
+
                             if(concurrent){
                                 Controller controller = ControllerMap.get(cmd.getPlayerId());
                                 controller.action(cmd, this);
@@ -308,11 +327,23 @@ public class GameController  implements ConcurrentCardListener {
                 //System.out.println("Flight phase complete");
 
             }
-            /// non deve finire il game ma semplicemente questo thread
-            //stopGame();
+            Controller ReadySetter;
+            for (Player p : game.getPlayers().values()) {
+
+                System.out.println(p.GetID()+ " is in this state: "+ p.getPlayerState().getClass());
+                ReadySetter =ControllerMap.get(p.GetID());
+                ReadyCommand readyCommand = new ReadyCommand(game.getID(),p.GetID(),game.getLv(),"Ready",true,"placeholder");
+                ReadySetter.action(readyCommand, this);
+                ///  senno invece che mettere tutti a ready posso frli direttamente andare nell'altro contrpoller??
+
+//                p.SetReady(true);
+            }
         });
+
         flightThread.start();
+
         System.out.println("Thread volo finito");
+        flightMode = false;
         changeState();
 
     }
@@ -353,7 +384,7 @@ public class GameController  implements ConcurrentCardListener {
         curr.setDisconnected(true);
         //setto booleano del controller
 
-        if (!flightMode) {
+        //if (!flightMode) {
             System.out.println("Player ID " + playerId + " not in flight mode, interrupting thread");
             threads.get(playerId).interrupt();
             threads.remove(playerId);
@@ -368,7 +399,7 @@ public class GameController  implements ConcurrentCardListener {
             });            ;
             t.start();
             threads.put(playerId, t);
-        }
+        //}
 
     }
 
@@ -378,7 +409,7 @@ public class GameController  implements ConcurrentCardListener {
         //setto booleano del controler
         threads.remove(playerId);
 
-        if (!flightMode){
+        //if (!flightMode){
             System.out.println("Player ID " + playerId + " not in flight mode, starting thread");
 
             BlockingQueue<Command> queue = commandQueues.get(playerId);
@@ -397,7 +428,7 @@ public class GameController  implements ConcurrentCardListener {
             t.start();
             threads.put(playerId, t);
 
-        }
+        //}
 
     }
 

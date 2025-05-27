@@ -102,8 +102,8 @@ class PiratesTest {
         Tile tile1 = new Tile(house1, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
         Tile tile2 = new Tile(house2, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
 
-        playerBoard1.insertTile(tile1,6,7);
-        playerBoard1.insertTile(tile2,7,7);
+        playerBoard1.insertTile(tile1,6,7, false);
+        playerBoard1.insertTile(tile2,7,7, false);
         TestSetupHelper.HumansSetter1(playerBoard1);
         playerBoard1.checkValidity();
 
@@ -171,7 +171,7 @@ class PiratesTest {
           else{
               System.out.println("small");
               assertEquals(new DefendingFromSmall().getClass(), Passo.getPlayerState().getClass());
-              carta.DefendFromSmall(null);
+              carta.DefendFromSmall(null,null);
               if (carta.getCurrentPlayer()==Passo) {
                   assertEquals(new HandleDestruction().getClass(), Passo.getPlayerState().getClass());
               }

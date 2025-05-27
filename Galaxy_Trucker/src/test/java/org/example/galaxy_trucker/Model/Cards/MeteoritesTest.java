@@ -164,7 +164,7 @@ class MeteoritesTest {
         meteoritesTest.setHit(8,8);
 
         //assertEquals(2,current.getmyPlayerBoard().getTile(7,8).getComponent().getType());
-        meteoritesTest.DefendFromLarge(null,null);
+        meteoritesTest.DefendFromLarge(null,null, null);
         assertEquals(HandleDestruction.class,current.getPlayerState().getClass());
 
 

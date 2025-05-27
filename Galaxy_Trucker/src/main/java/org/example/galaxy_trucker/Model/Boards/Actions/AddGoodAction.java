@@ -28,7 +28,9 @@ public class AddGoodAction extends ComponentAction {
             throw new IllegalStateException("illegal state");
         }
         storage.addGood(good);
-
+        if(good==null){
+            return;
+        }
         HashMap<Integer, ArrayList<IntegerPair>> storedgoods = playerBoard.getStoredGoods();
         if (storedgoods.containsKey(good.getValue())){
             storedgoods.get(good.getValue()).add(new IntegerPair(x, y));

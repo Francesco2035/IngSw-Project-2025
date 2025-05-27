@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEven
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.View.ClientModel.States.PlayerStateClient;
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 import org.example.galaxy_trucker.View.ViewPhase;
 
@@ -20,6 +21,10 @@ public class PlayerClient {
 
 
     public void showGame(Out out){
+        state.showGame(out);
+    }
+
+    public void showGame(GuiOut out){
         state.showGame(out);
     }
 

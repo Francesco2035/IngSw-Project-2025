@@ -5,9 +5,11 @@ import org.example.galaxy_trucker.View.TUI.Out;
 public class HandleCargoClient  extends PlayerStateClient{
     @Override
     public void showGame(Out out) {
-        out.showPlayers();
-        out.printGameboard();
-        out.showCard();
-        out.printBoard();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(out.showPlayers());
+        stringBuilder.append(out.printGameboard());
+        stringBuilder.append(out.showRewards());
+        stringBuilder.append(out.printBoard());
+        out.render(stringBuilder);
     }
 }

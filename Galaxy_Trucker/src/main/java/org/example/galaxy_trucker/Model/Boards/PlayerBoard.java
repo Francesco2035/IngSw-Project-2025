@@ -2,6 +2,8 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.example.galaxy_trucker.Controller.Listeners.RewardsListener;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
 import org.example.galaxy_trucker.Exceptions.*;
@@ -19,6 +21,7 @@ import java.util.*;
 public class PlayerBoard {
 
     PlayerBoardListener listener;
+    private RewardsListener rewardsListener;
 
     private Tile[][] PlayerBoard;
     private int damage;
@@ -48,6 +51,8 @@ public class PlayerBoard {
     private ArrayList<HousingUnit> connectedHousingUnits;
 
 
+
+
     private ArrayList<HousingUnit> HousingUnits;
     HashMap<Integer, ArrayList<IntegerPair>> shipSection;
 
@@ -57,9 +62,6 @@ public class PlayerBoard {
     private ArrayList<Storage> Storages;
     private ArrayList<ShieldGenerator> ShieldGenerators;
     private ArrayList<PowerCenter> PowerCenters;
-
-
-
 
 
 
@@ -180,6 +182,13 @@ public class PlayerBoard {
         sendUpdates(new TileEvent(158, 3, 8 + i , null, 0, false, false, 0, 0, Buffer.get(i).getConnectors()));
         return Buffer.remove(i);
     }
+
+
+    public void setRewardsListener(RewardsListener listener){
+        System.out.println("Setto listner "+ listener);
+        this.rewardsListener = listener;
+    }
+
 
 // setter and getters for lists
     public void setBufferGoods(ArrayList<Goods> bufferGoods) {
@@ -332,14 +341,14 @@ public class PlayerBoard {
             }
 
             if (x != 6 && y != 6){
-                if ((ValidPlayerBoard[x-1][y] != 1) ||(ValidPlayerBoard[x][y-1] != 1) || (ValidPlayerBoard[x+1][y] != 1) || (ValidPlayerBoard[x][y+1] != 1)) {
+                if ((ValidPlayerBoard[x-1][y] != 1) && (ValidPlayerBoard[x][y-1] != 1) && (ValidPlayerBoard[x+1][y] != 1) && (ValidPlayerBoard[x][y+1] != 1)) {
                     throw new InvalidInput(x,y, "Invalid input : invalid position, there aren't tiles nearby!");
                 }
 
             }
         }
 
-        System.out.println(x + " " +y);
+        //System.out.println(x + " " +y);
 
         this.PlayerBoard[x][y] = tile;
         tile.getComponent().setTile(tile);
@@ -461,6 +470,11 @@ public class PlayerBoard {
      * @return true if the player board is valid, false otherwise.
      */
     public boolean checkValidity(){
+
+        if(Buffer.size() != 0){
+            this.damage+=Buffer.size();
+            Buffer.clear();
+        }
 
         int r = 6;
         int c = 6;
@@ -879,6 +893,10 @@ public class PlayerBoard {
         clonedPlayerBoard.PowerCenters= new ArrayList<>();
         clonedPlayerBoard.connectedHousingUnits = new ArrayList<>();
         clonedPlayerBoard.Rewards = new ArrayList<>(this.Rewards);
+        clonedPlayerBoard.rewardsListener = this.getRewardsListener();
+        if (clonedPlayerBoard.rewardsListener == null){
+            System.out.println("sincero non capisco il perchè");
+        }
         clonedPlayerBoard.setListener(null);
 
         clonedPlayerBoard.PlayerBoard = new Tile[PlayerBoard.length][PlayerBoard[0].length];
@@ -911,10 +929,15 @@ public class PlayerBoard {
         for(HousingUnit unit : clonedPlayerBoard.getHousingUnits()){
             unit.checkNearbyUnits(clonedPlayerBoard);
         }
-        clonedPlayerBoard.setListener(this.getListener());
+        //clonedPlayerBoard.setListener(this.getListener());
+        //clonedPlayerBoard.setRewardsListener(this.getRewardsListener());
 
         return clonedPlayerBoard;
 
+    }
+
+    public RewardsListener getRewardsListener() {
+        return rewardsListener;
     }
 
 
@@ -945,6 +968,9 @@ public class PlayerBoard {
 
     public void setRewards(ArrayList<Goods> rewards){
         this.Rewards = rewards;
+        if (rewardsListener!= null){
+            rewardsListener.rewardsChanged(new RewardsEvent(new ArrayList<>(Rewards)));
+        }
     }
 
     public ArrayList<Goods> getRewards(){
@@ -958,7 +984,11 @@ public class PlayerBoard {
         if (Rewards.isEmpty()) {
             throw new InvalidInput("Rewards is empty");
         }
-        return Rewards.remove(i);
+        Goods removed = Rewards.remove(i);
+        if (rewardsListener!= null){
+            rewardsListener.rewardsChanged(new RewardsEvent(new ArrayList<>(Rewards)));
+        }
+        return removed;
     }
 
     public void AddGoodInBuffer(Goods good){

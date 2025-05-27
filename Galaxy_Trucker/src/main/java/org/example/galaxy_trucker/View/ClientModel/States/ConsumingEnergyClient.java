@@ -6,9 +6,12 @@ public class ConsumingEnergyClient  extends PlayerStateClient{
 
     @Override
     public void showGame(Out out) {
-        out.showPlayers();
-        out.printGameboard();
-        out.showCard();
-        out.printBoard();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Consuming energy...\n");
+        sb.append(out.showPlayers());
+        sb.append(out.printGameboard());
+        sb.append(out.showCard());
+        sb.append(out.printBoard());
+        out.render(sb);
     }
 }

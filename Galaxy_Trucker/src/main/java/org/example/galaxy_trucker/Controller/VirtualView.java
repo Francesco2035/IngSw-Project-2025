@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Controller.Listeners.*;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 //TODO: fare un solo listener, sono scemo non c'era bisogno di crearne 20000 tanto il dispatch viene fatto lato client col pattern, prima finiamo un game e poi cambiamo
-public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener{
+public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener{
 
     private boolean Disconnected = false;
     private TileEvent[][] eventMatrix;
@@ -32,7 +33,11 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private HashMap<Integer, ArrayList<Connectors>> uncoveredTilesMap = new HashMap<>();
     private HandEvent hand ;
     private UUID token;
-    private CardEvent card;
+    private CardEvent card = null;
+    private GameLobbyEvent lobby = null;
+    private GameBoardEvent board = null;
+    private PhaseEvent phase = null;
+    private RewardsEvent rewardsEvent = null;
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, PrintWriter echoSocket) {
@@ -42,7 +47,6 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         eventMatrix = new TileEvent[10][10];
         this.out = echoSocket;
     }
-
 
 
     public void setEventMatrix(int lv) {
@@ -119,6 +123,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             }
         }
     }
+
 
     public void sendEvent(TileEvent event) {
         if (!Disconnected) {
@@ -252,6 +257,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     @Override
     public void gameBoardChanged(GameBoardEvent event)  {
+        board = event;
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -299,6 +305,18 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         if (card != null){
             newCard(card);
         }
+        if (phase != null){
+            sendEvent(phase);
+        }
+        if (lobby != null){
+            sendEvent(lobby);
+        }
+        if (board!= null){
+            sendEvent(board);
+        }
+        if (rewardsEvent != null){
+            sendEvent(rewardsEvent);
+        }
 
     }
 
@@ -319,6 +337,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     @Override
     public void GameLobbyChanged(GameLobbyEvent event) {
+        lobby = event;
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -343,6 +362,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     @Override
     public void PhaseChanged(PhaseEvent event) {
+        phase = event;
         sendEvent(event);
     }
 
@@ -367,5 +387,12 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 }
             }
         }
+    }
+
+
+    @Override
+    public void rewardsChanged(RewardsEvent e) {
+        rewardsEvent = e;
+        sendEvent(e);
     }
 }

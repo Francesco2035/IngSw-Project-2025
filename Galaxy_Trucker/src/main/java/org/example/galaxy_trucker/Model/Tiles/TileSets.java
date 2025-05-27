@@ -48,7 +48,7 @@ public class TileSets {
         Tile SelectedTile = null;
         synchronized (UncoveredTiles) {
             try {
-                SelectedTile = UncoveredTiles.get(index);
+                SelectedTile = UncoveredTiles.remove(index);
 
                 for (TileSestListener listener : listeners){
                     listener.tilesSetChanged(new UncoverdTileSetEvent(SelectedTile.getId(),null));

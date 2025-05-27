@@ -44,53 +44,59 @@ public class BuildingCommand extends Command implements Serializable {
     @Override
     public void execute(Player player) throws RemoteException, JsonProcessingException {
 
-        if(!player.GetReady() || (Objects.equals(title, "Hourglass"))){
-            switch (title) {
+        if(!player.GetReady() || (Objects.equals(title, "Hourglass"))) {
+            try {
 
-            case "SeeDeck": {
-                player.getCommonBoard().getCardStack().notify(playerId, x);
-            }
+                switch (title) {
 
-            case "InsertTile": {
-                Tile tile = player.getCurrentTile();
-                int rotations = (rotation % 360) / 90;
-                for (int i = 0; i < rotations; i++) {
-                    tile.RotateDx();
-                }
-                player.getmyPlayerBoard().insertTile(tile, x, y, true);
-                player.setCurrentTile(null);
-                break;
-            }
-            case "ToBuffer" :{
-                Tile tile = player.getCurrentTile();
-                int rotations = (rotation % 360) / 90;
-                for (int i = 0; i < rotations; i++) {
-                    tile.RotateDx();
-                }
-                player.PlaceInBuffer();
-                break;
-            }
-            case "FromBuffer" :{
-
-                player.SelectFromBuffer(position);
-                break;
-            }
-            case "PickTile":{
-                player.PickNewTile(position);
-                break;
-            }
-            case "Discard":{
-                player.DiscardTile();
-                break;
-            }
-            case "Hourglass":{
-                    try {
-                        player.StartTimer();
-                    } catch (RuntimeException e) {
-                        throw new RuntimeException(e);
+                    case "SEEDECK": {
+                        player.getCommonBoard().getCardStack().notify(playerId, x);
                     }
-                    break;
+
+                    case "INSERTTILE": {
+                        Tile tile = player.getCurrentTile();
+                        int rotations = (rotation % 360) / 90;
+                        for (int i = 0; i < rotations; i++) {
+                            tile.RotateDx();
+                        }
+                        player.getmyPlayerBoard().insertTile(tile, x, y, true);
+                        player.setCurrentTile(null);
+                        break;
+                    }
+                    case "TOBUFFER": {
+                        Tile tile = player.getCurrentTile();
+                        int rotations = (rotation % 360) / 90;
+                        for (int i = 0; i < rotations; i++) {
+                            tile.RotateDx();
+                        }
+                        player.PlaceInBuffer();
+                        break;
+                    }
+                    case "FROMBUFFER": {
+
+                        player.SelectFromBuffer(position);
+                        break;
+                    }
+                    case "PICKTILE": {
+                        player.PickNewTile(position);
+                        break;
+                    }
+                    case "DISCARD": {
+                        System.out.println(player.GetID()+" sta scartando");
+                        player.DiscardTile();
+                        break;
+                    }
+                    case "HOURGLASS": {
+                        try {
+                            player.StartTimer();
+                        } catch (RuntimeException e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                    }
                 }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
 

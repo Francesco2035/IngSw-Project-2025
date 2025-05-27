@@ -80,10 +80,10 @@ public class Warzone extends Card{
         this.Minimum = 10000000;
         this.ShotsOrder = 0;
         this.ShotsLine = 0;
-        this.lines = new int[PunishmentShots.size()/2];
-        for(int i=0;i< PunishmentShots.size()/2;i++){
-            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
-        }
+//        this.lines = new int[PunishmentShots.size()/2];
+//        for(int i=0;i< PunishmentShots.size()/2;i++){
+//            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
+//        }
         this.hit = new IntegerPair(0,0);
         this.currentpower=0;
         this.currentmovement=0;
@@ -95,6 +95,10 @@ public class Warzone extends Card{
 
     @Override
     public void CardEffect(){
+        this.lines = new int[PunishmentShots.size()/2];
+        for(int i=0;i< PunishmentShots.size()/2;i++){
+            lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
+        }
         if (this.hit==null) {
             this.hit = new IntegerPair(0,0);
 
@@ -180,7 +184,6 @@ public class Warzone extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
-            PlayerList.get(i).SetReady(true);
         }
         System.out.println("card finished");
         this.setFinished(true);
@@ -586,7 +589,7 @@ public class Warzone extends Card{
 
 
     @Override
-    public void DefendFromSmall(IntegerPair energy){
+    public void DefendFromSmall(IntegerPair energy, Player player){
         PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if (energy!=null){
