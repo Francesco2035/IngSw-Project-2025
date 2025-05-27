@@ -1,9 +1,14 @@
 package org.example.galaxy_trucker.View.GUI;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -24,6 +29,8 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEve
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -37,6 +44,11 @@ public class GuiRoot implements View {
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private Stage primaryStage;
 
+    private StackPane primaryRoot;
+    private Pane contentRoot;
+    private Scene primaryScene;
+
+
     private PlayerClient playerClient;
     private GuiOut printer;
     private ArrayList<LobbyEvent> lobbyEvents = new ArrayList<>();
@@ -45,6 +57,10 @@ public class GuiRoot implements View {
     private String myName;
     private int myGameLv;
     private boolean amIReady;
+
+
+    private Image playerBoardImg;
+    private Image gameBoardImg;
 
     public void setStage(Stage primaryStage) {
         printer.setStage(primaryStage);
@@ -57,7 +73,7 @@ public class GuiRoot implements View {
     }
 
     public GuiRoot(){
-        printer = new GuiOut();
+        printer = new GuiOut(this);
         playerClient = new PlayerClient();
 
         guiThread = new Thread(() -> GuiMain.launchApp(this));
@@ -135,7 +151,7 @@ public class GuiRoot implements View {
         //mi arriva il lobby event ogni volta che qualcuno crea/si aggiunge ad un game
 
         Label titleLabel = new Label("GALAXY TRUCKERS");
-        titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+        titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
         // Lista giocatori
 
@@ -258,10 +274,18 @@ public class GuiRoot implements View {
         MainBox.setPadding(new Insets(20));
         MainBox.setMaxWidth(600);
 
-        BorderPane root = new BorderPane(MainBox);
-        root.setPadding(new Insets(10));
+        BorderPane lobbyRoot = new  BorderPane(MainBox);
+        lobbyRoot.setPadding(new Insets(10));
 
-        printer.setLobby( new Scene(root, 800, 600));
+        lobbyRoot.prefHeightProperty().bind(primaryStage.widthProperty());
+        lobbyRoot.prefWidthProperty().bind(primaryStage.widthProperty());
+
+
+        Platform.runLater(() -> {
+            contentRoot.getChildren().setAll(lobbyRoot);
+        });
+
+        printer.setLobby(primaryScene);
 
         playerClient.showGame(printer);
 
@@ -272,9 +296,8 @@ public class GuiRoot implements View {
     @Override
     public void showLobbyGame(GameLobbyEvent event){
 
-
         Label GameNameLabel = new Label("Game: " + myGameName);
-        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
         ListView<String> players = new ListView<>();
         players.setPrefHeight(100);
@@ -293,11 +316,14 @@ public class GuiRoot implements View {
         }
 
 
-        Image playerBoardImg;
-        if(myGameLv == 1)
-            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/cardboard-lv1.jpg"));
-        else
-            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/cardboard-lv2.jpg"));
+        if(myGameLv == 1){
+            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv1.jpg"));
+            gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv1.png"));
+        }
+        else{
+            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv2.jpg"));
+            gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv2.png"));
+        }
 
         ImageView playerBoard = new ImageView(playerBoardImg);
         playerBoard.setPreserveRatio(true);
@@ -305,20 +331,8 @@ public class GuiRoot implements View {
         playerBoard.setFitWidth(400);
         playerBoard.maxWidth(300);
 
-//        VBox imageBox = new VBox(playerBoard);
-//        imageBox.setAlignment(Pos.CENTER);
-//        imageBox.setPrefSize(40, 30); // iniziale
-//        imageBox.setMaxSize(40, 30); // permette l'espansione
-//
-
-//        playerBoard.fitWidthProperty().bind(imageBox.widthProperty());
-//        playerBoard.fitHeightProperty().bind(imageBox.heightProperty());
-
-
-
 
         VBox mainBox = new VBox(10, GameNameLabel, players);
-//        VBox.setVgrow(imageBox, Priority.ALWAYS);
         mainBox.setAlignment(Pos.TOP_CENTER);
         mainBox.setPadding(new Insets(10));
 
@@ -367,17 +381,25 @@ public class GuiRoot implements View {
         Buttons.setPadding(new Insets(15));
         Buttons.setAlignment(Pos.CENTER);
 
-        StackPane root = new StackPane(mainBox, playerBoard, Buttons);
-        root.setPadding(new Insets(10));
-        root.setAlignment(Pos.TOP_CENTER);
+        VBox imageBox = new VBox(playerBoard, Buttons);
+
+        StackPane gameLobbyRoot = new StackPane(mainBox, imageBox);
+
+        gameLobbyRoot.setPadding(new Insets(10));
+        gameLobbyRoot.setAlignment(Pos.TOP_CENTER);
+
+        gameLobbyRoot.prefWidthProperty().bind(primaryStage.widthProperty());
+        gameLobbyRoot.prefHeightProperty().bind(primaryStage.heightProperty());
 
         playerBoard.setTranslateY(200);
         Buttons.setTranslateY(250);
 
-        Scene scene = new Scene(root, 800, 600);
+        Platform.runLater(() ->{
+            contentRoot.getChildren().setAll(gameLobbyRoot);
+        });
 
 
-        printer.setGameLobby(scene);
+        printer.setGameLobby(primaryScene);
         playerClient.showGame(printer);
 
         //idplayer li salvo in un arraylist
@@ -386,6 +408,41 @@ public class GuiRoot implements View {
 
     @Override
     public void rewardsChanged(RewardsEvent event) {
+
+    }
+
+    public void buildingScene(){
+        Label GameNameLabel = new Label("Game: " + myGameName);
+        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+        ImageView playerBoard = new ImageView(playerBoardImg);
+        playerBoard.setPreserveRatio(true);
+        playerBoard.setSmooth(true);
+        playerBoard.setFitWidth(500);
+
+        ImageView gameBoard = new ImageView(gameBoardImg);
+        gameBoard.setPreserveRatio(true);
+        gameBoard.setSmooth(true);
+        gameBoard.setFitWidth(400);
+
+        VBox boardsBox = new VBox(10, GameNameLabel, gameBoard, playerBoard);
+        boardsBox.setAlignment(Pos.TOP_CENTER);
+
+        ScrollPane uncoveredBox = new ScrollPane();
+        uncoveredBox.setOpacity(0.5);
+
+        HBox mainBox = new HBox(10, uncoveredBox, boardsBox);
+
+        StackPane buildingRoot = new StackPane(mainBox);
+        buildingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
+        buildingRoot.prefHeightProperty().bind(primaryStage.heightProperty());
+
+        Platform.runLater(() ->{
+            contentRoot.getChildren().setAll(buildingRoot);
+        });
+
+        printer.setBuildingScene(primaryScene);
+        playerClient.showGame(printer);
 
     }
 
@@ -459,7 +516,7 @@ public class GuiRoot implements View {
 
 
     public void goToFirstScene() {
-
+        sceneSetup();
 
         Label titleLabel = new Label("GALAXY TRUCKERS");
         titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
@@ -471,14 +528,14 @@ public class GuiRoot implements View {
         TitleScreenBox.setAlignment(Pos.CENTER);
         TitleScreenBox.setPadding(new Insets(20));
         //TitleScreenBox.setMaxWidth(400);
+        StackPane titleRoot = new StackPane(TitleScreenBox);
+        TitleScreenBox.prefWidthProperty().bind(primaryStage.widthProperty());
+        TitleScreenBox.prefHeightProperty().bind(primaryStage.heightProperty());
 
-        StackPane root = backgroundMaker();
+        contentRoot.getChildren().setAll(titleRoot);
 
 
-        root.getChildren().addAll(TitleScreenBox);
-//        root.setPadding(new Insets(10));
-
-        printer.setTitleScreen(new Scene(root, 600, 400));
+        printer.setTitleScreen(primaryScene);
         printer.printTitleScreen();
 
         startButton.setOnAction(e -> {
@@ -487,8 +544,12 @@ public class GuiRoot implements View {
         });
     }
 
-    public StackPane backgroundMaker(){
-        Media media = new Media(getClass().getResource("/GUI/space-background.mp4").toExternalForm());
+    private void sceneSetup(){
+        primaryRoot = new StackPane();
+        contentRoot = new Pane();
+        primaryScene = new Scene(primaryRoot, 800, 600);
+
+        Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
 
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -500,7 +561,9 @@ public class GuiRoot implements View {
         background.fitHeightProperty().bind(primaryStage.heightProperty());
         background.fitWidthProperty().bind(primaryStage.widthProperty());
 
-        return new StackPane(background);
+
+        primaryRoot.getChildren().addAll(background, contentRoot);
+        primaryScene.setRoot(primaryRoot);
     }
 
     //printplayerboard(){..}

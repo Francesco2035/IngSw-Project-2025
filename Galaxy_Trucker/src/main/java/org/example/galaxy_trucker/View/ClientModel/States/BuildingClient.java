@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
 
@@ -34,5 +35,12 @@ public class BuildingClient  extends PlayerStateClient{
 //            out.showCovered();
 //            out.printBoard();
         }
+
+    }
+
+    @Override
+    public void showGame(GuiOut out){
+        out.getRoot().buildingScene();
+        out.printBuildingScreen();
     }
 }
