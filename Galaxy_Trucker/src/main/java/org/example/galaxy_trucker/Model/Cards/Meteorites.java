@@ -124,8 +124,8 @@ public class   Meteorites extends Card {
             System.out.println("attack number: "+this.MeteoritesOrder/2 +" on: "+currentPlayer.GetID());
 
             /// cose per stampare al client
-            String dimensione;
-            String direction;
+            String dimensione= new String();
+            String direction = new String();
             String Colpito = new String("missed you");
             String location = new String("");
 
@@ -291,7 +291,7 @@ public class   Meteorites extends Card {
 
             }
 
-
+            System.out.println("a "+dimensione+" meteorite came from "+dimensione+" and it "+Colpito+" at "+location);
             this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" meteorite came from "+dimensione+" and it "+Colpito+" at "+location));
 
             if (!DamageFlag){this.SuccessfulDefences++;}
