@@ -94,7 +94,7 @@ public class TileSets {
         listeners.remove(listener);
     }
 
-//    public ArrayList<Tile> getUncoveredTiles(){return UncoveredTiles;}
+    public ArrayList<Tile> getUncoveredTiles(){return UncoveredTiles;}
 
 }
 
