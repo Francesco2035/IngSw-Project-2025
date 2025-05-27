@@ -32,7 +32,8 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = HandleDestructionClient.class, name = "Destruction"),
         @JsonSubTypes.Type(value = HandleTheftClient.class, name = "Theft"),
         @JsonSubTypes.Type(value = KillingClient.class, name = "Kill"),
-        @JsonSubTypes.Type(value = WaitingClient.class, name = "Waiting")
+        @JsonSubTypes.Type(value = WaitingClient.class, name = "Waiting"),
+        @JsonSubTypes.Type(value = ReadCardClient.class, name  = "ReadCard")
 })
 
 public abstract class PlayerStateClient implements Serializable {
