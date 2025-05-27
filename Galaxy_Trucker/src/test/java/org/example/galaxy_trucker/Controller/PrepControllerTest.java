@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Controller;
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Commands.BuildingCommand;
+import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.FinishBuildingCommand;
 import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Controller.Listeners.PhaseListener;
@@ -146,6 +147,13 @@ class PrepControllerTest {
         c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Quit", false, null), gc);
 
         vv.setDisconnected(false);
+
+        BuildingShip bs = new BuildingShip();
+        Command cmd = bs.createDefaultCommand(game.getGameID(), p1);
+
+        c1.action(cmd, gc);
+
+
 
 
         p1.setState(new ChoosePosition());

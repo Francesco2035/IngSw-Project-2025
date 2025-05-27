@@ -29,17 +29,20 @@ public class BuildingShip extends PlayerState {
     public boolean allows(FinishBuildingCommand command){return true;}
 
     @Override
-    public Command createDefaultCommand(String gameId, Player player) { // dovrebbe andare bene?
+    public Command createDefaultCommand(String gameId, Player player) { // dovrebbe andare bene? //TODO sembra che non vada bene, non riporta un command ma una buildingship$1, che sarei felice di sapere cosa vuol dire
 
         return new Command() {
             @Override
-            public void execute(Player player) throws IOException {
+            public void execute(Player player) {
                 GameBoard board = player.getCommonBoard();
                 board.SetStartingPosition(player);
                 player.SetReady(true);
 
             }
         };
+
+
+
     }
 
 
