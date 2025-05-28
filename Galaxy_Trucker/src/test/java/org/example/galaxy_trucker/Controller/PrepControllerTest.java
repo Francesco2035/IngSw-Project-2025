@@ -35,51 +35,45 @@ class PrepControllerTest {
 
     static Game game;
     static GameBoard Gboard;
-
-    static {
-        try {
-            game = new Game(2, "testPrepController");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    static GameController gc = new GameController(game.getGameID(), game, new GamesHandler());
-    static Player p1 = new Player();
+    static GameController gc;
+    static Player p1;
     static VirtualView vv;
-    PrepController c1 = new PrepController(p1, game.getGameID(), gc, false);
+    PrepController c1;
 
-    @BeforeAll
-    public static void init() throws IOException {
+    @Test
+    public void testPrepController() throws IOException {
 
-        Game game = new Game(2, "testPrepController");
+
+        game = new Game(2, "testPrepController");
+        gc = new GameController(game.getGameID(), game, new GamesHandler());
+
+
         p1 = new Player();
         p1.setId("passos");
         game.NewPlayer(p1);
         p1.setBoards(game.getGameBoard());
-        p1.setMyPlance(TestSetupHelper.createInitializedBoard1());
         vv = new VirtualView(p1.GetID(), game.getGameID(), new RMIClient(new Client()), null);
         vv.setDisconnected(true);
         assertTrue(p1.getmyPlayerBoard().checkValidity());
-        TestSetupHelper.HumansSetter1(p1.getmyPlayerBoard());
         Gboard = game.getGameBoard();
+        c1 = new PrepController(p1, game.getGameID(), gc, false);
+        Controller controller = new LoginController(p1, game.getGameID());
+        gc.getControllerMap().put(p1.GetID(), controller);
 
         p1.setPhaseListener(vv);
         p1.getmyPlayerBoard().setListener(vv);
         p1.setHandListener(vv);
         p1.getCommonBoard().getTilesSets().setListeners(vv);
         p1.setCardListner(vv);
+        gc.getVirtualViewMap().put(p1.GetID(),vv);
 
-    }
 
-    @Test
-    public void testPrepController() {
+//--------------------------------------------------------------------------------------------------------------------------------
 
         p1.setState(new BuildingShip());
 
         BuildingCommand bc1 = new BuildingCommand(1, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "SEEDECK", null);
         c1.action(bc1, gc);
-//java.lang.RuntimeException: java.lang.NullPointerException: Cannot invoke "org.example.galaxy_trucker.Controller.Listeners.CardListner.seeDeck(org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent)" because the return value of "java.util.HashMap.get(Object)" is null
 
         BuildingCommand bc2 = new BuildingCommand(100, 100, 900, -1, game.getGameID(), p1.GetID(), 2, "PICKTILE", null);
         c1.action(bc2, gc);
@@ -147,19 +141,33 @@ class PrepControllerTest {
         c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Quit", false, null), gc);
 
         vv.setDisconnected(false);
-
-        BuildingShip bs = new BuildingShip();
-        Command cmd = bs.createDefaultCommand(game.getGameID(), p1);
-
-        c1.action(cmd, gc);
+        c1.DefaultAction(gc);
 
 
+        vv.setDisconnected(true);
+        c1.DefaultAction(gc);
 
+//--------------------------------------------------------------------------------------------
 
         p1.setState(new ChoosePosition());
 
-        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
-        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+        vv.setDisconnected(false);
+        c1.DefaultAction(gc);
+
+        vv.setDisconnected(true);
+        c1.DefaultAction(gc);
+
+//todo non so se è possibile testare facilmetne la finish perchè appena accade questo passa al next state e dovrei farlo al posto della defautl action
+//        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
+
+        vv.setDisconnected(false);
+        c1.nextState(gc);
+
+        vv.setDisconnected(true);
+        c1.nextState(gc);
 
     }
 }

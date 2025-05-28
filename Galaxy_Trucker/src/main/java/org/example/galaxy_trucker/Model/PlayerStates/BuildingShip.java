@@ -29,7 +29,7 @@ public class BuildingShip extends PlayerState {
     public boolean allows(FinishBuildingCommand command){return true;}
 
     @Override
-    public Command createDefaultCommand(String gameId, Player player) { // dovrebbe andare bene? //TODO sembra che non vada bene, non riporta un command ma una buildingship$1, che sarei felice di sapere cosa vuol dire
+    public Command createDefaultCommand(String gameId, Player player) { // dovrebbe andare bene?
 
         return new Command() {
             @Override

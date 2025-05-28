@@ -78,6 +78,13 @@ public class GameController  implements ConcurrentCardListener {
 
     }
 
+
+
+    public HashMap<String, Controller> getControllerMap() {
+        return ControllerMap;
+    }
+
+
     public void NewPlayer(Player p, VirtualView vv, UUID token){
         if (ControllerMap.keySet().contains(p.GetID())) {
             throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists");

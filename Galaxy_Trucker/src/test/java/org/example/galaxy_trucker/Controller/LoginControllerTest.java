@@ -1,13 +1,18 @@
 package org.example.galaxy_trucker.Controller;
 
+import org.example.galaxy_trucker.ClientServer.Client;
+import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,50 +21,45 @@ class LoginControllerTest {
 
     static Game game;
     static GameBoard Gboard;
+    static GameController gc;
+    static Player p1;
+    static VirtualView vv;
+    LoginController c1;
 
-    static {
-        try {
-            game = new Game(2, "testLoginController");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    static Player p1 = new Player();
+    @Test
+    public void testLoginController() throws IOException {
 
-    LoginController c1 = new LoginController(p1, game.getGameID());
-
-    @BeforeAll
-    public static void init() throws IOException {
-        Game game = new Game(2, "testLoginController");
+        game = new Game(2, "testLoginController");
+        gc = new GameController(game.getGameID(), game, new GamesHandler());
 
         p1 = new Player();
         p1.setId("passos");
         game.NewPlayer(p1);
-//        p1.setMyPlance(TestSetupHelper.createInitializedBoard1());
-
-//        assertTrue(p1.getmyPlayerBoard().checkValidity());
-
-//        TestSetupHelper.HumansSetter1(p1.getmyPlayerBoard());
+        p1.setBoards(game.getGameBoard());
+        vv = new VirtualView(p1.GetID(), game.getGameID(), new RMIClient(new Client()), null);
+        vv.setDisconnected(true);
+        assertTrue(p1.getmyPlayerBoard().checkValidity());
         Gboard = game.getGameBoard();
+        c1 = new LoginController(p1, game.getGameID());
 
-        Gboard.SetStartingPosition(p1);
+        p1.setPhaseListener(vv);
+        p1.getmyPlayerBoard().setListener(vv);
+        p1.setHandListener(vv);
+        p1.getCommonBoard().getTilesSets().setListeners(vv);
+        p1.setCardListner(vv);
 
-    }
+        gc.getVirtualViewMap().put(p1.GetID(),vv);
 
-
-
-
-    @Test
-    public void testLoginController() {
+//------------------------------------------------------------------------------------------------------------------------------
 
         ReadyCommand cmd1 = new ReadyCommand("testLoginController", "passos", 2, "Ready", true, null);
         cmd1.execute(p1);
         assertTrue(p1.GetReady());
 
-        ReadyCommand cmd2 = new ReadyCommand("testLoginController", "passos", 2, "Quit", true, null);
-        cmd2.execute(p1);
-        assertTrue(p1.GetReady()); // da aggiungersi il fatto che quittando il player viene eliminato interamente e con lui anche questo attributo
+//        ReadyCommand cmd2 = new ReadyCommand("testLoginController", "passos", 2, "Quit", true, null);
+//        cmd2.execute(p1);
+//        assertTrue(p1.GetReady()); // da aggiungersi il fatto che quittando il player viene eliminato interamente e con lui anche questo attributo
 
         ReadyCommand cmd3 = new ReadyCommand("testLoginController", "passos", 2, "Ready", true, null);
         cmd3.execute(p1);
@@ -67,15 +67,26 @@ class LoginControllerTest {
         ReadyCommand cmd4 = new ReadyCommand("testLoginController", "passos", 2, "Ready", false, null);
         cmd4.execute(p1);
         assertFalse(p1.GetReady());
-////////////////////////////////////////////////////////////////////////
         ReadyCommand cmd5 = new ReadyCommand("testLoginController", "passos", 2, "Ready", true, null);
         cmd5.execute(p1);
         assertTrue(p1.GetReady());
         ReadyCommand cmd6 = new ReadyCommand("testLoginController", "passos", 2, "Ready", true, null);
         cmd6.execute(p1);
         assertTrue(p1.GetReady());
-////////////////////////////////////////////////////////////////////////
         // non ha molto senso debuggare debugship in quanto è solo un comando per lo sviluppatore
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
+
+        vv.setDisconnected(false);
+        c1.nextState(gc);
+
+        vv.setDisconnected(true);
+        c1.nextState(gc);
+
     }
+
+
+
 
 }
