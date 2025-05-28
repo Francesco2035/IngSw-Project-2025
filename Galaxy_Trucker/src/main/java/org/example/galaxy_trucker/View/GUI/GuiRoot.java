@@ -29,8 +29,6 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEve
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -58,9 +56,12 @@ public class GuiRoot implements View {
     private int myGameLv;
     private boolean amIReady;
 
-
+    private ArrayList<Integer> discardedTiles;
     private Image playerBoardImg;
     private Image gameBoardImg;
+    private ImageView tileImage;
+    private TilePane uncoveredTiles;
+    private int tileRotation;
 
     public void setStage(Stage primaryStage) {
         printer.setStage(primaryStage);
@@ -73,8 +74,15 @@ public class GuiRoot implements View {
     }
 
     public GuiRoot(){
+        tileImage = new ImageView();
+        tileImage.setImage(null);
+        tileImage.setFitWidth(100);
+        tileImage.setPreserveRatio(true);
+        uncoveredTiles = new TilePane();
+
         printer = new GuiOut(this);
         playerClient = new PlayerClient();
+        discardedTiles = new ArrayList<>();
 
         guiThread = new Thread(() -> GuiMain.launchApp(this));
         guiThread.start();
@@ -101,7 +109,21 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void updateHand(HandEvent event) {
+    public void updateHand(HandEvent event){
+        tileRotation = 0;
+        tileImage.setRotate(0);
+
+        if(event.getId() == 158)
+            tileImage.setImage(null);
+        else{
+            Image tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg"));
+            tileImage.setImage(tile);
+            tileImage.setOpacity(1);
+        }
+
+        Platform.runLater(()->{
+            playerClient.showGame(printer);
+        });
 
     }
 
@@ -112,11 +134,31 @@ public class GuiRoot implements View {
 
     @Override
     public void updateCoveredTilesSet(CoveredTileSetEvent event) {
-
     }
 
     @Override
-    public void updateUncoveredTilesSet(UncoverdTileSetEvent event) {
+    public void updateUncoveredTilesSet(UncoverdTileSetEvent event){
+        discardedTiles.add(event.getId());
+
+        Image tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg"));
+        ImageView image = new ImageView(tile);
+        image.setFitWidth(100);
+        image.setPreserveRatio(true);
+        image.setSmooth(true);
+
+        image.setOnMouseClicked(mouseEvent -> {
+            inputQueue.add("PickTile "+ discardedTiles.indexOf(event.getId()));
+            uncoveredTiles.getChildren().remove(image);
+            discardedTiles.remove(event.getId());
+        });
+
+        VBox imageBox = new VBox(image);
+        imageBox.setPadding(new Insets(10));
+
+        Platform.runLater(()->{
+            uncoveredTiles.getChildren().add(imageBox);
+            playerClient.showGame(printer);
+        });
 
     }
 
@@ -398,9 +440,11 @@ public class GuiRoot implements View {
             contentRoot.getChildren().setAll(gameLobbyRoot);
         });
 
+        Platform.runLater(() ->{
+            printer.setGameLobby(primaryScene);
+            playerClient.showGame(printer);
+        });
 
-        printer.setGameLobby(primaryScene);
-        playerClient.showGame(printer);
 
         //idplayer li salvo in un arraylist
         //player->playerstate.showGame
@@ -425,13 +469,74 @@ public class GuiRoot implements View {
         gameBoard.setSmooth(true);
         gameBoard.setFitWidth(400);
 
-        VBox boardsBox = new VBox(10, GameNameLabel, gameBoard, playerBoard);
-        boardsBox.setAlignment(Pos.TOP_CENTER);
 
-        ScrollPane uncoveredBox = new ScrollPane();
-        uncoveredBox.setOpacity(0.5);
+        ImageView clockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow clockwise.png")));
+        clockwiseArrow.setPreserveRatio(true);
+        clockwiseArrow.setFitHeight(100);
+        clockwiseArrow.setFitWidth(50);
+        clockwiseArrow.setSmooth(false);
+        clockwiseArrow.setOnMouseClicked(event -> {
+            tileRotation += 90;
+            if(tileRotation == 360)
+                tileRotation = 0;
+            tileImage.setRotate(tileRotation);
+        });
+
+
+        ImageView counterclockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow counterclockwise.png")));
+        counterclockwiseArrow.setPreserveRatio(true);
+        counterclockwiseArrow.setFitHeight(100);
+        counterclockwiseArrow.setFitWidth(50);
+        counterclockwiseArrow.setSmooth(false);
+        counterclockwiseArrow.setOnMouseClicked(event -> {
+            tileRotation -= 90;
+            if(tileRotation == -90)
+                tileRotation = 270;
+            tileImage.setRotate(tileRotation);
+        });
+
+
+        Image tile;
+        if(tileImage.getImage() == null) {
+            tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
+            tileImage.setImage(tile);
+            tileImage.setOpacity(0.5);
+        }
+
+        Button pickTile = new Button("Pick Tile");
+        Button insertTile = new Button("Insert Tile");
+        Button discardTile = new Button("Discard");
+
+        pickTile.setOnAction(e -> {
+            inputQueue.add("PickTile -1");
+        });
+        discardTile.setOnAction(e -> {
+            inputQueue.add("Discard");
+        });
+
+
+        HBox tileBox =  new HBox(5, counterclockwiseArrow, tileImage, clockwiseArrow);
+        VBox Buttons = new VBox(15, tileBox, pickTile, insertTile, discardTile);
+        HBox buildKit = new HBox(20, playerBoard, Buttons);
+//        buildBox.prefWidthProperty().bind(primaryStage.widthProperty());
+//        buildBox.prefHeightProperty().bind(primaryStage.heightProperty());
+
+
+        VBox boardsBox = new VBox(10, GameNameLabel, gameBoard, buildKit);
+        boardsBox.setMaxWidth(800);
+        boardsBox.prefWidthProperty().bind(primaryStage.widthProperty());
+        boardsBox.prefHeightProperty().bind(primaryStage.heightProperty());
+        boardsBox.setPadding(new Insets(100));
+
+
+        ScrollPane uncoveredBox = new ScrollPane(uncoveredTiles);
+        uncoveredBox.setFitToWidth(true);
+        uncoveredBox.setPrefWidth(365);
+
+        uncoveredBox.setOpacity(0.4);
 
         HBox mainBox = new HBox(10, uncoveredBox, boardsBox);
+        mainBox.setPadding(new Insets(50));
 
         StackPane buildingRoot = new StackPane(mainBox);
         buildingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
@@ -442,7 +547,7 @@ public class GuiRoot implements View {
         });
 
         printer.setBuildingScene(primaryScene);
-        playerClient.showGame(printer);
+
 
     }
 
