@@ -77,7 +77,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testAbandonedShipCard() throws IOException {
+    public void testAbandonedShipCard() throws IOException, InterruptedException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -124,7 +124,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testAbandonedStationCard() throws IOException {
+    public void testAbandonedStationCard() throws IOException, InterruptedException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -182,7 +182,7 @@ public class CardControllerTest {
 
     //meteoriti ha memoria?
     @Test
-    public void testMeteoritesCard() throws IOException {
+    public void testMeteoritesCard() throws IOException, InterruptedException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -247,7 +247,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testOpensSpaceCard() throws IOException {
+    public void testOpensSpaceCard() throws IOException, InterruptedException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -295,7 +295,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testSolarSystemCard() throws IOException {
+    public void testSolarSystemCard() throws IOException, InterruptedException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();

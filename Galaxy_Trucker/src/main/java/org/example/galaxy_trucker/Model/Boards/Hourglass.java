@@ -17,6 +17,10 @@ public class Hourglass{
     private ArrayList<HourGlassListener> listeners;
     private Timer hourglass;
 
+
+
+    /// dov'è che viene fatta partire automaticamente?
+
     public Hourglass(){}
 
     public Hourglass(int lv) {
@@ -30,6 +34,8 @@ public class Hourglass{
 
     public synchronized void  startHourglass() {
 
+        System.out.println("trying to start hourglass");
+
         hourglass = new Timer();
 
         hourglass.schedule(new TimerTask(){
@@ -42,6 +48,7 @@ public class Hourglass{
                 }
                 else {
                     for (HourGlassListener listener : listeners){
+                        System.out.println("Calling Hourglass listener");
                         listener.onFinish();
                     }
                 }

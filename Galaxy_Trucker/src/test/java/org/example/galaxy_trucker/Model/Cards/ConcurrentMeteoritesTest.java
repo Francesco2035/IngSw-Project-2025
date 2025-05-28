@@ -77,7 +77,7 @@ public class ConcurrentMeteoritesTest
     }
 
     @RepeatedTest(50)
-    void CardEffect () throws IOException {
+    void CardEffect () throws IOException, InterruptedException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();

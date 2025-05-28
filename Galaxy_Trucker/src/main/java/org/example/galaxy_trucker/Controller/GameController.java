@@ -259,7 +259,12 @@ public class GameController  implements ConcurrentCardListener {
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         flightThread = new Thread(() -> {
             System.out.println("PESCO CARTA!");
-            Card card= game.getGameBoard().NewCard();
+            Card card= null;
+            try {
+                card = game.getGameBoard().NewCard();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             card.setConcurrentCardListener(this);
             //SET
 

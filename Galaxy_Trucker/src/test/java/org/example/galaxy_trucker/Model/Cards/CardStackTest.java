@@ -35,7 +35,7 @@ public class CardStackTest {
 
 
     @Test
-    public void cardStackTest() {
+    public void cardStackTest() throws InterruptedException {
         CardStacks cardStacks= game.getGameBoard().getCardStack();
         GameBoard gameBoard = game.getGameBoard();
         cardStacks.mergeDecks();

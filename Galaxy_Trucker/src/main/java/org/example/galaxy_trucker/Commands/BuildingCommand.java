@@ -44,7 +44,7 @@ public class BuildingCommand extends Command implements Serializable {
     @Override
     public void execute(Player player) throws RemoteException, JsonProcessingException {
 
-        if(!player.GetReady() || (Objects.equals(title, "Hourglass"))) {
+        if(!player.GetReady() || (Objects.equals(title, "HOURGLASS"))) {
             try {
 
                 switch (title) {
@@ -87,6 +87,7 @@ public class BuildingCommand extends Command implements Serializable {
                         break;
                     }
                     case "HOURGLASS": {
+                        System.out.println(player.GetID()+" sta ruotando la clessiddra ");
                         try {
                             player.StartTimer();
                         } catch (RuntimeException e) {

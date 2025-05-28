@@ -72,7 +72,7 @@ class StardustTest {
 
     }
     @Test
-    void cardEffect() throws IOException {
+    void cardEffect() throws IOException, InterruptedException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
