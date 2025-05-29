@@ -20,6 +20,8 @@ public class Out {
     private PlayerClient playerClient;
     private Boolean show = true;
 
+    String exception = "";
+
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final AtomicBoolean updateScheduled = new AtomicBoolean(false);
@@ -446,5 +448,15 @@ public class Out {
 
     public StringBuilder showRewards() {
         return Rewards;
+    }
+
+    public void setException(String exception) {
+        this.exception = exception;
+    }
+
+    public StringBuilder showException() {
+        StringBuilder sb = new StringBuilder(exception);
+        exception = "";
+        return sb;
     }
 }

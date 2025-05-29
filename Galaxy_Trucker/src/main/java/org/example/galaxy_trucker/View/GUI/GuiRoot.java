@@ -395,6 +395,11 @@ public class GuiRoot implements View {
         //plary.state.showGUI
     }
 
+    @Override
+    public void exceptionOccurred(ExceptionEvent exceptionEvent) {
+
+    }
+
 
     private @NotNull Button joinButtonMaker(LobbyEvent joining) {
         Button joinButton = new Button("Join");

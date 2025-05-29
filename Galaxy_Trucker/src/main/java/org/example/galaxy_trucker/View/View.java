@@ -50,4 +50,6 @@ public interface View {
 
 
     void phaseChanged(PhaseEvent event);
+
+    void exceptionOccurred(ExceptionEvent exceptionEvent);
 }

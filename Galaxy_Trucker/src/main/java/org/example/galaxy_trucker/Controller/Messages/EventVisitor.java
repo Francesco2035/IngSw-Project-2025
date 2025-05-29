@@ -32,5 +32,7 @@ public interface EventVisitor {
 
     void visit(RewardsEvent rewardsEvent);
 
+    void visit(ExceptionEvent exceptionEvent);
+
     //public void visit(GameBoardEvent event);
 }

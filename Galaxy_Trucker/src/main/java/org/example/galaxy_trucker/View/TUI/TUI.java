@@ -163,6 +163,11 @@ public class TUI implements View {
         onGameUpdate();
     }
 
+    @Override
+    public void exceptionOccurred(ExceptionEvent exceptionEvent) {
+        out.setException(exceptionEvent.getException());
+    }
+
 
     public String[] formatCell(LobbyEvent event) {
         String[] cell = new String[8];

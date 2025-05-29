@@ -158,6 +158,11 @@ public class Client implements EventVisitor {
     public void visit(RewardsEvent rewardsEvent) {this.view.rewardsChanged(rewardsEvent);}
 
     @Override
+    public void visit(ExceptionEvent exceptionEvent) {
+        this.view.exceptionOccurred(exceptionEvent);
+    }
+
+    @Override
     public void visit(DeckEvent event) {
         this.view.showDeck(event);
     }
