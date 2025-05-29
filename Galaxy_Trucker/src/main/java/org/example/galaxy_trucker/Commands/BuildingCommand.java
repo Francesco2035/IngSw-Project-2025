@@ -42,10 +42,9 @@ public class BuildingCommand extends Command implements Serializable {
 
 
     @Override
-    public void execute(Player player) throws RemoteException, JsonProcessingException {
+    public void execute(Player player) throws RemoteException, JsonProcessingException, IllegalStateException {
 
         if(!player.GetReady() || (Objects.equals(title, "Hourglass"))) {
-            try {
 
                 switch (title) {
 
@@ -95,9 +94,7 @@ public class BuildingCommand extends Command implements Serializable {
                         break;
                     }
                 }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+
         }
 
     }

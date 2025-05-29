@@ -30,9 +30,9 @@ public class CheckValidityController extends Controller{
         } catch (Exception e) {
             curPlayer.setMyPlance(playerBoardCopy);
             playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
-
+            sendException(e);
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
-            System.out.println(e);
+            e.printStackTrace();
         }
 
     }
@@ -43,12 +43,15 @@ public class CheckValidityController extends Controller{
         System.out.println("CHECK_CONTROLLER callign next state for " + curPlayer.GetID());
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new ChoosePosition());
-            System.out.print("ops");
-            gc.setControllerMap(curPlayer,new PrepController(curPlayer, gameId,gc,disconnected));
+            PrepController newController = new PrepController(curPlayer, gameId,gc,disconnected);
+            newController.setExceptionListener(exceptionListener);
+            gc.setControllerMap(curPlayer,newController);
 
         }
         else {
-            gc.setControllerMap(curPlayer, new CheckValidityController(curPlayer, gameId,this.disconnected));
+            CheckValidityController newController = new CheckValidityController(curPlayer,gameId,disconnected);
+            newController.setExceptionListener(exceptionListener);
+            gc.setControllerMap(curPlayer, newController);
         }
     }
 }

@@ -2,6 +2,8 @@ package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.ReadyCommand;
+import org.example.galaxy_trucker.Controller.Listeners.ExceptionListener;
+import org.example.galaxy_trucker.Controller.Messages.ExceptionEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;
@@ -19,6 +21,7 @@ public abstract class Controller {
     String gameId;
     PlayerBoard playerBoardCopy;
     boolean disconnected;
+    ExceptionListener exceptionListener;
 
 
     public synchronized void action(Command command, GameController gc) {
@@ -40,8 +43,8 @@ public abstract class Controller {
             }
             curPlayer.setMyPlance(playerBoardCopy);
             e.printStackTrace();
+            sendException(e);
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
-            System.out.println("mi ammazzo " + e);
         }
        // this.curPlayer.SetHasActed(true);
     }
@@ -73,5 +76,23 @@ public abstract class Controller {
     }
 
     public abstract void nextState(GameController gc);
+
+    public void setExceptionListener(ExceptionListener exceptionListener) {
+        this.exceptionListener = exceptionListener;
+    }
+
+    public void removeExceptionListener() {
+        this.exceptionListener = null;
+    }
+
+    public void sendException(Exception e) {
+        if (exceptionListener != null) {
+            ExceptionEvent event = new ExceptionEvent(e.getMessage());
+            exceptionListener.exceptionOccured(event);
+        }
+        else{
+            System.out.println("Exception occured but listener not set");
+        }
+    }
 
 }

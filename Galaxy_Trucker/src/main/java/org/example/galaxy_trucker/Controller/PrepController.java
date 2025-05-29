@@ -36,7 +36,9 @@ public class PrepController extends Controller implements HourGlassListener {
         }
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new AddCrewState());
-            gc.setControllerMap(curPlayer,new PostPrepController(curPlayer, gameId,this.disconnected));
+            PostPrepController newController = new PostPrepController(curPlayer, gameId,this.disconnected);
+            newController.setExceptionListener(exceptionListener);
+            gc.setControllerMap(curPlayer,newController);
         }
         else{
             //se la nave non è valida tolgo il razzo dalla gameboard, va ancora sistemato il fatto del cambio di stato/comandi chiamabili
@@ -44,7 +46,9 @@ public class PrepController extends Controller implements HourGlassListener {
                 curPlayer.getCommonBoard().removePlayerAndShift(curPlayer);
             }
 
-            gc.setControllerMap(curPlayer,new CheckValidityController(curPlayer, gameId,this.disconnected));
+            CheckValidityController newController = new CheckValidityController(curPlayer, gameId, disconnected);
+            newController.setExceptionListener(exceptionListener);
+            gc.setControllerMap(curPlayer,newController);
             curPlayer.setState(new CheckValidity());
         }
 

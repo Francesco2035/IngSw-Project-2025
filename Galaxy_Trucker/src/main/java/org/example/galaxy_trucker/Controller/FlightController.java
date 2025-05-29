@@ -29,7 +29,9 @@ public class FlightController extends Controller {
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
            this.disconnected = false;
         }
-        gc.setControllerMap(curPlayer, new CardsController(curPlayer, gameId, this.disconnected));
+        CardsController newController = new CardsController(curPlayer, gameId, this.disconnected);
+        newController.setExceptionListener(exceptionListener);
+        gc.setControllerMap(curPlayer,newController);
         gc.setFlightCount(1);
     }
 }

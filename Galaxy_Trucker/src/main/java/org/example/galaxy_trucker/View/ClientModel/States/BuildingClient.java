@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.List;
 
 
 public class BuildingClient  extends PlayerStateClient{
@@ -24,15 +25,14 @@ public class BuildingClient  extends PlayerStateClient{
             toPrint.append(out.showCovered());
             toPrint.append(out.showUncoveredTiles());
             toPrint.append(out.printBoard());
+            toPrint.append(out.showException());
             out.render(toPrint);
-            //out.printMessage(toPrint.toString());
-//            out.printMessage("Building...");
-//            //out.showPlayers();
-//            out.printGameboard();
-//            out.printHand();
-//            out.showUncoveredTiles();
-//            out.showCovered();
-//            out.printBoard();
+
         }
+    }
+
+    @Override
+    public List<String> getCommands() {
+        return List.of("Discard", "PickTile", "FinishBuilding", "InsertTile");
     }
 }

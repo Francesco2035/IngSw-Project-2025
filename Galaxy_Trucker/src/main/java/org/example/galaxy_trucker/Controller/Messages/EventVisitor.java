@@ -34,5 +34,6 @@ public interface EventVisitor {
 
     void visit(ExceptionEvent exceptionEvent);
 
+
     //public void visit(GameBoardEvent event);
 }

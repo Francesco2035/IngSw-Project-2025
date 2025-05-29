@@ -207,6 +207,7 @@ public class Client implements EventVisitor {
         this.view.updateGameboard(gameBoardEvent);
     }
 
+
     public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException, InterruptedException {
         if (connection.equals("RMI")) {
 //            String ip = NetworkUtils.getLocalIPAddress();

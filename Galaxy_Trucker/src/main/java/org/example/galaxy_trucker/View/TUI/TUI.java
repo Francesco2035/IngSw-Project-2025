@@ -5,7 +5,6 @@ package org.example.galaxy_trucker.View.TUI;
 //se disconnesso setta player a stato di disconnessione e chiama
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.galaxy_trucker.Commands.InputReader;
 import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -20,7 +19,6 @@ import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ViewPhase;
-import org.jline.nativ.Kernel32;
 
 
 import java.io.*;
@@ -159,13 +157,14 @@ public class TUI implements View {
     public void phaseChanged(PhaseEvent event) {
         System.out.println("STATE CHANGED: "+ event.getStateClient().getClass());
         playerClient.setPlayerState(event.getStateClient());
-
+        playerClient.getCompleter().setCommands(event.getStateClient().getCommands());
         onGameUpdate();
     }
 
     @Override
     public void exceptionOccurred(ExceptionEvent exceptionEvent) {
         out.setException(exceptionEvent.getException());
+        onGameUpdate();
     }
 
 
@@ -205,7 +204,8 @@ public class TUI implements View {
         }
         inputReader = new InputReader(inputQueue);
         inputThread = new Thread(inputReader);
-        inputThread.setDaemon(true); // opzionale, per terminare col processo principale
+        playerClient.setCompleter(inputReader.getCompleter());
+        inputThread.setDaemon(true);
         inputThread.start();
         phase = ViewPhase.LOBBY;
         inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));

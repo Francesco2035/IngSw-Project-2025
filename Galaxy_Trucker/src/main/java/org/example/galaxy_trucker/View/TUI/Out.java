@@ -1,10 +1,9 @@
 package org.example.galaxy_trucker.View.TUI;
 
-import org.example.galaxy_trucker.Commands.InputReader;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ViewPhase;
+import org.jline.jansi.Ansi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -455,8 +454,12 @@ public class Out {
     }
 
     public StringBuilder showException() {
-        StringBuilder sb = new StringBuilder(exception);
-        exception = "";
+        StringBuilder sb = new StringBuilder();
+        if (!exception.equals("")){
+            sb.append(Ansi.ansi().fgRed().a("[ " + exception + " ]").reset());
+            sb.append("\n\n");
+            exception = "";
+        }
         return sb;
     }
 }

@@ -39,9 +39,9 @@ public class PostPrepController extends Controller {
         } catch (Exception e) {
             curPlayer.setMyPlance(playerBoardCopy);
             playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
-
+            sendException(e);
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
-            System.out.println(e);
+            e.printStackTrace();
         }
 
     }
@@ -55,7 +55,9 @@ public class PostPrepController extends Controller {
         }
 
         gc.setFlightCount(1);
-        gc.setControllerMap(curPlayer, new FlightController( curPlayer, gameId, gc,this.disconnected));
+        FlightController newController = new FlightController( curPlayer, gameId, gc,this.disconnected);
+        newController.setExceptionListener(exceptionListener);
+        gc.setControllerMap(curPlayer,newController);
 
     }
 }

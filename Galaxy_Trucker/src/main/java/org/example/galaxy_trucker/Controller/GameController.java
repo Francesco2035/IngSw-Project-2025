@@ -86,6 +86,7 @@ public class GameController  implements ConcurrentCardListener {
         System.out.println("Player ID: " + playerId);
         System.out.println("Token: " + token.toString());
         Controller controller = new LoginController(p, idGame);
+        controller.setExceptionListener(vv);
         ControllerMap.put(playerId, controller);
         System.out.println("New player " + playerId+" in "+ this);
         tokenToPlayerId.put(token, playerId);

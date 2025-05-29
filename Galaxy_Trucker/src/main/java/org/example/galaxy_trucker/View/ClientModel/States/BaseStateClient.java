@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.List;
+
 public class BaseStateClient extends PlayerStateClient{
 
 
@@ -17,18 +19,20 @@ public class BaseStateClient extends PlayerStateClient{
 
         StringBuilder toPrint = new StringBuilder();
         toPrint.append("BaseState\n\n");
-        toPrint.append(out.showPlayers());
         //toPrint.append(out.printGameboard());
         toPrint.append(out.printBoard());
+        toPrint.append(out.showException());
         out.render(toPrint);
-        //out.printMessage(toPrint.toString());
-//        out.printMessage("BaseState");
-//        out.showPlayers();
-//        out.printBoard();
+
     }
 
     public void showGame(GuiOut out){
         out.printGameLobby();
+    }
+
+    @Override
+    public List<String> getCommands() {
+        return List.of("ready", "quit", "seeBoard");
     }
 
 }
