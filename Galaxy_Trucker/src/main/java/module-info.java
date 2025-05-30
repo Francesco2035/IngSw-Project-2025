@@ -1,5 +1,6 @@
     module org.example.galaxy_trucker {
         requires javafx.controls;
+        requires javafx.media;
         requires javafx.fxml;
         requires org.controlsfx.controls;
         requires java.compiler;

@@ -1,12 +1,20 @@
 package org.example.galaxy_trucker.View.GUI;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.galaxy_trucker.Controller.Messages.*;
@@ -21,7 +29,6 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEve
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -35,6 +42,11 @@ public class GuiRoot implements View {
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private Stage primaryStage;
 
+    private StackPane primaryRoot;
+    private Pane contentRoot;
+    private Scene primaryScene;
+
+
     private PlayerClient playerClient;
     private GuiOut printer;
     private ArrayList<LobbyEvent> lobbyEvents = new ArrayList<>();
@@ -43,6 +55,13 @@ public class GuiRoot implements View {
     private String myName;
     private int myGameLv;
     private boolean amIReady;
+
+    private ArrayList<Integer> discardedTiles;
+    private Image playerBoardImg;
+    private Image gameBoardImg;
+    private ImageView tileImage;
+    private TilePane uncoveredTiles;
+    private int tileRotation;
 
     public void setStage(Stage primaryStage) {
         printer.setStage(primaryStage);
@@ -55,8 +74,15 @@ public class GuiRoot implements View {
     }
 
     public GuiRoot(){
-        printer = new GuiOut();
+        tileImage = new ImageView();
+        tileImage.setImage(null);
+        tileImage.setFitWidth(100);
+        tileImage.setPreserveRatio(true);
+        uncoveredTiles = new TilePane();
+
+        printer = new GuiOut(this);
         playerClient = new PlayerClient();
+        discardedTiles = new ArrayList<>();
 
         guiThread = new Thread(() -> GuiMain.launchApp(this));
         guiThread.start();
@@ -83,7 +109,21 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void updateHand(HandEvent event) {
+    public void updateHand(HandEvent event){
+        tileRotation = 0;
+        tileImage.setRotate(0);
+
+        if(event.getId() == 158)
+            tileImage.setImage(null);
+        else{
+            Image tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg"));
+            tileImage.setImage(tile);
+            tileImage.setOpacity(1);
+        }
+
+        Platform.runLater(()->{
+            playerClient.showGame(printer);
+        });
 
     }
 
@@ -94,11 +134,31 @@ public class GuiRoot implements View {
 
     @Override
     public void updateCoveredTilesSet(CoveredTileSetEvent event) {
-
     }
 
     @Override
-    public void updateUncoveredTilesSet(UncoverdTileSetEvent event) {
+    public void updateUncoveredTilesSet(UncoverdTileSetEvent event){
+        discardedTiles.add(event.getId());
+
+        Image tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg"));
+        ImageView image = new ImageView(tile);
+        image.setFitWidth(100);
+        image.setPreserveRatio(true);
+        image.setSmooth(true);
+
+        image.setOnMouseClicked(mouseEvent -> {
+            inputQueue.add("PickTile "+ discardedTiles.indexOf(event.getId()));
+            uncoveredTiles.getChildren().remove(image);
+            discardedTiles.remove(event.getId());
+        });
+
+        VBox imageBox = new VBox(image);
+        imageBox.setPadding(new Insets(10));
+
+        Platform.runLater(()->{
+            uncoveredTiles.getChildren().add(imageBox);
+            playerClient.showGame(printer);
+        });
 
     }
 
@@ -133,7 +193,7 @@ public class GuiRoot implements View {
         //mi arriva il lobby event ogni volta che qualcuno crea/si aggiunge ad un game
 
         Label titleLabel = new Label("GALAXY TRUCKERS");
-        titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+        titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
         // Lista giocatori
 
@@ -256,10 +316,18 @@ public class GuiRoot implements View {
         MainBox.setPadding(new Insets(20));
         MainBox.setMaxWidth(600);
 
-        BorderPane root = new BorderPane(MainBox);
-        root.setPadding(new Insets(10));
+        BorderPane lobbyRoot = new  BorderPane(MainBox);
+        lobbyRoot.setPadding(new Insets(10));
 
-        printer.setLobby( new Scene(root, 800, 600));
+        lobbyRoot.prefHeightProperty().bind(primaryStage.widthProperty());
+        lobbyRoot.prefWidthProperty().bind(primaryStage.widthProperty());
+
+
+        Platform.runLater(() -> {
+            contentRoot.getChildren().setAll(lobbyRoot);
+        });
+
+        printer.setLobby(primaryScene);
 
         playerClient.showGame(printer);
 
@@ -270,9 +338,8 @@ public class GuiRoot implements View {
     @Override
     public void showLobbyGame(GameLobbyEvent event){
 
-
         Label GameNameLabel = new Label("Game: " + myGameName);
-        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
         ListView<String> players = new ListView<>();
         players.setPrefHeight(100);
@@ -291,11 +358,14 @@ public class GuiRoot implements View {
         }
 
 
-        Image playerBoardImg;
-        if(myGameLv == 1)
-            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/cardboard-lv1.jpg"));
-        else
-            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/cardboard-lv2.jpg"));
+        if(myGameLv == 1){
+            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv1.jpg"));
+            gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv1.png"));
+        }
+        else{
+            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv2.jpg"));
+            gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv2.png"));
+        }
 
         ImageView playerBoard = new ImageView(playerBoardImg);
         playerBoard.setPreserveRatio(true);
@@ -303,20 +373,8 @@ public class GuiRoot implements View {
         playerBoard.setFitWidth(400);
         playerBoard.maxWidth(300);
 
-//        VBox imageBox = new VBox(playerBoard);
-//        imageBox.setAlignment(Pos.CENTER);
-//        imageBox.setPrefSize(40, 30); // iniziale
-//        imageBox.setMaxSize(40, 30); // permette l'espansione
-//
-
-//        playerBoard.fitWidthProperty().bind(imageBox.widthProperty());
-//        playerBoard.fitHeightProperty().bind(imageBox.heightProperty());
-
-
-
 
         VBox mainBox = new VBox(10, GameNameLabel, players);
-//        VBox.setVgrow(imageBox, Priority.ALWAYS);
         mainBox.setAlignment(Pos.TOP_CENTER);
         mainBox.setPadding(new Insets(10));
 
@@ -365,18 +423,28 @@ public class GuiRoot implements View {
         Buttons.setPadding(new Insets(15));
         Buttons.setAlignment(Pos.CENTER);
 
-        StackPane root = new StackPane(mainBox, playerBoard, Buttons);
-        root.setPadding(new Insets(10));
-        root.setAlignment(Pos.TOP_CENTER);
+        VBox imageBox = new VBox(playerBoard, Buttons);
+
+        StackPane gameLobbyRoot = new StackPane(mainBox, imageBox);
+
+        gameLobbyRoot.setPadding(new Insets(10));
+        gameLobbyRoot.setAlignment(Pos.TOP_CENTER);
+
+        gameLobbyRoot.prefWidthProperty().bind(primaryStage.widthProperty());
+        gameLobbyRoot.prefHeightProperty().bind(primaryStage.heightProperty());
 
         playerBoard.setTranslateY(200);
         Buttons.setTranslateY(250);
 
-        Scene scene = new Scene(root, 800, 600);
+        Platform.runLater(() ->{
+            contentRoot.getChildren().setAll(gameLobbyRoot);
+        });
 
+        Platform.runLater(() ->{
+            printer.setGameLobby(primaryScene);
+            playerClient.showGame(printer);
+        });
 
-        printer.setGameLobby(scene);
-        playerClient.showGame(printer);
 
         //idplayer li salvo in un arraylist
         //player->playerstate.showGame
@@ -384,6 +452,102 @@ public class GuiRoot implements View {
 
     @Override
     public void rewardsChanged(RewardsEvent event) {
+
+    }
+
+    public void buildingScene(){
+        Label GameNameLabel = new Label("Game: " + myGameName);
+        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+        ImageView playerBoard = new ImageView(playerBoardImg);
+        playerBoard.setPreserveRatio(true);
+        playerBoard.setSmooth(true);
+        playerBoard.setFitWidth(500);
+
+        ImageView gameBoard = new ImageView(gameBoardImg);
+        gameBoard.setPreserveRatio(true);
+        gameBoard.setSmooth(true);
+        gameBoard.setFitWidth(400);
+
+
+        ImageView clockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow clockwise.png")));
+        clockwiseArrow.setPreserveRatio(true);
+        clockwiseArrow.setFitHeight(100);
+        clockwiseArrow.setFitWidth(50);
+        clockwiseArrow.setSmooth(false);
+        clockwiseArrow.setOnMouseClicked(event -> {
+            tileRotation += 90;
+            if(tileRotation == 360)
+                tileRotation = 0;
+            tileImage.setRotate(tileRotation);
+        });
+
+
+        ImageView counterclockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow counterclockwise.png")));
+        counterclockwiseArrow.setPreserveRatio(true);
+        counterclockwiseArrow.setFitHeight(100);
+        counterclockwiseArrow.setFitWidth(50);
+        counterclockwiseArrow.setSmooth(false);
+        counterclockwiseArrow.setOnMouseClicked(event -> {
+            tileRotation -= 90;
+            if(tileRotation == -90)
+                tileRotation = 270;
+            tileImage.setRotate(tileRotation);
+        });
+
+
+        Image tile;
+        if(tileImage.getImage() == null) {
+            tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
+            tileImage.setImage(tile);
+            tileImage.setOpacity(0.5);
+        }
+
+        Button pickTile = new Button("Pick Tile");
+        Button insertTile = new Button("Insert Tile");
+        Button discardTile = new Button("Discard");
+
+        pickTile.setOnAction(e -> {
+            inputQueue.add("PickTile -1");
+        });
+        discardTile.setOnAction(e -> {
+            inputQueue.add("Discard");
+        });
+
+
+        HBox tileBox =  new HBox(5, counterclockwiseArrow, tileImage, clockwiseArrow);
+        VBox Buttons = new VBox(15, tileBox, pickTile, insertTile, discardTile);
+        HBox buildKit = new HBox(20, playerBoard, Buttons);
+//        buildBox.prefWidthProperty().bind(primaryStage.widthProperty());
+//        buildBox.prefHeightProperty().bind(primaryStage.heightProperty());
+
+
+        VBox boardsBox = new VBox(10, GameNameLabel, gameBoard, buildKit);
+        boardsBox.setMaxWidth(800);
+        boardsBox.prefWidthProperty().bind(primaryStage.widthProperty());
+        boardsBox.prefHeightProperty().bind(primaryStage.heightProperty());
+        boardsBox.setPadding(new Insets(100));
+
+
+        ScrollPane uncoveredBox = new ScrollPane(uncoveredTiles);
+        uncoveredBox.setFitToWidth(true);
+        uncoveredBox.setPrefWidth(365);
+
+        uncoveredBox.setOpacity(0.4);
+
+        HBox mainBox = new HBox(10, uncoveredBox, boardsBox);
+        mainBox.setPadding(new Insets(50));
+
+        StackPane buildingRoot = new StackPane(mainBox);
+        buildingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
+        buildingRoot.prefHeightProperty().bind(primaryStage.heightProperty());
+
+        Platform.runLater(() ->{
+            contentRoot.getChildren().setAll(buildingRoot);
+        });
+
+        printer.setBuildingScene(primaryScene);
+
 
     }
 
@@ -462,10 +626,10 @@ public class GuiRoot implements View {
 
 
     public void goToFirstScene() {
-
+        sceneSetup();
 
         Label titleLabel = new Label("GALAXY TRUCKERS");
-        titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+        titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
         Button startButton = new Button("Start!");
         startButton.setStyle("-fx-font-size: 20px;");
@@ -474,17 +638,42 @@ public class GuiRoot implements View {
         TitleScreenBox.setAlignment(Pos.CENTER);
         TitleScreenBox.setPadding(new Insets(20));
         //TitleScreenBox.setMaxWidth(400);
+        StackPane titleRoot = new StackPane(TitleScreenBox);
+        TitleScreenBox.prefWidthProperty().bind(primaryStage.widthProperty());
+        TitleScreenBox.prefHeightProperty().bind(primaryStage.heightProperty());
 
-        BorderPane root = new BorderPane(TitleScreenBox);
-        root.setPadding(new Insets(10));
+        contentRoot.getChildren().setAll(titleRoot);
 
-        printer.setTitleScreen(new Scene(root, 600, 400));
+
+        printer.setTitleScreen(primaryScene);
         printer.printTitleScreen();
 
         startButton.setOnAction(e -> {
             inputQueue.add("Lobby");
             playerClient.setPlayerState(new LobbyClient());
         });
+    }
+
+    private void sceneSetup(){
+        primaryRoot = new StackPane();
+        contentRoot = new Pane();
+        primaryScene = new Scene(primaryRoot, 800, 600);
+
+        Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setAutoPlay(true);
+
+        MediaView background = new MediaView(mediaPlayer);
+        background.setPreserveRatio(false);
+
+        background.fitHeightProperty().bind(primaryStage.heightProperty());
+        background.fitWidthProperty().bind(primaryStage.widthProperty());
+
+
+        primaryRoot.getChildren().addAll(background, contentRoot);
+        primaryScene.setRoot(primaryRoot);
     }
 
     //printplayerboard(){..}

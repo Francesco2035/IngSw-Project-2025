@@ -139,6 +139,11 @@
       <artifactId>javafx-fxml</artifactId>
       <version>21.0.5</version>
     </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-media</artifactId>
+      <version>17.0.6</version>
+    </dependency>
 <dependency>
       <groupId>org.controlsfx</groupId>
       <artifactId>controlsfx</artifactId>
