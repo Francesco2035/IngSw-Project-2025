@@ -370,7 +370,7 @@ public class TUI implements View {
                             case 1 -> sb.append("\u001B[34m██\u001B[0m "); // Blu
                         }
                     }
-                    extra = sb.toString().trim();
+                    extra = sb.toString();
                 }
             }
 
@@ -400,7 +400,7 @@ public class TUI implements View {
         String centeredPart = centerText(leftPart, contentWidth - 8);
         cellLines[3] = "| < "+ left + centeredPart + right + " > |";
 
-        cellLines[4] = "|" + centerText(extra, contentWidth) + "|";
+        cellLines[4] = "|" + centerTextAnsi(extra, contentWidth) + "|";
 
         String position = " " + event.getX() + " : " + event.getY();
 

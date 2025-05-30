@@ -39,6 +39,7 @@ public class HandleCargoCommand extends Command implements Serializable {
         PlayerBoard playerBoard = player.getmyPlayerBoard();
         Goods temp;
         switch (title) {
+            //TODO:getfromorewards non vuole nessun index per aggiungere
             case "GetFromRewards": {
                 playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),
                         new AddGoodAction(
