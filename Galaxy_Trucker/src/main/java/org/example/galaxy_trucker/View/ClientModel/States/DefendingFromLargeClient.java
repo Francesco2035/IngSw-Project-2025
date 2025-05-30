@@ -20,6 +20,6 @@ public class DefendingFromLargeClient  extends PlayerStateClient{
 
     @Override
     public List<String> getCommands() {
-        return List.of("DefendFromLarge");
+        return List.of("DefendLarge");
     }
 }

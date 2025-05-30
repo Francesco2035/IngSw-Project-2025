@@ -28,7 +28,8 @@ public abstract class Controller {
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())) {
-            throw new IllegalStateException("Command not accepted: " + command.getClass() + " \n" + curPlayer.getPlayerState());
+            sendException(new IllegalStateException("You can't do this command!"));
+            //throw new IllegalStateException("Command not accepted: " + command.getClass() + " \n" + curPlayer.getPlayerState());
         }
 
         try {

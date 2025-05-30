@@ -32,6 +32,8 @@ public class CommandCompleter implements DynamicCompleter {
         description.put("getreward", "i_1 x y i_2 : put the good in position i_1 \n" +
                                  "in the selected tile and in the i_2 position");
         description.put("finishcargo", ":finish handlecargo phase");
+        description.put("defendlarge", "");
+        description.put("defendsmall", "x y");
     }
     @Override
     public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {

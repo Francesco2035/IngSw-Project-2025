@@ -45,8 +45,8 @@ public class TUI implements View {
     private final int contentWidth = 33;
     private String[][][] cachedBoard;
     private String[] cacheHand = null;
-    private final String gamboardBorder = "+-----------------------+";
-    private final String border = "+---------------------------------+";
+    private final String gamboardBorder = "+━━━━━━━━━━━━━━━━━━━━━━━+";
+    private final String border = "+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━+";
     private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
     private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap();
     private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
@@ -155,7 +155,7 @@ public class TUI implements View {
 
     @Override
     public void phaseChanged(PhaseEvent event) {
-        System.out.println("STATE CHANGED: "+ event.getStateClient().getClass());
+        //System.out.println("STATE CHANGED: "+ event.getStateClient().getClass());
         playerClient.setPlayerState(event.getStateClient());
         playerClient.getCompleter().setCommands(event.getStateClient().getCommands());
         onGameUpdate();
@@ -364,10 +364,10 @@ public class TUI implements View {
                     StringBuilder sb = new StringBuilder();
                     for (Goods g : event.getCargo()) {
                         switch (g.getValue()) {
-                            case 4 -> sb.append("\u001B[31m[]\u001B[0m "); // Rosso
-                            case 3 -> sb.append("\u001B[33m[]\u001B[0m "); // Giallo
-                            case 2 -> sb.append("\u001B[32m[]\u001B[0m "); // Verde
-                            case 1 -> sb.append("\u001B[34m[]\u001B[0m "); // Blu
+                            case 4 -> sb.append("\u001B[31m██\u001B[0m "); // Rosso
+                            case 3 -> sb.append("\u001B[33m██\u001B[0m "); // Giallo
+                            case 2 -> sb.append("\u001B[32m██\u001B[0m "); // Verde
+                            case 1 -> sb.append("\u001B[34m██\u001B[0m "); // Blu
                         }
                     }
                     extra = sb.toString().trim();
@@ -618,7 +618,7 @@ public class TUI implements View {
 
 
     public synchronized void onGameUpdate() {
-        System.out.println("waiting all package");
+        //System.out.println("waiting all package");
         if (scheduledTask != null && !scheduledTask.isDone()) {
             scheduledTask.cancel(false);
         }
@@ -650,10 +650,10 @@ public class TUI implements View {
         for (Goods goods : goodsList) {
             sb.append("| (pos: "+k+") ");
             switch (goods.getValue()){
-                    case 4 -> sb.append("\u001B[31m[]\u001B[0m"); // Rosso
-                    case 3 -> sb.append("\u001B[33m[]\u001B[0m"); // Giallo
-                    case 2 -> sb.append("\u001B[32m[]\u001B[0m"); // Verde
-                    case 1 -> sb.append("\u001B[34m[]\u001B[0m"); // Blu
+                    case 4 -> sb.append("\u001B[31m██\u001B[0m"); // Rosso
+                    case 3 -> sb.append("\u001B[33m██\u001B[0m"); // Giallo
+                    case 2 -> sb.append("\u001B[32m██\u001B[0m"); // Verde
+                    case 1 -> sb.append("\u001B[34m██\u001B[0m"); // Blu
 
             }
             sb.append(" |");

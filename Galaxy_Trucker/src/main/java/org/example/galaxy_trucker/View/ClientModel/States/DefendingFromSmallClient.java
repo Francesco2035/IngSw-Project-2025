@@ -19,6 +19,6 @@ public class DefendingFromSmallClient  extends PlayerStateClient{
 
     @Override
     public List<String> getCommands() {
-        return List.of("DefendFromSmall");
+        return List.of("DefendSmall");
     }
 }

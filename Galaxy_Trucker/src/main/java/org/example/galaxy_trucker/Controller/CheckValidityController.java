@@ -20,7 +20,8 @@ public class CheckValidityController extends Controller{
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
-            throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
+            sendException(new IllegalStateException("Command not accepted, you can only remove tile!"));
+            //throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
         }
 
         try {

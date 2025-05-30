@@ -23,7 +23,8 @@ public class PostPrepController extends Controller {
         System.out.println("POST_PREP_CONTROLLER");
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
-            throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
+            sendException(new IllegalStateException("You can only add aliens or humans!"));
+            //throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
         }
 
         try {

@@ -35,7 +35,7 @@ public class Out {
     private final int contentWidth = 33;
     private String[][][] cachedBoard;
     private String[] cacheHand = null;
-    private final String border = "+---------------------------------+";
+    private final String border = "+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━+";
     private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
     private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap();
     private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
@@ -209,7 +209,7 @@ public class Out {
             for (String[] game : lobby.values()) {
                 sb.append(game[i] + "   ");
             }
-            sb.append(String.valueOf(sb)+"\n");
+            sb.append("\n");
 
         }
         sb.append("\n\n");
@@ -222,7 +222,7 @@ public class Out {
         StringBuilder toPrint = new StringBuilder();
         int rows = 10;
         int cols = 10;
-        toPrint.append("\n############################ BOARD ############################\n");
+        toPrint.append("\n"+ASCII_ART.Board+"\n");
         toPrint.append("\n\n");
         //System.out.println("############################ BOARD ############################\n");
         for (int y = 0; y < rows; y++) {
@@ -253,7 +253,7 @@ public class Out {
         //toPrint.append("\n");
 
         //System.out.println("\n############################ ##### ############################");
-        toPrint.append("\n############################ ##### ############################\n");
+        toPrint.append(ASCII_ART.Border);
         return toPrint;
     }
 
@@ -262,7 +262,7 @@ public class Out {
     public StringBuilder showUncoveredTiles() {
         //TODO: spezzare le uncovered in %6, sarà ncasino
         StringBuilder toPrint = new StringBuilder();
-        toPrint.append("\n############################ UNCOVERED TILES ############################\n");
+        toPrint.append(ASCII_ART.UncoveredTiles);
 
         StringBuilder line = new StringBuilder();
         StringBuilder topLine = new StringBuilder();
@@ -280,7 +280,7 @@ public class Out {
         }
         toPrint.append(String.valueOf(topLine));
         toPrint.append(String.valueOf(line));
-        toPrint.append("\n############################ ############## ############################\n");
+        toPrint.append(ASCII_ART.Border);
         return toPrint;
 
     }
@@ -291,20 +291,19 @@ public class Out {
         StringBuilder toPrint = new StringBuilder();
         //inputReader.clearScreen();
         
-        toPrint.append("\n\n############################ HAND ############################\n\n");
+        toPrint.append(ASCII_ART.Hand);
         for (String l : cacheHand) toPrint.append("\n"+l);
         toPrint.append("\n"+border + "\n");
-        toPrint.append("\n############################ #### ############################\n");
+        toPrint.append(ASCII_ART.Border);
         return toPrint;
     }
 
 
     public  StringBuilder printGameboard(){
-        //inputReader.clearScreen();
+
         StringBuilder toPrint = new StringBuilder();
-        toPrint.append("\n\n\n########################## GameBoard #########################\n\n");
-        //toPrint.append("\n\n");
-        //toPrint.append("########################## GameBoard #########################\n");
+        toPrint.append(ASCII_ART.GameBoard);
+
         if (lv == 2){
             for (int i = 0; i < 6; i++) {
 
@@ -321,8 +320,8 @@ public class Out {
         else{
 
         }
-        //toPrint.append("\n");
-        toPrint.append("\n\n########################## ######### #########################\n\n");
+
+        toPrint.append(ASCII_ART.Border);
         return toPrint;
 
 
@@ -418,14 +417,18 @@ public class Out {
 
     public StringBuilder showCovered(){
         StringBuilder toPrint = new StringBuilder();
-        toPrint.append("\n\n############################ COVERED TILES SET ############################\n\n");
+        toPrint.append(ASCII_ART.CoveredTiles);
         toPrint.append("\n CoveredTileSet size: "+ CoveredTileSet);
         return toPrint;
     }
 
     public StringBuilder showCard(){
         StringBuilder toPrint = new StringBuilder();
+
         if (!CacheCard.equals("")){
+            toPrint.append("\n\n");
+            toPrint.append(ASCII_ART.Card);
+            toPrint.append("\n\n");
             toPrint.append("\n\n"+ CacheCard+ "\n\n");
         }
         else{

@@ -870,6 +870,15 @@ public class PlayerBoard {
     }
 
 
+    public ArrayList<Tile> getBuffer(){
+        return Buffer;
+    }
+
+    public void setBuffer (ArrayList<Tile> newBuffer) {
+        this.Buffer = newBuffer;
+    }
+
+
     public PlayerBoard clone(){
         PlayerBoard clonedPlayerBoard = new PlayerBoard(lv);
         clonedPlayerBoard.broken = broken;
@@ -894,6 +903,7 @@ public class PlayerBoard {
         clonedPlayerBoard.connectedHousingUnits = new ArrayList<>();
         clonedPlayerBoard.Rewards = new ArrayList<>(this.Rewards);
         clonedPlayerBoard.rewardsListener = this.getRewardsListener();
+        clonedPlayerBoard.setBuffer(this.Buffer);
         if (clonedPlayerBoard.rewardsListener == null){
             System.out.println("sincero non capisco il perchè");
         }
