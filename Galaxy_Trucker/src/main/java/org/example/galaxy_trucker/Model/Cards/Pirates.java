@@ -160,6 +160,15 @@ public class Pirates extends Card{
 
     @Override
     public void continueCard() {
+        /// cose per stampare al client
+        String dimensione= new String();
+        String direction = new String();
+        String Colpito = new String("missed you");
+        String location = new String("");
+
+
+
+
         int Movement;
         boolean shotsFlag= false;
             while (this.ShotsOrder < Punishment.size() && shotsFlag == false) {
@@ -168,11 +177,21 @@ public class Pirates extends Card{
 
             PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard(); //prendo plancia
             int[][] MeteoritesValidPlanche = CurrentPlanche.getValidPlayerBoard();//prende matrice validita
-            if (Punishment.get(ShotsOrder) == 0) { //sinistra
+
+                if(Punishment.get(ShotsOrder+1)==0) {
+                    dimensione = new String("small");
+
+                }
+                else {
+                    dimensione = new String("large");
+                }
+            if (Punishment.get(ShotsOrder) == 0) { ///sinistra
+                direction = new String("the left on line "+lines[ShotsOrder]);
                 Movement = 0;
                 while (Movement < 10  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
-                    if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
 
+                    if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
+                        location = new String(lines[ShotsOrder/2]+" "+Movement);
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
@@ -195,6 +214,7 @@ public class Pirates extends Card{
                         }
                         else {//colpo piccolo
                             currentPlayer.setState(new DefendingFromSmall());
+                            Colpito= new String("hit you");
                         }
                         }
 
@@ -202,11 +222,12 @@ public class Pirates extends Card{
                     Movement++;
                 }
             }
-            else if (Punishment.get(ShotsOrder) == 1) {//sopra
+            else if (Punishment.get(ShotsOrder) == 1) {///sopra
+                direction = new String("above on line "+lines[ShotsOrder]);
                 Movement = 0;
                 while (Movement < 10 && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-
+                        location = new String(Movement+" "+lines[ShotsOrder/2]);
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
@@ -228,6 +249,7 @@ public class Pirates extends Card{
 
                         }
                         else {//colpo piccolo
+                            Colpito= new String("hit you");
                             currentPlayer.setState(new DefendingFromSmall());
                         }
 
@@ -237,9 +259,11 @@ public class Pirates extends Card{
                 }
             }
             else if (Punishment.get(ShotsOrder) == 2) {// destra
+                direction = new String("the right on line "+lines[ShotsOrder]);
                 Movement = 9;
                 while (Movement >= 0   && lines[ShotsOrder/2]<10&& shotsFlag == false) {
                     if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {
+                        location = new String(lines[ShotsOrder/2]+" "+Movement);
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder/2]);
@@ -263,6 +287,7 @@ public class Pirates extends Card{
 
                         }
                         else {//colpo piccolo
+                            Colpito= new String("hit you");
                             currentPlayer.setState(new DefendingFromSmall());
                         }
 
@@ -272,9 +297,11 @@ public class Pirates extends Card{
 
             }
             else { //sotto
+                direction = new String("below on column "+lines[ShotsOrder]);
                 Movement = 9;
                 while (Movement >= 0  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
+                        location = new String(Movement+" "+lines[ShotsOrder/2]);
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
@@ -295,6 +322,7 @@ public class Pirates extends Card{
 
                         }
                         else {//colpo piccolo
+                            Colpito= new String("hit you");
                             currentPlayer.setState(new DefendingFromSmall());
                         }
                         }
@@ -307,6 +335,7 @@ public class Pirates extends Card{
             if(shotsFlag == false){
             this.ShotsOrder += 2;
             }
+            /// Todo aggiungere il messaggio a client e chiedere a francio che fare perche potrebbeb fare più di una chiamata per stato in caso di miss lezgosk
         }
         if(this.ShotsOrder >=Punishment.size() ){
             this.ShotsOrder = 0;
@@ -369,6 +398,11 @@ public class Pirates extends Card{
         this.setFinished(true);
     }
 
+
+    public void keepGoing(){
+
+        continueCard();
+    }
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
