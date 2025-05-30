@@ -18,5 +18,6 @@ class CheckValidityTest {
         newPlayer.setMyPlance(TestSetupHelper.createInitializedBoard5());
         newPlayer.getPlayerState().createDefaultCommand("dragone", newPlayer).execute(newPlayer);
     }
-
+//rimozione tile data disconnessione
+    //testare costruendo board non valide e facendole rompere in automatico da questo
 }

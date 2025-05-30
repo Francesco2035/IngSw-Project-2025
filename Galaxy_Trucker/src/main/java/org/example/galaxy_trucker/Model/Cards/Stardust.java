@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
+import org.example.galaxy_trucker.Model.PlayerStates.ReadCardState;
 
 import java.util.ArrayList;
 
@@ -12,10 +13,16 @@ public class Stardust extends Card {
         super(level, 0 ,board);
     }
     @Override
-    public void CardEffect () {
+    public void CardEffect () throws InterruptedException {
+
+
 
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
+        for(Player p : PlayerList){
+            p.setState(new ReadCardState());
+        }
+        Thread.sleep(5000);
         PlayerBoard CurrentPlanche;
         int Order=PlayerList.size()-1;
         int StarpowderMovement=0;

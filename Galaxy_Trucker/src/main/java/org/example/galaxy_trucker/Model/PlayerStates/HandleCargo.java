@@ -44,6 +44,12 @@ public class HandleCargo extends PlayerState {
 //        }
 //    }
 
+
+    @Override
+    public boolean allows(HandleCargoCommand command) {
+        return true;
+    }
+
     @Override
     public boolean allows(AddGoodAction action){
         return true;

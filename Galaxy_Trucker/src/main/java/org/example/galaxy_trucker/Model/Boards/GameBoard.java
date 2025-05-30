@@ -16,6 +16,8 @@ import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+//TODO: vincolo player non può scegliere posizione nella gameboard se pos > numPlayer
+// dovrebbe essere stato fatto
 public class GameBoard {
 
     // questo arrayList tiene conto della posizione effettiva nel Game
@@ -307,7 +309,13 @@ public class GameBoard {
         }
 
         CurrentCard.setBoard(this);
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
         System.out.println("Id Card: " +CurrentCard.getId() + " "+ CurrentCard.getClass().getName());
         return CurrentCard;
     }

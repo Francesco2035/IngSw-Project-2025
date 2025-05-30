@@ -2,13 +2,24 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.awt.image.AffineTransformOp;
+import java.util.List;
+
 public class HandleCargoClient  extends PlayerStateClient{
     @Override
     public void showGame(Out out) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(out.showPlayers());
-        stringBuilder.append(out.printGameboard());
-        stringBuilder.append(out.showRewards());
-        stringBuilder.append(out.printBoard());
+        StringBuilder toPrint = new StringBuilder();
+        toPrint.append("HandleCargo...\n\n");
+        toPrint.append(out.showPlayers());
+        toPrint.append(out.printGameboard());
+        toPrint.append(out.showRewards());
+        toPrint.append(out.printBoard());
+        toPrint.append(out.showException());
+        out.render(toPrint);
+    }
+
+    @Override
+    public List<String> getCommands() {
+        return List.of("GetReward","Switch", "DiscardCargo", "FinishCargo");
     }
 }

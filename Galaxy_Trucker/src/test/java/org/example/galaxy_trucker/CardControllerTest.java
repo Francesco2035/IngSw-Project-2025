@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CardControllerTest {
 
@@ -59,9 +60,9 @@ public class CardControllerTest {
         System.out.println("\n");
         p2.setMyPlance(TestSetupHelper.createInitializedBoard2());
 
-        assertEquals(true, p1.getmyPlayerBoard().checkValidity());
+        assertTrue(p1.getmyPlayerBoard().checkValidity());
         System.out.println("sksk");
-        assertEquals(true, p2.getmyPlayerBoard().checkValidity());
+        assertTrue(p2.getmyPlayerBoard().checkValidity());
 
         TestSetupHelper.HumansSetter1(p1.getmyPlayerBoard());
         TestSetupHelper.HumansSetter1(p2.getmyPlayerBoard());
@@ -90,16 +91,21 @@ public class CardControllerTest {
         CurrentCard.setBoard(Gboard);
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
 
-        assertEquals(p1.getPlayerState().getClass(), Accepting.class);
-        assertEquals(p2.getPlayerState().getClass(), Waiting.class);
+        assertEquals(Accepting.class, p1.getPlayerState().getClass());
+        assertEquals(Waiting.class, p2.getPlayerState().getClass());
         AcceptCommand acceptCommand = new AcceptCommand(game.getID(), p1.GetID(), Gboard.getLevel(), "AcceptCommand", false, "placeholder");
 
         acceptCommand.execute(p1);
-        assertEquals(p2.getPlayerState().getClass(), Accepting.class);
-        assertEquals(p1.getPlayerState().getClass(), Waiting.class);
+        assertEquals(Accepting.class, p2.getPlayerState().getClass());
+        assertEquals(Waiting.class, p1.getPlayerState().getClass());
         acceptCommand = new AcceptCommand(game.getID(), p2.GetID(), Gboard.getLevel(), "AcceptCommand", false, "placeholder");
         acceptCommand.execute(p2);
 
@@ -138,7 +144,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
 
         assertEquals(p1.getPlayerState().getClass(), Accepting.class);
@@ -202,7 +213,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
         DefendFromSmallCommand defendFromSmallCommand;
         DefendFromLargeCommand defendFromLargeCommand;
         int i=0;
@@ -261,7 +277,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
 
         assertEquals(p1.getPlayerState().getClass(), GiveSpeed.class);
@@ -309,7 +330,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
         assertEquals(p1.getPlayerState().getClass(), ChoosingPlanet.class);
         assertEquals(false, p1.GetHasActed());

@@ -5,6 +5,8 @@ import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.List;
+
 public class LobbyClient extends PlayerStateClient {
 
     @Override
@@ -12,14 +14,18 @@ public class LobbyClient extends PlayerStateClient {
         StringBuilder toPrint = new StringBuilder();
         toPrint.append("Lobby\n\n");
         toPrint.append(out.showLobby());
+        toPrint.append(out.showException());
         out.render(toPrint);
-        //out.printMessage(toPrint.toString());
-//        out.printMessage("Lobby");
-//        out.showLobby();
+
     }
 
     @Override
     public void showGame(GuiOut out){
         out.printLobby();
+    }
+
+    @Override
+    public List<String> getCommands() {
+        return List.of("");
     }
 }

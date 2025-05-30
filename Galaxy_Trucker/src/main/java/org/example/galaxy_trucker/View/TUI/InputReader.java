@@ -1,6 +1,6 @@
-package org.example.galaxy_trucker.Commands;
+package org.example.galaxy_trucker.View.TUI;
 
-import org.jline.jansi.AnsiConsole;
+import org.jline.reader.Completer;
 import org.jline.reader.Highlighter;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -14,7 +14,6 @@ import org.jline.utils.InfoCmp;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.BlockingQueue;
 
@@ -26,8 +25,14 @@ public class InputReader implements Runnable {
     AttributedString prompt;
     Highlighter highlighter;
     Terminal terminal;
+    DynamicCompleter completer;
+
 
     public InputReader(BlockingQueue<String> inputQueue) throws IOException {
+
+
+        completer = new CommandCompleter();
+
 
         this.inputQueue = inputQueue;
         terminal = TerminalBuilder.builder()
@@ -50,12 +55,14 @@ public class InputReader implements Runnable {
         this.Lreader = LineReaderBuilder.builder()
                 .terminal(terminal)
                 .highlighter(highlighter)
+                .completer(completer)
                 .build();
 
 
         prompt = new AttributedStringBuilder()
                 .append("> ", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW))
                 .toAttributedString();
+
 
         //The TerminalBuilder will figure out the current Operating System and which actual Terminal implementation to use.
         // Note that on the Windows platform you need to have either Jansi or JNA library in your classpath.
@@ -121,6 +128,20 @@ public class InputReader implements Runnable {
     private int lastRenderHeight = 0;
 
     public synchronized void renderScreen(StringBuilder content) {
+
+        try{
+            if(System.getProperty("os.name").contains("Windows")){
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            }
+            else
+                Runtime.getRuntime().exec("clear");
+        }
+        catch (IOException | InterruptedException _){
+            ;
+        }
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        //TODO: capire quale sistema operativo è e fare clean di conseguenza
         String partialInput = Lreader.getBuffer().toString();
         System.out.print("\033[3J");
         terminal.puts(InfoCmp.Capability.clear_screen);
@@ -145,7 +166,7 @@ public class InputReader implements Runnable {
 
     }
 
-
-
-
+    public DynamicCompleter getCompleter() {
+        return completer;
+    }
 }

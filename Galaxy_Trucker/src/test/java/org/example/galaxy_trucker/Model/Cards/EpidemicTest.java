@@ -84,7 +84,12 @@ class EpidemicTest {
 //        playerBoard1.getGetter().get();
 //        playerBoard1.getGetter().get();
 
-        epidemicTest.CardEffect();
+        try{
+            epidemicTest.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
         Franci= TGameBoard.getPlayers().get(0);
 
     }

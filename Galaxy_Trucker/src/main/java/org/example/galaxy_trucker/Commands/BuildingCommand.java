@@ -42,56 +42,57 @@ public class BuildingCommand extends Command implements Serializable {
 
 
     @Override
-    public void execute(Player player) throws RemoteException, JsonProcessingException {
+    public void execute(Player player) throws RemoteException, JsonProcessingException, IllegalStateException {
 
         if(!player.GetReady() || (Objects.equals(title, "HOURGLASS"))){
             switch (title) {
 
-            case "SEEDECK": {
-                player.getCommonBoard().getCardStack().notify(playerId, x);
-            }
-
-            case "INSERTTILE": {
-                Tile tile = player.getCurrentTile();
-                int rotations = (rotation % 360) / 90;
-                for (int i = 0; i < rotations; i++) {
-                    tile.RotateDx();
-                }
-                player.getmyPlayerBoard().insertTile(tile, x, y, true);
-                player.setCurrentTile(null);
-                break;
-            }
-            case "TOBUFFER" :{
-                Tile tile = player.getCurrentTile();
-                int rotations = (rotation % 360) / 90;
-                for (int i = 0; i < rotations; i++) {
-                    tile.RotateDx();
-                }
-                player.PlaceInBuffer();
-                break;
-            }
-            case "FROMBUFFER" :{
-
-                player.SelectFromBuffer(position);
-                break;
-            }
-            case "PICKTILE":{
-                player.PickNewTile(position);
-                break;
-            }
-            case "DISCARD":{
-                player.DiscardTile();
-                break;
-            }
-            case "HOURGLASS":{
-                    try {
-                        player.StartTimer();
-                    } catch (RuntimeException e) {
-                        throw new RuntimeException(e);
+                    case "SEEDECK": {
+                        player.getCommonBoard().getCardStack().notify(playerId, x);
                     }
-                    break;
+
+                    case "INSERTTILE": {
+                        Tile tile = player.getCurrentTile();
+                        int rotations = (rotation % 360) / 90;
+                        for (int i = 0; i < rotations; i++) {
+                            tile.RotateDx();
+                        }
+                        player.getmyPlayerBoard().insertTile(tile, x, y, true);
+                        player.setCurrentTile(null);
+                        break;
+                    }
+                    case "TOBUFFER": {
+                        Tile tile = player.getCurrentTile();
+                        int rotations = (rotation % 360) / 90;
+                        for (int i = 0; i < rotations; i++) {
+                            tile.RotateDx();
+                        }
+                        player.PlaceInBuffer();
+                        break;
+                    }
+                    case "FROMBUFFER": {
+                        player.SelectFromBuffer(position);
+                        break;
+                    }
+                    case "PICKTILE": {
+                        player.PickNewTile(position);
+                        break;
+                    }
+                    case "DISCARD": {
+                        System.out.println(player.GetID()+" sta scartando");
+                        player.DiscardTile();
+                        break;
+                    }
+                    case "HOURGLASS": {
+                        try {
+                            player.StartTimer();
+                        } catch (RuntimeException e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                    }
                 }
-            }
+
         }
 
     }
@@ -113,6 +114,6 @@ public class BuildingCommand extends Command implements Serializable {
 
     @Override
     public boolean allowedIn(PlayerState playerState) {
-        return playerState.allows(this);
+        return playerState.allows(this); //TODO: aggiungere caso per playerstate == null => eccezione
     }
 }

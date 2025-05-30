@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 //TODO: fare un solo listener, sono scemo non c'era bisogno di crearne 20000 tanto il dispatch viene fatto lato client col pattern, prima finiamo un game e poi cambiamo
-public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener{
+public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener, ExceptionListener{
 
     private boolean Disconnected = false;
     private TileEvent[][] eventMatrix;
@@ -38,7 +38,6 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private GameBoardEvent board = null;
     private PhaseEvent phase = null;
     private RewardsEvent rewardsEvent = null;
-    //83.55
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, PrintWriter echoSocket) {
@@ -48,7 +47,6 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         eventMatrix = new TileEvent[10][10];
         this.out = echoSocket;
     }
-
 
 
     public void setEventMatrix(int lv) {
@@ -125,6 +123,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             }
         }
     }
+
 
     public void sendEvent(TileEvent event) {
         if (!Disconnected) {
@@ -390,9 +389,15 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         }
     }
 
+
     @Override
-    public void sendEvent(RewardsEvent e) {
+    public void rewardsChanged(RewardsEvent e) {
         rewardsEvent = e;
         sendEvent(e);
+    }
+
+    @Override
+    public void exceptionOccured(ExceptionEvent event) {
+        sendEvent(event);
     }
 }

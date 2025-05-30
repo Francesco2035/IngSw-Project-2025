@@ -5,7 +5,6 @@ package org.example.galaxy_trucker.View.TUI;
 //se disconnesso setta player a stato di disconnessione e chiama
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.galaxy_trucker.Commands.InputReader;
 import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -46,8 +45,8 @@ public class TUI implements View {
     private final int contentWidth = 33;
     private String[][][] cachedBoard;
     private String[] cacheHand = null;
-    private final String gamboardBorder = "+-----------------------+";
-    private final String border = "+---------------------------------+";
+    private final String gamboardBorder = "+━━━━━━━━━━━━━━━━━━━━━━━+";
+    private final String border = "+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━+";
     private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
     private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap();
     private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
@@ -156,9 +155,15 @@ public class TUI implements View {
 
     @Override
     public void phaseChanged(PhaseEvent event) {
-        System.out.println("STATE CHANGED: "+ event.getStateClient().getClass());
+        //System.out.println("STATE CHANGED: "+ event.getStateClient().getClass());
         playerClient.setPlayerState(event.getStateClient());
+        playerClient.getCompleter().setCommands(event.getStateClient().getCommands());
+        onGameUpdate();
+    }
 
+    @Override
+    public void exceptionOccurred(ExceptionEvent exceptionEvent) {
+        out.setException(exceptionEvent.getException());
         onGameUpdate();
     }
 
@@ -199,7 +204,8 @@ public class TUI implements View {
         }
         inputReader = new InputReader(inputQueue);
         inputThread = new Thread(inputReader);
-        inputThread.setDaemon(true); // opzionale, per terminare col processo principale
+        playerClient.setCompleter(inputReader.getCompleter());
+        inputThread.setDaemon(true);
         inputThread.start();
         phase = ViewPhase.LOBBY;
         inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));
@@ -358,13 +364,13 @@ public class TUI implements View {
                     StringBuilder sb = new StringBuilder();
                     for (Goods g : event.getCargo()) {
                         switch (g.getValue()) {
-                            case 4 -> sb.append("\u001B[31m■\u001B[0m "); // Rosso
-                            case 3 -> sb.append("\u001B[33m■\u001B[0m "); // Giallo
-                            case 2 -> sb.append("\u001B[32m■\u001B[0m "); // Verde
-                            case 1 -> sb.append("\u001B[34m■\u001B[0m "); // Blu
+                            case 4 -> sb.append("\u001B[31m██\u001B[0m "); // Rosso
+                            case 3 -> sb.append("\u001B[33m██\u001B[0m "); // Giallo
+                            case 2 -> sb.append("\u001B[32m██\u001B[0m "); // Verde
+                            case 1 -> sb.append("\u001B[34m██\u001B[0m "); // Blu
                         }
                     }
-                    extra = sb.toString().trim();
+                    extra = sb.toString();
                 }
             }
 
@@ -394,7 +400,7 @@ public class TUI implements View {
         String centeredPart = centerText(leftPart, contentWidth - 8);
         cellLines[3] = "| < "+ left + centeredPart + right + " > |";
 
-        cellLines[4] = "|" + centerText(extra, contentWidth) + "|";
+        cellLines[4] = "|" + centerTextAnsi(extra, contentWidth) + "|";
 
         String position = " " + event.getX() + " : " + event.getY();
 
@@ -477,7 +483,7 @@ public class TUI implements View {
     }
 
     public void updateHand(HandEvent event) {
-        inputReader.printServerMessage("\n" + border);
+        //inputReader.printServerMessage("\n" + border);
         if(event.getId() == 158){
             out.setCacheHand(emptyCell());
         }
@@ -524,16 +530,21 @@ public class TUI implements View {
 
     @Override
     public void updateUncoveredTilesSet(UncoverdTileSetEvent event) {
-        out.setUncoveredTilesId(event.getId()); //QUI
-        out.setUncoverdTileSetCache(event.getId(), null);//QUI
-
         if(event.getConnectors() != null) {
-            uncoveredTilesId.add(event.getId());
+            out.setUncoveredTilesId(event.getId());
 
             String[] cache = formatCell(new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors()));
 
             out.setUncoverdTileSetCache(event.getId(), cache); //QUI
         }
+        else{
+
+            out.setUncoveredTilesId(event.getId()); //QUI
+            out.setUncoverdTileSetCache(event.getId(), null);//QUI
+        }
+
+
+
         onGameUpdate();
     }
 
@@ -607,13 +618,19 @@ public class TUI implements View {
 
 
     public synchronized void onGameUpdate() {
+        //System.out.println("waiting all package");
         if (scheduledTask != null && !scheduledTask.isDone()) {
             scheduledTask.cancel(false);
         }
 
         scheduledTask = scheduler.schedule(() -> {
             //inputReader.clearScreen();
-            out.showGame();
+            try{
+                out.showGame();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }, debounceDelayMs, TimeUnit.MILLISECONDS);
     }
 
@@ -633,10 +650,10 @@ public class TUI implements View {
         for (Goods goods : goodsList) {
             sb.append("| (pos: "+k+") ");
             switch (goods.getValue()){
-                    case 4 -> sb.append("\u001B[31m■\u001B[0m "); // Rosso
-                    case 3 -> sb.append("\u001B[33m■\u001B[0m "); // Giallo
-                    case 2 -> sb.append("\u001B[32m■\u001B[0m "); // Verde
-                    case 1 -> sb.append("\u001B[34m■\u001B[0m "); // Blu
+                    case 4 -> sb.append("\u001B[31m██\u001B[0m"); // Rosso
+                    case 3 -> sb.append("\u001B[33m██\u001B[0m"); // Giallo
+                    case 2 -> sb.append("\u001B[32m██\u001B[0m"); // Verde
+                    case 1 -> sb.append("\u001B[34m██\u001B[0m"); // Blu
 
             }
             sb.append(" |");
@@ -650,5 +667,5 @@ public class TUI implements View {
 
 
 }
-
+//TODO: utilizzare strip ansi suppongo per formattare il cargo
 //riceve eventi e formatta, aggiorna il "client"

@@ -1,23 +1,17 @@
 package org.example.galaxy_trucker.View.ClientModel;
 
-import org.example.galaxy_trucker.Commands.InputReader;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.View.ClientModel.States.PlayerStateClient;
 import org.example.galaxy_trucker.View.GUI.GuiOut;
+import org.example.galaxy_trucker.View.TUI.CommandCompleter;
+import org.example.galaxy_trucker.View.TUI.DynamicCompleter;
 import org.example.galaxy_trucker.View.TUI.Out;
-import org.example.galaxy_trucker.View.ViewPhase;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import org.jline.reader.Completer;
 
 public class PlayerClient {
 
 
     private PlayerStateClient state;
+    private DynamicCompleter completer;
 
 
     public void showGame(Out out){
@@ -34,6 +28,14 @@ public class PlayerClient {
 
     public PlayerStateClient getPlayerState() {
         return state;
+    }
+
+    public void setCompleter(DynamicCompleter completer) {
+        this.completer = completer;
+    }
+
+    public DynamicCompleter getCompleter() {
+        return this.completer;
     }
 
 }

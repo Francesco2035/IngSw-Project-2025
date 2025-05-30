@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.ClientServer.TCP.TCPClient;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
@@ -35,12 +36,12 @@ public class Client implements EventVisitor {
     }
 
     public void startRMIClient() throws IOException, NotBoundException {
-        String ip = NetworkUtils.getLocalIPAddress();
+        //String ip = NetworkUtils.getLocalIPAddress();
 
         //TODO: da fare in modo dinamico, non so se la classe networkutils lo trova quello di zerotier
-        System.setProperty("java.rmi.server.hostname", ip);
+        //System.setProperty("java.rmi.server.hostname", ip);
 
-        System.out.println("RMI hostname set to: " + ip);
+        //System.out.println("RMI hostname set to: " + ip);
         rmiClient = new RMIClient(this);
         rmiClient.StartClient();
     }
@@ -154,6 +155,14 @@ public class Client implements EventVisitor {
     }
 
     @Override
+    public void visit(RewardsEvent rewardsEvent) {this.view.rewardsChanged(rewardsEvent);}
+
+    @Override
+    public void visit(ExceptionEvent exceptionEvent) {
+        this.view.exceptionOccurred(exceptionEvent);
+    }
+
+    @Override
     public void visit(DeckEvent event) {
         this.view.showDeck(event);
     }
@@ -197,6 +206,7 @@ public class Client implements EventVisitor {
     public void visit(GameBoardEvent gameBoardEvent) {
         this.view.updateGameboard(gameBoardEvent);
     }
+
 
     public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException, InterruptedException {
         if (connection.equals("RMI")) {

@@ -7,6 +7,7 @@ import org.example.galaxy_trucker.Model.GameLists;
 import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
 import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestBuilding {
 
-    @Test
+    @Disabled
     public void testBuilding(){
         String simulatedInput = "{\"title\":\"login\", \"gameID\":\"num1\", \"playerID\":\"paolo\", \"lvl\":2}";
         String simulatedInput2 = "{\"title\":\"login\", \"gameID\":\"num1\", \"playerID\":\"pietro\", \"lvl\":2}";

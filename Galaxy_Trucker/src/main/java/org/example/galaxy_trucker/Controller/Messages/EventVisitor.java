@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Controller.Messages;
 
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 
@@ -28,6 +29,11 @@ public interface EventVisitor {
     void visit(LobbyEvent lobbyEvent);
 
     void visit(PhaseEvent phaseEvent);
+
+    void visit(RewardsEvent rewardsEvent);
+
+    void visit(ExceptionEvent exceptionEvent);
+
 
     //public void visit(GameBoardEvent event);
 }

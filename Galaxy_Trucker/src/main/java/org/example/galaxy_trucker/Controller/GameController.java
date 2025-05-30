@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
+import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Controller.Listeners.GameLobbyListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
@@ -77,6 +78,13 @@ public class GameController  implements ConcurrentCardListener {
 
     }
 
+
+
+    public HashMap<String, Controller> getControllerMap() {
+        return ControllerMap;
+    }
+
+
     public void NewPlayer(Player p, VirtualView vv, UUID token){
         if (ControllerMap.keySet().contains(p.GetID())) {
             throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists");
@@ -85,6 +93,7 @@ public class GameController  implements ConcurrentCardListener {
         System.out.println("Player ID: " + playerId);
         System.out.println("Token: " + token.toString());
         Controller controller = new LoginController(p, idGame);
+        controller.setExceptionListener(vv);
         ControllerMap.put(playerId, controller);
         System.out.println("New player " + playerId+" in "+ this);
         tokenToPlayerId.put(token, playerId);
@@ -93,6 +102,7 @@ public class GameController  implements ConcurrentCardListener {
         game.NewPlayer(p);
         VirtualViewMap.put(playerId,vv);
         vv.setEventMatrix(game.getGameBoard().getLevel());
+        p.getmyPlayerBoard().setRewardsListener(vv);
         p.getmyPlayerBoard().setListener(vv);
         p.getCommonBoard().getCardStack().addListener(p.GetID(),vv);
         Tile mainCockpitTile = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
@@ -100,18 +110,12 @@ public class GameController  implements ConcurrentCardListener {
         color++;
         p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6, false);
         p.setHandListener(vv);
-        p.getmyPlayerBoard().setRewardsListener(vv);
-        //p.setPhaseListener(vv);
         p.getCommonBoard().setListeners(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);
         p.setCardListner(vv);
         gameLobbyListeners.add(vv);
         updatePlayers();
 
-
-
-        //p.getGmaebord.setVrtualview(vv);
-//        p.getCommonBoard().addListener(p.GetID(),vv);
 
         Thread t = new Thread(() -> {
             while (true) {
@@ -271,6 +275,7 @@ public class GameController  implements ConcurrentCardListener {
 
                 while (index < players.size()) {
                     Player currentPlayer = players.get(index);
+
                     //prendi controller
                     //se è disconnesso chiami def action
                     //altrimenti esegui il blocco try
@@ -296,6 +301,8 @@ public class GameController  implements ConcurrentCardListener {
                         try {
                             Command cmd = flightQueue.take();
                             //TODO: notify della carta se è fase concorrenziale
+                            //game.getPlayers().get(cmd.getPlayerId()).getmyPlayerBoard().setRewardsListener(VirtualViewMap.get(currentPlayer.GetID()));
+
                             if(concurrent){
                                 Controller controller = ControllerMap.get(cmd.getPlayerId());
                                 controller.action(cmd, this);
@@ -323,8 +330,16 @@ public class GameController  implements ConcurrentCardListener {
                 //System.out.println("Flight phase complete");
 
             }
+            Controller ReadySetter;
             for (Player p : game.getPlayers().values()) {
-                p.SetReady(true);
+
+                System.out.println(p.GetID()+ " is in this state: "+ p.getPlayerState().getClass());
+                ReadySetter =ControllerMap.get(p.GetID());
+                ReadyCommand readyCommand = new ReadyCommand(game.getID(),p.GetID(),game.getLv(),"Ready",true,"placeholder");
+                ReadySetter.action(readyCommand, this);
+                ///  senno invece che mettere tutti a ready posso frli direttamente andare nell'altro contrpoller??
+
+//                p.SetReady(true);
             }
         });
 

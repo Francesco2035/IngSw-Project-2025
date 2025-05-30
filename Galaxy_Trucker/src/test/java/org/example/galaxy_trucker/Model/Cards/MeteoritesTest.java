@@ -161,7 +161,7 @@ class MeteoritesTest {
 
         meteoritesTest.setCurrentPlayer(current);
 
-        meteoritesTest.setHit(8,8);
+        meteoritesTest.setHit(8,8, current);
 
         //assertEquals(2,current.getmyPlayerBoard().getTile(7,8).getComponent().getType());
         meteoritesTest.DefendFromLarge(null,null, null);

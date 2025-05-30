@@ -8,7 +8,7 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import java.lang.reflect.InaccessibleObjectException;
 import java.util.ArrayList;
 import java.util.Comparator;
-
+//TODO: non si capisce perchè ci entrino due (sistemare switch e discard)
 public class SpecialStorageCompartment extends Storage{
 
     private ArrayList<Goods> goods;
@@ -33,18 +33,22 @@ public class SpecialStorageCompartment extends Storage{
     @Override
     public Goods removeGood(int position){
         if (position >= goods.size() || position < 0){
-            throw new InvalidInput("Cannot remove a good because it is out of bounds");
+
+            return null;
+            //throw new InvalidInput("Cannot remove a good because it is out of bounds");
         }
+        Goods good = removeGood(position);
         tile.sendUpdates(goods,0, false, false, 0);
-        return goods.remove(position);
-
-
+        return good;
 
     }
 
 
     @Override
     public void addGood(Goods good) {
+        if(good == null){
+            return;
+        }
         if (goods.size() == type){
             throw new InvalidInput("StorageCompartment is full!");
         }

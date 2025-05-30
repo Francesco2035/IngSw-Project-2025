@@ -27,9 +27,11 @@ public class GetGoodAction extends ComponentAction {
         }
 
         good = storage.removeGood(position);
-        playerBoard.getStoredGoods().get(good.getValue()).remove(new IntegerPair(x,y));
-        if (playerBoard.getStoredGoods().get(good.getValue()).isEmpty()){
-            playerBoard.getStoredGoods().remove(good.getValue());
+        if (good!=null){
+            playerBoard.getStoredGoods().get(good.getValue()).remove(new IntegerPair(x,y));
+            if (playerBoard.getStoredGoods().get(good.getValue()).isEmpty()){
+                playerBoard.getStoredGoods().remove(good.getValue());
+            }
         }
     }
 

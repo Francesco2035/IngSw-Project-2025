@@ -105,6 +105,11 @@ public class Tile implements Serializable {
 
     public void sendUpdates(ArrayList<Goods> cargo, int humans,boolean purpleAlien, boolean brownAlien, int batteries)  {
         playerBoard.sendUpdates(new TileEvent(id,x,y,cargo,humans,purpleAlien,brownAlien,batteries,rotation, connectors));
+        if (cargo!=null) {
+            for (Goods g : cargo) {
+                System.out.println(g.getClass());
+            }
+        }
     }
 
     public void sendUpdates(RemoveTileEvent event) {

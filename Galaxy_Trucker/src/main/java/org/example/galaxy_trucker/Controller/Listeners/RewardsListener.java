@@ -5,5 +5,5 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsE
 
 public interface RewardsListener {
 
-    public void sendEvent(RewardsEvent e);
+    public void rewardsChanged(RewardsEvent e);
 }

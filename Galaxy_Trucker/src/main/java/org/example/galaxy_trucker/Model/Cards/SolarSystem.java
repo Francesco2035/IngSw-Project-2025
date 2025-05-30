@@ -66,7 +66,7 @@ public class SolarSystem extends Card {
                     p.setState(new Waiting());
                 }
                 ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
-                concurrentCardListener.onConcurrentCard(false);
+                concurrentCardListener.onConcurrentCard(true);
                 for(Planet p: this.planets){
                     if(p.isOccupied()){
                         this.getBoard().movePlayer(p.getOccupied().GetID(), -this.getTime());

@@ -60,7 +60,7 @@ public abstract class HousingUnit extends Component{
 
     @Override
     public void insert(PlayerBoard playerBoard, int x, int y) {
-        System.out.println("HousingUnit insert called, i'm here: " + x + ", " + y);
+        //System.out.println("HousingUnit insert called, i'm here: " + x + ", " + y);
         //playerBoard.getHousingUnits().remove(this);
         playerBoard.getHousingUnits().add(this);
         this.x = x;
