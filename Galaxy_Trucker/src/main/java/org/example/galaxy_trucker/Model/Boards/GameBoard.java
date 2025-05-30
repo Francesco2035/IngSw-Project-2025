@@ -309,7 +309,13 @@ public class GameBoard {
         }
 
         CurrentCard.setBoard(this);
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
         System.out.println("Id Card: " +CurrentCard.getId() + " "+ CurrentCard.getClass().getName());
         return CurrentCard;
     }
