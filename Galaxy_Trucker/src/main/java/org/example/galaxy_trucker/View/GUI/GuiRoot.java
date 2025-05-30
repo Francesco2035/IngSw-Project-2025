@@ -55,10 +55,14 @@ public class GuiRoot implements View {
     private String myName;
     private int myGameLv;
     private boolean amIReady;
+    private boolean amIBuilding;
 
     private ArrayList<Integer> discardedTiles;
+    private HashMap<Integer, VBox> discardedMap;
     private Image playerBoardImg;
     private Image gameBoardImg;
+    private GridPane myBoard;
+    private Image tilePlaceholder;
     private ImageView tileImage;
     private TilePane uncoveredTiles;
     private int tileRotation;
@@ -68,10 +72,7 @@ public class GuiRoot implements View {
         this.primaryStage = primaryStage;
     }
 
-    @Override
-    public void updateBoard(TileEvent tileEvent) {
 
-    }
 
     public GuiRoot(){
         tileImage = new ImageView();
@@ -79,10 +80,13 @@ public class GuiRoot implements View {
         tileImage.setFitWidth(100);
         tileImage.setPreserveRatio(true);
         uncoveredTiles = new TilePane();
+        amIBuilding = true;
 
+        myBoard = new GridPane();
         printer = new GuiOut(this);
         playerClient = new PlayerClient();
         discardedTiles = new ArrayList<>();
+        discardedMap = new HashMap<>();
 
         guiThread = new Thread(() -> GuiMain.launchApp(this));
         guiThread.start();
@@ -109,21 +113,68 @@ public class GuiRoot implements View {
     }
 
     @Override
+    public void updateBoard(TileEvent event) {
+
+        ImageView tileImg = new ImageView();
+
+        if(event.getId() != 158){
+            if(event.getId() == 157) {
+                tileImg.setImage(tilePlaceholder);
+                tileImg.setOpacity(0.5);
+                if(amIBuilding){
+                    tileImg.setOnMouseClicked(e -> {
+                        inputQueue.add("InsertTile "+ event.getY() +" "+ event.getX() +" "+ tileRotation);
+                        tileImage.setImage(tilePlaceholder);
+                        tileImage.setOpacity(0.5);
+                    });
+                    tileImg.setOnMouseEntered(e -> {
+                        tileImg.setOpacity(1);
+
+                    });
+                    tileImg.setOnMouseExited(e -> {
+                        tileImg.setOpacity(0.5);
+                    });
+                }
+
+            }
+            else{
+                tileImg.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg")));
+                tileImg.setOpacity(1);
+                tileImg.setRotate(event.getRotation());
+            }
+
+            tileImg.setFitHeight(50);
+            tileImg.setPreserveRatio(true);
+
+            Platform.runLater(()->{
+                myBoard.add(tileImg, event.getX(), event.getY());
+            });
+
+        }
+
+
+    }
+
+
+    @Override
     public void updateHand(HandEvent event){
         tileRotation = 0;
         tileImage.setRotate(0);
+        System.out.println("CACCAPUPU " + event.getId());
 
-        if(event.getId() == 158)
-            tileImage.setImage(null);
+        if(event.getId() == 158) {
+            tileImage.setImage(tilePlaceholder);
+            tileImage.setOpacity(0.5);
+        }
         else{
             Image tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg"));
             tileImage.setImage(tile);
             tileImage.setOpacity(1);
         }
 
-        Platform.runLater(()->{
-            playerClient.showGame(printer);
-        });
+//        Platform.runLater(()->{
+//            playerClient.showGame(printer);
+//        });
 
     }
 
@@ -138,27 +189,41 @@ public class GuiRoot implements View {
 
     @Override
     public void updateUncoveredTilesSet(UncoverdTileSetEvent event){
-        discardedTiles.add(event.getId());
 
-        Image tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg"));
-        ImageView image = new ImageView(tile);
-        image.setFitWidth(100);
-        image.setPreserveRatio(true);
-        image.setSmooth(true);
+        if(discardedMap.containsKey(event.getId())) {
+            Platform.runLater(()->{
+                uncoveredTiles.getChildren().remove(discardedMap.get(event.getId()));
+                discardedMap.remove(event.getId());
+            });
 
-        image.setOnMouseClicked(mouseEvent -> {
-            inputQueue.add("PickTile "+ discardedTiles.indexOf(event.getId()));
-            uncoveredTiles.getChildren().remove(image);
-            discardedTiles.remove(event.getId());
-        });
+        }
+        else{
+            Image tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg"));
+            ImageView image = new ImageView(tile);
+            image.setFitWidth(100);
+            image.setPreserveRatio(true);
+            image.setSmooth(true);
 
-        VBox imageBox = new VBox(image);
-        imageBox.setPadding(new Insets(10));
+            VBox imageBox = new VBox(image);
+            imageBox.setPadding(new Insets(10));
 
-        Platform.runLater(()->{
-            uncoveredTiles.getChildren().add(imageBox);
-            playerClient.showGame(printer);
-        });
+            discardedMap.put(event.getId(), imageBox);
+
+            Platform.runLater(()->{
+                discardedTiles.add(event.getId());
+                uncoveredTiles.getChildren().add(imageBox);
+            });
+
+
+            image.setOnMouseClicked(mouseEvent -> {
+                inputQueue.add("PickTile "+ discardedTiles.indexOf(event.getId()));
+            });
+        }
+
+
+//        Platform.runLater(()->{
+//            playerClient.showGame(printer);
+//        });
 
     }
 
@@ -231,7 +296,7 @@ public class GuiRoot implements View {
                     }
 
                 }
-            });
+        });
 
 
 
@@ -269,10 +334,15 @@ public class GuiRoot implements View {
                 String level = levelBox.getValue();
 
 
-                if(level.equals("Tutorial"))
+                if(level.equals("Tutorial")){
                     myGameLv = 1;
-                else myGameLv = 2;
+//                    lv1PlayerboardBuilder();
+                }
 
+                else {
+                    myGameLv = 2;
+//                    lv2PlayerboardBuilder();
+                }
                 newGameStage.close();
 
                 myName = usernameField.getText();
@@ -496,12 +566,11 @@ public class GuiRoot implements View {
         });
 
 
-        Image tile;
-        if(tileImage.getImage() == null) {
-            tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
-            tileImage.setImage(tile);
-            tileImage.setOpacity(0.5);
-        }
+
+//        if(tileImage.getImage() == null) {
+//            tileImage.setImage(tilePlaceholder);
+//            tileImage.setOpacity(0.5);
+//        }
 
         Button pickTile = new Button("Pick Tile");
         Button insertTile = new Button("Insert Tile");
@@ -517,13 +586,14 @@ public class GuiRoot implements View {
 
         HBox tileBox =  new HBox(5, counterclockwiseArrow, tileImage, clockwiseArrow);
         VBox Buttons = new VBox(15, tileBox, pickTile, insertTile, discardTile);
-        HBox buildKit = new HBox(20, playerBoard, Buttons);
+        HBox buildKit = new HBox(20, myBoard, Buttons);
 //        buildBox.prefWidthProperty().bind(primaryStage.widthProperty());
 //        buildBox.prefHeightProperty().bind(primaryStage.heightProperty());
 
 
-        VBox boardsBox = new VBox(10, GameNameLabel, gameBoard, buildKit);
+        VBox boardsBox = new VBox(10, GameNameLabel, buildKit);
         boardsBox.setMaxWidth(800);
+        boardsBox.setAlignment(Pos.TOP_CENTER);
         boardsBox.prefWidthProperty().bind(primaryStage.widthProperty());
         boardsBox.prefHeightProperty().bind(primaryStage.heightProperty());
         boardsBox.setPadding(new Insets(100));
@@ -654,6 +724,12 @@ public class GuiRoot implements View {
         contentRoot = new Pane();
         primaryScene = new Scene(primaryRoot, 800, 600);
 
+        //tile setup
+        tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
+        tileImage.setImage(tilePlaceholder);
+        tileImage.setOpacity(0.5);
+
+        //background setup
         Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
 
@@ -669,6 +745,61 @@ public class GuiRoot implements View {
 
         primaryRoot.getChildren().addAll(background, contentRoot);
         primaryScene.setRoot(primaryRoot);
+    }
+
+    private void lv2PlayerboardBuilder(){
+
+        for(int i=0; i< 9; i++)
+            for(int j=0; j< 10; j++) {
+                ImageView emptyCell = new ImageView(tilePlaceholder);
+                emptyCell.setPreserveRatio(true);
+                emptyCell.setFitWidth(50);
+                int finalJ = j;
+                int finalI = i;
+                if ((i == 4 && (j == 5 || j == 7)) || (i == 5 && (j >= 4 && j <= 8)) || ((i == 6 || i == 7) && j>=3) || (i == 8 && (j>=3 && j != 6))){
+                    Platform.runLater(()->{
+                        myBoard.add(emptyCell, finalJ, finalI);
+                    });
+                }
+                emptyCell.setOpacity(0.5);
+                emptyCell.setOnMouseClicked(e -> {
+                    inputQueue.add("InsertTile "+ finalJ +" "+ finalI +" "+ tileRotation);
+                });
+                emptyCell.setOnMouseEntered(e -> {
+                    emptyCell.setOpacity(1);
+                });
+                emptyCell.setOnMouseExited(e -> {
+                    emptyCell.setOpacity(0.5);
+                });
+            }
+    }
+
+
+    private void lv1PlayerboardBuilder(){
+        for(int i=0; i< 9; i++)
+            for(int j=0; j< 10; j++) {
+                ImageView emptyCell = new ImageView(tilePlaceholder);
+                emptyCell.setPreserveRatio(true);
+                emptyCell.setFitWidth(50);
+                int finalJ = j;
+                int finalI = i;
+                if ((i == 4 && (j == 6)) || (i == 5 && (j >= 5 && j <= 7)) || ((i == 6 || i == 7) && (j>=4 && j<= 8)) || (i == 8 && (j>=4 && j != 6 && j!=9))){
+
+                    Platform.runLater(()->{
+                        myBoard.add(emptyCell, finalJ, finalI);
+                    });
+                }
+                emptyCell.setOpacity(0.5);
+                emptyCell.setOnMouseClicked(e -> {
+                    inputQueue.add("InsertTile "+ finalJ +" "+ finalI +" "+ tileRotation);
+                });
+                emptyCell.setOnMouseEntered(e -> {
+                    emptyCell.setOpacity(1);
+                });
+                emptyCell.setOnMouseExited(e -> {
+                    emptyCell.setOpacity(0.5);
+                });
+            }
     }
 
     //printplayerboard(){..}
