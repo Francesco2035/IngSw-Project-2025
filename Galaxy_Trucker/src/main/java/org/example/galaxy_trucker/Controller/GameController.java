@@ -78,6 +78,13 @@ public class GameController  implements ConcurrentCardListener {
 
     }
 
+
+
+    public HashMap<String, Controller> getControllerMap() {
+        return ControllerMap;
+    }
+
+
     public void NewPlayer(Player p, VirtualView vv, UUID token){
         if (ControllerMap.keySet().contains(p.GetID())) {
             throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists");
@@ -103,17 +110,12 @@ public class GameController  implements ConcurrentCardListener {
         color++;
         p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6, false);
         p.setHandListener(vv);
-        //p.setPhaseListener(vv);
         p.getCommonBoard().setListeners(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);
         p.setCardListner(vv);
         gameLobbyListeners.add(vv);
         updatePlayers();
 
-
-
-        //p.getGmaebord.setVrtualview(vv);
-//        p.getCommonBoard().addListener(p.GetID(),vv);
 
         Thread t = new Thread(() -> {
             while (true) {

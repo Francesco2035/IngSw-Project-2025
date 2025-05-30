@@ -110,10 +110,11 @@ public class Player implements Serializable {
 
 
     public void setState(PlayerState state) {
-
         this.PlayerState = state;
 
-        phaseListener.PhaseChanged(state.toClientState());
+        if (phaseListener != null) {
+            phaseListener.PhaseChanged(state.toClientState());
+        }
         state.shouldAct(this);
 
     }
@@ -139,17 +140,20 @@ public class Player implements Serializable {
             }
             CurrentTile = CommonBoard.getTilesSets().getNewTile();
             System.out.println("Id Tile: " +CurrentTile.getId());
-            handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
+            if (handListener != null) {
+                handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
+            }
         }
         else if (index >= 0 ){
             if (CurrentTile != null) {
                 throw new IllegalStateException("You can't pick a Tile, you have already one!");
             }
-
             try{
                 CurrentTile = CommonBoard.getTilesSets().getNewTile(index);
                 System.out.println("Id Tile: " +CurrentTile.getId());
-                handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
+                if (handListener != null) {
+                    handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
+                }
             }catch(RuntimeException e){
                 System.out.println(e);
                 CurrentTile = null;

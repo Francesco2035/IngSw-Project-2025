@@ -33,13 +33,16 @@ public class BuildingShip extends PlayerState {
 
         return new Command() {
             @Override
-            public void execute(Player player) throws IOException {
+            public void execute(Player player) {
                 GameBoard board = player.getCommonBoard();
                 board.SetStartingPosition(player);
                 player.SetReady(true);
 
             }
         };
+
+
+
     }
 
 

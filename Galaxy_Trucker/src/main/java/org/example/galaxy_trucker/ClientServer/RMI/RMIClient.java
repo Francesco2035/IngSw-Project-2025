@@ -134,7 +134,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         }
         catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            System.out.println("Error receiving event" + e.getMessage());
         }
     }
 

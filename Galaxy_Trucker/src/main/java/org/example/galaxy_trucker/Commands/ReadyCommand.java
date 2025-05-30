@@ -28,6 +28,7 @@ public class ReadyCommand extends Command implements Serializable {
         switch (title){
             case "Quit": {
              player.getCommonBoard().abandonRace(player);
+             System.out.println(player.GetID() + " quit");
              break;
             }
             case "Ready": {
@@ -42,9 +43,7 @@ public class ReadyCommand extends Command implements Serializable {
         }
     }
 
-    public ReadyCommand() {
-
-    }
+    public ReadyCommand() {}
 
     @Override
     public boolean allowedIn(PlayerState playerState) {
