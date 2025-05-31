@@ -32,6 +32,7 @@ public class Out {
 
     private final Object lock = new Object();
     private final HashMap<Integer, String> idToNameMap = new HashMap<>();
+    private final HashMap<String,  String[][][]> otherPlayersBoard  = new HashMap<>();
     private final int contentWidth = 33;
     private String[][][] cachedBoard;
     private String[] cacheHand = null;
@@ -55,6 +56,36 @@ public class Out {
     private ViewPhase phase;
 
 
+
+    public void setOthersPB(String playerId, int x, int y, String[] cell){
+        if (!otherPlayersBoard.containsKey(playerId)){
+            otherPlayersBoard.put(playerId, new String[10][10][7]);
+            for (int i = 0; i < 10; i++){
+                for (int j = 0; j < 10; j++){
+                    otherPlayersBoard.get(playerId)[i][j] = new String[7];
+                    for (int m = 0; m < 7; m++) {
+                        otherPlayersBoard.get(playerId)[i][j][m] = "";
+                    }
+                }
+            }
+        }
+        otherPlayersBoard.get(playerId)[x][y] = cell;
+    }
+
+    public void setOthersPB(String playerId, int x, int y,int k, String s){
+        if (!otherPlayersBoard.containsKey(playerId)){
+            otherPlayersBoard.put(playerId, new String[10][10][7]);
+            for (int i = 0; i < 10; i++){
+                for (int j = 0; j < 10; j++){
+                    otherPlayersBoard.get(playerId)[i][j] = new String[7];
+                    for (int m = 0; m < 7; m++) {
+                        otherPlayersBoard.get(playerId)[i][j][m] = "";
+                    }
+                }
+            }
+        }
+        otherPlayersBoard.get(playerId)[x][y][k] = s;
+    }
 
     public Out(InputReader inputReader, PlayerClient playerClient) {
         this.inputReader = inputReader;
@@ -97,12 +128,6 @@ public class Out {
     }
 
     public void setCachedBoard(int x, int y, String[] cell) {
-        for (int i = 0; i < 7; i++) {
-//            if (cell[i].equals("")){
-//                System.out.println("oh no");
-//            }
-//            System.out.println("cell"+ cell[i]);
-        }
         cachedBoard[x][y] = cell;
     }
 
@@ -224,7 +249,6 @@ public class Out {
         int cols = 10;
         toPrint.append("\n"+ASCII_ART.Board+"\n");
         toPrint.append("\n\n");
-        //System.out.println("############################ BOARD ############################\n");
         for (int y = 0; y < rows; y++) {
 
 
@@ -236,23 +260,48 @@ public class Out {
             for (int i = 0; i < 7; i++) {
                 for (int x = 0; x < cols; x++) {
                     if (y > 2 && x > 1){
-                        //System.out.print(formattedRow[x][i]);
                         toPrint.append(formattedRow[x][i]);
-                        //System.out.println(formattedRow[x][i]);
                     }
                 }
                 if (y > 2 ){
                     toPrint.append("\n");
-                    //System.out.println();
                 }
 
             }
         }
 
-        //System.out.println();
-        //toPrint.append("\n");
+        toPrint.append(ASCII_ART.Border);
+        return toPrint;
+    }
 
-        //System.out.println("\n############################ ##### ############################");
+
+    public StringBuilder printBoard(String[][][] board) {
+        StringBuilder toPrint = new StringBuilder();
+        int rows = 10;
+        int cols = 10;
+
+        toPrint.append("\n\n");
+        for (int y = 0; y < rows; y++) {
+
+
+            String[][] formattedRow = new String[cols][];
+            for (int x = 0; x < cols; x++) {
+                formattedRow[x] = board[y][x];
+            }
+
+            for (int i = 0; i < 7; i++) {
+                for (int x = 0; x < cols; x++) {
+                    if (y > 2 && x > 1){
+                        toPrint.append(formattedRow[x][i]);
+                    }
+                }
+                if (y > 2 ){
+                    toPrint.append("\n");
+                }
+
+            }
+        }
+
         toPrint.append(ASCII_ART.Border);
         return toPrint;
     }
@@ -343,7 +392,6 @@ public class Out {
                     i++;
                     line.append("          ");
                 }
-                //toPrint.append("##################   WELCOME   ##################\n\n");
         return line;
     }
 
@@ -352,7 +400,6 @@ public class Out {
 
     public void showGame(){
         show  = false;
-        //inputReader.clearScreen();
         this.playerClient.showGame(this);
         show = true;
 
@@ -402,13 +449,11 @@ public class Out {
 
     private void printTilesSet(){
         showUncoveredTiles();
-        //toPrint.append("\n");
     }
 
 
     public void setCacheCard(String s){
         CacheCard = s;
-        //printMessage(s);
     }
 
     public void setRewards(StringBuilder rewards){
@@ -464,5 +509,26 @@ public class Out {
             exception = "";
         }
         return sb;
+    }
+
+    public StringBuilder printSystemException(String s){
+        StringBuilder sb = new StringBuilder();
+
+
+        return sb;
+    }
+
+    public void seeBoards() {
+        StringBuilder sb = new StringBuilder();
+
+
+        for (String player : otherPlayersBoard.keySet()){
+            sb.append(ASCII_ART.Border);
+            sb.append("\n\nPlayer: " +player);
+            sb.append(printBoard(otherPlayersBoard.get(player)));
+            sb.append(ASCII_ART.Border);
+        }
+        sb.append(printBoard());
+        inputReader.renderScreen(sb);
     }
 }

@@ -219,6 +219,17 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                         }
 
                     }
+                    else if (cmd.equals("SeeBoards")){
+                        if (login){
+                            client.getView().seeBoards();
+                        }
+                        else{
+                            System.out.println("CHOOSE A GAME");
+                        }
+                    }
+                    else if (cmd.equals("MainTerminal")){
+                        client.getView().refresh();
+                    }
                     else {
                         if (login){
                             Command command = commandInterpreter.interpret(cmd);

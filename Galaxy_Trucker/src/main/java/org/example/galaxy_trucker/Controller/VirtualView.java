@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Controller.Listeners.*;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 //TODO: fare un solo listener, sono scemo non c'era bisogno di crearne 20000 tanto il dispatch viene fatto lato client col pattern, prima finiamo un game e poi cambiamo
-public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener, ExceptionListener{
+public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener, ExceptionListener, PlayersPBListener{
 
     private boolean Disconnected = false;
     private TileEvent[][] eventMatrix;
@@ -38,6 +39,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private GameBoardEvent board = null;
     private PhaseEvent phase = null;
     private RewardsEvent rewardsEvent = null;
+    private ArrayList<PlayersPBListener> playersPBListeners = new ArrayList<>();
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, PrintWriter echoSocket) {
@@ -61,12 +63,13 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                     if (x < 4 || y < 3 || (x == 4 && (y == 3 || y == 4 || y == 6 || y == 8 || y == 9)) ||(x == 5 && (y == 3 || y== 9)) || (x == 8 && y == 6) || x ==9) {
 
                         eventMatrix[x][y] = new TileEvent(158,x,y,null,0,false,false,0,0,noneConnectors);
+                        //updateOtherPlayers(eventMatrix[x][y]);
 
                     }
 
                     else {
                         eventMatrix[x][y] = new TileEvent(157,x,y,null,0,false,false,0,0,noneConnectors);
-
+                        //updateOtherPlayers(eventMatrix[x][y]);
 
                     }
 
@@ -78,12 +81,12 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 for (int y = 0; y < 10; y++) {
                     if(y <= 3 ||x == 9 || y == 9|| x <4 || ( x == 4 && (y != 6)) || (x== 5 &&(y <5 || y>7)) || (x==8 && y == 6))  {
                         eventMatrix[x][y] = new TileEvent(158,x,y,null,0,false,false,0,0,noneConnectors);
-
+                        //updateOtherPlayers(eventMatrix[x][y]);
                     }
 
                     else {
                         eventMatrix[x][y] = new TileEvent(157,x,y,null,0,false,false,0,0,noneConnectors);
-
+                        //updateOtherPlayers(eventMatrix[x][y]);
                     }
 
                 }
@@ -125,6 +128,28 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
+    public void sendEvent(PlayerTileEvent event){
+        if (!Disconnected) {
+            if (out != null) {
+                try{
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    out.println(objectMapper.writeValueAsString(event));
+                }
+                catch (JsonProcessingException e){
+                    e.printStackTrace();
+                }
+
+            }
+            else if(client!= null) {
+                try {
+                    client.receiveMessage(event);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
     public void sendEvent(TileEvent event) {
         if (!Disconnected) {
             if (out != null) {
@@ -151,6 +176,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     @Override
     public void playerBoardChanged(TileEvent event) {
         eventMatrix[event.getX()][event.getY()] = event;
+        updateOtherPlayers(event);
         sendEvent(event);
     }
 
@@ -400,4 +426,38 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     public void exceptionOccured(ExceptionEvent event) {
         sendEvent(event);
     }
+
+
+    public PlayersPBListener getPBlistener(){
+        return this;
+    }
+
+    public void setPlayersPBListeners(PlayersPBListener listener){
+        this.playersPBListeners.add(listener);
+        for (int i = 0; i < 10; i ++){
+            for (int j = 0; j < 10; j ++){
+                PlayerTileEvent newEvent = new PlayerTileEvent(playerName,eventMatrix[i][j].getId(),eventMatrix[i][j].getX(), eventMatrix[i][j].getY(),eventMatrix[i][j].getCargo(),eventMatrix[i][j].getHumans()
+                        ,eventMatrix[i][j].isPurpleAlien(),eventMatrix[i][j].isBrownAlien(), eventMatrix[i][j].getBatteries(),eventMatrix[i][j].getRotation(),eventMatrix[i][j].getConnectors());
+                listener.receivePBupdate(newEvent);
+            }
+        }
+    }
+
+    public void updateOtherPlayers(TileEvent event){
+        PlayerTileEvent newEvent = new PlayerTileEvent(playerName,event.getId(),event.getX(), event.getY(),event.getCargo(),event.getHumans()
+        ,event.isPurpleAlien(),event.isBrownAlien(), event.getBatteries(),event.getRotation(),event.getConnectors());
+        for (PlayersPBListener listener : playersPBListeners){
+            listener.receivePBupdate(newEvent);
+        }
+    }
+
+    @Override
+    public void receivePBupdate(PlayerTileEvent event){
+        sendEvent(event);
+    }
+
+    public String getPlayerName(){
+        return playerName;
+    }
+
 }

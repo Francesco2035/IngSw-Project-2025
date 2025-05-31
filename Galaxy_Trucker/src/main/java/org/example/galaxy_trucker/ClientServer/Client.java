@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.ClientServer.TCP.TCPClient;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -160,6 +161,11 @@ public class Client implements EventVisitor {
     @Override
     public void visit(ExceptionEvent exceptionEvent) {
         this.view.exceptionOccurred(exceptionEvent);
+    }
+
+    @Override
+    public void visit(PlayerTileEvent playerTileEvent) {
+        this.view.updateOthersPB(playerTileEvent);
     }
 
     @Override

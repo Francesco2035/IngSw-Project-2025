@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.View;
 
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -52,4 +53,10 @@ public interface View {
     void phaseChanged(PhaseEvent event);
 
     void exceptionOccurred(ExceptionEvent exceptionEvent);
+
+    void updateOthersPB(PlayerTileEvent playerTileEvent);
+
+    void seeBoards();
+
+    void refresh();
 }

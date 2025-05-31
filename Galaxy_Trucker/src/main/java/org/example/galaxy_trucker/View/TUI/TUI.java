@@ -6,10 +6,13 @@ package org.example.galaxy_trucker.View.TUI;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
+import org.example.galaxy_trucker.View.ClientModel.States.PlayerStateClient;
+import org.example.galaxy_trucker.View.ClientModel.States.SeeBoardsClient;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
@@ -38,6 +41,7 @@ public class TUI implements View {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledTask;
     private final int debounceDelayMs = 200;
+    private PlayerStateClient lastState;
 
     private int CardId = -1;
     private final TileEvent[][] board = new TileEvent[10][10];
@@ -167,6 +171,55 @@ public class TUI implements View {
         onGameUpdate();
     }
 
+    @Override
+    public void updateOthersPB(PlayerTileEvent event) {
+
+         if (event.getId() == 158) {
+            out.setOthersPB(event.getPlayerName(),event.getX(), event.getY(), emptyCell());
+            if (setup == 0 && event.getX() == 3 && event.getY() == 8){
+                out.setOthersPB(event.getPlayerName(),3,8,emptyCell()); //QUI
+            }
+            else if (!(event.getX() == 3 && event.getY() == 8) && (event.getX() < 3 || event.getY() < 3)) {
+
+                for (int k = 0; k < 7; k++) {
+                    out.setOthersPB(event.getPlayerName(),event.getX(), event.getY(),k, "");//QUI
+                }
+            }
+
+        }
+
+        else if (event.getId() == 159) {
+             out.setOthersPB(event.getPlayerName(),7, 8, emptyCell());
+             out.setOthersPB(event.getPlayerName(),7, 9, emptyCell());
+        }
+
+
+        else {
+             out.setOthersPB(event.getPlayerName(),event.getX(), event.getY(), formatCell(event)); //QUI
+        }
+
+        if (lastState != null){
+            onGameUpdate();
+        }
+
+
+    }
+
+    @Override
+    public void seeBoards() {
+
+        lastState = playerClient.getPlayerState();
+        playerClient.setPlayerState(new SeeBoardsClient());
+        onGameUpdate();
+    }
+
+    @Override
+    public void refresh() {
+        playerClient.setPlayerState(lastState);
+        lastState = null;
+        onGameUpdate();
+    }
+
 
     public String[] formatCell(LobbyEvent event) {
         String[] cell = new String[8];
@@ -241,10 +294,12 @@ public class TUI implements View {
 
     @Override
     public void updateBoard(TileEvent event) {
+
+        //TODO:qui e anche in otherPB si può traslare la playerboard inserendo un emptyu cell al controno della playerboard
         if (setup!=0){
             setup--;
         }
-        board[event.getX()][event.getY()] = event;
+
         if (event == null) {
             out.setCachedBoard(event.getX(), event.getY(), emptyCell());
         }
@@ -421,6 +476,9 @@ public class TUI implements View {
 
         return cellLines;
     }
+
+
+
 
     private String centerText(String text, int width) {
         int padding = Math.max(0, (width - text.length()) / 2);

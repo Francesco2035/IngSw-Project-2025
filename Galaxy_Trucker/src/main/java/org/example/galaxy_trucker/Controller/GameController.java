@@ -101,19 +101,28 @@ public class GameController  implements ConcurrentCardListener {
         commandQueues.put(playerId, queue);
         game.NewPlayer(p);
         VirtualViewMap.put(playerId,vv);
-        vv.setEventMatrix(game.getGameBoard().getLevel());
+
         p.getmyPlayerBoard().setRewardsListener(vv);
         p.getmyPlayerBoard().setListener(vv);
         p.getCommonBoard().getCardStack().addListener(p.GetID(),vv);
         Tile mainCockpitTile = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
         mainCockpitTile.setId(color);
         color++;
-        p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6, false);
         p.setHandListener(vv);
         p.getCommonBoard().setListeners(vv);
         p.getCommonBoard().getTilesSets().setListeners(vv);
         p.setCardListner(vv);
         gameLobbyListeners.add(vv);
+        vv.setEventMatrix(game.getGameBoard().getLevel());
+        for (VirtualView v : VirtualViewMap.values()) {
+
+            if(!vv.getPlayerName().equals(v.getPlayerName())){
+                v.setPlayersPBListeners(vv);
+                //System.out.println("vv "+vv.getPlayerName()+" v "+v.getPlayerName());
+                vv.setPlayersPBListeners(v);
+            }
+        }
+        p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6, false);
         updatePlayers();
 
 

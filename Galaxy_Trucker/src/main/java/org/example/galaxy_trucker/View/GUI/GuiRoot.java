@@ -18,6 +18,7 @@ import javafx.scene.media.MediaView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
@@ -561,6 +562,21 @@ public class GuiRoot implements View {
 
     @Override
     public void exceptionOccurred(ExceptionEvent exceptionEvent) {
+
+    }
+
+    @Override
+    public void updateOthersPB(PlayerTileEvent playerTileEvent) {
+
+    }
+
+    @Override
+    public void seeBoards() {
+
+    }
+
+    @Override
+    public void refresh() {
 
     }
 
