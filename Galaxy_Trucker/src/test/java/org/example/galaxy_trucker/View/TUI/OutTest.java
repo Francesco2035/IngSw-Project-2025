@@ -73,5 +73,12 @@ class OutTest {
         out.seeBoards();
     }
 
+    @Test
+    public void gb1(){
+        tui.setGameboard(1);
+        //out.initGameBoard(1);
+        System.out.println(tui.getOut().printGameboard());
+    }
+
 
 }

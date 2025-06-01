@@ -53,8 +53,7 @@ public class TUI implements View {
     private String[][][] Gameboard;
     private int lv;
     private int setup = 102;
-    private HashMap<Integer, IntegerPair> positionToGameboard = new HashMap<>();
-    private HashMap<String,Integer > PlayerToPosition = new HashMap<>();
+
     private HashMap<String, String[]> lobby = new HashMap<>();
     private ViewPhase phase;
     private Out out;
@@ -90,40 +89,36 @@ public class TUI implements View {
                     }
 
                     else {
-
                         out.setGameboard(i,j,emptyGbCell());
                     }
                 }
             }
-            positionToGameboard.put(-1, new IntegerPair(-1,-1));
-            positionToGameboard.put(0, new IntegerPair(0,2));
-            positionToGameboard.put(1, new IntegerPair(0,3));
-            positionToGameboard.put(2, new IntegerPair(0,4));
-            positionToGameboard.put(3, new IntegerPair(0,5));
-            positionToGameboard.put(4, new IntegerPair(0,6));
-            positionToGameboard.put(5, new IntegerPair(0,7));
-            positionToGameboard.put(6, new IntegerPair(0,8));
-            positionToGameboard.put(7, new IntegerPair(0,9));
-            positionToGameboard.put(8, new IntegerPair(1,10));
-            positionToGameboard.put(9, new IntegerPair(2,11));
-            positionToGameboard.put(10, new IntegerPair(3,11));
-            positionToGameboard.put(11, new IntegerPair(4,10));
-            positionToGameboard.put(12, new IntegerPair(5,9));
-            positionToGameboard.put(13, new IntegerPair(5,8));
-            positionToGameboard.put(14, new IntegerPair(5,7));
-            positionToGameboard.put(15, new IntegerPair(5,6));
-            positionToGameboard.put(16, new IntegerPair(5,5));
-            positionToGameboard.put(17, new IntegerPair(5,4));
-            positionToGameboard.put(18, new IntegerPair(5,3));
-            positionToGameboard.put(19, new IntegerPair(5,2));
-            positionToGameboard.put(20, new IntegerPair(4,1));
-            positionToGameboard.put(21, new IntegerPair(3,0));
-            positionToGameboard.put(22, new IntegerPair(2,0));
-            positionToGameboard.put(23, new IntegerPair(1,1));
+
 
         }
         else{
-            Gameboard = new String[10][5][7];
+
+            for (int i = 0; i < 5; i++){
+                for (int j = 0; j < 11; j++){
+                    if ((i == 0 && (j >= 3 && j <= 8)||(i == 1 && (j == 2 || j == 9)))
+                            || (i == 2 && (j == 1 || j == 10)||(i == 3 && (j == 2 || j == 9)))
+                            ||  (i == 4 && (j >= 3 && j <= 8))){
+
+                        if (i == 0 && (j == 3 || j == 4 || j == 5 ||j == 7)) {
+                            out.setGameboard(i,j,formatPosition(position));
+                            position--;
+                        }
+
+                        else {
+                            out.setGameboard(i,j,formatCell());
+                        }
+                    }
+
+                    else {
+                        out.setGameboard(i,j,emptyGbCell());
+                    }
+                }
+            }
         }
 
     }
@@ -563,8 +558,8 @@ public class TUI implements View {
 
         if(out.getPlayerToPosition().containsKey(event.getPlayerID())){
             int pos = out.getPlayerToPosition().get(event.getPlayerID());
-            int x1 = positionToGameboard.get(pos).getFirst();
-            int y1 = positionToGameboard.get(pos).getSecond();
+            int x1 = out.getPositionToGameboard().get(pos).getFirst();
+            int y1 = out.getPositionToGameboard().get(pos).getSecond();
             out.setGameboard(x1,y1,3,"|                       |") ;
             out.getPlayerToPosition().remove(event.getPlayerID());
             if(x != -1){
@@ -722,5 +717,9 @@ public class TUI implements View {
     }
 
 
+
+    public Out getOut(){
+        return out;
+    }
 
 }

@@ -368,7 +368,16 @@ public class Out {
 
         }
         else{
+            for (int i = 0; i < 5; i++) {
 
+                for (int k = 0; k < 7; k++) {
+                    for (int j = 0; j < 11; j++) {
+                        toPrint.append(Gameboard[i][j][k]);
+                    }
+                    toPrint.append("\n");
+                }
+
+            }
         }
 
         toPrint.append(ASCII_ART.Border);
@@ -442,7 +451,27 @@ public class Out {
             positionToGameboard.put(23, new IntegerPair(1,1));
         }
         else if (lv == 1){
-            Gameboard = new String[10][5][7];
+            Gameboard = new String[5][11][7];
+            positionToGameboard.put(-1, new IntegerPair(-1,-1));
+            positionToGameboard.put(0, new IntegerPair(0,3));
+            positionToGameboard.put(1, new IntegerPair(0,4));
+            positionToGameboard.put(2, new IntegerPair(0,5));
+            positionToGameboard.put(3, new IntegerPair(0,6));
+            positionToGameboard.put(4, new IntegerPair(0,7));
+            positionToGameboard.put(5, new IntegerPair(0,8));
+            positionToGameboard.put(6, new IntegerPair(1,9));
+            positionToGameboard.put(7, new IntegerPair(2,10));
+            positionToGameboard.put(8, new IntegerPair(3,9));
+            positionToGameboard.put(9, new IntegerPair(4,8));
+            positionToGameboard.put(10, new IntegerPair(4,7));
+            positionToGameboard.put(11, new IntegerPair(4,6));
+            positionToGameboard.put(12, new IntegerPair(4,5));
+            positionToGameboard.put(13, new IntegerPair(4,4));
+            positionToGameboard.put(14, new IntegerPair(4,3));
+            positionToGameboard.put(15, new IntegerPair(3,2));
+            positionToGameboard.put(16, new IntegerPair(2,1));
+            positionToGameboard.put(17, new IntegerPair(1,0));
+
         }
     }
 
