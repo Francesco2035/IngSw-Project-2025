@@ -8,16 +8,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
 import org.example.galaxy_trucker.View.ClientModel.States.PlayerStateClient;
 import org.example.galaxy_trucker.View.ClientModel.States.SeeBoardsClient;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -34,7 +31,6 @@ import java.util.concurrent.*;
 //TODO: impostare vincolo lunghezza nome e gameid (anche lato server)
 //TODO: stampare games per righe e non in colonna perchè mi da fastidio, oppure farlo su più righe
 //TODO: rimozione game se tutti i player quittano oppure se il game è partito
-//TODO: mettere le fasi nella TUI in modo tale che venga chiamato solo showTUI (salvando i dati in cache prime) e in base alle varie fasi chiama i metodi giusti
 
 public class TUI implements View {
 
@@ -160,6 +156,8 @@ public class TUI implements View {
     @Override
     public void phaseChanged(PhaseEvent event) {
         //System.out.println("STATE CHANGED: "+ event.getStateClient().getClass());
+        //lastState = null;
+        lastState = event.getStateClient();
         playerClient.setPlayerState(event.getStateClient());
         playerClient.getCompleter().setCommands(event.getStateClient().getCommands());
         onGameUpdate();
@@ -179,7 +177,7 @@ public class TUI implements View {
             if (setup == 0 && event.getX() == 3 && event.getY() == 8){
                 out.setOthersPB(event.getPlayerName(),3,8,emptyCell()); //QUI
             }
-            else if (!(event.getX() == 3 && event.getY() == 8) && (event.getX() < 3 || event.getY() < 3)) {
+            else if (!(event.getX() == 3 && event.getY() == 8) && (event.getX() < 3 || event.getY() < 3) && (event.getY() != 2)) {
 
                 for (int k = 0; k < 7; k++) {
                     out.setOthersPB(event.getPlayerName(),event.getX(), event.getY(),k, "");//QUI
@@ -216,7 +214,13 @@ public class TUI implements View {
     @Override
     public void refresh() {
         playerClient.setPlayerState(lastState);
-        lastState = null;
+        //lastState = null;
+        onGameUpdate();
+    }
+
+    @Override
+    public void effectCard(RandomCardEffectEvent event) {
+        out.setEffectCard(event.message());
         onGameUpdate();
     }
 
@@ -295,7 +299,6 @@ public class TUI implements View {
     @Override
     public void updateBoard(TileEvent event) {
 
-        //TODO:qui e anche in otherPB si può traslare la playerboard inserendo un emptyu cell al controno della playerboard
         if (setup!=0){
             setup--;
         }
@@ -309,8 +312,8 @@ public class TUI implements View {
                 out.setCachedBoard(3,8,out.getPlayerBoard()[3][9]); //QUI
                 out.setCachedBoard(3, 9, emptyCell());
             }
-            else if (!(event.getX() == 3 && event.getY() == 8) && (event.getX() < 3 || event.getY() < 3)) {
 
+            else if (!(event.getX() == 3 && event.getY() == 8) && (event.getX() < 3 || event.getY() < 3) && (event.getY() != 2)) {
                 for (int k = 0; k < 7; k++) {
                     out.setCachedBoard(event.getX(), event.getY(),k, "");//QUI
                 }
@@ -494,7 +497,7 @@ public class TUI implements View {
             case "UNIVERSAL" -> "U";
             case "CANNON"    -> "C";
             case "ENGINE"    -> "M";
-            default           -> "?";
+            default          -> "?";
         };
     }
 
@@ -541,7 +544,7 @@ public class TUI implements View {
     }
 
     public void updateHand(HandEvent event) {
-        //inputReader.printServerMessage("\n" + border);
+
         if(event.getId() == 158){
             out.setCacheHand(emptyCell());
         }
@@ -574,7 +577,6 @@ public class TUI implements View {
             out.setGameboard(x,y,3,"|"+centerTextAnsi(event.getPlayerID(),23) + "|") ;
         }
 
-
         onGameUpdate();
 
     }
@@ -601,8 +603,6 @@ public class TUI implements View {
             out.setUncoverdTileSetCache(event.getId(), null);//QUI
         }
 
-
-
         onGameUpdate();
     }
 
@@ -621,8 +621,7 @@ public class TUI implements View {
     public void showCard(CardEvent event){
 
         out.setCardId(event.getId());
-        //inputReader.printServerMessage("\n");
-        //inputReader.printServerMessage(CardsDescriptions.get(CardId));
+
         out.setCacheCard(CardsDescriptions.get(event.getId()));
         //printBoard();
         //System.out.println(CardsDescriptions.get(id));
@@ -725,5 +724,3 @@ public class TUI implements View {
 
 
 }
-//TODO: utilizzare strip ansi suppongo per formattare il cargo
-//riceve eventi e formatta, aggiorna il "client"

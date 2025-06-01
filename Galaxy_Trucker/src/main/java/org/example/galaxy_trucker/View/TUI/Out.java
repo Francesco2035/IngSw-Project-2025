@@ -20,6 +20,7 @@ public class Out {
     private Boolean show = true;
 
     String exception = "";
+    String effect = "";
 
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -530,5 +531,19 @@ public class Out {
         }
         sb.append(printBoard());
         inputReader.renderScreen(sb);
+    }
+
+    public void setEffectCard(String message) {
+        this.effect = message;
+    }
+
+    public StringBuilder showCardEffect(){
+        StringBuilder sb = new StringBuilder();
+        if (!effect.equals("")){
+            sb.append(Ansi.ansi().fgYellow().a("[ " + effect + " ]").reset());
+            sb.append("\n\n");
+            //effect = "";
+        }
+        return sb;
     }
 }

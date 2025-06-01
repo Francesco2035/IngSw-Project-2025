@@ -7,10 +7,7 @@ import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.View.GUI.GuiRoot;
 import org.example.galaxy_trucker.View.TUI.TUI;
 import org.example.galaxy_trucker.View.View;
@@ -169,6 +166,11 @@ public class Client implements EventVisitor {
     }
 
     @Override
+    public void visit(RandomCardEffectEvent event) {
+        this.view.effectCard(event);
+    }
+
+    @Override
     public void visit(DeckEvent event) {
         this.view.showDeck(event);
     }
@@ -212,6 +214,8 @@ public class Client implements EventVisitor {
     public void visit(GameBoardEvent gameBoardEvent) {
         this.view.updateGameboard(gameBoardEvent);
     }
+
+
 
 
     public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException, InterruptedException {

@@ -21,6 +21,7 @@ public class WaitingClient extends PlayerStateClient{
         toPrint.append(out.printGameboard());
         toPrint.append(out.showCard());
         toPrint.append(out.printBoard());
+        toPrint.append(out.showCardEffect());
         toPrint.append(out.showException());
         out.render(toPrint);
     }

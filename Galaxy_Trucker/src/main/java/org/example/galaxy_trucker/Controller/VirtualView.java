@@ -8,10 +8,7 @@ import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Connectors.NONE;
 
@@ -22,7 +19,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 //TODO: fare un solo listener, sono scemo non c'era bisogno di crearne 20000 tanto il dispatch viene fatto lato client col pattern, prima finiamo un game e poi cambiamo
-public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener, ExceptionListener, PlayersPBListener{
+public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener, ExceptionListener, PlayersPBListener, RandomCardEffectListener{
 
     private boolean Disconnected = false;
     private TileEvent[][] eventMatrix;
@@ -460,4 +457,8 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         return playerName;
     }
 
+    @Override
+    public void Effect(RandomCardEffectEvent event) {
+        sendEvent(event);
+    }
 }

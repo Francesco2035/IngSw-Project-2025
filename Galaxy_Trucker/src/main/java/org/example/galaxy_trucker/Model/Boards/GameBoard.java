@@ -174,10 +174,12 @@ public class GameBoard {
                     shiftedPositions[i] = p.getValue();
                     positions[shiftedPositions[i]] = null;
                     i++;
+                    //qui tolgo tutto
                 }
             }
 
             cur.setValue(-1);
+            //setto quello da rimuovere a -1
 
             i=0;
             for(Player_IntegerPair p : players)
@@ -203,9 +205,10 @@ public class GameBoard {
 
 
     public void updateAllPosition(){
-        for(Player_IntegerPair p : players)
-            if(p.getValue() >=0)
+        for(Player_IntegerPair p : players) //come hashmap
+            if(p.getValue() >=0){
                 sendUpdates(new GameBoardEvent(p.getValue(), p.getKey().GetID()));
+            }
     }
 
 
@@ -309,13 +312,7 @@ public class GameBoard {
         }
 
         CurrentCard.setBoard(this);
-        try{
-            CurrentCard.CardEffect();
 
-        }
-        catch (InterruptedException e){
-            e.printStackTrace();
-        }
         System.out.println("Id Card: " +CurrentCard.getId() + " "+ CurrentCard.getClass().getName());
         return CurrentCard;
     }

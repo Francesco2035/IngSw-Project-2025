@@ -37,6 +37,8 @@ public interface EventVisitor {
 
     void visit(PlayerTileEvent playerTileEvent);
 
+    void visit(RandomCardEffectEvent randomCardEffectEvent);
+
 
     //public void visit(GameBoardEvent event);
 }
