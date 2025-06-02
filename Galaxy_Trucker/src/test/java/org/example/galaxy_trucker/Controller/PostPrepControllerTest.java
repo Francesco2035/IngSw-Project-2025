@@ -27,7 +27,7 @@ class PostPrepControllerTest {
         }
     }
 
-    static GameController gc = new GameController(game.getGameID(), game, new GamesHandler());
+    static GameController gc = new GameController(game.getGameID(), game, new GamesHandler(),2);
     static Player p1 = new Player();
     static VirtualView vv;
     PrepController c1 = new PrepController(p1, game.getGameID(), gc, false);

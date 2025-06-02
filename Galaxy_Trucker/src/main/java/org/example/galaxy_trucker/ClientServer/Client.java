@@ -8,7 +8,10 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTi
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
+import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
+import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
 import org.example.galaxy_trucker.View.GUI.GuiRoot;
+import org.example.galaxy_trucker.View.TUI.CommandCompleter;
 import org.example.galaxy_trucker.View.TUI.TUI;
 import org.example.galaxy_trucker.View.View;
 import org.jline.reader.LineReader;
@@ -19,6 +22,7 @@ import org.jline.terminal.TerminalBuilder;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.rmi.NotBoundException;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class Client implements EventVisitor {
@@ -28,6 +32,42 @@ public class Client implements EventVisitor {
     private TCPClient tcpClient;
     private TileEvent[][] board;
     private UUID token;
+    private boolean login = false;
+    HashMap<String, Integer> gameidToLV = new HashMap<>();
+
+
+    public boolean getLogin(){
+        return login;
+    }
+
+    public void setLogin(boolean login){
+        this.login = login;
+    }
+
+
+    public synchronized boolean containsGameId(String gameid) {
+        System.out.println(this);
+
+        return gameidToLV.containsKey(gameid);
+    }
+
+    public synchronized int getLevel(String gameid) {
+        System.out.println(this);
+
+        return gameidToLV.get(gameid);
+    }
+
+    public synchronized void setGameIdToLV(String gameid, int lv) {
+        System.out.println(this);
+
+        System.out.println(gameid + " " + lv);
+        this.gameidToLV.putIfAbsent(gameid, lv);
+        System.out.println(gameid + " " + gameidToLV.get(gameid)+" size: "+gameidToLV.size());
+    }
+
+    public synchronized HashMap<String, Integer> getGameidToLV() {
+        return gameidToLV;
+    }
 
     public Client() {
         board = new TileEvent[10][10];
@@ -88,7 +128,9 @@ public class Client implements EventVisitor {
         Client client = new Client();
 
         if (view1.equals("TUI")) {
-            client.setView(new TUI());
+            TUI tui = new TUI();
+            tui.setClient(client);
+            client.setView(tui);
         } else if (view1.equals("GUI")){
             GuiRoot gui = new GuiRoot();
             client.setView(gui);
@@ -168,6 +210,12 @@ public class Client implements EventVisitor {
     @Override
     public void visit(RandomCardEffectEvent event) {
         this.view.effectCard(event);
+    }
+
+    @Override
+    public void visit(ConnectionRefusedEvent connectionRefusedEvent) {
+        login = false;
+        this.view.exceptionOccurred(new ExceptionEvent(connectionRefusedEvent.message()));
     }
 
     @Override

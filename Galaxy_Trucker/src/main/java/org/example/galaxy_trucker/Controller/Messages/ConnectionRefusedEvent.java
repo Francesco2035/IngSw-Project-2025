@@ -3,19 +3,14 @@ package org.example.galaxy_trucker.Controller.Messages;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ExceptionEvent implements Event{
+public class ConnectionRefusedEvent implements Event{
 
+    String message;
 
-    String exception;
 
     @JsonCreator
-    public ExceptionEvent(@JsonProperty("exception") String exception) {
-        this.exception = exception;
-    }
-
-
-    public ExceptionEvent() {
-
+    public ConnectionRefusedEvent(@JsonProperty("message") String message) {
+        this.message = message;
     }
 
     @Override
@@ -23,12 +18,8 @@ public class ExceptionEvent implements Event{
         visitor.visit(this);
     }
 
-    public String getException(){
-        return exception;
-    }
-
     @Override
     public String message() {
-        return "";
+        return message;
     }
 }

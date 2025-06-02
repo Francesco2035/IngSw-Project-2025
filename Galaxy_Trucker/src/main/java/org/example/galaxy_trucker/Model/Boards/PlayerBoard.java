@@ -185,7 +185,7 @@ public class PlayerBoard {
 
 
     public void setRewardsListener(RewardsListener listener){
-        System.out.println("Setto listner "+ listener);
+        //System.out.println("Setto listner "+ listener);
         this.rewardsListener = listener;
     }
 
@@ -980,6 +980,9 @@ public class PlayerBoard {
         this.Rewards = rewards;
         if (rewardsListener!= null){
             rewardsListener.rewardsChanged(new RewardsEvent(new ArrayList<>(Rewards)));
+            for (Goods g : Rewards){
+                System.out.println("@@@@"+ g.getClass());
+            }
         }
     }
 

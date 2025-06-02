@@ -5,6 +5,7 @@ package org.example.galaxy_trucker.View.TUI;
 //se disconnesso setta player a stato di disconnessione e chiama
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
@@ -25,8 +26,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.*;
-//TODO: non è ancora gestita la print del lv 1
-//TODO: mostrare che si è avviata la building phase
 //TODO: salvare lo stesso in virtualview per il momento non sto gestendo f.a. del tutto
 //TODO: impostare vincolo lunghezza nome e gameid (anche lato server)
 //TODO: stampare games per righe e non in colonna perchè mi da fastidio, oppure farlo su più righe
@@ -63,7 +62,7 @@ public class TUI implements View {
     private Thread inputThread;
     private InputReader inputReader;
     private PlayerClient playerClient;
-
+    private Client client;
 
 
     @Override
@@ -126,7 +125,16 @@ public class TUI implements View {
     @Override
     public void showLobby(LobbyEvent event) {
         //System.out.println(event.getGameId());
-        out.setLobby(event.getGameId(),formatCell(event)); //QUI
+        if (event.getLv() != -1){
+            //System.out.println("put "+event.getGameId()+" "+event.getLv());
+            try{
+                out.setLobby(event.getGameId(),formatCell(event)); //QUI
+                client.setGameIdToLV(event.getGameId(), event.getLv());
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
         onGameUpdate();
 //        if (event.getGameId().equals("EMPTY CREATE NEW GAME")){
 //            lobby.remove(event.getGameId());
@@ -722,4 +730,7 @@ public class TUI implements View {
         return out;
     }
 
+    public void setClient(Client client) {
+        this.client = client;
+    }
 }

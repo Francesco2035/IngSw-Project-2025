@@ -39,6 +39,8 @@ public interface EventVisitor {
 
     void visit(RandomCardEffectEvent randomCardEffectEvent);
 
+    void visit(ConnectionRefusedEvent connectionRefusedEvent);
+
 
     //public void visit(GameBoardEvent event);
 }

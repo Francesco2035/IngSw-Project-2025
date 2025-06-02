@@ -172,8 +172,14 @@ public class CommandInterpreter {
 
 
     private Command createReadyCommand(String[] strings) {
+        boolean accepted;
+        if (strings[0].equals("READY")){
+            accepted = true;
+        }
+        else {
+            accepted = false;
+        }
 
-        boolean accepted = Boolean.parseBoolean(strings[1]);
         return new ReadyCommand(gameId, playerId,lv, "Ready", accepted, token);
     }
 

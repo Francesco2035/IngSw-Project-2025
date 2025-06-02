@@ -239,6 +239,10 @@ public class Out {
 
         }
         sb.append("\n\n");
+        if (lobby.isEmpty()){
+            sb.append(ASCII_ART.noGame);
+        }
+        sb.append("\n\n");
         return sb;
 
     }
