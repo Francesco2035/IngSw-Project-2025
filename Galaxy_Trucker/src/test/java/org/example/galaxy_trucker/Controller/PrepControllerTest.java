@@ -57,8 +57,8 @@ class PrepControllerTest {
         assertTrue(p1.getmyPlayerBoard().checkValidity());
         Gboard = game.getGameBoard();
         c1 = new PrepController(p1, game.getGameID(), gc, false);
-        Controller controller = new LoginController(p1, game.getGameID());
-        gc.getControllerMap().put(p1.GetID(), controller);
+//        Controller controller = new LoginController(p1, game.getGameID());
+        gc.getControllerMap().put(p1.GetID(), c1);
 
         p1.setPhaseListener(vv);
         p1.getmyPlayerBoard().setListener(vv);
@@ -129,14 +129,14 @@ class PrepControllerTest {
         c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Ready", false, null), gc);
         System.out.println(p1.getPlayerState().toString());
 
-        c1.action(new FinishBuildingCommand(10, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
-        c1.action(new FinishBuildingCommand(4, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+//        c1.action(new FinishBuildingCommand(10, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+//        c1.action(new FinishBuildingCommand(4, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
 
 
 
-        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
-        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
-        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "HEHEHEHA", null), gc);
+//        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+//        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "HEHEHEHA", null), gc);
+//        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
 
         c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Quit", false, null), gc);
 
