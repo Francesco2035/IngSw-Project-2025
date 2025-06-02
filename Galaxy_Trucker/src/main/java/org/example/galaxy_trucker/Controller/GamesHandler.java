@@ -135,7 +135,7 @@ public class GamesHandler implements LobbyListener {
                     Game curGame = new Game(lvl, gameID);
 
                     synchronized (gameControllerMap) {
-                        GameController gameController = new GameController(gameID, curGame, this,command.getLv());
+                        GameController gameController = new GameController(gameID, curGame, this,command.getLv(), command.getMaxPlayers());
                         gameController.setLobbyListener(this);
                         gameControllerMap.putIfAbsent(gameID, gameController);
                         gameControllerMap.get(curGame.getGameID()).NewPlayer(temp, virtualView, virtualView.getToken());

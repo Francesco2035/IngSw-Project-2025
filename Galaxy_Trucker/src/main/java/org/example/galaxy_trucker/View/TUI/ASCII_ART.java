@@ -112,7 +112,6 @@ public class ASCII_ART {
     public static String CheckValidityPhase = "";
 
 
-
     public static String ChoosePositionPhase = "";
 
 

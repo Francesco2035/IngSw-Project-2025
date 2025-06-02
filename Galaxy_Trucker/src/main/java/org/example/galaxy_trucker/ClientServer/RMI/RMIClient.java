@@ -198,6 +198,13 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             String playerId = client.getView().askInput("Insert player ID: ");
                             String gameId = client.getView().askInput("Insert game ID: ");
                             int level = Integer.parseInt(client.getView().askInput("Insert game level: "));
+                            int maxPlayers = Integer.parseInt(client.getView().askInput("Insert number of players [1-4]: "));
+                            if (maxPlayers < 1){
+                                maxPlayers = 1;
+                            }
+                            if (maxPlayers > 4){
+                                maxPlayers = 4;
+                            }
 
                             String fullCommand = "Login " + playerId + " " + gameId + " " + level;
                             System.out.println(fullCommand);
@@ -206,7 +213,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             commandInterpreter.setlv(level);
 
                             commandInterpreter.setClient(this);
-                            LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login");
+                            LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login", maxPlayers);
                             loginCommand.setClient(this);
 
                             System.out.println(loginCommand);
@@ -237,7 +244,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                 commandInterpreter.setlv(level);
 
                                 commandInterpreter.setClient(this);
-                                LoginCommand loginCommand = new LoginCommand(gameId, playerId, level, "Login");
+                                LoginCommand loginCommand = new LoginCommand(gameId, playerId, level, "Login", -1);
                                 loginCommand.setClient(this);
 
                                 System.out.println(loginCommand);

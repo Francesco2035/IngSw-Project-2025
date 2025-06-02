@@ -18,8 +18,10 @@ public class LoginCommand extends Command implements Serializable {
 
     private ClientInterface client;
 
-    public LoginCommand(String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title, "");
+
+
+    public LoginCommand(String gameId, String playerId, int lv, String title, int maxPlayers) {
+        super(gameId, playerId, lv, title, "", maxPlayers);
     }
 
 
@@ -46,5 +48,7 @@ public class LoginCommand extends Command implements Serializable {
     public void setClient(ClientInterface client) {
         this.client = client;
     }
+
+
 
 }

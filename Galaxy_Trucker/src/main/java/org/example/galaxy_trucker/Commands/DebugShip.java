@@ -19,7 +19,7 @@ public class DebugShip extends Command implements Serializable {
 
 
     public DebugShip(String gameId, String playerId, int lv, String title, String token) {
-        super(gameId, playerId, lv, title, token);
+        super(gameId, playerId, lv, title, token,-1);
         this.gameId = gameId;
         this.playerId = playerId;
         this.title = title;

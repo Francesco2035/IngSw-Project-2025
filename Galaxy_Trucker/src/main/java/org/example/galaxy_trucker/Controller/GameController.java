@@ -63,13 +63,14 @@ public class GameController  implements ConcurrentCardListener {
         return VirtualViewMap;
     }
 
-    public GameController(String idGame, Game game, GamesHandler gh, int lv) {
+    public GameController(String idGame, Game game, GamesHandler gh, int lv, int maxPlayer) {
         this.idGame = idGame;
         ControllerMap = new HashMap<>();
         this.game = game;
         this.gh = gh;
         this.flightQueue = new LinkedBlockingQueue<>();
         this.lv = lv;
+        this.maxPlayer = maxPlayer;
 //        this.prepThread = new Thread(() -> {
 //            while(true){
 //                Command cmd = prepQueue.poll();
@@ -155,7 +156,7 @@ public class GameController  implements ConcurrentCardListener {
             t.start();
             threads.put(playerId, t);
             ArrayList<String> players = new ArrayList<>(VirtualViewMap.keySet());
-            lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players));
+            lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
         }
 
 
@@ -218,7 +219,7 @@ public class GameController  implements ConcurrentCardListener {
             stopGame();
         }
         ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
-        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players));
+        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
 
     }
 
@@ -495,8 +496,9 @@ public class GameController  implements ConcurrentCardListener {
         if (ControllerMap.containsKey(command.getPlayerId())) {
             return "Player "+command.getPlayerId()+" already exists in game "+game.getID();
         }
-        //TODO: controllo del numero massimo di player
-
+        if (ControllerMap.size() == maxPlayer){
+            return "This game is full";
+        }
         return "";
     }
 }

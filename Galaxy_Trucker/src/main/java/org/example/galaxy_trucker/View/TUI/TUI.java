@@ -229,7 +229,7 @@ public class TUI implements View {
 
 
     public String[] formatCell(LobbyEvent event) {
-        String[] cell = new String[8];
+        String[] cell = new String[9];
         cell[0] = "+"+centerTextAnsi(event.getGameId(),25, "-")+"+";
         cell[1] = "+                         +";
         cell[2] = "+                         +";
@@ -238,11 +238,13 @@ public class TUI implements View {
         cell[5] = "+                         +";
         cell[6] = "+                         +";
         cell[7] = "+-------------------------+";
+        cell[8] = "+-------------------------+";
         int k = 1;
         if (!event.getGameId().equals("EMPTY CREATE NEW GAME")){
             //TODO: chiama metodo speciale di out senza salvare la stringa su out se il titolo è questo
             ArrayList<String> players = event.getPlayers();
             cell[7] = "+"+centerTextAnsi("Game level: "+ event.getLv(),25, "-")+"+";
+            cell[8] = "+"+centerTextAnsi("Max players: "+ event.getMaxPlayers(),25, "-")+"+";
             for (String player : players) {
                 cell[2+ k -1] = "+"+centerTextAnsi("p"+k+ ": "+player, 25)+"+";
                 k++;

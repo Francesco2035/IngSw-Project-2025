@@ -231,7 +231,7 @@ public class Out {
 
     public StringBuilder showLobby(){
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             for (String[] game : lobby.values()) {
                 sb.append(game[i] + "   ");
             }
