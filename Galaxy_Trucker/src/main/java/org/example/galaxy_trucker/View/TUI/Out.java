@@ -1,10 +1,9 @@
 package org.example.galaxy_trucker.View.TUI;
 
-import org.example.galaxy_trucker.Commands.InputReader;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ViewPhase;
+import org.jline.jansi.Ansi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +19,9 @@ public class Out {
     private PlayerClient playerClient;
     private Boolean show = true;
 
+    String exception = "";
+    String effect = "";
+
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final AtomicBoolean updateScheduled = new AtomicBoolean(false);
@@ -31,10 +33,11 @@ public class Out {
 
     private final Object lock = new Object();
     private final HashMap<Integer, String> idToNameMap = new HashMap<>();
+    private final HashMap<String,  String[][][]> otherPlayersBoard  = new HashMap<>();
     private final int contentWidth = 33;
     private String[][][] cachedBoard;
     private String[] cacheHand = null;
-    private final String border = "+---------------------------------+";
+    private final String border = "+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━+";
     private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
     private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap();
     private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
@@ -54,6 +57,36 @@ public class Out {
     private ViewPhase phase;
 
 
+
+    public void setOthersPB(String playerId, int x, int y, String[] cell){
+        if (!otherPlayersBoard.containsKey(playerId)){
+            otherPlayersBoard.put(playerId, new String[10][10][7]);
+            for (int i = 0; i < 10; i++){
+                for (int j = 0; j < 10; j++){
+                    otherPlayersBoard.get(playerId)[i][j] = new String[7];
+                    for (int m = 0; m < 7; m++) {
+                        otherPlayersBoard.get(playerId)[i][j][m] = "";
+                    }
+                }
+            }
+        }
+        otherPlayersBoard.get(playerId)[x][y] = cell;
+    }
+
+    public void setOthersPB(String playerId, int x, int y,int k, String s){
+        if (!otherPlayersBoard.containsKey(playerId)){
+            otherPlayersBoard.put(playerId, new String[10][10][7]);
+            for (int i = 0; i < 10; i++){
+                for (int j = 0; j < 10; j++){
+                    otherPlayersBoard.get(playerId)[i][j] = new String[7];
+                    for (int m = 0; m < 7; m++) {
+                        otherPlayersBoard.get(playerId)[i][j][m] = "";
+                    }
+                }
+            }
+        }
+        otherPlayersBoard.get(playerId)[x][y][k] = s;
+    }
 
     public Out(InputReader inputReader, PlayerClient playerClient) {
         this.inputReader = inputReader;
@@ -96,12 +129,6 @@ public class Out {
     }
 
     public void setCachedBoard(int x, int y, String[] cell) {
-        for (int i = 0; i < 7; i++) {
-//            if (cell[i].equals("")){
-//                System.out.println("oh no");
-//            }
-//            System.out.println("cell"+ cell[i]);
-        }
         cachedBoard[x][y] = cell;
     }
 
@@ -208,8 +235,12 @@ public class Out {
             for (String[] game : lobby.values()) {
                 sb.append(game[i] + "   ");
             }
-            sb.append(String.valueOf(sb)+"\n");
+            sb.append("\n");
 
+        }
+        sb.append("\n\n");
+        if (lobby.isEmpty()){
+            sb.append(ASCII_ART.noGame);
         }
         sb.append("\n\n");
         return sb;
@@ -221,9 +252,8 @@ public class Out {
         StringBuilder toPrint = new StringBuilder();
         int rows = 10;
         int cols = 10;
-        toPrint.append("\n############################ BOARD ############################\n");
+        toPrint.append("\n"+ASCII_ART.Board+"\n");
         toPrint.append("\n\n");
-        //System.out.println("############################ BOARD ############################\n");
         for (int y = 0; y < rows; y++) {
 
 
@@ -235,24 +265,49 @@ public class Out {
             for (int i = 0; i < 7; i++) {
                 for (int x = 0; x < cols; x++) {
                     if (y > 2 && x > 1){
-                        //System.out.print(formattedRow[x][i]);
                         toPrint.append(formattedRow[x][i]);
-                        //System.out.println(formattedRow[x][i]);
                     }
                 }
                 if (y > 2 ){
                     toPrint.append("\n");
-                    //System.out.println();
                 }
 
             }
         }
 
-        //System.out.println();
-        //toPrint.append("\n");
+        toPrint.append(ASCII_ART.Border);
+        return toPrint;
+    }
 
-        //System.out.println("\n############################ ##### ############################");
-        toPrint.append("\n############################ ##### ############################\n");
+
+    public StringBuilder printBoard(String[][][] board) {
+        StringBuilder toPrint = new StringBuilder();
+        int rows = 10;
+        int cols = 10;
+
+        toPrint.append("\n\n");
+        for (int y = 0; y < rows; y++) {
+
+
+            String[][] formattedRow = new String[cols][];
+            for (int x = 0; x < cols; x++) {
+                formattedRow[x] = board[y][x];
+            }
+
+            for (int i = 0; i < 7; i++) {
+                for (int x = 0; x < cols; x++) {
+                    if (y > 2 && x > 1){
+                        toPrint.append(formattedRow[x][i]);
+                    }
+                }
+                if (y > 2 ){
+                    toPrint.append("\n");
+                }
+
+            }
+        }
+
+        toPrint.append(ASCII_ART.Border);
         return toPrint;
     }
 
@@ -261,7 +316,7 @@ public class Out {
     public StringBuilder showUncoveredTiles() {
         //TODO: spezzare le uncovered in %6, sarà ncasino
         StringBuilder toPrint = new StringBuilder();
-        toPrint.append("\n############################ UNCOVERED TILES ############################\n");
+        toPrint.append(ASCII_ART.UncoveredTiles);
 
         StringBuilder line = new StringBuilder();
         StringBuilder topLine = new StringBuilder();
@@ -279,7 +334,7 @@ public class Out {
         }
         toPrint.append(String.valueOf(topLine));
         toPrint.append(String.valueOf(line));
-        toPrint.append("\n############################ ############## ############################\n");
+        toPrint.append(ASCII_ART.Border);
         return toPrint;
 
     }
@@ -290,20 +345,19 @@ public class Out {
         StringBuilder toPrint = new StringBuilder();
         //inputReader.clearScreen();
         
-        toPrint.append("\n\n############################ HAND ############################\n\n");
+        toPrint.append(ASCII_ART.Hand);
         for (String l : cacheHand) toPrint.append("\n"+l);
         toPrint.append("\n"+border + "\n");
-        toPrint.append("\n############################ #### ############################\n");
+        toPrint.append(ASCII_ART.Border);
         return toPrint;
     }
 
 
     public  StringBuilder printGameboard(){
-        //inputReader.clearScreen();
+
         StringBuilder toPrint = new StringBuilder();
-        toPrint.append("\n\n\n########################## GameBoard #########################\n\n");
-        //toPrint.append("\n\n");
-        //toPrint.append("########################## GameBoard #########################\n");
+        toPrint.append(ASCII_ART.GameBoard);
+
         if (lv == 2){
             for (int i = 0; i < 6; i++) {
 
@@ -318,10 +372,19 @@ public class Out {
 
         }
         else{
+            for (int i = 0; i < 5; i++) {
 
+                for (int k = 0; k < 7; k++) {
+                    for (int j = 0; j < 11; j++) {
+                        toPrint.append(Gameboard[i][j][k]);
+                    }
+                    toPrint.append("\n");
+                }
+
+            }
         }
-        //toPrint.append("\n");
-        toPrint.append("\n\n########################## ######### #########################\n\n");
+
+        toPrint.append(ASCII_ART.Border);
         return toPrint;
 
 
@@ -343,7 +406,6 @@ public class Out {
                     i++;
                     line.append("          ");
                 }
-                //toPrint.append("##################   WELCOME   ##################\n\n");
         return line;
     }
 
@@ -352,7 +414,6 @@ public class Out {
 
     public void showGame(){
         show  = false;
-        //inputReader.clearScreen();
         this.playerClient.showGame(this);
         show = true;
 
@@ -394,7 +455,27 @@ public class Out {
             positionToGameboard.put(23, new IntegerPair(1,1));
         }
         else if (lv == 1){
-            Gameboard = new String[10][5][7];
+            Gameboard = new String[5][11][7];
+            positionToGameboard.put(-1, new IntegerPair(-1,-1));
+            positionToGameboard.put(0, new IntegerPair(0,3));
+            positionToGameboard.put(1, new IntegerPair(0,4));
+            positionToGameboard.put(2, new IntegerPair(0,5));
+            positionToGameboard.put(3, new IntegerPair(0,6));
+            positionToGameboard.put(4, new IntegerPair(0,7));
+            positionToGameboard.put(5, new IntegerPair(0,8));
+            positionToGameboard.put(6, new IntegerPair(1,9));
+            positionToGameboard.put(7, new IntegerPair(2,10));
+            positionToGameboard.put(8, new IntegerPair(3,9));
+            positionToGameboard.put(9, new IntegerPair(4,8));
+            positionToGameboard.put(10, new IntegerPair(4,7));
+            positionToGameboard.put(11, new IntegerPair(4,6));
+            positionToGameboard.put(12, new IntegerPair(4,5));
+            positionToGameboard.put(13, new IntegerPair(4,4));
+            positionToGameboard.put(14, new IntegerPair(4,3));
+            positionToGameboard.put(15, new IntegerPair(3,2));
+            positionToGameboard.put(16, new IntegerPair(2,1));
+            positionToGameboard.put(17, new IntegerPair(1,0));
+
         }
     }
 
@@ -402,13 +483,11 @@ public class Out {
 
     private void printTilesSet(){
         showUncoveredTiles();
-        //toPrint.append("\n");
     }
 
 
     public void setCacheCard(String s){
         CacheCard = s;
-        //printMessage(s);
     }
 
     public void setRewards(StringBuilder rewards){
@@ -417,14 +496,18 @@ public class Out {
 
     public StringBuilder showCovered(){
         StringBuilder toPrint = new StringBuilder();
-        toPrint.append("\n\n############################ COVERED TILES SET ############################\n\n");
+        toPrint.append(ASCII_ART.CoveredTiles);
         toPrint.append("\n CoveredTileSet size: "+ CoveredTileSet);
         return toPrint;
     }
 
     public StringBuilder showCard(){
         StringBuilder toPrint = new StringBuilder();
+
         if (!CacheCard.equals("")){
+            toPrint.append("\n\n");
+            toPrint.append(ASCII_ART.Card);
+            toPrint.append("\n\n");
             toPrint.append("\n\n"+ CacheCard+ "\n\n");
         }
         else{
@@ -446,5 +529,54 @@ public class Out {
 
     public StringBuilder showRewards() {
         return Rewards;
+    }
+
+    public void setException(String exception) {
+        this.exception = exception;
+    }
+
+    public StringBuilder showException() {
+        StringBuilder sb = new StringBuilder();
+        if (!exception.equals("")){
+            sb.append(Ansi.ansi().fgRed().a("[ " + exception + " ]").reset());
+            sb.append("\n\n");
+            exception = "";
+        }
+        return sb;
+    }
+
+    public StringBuilder printSystemException(String s){
+        StringBuilder sb = new StringBuilder();
+
+
+        return sb;
+    }
+
+    public void seeBoards() {
+        StringBuilder sb = new StringBuilder();
+
+
+        for (String player : otherPlayersBoard.keySet()){
+            sb.append(ASCII_ART.Border);
+            sb.append("\n\nPlayer: " +player);
+            sb.append(printBoard(otherPlayersBoard.get(player)));
+            sb.append(ASCII_ART.Border);
+        }
+        sb.append(printBoard());
+        inputReader.renderScreen(sb);
+    }
+
+    public void setEffectCard(String message) {
+        this.effect = message;
+    }
+
+    public StringBuilder showCardEffect(){
+        StringBuilder sb = new StringBuilder();
+        if (!effect.equals("")){
+            sb.append(Ansi.ansi().fgYellow().a("[ " + effect + " ]").reset());
+            sb.append("\n\n");
+            //effect = "";
+        }
+        return sb;
     }
 }

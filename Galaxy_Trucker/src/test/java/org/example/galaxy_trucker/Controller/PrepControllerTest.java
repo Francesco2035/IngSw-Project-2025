@@ -45,7 +45,7 @@ class PrepControllerTest {
 
 
         game = new Game(2, "testPrepController");
-        gc = new GameController(game.getGameID(), game, new GamesHandler());
+        gc = new GameController(game.getGameID(), game, new GamesHandler(),game.getLv());
 
 
         p1 = new Player();

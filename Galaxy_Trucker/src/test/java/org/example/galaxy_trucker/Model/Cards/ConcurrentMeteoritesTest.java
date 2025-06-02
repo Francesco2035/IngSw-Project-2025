@@ -115,7 +115,12 @@ public class ConcurrentMeteoritesTest
 
 
 
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
         for (Player p : game.getGameBoard().getPlayers()) {
             if(p.getPlayerState().getClass().equals(DefendingFromSmall.class)) {
                 System.out.println(p.GetID() +" is defending from small");

@@ -83,7 +83,12 @@ public class CardControllerTest {
         CurrentCard.setBoard(Gboard);
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
 
         assertEquals(Accepting.class, p1.getPlayerState().getClass());
@@ -131,7 +136,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
 
         assertEquals(p1.getPlayerState().getClass(), Accepting.class);
@@ -195,7 +205,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
         DefendFromSmallCommand defendFromSmallCommand;
         DefendFromLargeCommand defendFromLargeCommand;
         int i=0;
@@ -254,7 +269,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
 
         assertEquals(p1.getPlayerState().getClass(), GiveSpeed.class);
@@ -302,7 +322,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
         assertEquals(p1.getPlayerState().getClass(), ChoosingPlanet.class);
         assertEquals(false, p1.GetHasActed());

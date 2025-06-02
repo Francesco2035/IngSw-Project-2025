@@ -1,5 +1,6 @@
     module org.example.galaxy_trucker {
         requires javafx.controls;
+        requires javafx.media;
         requires javafx.fxml;
         requires org.controlsfx.controls;
         requires java.compiler;
@@ -45,4 +46,5 @@
         exports org.example.galaxy_trucker.View.GUI;
         exports org.example.galaxy_trucker.View.TUI to java.rmi;
         exports org.example.galaxy_trucker.View to java.rmi;
+            opens org.example.galaxy_trucker.View.TUI to com.fasterxml.jackson.databind, com.google.gson;
     }

@@ -7,6 +7,7 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.Killing;
+import org.example.galaxy_trucker.Model.PlayerStates.ReadCardState;
 import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
@@ -25,7 +26,7 @@ public class Epidemic extends Card {
 
     }
 
-    public void CardEffect(){
+    public void CardEffect() throws InterruptedException {
 
         if(infected==null) {
             infected = new ArrayList<>();
@@ -33,6 +34,10 @@ public class Epidemic extends Card {
 
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
+        for(Player p : PlayerList){
+            p.setState(new ReadCardState());
+        }
+        Thread.sleep(5000);
         PlayerBoard CurrentPlanche;
         int Len= PlayerList.size(); // quanti player ho
         ArrayList<HousingUnit> HousingCoords= new ArrayList<>();

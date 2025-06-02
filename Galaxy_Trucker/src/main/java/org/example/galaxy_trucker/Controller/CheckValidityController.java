@@ -20,7 +20,8 @@ public class CheckValidityController extends Controller{
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())){
-            throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
+            sendException(new IllegalStateException("Command not accepted, you can only remove tile!"));
+            //throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
         }
 
         try {
@@ -30,9 +31,9 @@ public class CheckValidityController extends Controller{
         } catch (Exception e) {
             curPlayer.setMyPlance(playerBoardCopy);
             playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
-
+            sendException(e);
             //throw new IllegalCallerException("illegal execution of command" + command.toString());
-            System.out.println(e);
+            e.printStackTrace();
         }
 
     }
@@ -43,12 +44,16 @@ public class CheckValidityController extends Controller{
         System.out.println("CHECK_CONTROLLER callign next state for " + curPlayer.GetID());
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new ChoosePosition());
-            System.out.print("ops");
-            gc.setControllerMap(curPlayer,new PrepController(curPlayer, gameId,gc,disconnected));
+            ChoosePositionController newController = new ChoosePositionController(curPlayer, gameId,disconnected);
+            newController.setExceptionListener(exceptionListener);
+            gc.setControllerMap(curPlayer,newController);
 
         }
         else {
-            gc.setControllerMap(curPlayer, new CheckValidityController(curPlayer, gameId,this.disconnected));
+            curPlayer.setState(new AddCrewState());
+            CheckValidityController newController = new CheckValidityController(curPlayer,gameId,disconnected);
+            newController.setExceptionListener(exceptionListener);
+            gc.setControllerMap(curPlayer, newController);
         }
     }
 }

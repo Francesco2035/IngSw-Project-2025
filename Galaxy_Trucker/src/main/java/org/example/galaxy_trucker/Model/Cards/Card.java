@@ -3,13 +3,16 @@ package org.example.galaxy_trucker.Model.Cards;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.example.galaxy_trucker.Controller.Listeners.RandomCardEffectListener;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.RandomCardEffectEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 @JsonTypeInfo(
@@ -39,6 +42,9 @@ import java.util.ArrayList;
 
 public class Card implements Serializable {
     public ConcurrentCardListener concurrentCardListener;
+    public HashMap<String, RandomCardEffectListener> RandomCardEffectListeners = new HashMap<>();
+
+
     private int id;
     @JsonProperty("Level")
     private int Level;
@@ -70,7 +76,7 @@ public class Card implements Serializable {
     public void removeConcurrentCardListener(){
         this.concurrentCardListener = null;
     }
-    public void CardEffect(){}
+    public void CardEffect() throws InterruptedException {}
     public int getTime() {
         return this.Time;
     }
@@ -107,6 +113,23 @@ public class Card implements Serializable {
     public void setFinished(boolean finished) {
         this.finished = finished;
     }
+
+    public void setRandomCardEffectListeners(String id, RandomCardEffectListener randomCardEffectListener) {
+        System.out.println("####Setto listener carta "+id+" "+randomCardEffectListener);
+        getRandomCardEffectListeners().put(id, randomCardEffectListener);
+    }
+
+
+    /// usa questo per mandare notifiche al client lezgo
+    public void sendRandomEffect(String playerid, RandomCardEffectEvent randomCardEffectEvent) {
+        System.out.println("invio a "+playerid+" "+randomCardEffectEvent.message());
+        getRandomCardEffectListeners().get(playerid).Effect(randomCardEffectEvent);
+    }
+
+    public HashMap<String, RandomCardEffectListener> getRandomCardEffectListeners() {
+        return RandomCardEffectListeners;
+    }
+
 
     //json required
     public Card() {}

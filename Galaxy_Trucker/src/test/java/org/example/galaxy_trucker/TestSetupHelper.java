@@ -276,7 +276,7 @@ public class TestSetupHelper {
     public static GameController GameControllerSetup() throws IOException {
         Game game = new Game(2, "poggi");
         GamesHandler gh = new GamesHandler();
-        GameController gc = new GameController(game.getGameID(), game, gh);
+        GameController gc = new GameController(game.getGameID(), game, gh,2);
         Player p1 = new Player();
         p1.setId("player1");
         Player p2 = new Player();

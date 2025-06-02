@@ -17,6 +17,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 
 import static java.lang.System.exit;
 
@@ -27,10 +28,10 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     private Game myGame;
     private CommandInterpreter commandInterpreter;
     private Client client;
+
     Boolean running = false;
     private Thread inputLoop = null;
     boolean lobby = false;
-    boolean login = false;
 
 
 
@@ -131,7 +132,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     public void receiveMessage(Event event) {
         try{
             client.receiveEvent(event);
-
         }
         catch (Exception e){
 //            e.printStackTrace();
@@ -176,12 +176,12 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     else if (cmd.equals("Lobby")){
                         if (!lobby){
                             lobby = true;
-                            LobbyCommand lobby = new LobbyCommand("Lobby");
-                            lobby.setClient(this);
-                            server.command(lobby);
+                            LobbyCommand Lobby = new LobbyCommand("Lobby");
+                            Lobby.setClient(this);
+                            server.command(Lobby);
                         }
                         else{
-                            if (login){
+                            if (client.getLogin()){
                                 System.out.println("You are already logged in! [quit?]");
                             }
                             else{
@@ -191,10 +191,10 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                         }
 
                     }
-                    else if (cmd.equals("Login")){
+                    else if (cmd.equals("Create")){
 
-                         if (!login){
-                            login = true;
+                         if (!client.getLogin()){
+                            client.setLogin(true);
                             String playerId = client.getView().askInput("Insert player ID: ");
                             String gameId = client.getView().askInput("Insert game ID: ");
                             int level = Integer.parseInt(client.getView().askInput("Insert game level: "));
@@ -219,8 +219,57 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                         }
 
                     }
+                    else if (cmd.equals("Join")) {
+                        if (!client.getLogin()){
+
+                            String playerId = client.getView().askInput("Insert player ID: ");
+                            String gameId = client.getView().askInput("Insert game ID: ");
+                            if (client.containsGameId(gameId)) {
+//                                System.out.println("Invalid Game!");
+//                                break;
+                                client.setLogin(true);
+                                int level = client.getLevel(gameId);
+
+                                String fullCommand = "Login " + playerId + " " + gameId + " " + level;
+                                System.out.println(fullCommand);
+
+                                commandInterpreter = new CommandInterpreter(playerId, gameId);
+                                commandInterpreter.setlv(level);
+
+                                commandInterpreter.setClient(this);
+                                LoginCommand loginCommand = new LoginCommand(gameId, playerId, level, "Login");
+                                loginCommand.setClient(this);
+
+                                System.out.println(loginCommand);
+                                server.command(loginCommand);
+                                System.out.println("Sent login command");
+                            }
+                            else {
+                                System.out.println("Invalid game: "+gameId+"\n games:");
+                                for (String id : client.getGameidToLV().keySet()) {
+                                    System.out.println(id);
+                                }
+                            }
+
+                        }
+                        else{
+                            System.out.println("You are already logged in! [quit?]");
+                        }
+
+                    }
+                    else if (cmd.equals("SeeBoards")){
+                        if (client.getLogin()){
+                            client.getView().seeBoards();
+                        }
+                        else{
+                            System.out.println("CHOOSE A GAME");
+                        }
+                    }
+                    else if (cmd.equals("MainTerminal")){
+                        client.getView().refresh();
+                    }
                     else {
-                        if (login){
+                        if (client.getLogin()){
                             Command command = commandInterpreter.interpret(cmd);
                             server.command(command);
                         }
@@ -364,6 +413,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         }
 
     }
+
+
 
 //TODO: usare metodo input reader per stamapre i messaggi di errore e usare [...] per capire se System o Server
     //perchè tanto potrei salvarmi l'ultimo StringBuilder usato per il render

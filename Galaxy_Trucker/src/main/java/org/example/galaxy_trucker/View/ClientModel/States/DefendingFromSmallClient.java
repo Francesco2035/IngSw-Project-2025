@@ -2,19 +2,24 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.List;
+
 public class DefendingFromSmallClient  extends PlayerStateClient{
     @Override
     public void showGame(Out out) {
-//TODO: messaggi della carta
-        StringBuilder sb = new StringBuilder();
-        sb.append("Defending From Small...\n");
-        sb.append(out.showPlayers());
-        sb.append(out.printGameboard());
-        sb.append(out.printBoard());
-//        out.showPlayers();
-//        out.printGameboard();
-//        out.showCard();
-//        out.printBoard();
-        out.render(sb);
+
+        StringBuilder toPrint = new StringBuilder();
+        toPrint.append("Defending From Small...\n");
+        toPrint.append(out.showPlayers());
+        toPrint.append(out.printGameboard());
+        toPrint.append(out.printBoard());
+        toPrint.append(out.showCardEffect());
+        toPrint.append(out.showException());
+        out.render(toPrint);
+    }
+
+    @Override
+    public List<String> getCommands() {
+        return List.of("DefendSmall");
     }
 }

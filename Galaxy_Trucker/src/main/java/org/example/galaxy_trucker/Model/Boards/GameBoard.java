@@ -146,6 +146,7 @@ public class GameBoard {
         if(positions[startPos[index-1]] == null) {
             SetNewPosition(cur, startPos[index-1], startPos[index-1]);
             sendUpdates(new GameBoardEvent(startPos[index-1], pl.GetID()));
+            System.out.println("@@@"+startPos[index-1]+":"+pl.GetID());
             PlayersOnBoard++;
         }
         else throw new IllegalArgumentException("This cell is already taken!");
@@ -155,6 +156,7 @@ public class GameBoard {
     
     public void removePlayerAndShift(Player pl) throws  RuntimeException{
         sendUpdates(new GameBoardEvent(-1, pl.GetID()));
+        System.out.println(pl.GetID()+ "removed");
         int[] shiftedPositions = new int[players.size()];
 
         Player_IntegerPair cur = players.stream()
@@ -174,27 +176,30 @@ public class GameBoard {
                     shiftedPositions[i] = p.getValue();
                     positions[shiftedPositions[i]] = null;
                     i++;
+                    //qui tolgo tutto
                 }
             }
 
             cur.setValue(-1);
+            //setto quello da rimuovere a -1
 
             i=0;
             for(Player_IntegerPair p : players)
                 if(p.getValue() >=0){
                     p.setValue(shiftedPositions[i]);
                     positions[shiftedPositions[i]] = p.getKey();
+                    System.out.println("@@@Set "+p.getKey().GetID()+" to "+shiftedPositions[i]+ " position: "+positions[shiftedPositions[i]]);
                     i++;
                 }
             updateAllPosition();
 
 
 
-            for(Player_IntegerPair p : players)
-                if(p.getValue() >=0)
-                    sendUpdates(new GameBoardEvent(p.getValue(), pl.GetID()));
-
-
+//            for(Player_IntegerPair p : players)
+//                if(p.getValue() >=0)
+//                    sendUpdates(new GameBoardEvent(p.getValue(), pl.GetID()));
+//
+//
         }
 
 
@@ -203,9 +208,11 @@ public class GameBoard {
 
 
     public void updateAllPosition(){
-        for(Player_IntegerPair p : players)
-            if(p.getValue() >=0)
+        for(Player_IntegerPair p : players) //come hashmap
+            if(p.getValue() >=0){
+                System.out.println("@@@"+p.getValue()+":"+ p.getKey().GetID());
                 sendUpdates(new GameBoardEvent(p.getValue(), p.getKey().GetID()));
+            }
     }
 
 
@@ -309,7 +316,7 @@ public class GameBoard {
         }
 
         CurrentCard.setBoard(this);
-        CurrentCard.CardEffect();
+
         System.out.println("Id Card: " +CurrentCard.getId() + " "+ CurrentCard.getClass().getName());
         return CurrentCard;
     }

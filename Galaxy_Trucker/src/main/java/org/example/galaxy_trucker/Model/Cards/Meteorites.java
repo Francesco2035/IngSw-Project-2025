@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model.Cards;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.RandomCardEffectEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
@@ -16,6 +17,7 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 //GESTISCI GLI ATTACCHI COME UN ARRAY LIST DI INTEGER E NON INTEGER PAIR
 
@@ -28,7 +30,7 @@ public class   Meteorites extends Card {
     private int PlayerOrder;
     private int MeteoritesOrder;
     private int MeteoritesLine;
-    private IntegerPair hit;
+    private HashMap <String,IntegerPair> hits;
     private  int SuccessfulDefences;
     private  int NumofDefences;
 
@@ -48,7 +50,7 @@ public class   Meteorites extends Card {
         this.PlayerOrder = 0;
         this.MeteoritesOrder = 0;
         this.MeteoritesLine = 0;
-        this.hit = new IntegerPair(0,0);
+        this.hits = new HashMap<>();
 
 
 
@@ -57,13 +59,10 @@ public class   Meteorites extends Card {
     //o gestisce la cosa e poi nel caso di hit chiama solo la posizione coplita se accade ed è indifesa
     @Override
     public void CardEffect() {
-
-        if (this.hit==null) {
-            this.hit = new IntegerPair(0,0);
-        }
-
+        hits = new HashMap<>();
         for (Player p: this.getBoard().getPlayers()) {
             p.setState(new Waiting());
+            hits.put(p.GetID(),new IntegerPair(0,0));
         }
 
         System.out.println("SIZE OF ATTACK:"+attacks.size()/2);
@@ -109,6 +108,11 @@ public class   Meteorites extends Card {
         System.out.println("Successfuldefences ="+SuccessfulDefences +" NumofDefences= " +NumofDefences);
         if(this.SuccessfulDefences==NumofDefences) {
        // if (PlayerOrder>=this.getBoard().getPlayers().size()){
+            try{
+                Thread.sleep(2500);
+            }catch(InterruptedException e){
+                e.printStackTrace();
+            }
             PlayerOrder=0;
             MeteoritesOrder+=2;
             this.CardEffect();
@@ -121,30 +125,51 @@ public class   Meteorites extends Card {
             PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard(); //prendo plancia
             int[][] MeteoritesValidPlanche = CurrentPlanche.getValidPlayerBoard();//prende matrice validita
             System.out.println("attack number: "+this.MeteoritesOrder/2 +" on: "+currentPlayer.GetID());
+
+            /// cose per stampare al client
+            String dimensione= new String();
+            String direction = new String();
+            String Colpito = new String("missed you");
+            String location = new String("");
+
+            if(attacks.get(MeteoritesOrder+1)==0) {
+                dimensione = new String("small");
+
+            }
+            else {
+                dimensione = new String("large");
+            }
+
             if (attacks.get(MeteoritesOrder) == 0) { //sinistra
                 System.out.println("SINISTRA");
+                direction = new String("the left on line "+MeteoritesLine);
                 Movement = 0;
                 while (Movement < 10 && MeteoritesLine<10  && MeteoritesFlag == false) {
                     if (MeteoritesValidPlanche[MeteoritesLine][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
+                        location= new String(MeteoritesLine+ " "+Movement);
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
                         System.out.println("touch in:"+MeteoritesLine+" "+Movement);
                         if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[MeteoritesLine][Movement].getConnectors().get(0) == NONE.INSTANCE) {
                             MeteoritesFlag = true;
                             System.out.println("lisciato");
+                            Colpito =new String("bounced off");
+
                         }
                         else if (attacks.get(MeteoritesOrder + 1) == 0) {
                             MeteoritesFlag = true;
                             DamageFlag=true;
-                            hit.setValue(MeteoritesLine,Movement);
+                            hits.get(currentPlayer.GetID()).setValue(MeteoritesLine,Movement);
                             System.out.println("Meteorites hit in: " + MeteoritesLine + " " + Movement);
+                            Colpito = new String("hit you");
                             currentPlayer.setState(new DefendingFromSmall());
 
                         }
                         else {
                             MeteoritesFlag = true;
                             DamageFlag = true;
-                            hit.setValue(MeteoritesLine, Movement);
+                            hits.get(currentPlayer.GetID()).setValue(MeteoritesLine, Movement);
                             System.out.println("Meteorites hit in: " + MeteoritesLine + " " + Movement);
+                            Colpito = new String("hit you");
                             currentPlayer.setState(new DefendingFromLarge());
                         }
                     }
@@ -154,29 +179,35 @@ public class   Meteorites extends Card {
             }
             else if (attacks.get(MeteoritesOrder) == 1) {//sopra
                 System.out.println("SOPRA");
+                direction = new String("above on column "+MeteoritesLine);
                 Movement = 0;
                 while (Movement < 10 && MeteoritesLine<10 && MeteoritesFlag == false) {
                     if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
+                        location= new String(Movement+ " "+MeteoritesLine);
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
                         if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[Movement][MeteoritesLine].getConnectors().get(1).equals(NONE.INSTANCE)) {
                             MeteoritesFlag = true;
 
                             System.out.println("lisciato");
+                            Colpito =new String("bounced off");
+
                         }
                         else if (attacks.get(MeteoritesOrder + 1) == 0) {
                             MeteoritesFlag = true;
                             DamageFlag=true;
-                            hit.setValue( Movement, MeteoritesLine);
+                            hits.get(currentPlayer.GetID()).setValue( Movement, MeteoritesLine);
                             System.out.println("Meteorites hit in: " + Movement + " " + MeteoritesLine);
+                            Colpito = new String("hit you");
                             currentPlayer.setState(new DefendingFromSmall());
 
                         }
                         else {
                             MeteoritesFlag = true;
                             DamageFlag = true;
-                            hit.setValue(Movement, MeteoritesLine);
+                            hits.get(currentPlayer.GetID()).setValue(Movement, MeteoritesLine);
                             System.out.println("Meteorites hit in: " + Movement + " " + MeteoritesLine);
+                            Colpito = new String("hit you");
                             currentPlayer.setState(new DefendingFromLarge());
                         }
                     }
@@ -186,28 +217,34 @@ public class   Meteorites extends Card {
             }
             else if (attacks.get(MeteoritesOrder) == 2) {// destra
                 System.out.println("DESTRA");
+                direction = new String("the right on line "+MeteoritesLine);
                 Movement = 9;
                 while (Movement >= 0  && MeteoritesLine<10 && MeteoritesFlag == false) {
                     if (MeteoritesValidPlanche[MeteoritesLine][Movement] > 0) {
+                        location= new String(MeteoritesLine+ " "+Movement);
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
                         if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[MeteoritesLine][Movement].getConnectors().get(2).equals(NONE.INSTANCE)) {
                             MeteoritesFlag = true;
                             System.out.println("lisciato");
+                            Colpito =new String("bounced off");
+
                         }
                         else if (attacks.get(MeteoritesOrder + 1) == 0) {
                             MeteoritesFlag = true;
                             DamageFlag=true;
-                            hit.setValue(MeteoritesLine,Movement);
+                            hits.get(currentPlayer.GetID()).setValue(MeteoritesLine,Movement);
                             System.out.println("Meteorites hit in: " + MeteoritesLine+ " " + Movement);
+                            Colpito = new String("hit you");
                             currentPlayer.setState(new DefendingFromSmall());
 
                         }
                         else {
                             MeteoritesFlag = true;
                             DamageFlag = true;
-                            hit.setValue(MeteoritesLine, Movement);
+                            hits.get(currentPlayer.GetID()).setValue(MeteoritesLine, Movement);
                             System.out.println("Meteorites hit in: " + MeteoritesLine + " " + Movement);
+                            Colpito = new String("hit you");
                             currentPlayer.setState(new DefendingFromLarge());
                         }
                     }
@@ -217,21 +254,26 @@ public class   Meteorites extends Card {
             }
             else { //sotto
                 System.out.println("SOTTO");
+                direction = new String("below on column "+MeteoritesLine);
                 Movement = 9;
                 while (Movement >= 0 && MeteoritesLine<10  && MeteoritesFlag == false) {
                     if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {
+                        location= new String(Movement+ " "+MeteoritesLine);
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
                         if (attacks.get(MeteoritesOrder + 1) == 0 ){ //caso meteoriti piccoli
                             if(tiles[Movement][MeteoritesLine].getConnectors().get(3).equals(NONE.class)) {
                             MeteoritesFlag = true;
                             System.out.println("lisciato");
+                                Colpito =new String("bounced off");
+
                         }
                             else if (attacks.get(MeteoritesOrder + 1) == 0) {
                                 MeteoritesFlag = true;
                                 DamageFlag = true;
-                                hit.setValue( Movement, MeteoritesLine);
+                                hits.get(currentPlayer.GetID()).setValue( Movement, MeteoritesLine);
                                 System.out.println("Meteorites hit in: " + Movement + " " + MeteoritesLine);
+                                Colpito = new String("hit you");
                                 currentPlayer.setState(new DefendingFromSmall());
 
                             }
@@ -240,8 +282,9 @@ public class   Meteorites extends Card {
                         else {// caso meteoriti grandi
                             MeteoritesFlag = true;
                             DamageFlag = true;
-                            hit.setValue(Movement, MeteoritesLine);
+                            hits.get(currentPlayer.GetID()).setValue(Movement, MeteoritesLine);
                             System.out.println("Meteorites hit in: " + Movement + " " + MeteoritesLine);
+                            Colpito = new String("hit you");
                             currentPlayer.setState(new DefendingFromLarge());
                         }
                     }
@@ -250,6 +293,10 @@ public class   Meteorites extends Card {
                 }
 
             }
+
+            System.out.println("a "+dimensione+" meteorite came from "+dimensione+" and it "+Colpito+" at "+location);
+            this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" meteorite came from "+dimensione+" and it "+Colpito+" at "+location));
+
             if (!DamageFlag){this.SuccessfulDefences++;}
             this.PlayerOrder++;
             if (PlayerOrder<this.getBoard().getPlayers().size()) {
@@ -287,13 +334,13 @@ public class   Meteorites extends Card {
             }
         }
         else {
-            currentBoard.destroy(hit.getFirst(), hit.getSecond());
-            currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
+            currentBoard.destroy(hits.get(player.GetID()).getFirst(), hits.get(player.GetID()).getSecond());
+            currentBoard.handleAttack(hits.get(player.GetID()).getFirst(), hits.get(player.GetID()).getSecond());
             if (currentBoard.getBroken()){
 
                 System.out.println("\nrottura nave\n");
 
-                System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
+                System.out.println("destroyed: "+hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond());
 
                 player.setState(new HandleDestruction());
                 System.out.println("Stato del player "+ player.getPlayerState().getClass().getName());
@@ -301,7 +348,7 @@ public class   Meteorites extends Card {
 
             }
             System.out.println("Stato del player "+ player.getPlayerState().getClass().getName());
-            System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
+            System.out.println("destroyed: "+hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond());
         }
         this.SuccessfulDefences++;
         this.updateSates();
@@ -313,7 +360,7 @@ public class   Meteorites extends Card {
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if(CannonCoord !=null) {
             if (attacks.get(MeteoritesOrder) == 0 || attacks.get(MeteoritesOrder) == 2) { // sinistra o destra
-                if(!((( CannonCoord.getFirst() == hit.getFirst() ||CannonCoord.getFirst() == hit.getFirst()+1 || CannonCoord.getFirst() == hit.getFirst()-1 ) && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(attacks.get(MeteoritesOrder))==(CANNON.INSTANCE)))){
+                if(!((( CannonCoord.getFirst() == hits.get(player.GetID()).getFirst() ||CannonCoord.getFirst() == hits.get(player.GetID()).getFirst()+1 || CannonCoord.getFirst() == hits.get(player.GetID()).getFirst()-1 ) && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(attacks.get(MeteoritesOrder))==(CANNON.INSTANCE)))){
                     throw new InvalidDefenceEceptiopn("this cannon isn't aiming at the meteorite");
                 }
                 else if (currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getComponent().getType() == 2) {
@@ -329,7 +376,7 @@ public class   Meteorites extends Card {
                 System.out.println("DefendFromLarge");
             }
             else if (attacks.get(MeteoritesOrder) == 1 || attacks.get(MeteoritesOrder) == 3){//sopra o sotto
-                 if(!((CannonCoord.getSecond() == hit.getSecond() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(attacks.get(MeteoritesOrder))==(CANNON.INSTANCE))) ){
+                 if(!((CannonCoord.getSecond() == hits.get(player.GetID()).getSecond() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(attacks.get(MeteoritesOrder))==(CANNON.INSTANCE))) ){
                      throw new InvalidDefenceEceptiopn("this cannon isn't aiming at the meteorite");
                  }
                  else if (currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getComponent().getType() == 2) {
@@ -346,13 +393,13 @@ public class   Meteorites extends Card {
             }
         }
         else  {
-            currentBoard.destroy(hit.getFirst(), hit.getSecond());
-            currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
-            System.out.println("destryoyed: "+hit.getFirst()+" "+hit.getSecond()+" of:"+player.GetID());
+            currentBoard.destroy(hits.get(player.GetID()).getFirst(), hits.get(player.GetID()).getSecond());
+            currentBoard.handleAttack(hits.get(player.GetID()).getFirst(), hits.get(player.GetID()).getSecond());
+            System.out.println("destryoyed: "+hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()+" of:"+player.GetID());
             if (currentBoard.getBroken()){
                 System.out.println("\nrottura nave\n");
 
-                System.out.println(" rottura in "+hit.getFirst()+" "+hit.getSecond());
+                System.out.println(" rottura in "+hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond());
                 player.setState(new HandleDestruction());
                 System.out.println("Stato del player "+ player.getPlayerState().getClass().getName());
                 return;
@@ -385,12 +432,12 @@ public class   Meteorites extends Card {
         PlayerOrder = playerOrder;
     }
 
-    public IntegerPair getHit() {
-        return hit;
+    public IntegerPair getHit(Player p) {
+        return hits.get(p.GetID());
     }
 
-    public void setHit(int x, int y) {
-        this.hit.setValue(x,y);
+    public void setHit(int x, int y, Player p) {
+        this.hits.get(p.GetID()).setValue(x,y);
     }
 
     public void setCurrentPlayer(Player currentPlayer) {

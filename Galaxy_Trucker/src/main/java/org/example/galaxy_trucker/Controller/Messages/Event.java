@@ -27,7 +27,11 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = GameLobbyEvent.class, name = "GameLobbyEvent"),
         @JsonSubTypes.Type(value = PhaseEvent.class, name = "PhaseEvent"),
         @JsonSubTypes.Type(value = RewardsEvent.class, name = "RewardsEvent"),
-        @JsonSubTypes.Type(value = GameBoardEvent.class, name = "GameBoardEvent" )
+        @JsonSubTypes.Type(value = GameBoardEvent.class, name = "GameBoardEvent" ),
+        @JsonSubTypes.Type(value = GameBoardEvent.class, name ="RandomCardEffectEvent"),
+        @JsonSubTypes.Type(value = GameBoardEvent.class, name = "GameBoardEvent" ),
+        @JsonSubTypes.Type(value = ExceptionEvent.class, name = "ExceptionEvent" ),
+        @JsonSubTypes.Type(value = ConnectionRefusedEvent.class, name = "ConnectionRefusedEvent" )
 
 })
 

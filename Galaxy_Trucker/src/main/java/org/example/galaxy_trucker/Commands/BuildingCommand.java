@@ -42,12 +42,10 @@ public class BuildingCommand extends Command implements Serializable {
 
 
     @Override
-    public void execute(Player player) throws RemoteException, JsonProcessingException {
+    public void execute(Player player) throws RemoteException, JsonProcessingException, IllegalStateException {
 
-        if(!player.GetReady() || (Objects.equals(title, "Hourglass"))) {
-            try {
-
-                switch (title) {
+        if(!player.GetReady() || (Objects.equals(title, "HOURGLASS"))){
+            switch (title) {
 
                     case "SEEDECK": {
                         player.getCommonBoard().getCardStack().notify(playerId, x);
@@ -94,9 +92,7 @@ public class BuildingCommand extends Command implements Serializable {
                         break;
                     }
                 }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+
         }
 
     }
