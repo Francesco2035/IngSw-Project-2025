@@ -13,9 +13,7 @@ public class LoginClient extends PlayerStateClient {
     }
 
     @Override
-    public void showGame(GuiOut out){
-        out.printGameLobby();
-    }
+    public void showGame(GuiOut out){}
 
     @Override
     public List<String> getCommands() {

@@ -21,6 +21,7 @@ import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
 import org.example.galaxy_trucker.View.View;
@@ -29,11 +30,13 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEve
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GuiRoot implements View {
 
@@ -54,6 +57,8 @@ public class GuiRoot implements View {
     private String myGameName;
     private String myName;
     private int myGameLv;
+
+    private ListView<String> readyPlayers;
     private boolean amIReady;
     private boolean amIBuilding;
 
@@ -66,6 +71,8 @@ public class GuiRoot implements View {
     private ImageView tileImage;
     private TilePane uncoveredTiles;
     private int tileRotation;
+
+    private HashMap<Integer, IntegerPair> coords;
 
     public void setStage(Stage primaryStage) {
         printer.setStage(primaryStage);
@@ -81,6 +88,8 @@ public class GuiRoot implements View {
         tileImage.setPreserveRatio(true);
         uncoveredTiles = new TilePane();
         amIBuilding = true;
+
+        coords = new HashMap<>();
 
         myBoard = new GridPane();
         printer = new GuiOut(this);
@@ -116,20 +125,19 @@ public class GuiRoot implements View {
     public void updateBoard(TileEvent event) {
 
         ImageView tileImg = new ImageView();
+        tileImage.setImage(tilePlaceholder);
+        tileImage.setOpacity(0.5);
 
         if(event.getId() != 158){
-            if(event.getId() == 157) {
+            if(event.getId() == 157){
                 tileImg.setImage(tilePlaceholder);
                 tileImg.setOpacity(0.5);
                 if(amIBuilding){
                     tileImg.setOnMouseClicked(e -> {
-                        inputQueue.add("InsertTile "+ event.getY() +" "+ event.getX() +" "+ tileRotation);
-                        tileImage.setImage(tilePlaceholder);
-                        tileImage.setOpacity(0.5);
+                        inputQueue.add("InsertTile "+ event.getX() +" "+ event.getY() +" "+ tileRotation);
                     });
                     tileImg.setOnMouseEntered(e -> {
                         tileImg.setOpacity(1);
-
                     });
                     tileImg.setOnMouseExited(e -> {
                         tileImg.setOpacity(0.5);
@@ -147,7 +155,7 @@ public class GuiRoot implements View {
             tileImg.setPreserveRatio(true);
 
             Platform.runLater(()->{
-                myBoard.add(tileImg, event.getX(), event.getY());
+                myBoard.add(tileImg, event.getY(), event.getX());
             });
 
         }
@@ -160,7 +168,6 @@ public class GuiRoot implements View {
     public void updateHand(HandEvent event){
         tileRotation = 0;
         tileImage.setRotate(0);
-        System.out.println("CACCAPUPU " + event.getId());
 
         if(event.getId() == 158) {
             tileImage.setImage(tilePlaceholder);
@@ -194,6 +201,7 @@ public class GuiRoot implements View {
             Platform.runLater(()->{
                 uncoveredTiles.getChildren().remove(discardedMap.get(event.getId()));
                 discardedMap.remove(event.getId());
+                discardedTiles.remove(event.getId());
             });
 
         }
@@ -220,16 +228,11 @@ public class GuiRoot implements View {
             });
         }
 
-
-//        Platform.runLater(()->{
-//            playerClient.showGame(printer);
-//        });
-
     }
 
     @Override
     public void showDeck(DeckEvent event) {
-
+        //per spydeck
     }
 
     @Override
@@ -348,6 +351,7 @@ public class GuiRoot implements View {
                 myName = usernameField.getText();
                 myGameName = gameNameField.getText();
 
+                //create myname mygamename lv maxplayers
                 inputQueue.add("Login");
                 inputQueue.add(myName);
                 inputQueue.add(myGameName);
@@ -408,117 +412,168 @@ public class GuiRoot implements View {
     @Override
     public void showLobbyGame(GameLobbyEvent event){
 
-        Label GameNameLabel = new Label("Game: " + myGameName);
-        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+        Platform.runLater(()->{
+            readyPlayers.getItems().clear();
 
-        ListView<String> players = new ListView<>();
-        players.setPrefHeight(100);
+            String s;
+            for(int i=0; i< event.getPlayers().size(); i++){
+                if(event.getPlayers().get(i).equals(myName)) {
+                    s = event.getPlayers().get(i) + " (You)";
+                    amIReady = event.getReady().get(i);
+                }
+                else s= event.getPlayers().get(i);
 
-        String s;
-        for(int i=0; i< event.getPlayers().size(); i++){
-            if(event.getPlayers().get(i).equals(myName)) {
-                s = event.getPlayers().get(i) + " (You)";
-                amIReady = event.getReady().get(i);
+                if(event.getReady().get(i))
+                    readyPlayers.getItems().add(s + " --> Ready!");
+                else readyPlayers.getItems().add(s+ " --> Not Ready");
             }
-            else s= event.getPlayers().get(i);
-
-            if(event.getReady().get(i))
-                players.getItems().add(s + " -> Ready!");
-            else players.getItems().add(s+ " -> Not Ready");
-        }
-
-
-        if(myGameLv == 1){
-            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv1.jpg"));
-            gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv1.png"));
-        }
-        else{
-            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv2.jpg"));
-            gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv2.png"));
-        }
-
-        ImageView playerBoard = new ImageView(playerBoardImg);
-        playerBoard.setPreserveRatio(true);
-        playerBoard.setSmooth(true);
-        playerBoard.setFitWidth(400);
-        playerBoard.maxWidth(300);
-
-
-        VBox mainBox = new VBox(10, GameNameLabel, players);
-        mainBox.setAlignment(Pos.TOP_CENTER);
-        mainBox.setPadding(new Insets(10));
-
-        Button quitButton = new Button("Quit");
-        Button readyButton = new Button();
-
-        if(amIReady)
-            readyButton.setText("Not Ready");
-        else readyButton.setText("Ready!");
-
-        readyButton.setOnAction(e -> {
-            if(amIReady)
-                inputQueue.add("Ready false");
-            else inputQueue.add("Ready true");
         });
 
-
-        quitButton.setOnAction(e -> {
-            Stage confirmStage = new Stage();
-            confirmStage.setTitle("Quitting");
-
-            Label quitLabel = new Label("Are You Sure?");
-            quitLabel.setStyle("-fx-font-size: 15px");
-
-            Button confirmButton = new Button("Pretty Sure");
-            Button goBackButton = goBackButtonMaker(confirmStage);
-
-            HBox buttons = new HBox(50, goBackButton, confirmButton);
-            buttons.setAlignment(Pos.CENTER);
-            buttons.setPadding(new Insets(5));
-
-            VBox quitBox = new VBox(3, quitLabel, buttons);
-            quitBox.setAlignment(Pos.CENTER);
-
-            Scene newGameScene = new Scene(quitBox, 250, 80);
-            confirmStage.setScene(newGameScene);
-            confirmStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
-            confirmStage.initModality(Modality.WINDOW_MODAL);
-
-            confirmStage.show();
-
-        });
-
-
-        HBox Buttons = new HBox(50, quitButton, readyButton);
-        Buttons.setPadding(new Insets(15));
-        Buttons.setAlignment(Pos.CENTER);
-
-        VBox imageBox = new VBox(playerBoard, Buttons);
-
-        StackPane gameLobbyRoot = new StackPane(mainBox, imageBox);
-
-        gameLobbyRoot.setPadding(new Insets(10));
-        gameLobbyRoot.setAlignment(Pos.TOP_CENTER);
-
-        gameLobbyRoot.prefWidthProperty().bind(primaryStage.widthProperty());
-        gameLobbyRoot.prefHeightProperty().bind(primaryStage.heightProperty());
-
-        playerBoard.setTranslateY(200);
-        Buttons.setTranslateY(250);
-
-        Platform.runLater(() ->{
-            contentRoot.getChildren().setAll(gameLobbyRoot);
-        });
-
-        Platform.runLater(() ->{
-            printer.setGameLobby(primaryScene);
-            playerClient.showGame(printer);
-        });
-
-
-        //idplayer li salvo in un arraylist
-        //player->playerstate.showGame
     }
+
+
+    private void gameBoardTest(){
+        Platform.runLater(() -> {
+            final int[] i = {0};
+            Stage gbStage = new Stage();
+            gbStage.setTitle("Exception");
+
+
+            StackPane root = new StackPane();
+
+            Pane pedLayer = new Pane();
+
+            ImageView board = new ImageView(gameBoardImg);
+            board.setFitHeight(639);
+            board.setPreserveRatio(true);
+
+            ImageView pedine = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/white-amogus.png")));
+            pedine.setFitHeight(50);
+            pedine.setPreserveRatio(true);
+            pedine.setLayoutX(coords.get(i[0]).getFirst() - 20);
+            pedine.setLayoutY(coords.get(i[0]).getSecond() + 140);
+            pedLayer.getChildren().add(pedine);
+
+            Button move = new Button("Move 1");
+            move.setOnAction(e -> {
+                System.out.println(i[0]);
+                System.out.println(coords.get(i[0]).getFirst() + ", " + coords.get(i[0]).getSecond());
+                i[0]++;
+                pedine.setLayoutX(coords.get(i[0]).getFirst() - 20);
+                pedine.setLayoutY(coords.get(i[0]).getSecond() + 140);
+
+            });
+
+            root.getChildren().addAll(board, pedLayer);
+
+            HBox box = new HBox(20,root, myBoard, move);
+            box.setAlignment(Pos.CENTER);
+
+            Scene errorScene = new Scene(box, 700, 800);
+            gbStage.setScene(errorScene);
+            gbStage.initOwner(primaryStage);
+            gbStage.initModality(Modality.WINDOW_MODAL);
+            gbStage.show();
+        });
+    }
+
+
+    public void buildLobbyGameScreen(){
+        {
+            Label GameNameLabel = new Label("Game: " + myGameName);
+            GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+
+            if(myGameLv == 1){
+                playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv1.jpg"));
+                gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv1.png"));
+            }
+            else{
+                playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv2.jpg"));
+                gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv2.png"));
+                Lv2GameboardSetup();
+            }
+
+            ImageView playerBoard = new ImageView(playerBoardImg);
+            playerBoard.setPreserveRatio(true);
+            playerBoard.setSmooth(true);
+            playerBoard.setFitWidth(400);
+            playerBoard.maxWidth(300);
+
+
+            VBox mainBox = new VBox(10, GameNameLabel, readyPlayers);
+            mainBox.setAlignment(Pos.TOP_CENTER);
+            mainBox.setPadding(new Insets(10));
+
+            Button quitButton = new Button("Quit");
+            Button readyButton = new Button();
+
+            if(amIReady)
+                readyButton.setText("Not Ready");
+            else readyButton.setText("Ready!");
+
+            readyButton.setOnAction(e -> {
+                if(amIReady)
+                    inputQueue.add("Ready false");
+                else inputQueue.add("Ready true");
+            });
+
+
+            quitButton.setOnAction(e -> {
+                Stage confirmStage = new Stage();
+                confirmStage.setTitle("Quitting");
+
+                Label quitLabel = new Label("Are You Sure?");
+                quitLabel.setStyle("-fx-font-size: 15px");
+
+                Button confirmButton = new Button("Pretty Sure");
+                Button goBackButton = goBackButtonMaker(confirmStage);
+
+                HBox buttons = new HBox(50, goBackButton, confirmButton);
+                buttons.setAlignment(Pos.CENTER);
+                buttons.setPadding(new Insets(5));
+
+                VBox quitBox = new VBox(3, quitLabel, buttons);
+                quitBox.setAlignment(Pos.CENTER);
+
+                Scene newGameScene = new Scene(quitBox, 250, 80);
+                confirmStage.setScene(newGameScene);
+                confirmStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
+                confirmStage.initModality(Modality.WINDOW_MODAL);
+
+                confirmStage.show();
+
+            });
+
+
+            HBox Buttons = new HBox(50, quitButton, readyButton);
+            Buttons.setPadding(new Insets(15));
+            Buttons.setAlignment(Pos.CENTER);
+
+            VBox imageBox = new VBox(playerBoard, Buttons);
+
+            StackPane gameLobbyRoot = new StackPane(mainBox, imageBox);
+
+            gameLobbyRoot.setPadding(new Insets(10));
+            gameLobbyRoot.setAlignment(Pos.TOP_CENTER);
+
+            gameLobbyRoot.prefWidthProperty().bind(primaryStage.widthProperty());
+            gameLobbyRoot.prefHeightProperty().bind(primaryStage.heightProperty());
+
+            playerBoard.setTranslateY(200);
+            Buttons.setTranslateY(250);
+
+            Platform.runLater(() ->{
+                contentRoot.getChildren().setAll(gameLobbyRoot);
+
+                printer.setGameLobby(primaryScene);
+            });
+
+            //idplayer li salvo in un arraylist
+            //player->playerstate.showGame
+        }
+    }
+
 
     @Override
     public void rewardsChanged(RewardsEvent event) {
@@ -527,7 +582,8 @@ public class GuiRoot implements View {
 
     public void buildingScene(){
         Label GameNameLabel = new Label("Game: " + myGameName);
-        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
 
         ImageView playerBoard = new ImageView(playerBoardImg);
         playerBoard.setPreserveRatio(true);
@@ -567,13 +623,8 @@ public class GuiRoot implements View {
 
 
 
-//        if(tileImage.getImage() == null) {
-//            tileImage.setImage(tilePlaceholder);
-//            tileImage.setOpacity(0.5);
-//        }
-
         Button pickTile = new Button("Pick Tile");
-        Button insertTile = new Button("Insert Tile");
+        Button board = new Button("Board");
         Button discardTile = new Button("Discard");
 
         pickTile.setOnAction(e -> {
@@ -583,9 +634,13 @@ public class GuiRoot implements View {
             inputQueue.add("Discard");
         });
 
+        board.setOnAction(e -> {
+           gameBoardTest();
+        });
+
 
         HBox tileBox =  new HBox(5, counterclockwiseArrow, tileImage, clockwiseArrow);
-        VBox Buttons = new VBox(15, tileBox, pickTile, insertTile, discardTile);
+        VBox Buttons = new VBox(15, tileBox, pickTile, board, discardTile);
         HBox buildKit = new HBox(20, myBoard, Buttons);
 //        buildBox.prefWidthProperty().bind(primaryStage.widthProperty());
 //        buildBox.prefHeightProperty().bind(primaryStage.heightProperty());
@@ -620,18 +675,38 @@ public class GuiRoot implements View {
 
 
     }
-
     @Override
     public void phaseChanged(@NotNull PhaseEvent event) {
         playerClient.setPlayerState(event.getStateClient());
         playerClient.showGame(printer);
+
         //player.setstate(event.getpahse)
         //plary.state.showGUI
     }
 
-    @Override
-    public void exceptionOccurred(ExceptionEvent exceptionEvent) {
 
+    @Override
+    public void exceptionOccurred(ExceptionEvent exceptionEvent){
+
+        Platform.runLater(() -> {
+            Stage exceptionStage = new Stage();
+            exceptionStage.setTitle("Exception");
+
+            Label errorLabel = new Label(exceptionEvent.getException());
+            errorLabel.setStyle("-fx-font-size: 15px");
+
+            Button okButton = goBackButtonMaker(exceptionStage);
+            okButton.setText("Ok");
+
+            VBox errorBox = new VBox(3, errorLabel, okButton);
+            errorBox.setAlignment(Pos.CENTER);
+
+            Scene errorScene = new Scene(errorBox, 300, 80);
+            exceptionStage.setScene(errorScene);
+            exceptionStage.initOwner(primaryStage);
+            exceptionStage.initModality(Modality.WINDOW_MODAL);
+            exceptionStage.show();
+        });
     }
 
 
@@ -674,6 +749,7 @@ public class GuiRoot implements View {
                 myGameLv = joining.getLv();
 
                 InsertNameStage.close();
+                //Join myname mygamename
                 inputQueue.add("Login");
                 inputQueue.add(myName);
                 inputQueue.add(myGameName);
@@ -699,7 +775,7 @@ public class GuiRoot implements View {
         sceneSetup();
 
         Label titleLabel = new Label("GALAXY TRUCKERS");
-        titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+        titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
 
         Button startButton = new Button("Start!");
         startButton.setStyle("-fx-font-size: 20px;");
@@ -728,6 +804,8 @@ public class GuiRoot implements View {
         primaryRoot = new StackPane();
         contentRoot = new Pane();
         primaryScene = new Scene(primaryRoot, 800, 600);
+        readyPlayers = new ListView<>();
+
 
         //tile setup
         tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
@@ -807,6 +885,24 @@ public class GuiRoot implements View {
             }
     }
 
+
+    private void Lv2GameboardSetup(){
+        int[] coordsList = {257,153,332,121,408,106,487,96,567,98,645,107,721,126,796,157,868,207,916,282,909,374,854,442,784,486,709,516,630,533,554,539,471,539,395,530,317,508,243,478,174,426,126,349,138,259,192,194};
+
+        IntegerPair temp = new IntegerPair();
+
+        int j = 0;
+        for(int i=0; i< coordsList.length; i++){
+            if(i%2 == 0)
+                temp.setFirst(coordsList[i]);
+            else{
+                temp.setSecond(coordsList[i]);
+                coords.put(j, new IntegerPair(temp.getFirst(), temp.getSecond()));
+                j++;
+            }
+        }
+
+    }
     //printplayerboard(){..}
 
 }
