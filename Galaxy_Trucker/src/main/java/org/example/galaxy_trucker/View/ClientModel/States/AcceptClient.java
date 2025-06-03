@@ -10,6 +10,7 @@ public class AcceptClient  extends PlayerStateClient{
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
+        toPrint.append(out.getTitleCard());
         toPrint.append("Accepting...\n");
         toPrint.append(out.showPlayers());
         toPrint.append(out.printGameboard());

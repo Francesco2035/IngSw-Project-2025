@@ -9,6 +9,7 @@ public class ReadCardClient extends PlayerStateClient{
 
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
+        toPrint.append(out.getTitleCard());
         toPrint.append("New card drawn \n\n\n");
         toPrint.append(out.showCard());
         toPrint.append("\n\n\n");

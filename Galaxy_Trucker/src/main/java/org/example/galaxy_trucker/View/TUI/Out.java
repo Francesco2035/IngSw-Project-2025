@@ -21,6 +21,7 @@ public class Out {
 
     String exception = "";
     String effect = "";
+    String titleCard = "";
 
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -118,6 +119,55 @@ public class Out {
 
     public void setCardId(int cardId) {
         CardId = cardId;
+        switch (cardId){
+            case 1, 2: {
+                titleCard = ASCII_ART.TitleSlavers;
+                break;
+            }
+            case 3, 4: {
+                titleCard = ASCII_ART.TitleSmugglers;
+                break;
+            }
+            case 5, 6: {
+                titleCard = ASCII_ART.TitlePirates;
+                break;
+            }
+            case 7, 8,9,10: {
+                titleCard = ASCII_ART.TitleAbandonedShip;
+                break;
+            }
+            case 11, 12,13,14: {
+                titleCard = ASCII_ART.TitleAbandonedStation;
+                break;
+            }
+            case 15,16,17,18,19,20: {
+                titleCard = ASCII_ART.TitleMeteorSwarm;
+                break;
+            }
+            case 21,22,23,24,25,26,27,28: {
+                titleCard = ASCII_ART.TitlePlanets;
+                break;
+            }
+
+            case 29,30,31,32,33,34,35: {
+                titleCard = ASCII_ART.TitleOpenSpace;
+                break;
+            }
+
+            case 36, 37: {
+                titleCard = ASCII_ART.TitleCombatZone;
+                break;
+            }
+            case 38, 39: {
+                titleCard = ASCII_ART.TitleStardust;
+                break;
+            }
+            case 40: {
+                titleCard = ASCII_ART.TitleEpidemic;
+                break;
+            }
+
+        }
     }
 
     public void setPlayers(ArrayList<String> players) {
@@ -578,5 +628,9 @@ public class Out {
             //effect = "";
         }
         return sb;
+    }
+
+    public StringBuilder getTitleCard(){
+        return new StringBuilder(titleCard);
     }
 }

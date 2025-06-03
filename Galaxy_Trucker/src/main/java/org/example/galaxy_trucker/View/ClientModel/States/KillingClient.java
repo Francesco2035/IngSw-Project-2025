@@ -8,6 +8,7 @@ public class KillingClient extends PlayerStateClient{
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
+        toPrint.append(out.getTitleCard());
         toPrint.append("Killing...\n");
         toPrint.append(out.showPlayers());
         toPrint.append(out.printGameboard());
