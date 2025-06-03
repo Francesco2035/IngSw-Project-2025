@@ -11,7 +11,8 @@ import java.io.Serializable;
 public class TheftCommand extends Command implements Serializable {
     int position;
     IntegerPair coordinate;
-    public TheftCommand(int position, IntegerPair coordinate) {
+    public TheftCommand(int position, IntegerPair coordinate,String gameId, String playerId, int lv, String title, String token) {
+        super(gameId, playerId, lv, title, token,-1);
         this.position = position;
         this.coordinate = coordinate;
     }

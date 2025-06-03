@@ -44,12 +44,13 @@ public class CheckValidityController extends Controller{
         System.out.println("CHECK_CONTROLLER callign next state for " + curPlayer.GetID());
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new ChoosePosition());
-            PrepController newController = new PrepController(curPlayer, gameId,gc,disconnected);
+            ChoosePositionController newController = new ChoosePositionController(curPlayer, gameId,disconnected);
             newController.setExceptionListener(exceptionListener);
             gc.setControllerMap(curPlayer,newController);
 
         }
         else {
+            curPlayer.setState(new AddCrewState());
             CheckValidityController newController = new CheckValidityController(curPlayer,gameId,disconnected);
             newController.setExceptionListener(exceptionListener);
             gc.setControllerMap(curPlayer, newController);

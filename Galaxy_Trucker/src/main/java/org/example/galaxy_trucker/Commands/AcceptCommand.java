@@ -12,7 +12,7 @@ public class AcceptCommand extends Command implements Serializable {
 
 
     public AcceptCommand(String gameId, String playerId, int lv, String title,boolean accepting, String token) {
-        super(gameId, playerId, lv, title, token);
+        super(gameId, playerId, lv, title, token, -1);
         this.accepting = accepting;
     }
 

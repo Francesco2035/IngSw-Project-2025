@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.View.TUI;
 
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
@@ -56,6 +57,27 @@ class OutTest {
             System.out.println(s);
         }
 
+    }
+
+    @Test
+    public void otherspb(){
+        ArrayList<Connectors> con = new ArrayList<>();
+        con.add(UNIVERSAL.INSTANCE);
+        con.add(UNIVERSAL.INSTANCE);
+        con.add(UNIVERSAL.INSTANCE);
+        con.add(UNIVERSAL.INSTANCE);
+        PlayerTileEvent playerTileEvent = new PlayerTileEvent("aaaa",45,6,7,null,0,false,false,0,0,con);
+        tui.updateOthersPB(playerTileEvent);
+
+        out.setOthersPB("aaaa",6,7,tui.formatCell(playerTileEvent));
+        out.seeBoards();
+    }
+
+    @Test
+    public void gb1(){
+        tui.setGameboard(1);
+        //out.initGameBoard(1);
+        System.out.println(tui.getOut().printGameboard());
     }
 
 

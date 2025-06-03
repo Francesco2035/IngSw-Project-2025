@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.ClientServer.RMI.RMIServer;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Controller.Listeners.GhListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
+import org.example.galaxy_trucker.Controller.Messages.ConnectionRefusedEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Game;
@@ -104,35 +105,45 @@ public class GamesHandler implements LobbyListener {
         System.out.println("initplayer");
         try {
             String gameID = command.getGameId();
-            if (gameControllerMap.containsKey(gameID) && gameControllerMap.get(gameID).isStarted()) {
-                throw new InvalidInput("Game already started: " + gameID);
-            }
-            String playerID = command.getPlayerId();
-            int lvl = command.getLv();
-
-            Player temp = new Player();
-            temp.setId(playerID);
-            temp.setPhaseListener(virtualView);
-            temp.setState(new BaseState());
-            synchronized (tokenToGame) {
-                tokenToGame.putIfAbsent(virtualView.getToken(), gameID);
-            }
-
+            String check = "";
             if (gameControllerMap.containsKey(gameID)) {
-                System.out.println("Game exists: " + gameID);
-                gameControllerMap.get(gameID).NewPlayer(temp, virtualView, virtualView.getToken());
-            } else {
-                System.out.println("Game doesn't exist: " + gameID);
-                Game curGame = new Game(lvl, gameID);
+                check = gameControllerMap.get(gameID).check(command);
 
-                synchronized (gameControllerMap) {
-                    GameController gameController = new GameController(gameID, curGame, this);
-                    gameController.setLobbyListener(this);
-                    gameControllerMap.putIfAbsent(gameID, gameController);
-                    gameControllerMap.get(curGame.getGameID()).NewPlayer(temp, virtualView, virtualView.getToken());
+            }
+
+            if (!check.equals("")){
+                virtualView.sendEvent(new ConnectionRefusedEvent(check));
+            }
+
+            else {
+                String playerID = command.getPlayerId();
+                int lvl = command.getLv();
+
+                Player temp = new Player();
+                temp.setId(playerID);
+                temp.setPhaseListener(virtualView);
+                temp.setState(new BaseState());
+                synchronized (tokenToGame) {
+                    tokenToGame.putIfAbsent(virtualView.getToken(), gameID);
                 }
-                System.out.println("Pending?: ");
-                rmi.addPending(virtualView.getToken());
+
+                if (gameControllerMap.containsKey(gameID)) {
+                    System.out.println("Game exists: " + gameID);
+                        gameControllerMap.get(gameID).NewPlayer(temp, virtualView, virtualView.getToken());
+                } else {
+                    System.out.println("Game doesn't exist: " + gameID);
+                    Game curGame = new Game(lvl, gameID);
+
+                    synchronized (gameControllerMap) {
+                        GameController gameController = new GameController(gameID, curGame, this,command.getLv(), command.getMaxPlayers());
+                        gameController.setLobbyListener(this);
+                        gameControllerMap.putIfAbsent(gameID, gameController);
+                        gameControllerMap.get(curGame.getGameID()).NewPlayer(temp, virtualView, virtualView.getToken());
+                    }
+                    System.out.println("Pending?: ");
+                    rmi.addPending(virtualView.getToken());
+
+                }
 
             }
 

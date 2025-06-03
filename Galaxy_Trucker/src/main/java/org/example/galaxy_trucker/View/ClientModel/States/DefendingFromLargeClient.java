@@ -10,10 +10,12 @@ public class DefendingFromLargeClient  extends PlayerStateClient{
     public void showGame(Out out) {
 //TODO: messaggi della carta
         StringBuilder toPrint = new StringBuilder();
+        toPrint.append(out.getTitleCard());
         toPrint.append("Defending From Large...\n");
         toPrint.append(out.showPlayers());
         toPrint.append(out.printGameboard());
         toPrint.append(out.printBoard());
+        toPrint.append(out.showCardEffect());
         toPrint.append(out.showException());
         out.render(toPrint);
     }

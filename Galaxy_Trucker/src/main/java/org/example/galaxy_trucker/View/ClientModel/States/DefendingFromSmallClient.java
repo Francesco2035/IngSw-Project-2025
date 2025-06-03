@@ -7,12 +7,14 @@ import java.util.List;
 public class DefendingFromSmallClient  extends PlayerStateClient{
     @Override
     public void showGame(Out out) {
-//TODO: messaggi della carta
+
         StringBuilder toPrint = new StringBuilder();
+        toPrint.append(out.getTitleCard());
         toPrint.append("Defending From Small...\n");
         toPrint.append(out.showPlayers());
         toPrint.append(out.printGameboard());
         toPrint.append(out.printBoard());
+        toPrint.append(out.showCardEffect());
         toPrint.append(out.showException());
         out.render(toPrint);
     }

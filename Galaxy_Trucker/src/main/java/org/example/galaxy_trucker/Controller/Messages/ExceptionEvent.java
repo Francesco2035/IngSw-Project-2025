@@ -1,14 +1,15 @@
 package org.example.galaxy_trucker.Controller.Messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ExceptionEvent implements Event{
 
-    @JsonProperty("exception")
+
     String exception;
 
-
-    public ExceptionEvent(String exception) {
+    @JsonCreator
+    public ExceptionEvent(@JsonProperty("exception") String exception) {
         this.exception = exception;
     }
 
