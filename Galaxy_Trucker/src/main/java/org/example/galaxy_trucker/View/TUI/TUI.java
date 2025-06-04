@@ -12,6 +12,7 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsE
 import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
+import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
 import org.example.galaxy_trucker.View.ClientModel.States.PlayerStateClient;
 import org.example.galaxy_trucker.View.ClientModel.States.SeeBoardsClient;
 import org.example.galaxy_trucker.View.View;
@@ -37,6 +38,7 @@ public class TUI implements View {
     private ScheduledFuture<?> scheduledTask;
     private final int debounceDelayMs = 200;
     private PlayerStateClient lastState;
+    private boolean firstUpdate = false;
 
     private int CardId = -1;
     private final TileEvent[][] board = new TileEvent[10][10];
@@ -124,6 +126,11 @@ public class TUI implements View {
 
     @Override
     public void showLobby(LobbyEvent event) {
+        if (!firstUpdate){
+            firstUpdate = true;
+            playerClient.setPlayerState(new LobbyClient());
+            lastState = new LobbyClient();
+        }
         //System.out.println(event.getGameId());
         if (event.getLv() != -1){
             //System.out.println("put "+event.getGameId()+" "+event.getLv());
@@ -255,8 +262,7 @@ public class TUI implements View {
     }
 
     public TUI() throws IOException {
-        playerClient = new PlayerClient();
-        playerClient.setPlayerState(new LobbyClient());
+
         loadComponentNames();
         loadCardsDescriptions();
         cachedBoard = new String[10][10][7];
@@ -266,12 +272,16 @@ public class TUI implements View {
         }
         inputReader = new InputReader(inputQueue);
         inputThread = new Thread(inputReader);
-        playerClient.setCompleter(inputReader.getCompleter());
         inputThread.setDaemon(true);
         inputThread.start();
-        phase = ViewPhase.LOBBY;
-        inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));
+        //phase = ViewPhase.LOBBY;
+        //inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));
+        playerClient = new PlayerClient();
+        playerClient.setPlayerState(new LoginClient());
+        playerClient.setCompleter(inputReader.getCompleter());
+        lastState = new LoginClient();
         out = new Out(inputReader, playerClient);
+        onGameUpdate();
         //inputReader.clearScreen();
 
 
