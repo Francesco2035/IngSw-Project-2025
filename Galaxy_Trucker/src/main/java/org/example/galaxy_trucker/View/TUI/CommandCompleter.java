@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CommandCompleter implements DynamicCompleter {
-    private List<String> commands = new ArrayList<>(List.of("Login", "Lobby"));
+    private List<String> commands = new ArrayList<>(List.of("Create", "Join", "Lobby"));
 
     private HashMap<String,String> description;
 
@@ -19,9 +19,9 @@ public class CommandCompleter implements DynamicCompleter {
 
     public CommandCompleter() {
         description = new HashMap<>();
-        description.put("login", "Login");
-        description.put("lobby", "Lobby");
-        description.put("create", "create new game");
+        description.put("Join", "Join an existing game");
+        description.put("lobby", "Show available games");
+        description.put("create", "create new game, you can also join one [level have to match the existing game's one!]");
         description.put("kill", "x y x y ... : kill 1 human in the selected tile x,y");
         description.put("inserttile", "x y rotation");
         description.put("discard", "");

@@ -9,16 +9,19 @@ import java.io.IOException;
 import java.io.Serializable;
 
 
+//TODO:AGGIUNGERE NUMERO MASSIMO DI PLAYER E MODIFICARE DI CONSEGUENZA GAMECONTROLLER (QUANDO VIENE CREATO DA GAMEHANDLER)
+
 public class LoginCommand extends Command implements Serializable {
 
     @JsonProperty("commandType")
     private final String commandType = "LoginCommand";
 
     private ClientInterface client;
-    //da parsare
-    //private Socket echoSocket;
-    public LoginCommand(String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title, "");
+
+
+
+    public LoginCommand(String gameId, String playerId, int lv, String title, int maxPlayers) {
+        super(gameId, playerId, lv, title, "", maxPlayers);
     }
 
 
@@ -45,6 +48,7 @@ public class LoginCommand extends Command implements Serializable {
     public void setClient(ClientInterface client) {
         this.client = client;
     }
+
 
 
 }

@@ -1,0 +1,36 @@
+sd/mainMenu/GT_box.png 804 410 156 223 
+sd/mainMenu/achievement_compl.png 4 1104 256 52 
+sd/mainMenu/achievement_notcompl.png 266 1104 256 52 
+sd/mainMenu/bg_center.png 4 598 584 500  rot
+sd/mainMenu/centerBottom.png 4 4 600 588 
+sd/mainMenu/centerTop.png 610 410 188 600  rot
+sd/mainMenu/cockpit_panel_center1.png 966 463 48 100  rot
+sd/mainMenu/cockpit_panel_center2.png 966 569 48 100  rot
+sd/mainMenu/cockpit_panel_center3.png 912 639 48 100  rot
+sd/mainMenu/cockpit_panel_left1.png 966 1133 52 68  rot
+sd/mainMenu/cockpit_panel_left2.png 436 1162 68 52 
+sd/mainMenu/cockpit_panel_left3.png 963 777 52 68  rot
+sd/mainMenu/cockpit_panel_left4.png 878 845 68 52 
+sd/mainMenu/cockpit_panel_right1.png 952 851 52 68  rot
+sd/mainMenu/cockpit_panel_right2.png 878 903 68 52 
+sd/mainMenu/cockpit_panel_right3.png 952 925 52 68  rot
+sd/mainMenu/cockpit_panel_right4.png 804 913 68 52 
+sd/mainMenu/flags_CS.png 528 1104 60 102 
+sd/mainMenu/flags_DE.png 750 1133 102 60  rot
+sd/mainMenu/flags_EN.png 858 1133 102 60  rot
+sd/mainMenu/flags_ES.png 4 1162 102 60  rot
+sd/mainMenu/flags_FR.png 112 1162 102 60  rot
+sd/mainMenu/flags_IT.png 220 1162 102 60  rot
+sd/mainMenu/flags_PL.png 328 1162 102 60  rot
+sd/mainMenu/flags_RO.png 804 639 102 60  rot
+sd/mainMenu/flags_RU.png 804 705 102 60  rot
+sd/mainMenu/ifo/metalfatigue.png 966 675 50 96  rot
+sd/mainMenu/news_button.png 594 1133 150 87 
+sd/mainMenu/ifo/nut.png 750 1199 25 23 
+sd/mainMenu/ifo/pipe.png 966 410 25 47  rot
+sd/mainMenu/planet.png 610 4 400 400 
+sd/mainMenu/planet_lens.png 594 1016 400 111 
+sd/mainMenu/ifo/saltamortale1.png 887 771 70 68  rot
+sd/mainMenu/ifo/saltamortale2.png 804 845 68 62 
+sd/mainMenu/ifo/screw.png 1000 410 13 25  rot
+sd/mainMenu/ifo/wreck.png 804 771 77 68  rot

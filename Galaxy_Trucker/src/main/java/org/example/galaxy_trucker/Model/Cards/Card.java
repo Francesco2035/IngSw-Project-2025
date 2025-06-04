@@ -42,6 +42,9 @@ import java.util.HashMap;
 
 public class Card implements Serializable {
     public ConcurrentCardListener concurrentCardListener;
+    public HashMap<String, RandomCardEffectListener> RandomCardEffectListeners = new HashMap<>();
+
+
     private int id;
     @JsonProperty("Level")
     private int Level;
@@ -50,7 +53,6 @@ public class Card implements Serializable {
     private GameBoard Board;
     private int DefaultPunishment;
     private  boolean finished;
-    private HashMap<String, RandomCardEffectListener> RandomCardEffectListeners;
     // IMPORTANTE ESERCITATORE DICE DI ATTIVARE EFFETTI DELLE CARTE A POSTERIORI DELLE SCELTE DEI PLAYER
     // NON SO SE HA SENSO MA LUI DICE DI FARE COSI, QUINDI I METODI DI CARD EFFECT DOVREBBERO ESSERE
     //INTERAMENTE DEFINITI SENZA CHIEDERE ALTRI IMPUT AI PLAYER, SEMPLICEMENTE MODIFICHERANNO IL MODELLO
@@ -113,18 +115,21 @@ public class Card implements Serializable {
     }
 
     public void setRandomCardEffectListeners(String id, RandomCardEffectListener randomCardEffectListener) {
+        System.out.println("####Setto listener carta "+id+" "+randomCardEffectListener);
         getRandomCardEffectListeners().put(id, randomCardEffectListener);
     }
 
 
     /// usa questo per mandare notifiche al client lezgo
     public void sendRandomEffect(String playerid, RandomCardEffectEvent randomCardEffectEvent) {
+        System.out.println("invio a "+playerid+" "+randomCardEffectEvent.message());
         getRandomCardEffectListeners().get(playerid).Effect(randomCardEffectEvent);
     }
 
     public HashMap<String, RandomCardEffectListener> getRandomCardEffectListeners() {
         return RandomCardEffectListeners;
     }
+
 
     //json required
     public Card() {}

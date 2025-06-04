@@ -1,12 +1,10 @@
 package org.example.galaxy_trucker.View;
 
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 
 import java.io.IOException;
 
@@ -52,4 +50,12 @@ public interface View {
     void phaseChanged(PhaseEvent event);
 
     void exceptionOccurred(ExceptionEvent exceptionEvent);
+
+    void updateOthersPB(PlayerTileEvent playerTileEvent);
+
+    void seeBoards();
+
+    void refresh();
+
+    void effectCard(RandomCardEffectEvent event);
 }

@@ -12,10 +12,12 @@ public class BaseStateClient extends PlayerStateClient{
     @JsonProperty("type")
     private final String type = "Base";
 
+    public BaseStateClient(){
+
+    }
+
     @Override
     public void showGame(Out out) {
-
-
 
         StringBuilder toPrint = new StringBuilder();
         toPrint.append("BaseState\n\n");
@@ -33,7 +35,7 @@ public class BaseStateClient extends PlayerStateClient{
 
     @Override
     public List<String> getCommands() {
-        return List.of("ready", "quit", "seeBoard");
+        return List.of("Ready", "SeeBoard", "NotReady","Quit");
     }
 
 }

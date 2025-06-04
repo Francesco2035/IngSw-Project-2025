@@ -1,9 +1,7 @@
 package org.example.galaxy_trucker.View.TUI;
 
-import org.jline.reader.Completer;
-import org.jline.reader.Highlighter;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
+import org.jline.keymap.KeyMap;
+import org.jline.reader.*;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.AttributedString;
@@ -26,11 +24,14 @@ public class InputReader implements Runnable {
     Highlighter highlighter;
     Terminal terminal;
     DynamicCompleter completer;
+    KeyMap<Binding> mainKeyMap;
+    StringBuilder lastRender = new StringBuilder();
+
 
 
     public InputReader(BlockingQueue<String> inputQueue) throws IOException {
 
-
+        lastRender.append("");
         completer = new CommandCompleter();
 
 
@@ -57,6 +58,13 @@ public class InputReader implements Runnable {
                 .highlighter(highlighter)
                 .completer(completer)
                 .build();
+
+        mainKeyMap = Lreader.getKeyMaps().get(LineReader.MAIN);
+
+
+        mainKeyMap.bind(new Macro("SeeBoards"), "\u0002"); // Ctrl+B
+        mainKeyMap.bind(new Macro("MainTerminal"), "\u0014");   // Ctrl+T
+
 
 
         prompt = new AttributedStringBuilder()
@@ -129,18 +137,18 @@ public class InputReader implements Runnable {
 
     public synchronized void renderScreen(StringBuilder content) {
 
-        try{
-            if(System.getProperty("os.name").contains("Windows")){
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            }
-            else
-                Runtime.getRuntime().exec("clear");
-        }
-        catch (IOException | InterruptedException _){
-            ;
-        }
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+//        try{
+//            if(System.getProperty("os.name").contains("Windows")){
+//                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+//            }
+//            else
+//                Runtime.getRuntime().exec("clear");
+//        }
+//        catch (IOException | InterruptedException _){
+//            ;
+//        }
+//        System.out.print("\033[H\033[2J");
+//        System.out.flush();
         //TODO: capire quale sistema operativo è e fare clean di conseguenza
         String partialInput = Lreader.getBuffer().toString();
         System.out.print("\033[3J");
@@ -169,4 +177,5 @@ public class InputReader implements Runnable {
     public DynamicCompleter getCompleter() {
         return completer;
     }
+
 }
