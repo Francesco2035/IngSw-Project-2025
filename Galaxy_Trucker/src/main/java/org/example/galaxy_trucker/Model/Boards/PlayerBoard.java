@@ -913,7 +913,15 @@ public class PlayerBoard {
         for (int i = 0; i < PlayerBoard.length; i++) {
             for (int j = 0; j < PlayerBoard[i].length; j++) {
                 Tile tile = PlayerBoard[i][j];
-                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone(clonedPlayerBoard) : null;
+//                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone(clonedPlayerBoard) : null;
+                if(tile != null) {
+                    Tile t = tile.clone(clonedPlayerBoard);
+                    clonedPlayerBoard.PlayerBoard[i][j] = t;
+                }
+                else
+                    clonedPlayerBoard.PlayerBoard[i][j] = null;
+
+
                 if (tile != null) {
                     clonedPlayerBoard.PlayerBoard[i][j].setY(j);
                     clonedPlayerBoard.PlayerBoard[i][j].setX(i);

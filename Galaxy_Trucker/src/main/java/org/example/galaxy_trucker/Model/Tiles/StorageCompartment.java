@@ -52,7 +52,8 @@ public class StorageCompartment extends Storage{
     @Override
     public void insert(PlayerBoard playerBoard, int x, int y) {
         playerBoard.getStorages().add(this);
-        goods = new ArrayList<>();
+        if (goods == null)
+            goods = new ArrayList<>();
         tile.sendUpdates(goods,0, false, false, 0);
 
     }
