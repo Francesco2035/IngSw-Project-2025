@@ -113,6 +113,7 @@ public class Warzone extends Card{
         }
         if(PlayerList.size() ==1){
             this.finishCard();
+            return;
         }
         this.updateSates();
     }
