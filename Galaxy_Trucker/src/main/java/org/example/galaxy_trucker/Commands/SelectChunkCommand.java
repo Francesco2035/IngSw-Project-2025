@@ -13,7 +13,7 @@ public class SelectChunkCommand extends Command implements Serializable {
     IntegerPair chunk;
 
     public SelectChunkCommand(IntegerPair chunk,String gameId, String playerId, int lv, String title, String token) {
-        super(gameId, playerId, lv, title, token);
+        super(gameId, playerId, lv, title, token,-1);
         this.chunk = chunk;
     }
 

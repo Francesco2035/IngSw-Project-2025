@@ -12,6 +12,7 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsE
 import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
+import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
 import org.example.galaxy_trucker.View.ClientModel.States.PlayerStateClient;
 import org.example.galaxy_trucker.View.ClientModel.States.SeeBoardsClient;
 import org.example.galaxy_trucker.View.View;
@@ -28,7 +29,6 @@ import java.util.HashMap;
 import java.util.concurrent.*;
 //TODO: salvare lo stesso in virtualview per il momento non sto gestendo f.a. del tutto
 //TODO: impostare vincolo lunghezza nome e gameid (anche lato server)
-//TODO: stampare games per righe e non in colonna perchè mi da fastidio, oppure farlo su più righe
 //TODO: rimozione game se tutti i player quittano oppure se il game è partito
 
 public class TUI implements View {
@@ -37,6 +37,7 @@ public class TUI implements View {
     private ScheduledFuture<?> scheduledTask;
     private final int debounceDelayMs = 200;
     private PlayerStateClient lastState;
+    private boolean firstUpdate = false;
 
     private int CardId = -1;
     private final TileEvent[][] board = new TileEvent[10][10];
@@ -124,6 +125,11 @@ public class TUI implements View {
 
     @Override
     public void showLobby(LobbyEvent event) {
+        if (!firstUpdate){
+            firstUpdate = true;
+            playerClient.setPlayerState(new LobbyClient());
+            lastState = new LobbyClient();
+        }
         //System.out.println(event.getGameId());
         if (event.getLv() != -1){
             //System.out.println("put "+event.getGameId()+" "+event.getLv());
@@ -229,7 +235,7 @@ public class TUI implements View {
 
 
     public String[] formatCell(LobbyEvent event) {
-        String[] cell = new String[8];
+        String[] cell = new String[9];
         cell[0] = "+"+centerTextAnsi(event.getGameId(),25, "-")+"+";
         cell[1] = "+                         +";
         cell[2] = "+                         +";
@@ -238,11 +244,13 @@ public class TUI implements View {
         cell[5] = "+                         +";
         cell[6] = "+                         +";
         cell[7] = "+-------------------------+";
+        cell[8] = "+-------------------------+";
         int k = 1;
         if (!event.getGameId().equals("EMPTY CREATE NEW GAME")){
             //TODO: chiama metodo speciale di out senza salvare la stringa su out se il titolo è questo
             ArrayList<String> players = event.getPlayers();
             cell[7] = "+"+centerTextAnsi("Game level: "+ event.getLv(),25, "-")+"+";
+            cell[8] = "+"+centerTextAnsi("Max players: "+ event.getMaxPlayers(),25, "-")+"+";
             for (String player : players) {
                 cell[2+ k -1] = "+"+centerTextAnsi("p"+k+ ": "+player, 25)+"+";
                 k++;
@@ -253,8 +261,7 @@ public class TUI implements View {
     }
 
     public TUI() throws IOException {
-        playerClient = new PlayerClient();
-        playerClient.setPlayerState(new LobbyClient());
+
         loadComponentNames();
         loadCardsDescriptions();
         cachedBoard = new String[10][10][7];
@@ -264,12 +271,16 @@ public class TUI implements View {
         }
         inputReader = new InputReader(inputQueue);
         inputThread = new Thread(inputReader);
-        playerClient.setCompleter(inputReader.getCompleter());
         inputThread.setDaemon(true);
         inputThread.start();
-        phase = ViewPhase.LOBBY;
-        inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));
+        //phase = ViewPhase.LOBBY;
+        //inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));
+        playerClient = new PlayerClient();
+        playerClient.setPlayerState(new LoginClient());
+        playerClient.setCompleter(inputReader.getCompleter());
+        lastState = new LoginClient();
         out = new Out(inputReader, playerClient);
+        onGameUpdate();
         //inputReader.clearScreen();
 
 

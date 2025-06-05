@@ -21,6 +21,7 @@ public class Out {
 
     String exception = "";
     String effect = "";
+    String titleCard = "";
 
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -46,7 +47,7 @@ public class Out {
     private int lv;
     private int setup = 102;
     private boolean fase = false;
-    private int CoveredTileSet = -1;
+    private int CoveredTileSet = 152;
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private InputReader inputReader;
     private Thread inputThread;
@@ -118,6 +119,55 @@ public class Out {
 
     public void setCardId(int cardId) {
         CardId = cardId;
+        switch (cardId){
+            case 1, 2: {
+                titleCard = ASCII_ART.TitleSlavers;
+                break;
+            }
+            case 3, 4: {
+                titleCard = ASCII_ART.TitleSmugglers;
+                break;
+            }
+            case 5, 6: {
+                titleCard = ASCII_ART.TitlePirates;
+                break;
+            }
+            case 7, 8,9,10: {
+                titleCard = ASCII_ART.TitleAbandonedShip;
+                break;
+            }
+            case 11, 12,13,14: {
+                titleCard = ASCII_ART.TitleAbandonedStation;
+                break;
+            }
+            case 15,16,17,18,19,20: {
+                titleCard = ASCII_ART.TitleMeteorSwarm;
+                break;
+            }
+            case 21,22,23,24,25,26,27,28: {
+                titleCard = ASCII_ART.TitlePlanets;
+                break;
+            }
+
+            case 29,30,31,32,33,34,35: {
+                titleCard = ASCII_ART.TitleOpenSpace;
+                break;
+            }
+
+            case 36, 37: {
+                titleCard = ASCII_ART.TitleCombatZone;
+                break;
+            }
+            case 38, 39: {
+                titleCard = ASCII_ART.TitleStardust;
+                break;
+            }
+            case 40: {
+                titleCard = ASCII_ART.TitleEpidemic;
+                break;
+            }
+
+        }
     }
 
     public void setPlayers(ArrayList<String> players) {
@@ -212,7 +262,6 @@ public class Out {
 
     public void setLobby(String gameid, String[]cell) {
         lobby.put(gameid,cell);
-        //TODO: ricordarsi di rimuovere il primo se gameid è quello che è
     }
 
     public void setPhase(ViewPhase phase) {
@@ -231,18 +280,35 @@ public class Out {
 
     public StringBuilder showLobby(){
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 8; i++) {
-            for (String[] game : lobby.values()) {
-                sb.append(game[i] + "   ");
-            }
-            sb.append("\n");
 
-        }
+        int last = 0;
+        int begin = 0;
+
         sb.append("\n\n");
         if (lobby.isEmpty()){
             sb.append(ASCII_ART.noGame);
         }
+
+        else{
+
+            int index = 0;
+            while (index < lobby.size()) {
+                for (int i = 0; i < 9; i++) {
+                    for (int j = 0; j < 8 && index + j < lobby.size(); j++) {
+                        sb.append(lobby.get(lobby.keySet().stream().toList().get(index + j))[i]).append("   ");
+                    }
+                    sb.append("\n");
+                }
+                sb.append("\n\n\n");
+                index += 8;
+            }
+
+
+        }
+
         sb.append("\n\n");
+
+
         return sb;
 
     }
@@ -314,28 +380,35 @@ public class Out {
 
 
     public StringBuilder showUncoveredTiles() {
-        //TODO: spezzare le uncovered in %6, sarà ncasino
+
+
         StringBuilder toPrint = new StringBuilder();
         toPrint.append(ASCII_ART.UncoveredTiles);
 
-        StringBuilder line = new StringBuilder();
-        StringBuilder topLine = new StringBuilder();
-        for (int j = 0; j < uncoveredTilesId.size(); j++) {
-            topLine.append("Position ").append(j).append("                          ");
-        }
-        line.append("\n");
+        int index = 0;
+        while (index < uncoveredTilesId.size()) {
+            StringBuilder topLine = new StringBuilder();
 
-        for (int i = 0; i < 7; i++){
-            for (Integer id : uncoveredTilesId) {
-                line.append(uncoverdTileSetCache.get((Integer)id)[i]).append(" ");
+            for (int j = 0; j < 8 && index + j < uncoveredTilesId.size(); j++) {
+                topLine.append("Position ").append(index + j).append("                          ");
             }
-            line.append("\n");
+            toPrint.append(topLine).append("\n");
 
+
+            for (int i = 0; i < 7; i++) {
+                for (int j = 0; j < 8 && index + j < uncoveredTilesId.size(); j++) {
+                    int id = uncoveredTilesId.get(index + j);
+                    toPrint.append(uncoverdTileSetCache.get(id)[i]).append(" ");
+                }
+                toPrint.append("\n");
+            }
+            toPrint.append("\n\n\n");
+            index += 8;
         }
-        toPrint.append(String.valueOf(topLine));
-        toPrint.append(String.valueOf(line));
+
         toPrint.append(ASCII_ART.Border);
         return toPrint;
+
 
     }
 
@@ -578,5 +651,9 @@ public class Out {
             //effect = "";
         }
         return sb;
+    }
+
+    public StringBuilder getTitleCard(){
+        return new StringBuilder(titleCard);
     }
 }

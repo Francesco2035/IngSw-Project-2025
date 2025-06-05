@@ -146,7 +146,7 @@ public class CommandInterpreter {
                 x1 = Integer.parseInt(strings[1]);
                 y1 = Integer.parseInt(strings[2]);
                 position1= Integer.parseInt(strings[3]);
-                return new TheftCommand(position1,new IntegerPair(x1,y1));
+                return new TheftCommand(position1,new IntegerPair(x1,y1), gameId, playerId,lv, "TheftCommand",token);
             }
             case "GETREWARD":{
                 if (strings.length != 5) {
@@ -227,8 +227,8 @@ public class CommandInterpreter {
     }
 
     private Command createLoginCommand(String[] parts) {
-        if (parts.length != 4) {
-            throw new IllegalArgumentException("Comando Login richiede 3 argomenti: nome giocatore, nome gioco, livello");
+        if (parts.length != 5) {
+            throw new IllegalArgumentException("Comando Login richiede 3 argomenti: nome giocatore, nome gioco, livello, max num di players");
         }
 
         String level = parts[3];
@@ -239,8 +239,14 @@ public class CommandInterpreter {
             System.out.println("Errore: la stringa non è un numero valido.");
         }
         setlv(levelInt);
-
-        return new LoginCommand(gameId,playerId, levelInt, "Login");
+        int maxPlayers = Integer.parseInt(parts[4]);
+        if (maxPlayers < 1){
+            maxPlayers = 1;
+        }
+        if (maxPlayers > 4){
+            maxPlayers = 4;
+        }
+        return new LoginCommand(gameId,playerId, levelInt, "Login", maxPlayers);
     }
 
     private Command createBuildingCommand(String[] parts) {

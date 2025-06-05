@@ -18,7 +18,7 @@ public class ReadyCommand extends Command implements Serializable {
     boolean ready;
 
     public ReadyCommand(String gameId, String playerId, int lv, String title, boolean ready, String token) {
-        super(gameId, playerId, lv, title, token);
+        super(gameId, playerId, lv, title, token, -1);
         this.ready = ready;
     }
 

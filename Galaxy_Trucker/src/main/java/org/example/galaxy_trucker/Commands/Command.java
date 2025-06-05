@@ -43,6 +43,8 @@ public abstract class Command implements Serializable {
     public String playerId;
     @JsonProperty("lv")
     public int lv;
+    @JsonProperty("maxPlayers")
+    int maxPlayers;
     @JsonProperty("title")
     public String title;
     @JsonProperty("token")
@@ -52,12 +54,13 @@ public abstract class Command implements Serializable {
         System.out.println("Command default called");
     }
 
-    public Command(String gameId, String playerId, int lv, String title, String token) {
+    public Command(String gameId, String playerId, int lv, String title, String token, int maxPlayers) {
         this.gameId = gameId;
         this.playerId = playerId;
         this.lv = lv;
         this.title = title;
         this.token = token;
+        this.maxPlayers = maxPlayers;
     }
 
     public abstract void execute(Player player) throws IOException;
@@ -76,6 +79,10 @@ public abstract class Command implements Serializable {
 
     public int getLv() {
         return lv;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
     }
 
     public boolean allowedIn(PlayerState state) {

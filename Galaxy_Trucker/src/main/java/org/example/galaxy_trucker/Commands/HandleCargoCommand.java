@@ -24,7 +24,7 @@ public class HandleCargoCommand extends Command implements Serializable {
 
 //TODO: super buggata
     public HandleCargoCommand(int position, IntegerPair coordinate, int position2,IntegerPair coordinate2, String gameId, String playerId, int lv, String title, String token) {
-        super(gameId, playerId, lv, title, token);
+        super(gameId, playerId, lv, title, token,-1);
         this.title = title;
         this.position = position;
         this.coordinate = coordinate;

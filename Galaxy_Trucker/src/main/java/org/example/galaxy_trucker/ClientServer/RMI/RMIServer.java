@@ -139,7 +139,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
         pingThread.start();
         lobbyEvents = new HashMap<>();
-        lobbyEvents.put("EMPTY CREATE NEW GAME", new LobbyEvent("EMPTY CREATE NEW GAME", -1,null));
+        lobbyEvents.put("EMPTY CREATE NEW GAME", new LobbyEvent("EMPTY CREATE NEW GAME", -1,null, -1));
 
 
     }

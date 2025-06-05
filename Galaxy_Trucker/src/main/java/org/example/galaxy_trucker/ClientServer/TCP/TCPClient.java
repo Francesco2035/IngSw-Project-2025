@@ -267,7 +267,15 @@ public class TCPClient{
 
                         int gameLevel = Integer.parseInt(client.getView().askInput("Game level: "));
 
-                        LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login");
+                        int maxPlayers = Integer.parseInt(client.getView().askInput("Insert number of players [1-4]: "));
+                        if (maxPlayers < 1){
+                            maxPlayers = 1;
+                        }
+                        if (maxPlayers > 4){
+                            maxPlayers = 4;
+                        }
+
+                        LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login", maxPlayers);
 
                         commandInterpreter = new CommandInterpreter(playerId, gameId);
                         commandInterpreter.setlv(gameLevel);
@@ -288,7 +296,7 @@ public class TCPClient{
 
                             int gameLevel = Integer.parseInt(client.getView().askInput("Game level: "));
 
-                            LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login");
+                            LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login", -1);
 
                             commandInterpreter = new CommandInterpreter(playerId, gameId);
                             commandInterpreter.setlv(gameLevel);

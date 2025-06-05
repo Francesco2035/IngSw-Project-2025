@@ -8,6 +8,7 @@ public class HandleDestructionClient  extends PlayerStateClient{
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
+        toPrint.append(out.getTitleCard());
         toPrint.append("Handling destruction...\n");
         toPrint.append(out.showPlayers());
         toPrint.append(out.printGameboard());

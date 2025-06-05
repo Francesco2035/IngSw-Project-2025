@@ -30,7 +30,7 @@ public class BuildingCommand extends Command implements Serializable {
     public BuildingCommand(){}
 
     public BuildingCommand(int x, int y, int rotation, int position, String gameId, String playerId, int lv, String title, String token) {
-        super(gameId, playerId, lv, title, token);
+        super(gameId, playerId, lv, title, token,-1);
         this.x = x;
         this.y = y;
         this.gameId = gameId;

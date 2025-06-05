@@ -15,8 +15,7 @@ public class LobbyClient extends PlayerStateClient {
         StringBuilder toPrint = new StringBuilder();
         toPrint.append(ASCII_ART.Title);
         toPrint.append(ASCII_ART.Border);
-        toPrint.append("\n\n");
-        toPrint.append("Lobby\n\n");
+
         toPrint.append(out.showLobby());
         toPrint.append(out.showException());
         out.render(toPrint);

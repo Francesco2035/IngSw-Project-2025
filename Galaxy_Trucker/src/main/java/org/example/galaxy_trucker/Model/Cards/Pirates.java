@@ -224,7 +224,7 @@ public class Pirates extends Card{
                 }
             }
             else if (Punishment.get(ShotsOrder) == 1) {///sopra
-                direction = new String("above on line "+lines[ShotsOrder]);
+                direction = new String("above on line "+lines[ShotsOrder/2]);
                 Movement = 0;
                 while (Movement < 10 && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
