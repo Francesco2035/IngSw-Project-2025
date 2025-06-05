@@ -108,6 +108,9 @@ public class Warzone extends Card{
         for(Player p : PlayerList){
             p.setState(new Waiting());
         }
+        if(PlayerList.size() ==1){
+            this.finishCard();
+        }
         this.updateSates();
     }
 
