@@ -46,8 +46,6 @@ public class AddCrewCommand extends Command implements Serializable {
         return playerState.allows(this);
     }
 
-    public AddCrewCommand(){
-
-    }
+    public AddCrewCommand(){}
 
 }

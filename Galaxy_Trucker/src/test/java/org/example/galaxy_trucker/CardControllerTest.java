@@ -30,29 +30,29 @@ public class CardControllerTest {
     static Game game;
     static GameBoard Gboard;
 
-    static {
-        try {
-            game = new Game(2, "testCarteController");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    static Player p1 = new Player();
-    static Player p2 = new Player();
+    Player p1;
+    Player p2;
 
     CardsController c1 = new CardsController(p1, game.getGameID(), false);
     CardsController c2 = new CardsController(p2, game.getGameID(), false);
 
 
-    @BeforeAll
-    public static void init() throws IOException {
-         Game game = new Game(2, "testCarteController");
 
 
-        p1 = new Player();
+
+        // CardsController c1= new CardsController(p1,game.getGameID(),false);
+// CardsController c2= new CardsController(p2,game.getGameID(),false);
+
+
+    @Test
+    public void testAbandonedShipCard() throws IOException {
+
+    Game game = new Game(2, "testCarteController");
+
+
+    p1 = new Player();
         p1.setId("pietro");
-        p2 = new Player();
+    p2 = new Player();
         p2.setId("FRA");
         game.NewPlayer(p1);
         game.NewPlayer(p2);
@@ -60,25 +60,17 @@ public class CardControllerTest {
         System.out.println("\n");
         p2.setMyPlance(TestSetupHelper.createInitializedBoard2());
 
-        assertTrue(p1.getmyPlayerBoard().checkValidity());
+    assertTrue(p1.getmyPlayerBoard().checkValidity());
         System.out.println("sksk");
-        assertTrue(p2.getmyPlayerBoard().checkValidity());
+    assertTrue(p2.getmyPlayerBoard().checkValidity());
 
         TestSetupHelper.HumansSetter1(p1.getmyPlayerBoard());
         TestSetupHelper.HumansSetter1(p2.getmyPlayerBoard());
-        Gboard = game.getGameBoard();
+    Gboard = game.getGameBoard();
 
         Gboard.SetStartingPosition(p1);
         Gboard.SetStartingPosition(p2);
 
-
-        // CardsController c1= new CardsController(p1,game.getGameID(),false);
-// CardsController c2= new CardsController(p2,game.getGameID(),false);
-
-    }
-
-    @Test
-    public void testAbandonedShipCard() throws IOException, InterruptedException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -130,7 +122,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testAbandonedStationCard() throws IOException, InterruptedException {
+    public void testAbandonedStationCard() throws IOException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -193,7 +185,7 @@ public class CardControllerTest {
 
     //meteoriti ha memoria?
     @Test
-    public void testMeteoritesCard() throws IOException, InterruptedException {
+    public void testMeteoritesCard() throws IOException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -263,7 +255,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testOpensSpaceCard() throws IOException, InterruptedException {
+    public void testOpensSpaceCard() throws IOException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -316,7 +308,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testSolarSystemCard() throws IOException, InterruptedException {
+    public void testSolarSystemCard() throws IOException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
