@@ -308,7 +308,7 @@ public class GameBoard {
 
 
 
-    public Card NewCard() throws InterruptedException {
+    public Card NewCard() {
         CurrentCard = CardStack.PickNewCard();
 
         for(Player_IntegerPair p : players){

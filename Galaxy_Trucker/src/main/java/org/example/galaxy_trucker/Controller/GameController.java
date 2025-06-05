@@ -280,7 +280,9 @@ public class GameController  implements ConcurrentCardListener {
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         flightThread = new Thread(() -> {
             System.out.println("PESCO CARTA!");
+
             Card card= game.getGameBoard().NewCard();
+
 
             card.setConcurrentCardListener(this);
             for (String player: VirtualViewMap.keySet()) {
