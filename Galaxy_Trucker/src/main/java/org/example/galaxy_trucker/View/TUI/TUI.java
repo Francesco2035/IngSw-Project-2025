@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.concurrent.*;
 //TODO: salvare lo stesso in virtualview per il momento non sto gestendo f.a. del tutto
 //TODO: impostare vincolo lunghezza nome e gameid (anche lato server)
-//TODO: stampare games per righe e non in colonna perchè mi da fastidio, oppure farlo su più righe
 //TODO: rimozione game se tutti i player quittano oppure se il game è partito
 
 public class TUI implements View {

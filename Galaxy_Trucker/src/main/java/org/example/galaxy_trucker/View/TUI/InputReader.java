@@ -26,6 +26,7 @@ public class InputReader implements Runnable {
     DynamicCompleter completer;
     KeyMap<Binding> mainKeyMap;
     StringBuilder lastRender = new StringBuilder();
+    BackgroundGenerator generator ;
 
 
 
@@ -43,6 +44,7 @@ public class InputReader implements Runnable {
                 .encoding(StandardCharsets.UTF_8)
                 .jansi(true)
                 .build();
+        generator = new BackgroundGenerator();
 
 
         highlighter = new Highlighter() {
@@ -150,11 +152,15 @@ public class InputReader implements Runnable {
 //        System.out.print("\033[H\033[2J");
 //        System.out.flush();
         //TODO: capire quale sistema operativo è e fare clean di conseguenza
+
         String partialInput = Lreader.getBuffer().toString();
         System.out.print("\033[3J");
         terminal.puts(InfoCmp.Capability.clear_screen);
         terminal.flush();
-        terminal.writer().println(content);
+        AttributedString colored = fillBackground(content.toString());
+        terminal.writer().print(colored.toAnsi());
+        terminal.writer().println();
+        terminal.flush();
         terminal.flush();
         Lreader.getBuffer().clear();
         Lreader.getBuffer().write(partialInput);
@@ -178,4 +184,34 @@ public class InputReader implements Runnable {
         return completer;
     }
 
+    public AttributedString fillBackground(String input) {
+        AttributedStringBuilder asb = new AttributedStringBuilder();
+        int i = 0;
+        while (i < input.length()) {
+            char c = input.charAt(i);
+            if (c == ' ') {
+                if (i + 1 < input.length() && input.charAt(i + 1) == ' ') {
+                    AttributedString symbol = generator.getRandomSymbol();
+                    String symbolStr = symbol.toString();
+
+                    asb.append(symbol);
+
+                    if (symbolStr.length() > 1) {
+                        i++;
+                    }
+                } else {
+                    asb.append(String.valueOf(c));
+                }
+            } else {
+                asb.append(String.valueOf(c));
+            }
+            i++;
+        }
+        return asb.toAttributedString();
+    }
+
+
+
 }
+
+
