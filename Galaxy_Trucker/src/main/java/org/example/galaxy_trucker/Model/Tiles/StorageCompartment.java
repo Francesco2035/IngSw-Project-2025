@@ -26,8 +26,9 @@ public class StorageCompartment extends Storage{
             return null;
             //throw new IndexOutOfBoundsException("Cannot remove a good because it is out of bounds");
         }
+        Goods good = goods.remove(i);
         tile.sendUpdates(goods,0, false, false, 0);
-        return goods.remove(i);
+        return good;
 
     }
 
@@ -68,7 +69,14 @@ public class StorageCompartment extends Storage{
         StorageCompartment clone = new StorageCompartment();
         clone.goods = new ArrayList<>(goods);
         clone.type = this.type;
+        for (Goods g : clone.getGoods()) {
+            System.out.println("CLONED NC "+g);
+        }
         return clone;
+    }
+
+    public ArrayList<Goods> getGoods() {
+        return goods;
     }
 
 }

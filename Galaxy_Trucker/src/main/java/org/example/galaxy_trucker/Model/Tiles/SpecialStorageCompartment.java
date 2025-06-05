@@ -37,7 +37,7 @@ public class SpecialStorageCompartment extends Storage{
             return null;
             //throw new InvalidInput("Cannot remove a good because it is out of bounds");
         }
-        Goods good = removeGood(position);
+        Goods good = goods.remove(position);
         tile.sendUpdates(goods,0, false, false, 0);
         return good;
 
@@ -79,6 +79,9 @@ public class SpecialStorageCompartment extends Storage{
         SpecialStorageCompartment clone = new SpecialStorageCompartment();
         clone.goods = new ArrayList<>(goods);
         clone.type = this.type;
+        for (Goods g : clone.getGoods()) {
+            System.out.println("CLONED SPC "+g);
+        }
         return clone;
     }
 

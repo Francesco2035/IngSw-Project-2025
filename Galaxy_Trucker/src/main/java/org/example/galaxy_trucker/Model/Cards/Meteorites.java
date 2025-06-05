@@ -295,7 +295,7 @@ public class   Meteorites extends Card {
             }
 
             System.out.println("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" at "+location);
-            this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" meteorite came from "+dimensione+" and it "+Colpito+" at "+location));
+            this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" at "+location));
 
             if (!DamageFlag){this.SuccessfulDefences++;}
             this.PlayerOrder++;

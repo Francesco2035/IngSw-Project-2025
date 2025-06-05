@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Boards.Actions;
 
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -32,6 +33,9 @@ public class GetGoodAction extends ComponentAction {
             if (playerBoard.getStoredGoods().get(good.getValue()).isEmpty()){
                 playerBoard.getStoredGoods().remove(good.getValue());
             }
+        }
+        else {
+            throw new InvalidInput("Cannot remove a good because it is out of bounds");
         }
     }
 
