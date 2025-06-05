@@ -187,7 +187,7 @@ public class Pirates extends Card{
                     dimensione = new String("large");
                 }
             if (Punishment.get(ShotsOrder) == 0) { ///sinistra
-                direction = new String("the left on line "+lines[ShotsOrder]);
+                direction = new String("the left on line "+lines[ShotsOrder/2]);
                 Movement = 0;
                 while (Movement < 10  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
 
@@ -224,7 +224,7 @@ public class Pirates extends Card{
                 }
             }
             else if (Punishment.get(ShotsOrder) == 1) {///sopra
-                direction = new String("above on column "+lines[ShotsOrder]);
+                direction = new String("above on column "+lines[ShotsOrder/2]);
                 Movement = 0;
                 while (Movement < 10 && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
@@ -260,7 +260,7 @@ public class Pirates extends Card{
                 }
             }
             else if (Punishment.get(ShotsOrder) == 2) {// destra
-                direction = new String("the right on line "+lines[ShotsOrder]);
+                direction = new String("the right on line "+lines[ShotsOrder/2]);
                 Movement = 9;
                 while (Movement >= 0   && lines[ShotsOrder/2]<10&& shotsFlag == false) {
                     if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {
@@ -298,7 +298,7 @@ public class Pirates extends Card{
 
             }
             else { //sotto
-                direction = new String("below on column "+lines[ShotsOrder]);
+                direction = new String("below on column "+lines[ShotsOrder/2]);
                 Movement = 9;
                 while (Movement >= 0  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
@@ -336,7 +336,7 @@ public class Pirates extends Card{
             if(shotsFlag == false){
             this.ShotsOrder += 2;
             }
-            sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+dimensione+" and it "+Colpito+" at "+location));
+            sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" at "+location));
             /// Todo aggiungere il messaggio a client e chiedere a francio che fare perche potrebbeb fare più di una chiamata per stato in caso di miss lezgosk
         }
         if(this.ShotsOrder >=Punishment.size() ){
