@@ -307,7 +307,7 @@ public class GameBoard {
     }
 
 
-    /// TODO metodo check doppiaggio da chiamare nel controller o nelle carte  
+    /// TODO metodo check doppiaggio da chiamare nel controller o nelle carte
 
     public Card NewCard(){
         CurrentCard = CardStack.PickNewCard();
