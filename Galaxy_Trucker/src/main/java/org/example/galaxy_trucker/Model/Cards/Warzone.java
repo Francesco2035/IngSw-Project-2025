@@ -95,6 +95,9 @@ public class Warzone extends Card{
 
     @Override
     public void CardEffect(){
+
+
+
         this.lines = new int[PunishmentShots.size()/2];
         for(int i=0;i< PunishmentShots.size()/2;i++){
             lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;

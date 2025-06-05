@@ -336,7 +336,7 @@ public class Pirates extends Card{
             if(shotsFlag == false){
             this.ShotsOrder += 2;
             }
-            sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+dimensione+" and it "+Colpito+" at "+location));
+            sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" at "+location));
             /// Todo aggiungere il messaggio a client e chiedere a francio che fare perche potrebbeb fare più di una chiamata per stato in caso di miss lezgosk
         }
         if(this.ShotsOrder >=Punishment.size() ){
