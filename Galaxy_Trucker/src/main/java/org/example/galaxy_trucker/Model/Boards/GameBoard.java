@@ -309,6 +309,8 @@ public class GameBoard {
 
     /// TODO metodo check doppiaggio da chiamare nel controller o nelle carte
     //questa ti restituisce la lista di players che sono stati doppiati in un certo istante (idealmente a fine carta)
+
+    //il calcolo è giusto: parola di Pietro
     public ArrayList<Player> checkDoubleLap(){
         ArrayList<Player> doubled = new ArrayList<>();
 
