@@ -72,6 +72,7 @@ public class GuiRoot implements View {
 
     private HashMap<Integer, IntegerPair> coords;
 
+
     public void setStage(Stage primaryStage) {
         printer.setStage(primaryStage);
         this.primaryStage = primaryStage;
@@ -250,7 +251,7 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void setGameboard(int lv) {
+    public void setGameboard(int lv){
 
     }
 
@@ -350,10 +351,11 @@ public class GuiRoot implements View {
                 myGameName = gameNameField.getText();
 
                 //create myname mygamename lv maxplayers
-                inputQueue.add("Login");
+                inputQueue.add("Create");
                 inputQueue.add(myName);
                 inputQueue.add(myGameName);
                 inputQueue.add(String.valueOf(myGameLv));
+                inputQueue.add("4");
 
             });
 
@@ -435,7 +437,6 @@ public class GuiRoot implements View {
             final int[] i = {0};
             Stage gbStage = new Stage();
             gbStage.setTitle("Exception");
-
 
             StackPane root = new StackPane();
 
@@ -673,6 +674,8 @@ public class GuiRoot implements View {
 
 
     }
+
+
     @Override
     public void phaseChanged(@NotNull PhaseEvent event) {
         playerClient.setPlayerState(event.getStateClient());
@@ -708,8 +711,9 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void updateOthersPB(PlayerTileEvent playerTileEvent) {
+    public void updateOthersPB(PlayerTileEvent event){
 
+        //per le playerboard degli altri
     }
 
     @Override
@@ -768,10 +772,9 @@ public class GuiRoot implements View {
 
                 InsertNameStage.close();
                 //Join myname mygamename
-                inputQueue.add("Login");
+                inputQueue.add("Join");
                 inputQueue.add(myName);
                 inputQueue.add(myGameName);
-                inputQueue.add(String.valueOf(myGameLv));
             });
         });
         return joinButton;

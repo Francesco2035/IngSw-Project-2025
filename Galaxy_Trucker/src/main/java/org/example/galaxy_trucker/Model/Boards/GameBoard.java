@@ -44,7 +44,7 @@ public class GameBoard {
         tileSets = list;
         startPos = new int[4];
         PlayersOnBoard = 0;
-
+        scoreboard = new ArrayList<>();
 
         if(lv == 2) {
             nPositions = 24;
@@ -244,25 +244,25 @@ public class GameBoard {
             while (i > 0) {
                 NewPos++;
                 NewIndex++;
-                if (positions[NewIndex % nPositions] == null) i--;
-                else if (cur.getKey().equals(players.getFirst().getKey()) && players.getFirst().getValue() + nSteps - nPositions >= players.getLast().getValue()) {
-                    abandonRace(players.getLast().getKey());
-                }
+                if (positions[NewIndex % nPositions] == null || positions[NewIndex % nPositions].equals(cur.getKey())) i--;
+//                else if (cur.getKey().equals(players.getFirst().getKey()) && players.getFirst().getValue() + nSteps - nPositions >= players.getLast().getValue()) {
+//                    abandonRace(players.getLast().getKey());
+//                }
             }
 
         }
         else while(i < 0){
             NewPos--;
-            if(NewPos < 0) NewIndex = nPositions - (-NewPos % nPositions);
+            if(NewPos < 0) NewIndex = (nPositions + (NewPos % nPositions)) % nPositions;
             else NewIndex = NewPos % nPositions;
 
-            if(positions[NewIndex % nPositions] == null) i++;
-            else if(cur.getKey().equals(players.getLast().getKey()) && players.getLast().getValue() + nSteps +nPositions <= players.getFirst().getValue()){
-                abandonRace(players.getLast().getKey());
-            }
+                if (positions[NewIndex % nPositions] == null || positions[NewIndex % nPositions].equals(cur.getKey())) i++;
+//            else if(cur.getKey().equals(players.getLast().getKey()) && players.getLast().getValue() + nSteps +nPositions <= players.getFirst().getValue()){
+//                abandonRace(players.getLast().getKey());
+//            }
         }
 
-        if(NewPos < 0) NewIndex = nPositions + NewPos;
+        if(NewPos < 0) NewIndex = (nPositions + (NewPos % nPositions)) % nPositions;
         else NewIndex = NewPos % nPositions;
 
         SetNewPosition(cur, NewPos, NewIndex);
@@ -307,6 +307,7 @@ public class GameBoard {
     }
 
 
+    /// TODO metodo check doppiaggio da chiamare nel controller o nelle carte  
 
     public Card NewCard(){
         CurrentCard = CardStack.PickNewCard();
