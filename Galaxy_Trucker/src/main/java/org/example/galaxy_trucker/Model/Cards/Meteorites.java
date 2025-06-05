@@ -143,7 +143,7 @@ public class   Meteorites extends Card {
                 Movement = 0;
                 while (Movement < 10 && MeteoritesLine<10  && MeteoritesFlag == false) {
                     if (MeteoritesValidPlanche[MeteoritesLine][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                        location= new String(MeteoritesLine+ " "+Movement);
+                        location= new String("at "+MeteoritesLine+ " "+Movement);
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
                         System.out.println("touch in:"+MeteoritesLine+" "+Movement);
                         if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[MeteoritesLine][Movement].getConnectors().get(0) == NONE.INSTANCE) {
@@ -180,7 +180,7 @@ public class   Meteorites extends Card {
                 Movement = 0;
                 while (Movement < 10 && MeteoritesLine<10 && MeteoritesFlag == false) {
                     if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                        location= new String(Movement+ " "+MeteoritesLine);
+                        location= new String("at "+Movement+ " "+MeteoritesLine);
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
                         if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[Movement][MeteoritesLine].getConnectors().get(1).equals(NONE.INSTANCE)) {
@@ -218,7 +218,7 @@ public class   Meteorites extends Card {
                 Movement = 9;
                 while (Movement >= 0  && MeteoritesLine<10 && MeteoritesFlag == false) {
                     if (MeteoritesValidPlanche[MeteoritesLine][Movement] > 0) {
-                        location= new String(MeteoritesLine+ " "+Movement);
+                        location= new String("at "+MeteoritesLine+ " "+Movement);
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
                         if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[MeteoritesLine][Movement].getConnectors().get(2).equals(NONE.INSTANCE)) {
@@ -255,7 +255,7 @@ public class   Meteorites extends Card {
                 Movement = 9;
                 while (Movement >= 0 && MeteoritesLine<10  && MeteoritesFlag == false) {
                     if (MeteoritesValidPlanche[Movement][MeteoritesLine] > 0) {
-                        location= new String(Movement+ " "+MeteoritesLine);
+                        location= new String("at "+Movement+ " "+MeteoritesLine);
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
                         if (attacks.get(MeteoritesOrder + 1) == 0 ){ //caso meteoriti piccoli
@@ -291,7 +291,7 @@ public class   Meteorites extends Card {
 
             }
 
-            System.out.println("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" at "+location);
+            System.out.println("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" "+location);
             this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" meteorite came from "+dimensione+" and it "+Colpito+" at "+location));
 
             if (!DamageFlag){this.SuccessfulDefences++;}

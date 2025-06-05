@@ -106,6 +106,8 @@ public class Smugglers extends Card{
 
 
 
+
+
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
         if (coordinates==null){
@@ -163,6 +165,9 @@ public class Smugglers extends Card{
 
     }
 
+
+
+    /// devo far si che se ho 0 energia termina subito perché senno devoi fare un consume energy vuoto
     public void checkStrength(){
 
 
