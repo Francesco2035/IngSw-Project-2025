@@ -70,6 +70,9 @@ class PostPrepControllerTest {
         c1.action(new AddCrewCommand(3, false, false, new IntegerPair(4, 5), game.getGameID(), p1.GetID(), game.getLv(),"POPULATE", null), gc);
         c1.action(new AddCrewCommand(-50000, false, false, new IntegerPair(4, 5), game.getGameID(), p1.GetID(), game.getLv(),"POPULATE", null), gc);
         c1.action(new AddCrewCommand(90000, false, false, new IntegerPair(4, 5), game.getGameID(), p1.GetID(), game.getLv(),"POPULATE", null), gc);
+        c1.action(new AddCrewCommand(0, true, false, new IntegerPair(4, 5), game.getGameID(), p1.GetID(), game.getLv(),"POPULATE", null), gc);
+        c1.action(new AddCrewCommand(0, false, true, new IntegerPair(4, 5), game.getGameID(), p1.GetID(), game.getLv(),"POPULATE", null), gc);
+        c1.action(new AddCrewCommand(0, false, false, new IntegerPair(4, 5), game.getGameID(), p1.GetID(), game.getLv(),"POPULATE", null), gc);
 
 
         vv.setDisconnected(false);
