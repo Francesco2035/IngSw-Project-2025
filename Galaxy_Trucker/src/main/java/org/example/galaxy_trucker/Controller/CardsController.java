@@ -21,7 +21,9 @@ public class CardsController extends Controller {
         }
 
         else{
-            gc.setControllerMap(curPlayer,new FlightController(curPlayer, gameId, gc, disconnected));
+            FlightController newController = new FlightController(curPlayer, gameId, gc, disconnected);
+            newController.setExceptionListener(exceptionListener);
+            gc.setControllerMap(curPlayer,newController);
         }
     }
 }

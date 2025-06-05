@@ -185,7 +185,7 @@ public class PlayerBoard {
 
 
     public void setRewardsListener(RewardsListener listener){
-        System.out.println("Setto listner "+ listener);
+        //System.out.println("Setto listner "+ listener);
         this.rewardsListener = listener;
     }
 
@@ -870,6 +870,15 @@ public class PlayerBoard {
     }
 
 
+    public ArrayList<Tile> getBuffer(){
+        return Buffer;
+    }
+
+    public void setBuffer (ArrayList<Tile> newBuffer) {
+        this.Buffer = newBuffer;
+    }
+
+
     public PlayerBoard clone(){
         PlayerBoard clonedPlayerBoard = new PlayerBoard(lv);
         clonedPlayerBoard.broken = broken;
@@ -894,6 +903,7 @@ public class PlayerBoard {
         clonedPlayerBoard.connectedHousingUnits = new ArrayList<>();
         clonedPlayerBoard.Rewards = new ArrayList<>(this.Rewards);
         clonedPlayerBoard.rewardsListener = this.getRewardsListener();
+        clonedPlayerBoard.setBuffer(this.Buffer);
         if (clonedPlayerBoard.rewardsListener == null){
             System.out.println("sincero non capisco il perchè");
         }
@@ -970,6 +980,9 @@ public class PlayerBoard {
         this.Rewards = rewards;
         if (rewardsListener!= null){
             rewardsListener.rewardsChanged(new RewardsEvent(new ArrayList<>(Rewards)));
+            for (Goods g : Rewards){
+                System.out.println("@@@@"+ g.getClass());
+            }
         }
     }
 

@@ -152,30 +152,7 @@ class MeteoritesTest {
 
         Meteorites meteoritesTest=new Meteorites(2,0,TGameBoard,attacks);
 
-     //   meteoritesTest.setMeteoritesOrdgame.setGameBoard(Gboard);
-        //        PhaseListener phaseListener = new PhaseListener() {
-        //            @Override
-        //            public void PhaseChanged(PhaseEvent event) {
-        //                System.out.println(event);
-        //            }
-        //        };
-        //
-        //        HandListener handListener = new HandListener() {
-        //
-        //            @Override
-        //            public void handChanged(HandEvent event) {
-        //                System.out.println("handChanged");
-        //            }
-        //        };
-        //
-        //        for(Player p: game.getGameBoard().getPlayers()) {
-        //            p.setPhaseListener(phaseListener);
-        //            p.setHandListener(handListener);
-        //            p.setState(new BuildingShip());
-        //
-        //        }
-        //        PrepController prepController1 = new PrepController(p1,game.getID(),null,false);
-        //        PrepController prepController2 = new PrepController(p2,game.getID(),null,false);ieer(2);
+     //   meteoritesTest.setMeteoritesOrder(2);
         System.out.println(meteoritesTest.getAttacks().get(meteoritesTest.getMeteoritesOrder()));
 
 
@@ -184,7 +161,7 @@ class MeteoritesTest {
 
         meteoritesTest.setCurrentPlayer(current);
 
-        meteoritesTest.setHit(8,8,pie);
+        meteoritesTest.setHit(8,8, current);
 
         //assertEquals(2,current.getmyPlayerBoard().getTile(7,8).getComponent().getType());
         meteoritesTest.DefendFromLarge(null,null, null);

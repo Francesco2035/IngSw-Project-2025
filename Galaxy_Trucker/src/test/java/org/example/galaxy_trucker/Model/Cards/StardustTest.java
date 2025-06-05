@@ -78,7 +78,12 @@ class StardustTest {
         ArrayList<Card> cards = gag.getCardsDeck();
         Card CurrentCard = cards.get(38);
         CurrentCard.setBoard(Gboard);
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
         System.out.println("fine");
 
 

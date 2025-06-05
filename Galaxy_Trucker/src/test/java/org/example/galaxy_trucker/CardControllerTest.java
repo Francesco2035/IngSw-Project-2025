@@ -23,35 +23,36 @@ import java.util.ArrayList;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CardControllerTest {
 
     static Game game;
     static GameBoard Gboard;
 
-    static {
-        try {
-            game = new Game(2, "testCarteController");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    static Player p1 = new Player();
-    static Player p2 = new Player();
+    Player p1;
+    Player p2;
 
     CardsController c1 = new CardsController(p1, game.getGameID(), false);
     CardsController c2 = new CardsController(p2, game.getGameID(), false);
 
 
-    @BeforeAll
-    public static void init() throws IOException {
-         Game game = new Game(2, "testCarteController");
 
 
-        p1 = new Player();
+
+        // CardsController c1= new CardsController(p1,game.getGameID(),false);
+// CardsController c2= new CardsController(p2,game.getGameID(),false);
+
+
+    @Test
+    public void testAbandonedShipCard() throws IOException {
+
+    Game game = new Game(2, "testCarteController");
+
+
+    p1 = new Player();
         p1.setId("pietro");
-        p2 = new Player();
+    p2 = new Player();
         p2.setId("FRA");
         game.NewPlayer(p1);
         game.NewPlayer(p2);
@@ -59,25 +60,17 @@ public class CardControllerTest {
         System.out.println("\n");
         p2.setMyPlance(TestSetupHelper.createInitializedBoard2());
 
-        assertEquals(true, p1.getmyPlayerBoard().checkValidity());
+    assertTrue(p1.getmyPlayerBoard().checkValidity());
         System.out.println("sksk");
-        assertEquals(true, p2.getmyPlayerBoard().checkValidity());
+    assertTrue(p2.getmyPlayerBoard().checkValidity());
 
         TestSetupHelper.HumansSetter1(p1.getmyPlayerBoard());
         TestSetupHelper.HumansSetter1(p2.getmyPlayerBoard());
-        Gboard = game.getGameBoard();
+    Gboard = game.getGameBoard();
 
         Gboard.SetStartingPosition(p1);
         Gboard.SetStartingPosition(p2);
 
-
-        // CardsController c1= new CardsController(p1,game.getGameID(),false);
-// CardsController c2= new CardsController(p2,game.getGameID(),false);
-
-    }
-
-    @Test
-    public void testAbandonedShipCard() throws IOException, InterruptedException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -90,16 +83,21 @@ public class CardControllerTest {
         CurrentCard.setBoard(Gboard);
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
 
-        assertEquals(p1.getPlayerState().getClass(), Accepting.class);
-        assertEquals(p2.getPlayerState().getClass(), Waiting.class);
+        assertEquals(Accepting.class, p1.getPlayerState().getClass());
+        assertEquals(Waiting.class, p2.getPlayerState().getClass());
         AcceptCommand acceptCommand = new AcceptCommand(game.getID(), p1.GetID(), Gboard.getLevel(), "AcceptCommand", false, "placeholder");
 
         acceptCommand.execute(p1);
-        assertEquals(p2.getPlayerState().getClass(), Accepting.class);
-        assertEquals(p1.getPlayerState().getClass(), Waiting.class);
+        assertEquals(Accepting.class, p2.getPlayerState().getClass());
+        assertEquals(Waiting.class, p1.getPlayerState().getClass());
         acceptCommand = new AcceptCommand(game.getID(), p2.GetID(), Gboard.getLevel(), "AcceptCommand", false, "placeholder");
         acceptCommand.execute(p2);
 
@@ -124,7 +122,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testAbandonedStationCard() throws IOException, InterruptedException {
+    public void testAbandonedStationCard() throws IOException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -138,7 +136,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
 
         assertEquals(p1.getPlayerState().getClass(), Accepting.class);
@@ -182,7 +185,7 @@ public class CardControllerTest {
 
     //meteoriti ha memoria?
     @Test
-    public void testMeteoritesCard() throws IOException, InterruptedException {
+    public void testMeteoritesCard() throws IOException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -202,7 +205,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
         DefendFromSmallCommand defendFromSmallCommand;
         DefendFromLargeCommand defendFromLargeCommand;
         int i=0;
@@ -247,7 +255,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testOpensSpaceCard() throws IOException, InterruptedException {
+    public void testOpensSpaceCard() throws IOException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -261,7 +269,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
 
         assertEquals(p1.getPlayerState().getClass(), GiveSpeed.class);
@@ -295,7 +308,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testSolarSystemCard() throws IOException, InterruptedException {
+    public void testSolarSystemCard() throws IOException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -309,7 +322,12 @@ public class CardControllerTest {
 
 
         System.out.println("Id Card: " + CurrentCard.getId() + " " + CurrentCard.getClass().getName());
-        CurrentCard.CardEffect();
+        try{
+            CurrentCard.CardEffect();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
         assertEquals(p1.getPlayerState().getClass(), ChoosingPlanet.class);
         assertEquals(false, p1.GetHasActed());

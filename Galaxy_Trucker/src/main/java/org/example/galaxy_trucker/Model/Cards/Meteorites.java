@@ -59,9 +59,7 @@ public class   Meteorites extends Card {
     //o gestisce la cosa e poi nel caso di hit chiama solo la posizione coplita se accade ed è indifesa
     @Override
     public void CardEffect() {
-
-
-
+        hits = new HashMap<>();
         for (Player p: this.getBoard().getPlayers()) {
             p.setState(new Waiting());
             hits.put(p.GetID(),new IntegerPair(0,0));
@@ -110,6 +108,11 @@ public class   Meteorites extends Card {
         System.out.println("Successfuldefences ="+SuccessfulDefences +" NumofDefences= " +NumofDefences);
         if(this.SuccessfulDefences==NumofDefences) {
        // if (PlayerOrder>=this.getBoard().getPlayers().size()){
+            try{
+                Thread.sleep(2500);
+            }catch(InterruptedException e){
+                e.printStackTrace();
+            }
             PlayerOrder=0;
             MeteoritesOrder+=2;
             this.CardEffect();
@@ -292,7 +295,7 @@ public class   Meteorites extends Card {
             }
 
             System.out.println("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" "+location);
-            this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" meteorite came from "+dimensione+" and it "+Colpito+" at "+location));
+            this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" at "+location));
 
             if (!DamageFlag){this.SuccessfulDefences++;}
             this.PlayerOrder++;

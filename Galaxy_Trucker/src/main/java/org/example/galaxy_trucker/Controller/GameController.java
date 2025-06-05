@@ -4,9 +4,7 @@ import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Controller.Listeners.GameLobbyListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
-import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
-import org.example.galaxy_trucker.Controller.Messages.GameLobbyEvent;
-import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
@@ -46,7 +44,8 @@ public class GameController  implements ConcurrentCardListener {
     private boolean firtflight = true;
     private boolean concurrent = false;
     private int color = 153;
-
+    int lv = 0;
+    private int maxPlayer = 4;
     private Thread prepThread;
 
     private LobbyListener lobbyListener;
@@ -64,12 +63,14 @@ public class GameController  implements ConcurrentCardListener {
         return VirtualViewMap;
     }
 
-    public GameController(String idGame, Game game, GamesHandler gh) {
+    public GameController(String idGame, Game game, GamesHandler gh, int lv, int maxPlayer) {
         this.idGame = idGame;
         ControllerMap = new HashMap<>();
         this.game = game;
         this.gh = gh;
         this.flightQueue = new LinkedBlockingQueue<>();
+        this.lv = lv;
+        this.maxPlayer = maxPlayer;
 //        this.prepThread = new Thread(() -> {
 //            while(true){
 //                Command cmd = prepQueue.poll();
@@ -78,67 +79,87 @@ public class GameController  implements ConcurrentCardListener {
 
     }
 
+
+
+    public HashMap<String, Controller> getControllerMap() {
+        return ControllerMap;
+    }
+
+
     public void NewPlayer(Player p, VirtualView vv, UUID token){
         if (ControllerMap.keySet().contains(p.GetID())) {
-            throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists");
+            vv.sendEvent(new ConnectionRefusedEvent("Player ID " + p.GetID() + " already exists in game "+idGame));
+            //throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists in game "+idGame);
         }
-        String playerId = p.GetID();
-        System.out.println("Player ID: " + playerId);
-        System.out.println("Token: " + token.toString());
-        Controller controller = new LoginController(p, idGame);
-        ControllerMap.put(playerId, controller);
-        System.out.println("New player " + playerId+" in "+ this);
-        tokenToPlayerId.put(token, playerId);
-        BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
-        commandQueues.put(playerId, queue);
-        game.NewPlayer(p);
-        VirtualViewMap.put(playerId,vv);
-        vv.setEventMatrix(game.getGameBoard().getLevel());
-        p.getmyPlayerBoard().setRewardsListener(vv);
-        p.getmyPlayerBoard().setListener(vv);
-        p.getCommonBoard().getCardStack().addListener(p.GetID(),vv);
-        Tile mainCockpitTile = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
-        mainCockpitTile.setId(color);
-        color++;
-        p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6, false);
-        p.setHandListener(vv);
-        //p.setPhaseListener(vv);
-        p.getCommonBoard().setListeners(vv);
-        p.getCommonBoard().getTilesSets().setListeners(vv);
-        p.setCardListner(vv);
-        gameLobbyListeners.add(vv);
-        updatePlayers();
+        else if (maxPlayer == ControllerMap.size()){
+            vv.sendEvent(new ConnectionRefusedEvent(idGame + " is full!"));
+        }
+         else {
+            String playerId = p.GetID();
+            System.out.println("Player ID: " + playerId);
+            System.out.println("Token: " + token.toString());
+            Controller controller = new LoginController(p, idGame);
+            controller.setExceptionListener(vv);
+            ControllerMap.put(playerId, controller);
+            System.out.println("New player " + playerId+" in "+ this);
+            tokenToPlayerId.put(token, playerId);
+            BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
+            commandQueues.put(playerId, queue);
+            game.NewPlayer(p);
+            VirtualViewMap.put(playerId,vv);
+
+            p.getmyPlayerBoard().setRewardsListener(vv);
+            p.getmyPlayerBoard().setListener(vv);
+            p.getCommonBoard().getCardStack().addListener(p.GetID(),vv);
+            Tile mainCockpitTile = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE,UNIVERSAL.INSTANCE);
+            mainCockpitTile.setId(color);
+            color++;
+            p.setHandListener(vv);
+            p.getCommonBoard().setListeners(vv);
+            p.getCommonBoard().getTilesSets().setListeners(vv);
+            p.setCardListner(vv);
+            gameLobbyListeners.add(vv);
+            vv.setEventMatrix(game.getGameBoard().getLevel());
+            for (VirtualView v : VirtualViewMap.values()) {
+
+                if(!vv.getPlayerName().equals(v.getPlayerName())){
+                    v.setPlayersPBListeners(vv);
+                    //System.out.println("vv "+vv.getPlayerName()+" v "+v.getPlayerName());
+                    vv.setPlayersPBListeners(v);
+                }
+            }
+            p.getmyPlayerBoard().insertTile(mainCockpitTile,6,6, false);
+            updatePlayers();
 
 
-
-        //p.getGmaebord.setVrtualview(vv);
-//        p.getCommonBoard().addListener(p.GetID(),vv);
-
-        Thread t = new Thread(() -> {
-            while (true) {
-                synchronized (ControllerMap) {
-                    Controller current = ControllerMap.get(playerId);
-                    if(current.disconnected){ //questo è il thread  dei command fuori dalla flight mode giusto?
-                        //current.DefaultAction(this);
-                    }
-                    else{
-                        Command cmd = queue.poll(); // se questa è esclusiva del player si potrebbe svuotare in caso di disconnessione
-                        if (cmd != null){
-                            current.action(cmd, this);
+            Thread t = new Thread(() -> {
+                while (true) {
+                    synchronized (ControllerMap) {
+                        Controller current = ControllerMap.get(playerId);
+                        if(current.disconnected){ //questo è il thread  dei command fuori dalla flight mode giusto?
+                            //current.DefaultAction(this);
+                        }
+                        else{
+                            Command cmd = queue.poll(); // se questa è esclusiva del player si potrebbe svuotare in caso di disconnessione
+                            if (cmd != null){
+                                current.action(cmd, this);
+                            }
                         }
                     }
+                    //vedi se è connesso
+                    //se è connesso prendi dalla coda e chiami il metodo
+
+
+                    //se non è connesso chiami defaultaction
                 }
-                //vedi se è connesso
-                //se è connesso prendi dalla coda e chiami il metodo
+            });
+            t.start();
+            threads.put(playerId, t);
+            ArrayList<String> players = new ArrayList<>(VirtualViewMap.keySet());
+            lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
+        }
 
 
-                //se non è connesso chiami defaultaction
-            }
-        });
-        t.start();
-        threads.put(playerId, t);
-        ArrayList<String> players = new ArrayList<>(VirtualViewMap.keySet());
-        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players));
     }
 
 
@@ -198,7 +219,7 @@ public class GameController  implements ConcurrentCardListener {
             stopGame();
         }
         ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
-        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players));
+        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
 
     }
 
@@ -259,33 +280,43 @@ public class GameController  implements ConcurrentCardListener {
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         flightThread = new Thread(() -> {
             System.out.println("PESCO CARTA!");
-            Card card= null;
-            try {
-                card = game.getGameBoard().NewCard();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            card.setConcurrentCardListener(this);
-            //SET
 
+            Card card= game.getGameBoard().NewCard();
+
+
+            card.setConcurrentCardListener(this);
+            for (String player: VirtualViewMap.keySet()) {
+                card.setRandomCardEffectListeners(player, VirtualViewMap.get(player));
+            }
+            try{
+                card.CardEffect();
+
+            }
+            catch (InterruptedException e){
+                e.printStackTrace();
+            }
+            //SET
                     //game.getGameBoard().getPlayers().getFirst()
+            int index = 0;
+
             while (!card.isFinished()) {
 
-                int index = 0;
                 /// il game pesca la carta automaticamente
                 //game.getGameBoard().NewCard();
 
-                while (index < players.size()) {
+                while (index < players.size() && !card.isFinished()) {
                     Player currentPlayer = players.get(index);
+                    //System.out.println("PLAYER: " +currentPlayer + "cristo de dio "+ index);
 
                     //prendi controller
                     //se è disconnesso chiami def action
                     //altrimenti esegui il blocco try
                     Controller cur = ControllerMap.get(currentPlayer.GetID());
-                    if (cur.disconnected==true){ // se è disconnesso chiamo il comando di default
+                    if (cur != null && cur.disconnected){ // se è disconnesso chiamo il comando di default
                         try {
                             cur.DefaultAction(this);
                         } catch (Exception e) {
+                            System.out.println(e.getMessage()+ "cristo de dio");
                             throw new ImpossibleActionException("errore nell'azione di default, che dio ci aiuti");
                         }
                         ///  credo ci vada una thìry ctch ma non la stava lanciando :)
@@ -298,43 +329,54 @@ public class GameController  implements ConcurrentCardListener {
                     }
 
                     else { // se il player  non è disconneso prendo icommand dalla queue
-                        //TODO : aggiungere se detto da cugola timout
 
                         try {
-                            Command cmd = flightQueue.take();
+                            Command cmd = flightQueue.poll();
                             //TODO: notify della carta se è fase concorrenziale
                             //game.getPlayers().get(cmd.getPlayerId()).getmyPlayerBoard().setRewardsListener(VirtualViewMap.get(currentPlayer.GetID()));
-
-                            if(concurrent){
-                                Controller controller = ControllerMap.get(cmd.getPlayerId());
-                                controller.action(cmd, this);
-                            }
-                            else if (cmd.getPlayerId().equals(currentPlayer.GetID())) {
-                                Controller controller = ControllerMap.get(cmd.getPlayerId());
-                                controller.action(cmd, this);
-
-                                ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
-                                if (currentPlayer.GetHasActed()) {
-                                    index++;
+                            if (cmd != null){
+                                if(concurrent){
+                                    Controller controller = ControllerMap.get(cmd.getPlayerId());
+                                    controller.action(cmd, this);
                                 }
-                            } else {
+                                else if (cmd.getPlayerId().equals(currentPlayer.GetID())) {
+                                    Controller controller = ControllerMap.get(cmd.getPlayerId());
+                                    controller.action(cmd, this);
 
-                                flightQueue.offer(cmd);
+                                    ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
+                                //TODO: pietro esplodi
+                                    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>index "+ index);
+                                    if (currentPlayer.GetHasActed()) {
+                                        System.out.println("aggiornmo inpoxadasdophièhnkoiadfshnikodasj");
+                                        index++;
+                                    }
+                                }
+                                else {
+                                    //TODO: non ho capito che minchia fa la offer
+                                    flightQueue.offer(cmd);
+                                }
                             }
 
-                        } catch (InterruptedException e) {
+
+
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage()+ "cristo de dio");
                             break;
                         }
                     }
                 }
 
 
-                //System.out.println("Flight phase complete");
+                System.out.println("PRIMO WHILE FINITO");
+
 
             }
-            Controller ReadySetter;
-            for (Player p : game.getPlayers().values()) {
 
+            System.out.println("USCITO DAL SECONDO WHILE");
+            Controller ReadySetter;
+            System.out.println("players "+ game.getPlayers().size());
+            for (Player p : game.getPlayers().values()) {
+                System.out.println("-------------------------------------------------FORCED");
                 System.out.println(p.GetID()+ " is in this state: "+ p.getPlayerState().getClass());
                 ReadySetter =ControllerMap.get(p.GetID());
                 ReadyCommand readyCommand = new ReadyCommand(game.getID(),p.GetID(),game.getLv(),"Ready",true,"placeholder");
@@ -346,8 +388,9 @@ public class GameController  implements ConcurrentCardListener {
         });
 
         flightThread.start();
+        //THREAD NON FINISCE SEMPLCIMENTE STO CREANDO OGNI VOLTA UNO NUOVO NEL CASO DI CARTA NON SPECIALE
 
-        System.out.println("Thread volo finito");
+
         flightMode = false;
         changeState();
 
@@ -455,5 +498,23 @@ public class GameController  implements ConcurrentCardListener {
     @Override
     public void onConcurrentCard(boolean phase) {
         this.concurrent = phase;
+    }
+
+    public int getlv(){
+        return this.lv;
+    }
+
+
+    public String check(Command command) {
+        if (command.getLv() != lv){
+            return "Game level doesn't match!";
+        }
+        if (ControllerMap.containsKey(command.getPlayerId())) {
+            return "Player "+command.getPlayerId()+" already exists in game "+game.getID();
+        }
+        if (ControllerMap.size() == maxPlayer){
+            return "This game is full";
+        }
+        return "";
     }
 }

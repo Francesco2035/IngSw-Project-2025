@@ -45,6 +45,7 @@ public class Hourglass{
                 System.out.println("Hourglass ended: " + usages + " usages left");
                 if(usages>0){
                     startable = true;
+                    hourglass.cancel();
                 }
                 else {
                     for (HourGlassListener listener : listeners){
@@ -53,7 +54,6 @@ public class Hourglass{
                     }
                 }
 
-                hourglass.cancel();
             }
         }, time);
 

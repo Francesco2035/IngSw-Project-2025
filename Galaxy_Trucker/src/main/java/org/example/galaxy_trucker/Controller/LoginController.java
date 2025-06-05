@@ -19,9 +19,10 @@ public class LoginController extends Controller {
             this.disconnected = false;
         }
         curPlayer.setState(new BuildingShip());
-        PrepController prep  = new PrepController(curPlayer, gameId, gc,disconnected);
-        curPlayer.getCommonBoard().getHourglass().setListener(prep);
+        PrepController newController  = new PrepController(curPlayer, gameId, gc,disconnected);
+        curPlayer.getCommonBoard().getHourglass().setListener(newController);
+        newController.setExceptionListener(exceptionListener);
         gc.setBuildingCount(1);
-        gc.setControllerMap(curPlayer,prep);
+        gc.setControllerMap(curPlayer,newController);
     }
 }

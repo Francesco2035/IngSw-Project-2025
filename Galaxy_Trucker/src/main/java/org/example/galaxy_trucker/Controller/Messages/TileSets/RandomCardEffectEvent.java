@@ -20,11 +20,11 @@ public class RandomCardEffectEvent implements Event {
     }
     @Override
     public void accept(EventVisitor visitor) {
-
+        visitor.visit(this);
     }
 
     @Override
     public String message() {
-        return "";
+        return effect;
     }
 }

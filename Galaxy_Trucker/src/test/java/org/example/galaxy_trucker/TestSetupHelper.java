@@ -24,7 +24,7 @@ import java.util.UUID;
 
 public class TestSetupHelper {
 
-    static PlayerBoard playerBoard = new PlayerBoard(2);
+    static PlayerBoard playerBoard1 = new PlayerBoard(2);
     static PlayerBoard playerBoard2 = new PlayerBoard(2);
     static PlayerBoard playerBoard3 = new PlayerBoard(2);
     static PlayerBoard playerBoard4 = new PlayerBoard(2);
@@ -73,7 +73,7 @@ public class TestSetupHelper {
         plasmaDrill.RotateDx();
 
 
-
+        PlayerBoard playerBoard = new PlayerBoard(2);
 
         playerBoard.insertTile(t1, 6,7, true);
         t2.RotateSx();
@@ -276,7 +276,7 @@ public class TestSetupHelper {
     public static GameController GameControllerSetup() throws IOException {
         Game game = new Game(2, "poggi");
         GamesHandler gh = new GamesHandler();
-        GameController gc = new GameController(game.getGameID(), game, gh);
+        GameController gc = new GameController(game.getGameID(), game, gh,2, 4);
         Player p1 = new Player();
         p1.setId("player1");
         Player p2 = new Player();

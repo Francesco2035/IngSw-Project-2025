@@ -2,16 +2,25 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.List;
+
 public class ConsumingEnergyClient  extends PlayerStateClient{
 
     @Override
     public void showGame(Out out) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Consuming energy...\n");
-        sb.append(out.showPlayers());
-        sb.append(out.printGameboard());
-        sb.append(out.showCard());
-        sb.append(out.printBoard());
-        out.render(sb);
+        StringBuilder toPrint = new StringBuilder();
+        toPrint.append(out.getTitleCard());
+        toPrint.append("Consuming energy...\n");
+        toPrint.append(out.showPlayers());
+        toPrint.append(out.printGameboard());
+        toPrint.append(out.showCard());
+        toPrint.append(out.printBoard());
+        toPrint.append(out.showException());
+        out.render(toPrint);
+    }
+
+    @Override
+    public List<String> getCommands() {
+        return List.of("ConsumeEnergy");
     }
 }

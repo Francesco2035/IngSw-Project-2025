@@ -20,7 +20,7 @@ import java.util.UUID;
 public class TCPClient{
 //TODO: settare lobby e login anche da fuori nel caso il client dovesse cambiare connessione
     private boolean lobby = false;
-    private boolean login = false;
+
     private boolean connected = false;
     private Socket echoSocket;
     private PrintWriter out = null;
@@ -152,72 +152,78 @@ public class TCPClient{
 
 
     public void disconnect() throws IOException {
+        if (connected){
+            client.getView().disconnect();
 
-        client.getView().disconnect();
 
-
-        connected = false;
-        try {
-            if (echoSocket != null && !echoSocket.isClosed()) {
-                echoSocket.close();
-            }
-        } catch (IOException e) {
-            System.err.println("Socket close error: " + e.getMessage());
-        }
-
-        if (eventThread != null) {
-            eventThread.interrupt();
+            connected = false;
             try {
-                eventThread.join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                if (echoSocket != null && !echoSocket.isClosed()) {
+                    echoSocket.close();
+                }
+            } catch (IOException e) {
+                System.err.println("Socket close error: " + e.getMessage());
             }
-        }
 
-        if (pingThread != null) {
-            pingThread.interrupt();
+            if (eventThread != null) {
+                eventThread.interrupt();
+                try {
+                    eventThread.join();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+            if (pingThread != null) {
+                pingThread.interrupt();
+                try {
+                    pingThread.join();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+
+            client.getView().connect();
+
             try {
-                pingThread.join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+                System.out.println("\nServer Disconnected.");
 
+                while (true) {
+                    String whatNow = client.getView().askInput("<Reconnect> | <ChangeConnection> | <Exit> :");
+                    switch (whatNow) {
+                        case "Reconnect":
+                            reconnect();
+                            return;
+                        case "ChangeConnection":
+                            changeConnection();
+                            return;
+                        case "Exit":
+                            System.exit(0);
+                            return;
+                        default:
+                            System.out.println("Invalid input: " + whatNow);
+                            break;
+                    }
 
-        client.getView().connect();
-
-        try {
-            System.out.println("\nServer Disconnected.");
-
-            while (true) {
-                String whatNow = client.getView().askInput("<Reconnect> | <ChangeConnection> | <Exit> :");
-                switch (whatNow) {
-                    case "Reconnect":
-                        reconnect();
-                        return;
-                    case "ChangeConnection":
-                        changeConnection();
-                        return;
-                    case "Exit":
-                        System.exit(0);
-                        return;
-                    default:
-                        System.out.println("Invalid input: " + whatNow);
-                        break;
                 }
 
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
     }
 
 
 
     public void clientLoop() {
         String userInput;
+        String jsonLogin;
+        ObjectMapper mapper = new ObjectMapper();
+
+
         while (true) {
             if (!connected) {
                 System.out.println("Client is disconnected. Exiting client loop.");
@@ -234,43 +240,82 @@ public class TCPClient{
                     if (!lobby) {
                         lobby = true;
                         LobbyCommand lobbyCommand = new LobbyCommand("Lobby");
-                        ObjectMapper mapper = new ObjectMapper();
-                        String jsonLogin = mapper.writeValueAsString(lobbyCommand);
 
-                        out.println(jsonLogin);
+                        try{
+                            jsonLogin = mapper.writeValueAsString(lobbyCommand);
+                            out.println(jsonLogin);
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else if (client.getLogin()){
+                        System.out.println("You are already logged in! [quit?]");
                     }
                     else{
                         System.out.println("Lobby is already connected");
                     }
-                    if (login){
-                        System.out.println("You are already logged in! [quit?]");
-                    }
 
 
                 }
-                else if (userInput.equals("Login")) {
-                    if(!login){
-                        login = true;
+                else if (userInput.equals("Create")) {
+                    if (!client.getLogin()) {
+                        client.setLogin(true);
+
                         String playerId = client.getView().askInput("PlayerID: ");
 
                         String gameId = client.getView().askInput("GameID: ");
 
-                        int gameLevel = Integer.parseInt( client.getView().askInput("Game level: "));
+                        int gameLevel = Integer.parseInt(client.getView().askInput("Game level: "));
 
-                        LoginCommand loginCommand = new LoginCommand(gameId,playerId, gameLevel, "Login");
+                        int maxPlayers = Integer.parseInt(client.getView().askInput("Insert number of players [1-4]: "));
+                        if (maxPlayers < 1){
+                            maxPlayers = 1;
+                        }
+                        if (maxPlayers > 4){
+                            maxPlayers = 4;
+                        }
+
+                        LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login", maxPlayers);
 
                         commandInterpreter = new CommandInterpreter(playerId, gameId);
                         commandInterpreter.setlv(gameLevel);
-                        ObjectMapper mapper = new ObjectMapper();
-                        String jsonLogin = mapper.writeValueAsString(loginCommand);
+                        mapper = new ObjectMapper();
+                        jsonLogin = mapper.writeValueAsString(loginCommand);
 
                         out.println(jsonLogin);
                     }
-                    else{
-                            System.out.println("You are already logged in! [quit?]");
-                    }
-
                 }
+                else if (userInput.equals("Join")) {
+
+                    if(!client.getLogin()) {
+
+                        String playerId = client.getView().askInput("PlayerID: ");
+                        String gameId = client.getView().askInput("GameID: ");
+                        if (client.containsGameId(gameId)) {
+                            client.setLogin(true);
+
+                            int gameLevel = Integer.parseInt(client.getView().askInput("Game level: "));
+
+                            LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login", -1);
+
+                            commandInterpreter = new CommandInterpreter(playerId, gameId);
+                            commandInterpreter.setlv(gameLevel);
+                             mapper = new ObjectMapper();
+                             jsonLogin = mapper.writeValueAsString(loginCommand);
+
+                            out.println(jsonLogin);
+                        }
+                        else{
+                            System.out.println("Invalid GameId");
+                        }
+
+
+                    }
+                    else{
+                        System.out.println("You are already logged in! [quit?]");
+                    }
+                }
+
                 else if (userInput.equals("end")) {
                     break;
                 }
@@ -286,7 +331,7 @@ public class TCPClient{
 
                 else{
                     Command command = commandInterpreter.interpret(userInput);
-                    ObjectMapper mapper = new ObjectMapper();
+                    mapper = new ObjectMapper();
                     String json = mapper.writeValueAsString(command);
 
                     out.println(json);
@@ -310,18 +355,12 @@ public class TCPClient{
             disconnect();
         }
         startThread();
-
-
-
-
         System.out.println("Connection started\n");
-
-
         clientLoop();
-
-    }
+        }
 
     private void reconnect() throws IOException {
+        connected = true;
         try {
             try {
                 echoSocket = new Socket(Settings.SERVER_NAME, Settings.TCP_PORT);
@@ -344,7 +383,7 @@ public class TCPClient{
                 String response = in.readLine();
                 if (response != null && response.equals("pong")) {
                     System.out.println("Server responded to ping. Connection is active.");
-                    connected = true;
+                    //connected = true; qui
                     ObjectMapper mapper = new ObjectMapper();
 
                     String reconnect = mapper.writeValueAsString(commandInterpreter.interpret("Reconnect"));

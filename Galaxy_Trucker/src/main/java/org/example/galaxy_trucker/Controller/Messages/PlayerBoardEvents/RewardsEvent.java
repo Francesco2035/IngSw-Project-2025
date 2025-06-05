@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.EventVisitor;
@@ -10,14 +11,15 @@ import java.util.ArrayList;
 public class RewardsEvent implements Event {
 
 
-    @JsonProperty("rewards")
+
     ArrayList<Goods> rewards;
 
     public RewardsEvent() {
 
     }
 
-    public RewardsEvent(ArrayList<Goods> rewards) {
+    @JsonCreator
+    public RewardsEvent(@JsonProperty("rewards") ArrayList<Goods> rewards) {
         this.rewards = rewards;
     }
 

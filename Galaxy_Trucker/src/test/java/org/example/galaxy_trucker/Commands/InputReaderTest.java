@@ -1,12 +1,11 @@
 package org.example.galaxy_trucker.Commands;
 
+import org.example.galaxy_trucker.View.TUI.InputReader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class InputReaderTest {
 

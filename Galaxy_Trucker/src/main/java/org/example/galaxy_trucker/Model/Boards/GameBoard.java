@@ -44,7 +44,7 @@ public class GameBoard {
         tileSets = list;
         startPos = new int[4];
         PlayersOnBoard = 0;
-
+        scoreboard = new ArrayList<>();
 
         if(lv == 2) {
             nPositions = 24;
@@ -146,6 +146,7 @@ public class GameBoard {
         if(positions[startPos[index-1]] == null) {
             SetNewPosition(cur, startPos[index-1], startPos[index-1]);
             sendUpdates(new GameBoardEvent(startPos[index-1], pl.GetID()));
+            System.out.println("@@@"+startPos[index-1]+":"+pl.GetID());
             PlayersOnBoard++;
         }
         else throw new IllegalArgumentException("This cell is already taken!");
@@ -155,6 +156,7 @@ public class GameBoard {
     
     public void removePlayerAndShift(Player pl) throws  RuntimeException{
         sendUpdates(new GameBoardEvent(-1, pl.GetID()));
+        System.out.println(pl.GetID()+ "removed");
         int[] shiftedPositions = new int[players.size()];
 
         Player_IntegerPair cur = players.stream()
@@ -174,27 +176,30 @@ public class GameBoard {
                     shiftedPositions[i] = p.getValue();
                     positions[shiftedPositions[i]] = null;
                     i++;
+                    //qui tolgo tutto
                 }
             }
 
             cur.setValue(-1);
+            //setto quello da rimuovere a -1
 
             i=0;
             for(Player_IntegerPair p : players)
                 if(p.getValue() >=0){
                     p.setValue(shiftedPositions[i]);
                     positions[shiftedPositions[i]] = p.getKey();
+                    System.out.println("@@@Set "+p.getKey().GetID()+" to "+shiftedPositions[i]+ " position: "+positions[shiftedPositions[i]]);
                     i++;
                 }
             updateAllPosition();
 
 
 
-            for(Player_IntegerPair p : players)
-                if(p.getValue() >=0)
-                    sendUpdates(new GameBoardEvent(p.getValue(), pl.GetID()));
-
-
+//            for(Player_IntegerPair p : players)
+//                if(p.getValue() >=0)
+//                    sendUpdates(new GameBoardEvent(p.getValue(), pl.GetID()));
+//
+//
         }
 
 
@@ -203,9 +208,11 @@ public class GameBoard {
 
 
     public void updateAllPosition(){
-        for(Player_IntegerPair p : players)
-            if(p.getValue() >=0)
+        for(Player_IntegerPair p : players) //come hashmap
+            if(p.getValue() >=0){
+                System.out.println("@@@"+p.getValue()+":"+ p.getKey().GetID());
                 sendUpdates(new GameBoardEvent(p.getValue(), p.getKey().GetID()));
+            }
     }
 
 
@@ -237,25 +244,25 @@ public class GameBoard {
             while (i > 0) {
                 NewPos++;
                 NewIndex++;
-                if (positions[NewIndex % nPositions] == null) i--;
-                else if (cur.getKey().equals(players.getFirst().getKey()) && players.getFirst().getValue() + nSteps - nPositions >= players.getLast().getValue()) {
-                    abandonRace(players.getLast().getKey());
-                }
+                if (positions[NewIndex % nPositions] == null || positions[NewIndex % nPositions].equals(cur.getKey())) i--;
+//                else if (cur.getKey().equals(players.getFirst().getKey()) && players.getFirst().getValue() + nSteps - nPositions >= players.getLast().getValue()) {
+//                    abandonRace(players.getLast().getKey());
+//                }
             }
 
         }
         else while(i < 0){
             NewPos--;
-            if(NewPos < 0) NewIndex = nPositions - (-NewPos % nPositions);
+            if(NewPos < 0) NewIndex = (nPositions + (NewPos % nPositions)) % nPositions;
             else NewIndex = NewPos % nPositions;
 
-            if(positions[NewIndex % nPositions] == null) i++;
-            else if(cur.getKey().equals(players.getLast().getKey()) && players.getLast().getValue() + nSteps +nPositions <= players.getFirst().getValue()){
-                abandonRace(players.getLast().getKey());
-            }
+                if (positions[NewIndex % nPositions] == null || positions[NewIndex % nPositions].equals(cur.getKey())) i++;
+//            else if(cur.getKey().equals(players.getLast().getKey()) && players.getLast().getValue() + nSteps +nPositions <= players.getFirst().getValue()){
+//                abandonRace(players.getLast().getKey());
+//            }
         }
 
-        if(NewPos < 0) NewIndex = nPositions + NewPos;
+        if(NewPos < 0) NewIndex = (nPositions + (NewPos % nPositions)) % nPositions;
         else NewIndex = NewPos % nPositions;
 
         SetNewPosition(cur, NewPos, NewIndex);
@@ -300,8 +307,9 @@ public class GameBoard {
     }
 
 
+    /// TODO metodo check doppiaggio da chiamare nel controller o nelle carte
 
-    public Card NewCard() throws InterruptedException {
+    public Card NewCard() {
         CurrentCard = CardStack.PickNewCard();
 
         for(Player_IntegerPair p : players){
@@ -309,7 +317,7 @@ public class GameBoard {
         }
 
         CurrentCard.setBoard(this);
-        CurrentCard.CardEffect();
+
         System.out.println("Id Card: " +CurrentCard.getId() + " "+ CurrentCard.getClass().getName());
         return CurrentCard;
     }

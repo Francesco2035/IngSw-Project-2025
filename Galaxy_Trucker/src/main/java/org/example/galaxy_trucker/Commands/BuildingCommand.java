@@ -30,7 +30,7 @@ public class BuildingCommand extends Command implements Serializable {
     public BuildingCommand(){}
 
     public BuildingCommand(int x, int y, int rotation, int position, String gameId, String playerId, int lv, String title, String token) {
-        super(gameId, playerId, lv, title, token);
+        super(gameId, playerId, lv, title, token,-1);
         this.x = x;
         this.y = y;
         this.gameId = gameId;
@@ -42,12 +42,10 @@ public class BuildingCommand extends Command implements Serializable {
 
 
     @Override
-    public void execute(Player player) throws RemoteException, JsonProcessingException {
+    public void execute(Player player) throws RemoteException, JsonProcessingException, IllegalStateException {
 
-        if(!player.GetReady() || (Objects.equals(title, "HOURGLASS"))) {
-            try {
-
-                switch (title) {
+        if(!player.GetReady() || (Objects.equals(title, "HOURGLASS"))){
+            switch (title) {
 
                     case "SEEDECK": {
                         player.getCommonBoard().getCardStack().notify(playerId, x);
@@ -73,7 +71,6 @@ public class BuildingCommand extends Command implements Serializable {
                         break;
                     }
                     case "FROMBUFFER": {
-
                         player.SelectFromBuffer(position);
                         break;
                     }
@@ -87,7 +84,6 @@ public class BuildingCommand extends Command implements Serializable {
                         break;
                     }
                     case "HOURGLASS": {
-                        System.out.println(player.GetID()+" sta ruotando la clessiddra ");
                         try {
                             player.StartTimer();
                         } catch (RuntimeException e) {
@@ -96,9 +92,7 @@ public class BuildingCommand extends Command implements Serializable {
                         break;
                     }
                 }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+
         }
 
     }
@@ -120,6 +114,6 @@ public class BuildingCommand extends Command implements Serializable {
 
     @Override
     public boolean allowedIn(PlayerState playerState) {
-        return playerState.allows(this);
+        return playerState.allows(this); //TODO: aggiungere caso per playerstate == null => eccezione
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
-
+//TODO: fixare, non serve riceverlo in fasi diverse dalla BaseState però comunque è mezzo buggato
 public class GameLobbyEvent implements Event{
 
     ArrayList<String> players;

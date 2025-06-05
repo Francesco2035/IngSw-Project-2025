@@ -30,9 +30,10 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = LoginCommand.class, names = "LobbyCommand"),
         @JsonSubTypes.Type(value = HandleCargoCommand.class, names = "HandleCargoCommand"),
         @JsonSubTypes.Type(value = TheftCommand.class, names = "TheftCommand"),
+        @JsonSubTypes.Type(value = SelectChunkCommand.class, name = "SelectChunkCommand"),
 
         @JsonSubTypes.Type(value = ReconnectCommand.class, names = "ReconnectCommand")
-//TODO: AGGIUNGERE ALTRI COMANDI IN JSONSUBTYPES PER TCP E LE JSONPROPERY NELLE SOTTOCLASSI: IMPORTANTISSIMO REGA'
+//TODO: AGGIUNGERE ALTRI COMANDI IN JSONSUBTYPES PER TCP E LE JSONPROPERTY NELLE SOTTOCLASSI: IMPORTANTISSIMO REGA'
 })
 public abstract class Command implements Serializable {
 
@@ -42,6 +43,8 @@ public abstract class Command implements Serializable {
     public String playerId;
     @JsonProperty("lv")
     public int lv;
+    @JsonProperty("maxPlayers")
+    int maxPlayers;
     @JsonProperty("title")
     public String title;
     @JsonProperty("token")
@@ -51,12 +54,13 @@ public abstract class Command implements Serializable {
         System.out.println("Command default called");
     }
 
-    public Command(String gameId, String playerId, int lv, String title, String token) {
+    public Command(String gameId, String playerId, int lv, String title, String token, int maxPlayers) {
         this.gameId = gameId;
         this.playerId = playerId;
         this.lv = lv;
         this.title = title;
         this.token = token;
+        this.maxPlayers = maxPlayers;
     }
 
     public abstract void execute(Player player) throws IOException;
@@ -75,6 +79,10 @@ public abstract class Command implements Serializable {
 
     public int getLv() {
         return lv;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
     }
 
     public boolean allowedIn(PlayerState state) {

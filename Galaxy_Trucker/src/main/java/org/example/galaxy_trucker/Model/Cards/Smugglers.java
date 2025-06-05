@@ -143,12 +143,12 @@ public class Smugglers extends Card{
     public void consumeEnergy2(ArrayList<IntegerPair> coordinates) {
 
         if(coordinates.size()!=this.energyUsage){
-
+            System.out.println("----->"+this.energyUsage);
             throw new WrongNumofEnergyExeption("wrong number of energy cells to steal");
         }
-        PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
+        PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard();
         Tile[][] tiles = CurrentPlanche.getPlayerBoard();
-        /// opero sulla copia
+        // opero sulla copia
         for(IntegerPair i:coordinates){
             try {
                 CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),

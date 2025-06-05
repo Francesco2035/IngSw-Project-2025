@@ -1,7 +1,10 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
+
+import java.util.List;
 
 public class AddCrewClient  extends PlayerStateClient{
 
@@ -15,12 +18,17 @@ public class AddCrewClient  extends PlayerStateClient{
         toPrint.append(out.showPlayers());
         toPrint.append(out.printGameboard());
         toPrint.append(out.printBoard());
+        toPrint.append(out.showException());
         out.render(toPrint);
-        //out.printMessage(toPrint.toString());
-        //out.printMessage("AddCrew");
 
-//        out.showPlayers();
-//        out.printGameboard();
-//        out.printBoard();
+    }
+
+    public void showGame(GuiOut out){
+        out.getRoot().buildAddCrewScreen();
+        out.printAddCrewScreen();
+    }
+    @Override
+    public List<String> getCommands() {
+        return List.of("AddCrew", "AddPurpleAlien", "AddBrownAlien");
     }
 }

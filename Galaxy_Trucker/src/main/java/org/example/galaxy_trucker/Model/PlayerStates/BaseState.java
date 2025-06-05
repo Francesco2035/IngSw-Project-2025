@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.example.galaxy_trucker.Commands.DebugShip;
 import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.Commands.ReadyCommand;
@@ -13,6 +14,8 @@ import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
 
 //TODO: da aggiungere quit
 public class BaseState extends PlayerState {
+
+
 
     @Override
     public boolean allows(LoginCommand command){

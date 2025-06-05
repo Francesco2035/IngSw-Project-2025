@@ -10,6 +10,7 @@ public class LobbyEvent implements Event {
 
     String gameId;
     int lv;
+    int maxPlayers;
     ArrayList<String> players;
 
 
@@ -17,10 +18,11 @@ public class LobbyEvent implements Event {
 
     }
     @JsonCreator
-    public LobbyEvent(@JsonProperty("gameId")String gameId, @JsonProperty("lv")int lv, @JsonProperty("players") ArrayList<String> players) {
+    public LobbyEvent(@JsonProperty("gameId")String gameId, @JsonProperty("lv")int lv, @JsonProperty("players") ArrayList<String> players, @JsonProperty("maxPlayers")int maxPlayers) {
         this.gameId = gameId;
         this.players = players;
         this.lv = lv;
+        this.maxPlayers = maxPlayers;
     }
 
     @Override
@@ -47,5 +49,8 @@ public class LobbyEvent implements Event {
         return this.gameId;
     }
 
+    public int getMaxPlayers() {
+        return this.maxPlayers;
+    }
 
 }

@@ -12,7 +12,7 @@ public class KillCommand extends Command implements Serializable {
     ArrayList<IntegerPair> coordinates;
 
     public KillCommand(ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title, String token) {
-        super(gameId, playerId, lv, title, token);
+        super(gameId, playerId, lv, title, token,-1);
         this.coordinates = coordinates;
     }
 
