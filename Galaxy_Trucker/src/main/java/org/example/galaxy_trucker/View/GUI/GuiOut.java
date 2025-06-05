@@ -11,6 +11,7 @@ public class GuiOut {
     private Scene LobbyScene;
     private Scene GameLobbyScene;
     private Scene buildingScene;
+    private Scene addCrewScene;
 
     private Stage primaryStage;
 
@@ -76,6 +77,17 @@ public class GuiOut {
         Platform.runLater(() -> {
             primaryStage.setTitle("Building Screen");
             primaryStage.setScene(buildingScene);
+            primaryStage.show();
+        });
+    }
+
+    public void setAddCrewScreen(Scene addCrewScene){
+        this.addCrewScene=addCrewScene;
+    }
+    public void printAddCrewScreen(){
+        Platform.runLater(() -> {
+            primaryStage.setTitle("Add Crew");
+            primaryStage.setScene(addCrewScene);
             primaryStage.show();
         });
     }
