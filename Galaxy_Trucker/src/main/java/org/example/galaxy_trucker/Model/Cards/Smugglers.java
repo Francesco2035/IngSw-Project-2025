@@ -113,6 +113,7 @@ public class Smugglers extends Card{
         }
         if(isaPunishment){
             this.consumeEnergy2(coordinates);
+            return;
         }
         if(coordinates.size()!=this.energyUsage){
             currentPlayer.setState(new GiveAttack());
@@ -134,6 +135,8 @@ public class Smugglers extends Card{
         this.checkStrength();
 
     }
+
+
 
     public void consumeEnergy2(ArrayList<IntegerPair> coordinates) {
 
@@ -177,8 +180,9 @@ public class Smugglers extends Card{
             System.out.println("hai perso :3");
             PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard();
             HashMap<Integer, ArrayList<IntegerPair>> cargoH = CurrentPlanche.getStoredGoods();
+            this.tmpPunishment = Punishment;
             if (!cargoH.isEmpty()) {
-                this.tmpPunishment = Punishment;
+
                 this.setDefaultPunishment(tmpPunishment);
                 this.currentPlayer.setState(new HandleTheft());
 

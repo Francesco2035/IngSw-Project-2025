@@ -224,7 +224,7 @@ public class Pirates extends Card{
                 }
             }
             else if (Punishment.get(ShotsOrder) == 1) {///sopra
-                direction = new String("above on line "+lines[ShotsOrder/2]);
+                direction = new String("above on column "+lines[ShotsOrder]);
                 Movement = 0;
                 while (Movement < 10 && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
@@ -336,16 +336,7 @@ public class Pirates extends Card{
             if(shotsFlag == false){
             this.ShotsOrder += 2;
             }
-                this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+dimensione+" and it "+Colpito+" at "+location));
-                PlayerState lastState = currentPlayer.getPlayerState();
-                currentPlayer.setState(new Waiting());
-                try{
-                    Thread.sleep(2500);
-                }
-                catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-                currentPlayer.setState(lastState);
+            sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+dimensione+" and it "+Colpito+" at "+location));
             /// Todo aggiungere il messaggio a client e chiedere a francio che fare perche potrebbeb fare più di una chiamata per stato in caso di miss lezgosk
         }
         if(this.ShotsOrder >=Punishment.size() ){

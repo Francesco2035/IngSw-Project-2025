@@ -76,7 +76,7 @@ class EpidemicTest {
     }
 
     @Test
-    void cardEffect() {
+    void cardEffect() throws InterruptedException {
         //IntegerPair coordinate= new IntegerPair(5,6);
 
 
