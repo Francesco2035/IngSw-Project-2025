@@ -72,6 +72,7 @@ public class GuiRoot implements View {
     private TilePane uncoveredTiles;
     private int tileRotation;
     private HashMap<String, GridPane> othersBoards;
+    private boolean addcrew;
 
     private HashMap<Integer, IntegerPair> coords;
     private Image brownAlien, purpleAlien, crewMate;
@@ -90,6 +91,7 @@ public class GuiRoot implements View {
         tileImage.setPreserveRatio(true);
         uncoveredTiles = new TilePane();
         amIBuilding = true;
+        addcrew = false;
 
         coords = new HashMap<>();
         othersBoards = new HashMap<>();
@@ -163,7 +165,7 @@ public class GuiRoot implements View {
             tileImg.setOpacity(1);
             tileImg.setRotate(event.getRotation());
 
-            if(!amIBuilding){
+            if(addcrew){
                 tileImg.setFitWidth(70);
                 ImageView crewImg = new ImageView();
                 crewImg.setFitWidth(40);
@@ -210,7 +212,7 @@ public class GuiRoot implements View {
                 }
 
 
-                if(amIBuilding)
+                if(!addcrew)
                     myBoard.add(tileImg, event.getY(), event.getX());
 
                 else{
@@ -358,6 +360,50 @@ public class GuiRoot implements View {
 
         StackPane textPanel = new StackPane(txtBackground, text);
 
+        Button finishButton = new Button("Done");
+
+        finishButton.setOnAction(e -> {
+            Stage ChoosePositionStage = new Stage();
+            ChoosePositionStage.setTitle("Select Position");
+
+            ComboBox<String> position = new ComboBox<>();
+            position.getItems().addAll("1", "2", "3", "4");
+            position.setPromptText("Position");
+
+            Button confirmButton = new Button("Confirm");
+            Button goBackButton = goBackButtonMaker(ChoosePositionStage);
+
+            confirmButton.disableProperty().bind(
+                    position.valueProperty().isNull()
+            );
+
+            confirmButton.setOnAction(ev -> {
+                ChoosePositionStage.close();
+                inputQueue.add("FinishBuilding "+ position.getValue());
+
+            });
+
+
+            HBox Buttons = new HBox(50, confirmButton, goBackButton);
+
+            Buttons.setAlignment(Pos.CENTER);
+            Buttons.setPadding(new Insets(15));
+
+            VBox formBox = new VBox(10,
+                    new Label("Select Yout Starting Position:"), position,
+                    Buttons
+            );
+            formBox.setPadding(new Insets(15));
+            formBox.setAlignment(Pos.CENTER);
+
+            Scene scene = new Scene(formBox, 250, 80);
+            ChoosePositionStage.setScene(scene);
+            ChoosePositionStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
+            ChoosePositionStage.initModality(Modality.WINDOW_MODAL);
+
+            ChoosePositionStage.show();
+
+        });
 
         AtomicInteger x = new AtomicInteger();
         AtomicInteger y = new AtomicInteger();
@@ -394,7 +440,7 @@ public class GuiRoot implements View {
                 othersBox.getChildren().add(othersBoards.get(id));
             }
 
-            HBox mainBox = new HBox(new VBox(100, myBoard, textPanel), othersBox);
+            HBox mainBox = new HBox(new VBox(100, myBoard, textPanel), finishButton, othersBox);
             mainBox.setPadding(new Insets(150));
             mainBox.setAlignment(Pos.CENTER);
             Pane root = new Pane(mainBox);
@@ -413,6 +459,7 @@ public class GuiRoot implements View {
 
     public void AddCrewScene(){
         amIBuilding = false;
+        addcrew = true;
 
         Label text = new Label("Populate Your Ship!");
         text.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
