@@ -19,6 +19,7 @@ public class Out {
     private PlayerClient playerClient;
     private Boolean show = true;
 
+    String PBInfo = "";
     String exception = "";
     String effect = "";
     String titleCard = "";
@@ -655,5 +656,8 @@ public class Out {
 
     public StringBuilder getTitleCard(){
         return new StringBuilder(titleCard);
+    }
+
+    public void setPBInfo(String s) {
     }
 }
