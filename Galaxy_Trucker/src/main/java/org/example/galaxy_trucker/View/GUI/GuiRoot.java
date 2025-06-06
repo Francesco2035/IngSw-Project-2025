@@ -136,16 +136,17 @@ public class GuiRoot implements View {
         Pane crewPane = new Pane();
 
         ImageView tileImg = new ImageView();
-        tileImg.setFitWidth(100);
+        tileImg.setFitWidth(70);
+        tileImage.setRotate(event.getRotation());
         tileImage.setImage(tilePlaceholder);
         tileImage.setOpacity(0.5);
 
         if(event.getId() == 158)
             tileImg.setImage(null);
-        else if(event.getId() == 157) {
+        else if(event.getId() == 157){
             tileImg.setImage(tilePlaceholder);
             tileImg.setOpacity(0.5);
-            if (amIBuilding) {
+            if (amIBuilding){
                 tileImg.setOnMouseClicked(e -> {
                     inputQueue.add("InsertTile " + event.getX() + " " + event.getY() + " " + tileRotation);
                 });
@@ -346,6 +347,7 @@ public class GuiRoot implements View {
     }
 
     public void checkValidityScene(){
+        amIBuilding = false;
 
         Label text = new Label("Remove Invalid Tiles!");
         text.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
