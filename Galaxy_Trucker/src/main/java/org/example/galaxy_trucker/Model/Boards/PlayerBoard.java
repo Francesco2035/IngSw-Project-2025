@@ -400,7 +400,7 @@ public class PlayerBoard {
             for (int y = 0; y < 10; y++) {
 
                 if (ValidPlayerBoard[x][y] == 1 && !visited.contains(new IntegerPair(x,y))){
-                    ValidPlayerBoard[x][y] = -2;
+                    //ValidPlayerBoard[x][y] = -2;
                     findOne = true;
                 }
 
