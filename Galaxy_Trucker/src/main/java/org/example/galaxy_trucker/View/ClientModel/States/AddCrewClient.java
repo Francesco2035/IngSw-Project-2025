@@ -24,7 +24,7 @@ public class AddCrewClient  extends PlayerStateClient{
     }
 
     public void showGame(GuiOut out){
-        out.getRoot().buildAddCrewScreen();
+        out.getRoot().AddCrewScene();
         out.printAddCrewScreen();
     }
     @Override

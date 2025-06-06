@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class GuiRoot implements View {
@@ -70,11 +71,12 @@ public class GuiRoot implements View {
     private ImageView tileImage;
     private TilePane uncoveredTiles;
     private int tileRotation;
+    private HashMap<String, GridPane> othersBoards;
 
     private HashMap<Integer, IntegerPair> coords;
     private Image brownAlien, purpleAlien, crewMate;
 
-    public void setStage(Stage primaryStage) {
+    public void setStage(Stage primaryStage){
         printer.setStage(primaryStage);
         this.primaryStage = primaryStage;
     }
@@ -90,7 +92,7 @@ public class GuiRoot implements View {
         amIBuilding = true;
 
         coords = new HashMap<>();
-
+        othersBoards = new HashMap<>();
 
         brownAlien = new Image(getClass().getResourceAsStream("/GUI/brown.png"));
         purpleAlien = new Image(getClass().getResourceAsStream("/GUI/purple.png"));
@@ -128,13 +130,13 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void updateBoard(TileEvent event) {
-
+    public void updateBoard(TileEvent event){
 
         StackPane tileStack;
         Pane crewPane = new Pane();
 
         ImageView tileImg = new ImageView();
+        tileImg.setFitWidth(100);
         tileImage.setImage(tilePlaceholder);
         tileImage.setOpacity(0.5);
 
@@ -161,10 +163,12 @@ public class GuiRoot implements View {
             tileImg.setRotate(event.getRotation());
 
             if(!amIBuilding){
-
+                tileImg.setFitWidth(70);
                 ImageView crewImg = new ImageView();
-                crewImg.setFitWidth(20);
+                crewImg.setFitWidth(40);
                 crewImg.setPreserveRatio(true);
+
+
 
                 if(event.isBrownAlien()){
                     crewImg.setImage(brownAlien);
@@ -182,9 +186,10 @@ public class GuiRoot implements View {
 
                     for (int i = 0; i < event.getHumans(); i++) {
                         ImageView crew = new ImageView(crewMate);
-                        crew.setFitWidth(20);
+                        crew.setFitWidth(40);
                         crew.setPreserveRatio(true);
                         humans.getChildren().add(crew);
+
                     }
                     crewPane.getChildren().add(humans);
                 }
@@ -193,19 +198,59 @@ public class GuiRoot implements View {
         }
 
         tileStack = new StackPane(tileImg, crewPane);
-        tileImg.setFitHeight(50);
         tileImg.setPreserveRatio(true);
 
             Platform.runLater(()->{
+
+                ArrayList<Node> nodes = new ArrayList<>(myBoard.getChildren());
+                for (Node node : nodes){
+                    if(node != null && GridPane.getRowIndex(node) == event.getX() && GridPane.getColumnIndex(node) == event.getY())
+                        myBoard.getChildren().remove(node);
+                }
+
+
                 if(amIBuilding)
                     myBoard.add(tileImg, event.getY(), event.getX());
-                else
+
+                else{
                     myBoard.add(tileStack, event.getY(), event.getX());
+                }
+
             });
 
 
 
     }
+
+    @Override
+    public void updateOthersPB(PlayerTileEvent event) {
+        if(!othersBoards.containsKey(event.getPlayerName()))
+            othersBoards.put(event.getPlayerName(), new GridPane());
+
+        ImageView tile = new ImageView();
+        tile.setFitWidth(40);
+        tile.setPreserveRatio(true);
+
+        if(event.getId() == 157) {
+            tile.setImage(tilePlaceholder);
+            tile.setOpacity(0.5);
+        }
+        else if(event.getId() < 157){
+            tile.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg")));
+            tile.setRotate(event.getRotation());
+        }
+
+        Platform.runLater(()->{
+            ArrayList<Node> nodes = new ArrayList<>(othersBoards.get(event.getPlayerName()).getChildren());
+            for (Node node : nodes){
+                if(node != null && GridPane.getRowIndex(node) == event.getX() && GridPane.getColumnIndex(node) == event.getY())
+                    othersBoards.get(event.getPlayerName()).getChildren().remove(node);
+            }
+
+            othersBoards.get(event.getPlayerName()).add(tile, event.getY(), event.getX());
+        });
+    }
+
 
 
     @Override
@@ -300,13 +345,25 @@ public class GuiRoot implements View {
 
     }
 
-    public void buildAddCrewScreen(){
+    public void CheckValidityScene(){}
+
+
+    public void AddCrewScene(){
         amIBuilding = false;
+
+        Label text = new Label("Populate Your Ship!");
+        text.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+        ImageView txtBackground = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/all_belt.png")));
+        txtBackground.setFitWidth(600);
+        txtBackground.setFitHeight(100);
+
+        StackPane textPanel = new StackPane(txtBackground, text);
 
         AtomicReference<String> cmdType = new AtomicReference<>(null);
 
         ImageView brown = new ImageView(brownAlien);
-        brown.setFitWidth(70);
+        brown.setFitWidth(60);
         brown.setPreserveRatio(true);
 
         brown.setOnMouseClicked(e->{
@@ -314,14 +371,14 @@ public class GuiRoot implements View {
         });
 
         ImageView purple = new ImageView(purpleAlien);
-        purple.setFitWidth(70);
+        purple.setFitWidth(60);
         purple.setPreserveRatio(true);
         purple.setOnMouseClicked(e->{
             cmdType.set("AddPurpleAlien");
         });
 
         ImageView human = new ImageView(crewMate);
-        human.setFitWidth(70);
+        human.setFitWidth(60);
         human.setPreserveRatio(true);
         human.setOnMouseClicked(e->{
             cmdType.set("AddCrew");
@@ -329,30 +386,53 @@ public class GuiRoot implements View {
 
         VBox crewBox = new VBox(human,purple,brown);
 
-        for(Node node : myBoard.getChildren()){
-            ImageView tile = (ImageView) node;
-            tile.setOnMouseClicked(e->{
-                if(cmdType.get() != null){
-                    int x, y;
-                    x = GridPane.getColumnIndex(node);
-                    y = GridPane.getRowIndex(node);
-                    inputQueue.add(cmdType + " " + y + " " + x);
-                }
+        AtomicInteger x = new AtomicInteger();
+        AtomicInteger y = new AtomicInteger();
+        ArrayList<Node> childrenCopy = new ArrayList<>(myBoard.getChildren());
 
+        for(Node node : childrenCopy){
+
+            ImageView tile = (ImageView) node;
+
+            ImageView newTile =new ImageView(tile.getImage());
+            newTile.setFitWidth(70);
+            newTile.setPreserveRatio(true);
+
+            newTile.setOnMouseClicked(e->{
+                if(cmdType.get() != null){
+                    x.set(GridPane.getColumnIndex(node));
+                    y.set(GridPane.getRowIndex(node));
+                    inputQueue.add(cmdType.get() + " " + y.get() + " " + x.get());
+                }
             });
 
-            if(tile.getImage() != null && tile.getImage().equals(tilePlaceholder))
-                tile.setOpacity(0.5);
+            if(newTile.getImage() != null && newTile.getImage().equals(tilePlaceholder))
+                newTile.setOpacity(0.5);
 
-            tile.setOnMouseEntered(null);
-            tile.setOnMouseExited(null);
+            Platform.runLater(()->{
+               myBoard.getChildren().remove(node);
+               myBoard.add(newTile,  GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
+            });
+
         }
 
         Platform.runLater(()->{
-            HBox mainBox = new HBox(20, myBoard, crewBox);
-            mainBox.setPadding(new Insets(10));
+            HBox boardBox = new HBox(50, myBoard, crewBox);
+//            boardBox.setAlignment(Pos.CENTER);
+//            boardBox.setPadding(new Insets(50));
+
+            VBox othersBox = new VBox(20);
+            for(String id : othersBoards.keySet()){
+                othersBox.getChildren().add(othersBoards.get(id));
+            }
+
+            HBox mainBox = new HBox(new VBox(100, boardBox, textPanel), othersBox);
+            mainBox.setPadding(new Insets(200));
             mainBox.setAlignment(Pos.CENTER);
             Pane root = new Pane(mainBox);
+
+            mainBox.prefWidthProperty().bind(primaryStage.widthProperty());
+            mainBox.prefHeightProperty().bind(primaryStage.heightProperty());
 
             contentRoot.getChildren().setAll(root);
             printer.setAddCrewScreen(primaryScene);
@@ -590,7 +670,7 @@ public class GuiRoot implements View {
     }
 
 
-    public void buildLobbyGameScreen(){
+    public void LobbyGameScreen(){
         {
             Label GameNameLabel = new Label("Game: " + myGameName);
             GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
@@ -799,28 +879,33 @@ public class GuiRoot implements View {
         });
 
 
+        VBox others = new VBox(20);
+        for(String PlayerName : othersBoards.keySet()){
+            others.getChildren().add(new HBox(5, new Label(PlayerName), othersBoards.get(PlayerName)));
+        }
+
         HBox tileBox =  new HBox(5, counterclockwiseArrow, tileImage, clockwiseArrow);
-        VBox Buttons = new VBox(15, tileBox, pickTile, board, discardTile, finishButton);
-        HBox buildKit = new HBox(20, myBoard, Buttons);
-//        buildBox.prefWidthProperty().bind(primaryStage.widthProperty());
-//        buildBox.prefHeightProperty().bind(primaryStage.heightProperty());
+        VBox Buttons = new VBox(15, pickTile, board, discardTile, finishButton);
+        HBox buildKit = new HBox(10, tileBox, Buttons);
 
 
-        VBox boardsBox = new VBox(10, GameNameLabel, buildKit);
-        boardsBox.setMaxWidth(800);
-        boardsBox.setAlignment(Pos.TOP_CENTER);
-        boardsBox.prefWidthProperty().bind(primaryStage.widthProperty());
-        boardsBox.prefHeightProperty().bind(primaryStage.heightProperty());
-        boardsBox.setPadding(new Insets(100));
+
+
+//        VBox boardsBox = new VBox(10, GameNameLabel, buildKit);
+//        boardsBox.setMaxWidth(800);
+//        boardsBox.setAlignment(Pos.CENTER);
+//        boardsBox.prefWidthProperty().bind(primaryStage.widthProperty());
+//        boardsBox.prefHeightProperty().bind(primaryStage.heightProperty());
+//        boardsBox.setPadding(new Insets(100));
 
 
         ScrollPane uncoveredBox = new ScrollPane(uncoveredTiles);
         uncoveredBox.setFitToWidth(true);
-        uncoveredBox.setPrefWidth(365);
+        uncoveredBox.setPrefWidth(500);
 
         uncoveredBox.setOpacity(0.4);
 
-        HBox mainBox = new HBox(10, uncoveredBox, boardsBox);
+        HBox mainBox = new HBox(10, uncoveredBox, new VBox(10, myBoard, buildKit), others);
         mainBox.setPadding(new Insets(50));
 
         StackPane buildingRoot = new StackPane(mainBox);
@@ -833,8 +918,10 @@ public class GuiRoot implements View {
 
         printer.setBuildingScene(primaryScene);
 
-
     }
+
+
+
     @Override
     public void phaseChanged(@NotNull PhaseEvent event) {
         playerClient.setPlayerState(event.getStateClient());
@@ -869,10 +956,7 @@ public class GuiRoot implements View {
         });
     }
 
-    @Override
-    public void updateOthersPB(PlayerTileEvent playerTileEvent) {
 
-    }
 
     @Override
     public void seeBoards() {
@@ -894,7 +978,7 @@ public class GuiRoot implements View {
         Button joinButton = new Button("Join");
         joinButton.setOnAction(e -> {
             Stage InsertNameStage = new Stage();
-            InsertNameStage.setTitle("Insert Username");
+            InsertNameStage.setTitle("Joining game: \"" + joining.getGameId() + "\"");
 
             TextField usernameField = new TextField();
             usernameField.setPromptText("Player Name");
@@ -930,9 +1014,12 @@ public class GuiRoot implements View {
 
                 InsertNameStage.close();
                 //Join myname mygamename
-                inputQueue.add("Join");
+                ///TODO: sistemare la join
+                inputQueue.add("Create");
                 inputQueue.add(myName);
                 inputQueue.add(myGameName);
+                inputQueue.add(String.valueOf(joining.getLv()));
+                inputQueue.add(String.valueOf(joining.getMaxPlayers()));
             });
         });
         return joinButton;
