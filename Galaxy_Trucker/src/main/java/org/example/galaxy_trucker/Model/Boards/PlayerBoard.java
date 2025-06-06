@@ -1114,8 +1114,8 @@ public class PlayerBoard {
     }
 
     public void updateInfo(){
-        PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,this.numHumans, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien);
-        listener.PBInfoChanged(event);
+//        PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,this.numHumans, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien);
+//        listener.PBInfoChanged(event);
 
     }
 
