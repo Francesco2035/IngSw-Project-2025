@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model.Boards;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Listeners.RewardsListener;
+import org.example.galaxy_trucker.Controller.Messages.PBInfoEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
@@ -24,7 +25,6 @@ public class PlayerBoard {
     private RewardsListener rewardsListener;
 
     private Tile[][] PlayerBoard;
-    private int damage;
     private ArrayList<Goods> BufferGoods;
 
     private HashMap<Integer, ArrayList<IntegerPair>> storedGoods;
@@ -36,18 +36,12 @@ public class PlayerBoard {
     private int totalValue;
 
     private int[][] ValidPlayerBoard;
-    private int exposedConnectors;
-    private int[] shield;
-    private int numHumans = 0;
-    private int EnginePower = 0;
-    private double PlasmaDrillsPower = 0;
-    private int Energy = 0;
+
     private int lv;
 
     private boolean valid;
 
-    private boolean purpleAlien;
-    private boolean brownAlien;
+
     private ArrayList<HousingUnit> connectedHousingUnits;
 
 
@@ -63,12 +57,24 @@ public class PlayerBoard {
     private ArrayList<ShieldGenerator> ShieldGenerators;
     private ArrayList<PowerCenter> PowerCenters;
 
+    private int damage;
+    private int credits;
+    private int exposedConnectors;
+    private int[] shield;
+    private int numHumans = 0;
+    private int EnginePower = 0;
+    private double PlasmaDrillsPower = 0;
+    private int Energy = 0;
+    private boolean purpleAlien;
+    private boolean brownAlien;
+
 
 
     public PlayerBoard(int lv) {
         this.lv = lv;
         this.broken = false;
         this.damage = 0;
+        this.credits = 0;
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
         this.totalValue = 0;
@@ -399,8 +405,9 @@ public class PlayerBoard {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
 
-                if (ValidPlayerBoard[x][y] == 1 && !visited.contains(new IntegerPair(x,y))){
-                    //ValidPlayerBoard[x][y] = -2;
+                if ((ValidPlayerBoard[x][y] == 1 || ValidPlayerBoard[x][y] == -1) && !visited.contains(new IntegerPair(x,y))){
+                    //TODO: capire come fixare per il comando di def
+                    ValidPlayerBoard[x][y] = -2;
                     findOne = true;
                 }
 
@@ -474,6 +481,7 @@ public class PlayerBoard {
         if(Buffer.size() != 0){
             this.damage+=Buffer.size();
             Buffer.clear();
+            updateInfo();
         }
 
         int r = 6;
@@ -557,6 +565,7 @@ public class PlayerBoard {
 
         PlayerBoard[x][y].getComponent().remove(this);
         damage++;
+        updateInfo();
         PlayerBoard[x][y] = new Tile(new SpaceVoid(),NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;
         for(HousingUnit Unit : HousingUnits){
@@ -608,6 +617,7 @@ public class PlayerBoard {
                 }
             }
         }
+        updateInfo();
         updateAttributes(newPlayerBoard.getFirst().getFirst(),newPlayerBoard.getFirst().getSecond());
         broken = false;
         for(HousingUnit Unit : HousingUnits){
@@ -634,6 +644,7 @@ public class PlayerBoard {
         updateBoardAttributes(x,y, visitedPositions);
         updateGloabalAttributes(visitedPositions);
         updateStoredGoods();
+        updateInfo();
 
     }
 
@@ -769,11 +780,13 @@ public class PlayerBoard {
 
     public void setBrownAlien(boolean brownAlien) {
         this.brownAlien = brownAlien;
+        updateInfo();
     }
 
 
     public void setPurpleAlien(boolean purpleAlien) {
         this.purpleAlien = purpleAlien;
+        updateInfo();
     }
 
 
@@ -841,6 +854,7 @@ public class PlayerBoard {
 
     public void setPlasmaDrillsPower(double plasmaDrillsPower) {
         PlasmaDrillsPower += plasmaDrillsPower;
+        updateInfo();
     }
 
 
@@ -851,17 +865,18 @@ public class PlayerBoard {
 
     public void setNumHumans(int numHumans) {
         this.numHumans += numHumans;
+        updateInfo();
     }
 
 
     public int getEnergy() {
-
         return Energy;
     }
 
 
     public void setEnergy(int energy) {
         Energy += energy;
+        updateInfo();
     }
 
 
@@ -1095,6 +1110,12 @@ public class PlayerBoard {
         ///  TODO mettere anche i tasselli che rimangono nel buffer nel damage per adesso non è gestityo :)
         result -= this.damage;
         return result;
+
+    }
+
+    public void updateInfo(){
+        PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,this.numHumans, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien);
+        listener.PBInfoChanged(event);
 
     }
 
