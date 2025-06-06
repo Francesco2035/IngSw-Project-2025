@@ -41,6 +41,8 @@ public interface EventVisitor {
 
     void visit(ConnectionRefusedEvent connectionRefusedEvent);
 
+    void visit(PBInfoEvent pbInfoEvent);
+
 
     //public void visit(GameBoardEvent event);
 }

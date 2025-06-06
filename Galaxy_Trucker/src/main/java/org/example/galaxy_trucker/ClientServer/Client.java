@@ -213,9 +213,14 @@ public class Client implements EventVisitor {
     }
 
     @Override
-    public void visit(ConnectionRefusedEvent connectionRefusedEvent) {
+    public void visit(ConnectionRefusedEvent event) {
         login = false;
-        this.view.exceptionOccurred(new ExceptionEvent(connectionRefusedEvent.message()));
+        this.view.exceptionOccurred(new ExceptionEvent(event.message()));
+    }
+
+    @Override
+    public void visit(PBInfoEvent event) {
+        this.view.updatePBInfo(event);
     }
 
     @Override

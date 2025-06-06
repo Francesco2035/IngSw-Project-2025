@@ -233,6 +233,11 @@ public class TUI implements View {
         onGameUpdate();
     }
 
+    @Override
+    public void updatePBInfo(PBInfoEvent event) {
+
+    }
+
 
     public String[] formatCell(LobbyEvent event) {
         String[] cell = new String[9];

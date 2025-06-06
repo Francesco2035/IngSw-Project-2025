@@ -37,6 +37,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private PhaseEvent phase = null;
     private RewardsEvent rewardsEvent = null;
     private ArrayList<PlayersPBListener> playersPBListeners = new ArrayList<>();
+    private PBInfoEvent pbInfoEvent = null;
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, PrintWriter echoSocket) {
@@ -174,6 +175,12 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     public void playerBoardChanged(TileEvent event) {
         eventMatrix[event.getX()][event.getY()] = event;
         updateOtherPlayers(event);
+        sendEvent(event);
+    }
+
+    @Override
+    public void PBInfoChanged(PBInfoEvent event) {
+        this.pbInfoEvent = event;
         sendEvent(event);
     }
 
