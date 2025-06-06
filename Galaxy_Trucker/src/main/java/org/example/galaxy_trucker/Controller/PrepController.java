@@ -57,6 +57,8 @@ public class PrepController extends Controller implements HourGlassListener {
 
     @Override
     public void onFinish() {
+
+        System.out.println("Hourglass finish ");
         //settiamo player a choosePosition
         //dove è acconsentito un solo tipo di comando che è la Finish Building
         //che setta curPlayer ready true

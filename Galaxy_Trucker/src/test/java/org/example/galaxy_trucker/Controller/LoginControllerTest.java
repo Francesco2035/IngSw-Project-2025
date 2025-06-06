@@ -31,7 +31,7 @@ class LoginControllerTest {
     public void testLoginController() throws IOException {
 
         game = new Game(2, "testLoginController");
-        gc = new GameController(game.getGameID(), game, new GamesHandler(),2,4);
+        gc = new GameController(game.getGameID(), game, new GamesHandler(), game.getLv(),4);
 
         p1 = new Player();
         p1.setId("passos");

@@ -345,7 +345,68 @@ public class GuiRoot implements View {
 
     }
 
-    public void CheckValidityScene(){}
+    public void checkValidityScene(){
+
+        Label text = new Label("Remove Invalid Tiles!");
+        text.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+        ImageView txtBackground = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/all_belt.png")));
+        txtBackground.setFitWidth(600);
+        txtBackground.setFitHeight(100);
+
+        StackPane textPanel = new StackPane(txtBackground, text);
+
+
+        AtomicInteger x = new AtomicInteger();
+        AtomicInteger y = new AtomicInteger();
+        ArrayList<Node> childrenCopy = new ArrayList<>(myBoard.getChildren());
+
+        for(Node node : childrenCopy){
+
+            ImageView tile = (ImageView) node;
+
+            ImageView newTile =new ImageView(tile.getImage());
+            newTile.setFitWidth(70);
+            newTile.setPreserveRatio(true);
+
+            newTile.setOnMouseClicked(e->{
+                x.set(GridPane.getColumnIndex(node));
+                y.set(GridPane.getRowIndex(node));
+                inputQueue.add("RemoveTile " + y.get() + " " + x.get());
+            });
+
+            if(newTile.getImage() != null && newTile.getImage().equals(tilePlaceholder))
+                newTile.setOpacity(0.5);
+
+            Platform.runLater(()->{
+                myBoard.getChildren().remove(node);
+                myBoard.add(newTile,  GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
+            });
+
+        }
+
+        Platform.runLater(()->{
+
+            VBox othersBox = new VBox(20);
+            for(String id : othersBoards.keySet()){
+                othersBox.getChildren().add(othersBoards.get(id));
+            }
+
+            HBox mainBox = new HBox(new VBox(100, myBoard, textPanel), othersBox);
+            mainBox.setPadding(new Insets(150));
+            mainBox.setAlignment(Pos.CENTER);
+            Pane root = new Pane(mainBox);
+
+            mainBox.prefWidthProperty().bind(primaryStage.widthProperty());
+            mainBox.prefHeightProperty().bind(primaryStage.heightProperty());
+
+            contentRoot.getChildren().setAll(root);
+            printer.setCheckValidityScreen(primaryScene);
+        });
+
+
+    }
+
 
 
     public void AddCrewScene(){
@@ -427,7 +488,7 @@ public class GuiRoot implements View {
             }
 
             HBox mainBox = new HBox(new VBox(100, boardBox, textPanel), othersBox);
-            mainBox.setPadding(new Insets(200));
+            mainBox.setPadding(new Insets(150));
             mainBox.setAlignment(Pos.CENTER);
             Pane root = new Pane(mainBox);
 

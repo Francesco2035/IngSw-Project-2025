@@ -355,14 +355,9 @@ public class TCPClient{
             disconnect();
         }
         startThread();
-
-
         System.out.println("Connection started\n");
-
-
         clientLoop();
-
-    }
+        }
 
     private void reconnect() throws IOException {
         connected = true;

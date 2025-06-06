@@ -91,7 +91,7 @@ public class GameBoard {
 
 
     public void StartHourglass() throws RuntimeException{
-
+            System.out.println("Gameboard attempting  to call start hourglass");
         if(this.GameLv == 1){
             throw new IllegalStateException("Cannot use Hourglass in a level 1 game!");
         }
@@ -325,7 +325,7 @@ public class GameBoard {
         return doubled;
     }
 
-    public Card NewCard(){
+    public Card NewCard() {
         CurrentCard = CardStack.PickNewCard();
         for(Player_IntegerPair p : players){
             p.getKey().setCard(CurrentCard);

@@ -11,6 +11,7 @@ public class GuiOut {
     private Scene LobbyScene;
     private Scene GameLobbyScene;
     private Scene buildingScene;
+    private Scene validityScene;
     private Scene addCrewScene;
 
     private Stage primaryStage;
@@ -88,6 +89,17 @@ public class GuiOut {
         Platform.runLater(() -> {
             primaryStage.setTitle("Add Crew");
             primaryStage.setScene(addCrewScene);
+            primaryStage.show();
+        });
+    }
+
+    public void setCheckValidityScreen(Scene scene){
+        this.validityScene= scene;
+    }
+    public void printCheckValidityScreen(){
+        Platform.runLater(() -> {
+            primaryStage.setTitle("Check Validity");
+            primaryStage.setScene(validityScene);
             primaryStage.show();
         });
     }

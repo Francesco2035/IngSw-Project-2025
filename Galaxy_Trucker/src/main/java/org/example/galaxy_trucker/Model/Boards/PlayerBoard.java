@@ -400,7 +400,7 @@ public class PlayerBoard {
             for (int y = 0; y < 10; y++) {
 
                 if (ValidPlayerBoard[x][y] == 1 && !visited.contains(new IntegerPair(x,y))){
-                    ValidPlayerBoard[x][y] = -2;
+                    //ValidPlayerBoard[x][y] = -2;
                     findOne = true;
                 }
 
@@ -913,7 +913,15 @@ public class PlayerBoard {
         for (int i = 0; i < PlayerBoard.length; i++) {
             for (int j = 0; j < PlayerBoard[i].length; j++) {
                 Tile tile = PlayerBoard[i][j];
-                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone(clonedPlayerBoard) : null;
+//                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone(clonedPlayerBoard) : null;
+                if(tile != null) {
+                    Tile t = tile.clone(clonedPlayerBoard);
+                    clonedPlayerBoard.PlayerBoard[i][j] = t;
+                }
+                else
+                    clonedPlayerBoard.PlayerBoard[i][j] = null;
+
+
                 if (tile != null) {
                     clonedPlayerBoard.PlayerBoard[i][j].setY(j);
                     clonedPlayerBoard.PlayerBoard[i][j].setX(i);

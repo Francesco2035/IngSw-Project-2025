@@ -280,7 +280,9 @@ public class GameController  implements ConcurrentCardListener {
         ArrayList<Player> players = game.getGameBoard().getPlayers();
         flightThread = new Thread(() -> {
             System.out.println("PESCO CARTA!");
+
             Card card= game.getGameBoard().NewCard();
+
 
             card.setConcurrentCardListener(this);
             for (String player: VirtualViewMap.keySet()) {
@@ -294,25 +296,27 @@ public class GameController  implements ConcurrentCardListener {
                 e.printStackTrace();
             }
             //SET
-
                     //game.getGameBoard().getPlayers().getFirst()
+            int index = 0;
+
             while (!card.isFinished()) {
 
-                int index = 0;
                 /// il game pesca la carta automaticamente
                 //game.getGameBoard().NewCard();
 
-                while (index < players.size()) {
+                while (index < players.size() && !card.isFinished()) {
                     Player currentPlayer = players.get(index);
+                    //System.out.println("PLAYER: " +currentPlayer + "cristo de dio "+ index);
 
                     //prendi controller
                     //se è disconnesso chiami def action
                     //altrimenti esegui il blocco try
                     Controller cur = ControllerMap.get(currentPlayer.GetID());
-                    if (cur.disconnected==true){ // se è disconnesso chiamo il comando di default
+                    if (cur != null && cur.disconnected){ // se è disconnesso chiamo il comando di default
                         try {
                             cur.DefaultAction(this);
                         } catch (Exception e) {
+                            System.out.println(e.getMessage()+ "cristo de dio");
                             throw new ImpossibleActionException("errore nell'azione di default, che dio ci aiuti");
                         }
                         ///  credo ci vada una thìry ctch ma non la stava lanciando :)
@@ -325,43 +329,54 @@ public class GameController  implements ConcurrentCardListener {
                     }
 
                     else { // se il player  non è disconneso prendo icommand dalla queue
-                        //TODO : aggiungere se detto da cugola timout
 
                         try {
-                            Command cmd = flightQueue.take();
+                            Command cmd = flightQueue.poll();
                             //TODO: notify della carta se è fase concorrenziale
                             //game.getPlayers().get(cmd.getPlayerId()).getmyPlayerBoard().setRewardsListener(VirtualViewMap.get(currentPlayer.GetID()));
-
-                            if(concurrent){
-                                Controller controller = ControllerMap.get(cmd.getPlayerId());
-                                controller.action(cmd, this);
-                            }
-                            else if (cmd.getPlayerId().equals(currentPlayer.GetID())) {
-                                Controller controller = ControllerMap.get(cmd.getPlayerId());
-                                controller.action(cmd, this);
-
-                                ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
-                                if (currentPlayer.GetHasActed()) {
-                                    index++;
+                            if (cmd != null){
+                                if(concurrent){
+                                    Controller controller = ControllerMap.get(cmd.getPlayerId());
+                                    controller.action(cmd, this);
                                 }
-                            } else {
+                                else if (cmd.getPlayerId().equals(currentPlayer.GetID())) {
+                                    Controller controller = ControllerMap.get(cmd.getPlayerId());
+                                    controller.action(cmd, this);
 
-                                flightQueue.offer(cmd);
+                                    ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
+                                //TODO: pietro esplodi
+                                    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>index "+ index);
+                                    if (currentPlayer.GetHasActed()) {
+                                        System.out.println("aggiornmo inpoxadasdophièhnkoiadfshnikodasj");
+                                        index++;
+                                    }
+                                }
+                                else {
+                                    //TODO: non ho capito che minchia fa la offer
+                                    flightQueue.offer(cmd);
+                                }
                             }
 
-                        } catch (InterruptedException e) {
+
+
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage()+ "cristo de dio");
                             break;
                         }
                     }
                 }
 
 
-                //System.out.println("Flight phase complete");
+                System.out.println("PRIMO WHILE FINITO");
+
 
             }
-            Controller ReadySetter;
-            for (Player p : game.getPlayers().values()) {
 
+            System.out.println("USCITO DAL SECONDO WHILE");
+            Controller ReadySetter;
+            System.out.println("players "+ game.getPlayers().size());
+            for (Player p : game.getPlayers().values()) {
+                System.out.println("-------------------------------------------------FORCED");
                 System.out.println(p.GetID()+ " is in this state: "+ p.getPlayerState().getClass());
                 ReadySetter =ControllerMap.get(p.GetID());
                 ReadyCommand readyCommand = new ReadyCommand(game.getID(),p.GetID(),game.getLv(),"Ready",true,"placeholder");
@@ -373,8 +388,9 @@ public class GameController  implements ConcurrentCardListener {
         });
 
         flightThread.start();
+        //THREAD NON FINISCE SEMPLCIMENTE STO CREANDO OGNI VOLTA UNO NUOVO NEL CASO DI CARTA NON SPECIALE
 
-        System.out.println("Thread volo finito");
+
         flightMode = false;
         changeState();
 

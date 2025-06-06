@@ -86,6 +86,7 @@ public class HandleCargoCommand extends Command implements Serializable {
             }
         }
         catch (Exception e){
+            System.out.println("---------------mi è arrivata eccezione");
             playerBoard.setRewards(rewards);
             throw new InvalidInput(e.getMessage());
         }
