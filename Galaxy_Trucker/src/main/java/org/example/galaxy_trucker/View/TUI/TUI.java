@@ -235,7 +235,15 @@ public class TUI implements View {
 
     @Override
     public void updatePBInfo(PBInfoEvent event) {
+        out.setPBInfo(formatPBInfo(event));
+    }
 
+    public String formatPBInfo(PBInfoEvent event) {
+        StringBuilder sb = new StringBuilder();
+
+
+
+        return sb.toString();
     }
 
 

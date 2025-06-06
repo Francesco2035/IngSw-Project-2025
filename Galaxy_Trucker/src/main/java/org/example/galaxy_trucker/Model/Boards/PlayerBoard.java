@@ -405,7 +405,7 @@ public class PlayerBoard {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
 
-                if ((ValidPlayerBoard[x][y] == 1 || ValidPlayerBoard[x][y] == -1) && !visited.contains(new IntegerPair(x,y))){
+                if (ValidPlayerBoard[x][y] == -2 || ((ValidPlayerBoard[x][y] == 1 || ValidPlayerBoard[x][y] == -2) && !visited.contains(new IntegerPair(x,y)))){
                     //TODO: capire come fixare per il comando di def
                     ValidPlayerBoard[x][y] = -2;
                     findOne = true;
