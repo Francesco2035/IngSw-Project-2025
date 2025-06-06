@@ -36,6 +36,7 @@ public class PlayerBoard {
     private int totalValue;
 
     private int[][] ValidPlayerBoard;
+    private int[][] toRemovePB;
 
     private int lv;
 
@@ -96,6 +97,7 @@ public class PlayerBoard {
         this.BufferGoods = new ArrayList<>();
 
         this.ValidPlayerBoard = new int[10][10];
+        this.toRemovePB = new int[10][10];
         this.connectedHousingUnits = new ArrayList<>();
 
 
@@ -388,7 +390,7 @@ public class PlayerBoard {
         if (!t1.checkLegal(t2)){
             System.out.println("INVALID CONNECTION "+ t1.getClass() + " " + t2.getClass());
             valid = false;
-            ValidPlayerBoard[x][y] = -2;
+            toRemovePB[x][y] = -2;
         }
         return t1.checkAdjacent(t2);
     }
@@ -405,9 +407,9 @@ public class PlayerBoard {
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
 
-                if (ValidPlayerBoard[x][y] == -2 || ((ValidPlayerBoard[x][y] == 1 || ValidPlayerBoard[x][y] == -2) && !visited.contains(new IntegerPair(x,y)))){
+                if (ValidPlayerBoard[x][y] == 1 && !visited.contains(new IntegerPair(x,y))){
                     //TODO: capire come fixare per il comando di def
-                    ValidPlayerBoard[x][y] = -2;
+                    toRemovePB[x][y] = -2;
                     findOne = true;
                 }
 
@@ -439,7 +441,7 @@ public class PlayerBoard {
 
             if(!PlayerBoard[x][y].controlDirections(this,x,y)){
                 legal = false;
-                ValidPlayerBoard[x][y] = -2;
+                toRemovePB[x][y] = -2;
             }
         }
         return legal;
@@ -1114,10 +1116,11 @@ public class PlayerBoard {
     }
 
     public void updateInfo(){
-        PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,this.numHumans, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien);
-        listener.PBInfoChanged(event);
+        if (listener != null){
+            PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,this.numHumans, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien);
+            listener.PBInfoChanged(event);
+        }
 
     }
-
 
 }
