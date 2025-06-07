@@ -126,10 +126,12 @@ class GameBoardTest {
         gb.movePlayer("Player1", +25);
         assertEquals("Player1", gb.getPositions()[9].GetID());
         assertNull(gb.getPositions()[6]);
+        gb.checkDoubleLap();
 
         gb.movePlayer("Player3", -26);
         assertEquals("Player3", gb.getPositions()[21].GetID());
         assertNull(gb.getPositions()[20]);
+        gb.checkDoubleLap();
 
     }
 

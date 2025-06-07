@@ -30,7 +30,7 @@ public class BaseStateClient extends PlayerStateClient{
     }
 
     public void showGame(GuiOut out){
-        out.getRoot().buildLobbyGameScreen();
+        out.getRoot().LobbyGameScreen();
         out.printGameLobby();
     }
 
