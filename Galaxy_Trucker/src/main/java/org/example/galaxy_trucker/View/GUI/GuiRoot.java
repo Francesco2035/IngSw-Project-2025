@@ -137,11 +137,15 @@ public class GuiRoot implements View {
         StackPane tileStack;
         Pane crewPane = new Pane();
 
+        System.out.println("Rotazione tassello in "+event.getX() + " " + event.getY() + "--> " + event.getRotation());
+
         ImageView tileImg = new ImageView();
         tileImg.setFitWidth(70);
-        tileImage.setRotate(event.getRotation());
+        tileImg.setRotate(event.getRotation());
         tileImage.setImage(tilePlaceholder);
         tileImage.setOpacity(0.5);
+        tileRotation = 0;
+        tileImage.setRotate(0);
 
         if(event.getId() == 158)
             tileImg.setImage(null);
@@ -163,9 +167,9 @@ public class GuiRoot implements View {
         else{
             tileImg.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg")));
             tileImg.setOpacity(1);
-            tileImg.setRotate(event.getRotation());
 
             if(addcrew){
+
                 tileImg.setFitWidth(70);
                 ImageView crewImg = new ImageView();
                 crewImg.setFitWidth(40);
@@ -258,8 +262,7 @@ public class GuiRoot implements View {
 
     @Override
     public void updateHand(HandEvent event){
-        tileRotation = 0;
-        tileImage.setRotate(0);
+
 
         if(event.getId() == 158) {
             tileImage.setImage(tilePlaceholder);
@@ -270,10 +273,6 @@ public class GuiRoot implements View {
             tileImage.setImage(tile);
             tileImage.setOpacity(1);
         }
-
-//        Platform.runLater(()->{
-//            playerClient.showGame(printer);
-//        });
 
     }
 
@@ -414,10 +413,10 @@ public class GuiRoot implements View {
             ImageView tile = (ImageView) node;
 
             ImageView newTile =new ImageView(tile.getImage());
-            newTile.setFitWidth(70);
-            newTile.setPreserveRatio(true);
+            tile.setFitWidth(70);
+            tile.setPreserveRatio(true);
 
-            newTile.setOnMouseClicked(e->{
+            tile.setOnMouseClicked(e->{
                 x.set(GridPane.getColumnIndex(node));
                 y.set(GridPane.getRowIndex(node));
                 inputQueue.add("RemoveTile " + y.get() + " " + x.get());
@@ -426,10 +425,10 @@ public class GuiRoot implements View {
             if(newTile.getImage() != null && newTile.getImage().equals(tilePlaceholder))
                 newTile.setOpacity(0.5);
 
-            Platform.runLater(()->{
-                myBoard.getChildren().remove(node);
-                myBoard.add(newTile,  GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
-            });
+//            Platform.runLater(()->{
+//                myBoard.getChildren().remove(node);
+//                myBoard.add(newTile,  GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
+//            });
 
         }
 
@@ -505,10 +504,10 @@ public class GuiRoot implements View {
             ImageView tile = (ImageView) node;
 
             ImageView newTile =new ImageView(tile.getImage());
-            newTile.setFitWidth(70);
-            newTile.setPreserveRatio(true);
+            tile.setFitWidth(70);
+            tile.setPreserveRatio(true);
 
-            newTile.setOnMouseClicked(e->{
+            tile.setOnMouseClicked(e->{
                 if(cmdType.get() != null){
                     x.set(GridPane.getColumnIndex(node));
                     y.set(GridPane.getRowIndex(node));
@@ -519,10 +518,10 @@ public class GuiRoot implements View {
             if(newTile.getImage() != null && newTile.getImage().equals(tilePlaceholder))
                 newTile.setOpacity(0.5);
 
-            Platform.runLater(()->{
-               myBoard.getChildren().remove(node);
-               myBoard.add(newTile,  GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
-            });
+//            Platform.runLater(()->{
+//               myBoard.getChildren().remove(node);
+//               myBoard.add(newTile,  GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
+//            });
 
         }
 
