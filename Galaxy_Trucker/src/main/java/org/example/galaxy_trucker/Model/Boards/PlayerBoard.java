@@ -1004,7 +1004,7 @@ public class PlayerBoard {
 
     public void setRewards(ArrayList<Goods> rewards){
         this.Rewards = rewards;
-        if (rewardsListener!= null){
+        if (rewardsListener!= null && rewards != null){
             rewardsListener.rewardsChanged(new RewardsEvent(new ArrayList<>(Rewards)));
             for (Goods g : Rewards){
                 System.out.println("@@@@"+ g.getClass());
