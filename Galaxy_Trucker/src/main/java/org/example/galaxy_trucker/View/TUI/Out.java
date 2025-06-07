@@ -659,5 +659,10 @@ public class Out {
     }
 
     public void setPBInfo(String s) {
+        PBInfo = s;
+    }
+
+    public StringBuilder showPbInfo(){
+        return new StringBuilder(PBInfo);
     }
 }

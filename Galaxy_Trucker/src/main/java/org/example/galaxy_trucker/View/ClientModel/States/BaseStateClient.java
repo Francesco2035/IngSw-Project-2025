@@ -21,7 +21,8 @@ public class BaseStateClient extends PlayerStateClient{
 
         StringBuilder toPrint = new StringBuilder();
         toPrint.append("BaseState\n\n");
-        //toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameboard());
+        toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
         toPrint.append(out.showException());
         out.render(toPrint);

@@ -151,7 +151,6 @@ public class InputReader implements Runnable {
         }
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        //TODO: capire quale sistema operativo è e fare clean di conseguenza
 
         String partialInput = Lreader.getBuffer().toString();
         System.out.print("\033[3J");

@@ -13,6 +13,7 @@ public class DefendingFromSmallClient  extends PlayerStateClient{
         toPrint.append("Defending From Small...\n");
         toPrint.append(out.showPlayers());
         toPrint.append(out.printGameboard());
+        toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
         toPrint.append(out.showCardEffect());
         toPrint.append(out.showException());

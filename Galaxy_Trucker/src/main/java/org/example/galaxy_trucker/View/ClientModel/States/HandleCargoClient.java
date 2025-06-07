@@ -14,6 +14,7 @@ public class HandleCargoClient  extends PlayerStateClient{
         toPrint.append(out.showPlayers());
         toPrint.append(out.printGameboard());
         toPrint.append(out.showRewards());
+        toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
         toPrint.append(out.showException());
         out.render(toPrint);

@@ -33,7 +33,6 @@ public class PlayerBoard {
 
 
     private boolean broken;
-    private int totalValue;
 
     private int[][] ValidPlayerBoard;
     private int[][] toRemovePB;
@@ -68,6 +67,7 @@ public class PlayerBoard {
     private int Energy = 0;
     private boolean purpleAlien;
     private boolean brownAlien;
+    private int totalValue = 0;
 
 
 
@@ -78,7 +78,7 @@ public class PlayerBoard {
         this.credits = 0;
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
-        this.totalValue = 0;
+
 
 
         this.Rewards = new ArrayList<>();
@@ -158,6 +158,7 @@ public class PlayerBoard {
 
     public void setTotalValue(int i){
         this.totalValue += i;
+        updateInfo();
     }
 
     public int getTotalValue(){
@@ -1117,7 +1118,13 @@ public class PlayerBoard {
 
     public void updateInfo(){
         if (listener != null){
-            PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,this.numHumans, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien);
+            int crew = 0;
+            crew += numHumans;
+            if (purpleAlien || brownAlien){
+                crew++;
+            }
+            int engine = 0;
+            PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,crew, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien, this.totalValue);
             listener.PBInfoChanged(event);
         }
 

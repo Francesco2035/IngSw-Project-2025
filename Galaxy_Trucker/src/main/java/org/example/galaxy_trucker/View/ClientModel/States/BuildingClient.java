@@ -25,6 +25,7 @@ public class BuildingClient  extends PlayerStateClient{
             toPrint.append(out.printHand());
             toPrint.append(out.showCovered());
             toPrint.append(out.showUncoveredTiles());
+            toPrint.append(out.showPbInfo());
             toPrint.append(out.printBoard());
             toPrint.append(out.showException());
             out.render(toPrint);

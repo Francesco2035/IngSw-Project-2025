@@ -11,6 +11,7 @@ import java.util.Comparator;
 public class StorageCompartment extends Storage{
 
     private ArrayList<Goods> goods;
+    private PlayerBoard playerBoard;
 
 
     private void orderGoods() {
@@ -28,6 +29,7 @@ public class StorageCompartment extends Storage{
         }
         Goods good = goods.remove(i);
         tile.sendUpdates(goods,0, false, false, 0);
+        playerBoard.setTotalValue(-good.getValue());
         return good;
 
     }
@@ -44,6 +46,7 @@ public class StorageCompartment extends Storage{
             throw new InvalidInput("StorageCompartment cannot contain special Goods");
         }
         goods.add(good);
+        playerBoard.setTotalValue(good.getValue());
         tile.sendUpdates(goods,0, false, false, 0);
 
     }
@@ -51,6 +54,7 @@ public class StorageCompartment extends Storage{
 
     @Override
     public void insert(PlayerBoard playerBoard, int x, int y) {
+        this.playerBoard = playerBoard;
         playerBoard.getStorages().add(this);
         if (goods == null)
             goods = new ArrayList<>();

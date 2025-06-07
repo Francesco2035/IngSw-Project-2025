@@ -235,12 +235,28 @@ public class TUI implements View {
 
     @Override
     public void updatePBInfo(PBInfoEvent event) {
-        out.setPBInfo(formatPBInfo(event));
+        try{
+            out.setPBInfo(formatPBInfo(event));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public String formatPBInfo(PBInfoEvent event) {
         StringBuilder sb = new StringBuilder();
+        sb.append(ASCII_ART.compose("            ",
+                ASCII_ART.addNumber(ASCII_ART.credits,String.valueOf(event.getCredits())),
+                ASCII_ART.addNumber(ASCII_ART.cargoValue,String.valueOf(event.getTotValue())),
+                ASCII_ART.addNumber(ASCII_ART.exposedConnectors,String.valueOf(event.getExposedConnectors())),
+                ASCII_ART.addNumber(ASCII_ART.damage,String.valueOf(event.getDamage()))
+                        ));
 
+        sb.append(ASCII_ART.compose("          ",
+                ASCII_ART.addNumber(ASCII_ART.crew,String.valueOf(event.getNumHumans())),
+                ASCII_ART.addNumber(ASCII_ART.enginePower,String.valueOf(event.getEnginePower())),
+                ASCII_ART.addNumber(ASCII_ART.plasmDrillPower,String.valueOf(event.getPlasmaDrillsPower()))
+        ));
 
 
         return sb.toString();
