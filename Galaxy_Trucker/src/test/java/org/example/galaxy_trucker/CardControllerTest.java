@@ -122,7 +122,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testAbandonedStationCard() throws IOException {
+    public void testAbandonedStationCard() throws IOException, InterruptedException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();

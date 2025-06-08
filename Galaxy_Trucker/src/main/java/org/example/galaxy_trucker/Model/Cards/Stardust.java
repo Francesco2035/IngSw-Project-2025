@@ -9,6 +9,9 @@ import org.example.galaxy_trucker.Model.PlayerStates.ReadCardState;
 import java.util.ArrayList;
 
 public class Stardust extends Card {
+
+    private  ArrayList<Player> losers;
+
     public Stardust(int level, GameBoard board){
         super(level, 0 ,board);
     }
@@ -53,6 +56,21 @@ public class Stardust extends Card {
             PlayerList.get(i).setState(new BaseState());
 
         }
+
+        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+
+        for(Player p: getBoard().getPlayers()){
+            if(p.getmyPlayerBoard().getNumHumans()==0){
+                losers.remove(p);
+                losers.add(p);
+            }
+        }
+
+        for(Player p: losers){
+            getBoard().abandonRace(p);
+        }
+
         this.setFinished(true);
     }
 

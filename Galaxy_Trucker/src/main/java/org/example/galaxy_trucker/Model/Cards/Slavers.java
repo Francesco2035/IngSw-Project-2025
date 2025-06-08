@@ -24,6 +24,7 @@ public class Slavers extends Card{
     private boolean defeated;
     private double currentpower;
     private  int energyUsage;
+    ArrayList<Player> losers;
 
     // conviene creare una classe che lista gli attacchi o in qualche modo chiama solo una volta
     //il player da attaccare cambia Attack
@@ -130,6 +131,12 @@ public class Slavers extends Card{
             System.out.println("defeated");
         }
         else if(this.currentpower<this.getRequirement()){
+            if(this.currentPlayer.getmyPlayerBoard().getNumHumans()<this.Punishment){ // dovrebbe bastare a evitare il caso in cui uno è forzato ad uccidere più umani di quanti de abbia
+                losers.add(currentPlayer);
+                this.updateSates();
+                return;
+            }
+
             this.setDefaultPunishment(this.Punishment);
             this.currentPlayer.setState(new Killing());
             //this.currentPlayer.setInputHandler(new Killing(this));
@@ -194,6 +201,21 @@ public class Slavers extends Card{
             PlayerList.get(i).setState(new BaseState());
 
         }
+
+        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+
+        for(Player p: getBoard().getPlayers()){
+            if(p.getmyPlayerBoard().getNumHumans()==0){
+                losers.remove(p);
+                losers.add(p);
+            }
+        }
+
+        for(Player p: losers){
+            getBoard().abandonRace(p);
+        }
+
         System.out.println("card finished");
         this.setFinished(true);
     }

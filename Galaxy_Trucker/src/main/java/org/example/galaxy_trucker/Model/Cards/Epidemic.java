@@ -17,7 +17,8 @@ import java.util.ArrayList;
 public class Epidemic extends Card {
     private ArrayList<HousingUnit> infected;
 
-    Player currentPlayer;
+    private Player currentPlayer;
+    private ArrayList<Player> losers;
 
 
 
@@ -85,6 +86,23 @@ public class Epidemic extends Card {
 
         }
         System.out.println("card finished\n");
+
+        /// souldn't be possible
+        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+
+        for(Player p: getBoard().getPlayers()){
+            if(p.getmyPlayerBoard().getNumHumans()==0){
+                losers.remove(p);
+                losers.add(p);
+            }
+        }
+
+        for(Player p: losers){
+            getBoard().abandonRace(p);
+        }
+
+
         this.setFinished(true);
     }
 
