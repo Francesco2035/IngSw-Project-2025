@@ -42,13 +42,14 @@ public class AbandonedShip extends Card{
     }
 
     @Override
-    public void CardEffect(){
+    public void CardEffect() throws InterruptedException {
 
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
             p.setState(new Waiting());
         }
+        Thread.sleep(3000);
         this.updateSates();
     }
     @Override

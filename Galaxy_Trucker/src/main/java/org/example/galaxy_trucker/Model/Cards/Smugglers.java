@@ -207,9 +207,6 @@ public class Smugglers extends Card{
                 currentPlayer.setState(new ConsumingEnergy()); /// se il player va in consuming energy e poi si disconnette ma non ha abbastanza energie  sei fottuto
             /// non dovrebbe succedere perche prendo il minimo tra i due ma non si sa mai :)
             }
-
-
-
                 ///manca il loseCargo lose cargo semplicemente lancia
 
         }

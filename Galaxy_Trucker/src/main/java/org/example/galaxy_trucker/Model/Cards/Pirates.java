@@ -356,7 +356,7 @@ public class Pirates extends Card{
     }
 
     @Override
-    public void DefendFromSmall(IntegerPair energy, Player player){
+    public void DefendFromSmall(IntegerPair energy, Player player) throws InterruptedException {
         PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if (energy!=null){
@@ -376,9 +376,14 @@ public class Pirates extends Card{
         else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
             currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
+            this.sendRandomEffect(player.GetID(),new RandomCardEffectEvent("your ship got destroyed in " +hit.getFirst()+" "+hit.getSecond()));
+            player.setState(new Waiting());
+            Thread.sleep(1000);
             if (currentBoard.getBroken()){
                 System.out.println("rottura nave");
                 this.currentPlayer.setState(new HandleDestruction());
+                this.sendRandomEffect(player.GetID(),new RandomCardEffectEvent("your ship got broken into parts, select a chunk to keep"));
+
                 return;
 
             }

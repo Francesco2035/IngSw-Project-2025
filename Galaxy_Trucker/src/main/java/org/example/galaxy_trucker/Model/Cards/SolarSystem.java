@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.RandomCardEffectEvent;
 import org.example.galaxy_trucker.Exceptions.WrongPlanetExeption;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -18,6 +19,7 @@ public class SolarSystem extends Card {
     private  Player currentPlayer;
     private int order;
     private int done;
+    private  String message;
 
 
 
@@ -40,6 +42,7 @@ public class SolarSystem extends Card {
             System.out.println(p.GetID());
             p.setState(new Waiting());
         }
+        this.message=" ";
         this.updateSates();
     }
 
@@ -56,6 +59,7 @@ public class SolarSystem extends Card {
                 PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
                 this.currentPlayer.setState(new ChoosingPlanet());
+                this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent(message));
                 System.out.println(this.currentPlayer.GetID() + " : "+ this.currentPlayer.getPlayerState());
                 //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
 
@@ -111,6 +115,7 @@ public class SolarSystem extends Card {
                 //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
             } else {
                 this.planets.get(planet).setOccupied(this.currentPlayer);
+                message=message+currentPlayer.GetID()+"has chosen planet number "+planet+"\n";
                 this.updateSates();
             }
         }

@@ -353,13 +353,12 @@ public class GameBoard {
         Player playah = pair.getKey();
         int finalScore = playah.finishRace(false);
         //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
-        // todo aggiungere una classifica?
-
-
         //--> ho fatto metodo finishGame per mettere in classifica anche quelli che vincono alla fine
         //-palu
         scoreboard.add(new Player_IntegerPair(playah, finalScore));
 
+
+        /// controllare che anche lato controller il player che abbandona smetta di esistere
         players.remove(pair);
     }
 
