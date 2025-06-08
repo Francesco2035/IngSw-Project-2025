@@ -143,10 +143,11 @@ public class CommandInterpreter {
                 if (strings.length != 4) {
                     throw new IllegalArgumentException("Comando Theft richiede 3 argomenti: x1, y1, pos1");
                 }
+                title = "TheftCommand";
                 x1 = Integer.parseInt(strings[1]);
                 y1 = Integer.parseInt(strings[2]);
                 position1= Integer.parseInt(strings[3]);
-                return new TheftCommand(position1,new IntegerPair(x1,y1), gameId, playerId,lv, "TheftCommand",token);
+                return new TheftCommand(position1,new IntegerPair(x1,y1), gameId, playerId,lv,title,token);
             }
             case "GETREWARD":{
                 if (strings.length != 5) {

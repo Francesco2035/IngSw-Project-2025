@@ -5,12 +5,18 @@ import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Commands.HandleCargoCommand;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Game;
+import org.example.galaxy_trucker.Model.Goods.BLUE;
+import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.Goods.RED;
+import org.example.galaxy_trucker.Model.Goods.YELLOW;
+import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.HandleCargo;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,11 +57,33 @@ class FlightControllerTest {
 
         p1.setMyPlance(TestSetupHelper.createInitializedBoard1());
 
+        ArrayList<Goods> goodsList = new ArrayList<>();
+        goodsList.add(new BLUE());
+        goodsList.add(new YELLOW());
+        goodsList.add(new RED());
+        goodsList.add(new RED());
 
         p1.setState(new HandleCargo());
-//        c1.action(new HandleCargoCommand());
+        p1.getmyPlayerBoard().setRewards(goodsList);
 
 
+        c1.action(new HandleCargoCommand(0, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+        c1.action(new HandleCargoCommand(2, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+        c1.action(new HandleCargoCommand(1, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+        c1.action(new HandleCargoCommand(0, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(-1, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(6, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(10, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(-9, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+
+        c1.action(new HandleCargoCommand(0, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+        c1.action(new HandleCargoCommand(2, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+        c1.action(new HandleCargoCommand(1, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(0, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(-1, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(6, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(10, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(-9, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
 
 
 

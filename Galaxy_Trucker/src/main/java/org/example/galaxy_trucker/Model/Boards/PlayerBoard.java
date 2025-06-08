@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model.Boards;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Listeners.RewardsListener;
+import org.example.galaxy_trucker.Controller.Messages.PBInfoEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
@@ -24,7 +25,6 @@ public class PlayerBoard {
     private RewardsListener rewardsListener;
 
     private Tile[][] PlayerBoard;
-    private int damage;
     private ArrayList<Goods> BufferGoods;
 
     private HashMap<Integer, ArrayList<IntegerPair>> storedGoods;
@@ -33,21 +33,15 @@ public class PlayerBoard {
 
 
     private boolean broken;
-    private int totalValue;
 
     private int[][] ValidPlayerBoard;
-    private int exposedConnectors;
-    private int[] shield;
-    private int numHumans = 0;
-    private int EnginePower = 0;
-    private double PlasmaDrillsPower = 0;
-    private int Energy = 0;
+    private int[][] toRemovePB;
+
     private int lv;
 
     private boolean valid;
 
-    private boolean purpleAlien;
-    private boolean brownAlien;
+
     private ArrayList<HousingUnit> connectedHousingUnits;
 
 
@@ -63,15 +57,28 @@ public class PlayerBoard {
     private ArrayList<ShieldGenerator> ShieldGenerators;
     private ArrayList<PowerCenter> PowerCenters;
 
+    private int damage;
+    private int credits;
+    private int exposedConnectors;
+    private int[] shield;
+    private int numHumans = 0;
+    private int EnginePower = 0;
+    private double PlasmaDrillsPower = 0;
+    private int Energy = 0;
+    private boolean purpleAlien;
+    private boolean brownAlien;
+    private int totalValue = 0;
+
 
 
     public PlayerBoard(int lv) {
         this.lv = lv;
         this.broken = false;
         this.damage = 0;
+        this.credits = 0;
         this.shield = new int[4];
         this.Buffer = new ArrayList<>();
-        this.totalValue = 0;
+
 
 
         this.Rewards = new ArrayList<>();
@@ -90,6 +97,7 @@ public class PlayerBoard {
         this.BufferGoods = new ArrayList<>();
 
         this.ValidPlayerBoard = new int[10][10];
+        this.toRemovePB = new int[10][10];
         this.connectedHousingUnits = new ArrayList<>();
 
 
@@ -150,6 +158,7 @@ public class PlayerBoard {
 
     public void setTotalValue(int i){
         this.totalValue += i;
+        updateInfo();
     }
 
     public int getTotalValue(){
@@ -382,7 +391,7 @@ public class PlayerBoard {
         if (!t1.checkLegal(t2)){
             System.out.println("INVALID CONNECTION "+ t1.getClass() + " " + t2.getClass());
             valid = false;
-            ValidPlayerBoard[x][y] = -2;
+            toRemovePB[x][y] = -2;
         }
         return t1.checkAdjacent(t2);
     }
@@ -400,7 +409,8 @@ public class PlayerBoard {
             for (int y = 0; y < 10; y++) {
 
                 if (ValidPlayerBoard[x][y] == 1 && !visited.contains(new IntegerPair(x,y))){
-                    ValidPlayerBoard[x][y] = -2;
+                    //TODO: capire come fixare per il comando di def
+                    toRemovePB[x][y] = -2;
                     findOne = true;
                 }
 
@@ -432,7 +442,7 @@ public class PlayerBoard {
 
             if(!PlayerBoard[x][y].controlDirections(this,x,y)){
                 legal = false;
-                ValidPlayerBoard[x][y] = -2;
+                toRemovePB[x][y] = -2;
             }
         }
         return legal;
@@ -474,6 +484,7 @@ public class PlayerBoard {
         if(Buffer.size() != 0){
             this.damage+=Buffer.size();
             Buffer.clear();
+            updateInfo();
         }
 
         int r = 6;
@@ -557,6 +568,7 @@ public class PlayerBoard {
 
         PlayerBoard[x][y].getComponent().remove(this);
         damage++;
+        updateInfo();
         PlayerBoard[x][y] = new Tile(new SpaceVoid(),NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;
         for(HousingUnit Unit : HousingUnits){
@@ -608,6 +620,7 @@ public class PlayerBoard {
                 }
             }
         }
+        updateInfo();
         updateAttributes(newPlayerBoard.getFirst().getFirst(),newPlayerBoard.getFirst().getSecond());
         broken = false;
         for(HousingUnit Unit : HousingUnits){
@@ -634,6 +647,7 @@ public class PlayerBoard {
         updateBoardAttributes(x,y, visitedPositions);
         updateGloabalAttributes(visitedPositions);
         updateStoredGoods();
+        updateInfo();
 
     }
 
@@ -769,11 +783,13 @@ public class PlayerBoard {
 
     public void setBrownAlien(boolean brownAlien) {
         this.brownAlien = brownAlien;
+        updateInfo();
     }
 
 
     public void setPurpleAlien(boolean purpleAlien) {
         this.purpleAlien = purpleAlien;
+        updateInfo();
     }
 
 
@@ -841,6 +857,7 @@ public class PlayerBoard {
 
     public void setPlasmaDrillsPower(double plasmaDrillsPower) {
         PlasmaDrillsPower += plasmaDrillsPower;
+        updateInfo();
     }
 
 
@@ -851,17 +868,18 @@ public class PlayerBoard {
 
     public void setNumHumans(int numHumans) {
         this.numHumans += numHumans;
+        updateInfo();
     }
 
 
     public int getEnergy() {
-
         return Energy;
     }
 
 
     public void setEnergy(int energy) {
         Energy += energy;
+        updateInfo();
     }
 
 
@@ -913,7 +931,15 @@ public class PlayerBoard {
         for (int i = 0; i < PlayerBoard.length; i++) {
             for (int j = 0; j < PlayerBoard[i].length; j++) {
                 Tile tile = PlayerBoard[i][j];
-                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone(clonedPlayerBoard) : null;
+//                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone(clonedPlayerBoard) : null;
+                if(tile != null) {
+                    Tile t = tile.clone(clonedPlayerBoard);
+                    clonedPlayerBoard.PlayerBoard[i][j] = t;
+                }
+                else
+                    clonedPlayerBoard.PlayerBoard[i][j] = null;
+
+
                 if (tile != null) {
                     clonedPlayerBoard.PlayerBoard[i][j].setY(j);
                     clonedPlayerBoard.PlayerBoard[i][j].setX(i);
@@ -978,7 +1004,7 @@ public class PlayerBoard {
 
     public void setRewards(ArrayList<Goods> rewards){
         this.Rewards = rewards;
-        if (rewardsListener!= null){
+        if (rewardsListener!= null && rewards != null){
             rewardsListener.rewardsChanged(new RewardsEvent(new ArrayList<>(Rewards)));
             for (Goods g : Rewards){
                 System.out.println("@@@@"+ g.getClass());
@@ -1090,5 +1116,18 @@ public class PlayerBoard {
 
     }
 
+    public void updateInfo(){
+        if (listener != null){
+            int crew = 0;
+            crew += numHumans;
+            if (purpleAlien || brownAlien){
+                crew++;
+            }
+            int engine = 0;
+            PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,crew, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien, this.totalValue);
+            listener.PBInfoChanged(event);
+        }
+
+    }
 
 }

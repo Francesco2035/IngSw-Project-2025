@@ -58,4 +58,6 @@ public interface View {
     void refresh();
 
     void effectCard(RandomCardEffectEvent event);
+
+    void updatePBInfo(PBInfoEvent event);
 }

@@ -636,6 +636,282 @@ public class ASCII_ART {
                     "\n";
 
 
+    public static String[] damage =
+                    {"                              ",
+                    "                              " ,
+                    "░░░█▀▄░█▀█░█▄█░█▀█░█▀▀░█▀▀░░░░" ,
+                    "░░░█░█░█▀█░█░█░█▀█░█░█░█▀▀░░░░" ,
+                    "░░░▀▀░░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░░░" ,
+                    "                              "};
+
+    public static String[] cargoValue = {
+                "                          " ,
+                "                          " ,
+                "░░░█▀▀░█▀█░█▀▄░█▀▀░█▀█░░░░" ,
+                "░░░█░░░█▀█░█▀▄░█░█░█░█░░░░" ,
+                "░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░░░" ,
+                "                          "
+    };
+
+    public static String[] credits  =
+                    {"                                  " ,
+                    "                                  " ,
+                    "░░░█▀▀░█▀▄░█▀▀░█▀▄░▀█▀░▀█▀░█▀▀░░░░" ,
+                    "░░░█░░░█▀▄░█▀▀░█░█░░█░░░█░░▀▀█░░░░" ,
+                    "░░░▀▀▀░▀░▀░▀▀▀░▀▀░░▀▀▀░░▀░░▀▀▀░░░░" ,
+                    "                                  "};
+
+    public static String[] exposedConnectors =
+                    {"                                                                            " ,
+                    "                                                                            " ,
+                    "░░░█▀▀░█░█░█▀█░█▀█░█▀▀░█▀▀░█▀▄░░░█▀▀░█▀█░█▀█░█▀█░█▀▀░█▀▀░▀█▀░█▀█░█▀▄░█▀▀░░░░" ,
+                    "░░░█▀▀░▄▀▄░█▀▀░█░█░▀▀█░█▀▀░█░█░░░█░░░█░█░█░█░█░█░█▀▀░█░░░░█░░█░█░█▀▄░▀▀█░░░░" ,
+                    "░░░▀▀▀░▀░▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀░░░░▀▀▀░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░▀░░▀▀▀░▀░▀░▀▀▀░░░░" ,
+                    "                                                                            "};
+
+    public static String[] crew  =
+                    {"                      " ,
+                    "                      " ,
+                    "░░░█▀▀░█▀▄░█▀▀░█░█░░░░" ,
+                    "░░░█░░░█▀▄░█▀▀░█▄█░░░░" ,
+                    "░░░▀▀▀░▀░▀░▀▀▀░▀░▀░░░░" ,
+                    "                      "};
+
+    public static String[] enginePower =
+                   {"                                                        " ,
+                    "                                                        " ,
+                    "░░░█▀▀░█▀█░█▀▀░▀█▀░█▀█░█▀▀░█▀▀░░░█▀█░█▀█░█░█░█▀▀░█▀▄░░░░" ,
+                    "░░░█▀▀░█░█░█░█░░█░░█░█░█▀▀░▀▀█░░░█▀▀░█░█░█▄█░█▀▀░█▀▄░░░░" ,
+                    "░░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░░░▀░░░▀▀▀░▀░▀░▀▀▀░▀░▀░░░░" ,
+                    "                                                        "};
+
+    public static String[] plasmDrillPower =
+            {
+                            "                                                    " ,
+                            "                                                    " ,
+                            "░░░█▀▄░█▀▄░▀█▀░█░░░█░░░█▀▀░░░█▀█░█▀█░█░█░█▀▀░█▀▄░░░░",
+                            "░░░█░█░█▀▄░░█░░█░░░█░░░▀▀█░░░█▀▀░█░█░█▄█░█▀▀░█▀▄░░░░",
+                            "░░░▀▀░░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░░░▀░░░▀▀▀░▀░▀░▀▀▀░▀░▀░░░░",
+                            "                                                    "
+            };
+
+    public static String[] batteries  =
+            {
+                            "                                          ",
+                            "                                          ",
+                            "░░░█▀▄░█▀█░▀█▀░▀█▀░█▀▀░█▀▄░▀█▀░█▀▀░█▀▀░░░░",
+                            "░░░█▀▄░█▀█░░█░░░█░░█▀▀░█▀▄░░█░░█▀▀░▀▀█░░░░",
+                            "░░░▀▀░░▀░▀░░▀░░░▀░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░░░░",
+                            "                                          "
+            };
+
+    public static String[] equals = {
+                    "          " ,
+                    "          " ,
+                    "░░░░░░░░░░" ,
+                    "░░░▀▀▀░░░░" ,
+                    "░░░▀▀▀░░░░" ,
+                    "          "
+    };
+
+    public static String[] point = {
+                    "   " ,
+                    "   " ,
+                    "░░░" ,
+                    "░░░" ,
+                    "░▀░" ,
+                    "   "
+    };
+
+    public static String[] zero = {
+                    "          " ,
+                    "          " ,
+                    "░░░▄▀▄░░░░" ,
+                    "░░░█ █░░░░" ,
+                    "░░░░▀░░░░░" ,
+                    "          "
+    };
+
+    public static String[] one = {
+                    "          " ,
+                    "          " ,
+                    "░░░▀█░░░░░" ,
+                    "░░░░█░░░░░" ,
+                    "░░░▀▀▀░░░░" ,
+                    "          "
+    };
+
+    public static String[] two = {
+                    "          " ,
+                    "          " ,
+                    "░░░▀▀▄░░░░" ,
+                    "░░░▄▀░░░░░" ,
+                    "░░░▀▀▀░░░░" ,
+                    "          "
+    };
+
+    public static String[] three = {
+                    "          " ,
+                    "          " ,
+                    "░░░▀▀█░░░░" ,
+                    "░░░░▀▄░░░░" ,
+                    "░░░▀▀░░░░░" ,
+                    "          "
+    };
+
+    public static String[] four = {
+                    "          " ,
+                    "          " ,
+                    "░░░█░█░░░░" ,
+                    "░░░░▀█░░░░" ,
+                    "░░░░░▀░░░░" ,
+                    "          "
+    };
+
+    public static String[] five = {
+                    "          " ,
+                    "          " ,
+                    "░░░█▀▀░░░░" ,
+                    "░░░▀▀▄░░░░" ,
+                    "░░░▀▀░░░░░" ,
+                    "          "
+    };
+
+    public static String[] six = {
+                    "          " +
+                    "          " +
+                    "░░░▄▀▀░░░░" +
+                    "░░░█▀▄░░░░" +
+                    "░░░░▀░░░░░" +
+                    "          "
+    };
+
+    public static String[] seven = {
+                    "          " ,
+                    "          " ,
+                    "░░░▀▀█░░░░" ,
+                    "░░░▄▀░░░░░" ,
+                    "░░░▀░░░░░░" ,
+                    "          "
+    };
+
+    public static String[] eight = {
+                    "          " ,
+                    "          " ,
+                    "░░░▄▀▄░░░░" ,
+                    "░░░▄▀▄░░░░" ,
+                    "░░░░▀░░░░░" ,
+                    "          "
+    };
+
+    public static String[] nine = {
+                    "          " +
+                    "          " +
+                    "░░░▄▀▄░░░░" +
+                    "░░░░▀█░░░░" +
+                    "░░░▀▀░░░░░" +
+                    "          "
+    };
+
+    public static String[] addNumber(String[] s, String n) {
+
+        int height = equals.length;
+        String[] normalized = new String[height];
+        for (int i = 0; i < height; i++) {
+            normalized[i] = (i < s.length) ? s[i] : "";
+        }
+        s = normalized;
+
+        String[] result = new String[height];
+
+        StringBuilder[] builders = new StringBuilder[height];
+        for (int i = 0; i < height; ++i) {
+            builders[i] = new StringBuilder();
+            builders[i].append(s[i]);
+            builders[i].append(equals[i]);
+        }
+        for (char digit : n.toCharArray()) {
+            switch (digit) {
+                case '.': {for (int i = 0; i < point.length; i ++){
+                    builders[i].append(point[i]);
+                }
+                    break;
+                }
+
+                case '0': {for (int i = 0; i < zero.length; i ++){
+                    builders[i].append(zero[i]);
+                }
+                    break;
+                }
+                case '1': {for (int i = 0; i < one.length; i ++){
+                    builders[i].append(one[i]);
+                }
+                    break;
+                }
+                case '2': {for (int i = 0; i < two.length; i ++){
+                    builders[i].append(two[i]);
+                }
+                    break;
+                }
+                case '3': {for (int i = 0; i < three.length; i ++){
+                    builders[i].append(three[i]);
+                }
+                    break;
+                }
+                case '4': {for (int i = 0; i < four.length; i ++){
+                    builders[i].append(four[i]);
+                }
+                    break;
+                }
+                case '5': {for (int i = 0; i < five.length; i ++){
+                    builders[i].append(five[i]);
+                }
+                    break;
+                }
+                case '6': {for (int i = 0; i < six.length; i ++){
+                    builders[i].append(six[i]);
+                }
+                    break;
+                }
+                case '7': {for (int i = 0; i < seven.length; i ++){
+                    builders[i].append(seven[i]);
+                }
+                    break;
+                }
+                case '8': {for (int i = 0; i < eight.length; i ++){
+                    builders[i].append(eight[i]);
+                }
+                    break;
+                }
+                case '9': {for (int i = 0; i < nine.length; i ++){
+                    builders[i].append(nine[i]);
+                }
+                    break;
+                }
+                default: throw new IllegalArgumentException("Carattere non supportato: " + digit);
+            }
+        }
+
+
+        for (int i = 0; i < s.length; ++i) {
+            result[i] = builders[i].toString();
+        }
+
+        return result;
+    }
+
+    public static StringBuilder compose(String s, String[]... toCompose){
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < toCompose[1].length; ++i) {
+            for (String[] c : toCompose){
+                result.append(c[i]);
+                result.append(s);
+            }
+            result.append("\n");
+        }
+
+        return result;
+    }
 
 
 }

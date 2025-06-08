@@ -308,10 +308,25 @@ public class GameBoard {
 
 
     /// TODO metodo check doppiaggio da chiamare nel controller o nelle carte
+    //questa ti restituisce la lista di players che sono stati doppiati in un certo istante (idealmente a fine carta)
+
+    //il calcolo è giusto: parola di Pietro
+    public ArrayList<Player> checkDoubleLap(){
+        ArrayList<Player> doubled = new ArrayList<>();
+
+        for(Player_IntegerPair p1 : players)
+            for(Player_IntegerPair p2 : players){
+                if(!p1.equals(p2) && p2.getValue() - p1.getValue() >= nPositions){
+                    if(!doubled.contains(p1.getKey()))
+                        doubled.add(p1.getKey());
+                }
+            }
+
+        return doubled;
+    }
 
     public Card NewCard() {
         CurrentCard = CardStack.PickNewCard();
-
         for(Player_IntegerPair p : players){
             p.getKey().setCard(CurrentCard);
         }

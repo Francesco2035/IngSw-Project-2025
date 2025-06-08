@@ -13,6 +13,7 @@ public class HandleTheftClient  extends PlayerStateClient{
         toPrint.append(out.showPlayers());
         toPrint.append(out.printGameboard());
         toPrint.append(out.showCard());
+        toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
         toPrint.append(out.showException());
         out.render(toPrint);

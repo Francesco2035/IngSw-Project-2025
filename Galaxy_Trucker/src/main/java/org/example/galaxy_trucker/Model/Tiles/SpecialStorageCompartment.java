@@ -12,6 +12,7 @@ import java.util.Comparator;
 public class SpecialStorageCompartment extends Storage{
 
     private ArrayList<Goods> goods;
+    PlayerBoard playerBoard;
 
 
 
@@ -38,6 +39,7 @@ public class SpecialStorageCompartment extends Storage{
             //throw new InvalidInput("Cannot remove a good because it is out of bounds");
         }
         Goods good = goods.remove(position);
+        playerBoard.setTotalValue(-good.getValue());
         tile.sendUpdates(goods,0, false, false, 0);
         return good;
 
@@ -53,6 +55,7 @@ public class SpecialStorageCompartment extends Storage{
             throw new InvalidInput("StorageCompartment is full!");
         }
         goods.add(good);
+        playerBoard.setTotalValue(good.getValue());
         tile.sendUpdates(goods,0, false, false, 0);
 
     }
@@ -60,8 +63,10 @@ public class SpecialStorageCompartment extends Storage{
 
     @Override
     public void insert(PlayerBoard playerBoard, int x, int y) {
+        this.playerBoard = playerBoard;
         playerBoard.getStorages().add(this);
-        goods = new ArrayList<>();
+        if (goods == null)
+            goods = new ArrayList<>();
         tile.sendUpdates(goods,0, false, false, 0);
 
     }

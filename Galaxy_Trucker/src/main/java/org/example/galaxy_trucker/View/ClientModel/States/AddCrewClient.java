@@ -17,6 +17,7 @@ public class AddCrewClient  extends PlayerStateClient{
         toPrint.append("AddCrew\n\n");
         toPrint.append(out.showPlayers());
         toPrint.append(out.printGameboard());
+        toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
         toPrint.append(out.showException());
         out.render(toPrint);
@@ -24,7 +25,7 @@ public class AddCrewClient  extends PlayerStateClient{
     }
 
     public void showGame(GuiOut out){
-        out.getRoot().buildAddCrewScreen();
+        out.getRoot().AddCrewScene();
         out.printAddCrewScreen();
     }
     @Override

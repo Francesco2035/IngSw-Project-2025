@@ -41,7 +41,10 @@ public class HandleCargoCommand extends Command implements Serializable {
 
         PlayerBoard playerBoard = player.getmyPlayerBoard();
         Goods temp;
-        ArrayList<Goods> rewards = new ArrayList<>(playerBoard.getRewards());
+        ArrayList<Goods> rewards = null;
+        if (playerBoard.getRewards() != null){
+            rewards = new ArrayList<>(playerBoard.getRewards());
+        }
         try{
             switch (title) {
                 //TODO:getfromorewards non vuole nessun index per aggiungere, si può togliere nel chill
@@ -65,6 +68,9 @@ public class HandleCargoCommand extends Command implements Serializable {
                     break;
                 }
                 case "Switch":{
+                    if (coordinate.getFirst() == coordinate2.getFirst() && coordinate.getSecond() == coordinate2.getSecond()) {
+                        throw new InvalidInput("You can't switch viva il cringe");
+                    }
                     GetGoodAction action = new GetGoodAction(position,playerBoard,coordinate.getFirst(),coordinate.getSecond());
                     playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()
                             , action, player.getPlayerState());
@@ -89,6 +95,7 @@ public class HandleCargoCommand extends Command implements Serializable {
         }
         catch (Exception e){
             System.out.println("---------------mi è arrivata eccezione");
+            e.printStackTrace();
             playerBoard.setRewards(rewards);
             throw new InvalidInput(e.getMessage());
         }
