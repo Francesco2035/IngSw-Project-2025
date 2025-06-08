@@ -107,7 +107,9 @@ public class Warzone extends Card{
     @Override
     public void CardEffect() throws InterruptedException {
 
-
+            if(losers==null){
+                losers = new ArrayList<>();
+            }
 
         this.lines = new int[PunishmentShots.size()/2];
         for(int i=0;i< PunishmentShots.size()/2;i++){

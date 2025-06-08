@@ -45,7 +45,7 @@ public class Slavers extends Card{
 
     @Override
     public void CardEffect(){
-
+        losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){

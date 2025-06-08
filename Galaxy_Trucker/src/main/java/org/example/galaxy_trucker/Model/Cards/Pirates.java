@@ -64,7 +64,7 @@ public class Pirates extends Card{
     }
  @Override
     public void CardEffect(){
-
+     losers = new ArrayList<>();
      this.lines = new int[this.Punishment.size()/2];
      for(int i=0;i< Punishment.size()/2;i++){
          lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;

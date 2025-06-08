@@ -44,7 +44,7 @@ public class AbandonedShip extends Card{
 
     @Override
     public void CardEffect() throws InterruptedException {
-
+        losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){

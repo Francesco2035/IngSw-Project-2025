@@ -28,7 +28,7 @@ public class Epidemic extends Card {
     }
 
     public void CardEffect() throws InterruptedException {
-
+        losers = new ArrayList<>();
         if(infected==null) {
             infected = new ArrayList<>();
         }

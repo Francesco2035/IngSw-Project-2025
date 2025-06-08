@@ -19,7 +19,7 @@ public class Stardust extends Card {
     public void CardEffect () throws InterruptedException {
 
 
-
+        losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){

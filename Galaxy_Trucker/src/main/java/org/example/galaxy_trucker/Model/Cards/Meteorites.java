@@ -60,6 +60,7 @@ public class   Meteorites extends Card {
     //o gestisce la cosa e poi nel caso di hit chiama solo la posizione coplita se accade ed è indifesa
     @Override
     public void CardEffect() {
+        losers = new ArrayList<>();
         hits = new HashMap<>();
         for (Player p: this.getBoard().getPlayers()) {
             p.setState(new Waiting());

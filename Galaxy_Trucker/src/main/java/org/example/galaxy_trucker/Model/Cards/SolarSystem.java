@@ -36,7 +36,7 @@ public class SolarSystem extends Card {
 
     @Override
     public void CardEffect(){
-
+        losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         System.out.println("playerlist size " + PlayerList.size());
