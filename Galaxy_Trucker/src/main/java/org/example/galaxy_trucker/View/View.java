@@ -60,4 +60,6 @@ public interface View {
     void effectCard(RandomCardEffectEvent event);
 
     void updatePBInfo(PBInfoEvent event);
+
+    void updateHourglass(HourglassEvent event);
 }

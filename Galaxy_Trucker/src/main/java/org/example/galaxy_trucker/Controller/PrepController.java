@@ -1,13 +1,20 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Controller.Listeners.HourGlassListener;
+import org.example.galaxy_trucker.Controller.Listeners.ControllerHourGlassListener;
+import org.example.galaxy_trucker.Controller.Messages.HourglassEvent;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
 import org.example.galaxy_trucker.Model.PlayerStates.ChoosePosition;
 
-public class PrepController extends Controller implements HourGlassListener {
+public class PrepController extends Controller implements ControllerHourGlassListener {
+
+    private VirtualView vv;
+
+    public void setVv(VirtualView vv) {
+        this.vv = vv;
+    }
 
     GameController gc;
     public PrepController(Player currentPlayer, String gameId, GameController gc, boolean disconnected) {
@@ -68,5 +75,10 @@ public class PrepController extends Controller implements HourGlassListener {
                     .stream().filter(p -> !p.GetReady())
                     .forEach(p -> p.setState(new ChoosePosition()));
         }
+    }
+
+    @Override
+    public void hourglassUpdate(HourglassEvent event) {
+        vv.sendEvent(event);
     }
 }

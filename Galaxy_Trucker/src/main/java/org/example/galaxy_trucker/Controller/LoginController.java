@@ -18,10 +18,13 @@ public class LoginController extends Controller {
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
             this.disconnected = false;
         }
+
         curPlayer.setState(new BuildingShip());
+        ;
         PrepController newController  = new PrepController(curPlayer, gameId, gc,disconnected);
         curPlayer.getCommonBoard().getHourglass().setListener(newController);
         newController.setExceptionListener(exceptionListener);
+        newController.setVv(gc.getVirtualViewMap().get(curPlayer.GetID()));
         gc.setBuildingCount(1);
         gc.setControllerMap(curPlayer,newController);
     }

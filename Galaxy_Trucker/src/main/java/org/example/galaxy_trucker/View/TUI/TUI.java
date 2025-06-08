@@ -246,6 +246,12 @@ public class TUI implements View {
         }
     }
 
+    @Override
+    public void updateHourglass(HourglassEvent event) {
+        out.setHorglass(event.getStart(), event.message());
+        onGameUpdate();
+    }
+
     public String formatPBInfo(PBInfoEvent event) {
         StringBuilder sb = new StringBuilder();
         sb.append(ASCII_ART.compose("            ",
@@ -596,7 +602,7 @@ public class TUI implements View {
         }
         else {
             TileEvent temp = new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors());
-            out.setCacheHand(formatCell(temp)); //QUI
+            out.setCacheHand(formatCell(temp));
         }
         onGameUpdate();
     }
@@ -656,11 +662,8 @@ public class TUI implements View {
 
 
     //questo come anche qualche altro metodo sarà per gestire le cose eccezionali o comunque chiama un metodo speciale di out
-    public void showCard(int id){
-        inputReader.printServerMessage("\n");
-        inputReader.printServerMessage(CardsDescriptions.get(id));
-        //printBoard();
-        //System.out.println(CardsDescriptions.get(id));
+    public String formatCard(int id){
+        return CardsDescriptions.get(id);
     }
 
     @Override
@@ -712,9 +715,12 @@ public class TUI implements View {
 
     @Override
     public void showDeck(DeckEvent deck){
-        for (Integer e : deck.getIds()) {
-            showCard(e);
+        ArrayList<String> toAdd = new ArrayList<>();
+        for (Integer card : deck.getIds()){
+            toAdd.add(formatCard(card));
         }
+        out.setDeck(toAdd);
+        this.onGameUpdate();
     }
 
 

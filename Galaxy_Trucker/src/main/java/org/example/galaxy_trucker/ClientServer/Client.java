@@ -241,6 +241,11 @@ public class Client implements EventVisitor {
     }
 
     @Override
+    public void visit(HourglassEvent event) {
+        this.view.updateHourglass(event);
+    }
+
+    @Override
     public void visit(DeckEvent event) {
         this.view.showDeck(event);
     }
