@@ -22,6 +22,7 @@ public class AbandonedStation extends Card{
     private boolean flag;
     private int order;
     int totHumans;
+    private ArrayList<Player> losers;
 
 
 
@@ -90,6 +91,12 @@ public class AbandonedStation extends Card{
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
 
+        }
+
+        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+        for(Player p: losers){
+            getBoard().abandonRace(p);
         }
         System.out.println("card finished!");
         this.setFinished(true);

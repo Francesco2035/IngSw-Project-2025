@@ -21,6 +21,8 @@ public class SolarSystem extends Card {
     private int done;
     private  String message;
 
+    ArrayList<Player> losers;
+
 
 
     /// caso base è non scendere sui pianeti
@@ -92,6 +94,21 @@ public class SolarSystem extends Card {
                 PlayerList.get(i).setState(new BaseState());
 
             }
+
+            losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+            losers.addAll(getBoard().checkDoubleLap());
+
+            for(Player p: getBoard().getPlayers()){
+                if(p.getmyPlayerBoard().getNumHumans()==0){
+                    losers.remove(p);
+                    losers.add(p);
+                }
+            }
+
+            for(Player p: losers){
+                getBoard().abandonRace(p);
+            }
+
             System.out.println("card finished");
             this.setFinished(true);
         }

@@ -67,6 +67,7 @@ public class Warzone extends Card{
     private String message;
     boolean isaPunishment;
     int tmpPunishment;
+    private ArrayList<Player> losers;
 
 
 
@@ -169,19 +170,34 @@ public class Warzone extends Card{
             } else {
                 System.out.println("the worst is: " + Worst.GetID());
                 this.PlayerOrder = 0;
+
+                /// movement
                 if (this.PunishmentType[ChallengeOrder] == 1) {
                     this.Minimum = 100000;
                     this.ChallengeOrder++;
 
                     this.loseTime();
                     return; // serve perché lose time ri attiva update states al completamento quinid devo fare finta di averlo finito prima di chiamarlo e poi terminarlo appena è finitra la chiamat
-                } else if (this.PunishmentType[ChallengeOrder] == 2) {
+                }
+
+                /// killing
+                else if (this.PunishmentType[ChallengeOrder] == 2) {
+
+                    if(this.currentPlayer.getmyPlayerBoard().getNumHumans()<this.PunishmentHumans){ // dovrebbe bastare a evitare il caso in cui uno è forzato ad uccidere più umani di quanti de abbia
+                        losers.add(currentPlayer);
+                        this.updateSates();
+                        return;
+                    }
+
                     System.out.println(Worst.GetID() + " has to kill" + this.PunishmentHumans);
                     this.sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent(Worst.GetID()+"is the worst and has to kill "+this.PunishmentHumans));
                     this.setDefaultPunishment(this.PunishmentHumans);
                     this.Worst.setState(new Killing());
                     //this.currentPlayer.setInputHandler(new Killing(this));
-                } else if (this.PunishmentType[ChallengeOrder] == 3) {
+                }
+
+                /// lose cargo
+                else if (this.PunishmentType[ChallengeOrder] == 3) {
 
                     this.sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent(Worst.GetID()+"is the worst and loses "+this.PunishmentCargo+" cargo"));
 
@@ -217,7 +233,10 @@ public class Warzone extends Card{
                     }
 
 
-                } else {
+                }
+
+                /// shots
+                else {
                     this.Minimum = 1000000;
                     this.ChallengeOrder++;
                     this.sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent(Worst.GetID()+"is the worst and has to kill "+this.PunishmentHumans));
@@ -249,6 +268,21 @@ public class Warzone extends Card{
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
         }
+
+        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+
+        for(Player p: getBoard().getPlayers()){
+            if(p.getmyPlayerBoard().getNumHumans()==0){
+                losers.remove(p);
+                losers.add(p);
+            }
+        }
+
+        for(Player p: losers){
+            getBoard().abandonRace(p);
+        }
+
         System.out.println("card finished");
         this.setFinished(true);
     }

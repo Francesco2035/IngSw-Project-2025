@@ -33,6 +33,7 @@ public class   Meteorites extends Card {
     private HashMap <String,IntegerPair> hits;
     private  int SuccessfulDefences;
     private  int NumofDefences;
+    private ArrayList<Player> losers;
 
     @JsonProperty ("attacks")// prima è la direzione, secondo il tipo di attacco
     private ArrayList<Integer> attacks;
@@ -435,6 +436,20 @@ public class   Meteorites extends Card {
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
 
+        }
+
+        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+
+        for(Player p: getBoard().getPlayers()){
+            if(p.getmyPlayerBoard().getNumHumans()==0){
+                losers.remove(p);
+                losers.add(p);
+            }
+        }
+
+        for(Player p: losers){
+            getBoard().abandonRace(p);
         }
         System.out.println("card finished\n");
         this.setFinished(true);

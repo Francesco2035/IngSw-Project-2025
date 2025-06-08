@@ -378,12 +378,26 @@ public class GameBoard {
     }
 
     public void finishGame(){
-        int score;
-        for(Player_IntegerPair p : players){
-            score = p.getKey().finishRace(true);
-            scoreboard.add(new Player_IntegerPair(p.getKey(), score));
-        }
+
+       for(Player_IntegerPair p : players){
+           positions[p.getValue() % nPositions] = null;
+           Player playah = p.getKey();
+           int finalScore = playah.finishRace(true);
+           scoreboard.add(new Player_IntegerPair(playah, finalScore));
+           players.remove(p);
+
+           /// todo in qualche modo questo deve notificare il gioco che la partitra è finita:)
+       }
+
     }
+
+//    public void finishGame(){
+//        int score;
+//        for(Player_IntegerPair p : players){
+//            score = p.getKey().finishRace(true);
+//            scoreboard.add(new Player_IntegerPair(p.getKey(), score));
+//        }
+//    }
 
 
     public void sendUpdates(GameBoardEvent event){
