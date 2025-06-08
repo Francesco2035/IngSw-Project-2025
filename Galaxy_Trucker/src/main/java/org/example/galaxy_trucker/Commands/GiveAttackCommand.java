@@ -30,12 +30,20 @@ public class GiveAttackCommand extends Command implements Serializable {
                         action ,player.getPlayerState());
             }
 
-            player.getCurrentCard().checkPower(action.getPower() ,action.getCountDoublePlasmaDrills());
+            try {
+                player.getCurrentCard().checkPower(action.getPower() ,action.getCountDoublePlasmaDrills());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         else {
             PlayerBoard playerBoard = player.getmyPlayerBoard();
             GetPlasmaDrillPower action = new GetPlasmaDrillPower(playerBoard.getEnginePower());
-            player.getCurrentCard().checkPower(action.getPower() ,action.getCountDoublePlasmaDrills());
+            try {
+                player.getCurrentCard().checkPower(action.getPower() ,action.getCountDoublePlasmaDrills());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

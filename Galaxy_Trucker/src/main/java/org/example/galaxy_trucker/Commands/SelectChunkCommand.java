@@ -26,6 +26,10 @@ public class SelectChunkCommand extends Command implements Serializable {
     public void execute(Player player) {
         PlayerBoard playerBoard = player.getmyPlayerBoard();
         playerBoard.modifyPlayerBoard(playerBoard.choosePlayerBoard(chunk));
-        player.getCurrentCard().keepGoing();
+        try {
+            player.getCurrentCard().keepGoing();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

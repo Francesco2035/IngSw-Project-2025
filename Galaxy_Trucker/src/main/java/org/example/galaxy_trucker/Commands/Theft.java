@@ -24,6 +24,10 @@ public class Theft extends Command implements Serializable {
 
     @Override
     public void execute(Player player) {
-        player.getCurrentCard().loseCargo(pair,position);
+        try {
+            player.getCurrentCard().loseCargo(pair,position);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

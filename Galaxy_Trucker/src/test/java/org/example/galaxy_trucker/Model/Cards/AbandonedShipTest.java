@@ -128,7 +128,11 @@ class AbandonedShipTest {
     @Order(1)
     void cardEffect() {
 
-        FakeAbandonedShip.CardEffect();
+        try {
+            FakeAbandonedShip.CardEffect();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         assertTrue(GameBoard.getPlayers().size()==3);
        Franci= GameBoard.getPlayers().get(2);
        Pietro= GameBoard.getPlayers().get(1);
