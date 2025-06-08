@@ -262,7 +262,12 @@ public class Out {
     }
 
     public void setLobby(String gameid, String[]cell) {
-        lobby.put(gameid,cell);
+        if(cell == null){
+            lobby.remove(gameid);
+        }
+        else{
+            lobby.put(gameid,cell);
+        }
     }
 
     public void setPhase(ViewPhase phase) {

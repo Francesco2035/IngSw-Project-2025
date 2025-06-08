@@ -64,6 +64,8 @@ public abstract class PlayerState {
         return false;
     }
 
+    public boolean allows(QuitCommand command){return false;}
+
     public boolean allows(ReadyCommand command) {
         return false;
     }

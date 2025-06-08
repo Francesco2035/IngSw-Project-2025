@@ -9,6 +9,7 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEve
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
 
+import java.awt.desktop.QuitEvent;
 import java.io.Serializable;
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -32,7 +33,8 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = GameBoardEvent.class, name = "GameBoardEvent" ),
         @JsonSubTypes.Type(value = ExceptionEvent.class, name = "ExceptionEvent" ),
         @JsonSubTypes.Type(value = ConnectionRefusedEvent.class, name = "ConnectionRefusedEvent" ),
-        @JsonSubTypes.Type(value = PBInfoEvent.class, name = "PBInfoEvent")
+        @JsonSubTypes.Type(value = PBInfoEvent.class, name = "PBInfoEvent"),
+        @JsonSubTypes.Type(value = QuitEvent.class, name = "QuitEvent")
 
 })
 

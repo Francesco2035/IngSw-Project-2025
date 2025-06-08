@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.LoginCommand;
+import org.example.galaxy_trucker.Commands.QuitCommand;
 import org.example.galaxy_trucker.Controller.*;
 import org.example.galaxy_trucker.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Listeners.GhListener;
@@ -172,16 +173,30 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
         if (cmd.getTitle().equals("Lobby")){
             System.out.println("LOBBY");
             lobby.add(cmd.getClient());
+
             new Thread(()->{
                 synchronized (lobbyEvents) {
-                    for (LobbyEvent event : lobbyEvents.values()) {
+
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    Future<Void> future = executor.submit(() -> {
                         try {
-                            cmd.getClient().receiveMessage(event);
+                            for (LobbyEvent event : lobbyEvents.values()) {
+                                    cmd.getClient().receiveMessage(event);
+                            }
                         } catch (RemoteException e) {
-                            e.printStackTrace();
                             lobby.remove(cmd.getClient());
+                            throw new ExecutionException(e);
                         }
+                        return null;
+                    });
+
+                    try {
+                        future.get(1500, TimeUnit.MILLISECONDS);
+                    } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                        lobby.remove(cmd.getClient());
                     }
+                    executor.shutdown();
+
                 }
             }).start();
         }
@@ -268,20 +283,51 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
 
     @Override
-    public void sendEvent(LobbyEvent event){
+    public void sendEvent(LobbyEvent event) {
+
         System.out.println("Sending event: " + event);
         lobbyEvents.remove("EMPTY CREATE NEW GAME");
         lobbyEvents.remove(event.getGameId());
         lobbyEvents.put(event.getGameId(), event);
-        try{
-            for (ClientInterface client: lobby){
-                client.receiveMessage(event);
-            }
-        }
-        catch (RemoteException e){
-            e.printStackTrace();
-        }
+        ArrayList<ClientInterface> toRemove = new ArrayList<>();
 
+
+
+            for (ClientInterface client : lobby) {
+                //TODO:pool di executor meglio
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                Future<Void> future = executor.submit(() -> {
+                    try {
+                        client.receiveMessage(event);
+                    } catch (RemoteException e) {
+                        toRemove.add(client);
+                        throw new ExecutionException(e);
+                    }
+                    return null;
+                });
+
+                try{
+                    future.get(3000, TimeUnit.MILLISECONDS);
+
+                    //System.out.println("Ping successful for client: " + client);
+
+                    executor.shutdown();
+                }
+                catch(InterruptedException | ExecutionException | TimeoutException e){
+                    toRemove.add(client);
+                }
+
+            }
+
+            lobby.removeAll(toRemove);
+
+    }
+
+    @Override
+    public void quitPlayer(QuitCommand event) {
+        synchronized (clients){
+            clients.remove(event.getClient());
+        }
     }
 
     public void addPending(UUID token){

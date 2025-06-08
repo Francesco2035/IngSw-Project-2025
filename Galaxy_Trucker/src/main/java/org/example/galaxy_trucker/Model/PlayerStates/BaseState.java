@@ -2,12 +2,9 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ser.Serializers;
-import org.example.galaxy_trucker.Commands.DebugShip;
-import org.example.galaxy_trucker.Commands.LoginCommand;
-import org.example.galaxy_trucker.Commands.ReadyCommand;
+import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
-import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
@@ -24,6 +21,11 @@ public class BaseState extends PlayerState {
 
     @Override
     public boolean allows(ReadyCommand command){
+        return true;
+    }
+
+    @Override
+    public boolean allows(QuitCommand command){
         return true;
     }
 

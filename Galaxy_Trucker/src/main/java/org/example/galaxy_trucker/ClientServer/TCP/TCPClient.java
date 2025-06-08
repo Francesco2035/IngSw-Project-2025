@@ -237,8 +237,8 @@ public class TCPClient{
                     return;
                 }
                 else if (userInput.equals("Lobby")) {
-                    if (!lobby) {
-                        lobby = true;
+                    if (!this.client.getLobby()) {
+                        this.client.setLobby(true);
                         LobbyCommand lobbyCommand = new LobbyCommand("Lobby");
 
                         try{

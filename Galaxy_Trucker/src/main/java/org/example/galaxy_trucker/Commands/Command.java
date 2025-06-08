@@ -20,6 +20,7 @@ import java.io.Serializable;
 
 @JsonSubTypes({
         @JsonSubTypes.Type(value = LoginCommand.class, name = "LoginCommand"),
+        @JsonSubTypes.Type(value = QuitCommand.class, name = "QuitCommand"),
         @JsonSubTypes.Type(value = ReadyCommand.class, name = "ReadyCommand"),
         @JsonSubTypes.Type(value = BuildingCommand.class, name = "BuildingCommand"),
         @JsonSubTypes.Type(value = FinishBuildingCommand.class, name = "FinishBuildingCommand"),

@@ -25,6 +25,6 @@ public class LoginClient extends PlayerStateClient {
 
     @Override
     public List<String> getCommands() {
-        return List.of("");
+        return List.of("Lobby", "Create", "Join");
     }
 }

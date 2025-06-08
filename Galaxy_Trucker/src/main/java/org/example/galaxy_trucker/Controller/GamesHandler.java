@@ -71,22 +71,30 @@ public class GamesHandler implements LobbyListener {
 
     public void receive(Command command) {
 
-        System.out.println("Received: " + command.getTitle() + " " + command.getClass().getSimpleName());
-        String title = command.getTitle();
-        String gameId = command.getGameId();
-        if ("Quit".equals(title)) {
-            if (gameControllerMap.containsKey(gameId)) {
-                gameControllerMap.get(gameId).removePlayer(UUID.fromString(command.getToken()));
+        try{
+            System.out.println("Received: " + command.getTitle() + " " + command.getClass().getSimpleName());
+            String title = command.getTitle();
+            String gameId = command.getGameId();
+            if ("Quit".equals(title)) {
+                if (gameControllerMap.containsKey(gameId)) {
+                    gameControllerMap.get(gameId).removePlayer(UUID.fromString(command.getToken()));
+
+                } else {
+                    System.out.println("No player found for token: " + command.getToken());
+                    //throw new InvalidInput("GameId doesn't exist: " + gameId);
+                }
             } else {
-                throw new InvalidInput("GameId doesn't exist: " + gameId);
-            }
-        } else {
-            if (gameControllerMap.containsKey(gameId)) {
-                gameControllerMap.get(gameId).addCommand(command);
-            } else {
-                throw new InvalidInput("GameId doesn't exist: " + gameId);
+                if (gameControllerMap.containsKey(gameId)) {
+                    gameControllerMap.get(gameId).addCommand(command);
+                } else {
+                    //throw new InvalidInput("GameId doesn't exist: " + gameId);
+                }
             }
         }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 

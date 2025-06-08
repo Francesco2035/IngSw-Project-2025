@@ -141,6 +141,9 @@ public class TUI implements View {
                 e.printStackTrace();
             }
         }
+        else if (event.getGameId() != null){
+            out.setLobby(event.getGameId(), null);
+        }
         onGameUpdate();
 //        if (event.getGameId().equals("EMPTY CREATE NEW GAME")){
 //            lobby.remove(event.getGameId());

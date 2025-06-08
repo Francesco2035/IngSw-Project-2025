@@ -43,6 +43,8 @@ public interface EventVisitor {
 
     void visit(PBInfoEvent pbInfoEvent);
 
+    void visit(QuitEvent quitEvent);
+
 
     //public void visit(GameBoardEvent event);
 }
