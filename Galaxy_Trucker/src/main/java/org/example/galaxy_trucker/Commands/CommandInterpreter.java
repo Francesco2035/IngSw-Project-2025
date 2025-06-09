@@ -43,6 +43,7 @@ public class CommandInterpreter {
     private void initializeCommandMap() {
         commandMap = new HashMap<>();
         commandMap.put("LOGIN", this::createLoginCommand);
+        commandMap.put("QUIT", this::createQuitCommand);
         commandMap.put("INSERTTILE", this::createBuildingCommand);
         commandMap.put("PICKTILE", this::createBuildingCommand);
         commandMap.put("HOURGLASS", this::createBuildingCommand);
@@ -185,10 +186,8 @@ public class CommandInterpreter {
     }
 
     private Command createQuitCommand(String[] strings) {
-        return new ReadyCommand(gameId,playerId,lv,"Quit",false, token);
+        return new QuitCommand(gameId,  playerId,  lv, "Quit",  token);
     }
-
-
 
 
     private Command createAddCrewCommand(String[] strings) {

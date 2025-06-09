@@ -27,6 +27,10 @@ public class DefendFromLargeCommand extends Command implements Serializable {
 
     @Override
     public void execute(Player player) {
-        player.getCurrentCard().DefendFromLarge(plasmaDrill, batteryComp,player);
+        try {
+            player.getCurrentCard().DefendFromLarge(plasmaDrill, batteryComp,player);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

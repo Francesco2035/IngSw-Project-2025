@@ -1,7 +1,9 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.*;
+import org.example.galaxy_trucker.Model.Boards.Actions.GetGoodAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
@@ -14,9 +16,14 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 import org.example.galaxy_trucker.Model.PlayerStates.*;
+import org.example.galaxy_trucker.Model.Tiles.PowerCenter;
+import org.example.galaxy_trucker.Model.Tiles.Storage;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import static java.lang.Math.min;
 
 
 //RISCRIVI ZONA DI GUERRA CHE PRENDE L'INPUT UN ARRAY DI METODI DA CHIAMARE E LI DIVIDE IN CONTROLLI
@@ -57,6 +64,10 @@ public class Warzone extends Card{
     private double currentpower;
     private int currentmovement;
     private int energyUsage;
+    private String message;
+    boolean isaPunishment;
+    int tmpPunishment;
+    private ArrayList<Player> losers;
 
 
 
@@ -94,9 +105,11 @@ public class Warzone extends Card{
 
 
     @Override
-    public void CardEffect(){
+    public void CardEffect() throws InterruptedException {
 
-
+            if(losers==null){
+                losers = new ArrayList<>();
+            }
 
         this.lines = new int[PunishmentShots.size()/2];
         for(int i=0;i< PunishmentShots.size()/2;i++){
@@ -111,17 +124,22 @@ public class Warzone extends Card{
         for(Player p : PlayerList){
             p.setState(new Waiting());
         }
+
+        this.isaPunishment=false;
         if(PlayerList.size() ==1){
             this.finishCard();
             return;
         }
+
         this.updateSates();
     }
 
 
     @Override
-    public void updateSates(){
+    public void updateSates() throws InterruptedException {
         if(ChallengeOrder<3) {
+            this.isaPunishment=false;
+            message ="";
             System.out.println("challenge number: " + this.ChallengeOrder);
             GameBoard Board = this.getBoard();
             ArrayList<Player> PlayerList = Board.getPlayers();
@@ -135,11 +153,13 @@ public class Warzone extends Card{
                 if (RequirementsType[ChallengeOrder] == 1) {
                     System.out.println("checking attack of: " + currentPlayer.GetID());
                     this.currentPlayer.setState(new GiveAttack());
+                    this.sendRandomEffect(currentPlayer.GetID(),new LogEvent(message));
                     //this.currentPlayer.setInputHandler(new GiveAttack(this));
 
                 } else if (RequirementsType[ChallengeOrder] == 2) {
                     System.out.println("checking speed of: " + currentPlayer.GetID());
                     this.currentPlayer.setState(new GiveSpeed());
+                    this.sendRandomEffect(currentPlayer.GetID(),new LogEvent(message));
                     //this.currentPlayer.setInputHandler(new GiveSpeed(this));
 
                 } else { //problema qui:)
@@ -152,21 +172,79 @@ public class Warzone extends Card{
             } else {
                 System.out.println("the worst is: " + Worst.GetID());
                 this.PlayerOrder = 0;
+
+                /// movement
                 if (this.PunishmentType[ChallengeOrder] == 1) {
                     this.Minimum = 100000;
                     this.ChallengeOrder++;
+
                     this.loseTime();
                     return; // serve perché lose time ri attiva update states al completamento quinid devo fare finta di averlo finito prima di chiamarlo e poi terminarlo appena è finitra la chiamat
-                } else if (this.PunishmentType[ChallengeOrder] == 2) {
+                }
+
+                /// killing
+                else if (this.PunishmentType[ChallengeOrder] == 2) {
+
+                    if(this.currentPlayer.getmyPlayerBoard().getNumHumans()<this.PunishmentHumans){ // dovrebbe bastare a evitare il caso in cui uno è forzato ad uccidere più umani di quanti de abbia
+                        losers.add(currentPlayer);
+                        this.updateSates();
+                        return;
+                    }
+
                     System.out.println(Worst.GetID() + " has to kill" + this.PunishmentHumans);
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and has to kill "+this.PunishmentHumans));
                     this.setDefaultPunishment(this.PunishmentHumans);
                     this.Worst.setState(new Killing());
                     //this.currentPlayer.setInputHandler(new Killing(this));
-                } else if (this.PunishmentType[ChallengeOrder] == 3) {
+                }
+
+                /// lose cargo
+                else if (this.PunishmentType[ChallengeOrder] == 3) {
+
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and loses "+this.PunishmentCargo+" cargo"));
+
                     //  chiamo il metodo di fottitura eterna :)
-                } else {
+
+
+
+
+
+                    System.out.println("hai perso :3");
+                    PlayerBoard CurrentPlanche = Worst.getmyPlayerBoard();
+                    HashMap<Integer, ArrayList<IntegerPair>> cargoH = CurrentPlanche.getStoredGoods();
+                    this.tmpPunishment = PunishmentCargo;
+                    if (!cargoH.isEmpty()) {
+
+                        this.setDefaultPunishment(tmpPunishment);
+                        this.Worst.setState(new HandleTheft());
+
+                    }
+                    else {
+                        System.out.println("no goods found");
+                        this.isaPunishment = true;
+                        int totenergy=0;
+                        for(PowerCenter i: CurrentPlanche.getPowerCenters() ){
+                            totenergy+=i.getType();
+                            System.out.println( "tot energy:" +totenergy);
+                        }
+
+                        energyUsage = min(tmpPunishment, CurrentPlanche.getEnergy());
+                        System.out.println("energy usage (Check Strength):" +energyUsage);
+                        this.setDefaultPunishment(energyUsage);
+                        Worst.setState(new ConsumingEnergy());
+                    }
+
+
+                }
+
+                /// shots
+                else {
                     this.Minimum = 1000000;
                     this.ChallengeOrder++;
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and has to kill "+this.PunishmentHumans));
+
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and he is going to get shot at ^_^"));
+                    Thread.sleep(1000);
                     this.continueCard();
                     return; // stessa cosa di lose time dato che ci torno automaticamente incremento qui che è meglio
                 }
@@ -192,6 +270,21 @@ public class Warzone extends Card{
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
         }
+
+        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+
+        for(Player p: getBoard().getPlayers()){
+            if(p.getmyPlayerBoard().getNumHumans()==0){
+                losers.remove(p);
+                losers.add(p);
+            }
+        }
+
+        for(Player p: losers){
+            getBoard().abandonRace(p);
+        }
+
         System.out.println("card finished");
         this.setFinished(true);
     }
@@ -217,7 +310,7 @@ public class Warzone extends Card{
 
     /// fornisce la potenza dei cannoni
     @Override
-    public void checkPower(double power, int numofDouble) {
+    public void checkPower(double power, int numofDouble) throws InterruptedException {
 //            double movement= currentPlayer.getMyPlance().getPower(coordinates);
 
         this.currentpower = power;
@@ -236,7 +329,7 @@ public class Warzone extends Card{
 
     /// da la potenza motrice
     @Override
-    public void checkMovement(int movement, int numofDouble) {
+    public void checkMovement(int movement, int numofDouble) throws InterruptedException {
 //        double movement= currentPlayer.getMyPlance().getEnginePower(coordinates);
         this.currentmovement=movement;
         this.energyUsage=numofDouble;
@@ -260,7 +353,7 @@ public class Warzone extends Card{
 
 
     @Override
-    public void consumeEnergy(ArrayList<IntegerPair> coordinates) {
+    public void consumeEnergy(ArrayList<IntegerPair> coordinates) throws InterruptedException {
         if(coordinates==null) {
             System.out.println("coordinates is null");
             if (RequirementsType[ChallengeOrder] == 1) {
@@ -270,6 +363,11 @@ public class Warzone extends Card{
                 this.currentPlayer.setState(new GiveSpeed());
                 System.out.println("going back to checking speed of " + currentPlayer.GetID());
             }
+        }
+
+        if(isaPunishment){
+            this.consumeEnergy2(coordinates);
+            return;
         }
 
         if(coordinates.size()!=this.energyUsage){
@@ -316,7 +414,33 @@ public class Warzone extends Card{
         }
     }
 
-    public void checkStrength(){
+
+    public void consumeEnergy2(ArrayList<IntegerPair> coordinates) throws InterruptedException {
+
+        if(coordinates.size()!=this.energyUsage){
+            System.out.println("----->"+this.energyUsage);
+            throw new WrongNumofEnergyExeption("wrong number of energy cells to steal");
+        }
+        PlayerBoard CurrentPlanche = Worst.getmyPlayerBoard();
+        Tile[][] tiles = CurrentPlanche.getPlayerBoard();
+        // opero sulla copia
+        for(IntegerPair i:coordinates){
+            try {
+                CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),
+                        new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+            }
+            catch (InvalidInput e){
+
+                throw new WrongNumofEnergyExeption("no energy here to consume");
+            }
+        }
+        this.isaPunishment=false;
+        this.updateSates();
+
+
+    }
+
+    public void checkStrength() throws InterruptedException {
         System.out.println("checking strength of "+currentPlayer.GetID()+ " strength is "+this.currentpower);
         if(this.currentpower<Minimum){
             this.Worst=currentPlayer;
@@ -324,22 +448,24 @@ public class Warzone extends Card{
             System.out.println(currentPlayer.GetID()+" is the worst, the minimum is now"+this.currentpower);
         }
         this.currentPlayer.setState(new Waiting());
+        message= message+currentPlayer.GetID()+"has chosen strength "+this.currentpower +"\n";
         this.updateSates();
     }
 
-    public void checkSpeed(){
+    public void checkSpeed() throws InterruptedException {
         System.out.println("checking speed of "+currentPlayer.GetID()+" speed is: "+this.currentmovement);
         if(this.currentmovement<Minimum){
             this.Worst=currentPlayer;
             this.Minimum=this.currentmovement;
         }
         this.currentPlayer.setState(new Waiting());
+        message= message+currentPlayer.GetID()+"has chosen strength "+this.currentpower +"\n";
         this.updateSates();
     }
 
 
 
-    public void checkPeople() {
+    public void checkPeople() throws InterruptedException {
         int Order=0;
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
@@ -375,7 +501,9 @@ public class Warzone extends Card{
 
 
 
-    public void loseTime() {
+    public void loseTime() throws InterruptedException {
+        this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and loses "+this.PunishmentMovement+" time"));
+        Thread.sleep(1000);
         this.getBoard().movePlayer(Worst.GetID(),-this.PunishmentMovement);
         System.out.println(this.Worst.GetID()+" loses the time");
 
@@ -399,7 +527,7 @@ public class Warzone extends Card{
 
 
     @Override
-    public void killHumans(ArrayList<IntegerPair> coordinates){
+    public void killHumans(ArrayList<IntegerPair> coordinates) throws InterruptedException {
 
         System.out.println("killing "+PunishmentHumans+" humans of "+Worst.GetID());
         /// worst e non current
@@ -433,12 +561,17 @@ public class Warzone extends Card{
     }
 
 
+
     @Override
-    public void continueCard() {
+    public void continueCard() throws InterruptedException {
+        /// cose per stampare al client
+        String dimensione= new String();
+        String direction = new String();
+        String Colpito = new String("missed you");
+        String location = new String("");
 
-        /// current player va sostituito con worst
 
-        System.out.println("shooting at "+this.Worst.GetID());
+
 
         int Movement;
         boolean shotsFlag= false;
@@ -448,11 +581,21 @@ public class Warzone extends Card{
 
             PlayerBoard CurrentPlanche = Worst.getmyPlayerBoard(); //prendo plancia
             int[][] MeteoritesValidPlanche = CurrentPlanche.getValidPlayerBoard();//prende matrice validita
-            if (PunishmentShots.get(ShotsOrder) == 0) { //sinistra
+
+            if(PunishmentShots.get(ShotsOrder+1)==0) {
+                dimensione = new String("small");
+
+            }
+            else {
+                dimensione = new String("large");
+            }
+            if (PunishmentShots.get(ShotsOrder) == 0) { ///sinistra
+                direction = new String("the left on line "+lines[ShotsOrder/2]);
                 Movement = 0;
                 while (Movement < 10  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
-                    if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
 
+                    if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
+                        location = new String("at "+lines[ShotsOrder/2]+" "+Movement);
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
@@ -461,7 +604,7 @@ public class Warzone extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                this.currentPlayer.setState(new HandleDestruction());
+                                this.Worst.setState(new HandleDestruction());
                                 return;
 
                             }
@@ -474,7 +617,8 @@ public class Warzone extends Card{
 
                         }
                         else {//colpo piccolo
-                            currentPlayer.setState(new DefendingFromSmall());
+                            Worst.setState(new DefendingFromSmall());
+                            Colpito= new String("hit you");
                         }
                     }
 
@@ -482,11 +626,12 @@ public class Warzone extends Card{
                     Movement++;
                 }
             }
-            else if (PunishmentShots.get(ShotsOrder) == 1) {//sopra
+            else if (PunishmentShots.get(ShotsOrder) == 1) {///sopra
+                direction = new String("above on column "+lines[ShotsOrder/2]);
                 Movement = 0;
                 while (Movement < 10 && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-
+                        location = new String("at "+Movement+" "+lines[ShotsOrder/2]);
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
@@ -496,7 +641,7 @@ public class Warzone extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                this.currentPlayer.setState(new HandleDestruction());
+                                this.Worst.setState(new HandleDestruction());
                                 return;
 
                             }
@@ -508,7 +653,8 @@ public class Warzone extends Card{
 
                         }
                         else {//colpo piccolo
-                            currentPlayer.setState(new DefendingFromSmall());
+                            Colpito= new String("hit you");
+                            Worst.setState(new DefendingFromSmall());
                         }
 
                     }
@@ -517,9 +663,11 @@ public class Warzone extends Card{
                 }
             }
             else if (PunishmentShots.get(ShotsOrder) == 2) {// destra
+                direction = new String("the right on line "+lines[ShotsOrder/2]);
                 Movement = 9;
                 while (Movement >= 0   && lines[ShotsOrder/2]<10&& shotsFlag == false) {
                     if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {
+                        location = new String("at "+lines[ShotsOrder/2]+" "+Movement);
 
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder/2]);
@@ -530,7 +678,7 @@ public class Warzone extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                this.currentPlayer.setState(new HandleDestruction());
+                                this.Worst.setState(new HandleDestruction());
                                 return;
 
                             }
@@ -543,7 +691,8 @@ public class Warzone extends Card{
 
                         }
                         else {//colpo piccolo
-                            currentPlayer.setState(new DefendingFromSmall());
+                            Colpito= new String("hit you");
+                            Worst.setState(new DefendingFromSmall());
                         }
 
                     }
@@ -552,9 +701,11 @@ public class Warzone extends Card{
 
             }
             else { //sotto
+                direction = new String("below on column "+lines[ShotsOrder/2]);
                 Movement = 9;
                 while (Movement >= 0  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
+                        location = new String("at "+Movement+" "+lines[ShotsOrder/2]);
                         shotsFlag = true;
                         hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
@@ -563,7 +714,7 @@ public class Warzone extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                this.currentPlayer.setState(new HandleDestruction());
+                                this.Worst.setState(new HandleDestruction());
                                 return;
 
                             }
@@ -575,7 +726,8 @@ public class Warzone extends Card{
 
                         }
                         else {//colpo piccolo
-                            currentPlayer.setState(new DefendingFromSmall());
+                            Colpito= new String("hit you");
+                            Worst.setState(new DefendingFromSmall());
                         }
                     }
 
@@ -587,6 +739,8 @@ public class Warzone extends Card{
             if(shotsFlag == false){
                 this.ShotsOrder += 2;
             }
+            sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+            /// Todo aggiungere il messaggio a client e chiedere a francio che fare perche potrebbeb fare più di una chiamata per stato in caso di miss lezgosk
         }
         if(this.ShotsOrder >=PunishmentShots.size() ){
             this.ShotsOrder = 0;
@@ -596,8 +750,8 @@ public class Warzone extends Card{
 
 
     @Override
-    public void DefendFromSmall(IntegerPair energy, Player player){
-        PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
+    public void DefendFromSmall(IntegerPair energy, Player player) throws InterruptedException {
+        PlayerBoard currentBoard =this.Worst.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if (energy!=null){
             if ((currentBoard.getShield()[PunishmentShots.get(ShotsOrder)]==0)){
@@ -632,8 +786,75 @@ public class Warzone extends Card{
 
 
     @Override
-    public void keepGoing(){
+    public void keepGoing() throws InterruptedException {
         continueCard();
+    }
+
+
+
+    @Override
+    public void loseCargo(IntegerPair coord,int index) throws InterruptedException {
+        PlayerBoard CurrentPlanche =Worst.getmyPlayerBoard();
+        ArrayList<Storage> storages=CurrentPlanche.getStorages();
+        Tile tiles[][]=CurrentPlanche.getPlayerBoard();
+
+
+        HashMap<Integer,ArrayList<IntegerPair>> cargoH= CurrentPlanche.getStoredGoods();
+
+        if(cargoH.isEmpty()){
+            energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
+            System.out.println("energy usage (lose Cargo) :" +energyUsage);
+            this.setDefaultPunishment(energyUsage);
+            this.isaPunishment=true;
+            Worst.setState(new ConsumingEnergy()); // potrebbe non fare l'update?
+            this.setDefaultPunishment(energyUsage);
+            return;
+        }
+
+        if(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond())==null ){
+            throw new InvalidInput("there is nothing here ");
+        }
+        else {
+            if (storages.contains(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond()).getComponent())){
+                int i=storages.indexOf(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
+                Storage currStorage=storages.get(i);
+                if (index>=currStorage.getGoodsArray().size() || index<0){
+                    throw new InvalidInput("there is nothing at this position in the storage");
+                }
+                if(currStorage.getValue(index)==cargoH.keySet().iterator().next() ){//iterator.next da il primo elemento non chiederti perché
+                    CurrentPlanche.performAction(tiles[coord.getFirst()][coord.getSecond()].getComponent(), new GetGoodAction(index,CurrentPlanche,coord.getFirst(),coord.getSecond()),new HandleTheft());///prega dio sia giusto :)
+                    this.tmpPunishment--;
+                    this.setDefaultPunishment(tmpPunishment);
+
+
+
+                }
+                else {
+                    throw new InvalidInput("this isnt the most valuable good you own");
+                }
+
+            }
+            else {
+                throw new InvalidInput("this isn't a storage ");
+            }
+        }
+        if(tmpPunishment==0){
+            System.out.println("finished stealing");
+            this.updateSates();
+            return;
+        }
+        if(cargoH.isEmpty()){
+            energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
+            this.setDefaultPunishment(energyUsage);
+            this.isaPunishment=true;
+            Worst.setState(new ConsumingEnergy()); // potrebbe non fare l'update?
+            this.setDefaultPunishment(energyUsage);
+            return;
+        }
+        else {
+            Worst.setState(new HandleTheft());
+        }
+
     }
 
 

@@ -11,10 +11,7 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTi
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
-import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
-import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
-import org.example.galaxy_trucker.View.ClientModel.States.PlayerStateClient;
-import org.example.galaxy_trucker.View.ClientModel.States.SeeBoardsClient;
+import org.example.galaxy_trucker.View.ClientModel.States.*;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
@@ -141,6 +138,9 @@ public class TUI implements View {
                 e.printStackTrace();
             }
         }
+        else if (event.getGameId() != null){
+            out.setLobby(event.getGameId(), null);
+        }
         onGameUpdate();
 //        if (event.getGameId().equals("EMPTY CREATE NEW GAME")){
 //            lobby.remove(event.getGameId());
@@ -228,7 +228,7 @@ public class TUI implements View {
     }
 
     @Override
-    public void effectCard(RandomCardEffectEvent event) {
+    public void effectCard(LogEvent event) {
         out.setEffectCard(event.message());
         onGameUpdate();
     }
@@ -241,6 +241,19 @@ public class TUI implements View {
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void updateHourglass(HourglassEvent event) {
+        out.setHorglass(event.getStart(), event.message());
+        onGameUpdate();
+    }
+
+    @Override
+    public void seeLog() {
+        lastState = playerClient.getPlayerState();
+        playerClient.setPlayerState(new SeeLog());
+        onGameUpdate();
     }
 
     public String formatPBInfo(PBInfoEvent event) {
@@ -593,7 +606,7 @@ public class TUI implements View {
         }
         else {
             TileEvent temp = new TileEvent(event.getId(), 0, 0, null, 0, false, false, 0, 0, event.getConnectors());
-            out.setCacheHand(formatCell(temp)); //QUI
+            out.setCacheHand(formatCell(temp));
         }
         onGameUpdate();
     }
@@ -653,11 +666,8 @@ public class TUI implements View {
 
 
     //questo come anche qualche altro metodo sarà per gestire le cose eccezionali o comunque chiama un metodo speciale di out
-    public void showCard(int id){
-        inputReader.printServerMessage("\n");
-        inputReader.printServerMessage(CardsDescriptions.get(id));
-        //printBoard();
-        //System.out.println(CardsDescriptions.get(id));
+    public String formatCard(int id){
+        return CardsDescriptions.get(id);
     }
 
     @Override
@@ -709,9 +719,12 @@ public class TUI implements View {
 
     @Override
     public void showDeck(DeckEvent deck){
-        for (Integer e : deck.getIds()) {
-            showCard(e);
+        ArrayList<String> toAdd = new ArrayList<>();
+        for (Integer card : deck.getIds()){
+            toAdd.add(formatCard(card));
         }
+        out.setDeck(toAdd);
+        this.onGameUpdate();
     }
 
 

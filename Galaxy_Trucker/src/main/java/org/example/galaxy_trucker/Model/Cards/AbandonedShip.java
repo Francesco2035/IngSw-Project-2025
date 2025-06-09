@@ -29,6 +29,7 @@ public class AbandonedShip extends Card{
     private boolean flag;
     private int order;
     private int totHumans;
+    private ArrayList<Player> losers;
 
 
     public AbandonedShip(int requirement, int reward, int level, int time, GameBoard board) {
@@ -42,13 +43,14 @@ public class AbandonedShip extends Card{
     }
 
     @Override
-    public void CardEffect(){
-
+    public void CardEffect() throws InterruptedException {
+        losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
             p.setState(new Waiting());
         }
+        Thread.sleep(3000);
         this.updateSates();
     }
     @Override
@@ -108,6 +110,11 @@ public class AbandonedShip extends Card{
             PlayerList.get(i).setState(new BaseState());
 
         }
+        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+        for(Player p: losers){
+            getBoard().abandonRace(p);
+        }
         this.setFinished(true);
 
     }
@@ -141,6 +148,10 @@ public class AbandonedShip extends Card{
             currentPlayer.IncreaseCredits(this.reward);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
 
+
+            if(currentPlayer.getmyPlayerBoard().getNumHumans()==0){
+                losers.add(currentPlayer);
+            }
             this.finishCard();
         }
 //        else{

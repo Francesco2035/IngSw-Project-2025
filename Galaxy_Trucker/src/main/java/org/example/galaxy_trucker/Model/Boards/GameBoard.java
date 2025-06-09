@@ -369,23 +369,36 @@ public class GameBoard {
         Player playah = pair.getKey();
         int finalScore = playah.finishRace(false);
         //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
-        // todo aggiungere una classifica?
-
-
         //--> ho fatto metodo finishGame per mettere in classifica anche quelli che vincono alla fine
         //-palu
         scoreboard.add(new Player_IntegerPair(playah, finalScore));
 
+
+        /// controllare che anche lato controller il player che abbandona smetta di esistere
         players.remove(pair);
     }
 
     public void finishGame(){
-        int score;
-        for(Player_IntegerPair p : players){
-            score = p.getKey().finishRace(true);
-            scoreboard.add(new Player_IntegerPair(p.getKey(), score));
-        }
+
+       for(Player_IntegerPair p : players){
+           positions[p.getValue() % nPositions] = null;
+           Player playah = p.getKey();
+           int finalScore = playah.finishRace(true);
+           scoreboard.add(new Player_IntegerPair(playah, finalScore));
+           players.remove(p);
+
+           /// todo in qualche modo questo deve notificare il gioco che la partitra è finita:)
+       }
+
     }
+
+//    public void finishGame(){
+//        int score;
+//        for(Player_IntegerPair p : players){
+//            score = p.getKey().finishRace(true);
+//            scoreboard.add(new Player_IntegerPair(p.getKey(), score));
+//        }
+//    }
 
 
     public void sendUpdates(GameBoardEvent event){

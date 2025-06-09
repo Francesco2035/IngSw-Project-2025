@@ -1,7 +1,10 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.example.galaxy_trucker.Controller.Controller;
+import org.example.galaxy_trucker.Controller.Listeners.ControllerHourGlassListener;
 import org.example.galaxy_trucker.Controller.Listeners.HourGlassListener;
+import org.example.galaxy_trucker.Controller.Messages.HourglassEvent;
 
 import java.lang.Thread;
 import java.util.ArrayList;
@@ -14,17 +17,14 @@ public class Hourglass{
     private int time;
     private int usages;
     private boolean startable;
-    private ArrayList<HourGlassListener> listeners;
+    private ArrayList<ControllerHourGlassListener> listeners;
     private Timer hourglass;
 
-
-
-    /// dov'è che viene fatta partire automaticamente?
 
     public Hourglass(){}
 
     public Hourglass(int lv) {
-        time = 60;
+        time = 60000;
         startable = true;
         if(lv == 2) usages = 3;
         else usages = -1;
@@ -38,7 +38,12 @@ public class Hourglass{
 
         hourglass = new Timer();
 
+
+        for (ControllerHourGlassListener listener : listeners){
+            listener.hourglassUpdate(new HourglassEvent("Hourglass Started: "+usages, true));
+        }
         hourglass.schedule(new TimerTask(){
+
             @Override
             public void run() {
                 usages--;
@@ -46,9 +51,12 @@ public class Hourglass{
                 if(usages>0){
                     startable = true;
                     hourglass.cancel();
+                    for (ControllerHourGlassListener listener : listeners){
+                        listener.hourglassUpdate(new HourglassEvent("Hourglass ended: "+usages, false));
+                    }
                 }
                 else {
-                    for (HourGlassListener listener : listeners){
+                    for (ControllerHourGlassListener listener : listeners){
                         System.out.println("Calling Hourglass listener");
                         listener.onFinish();
                     }
@@ -67,7 +75,7 @@ public class Hourglass{
     }
 
 
-    public void setListener(HourGlassListener listener){
+    public void setListener(ControllerHourGlassListener listener){
         listeners.add(listener);
     }
 
@@ -76,34 +84,5 @@ public class Hourglass{
     public boolean isStartable() {return startable;}
 
     public void setLock(){startable = false;}
-
-//
-//    @Override
-//    @JsonIgnore
-//    public void run() {
-//
-//        startable = false;
-//
-//        try {
-//            Thread.sleep(time);
-//            usages--;
-//
-//            if(usages>0) {
-//                startable = true;
-//            }
-//            else {
-//                for (HourGlassListener listener : listeners){
-//                    listener.onFinish();
-//                }
-//            }
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//
-//
-//    }
-
-
 
 }

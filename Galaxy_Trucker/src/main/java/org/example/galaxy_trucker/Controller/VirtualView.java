@@ -465,7 +465,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
     @Override
-    public void Effect(RandomCardEffectEvent event) {
+    public void Effect(LogEvent event) {
         sendEvent(event);
     }
 }

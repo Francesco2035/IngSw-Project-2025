@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Controller.Listeners.RandomCardEffectListener;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.RandomCardEffectEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
@@ -83,21 +83,21 @@ public class Card implements Serializable {
     public GameBoard getBoard() {
         return this.Board;
     }
-    public void updateSates(){}
+    public void updateSates() throws InterruptedException {}
     public void finishCard() {}
     public void continueCard(boolean accepted) {}
-    public void checkPower(double power, int numofDouble) {}
-    public void checkMovement(int power, int numofDouble) {}
+    public void checkPower(double power, int numofDouble) throws InterruptedException {}
+    public void checkMovement(int power, int numofDouble) throws InterruptedException {}
     public void continueCard(ArrayList<IntegerPair> coordinates, boolean accepted) {}
-    public void DefendFromLarge(IntegerPair CannonCoord, IntegerPair EnergyStorage, Player player) {}
-    public void DefendFromSmall(IntegerPair energy, Player player) {}
+    public void DefendFromLarge(IntegerPair CannonCoord, IntegerPair EnergyStorage, Player player) throws InterruptedException {}
+    public void DefendFromSmall(IntegerPair energy, Player player) throws InterruptedException {}
     public void continueCard(ArrayList<IntegerPair> coordinates) {}
-    public void continueCard(){}
-    public void killHumans(ArrayList<IntegerPair> coordinates) {}
+    public void continueCard() throws InterruptedException {}
+    public void killHumans(ArrayList<IntegerPair> coordinates) throws InterruptedException {}
     public void choosePlanet(int planet){}
-    public void keepGoing(){}
-    public void consumeEnergy(ArrayList<IntegerPair> coordinates) {}
-    public void loseCargo(IntegerPair pair, int position){}
+    public void keepGoing() throws InterruptedException {}
+    public void consumeEnergy(ArrayList<IntegerPair> coordinates) throws InterruptedException {}
+    public void loseCargo(IntegerPair pair, int position) throws InterruptedException {}
     public void ActivateCard(){}
     public int getDefaultPunishment(){return DefaultPunishment;}
     public void setDefaultPunishment(int p){DefaultPunishment = p;}
@@ -121,7 +121,7 @@ public class Card implements Serializable {
 
 
     /// usa questo per mandare notifiche al client lezgo
-    public void sendRandomEffect(String playerid, RandomCardEffectEvent randomCardEffectEvent) {
+    public void sendRandomEffect(String playerid, LogEvent randomCardEffectEvent) {
         System.out.println("invio a "+playerid+" "+randomCardEffectEvent.message());
         getRandomCardEffectListeners().get(playerid).Effect(randomCardEffectEvent);
     }

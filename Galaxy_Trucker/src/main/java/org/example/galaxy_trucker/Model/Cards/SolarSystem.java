@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.WrongPlanetExeption;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -18,6 +19,9 @@ public class SolarSystem extends Card {
     private  Player currentPlayer;
     private int order;
     private int done;
+    private  String message;
+
+    ArrayList<Player> losers;
 
 
 
@@ -32,7 +36,7 @@ public class SolarSystem extends Card {
 
     @Override
     public void CardEffect(){
-
+        losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         System.out.println("playerlist size " + PlayerList.size());
@@ -40,6 +44,7 @@ public class SolarSystem extends Card {
             System.out.println(p.GetID());
             p.setState(new Waiting());
         }
+        this.message=" ";
         this.updateSates();
     }
 
@@ -56,6 +61,7 @@ public class SolarSystem extends Card {
                 PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
                 this.currentPlayer.setState(new ChoosingPlanet());
+                this.sendRandomEffect(currentPlayer.GetID(),new LogEvent(message));
                 System.out.println(this.currentPlayer.GetID() + " : "+ this.currentPlayer.getPlayerState());
                 //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
 
@@ -88,6 +94,21 @@ public class SolarSystem extends Card {
                 PlayerList.get(i).setState(new BaseState());
 
             }
+
+            losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+            losers.addAll(getBoard().checkDoubleLap());
+
+            for(Player p: getBoard().getPlayers()){
+                if(p.getmyPlayerBoard().getNumHumans()==0){
+                    losers.remove(p);
+                    losers.add(p);
+                }
+            }
+
+            for(Player p: losers){
+                getBoard().abandonRace(p);
+            }
+
             System.out.println("card finished");
             this.setFinished(true);
         }
@@ -111,6 +132,7 @@ public class SolarSystem extends Card {
                 //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
             } else {
                 this.planets.get(planet).setOccupied(this.currentPlayer);
+                message=message+currentPlayer.GetID()+"has chosen planet number "+planet+"\n";
                 this.updateSates();
             }
         }

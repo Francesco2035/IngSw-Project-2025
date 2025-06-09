@@ -48,6 +48,8 @@ public class HandleCargoCommand extends Command implements Serializable {
         try{
             switch (title) {
                 //TODO:getfromorewards non vuole nessun index per aggiungere, si può togliere nel chill
+
+                /// quando faccio la get from rewards faccio la remove prima di controllare che effettivamente faccia il command quindi quando ho errore consumo il good
                 case "GetFromRewards": {
                     playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),
                             new AddGoodAction(

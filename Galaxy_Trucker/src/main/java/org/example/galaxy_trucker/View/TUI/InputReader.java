@@ -66,7 +66,8 @@ public class InputReader implements Runnable {
 
         mainKeyMap.bind(new Macro("SeeBoards"), "\u0002"); // Ctrl+B
         mainKeyMap.bind(new Macro("MainTerminal"), "\u0014");   // Ctrl+T
-
+        mainKeyMap.bind(new Macro("Log"), "\u000C");   // Ctrl+L
+        //mainKeyMap.bind(new Macro("Help"), "\u0008");   // Ctrl+H
 
 
         prompt = new AttributedStringBuilder()

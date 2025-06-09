@@ -49,6 +49,7 @@ public class BuildingCommand extends Command implements Serializable {
 
                     case "SEEDECK": {
                         player.getCommonBoard().getCardStack().notify(playerId, x);
+                        break;
                     }
 
                     case "INSERTTILE": {

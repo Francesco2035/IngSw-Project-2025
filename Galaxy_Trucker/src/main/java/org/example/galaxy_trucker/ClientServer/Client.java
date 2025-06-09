@@ -33,7 +33,9 @@ public class Client implements EventVisitor {
     private TileEvent[][] board;
     private UUID token;
     private boolean login = false;
+    private boolean lobby = false;
     HashMap<String, Integer> gameidToLV = new HashMap<>();
+    CommandInterpreter commandInterpreter;
 
 
     public boolean getLogin(){
@@ -42,6 +44,14 @@ public class Client implements EventVisitor {
 
     public void setLogin(boolean login){
         this.login = login;
+    }
+
+    public boolean getLobby(){
+        return lobby;
+    }
+
+    public void setLobby(boolean lobby){
+        this.lobby = lobby;
     }
 
 
@@ -208,7 +218,7 @@ public class Client implements EventVisitor {
     }
 
     @Override
-    public void visit(RandomCardEffectEvent event) {
+    public void visit(LogEvent event) {
         this.view.effectCard(event);
     }
 
@@ -221,6 +231,18 @@ public class Client implements EventVisitor {
     @Override
     public void visit(PBInfoEvent event) {
         this.view.updatePBInfo(event);
+    }
+
+    @Override
+    public void visit(QuitEvent quitEvent) {
+        this.login = false;
+        this.lobby = false;
+        this.view.phaseChanged(new PhaseEvent(new LoginClient()));
+    }
+
+    @Override
+    public void visit(HourglassEvent event) {
+        this.view.updateHourglass(event);
     }
 
     @Override

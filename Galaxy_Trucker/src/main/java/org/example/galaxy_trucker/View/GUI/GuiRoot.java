@@ -1111,12 +1111,22 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void effectCard(RandomCardEffectEvent event) {
+    public void effectCard(LogEvent event) {
 
     }
 
     @Override
     public void updatePBInfo(PBInfoEvent event) {
+
+    }
+
+    @Override
+    public void updateHourglass(HourglassEvent event) {
+
+    }
+
+    @Override
+    public void seeLog() {
 
     }
 

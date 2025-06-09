@@ -22,12 +22,15 @@ public class BuildingClient  extends PlayerStateClient{
             toPrint.append("Building\n\n");
             toPrint.append(out.showPlayers());
             toPrint.append(out.printGameboard());
-            toPrint.append(out.printHand());
             toPrint.append(out.showCovered());
             toPrint.append(out.showUncoveredTiles());
             toPrint.append(out.showPbInfo());
             toPrint.append(out.printBoard());
+            toPrint.append(out.printHand());
+            toPrint.append(out.showDeck());
+            toPrint.append(out.showHorglass());
             toPrint.append(out.showException());
+            toPrint.append(out.showCardEffect());
             out.render(toPrint);
 
         }
@@ -42,6 +45,6 @@ public class BuildingClient  extends PlayerStateClient{
 
     @Override
     public List<String> getCommands() {
-        return List.of("Discard", "PickTile", "FinishBuilding", "InsertTile");
+        return List.of("Discard", "PickTile", "FinishBuilding", "InsertTile", "SeeDeck");
     }
 }
