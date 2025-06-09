@@ -60,21 +60,27 @@ public class SolarSystem extends Card {
                 currentPlayer = PlayerList.get(this.order);
                 PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
-                this.currentPlayer.setState(new ChoosingPlanet());
+
                 this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent(message));
+                this.currentPlayer.setState(new ChoosingPlanet());
+
                 System.out.println(this.currentPlayer.GetID() + " : "+ this.currentPlayer.getPlayerState());
                 //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
 
                 this.order++;
             }
             else{
+                System.out.println("Players now have to handle the cargo :)");
                 for(Player p : PlayerList){
                     p.setState(new Waiting());
                 }
                 ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
                 concurrentCardListener.onConcurrentCard(true);
                 for(Planet p: this.planets){
+
                     if(p.isOccupied()){
+
+                        System.out.println(p.getOccupied().GetID()+" is occupying this planet");
                         this.getBoard().movePlayer(p.getOccupied().GetID(), -this.getTime());
 
                         p.getOccupied().setState(new HandleCargo());
@@ -88,7 +94,7 @@ public class SolarSystem extends Card {
     public void finishCard() {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        if(this.done==PlayerList.size()-1) {
+        if(this.done>=PlayerList.size()-1) {
 
             for (int i = 0; i < PlayerList.size(); i++) {
                 PlayerList.get(i).setState(new BaseState());
