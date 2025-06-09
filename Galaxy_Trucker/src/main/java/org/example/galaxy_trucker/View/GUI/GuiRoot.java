@@ -74,8 +74,12 @@ public class GuiRoot implements View {
     private HashMap<String, GridPane> othersBoards;
     private boolean addcrew;
 
+
+    private HashMap<String, ImageView> playerRockets;
+    private HashMap<String, Integer> playerPositions;
     private HashMap<Integer, IntegerPair> coords;
     private Image brownAlien, purpleAlien, crewMate;
+    private Pane rocketsPane;
 
     public void setStage(Stage primaryStage){
         printer.setStage(primaryStage);
@@ -95,10 +99,13 @@ public class GuiRoot implements View {
 
         coords = new HashMap<>();
         othersBoards = new HashMap<>();
+        playerRockets = new HashMap<>();
+        playerPositions = new HashMap<>();
+        rocketsPane = new Pane();
 
-        brownAlien = new Image(getClass().getResourceAsStream("/GUI/brown.png"));
-        purpleAlien = new Image(getClass().getResourceAsStream("/GUI/purple.png"));
-        crewMate = new Image(getClass().getResourceAsStream("/GUI/white-amogus.png"));
+        brownAlien = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/alien-brown.png"));
+        purpleAlien = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/alien-purple.png"));
+        crewMate = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-white.png"));
 
 
         myBoard = new GridPane();
@@ -136,9 +143,6 @@ public class GuiRoot implements View {
 
         StackPane tileStack;
         Pane crewPane = new Pane();
-
-        System.out.println("Rotazione tassello in "+event.getX() + " " + event.getY() + "--> " + event.getRotation());
-
         ImageView tileImg = new ImageView();
         tileImg.setFitWidth(70);
         tileImg.setRotate(event.getRotation());
@@ -165,8 +169,10 @@ public class GuiRoot implements View {
             }
         }
         else{
+
             tileImg.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg")));
             tileImg.setOpacity(1);
+            setColors(myName, event.getId());
 
             if(addcrew){
 
@@ -174,7 +180,6 @@ public class GuiRoot implements View {
                 ImageView crewImg = new ImageView();
                 crewImg.setFitWidth(40);
                 crewImg.setPreserveRatio(true);
-
 
 
                 if(event.isBrownAlien()){
@@ -243,6 +248,7 @@ public class GuiRoot implements View {
             tile.setOpacity(0.5);
         }
         else if(event.getId() < 157){
+            setColors(event.getPlayerName(), event.getId());
             tile.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg")));
             tile.setRotate(event.getRotation());
         }
@@ -276,10 +282,6 @@ public class GuiRoot implements View {
 
     }
 
-    @Override
-    public void updateGameboard(GameBoardEvent event) {
-
-    }
 
     @Override
     public void updateCoveredTilesSet(CoveredTileSetEvent event) {
@@ -733,11 +735,13 @@ public class GuiRoot implements View {
     }
 
 
-    private void gameBoardTest(){
+    private void setGameBoard(){
+        double scaleRatio = 0.85;
+
         Platform.runLater(() -> {
             final int[] i = {0};
             Stage gbStage = new Stage();
-            gbStage.setTitle("Exception");
+            gbStage.setTitle("Game Board");
 
 
             StackPane root = new StackPane();
@@ -745,38 +749,56 @@ public class GuiRoot implements View {
             Pane pedLayer = new Pane();
 
             ImageView board = new ImageView(gameBoardImg);
-            board.setFitHeight(639);
+            board.setFitHeight(639 * scaleRatio);
             board.setPreserveRatio(true);
 
-            ImageView pedine = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/white-amogus.png")));
-            pedine.setFitHeight(50);
-            pedine.setPreserveRatio(true);
-            pedine.setLayoutX(coords.get(i[0]).getFirst() - 20);
-            pedine.setLayoutY(coords.get(i[0]).getSecond() + 140);
-            pedLayer.getChildren().add(pedine);
+//            ImageView pedine = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/among-us-white.png")));
+//            pedine.setFitHeight(40);
+//            pedine.setPreserveRatio(true);
+//            pedine.setLayoutX((coords.get(i[0]).getFirst() - 20) * scaleRatio);
+//            pedine.setLayoutY((coords.get(i[0]).getSecond() - 25) * scaleRatio);
+//            pedLayer.getChildren().add(pedine);
+//
+//            pedine.setOnMouseClicked(e -> {
+//                i[0]++;
+//                pedine.setLayoutX((coords.get(i[0]).getFirst() - 20) * scaleRatio);
+//                pedine.setLayoutY((coords.get(i[0]).getSecond() - 20) * scaleRatio);
+//
+//            });
 
-            Button move = new Button("Move 1");
-            move.setOnAction(e -> {
-                System.out.println(i[0]);
-                System.out.println(coords.get(i[0]).getFirst() + ", " + coords.get(i[0]).getSecond());
-                i[0]++;
-                pedine.setLayoutX(coords.get(i[0]).getFirst() - 20);
-                pedine.setLayoutY(coords.get(i[0]).getSecond() + 140);
+            root.getChildren().addAll(board, rocketsPane);
 
-            });
+            Scene scene = new Scene(root, 1055*scaleRatio, 639*scaleRatio);
+            gbStage.setScene(scene);
 
-            root.getChildren().addAll(board, pedLayer);
-
-            HBox box = new HBox(20,root, myBoard, move);
-            box.setAlignment(Pos.CENTER);
-
-            Scene errorScene = new Scene(box, 700, 800);
-            gbStage.setScene(errorScene);
-            gbStage.initOwner(primaryStage);
             gbStage.initModality(Modality.WINDOW_MODAL);
+            gbStage.setResizable(false);
             gbStage.show();
+    });
+}
+
+
+    @Override
+    public void updateGameboard(GameBoardEvent event){
+        Platform.runLater(()->{
+            if(!playerPositions.containsKey(event.getPlayerID())){
+                playerPositions.put(event.getPlayerID(), event.getPosition());
+                rocketsPane.getChildren().add(playerRockets.get(event.getPlayerID()));
+            }
+
+            if(event.getPosition() == -1){
+                playerPositions.remove(event.getPlayerID());
+                rocketsPane.getChildren().remove(playerRockets.get(event.getPlayerID()));
+            }
+            else{
+                playerRockets.get(event.getPlayerID()).setLayoutX((coords.get(event.getPosition()).getFirst() - 20) * 0.85);
+                playerRockets.get(event.getPlayerID()).setLayoutY((coords.get(event.getPosition()).getSecond() - 20) * 0.85);
+            }
+
         });
+
     }
+
 
 
     public void LobbyGameScreen(){
@@ -900,6 +922,17 @@ public class GuiRoot implements View {
         gameBoard.setSmooth(true);
         gameBoard.setFitWidth(400);
 
+        ImageView hourglass = new ImageView((new Image(getClass().getResourceAsStream("/GUI/hourglass.png"))));
+        hourglass.setPreserveRatio(true);
+        hourglass.setSmooth(true);
+        hourglass.setFitHeight(70);
+        hourglass.setOnMouseClicked(event -> {
+            inputQueue.add("Hourglass");
+        });
+
+
+        ImageView runningHourglass = new ImageView((new Image(getClass().getResourceAsStream("/GUI/super-buu-hourglass.gif"))));
+
 
         ImageView clockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow clockwise.png")));
         clockwiseArrow.setPreserveRatio(true);
@@ -941,7 +974,7 @@ public class GuiRoot implements View {
         });
 
         board.setOnAction(e -> {
-           gameBoardTest();
+           setGameBoard();
         });
 
         finishButton.setOnAction(e -> {
@@ -995,7 +1028,7 @@ public class GuiRoot implements View {
 
         HBox tileBox =  new HBox(5, counterclockwiseArrow, tileImage, clockwiseArrow);
         VBox Buttons = new VBox(15, pickTile, board, discardTile, finishButton);
-        HBox buildKit = new HBox(10, tileBox, Buttons);
+        HBox buildKit = new HBox(10, tileBox, Buttons, hourglass);
 
 
 
@@ -1283,6 +1316,36 @@ public class GuiRoot implements View {
         }
 
     }
-    //printplayerboard(){..}
+
+    private void setColors(String pl, int id){
+
+        Platform.runLater(()->{
+            ImageView img = new ImageView();
+            img.setFitHeight(40);
+            img.setPreserveRatio(true);
+
+            if(!playerRockets.containsKey(pl)) {
+                if (id == 153) {
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-blue.png")));
+                    playerRockets.put(pl, img);
+                }
+                if (id == 154) {
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-green.png")));
+                    playerRockets.put(pl, img);
+                }
+                if (id == 155) {
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-red.png")));
+                    playerRockets.put(pl, img);
+                }
+                if (id == 156) {
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-yellow.png")));
+                    playerRockets.put(pl, img);
+                }
+            }
+
+        });
+        System.out.println(pl +" "+ id);
+    }
+
 
 }

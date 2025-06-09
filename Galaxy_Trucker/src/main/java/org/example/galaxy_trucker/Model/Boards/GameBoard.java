@@ -256,7 +256,8 @@ public class GameBoard {
             if(NewPos < 0) NewIndex = (nPositions + (NewPos % nPositions)) % nPositions;
             else NewIndex = NewPos % nPositions;
 
-                if (positions[NewIndex % nPositions] == null || positions[NewIndex % nPositions].equals(cur.getKey())) i++;
+            if (positions[NewIndex % nPositions] == null || positions[NewIndex % nPositions].equals(cur.getKey()))
+                i++;
 //            else if(cur.getKey().equals(players.getLast().getKey()) && players.getLast().getValue() + nSteps +nPositions <= players.getFirst().getValue()){
 //                abandonRace(players.getLast().getKey());
 //            }
