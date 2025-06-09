@@ -123,7 +123,12 @@ public class Card implements Serializable {
     /// usa questo per mandare notifiche al client lezgo
     public void sendRandomEffect(String playerid, LogEvent randomCardEffectEvent) {
         System.out.println("invio a "+playerid+" "+randomCardEffectEvent.message());
-        getRandomCardEffectListeners().get(playerid).Effect(randomCardEffectEvent);
+        if(getRandomCardEffectListeners().get(playerid) != null) {
+            getRandomCardEffectListeners().get(playerid).Effect(randomCardEffectEvent);
+        }
+        else{
+            System.out.println("the value of the card listener was Null if its not a test this is an issue ");
+        }
     }
 
     public HashMap<String, RandomCardEffectListener> getRandomCardEffectListeners() {
