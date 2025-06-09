@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.RandomCardEffectEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.*;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetGoodAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
@@ -153,13 +153,13 @@ public class Warzone extends Card{
                 if (RequirementsType[ChallengeOrder] == 1) {
                     System.out.println("checking attack of: " + currentPlayer.GetID());
                     this.currentPlayer.setState(new GiveAttack());
-                    this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent(message));
+                    this.sendRandomEffect(currentPlayer.GetID(),new LogEvent(message));
                     //this.currentPlayer.setInputHandler(new GiveAttack(this));
 
                 } else if (RequirementsType[ChallengeOrder] == 2) {
                     System.out.println("checking speed of: " + currentPlayer.GetID());
                     this.currentPlayer.setState(new GiveSpeed());
-                    this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent(message));
+                    this.sendRandomEffect(currentPlayer.GetID(),new LogEvent(message));
                     //this.currentPlayer.setInputHandler(new GiveSpeed(this));
 
                 } else { //problema qui:)
@@ -192,7 +192,7 @@ public class Warzone extends Card{
                     }
 
                     System.out.println(Worst.GetID() + " has to kill" + this.PunishmentHumans);
-                    this.sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent(Worst.GetID()+"is the worst and has to kill "+this.PunishmentHumans));
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and has to kill "+this.PunishmentHumans));
                     this.setDefaultPunishment(this.PunishmentHumans);
                     this.Worst.setState(new Killing());
                     //this.currentPlayer.setInputHandler(new Killing(this));
@@ -201,7 +201,7 @@ public class Warzone extends Card{
                 /// lose cargo
                 else if (this.PunishmentType[ChallengeOrder] == 3) {
 
-                    this.sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent(Worst.GetID()+"is the worst and loses "+this.PunishmentCargo+" cargo"));
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and loses "+this.PunishmentCargo+" cargo"));
 
                     //  chiamo il metodo di fottitura eterna :)
 
@@ -241,9 +241,9 @@ public class Warzone extends Card{
                 else {
                     this.Minimum = 1000000;
                     this.ChallengeOrder++;
-                    this.sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent(Worst.GetID()+"is the worst and has to kill "+this.PunishmentHumans));
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and has to kill "+this.PunishmentHumans));
 
-                    this.sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent(Worst.GetID()+"is the worst and he is going to get shot at ^_^"));
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and he is going to get shot at ^_^"));
                     Thread.sleep(1000);
                     this.continueCard();
                     return; // stessa cosa di lose time dato che ci torno automaticamente incremento qui che è meglio
@@ -502,7 +502,7 @@ public class Warzone extends Card{
 
 
     public void loseTime() throws InterruptedException {
-        this.sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent(Worst.GetID()+"is the worst and loses "+this.PunishmentMovement+" time"));
+        this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and loses "+this.PunishmentMovement+" time"));
         Thread.sleep(1000);
         this.getBoard().movePlayer(Worst.GetID(),-this.PunishmentMovement);
         System.out.println(this.Worst.GetID()+" loses the time");
@@ -739,7 +739,7 @@ public class Warzone extends Card{
             if(shotsFlag == false){
                 this.ShotsOrder += 2;
             }
-            sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+            sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
             /// Todo aggiungere il messaggio a client e chiedere a francio che fare perche potrebbeb fare più di una chiamata per stato in caso di miss lezgosk
         }
         if(this.ShotsOrder >=PunishmentShots.size() ){

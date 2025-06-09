@@ -1078,7 +1078,7 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void effectCard(RandomCardEffectEvent event) {
+    public void effectCard(LogEvent event) {
 
     }
 
@@ -1089,6 +1089,11 @@ public class GuiRoot implements View {
 
     @Override
     public void updateHourglass(HourglassEvent event) {
+
+    }
+
+    @Override
+    public void seeLog() {
 
     }
 

@@ -3,7 +3,7 @@ package org.example.galaxy_trucker.Model.Cards;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.RandomCardEffectEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
@@ -300,7 +300,7 @@ public class   Meteorites extends Card {
             }
 
             System.out.println("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" "+location);
-            this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" at "+location));
+            this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" at "+location));
 
             if (!DamageFlag){this.SuccessfulDefences++;}
             this.PlayerOrder++;
@@ -344,7 +344,7 @@ public class   Meteorites extends Card {
             currentBoard.destroy(hits.get(player.GetID()).getFirst(), hits.get(player.GetID()).getSecond());
             currentBoard.handleAttack(hits.get(player.GetID()).getFirst(), hits.get(player.GetID()).getSecond());
             /// se metto la sleep rischia di far andare avanti il gamecontroller??
-            this.sendRandomEffect(player.GetID(),new RandomCardEffectEvent("your ship got destroyed in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()));
+            this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()));
             player.setState(new Waiting());
             Thread.sleep(1000);
             if (currentBoard.getBroken()){
@@ -352,7 +352,7 @@ public class   Meteorites extends Card {
                 System.out.println("\nrottura nave\n");
 
                 System.out.println("destroyed: "+hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond());
-                this.sendRandomEffect(player.GetID(),new RandomCardEffectEvent("your ship got broken into parts, select a chunk to keep"));
+                this.sendRandomEffect(player.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep"));
                 player.setState(new HandleDestruction());
                 System.out.println("Stato del player "+ player.getPlayerState().getClass().getName());
                 return;
@@ -408,7 +408,7 @@ public class   Meteorites extends Card {
             currentBoard.handleAttack(hits.get(player.GetID()).getFirst(), hits.get(player.GetID()).getSecond());
             System.out.println("destryoyed: "+hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()+" of:"+player.GetID());
 
-            this.sendRandomEffect(player.GetID(),new RandomCardEffectEvent("your ship got destroyed in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()));
+            this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()));
             player.setState(new Waiting());
             Thread.sleep(1000);
             if (currentBoard.getBroken()){
@@ -417,7 +417,7 @@ public class   Meteorites extends Card {
                 System.out.println(" rottura in "+hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond());
 
                 player.setState(new HandleDestruction());
-                this.sendRandomEffect(player.GetID(),new RandomCardEffectEvent("your ship got broken into parts, select a chunk to keep"));
+                this.sendRandomEffect(player.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep"));
 
                 System.out.println("Stato del player "+ player.getPlayerState().getClass().getName());
                 return;

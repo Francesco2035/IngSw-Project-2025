@@ -11,10 +11,7 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTi
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
-import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
-import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
-import org.example.galaxy_trucker.View.ClientModel.States.PlayerStateClient;
-import org.example.galaxy_trucker.View.ClientModel.States.SeeBoardsClient;
+import org.example.galaxy_trucker.View.ClientModel.States.*;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
@@ -231,7 +228,7 @@ public class TUI implements View {
     }
 
     @Override
-    public void effectCard(RandomCardEffectEvent event) {
+    public void effectCard(LogEvent event) {
         out.setEffectCard(event.message());
         onGameUpdate();
     }
@@ -249,6 +246,13 @@ public class TUI implements View {
     @Override
     public void updateHourglass(HourglassEvent event) {
         out.setHorglass(event.getStart(), event.message());
+        onGameUpdate();
+    }
+
+    @Override
+    public void seeLog() {
+        lastState = playerClient.getPlayerState();
+        playerClient.setPlayerState(new SeeLog());
         onGameUpdate();
     }
 

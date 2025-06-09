@@ -26,6 +26,7 @@ public class Out {
     String titleCard = "";
     ArrayList<String> deck = new ArrayList<>();
     private boolean hourglass = false;
+    ArrayList<String> log = new ArrayList<>();
 
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -645,6 +646,10 @@ public class Out {
 
     public void setEffectCard(String message) {
         this.effect = message;
+        StringBuilder sb = new StringBuilder();
+        sb.append(Ansi.ansi().fgYellow().a("[ " + effect + " ]").reset()+ "                                                                                                                                                                                                                                                         ");
+        sb.append("\n\n");
+        log.add(sb.toString());
     }
 
     public StringBuilder showCardEffect(){
@@ -724,6 +729,15 @@ public class Out {
         }
 
 
+        return sb;
+    }
+
+    public StringBuilder showLog() {
+        StringBuilder sb = new StringBuilder();
+        for (String s : log){
+            sb.append(s);
+            sb.append("\n");
+        }
         return sb;
     }
 }

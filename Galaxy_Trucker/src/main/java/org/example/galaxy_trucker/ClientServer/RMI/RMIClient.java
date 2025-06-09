@@ -173,6 +173,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     else if (cmd.equals("Reconnect")) {
                         System.out.println("No need to reconnect!");
                     }
+                    else if(cmd.equals("Log")){
+                        client.getView().seeLog();
+                    }
                     else if (cmd.equals("Lobby")){
                         if (!client.getLobby()){
                             client.setLobby(true);

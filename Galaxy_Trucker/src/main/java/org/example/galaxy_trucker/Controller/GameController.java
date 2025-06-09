@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Controller.Listeners.GameLobbyListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
@@ -102,6 +103,8 @@ public class GameController  implements ConcurrentCardListener {
             Controller controller = new LoginController(p, idGame);
             controller.setExceptionListener(vv);
             ControllerMap.put(playerId, controller);
+            sendMessage(new LogEvent("New player: " + playerId));
+
             System.out.println("New player " + playerId+" in "+ this);
             tokenToPlayerId.put(token, playerId);
             BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
@@ -226,6 +229,7 @@ public class GameController  implements ConcurrentCardListener {
                 lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
             }
             VirtualView vv = VirtualViewMap.remove(playerId);
+            sendMessage(new LogEvent(playerId + " quit"));
             vv.sendEvent(new QuitEvent());
 
         }
@@ -249,7 +253,7 @@ public class GameController  implements ConcurrentCardListener {
             ControllerMap.put(player.GetID(), controller);
 
             if(buildingCount == ControllerMap.size()){
-
+                sendMessage(new LogEvent("Building started"));
                 try {
                     game.getGameBoard().StartHourglass();
                 }catch(RuntimeException e){
@@ -288,10 +292,12 @@ public class GameController  implements ConcurrentCardListener {
         }
         firtflight = false;
         ArrayList<Player> players = game.getGameBoard().getPlayers();
+        sendMessage(new LogEvent("Flight started"));
         flightThread = new Thread(() -> {
             System.out.println("PESCO CARTA!");
 
             Card card= game.getGameBoard().NewCard();
+            sendMessage(new LogEvent("New card drawn"));
 
 
             card.setConcurrentCardListener(this);
@@ -395,14 +401,15 @@ public class GameController  implements ConcurrentCardListener {
 
 //                p.SetReady(true);
             }
+            sendMessage(new LogEvent("Flight finished"));
+            flightMode = false;
         });
 
         flightThread.start();
         //THREAD NON FINISCE SEMPLCIMENTE STO CREANDO OGNI VOLTA UNO NUOVO NEL CASO DI CARTA NON SPECIALE
 
-
-        flightMode = false;
-        changeState();
+//        flightMode = false;
+//        changeState();
 
     }
 
@@ -526,5 +533,13 @@ public class GameController  implements ConcurrentCardListener {
             return "This game is full";
         }
         return "";
+    }
+
+
+    public void sendMessage(LogEvent event){
+        System.out.println("sending message " + event.message());
+        for (VirtualView vv : VirtualViewMap.values()){
+            vv.sendEvent(event);
+        }
     }
 }

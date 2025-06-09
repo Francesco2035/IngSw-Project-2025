@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Controller.Listeners.RandomCardEffectListener;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.RandomCardEffectEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
@@ -121,7 +121,7 @@ public class Card implements Serializable {
 
 
     /// usa questo per mandare notifiche al client lezgo
-    public void sendRandomEffect(String playerid, RandomCardEffectEvent randomCardEffectEvent) {
+    public void sendRandomEffect(String playerid, LogEvent randomCardEffectEvent) {
         System.out.println("invio a "+playerid+" "+randomCardEffectEvent.message());
         getRandomCardEffectListeners().get(playerid).Effect(randomCardEffectEvent);
     }

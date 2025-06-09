@@ -218,7 +218,7 @@ public class Client implements EventVisitor {
     }
 
     @Override
-    public void visit(RandomCardEffectEvent event) {
+    public void visit(LogEvent event) {
         this.view.effectCard(event);
     }
 
