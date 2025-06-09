@@ -40,6 +40,15 @@ public class   Meteorites extends Card {
 
 
 
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Meteor swarn"));
+        }
+    }
+
+
 
     ///  in caso di disconnessione semplicemente non si difende da ncazzoz che lo colpisce
     public Meteorites(int level, int time, GameBoard board, ArrayList<Integer> attacks) {

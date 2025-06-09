@@ -304,6 +304,7 @@ public class GameController  implements ConcurrentCardListener {
             for (String player: VirtualViewMap.keySet()) {
                 card.setRandomCardEffectListeners(player, VirtualViewMap.get(player));
             }
+            card.sendTypeLog();
             try{
                 card.CardEffect();
 

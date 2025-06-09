@@ -62,6 +62,16 @@ public class Pirates extends Card{
 
 
     }
+
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Pirates"));
+        }
+    }
+
+
  @Override
     public void CardEffect(){
      losers = new ArrayList<>();
@@ -203,14 +213,14 @@ public class Pirates extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
                             }
                             else{
                                 this.ShotsOrder+=2;
-                                sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }
@@ -243,14 +253,14 @@ public class Pirates extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
                             }
                             else{
                                 this.ShotsOrder+=2;
-                                sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }
@@ -283,7 +293,7 @@ public class Pirates extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
@@ -291,7 +301,7 @@ public class Pirates extends Card{
                             else{
                                 System.out.println("non si è rotto nulla");
                                 this.ShotsOrder+=2;
-                                sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }
@@ -322,14 +332,14 @@ public class Pirates extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
                             }
                             else{
                                 this.ShotsOrder+=2;
-                                sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }

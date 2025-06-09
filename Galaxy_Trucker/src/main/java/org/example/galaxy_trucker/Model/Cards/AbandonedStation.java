@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 //import org.example.galaxy_trucker.Model.InputHandlers.Accept;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -25,6 +26,14 @@ public class AbandonedStation extends Card{
     private ArrayList<Player> losers;
 
 
+
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Abandoned station"));
+        }
+    }
 
 
     /// in caso di disconnession il player sempluicemente non accetta se deve accttare la nave

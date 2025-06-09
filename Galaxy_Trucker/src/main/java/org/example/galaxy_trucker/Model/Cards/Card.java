@@ -110,6 +110,10 @@ public class Card implements Serializable {
         return finished;
     }
 
+    public void sendTypeLog(){
+
+    }
+
     public void setFinished(boolean finished) {
         this.finished = finished;
     }

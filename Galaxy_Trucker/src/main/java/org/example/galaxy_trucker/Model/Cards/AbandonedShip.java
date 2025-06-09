@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
@@ -30,6 +31,14 @@ public class AbandonedShip extends Card{
     private int order;
     private int totHumans;
     private ArrayList<Player> losers;
+
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Abandoned Ship"));
+        }
+    }
 
 
     public AbandonedShip(int requirement, int reward, int level, int time, GameBoard board) {

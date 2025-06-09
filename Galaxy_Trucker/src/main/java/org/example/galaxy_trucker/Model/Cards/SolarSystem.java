@@ -23,6 +23,14 @@ public class SolarSystem extends Card {
 
     ArrayList<Player> losers;
 
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Planets"));
+        }
+    }
+
 
 
     /// caso base è non scendere sui pianeti

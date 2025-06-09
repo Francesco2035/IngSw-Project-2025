@@ -70,6 +70,14 @@ public class Warzone extends Card{
     private ArrayList<Player> losers;
 
 
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Combat Zone"));
+        }
+    }
+
 
 
 
@@ -607,14 +615,14 @@ public class Warzone extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.Worst.setState(new HandleDestruction());
                                 return;
 
                             }
                             else{
                                 this.ShotsOrder+=2;
-                                sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }
@@ -647,14 +655,14 @@ public class Warzone extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.Worst.setState(new HandleDestruction());
                                 return;
 
                             }
                             else{
                                 this.ShotsOrder+=2;
-                                sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }
@@ -687,7 +695,7 @@ public class Warzone extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.Worst.setState(new HandleDestruction());
                                 return;
 
@@ -695,7 +703,7 @@ public class Warzone extends Card{
                             else{
                                 System.out.println("non si è rotto nulla");
                                 this.ShotsOrder+=2;
-                                sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }
@@ -726,14 +734,14 @@ public class Warzone extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
-                                sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.Worst.setState(new HandleDestruction());
                                 return;
 
                             }
                             else{
                                 this.ShotsOrder+=2;
-                                sendRandomEffect(Worst.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
+                                sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }
