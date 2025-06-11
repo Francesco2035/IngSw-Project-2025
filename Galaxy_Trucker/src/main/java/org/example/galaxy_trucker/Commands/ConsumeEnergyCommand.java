@@ -19,7 +19,12 @@ public class ConsumeEnergyCommand extends Command implements Serializable {
 
     @Override
     public void execute(Player player) {
-        player.getCurrentCard().consumeEnergy(coordinate);
+        try{
+            player.getCurrentCard().consumeEnergy(coordinate);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 

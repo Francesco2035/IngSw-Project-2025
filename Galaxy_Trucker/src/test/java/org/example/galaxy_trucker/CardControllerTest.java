@@ -2,6 +2,7 @@ package org.example.galaxy_trucker;
 
 import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.Controller.CardsController;
+import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.Player_IntegerPair;
 import org.example.galaxy_trucker.Model.Cards.AbandonedShip;
@@ -12,10 +13,7 @@ import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.nio.channels.AcceptPendingException;
@@ -25,51 +23,72 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 public class CardControllerTest {
 
     static Game game;
-    static GameBoard Gboard;
 
-    Player p1;
-    Player p2;
+    static {
+        try {
+            game = new Game(2,"pippo");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    CardsController c1 = new CardsController(p1, game.getGameID(), false);
-    CardsController c2 = new CardsController(p2, game.getGameID(), false);
+    static GameBoard Gboard =game.getGameBoard();
+
+   static Player p1;
+   static Player p2;
+
+   static CardsController c1 = new CardsController(p1,game.getGameID(),false);
+    static CardsController c2= new CardsController(p2,game.getGameID(),false);;
 
 
 
 
+//    CardsController c1= new CardsController(p1,game.getGameID(),false);
+//    CardsController c2= new CardsController(p2,game.getGameID(),false);
 
-        // CardsController c1= new CardsController(p1,game.getGameID(),false);
-// CardsController c2= new CardsController(p2,game.getGameID(),false);
-
-
-    @Test
-    public void testAbandonedShipCard() throws IOException {
+@BeforeAll
+public void setup() throws IOException {
 
     Game game = new Game(2, "testCarteController");
 
 
     p1 = new Player();
-        p1.setId("pietro");
+    p1.setId("pietro");
     p2 = new Player();
-        p2.setId("FRA");
-        game.NewPlayer(p1);
-        game.NewPlayer(p2);
-        p1.setMyPlance(TestSetupHelper.createInitializedBoard1());
-        System.out.println("\n");
-        p2.setMyPlance(TestSetupHelper.createInitializedBoard2());
+    p2.setId("FRA");
+    game.NewPlayer(p1);
+    game.NewPlayer(p2);
+    p1.setMyPlance(TestSetupHelper.createInitializedBoard1());
+    System.out.println("\n");
+    p2.setMyPlance(TestSetupHelper.createInitializedBoard2());
 
     assertTrue(p1.getmyPlayerBoard().checkValidity());
-        System.out.println("sksk");
+    System.out.println("sksk");
     assertTrue(p2.getmyPlayerBoard().checkValidity());
 
-        TestSetupHelper.HumansSetter1(p1.getmyPlayerBoard());
-        TestSetupHelper.HumansSetter1(p2.getmyPlayerBoard());
+    TestSetupHelper.HumansSetter1(p1.getmyPlayerBoard());
+    TestSetupHelper.HumansSetter1(p2.getmyPlayerBoard());
     Gboard = game.getGameBoard();
 
-        Gboard.SetStartingPosition(p1);
-        Gboard.SetStartingPosition(p2);
+    Gboard.SetStartingPosition(p1);
+    Gboard.SetStartingPosition(p2);
+
+
+//    c1 = new CardsController(p1, game.getGameID(), false);
+//    c2 = new CardsController(p2, game.getGameID(), false);
+}
+
+
+@Test
+@Order(2)
+    public void testAbandonedShipCard() throws IOException {
+
 
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
@@ -122,7 +141,11 @@ public class CardControllerTest {
     }
 
     @Test
-    public void testAbandonedStationCard() throws IOException {
+    @Order(3)
+    public void testAbandonedStationCard() throws IOException, InterruptedException {
+
+
+
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -185,7 +208,12 @@ public class CardControllerTest {
 
     //meteoriti ha memoria?
     @Test
+    @Order(30)
     public void testMeteoritesCard() throws IOException {
+
+
+
+
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -255,7 +283,11 @@ public class CardControllerTest {
     }
 
     @Test
+    @Order(5)
     public void testOpensSpaceCard() throws IOException {
+
+
+
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -308,11 +340,26 @@ public class CardControllerTest {
     }
 
     @Test
+    @Order(6)
     public void testSolarSystemCard() throws IOException {
+
+
+
+
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
+
+        ConcurrentCardListener conc = new ConcurrentCardListener() {
+            @Override
+            public void onConcurrentCard(boolean phase) {
+                System.out.println("LISTENER CONCORRENTE");
+            }
+        };
+
         Card CurrentCard = cards.get(27);
+
+        CurrentCard.setConcurrentCardListener(conc);
 
         for (Player p : game.getGameBoard().getPlayers()) {
             p.setCard(CurrentCard);
@@ -334,7 +381,7 @@ public class CardControllerTest {
         assertEquals(p2.getPlayerState().getClass(), Waiting.class);
         assertEquals(true, p2.GetHasActed());
         System.out.println("p1 is choosing");
-        ChoosingPlanetsCommand choosingPlanetsCommand = new ChoosingPlanetsCommand(-1,game.getID(),p1.GetID(),Gboard.getLevel(),"boh?","Placeholder");
+        ChoosingPlanetsCommand choosingPlanetsCommand = new ChoosingPlanetsCommand(1,game.getID(),p1.GetID(),Gboard.getLevel(),"boh?","Placeholder");
         choosingPlanetsCommand.execute(p1);
         assertEquals(p2.getPlayerState().getClass(), ChoosingPlanet.class);
         assertEquals(false, p2.GetHasActed());

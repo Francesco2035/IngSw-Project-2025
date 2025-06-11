@@ -115,7 +115,7 @@ class WarzoneTest {
 
     @Test
     void
-    cardEffect() {
+    cardEffect() throws InterruptedException {
         int[] req = new int[3];
         req[0]=1;//cannoni
         req[1]=2;//movim

@@ -49,6 +49,7 @@ public class BuildingCommand extends Command implements Serializable {
 
                     case "SEEDECK": {
                         player.getCommonBoard().getCardStack().notify(playerId, x);
+                        break;
                     }
 
                     case "INSERTTILE": {
@@ -56,6 +57,7 @@ public class BuildingCommand extends Command implements Serializable {
                         int rotations = (rotation % 360) / 90;
                         for (int i = 0; i < rotations; i++) {
                             tile.RotateDx();
+                            tile.setRotation(rotations);
                         }
                         player.getmyPlayerBoard().insertTile(tile, x, y, true);
                         player.setCurrentTile(null);
@@ -66,6 +68,7 @@ public class BuildingCommand extends Command implements Serializable {
                         int rotations = (rotation % 360) / 90;
                         for (int i = 0; i < rotations; i++) {
                             tile.RotateDx();
+                            tile.setRotation(rotations);
                         }
                         player.PlaceInBuffer();
                         break;

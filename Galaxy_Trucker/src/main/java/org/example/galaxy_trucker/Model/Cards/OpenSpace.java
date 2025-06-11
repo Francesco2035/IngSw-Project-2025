@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
@@ -18,7 +19,16 @@ public class OpenSpace extends Card{
     private int order;
     private int currentmovement;
     private int energyUsage;
+    private ArrayList<Player> losers;
 
+
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Open space"));
+        }
+    }
 
 
     ///  in caso di disconnessione non attiva motori doppi ma avanza lo stesso
@@ -33,7 +43,7 @@ public class OpenSpace extends Card{
 
     @Override
     public void CardEffect(){
-
+        losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
@@ -69,6 +79,22 @@ public class OpenSpace extends Card{
             PlayerList.get(i).setState(new BaseState());
 
         }
+
+
+        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+
+        for(Player p: getBoard().getPlayers()){
+            if(p.getmyPlayerBoard().getNumHumans()==0){
+                losers.remove(p);
+                losers.add(p);
+            }
+        }
+
+        for(Player p: losers){
+            getBoard().abandonRace(p);
+        }
+
         System.out.println("card finished");
         this.setFinished(true);
     }
@@ -115,8 +141,7 @@ public class OpenSpace extends Card{
     }
     public void moveplayer(){
         if(currentmovement==0){
-
-
+            losers.add(this.currentPlayer);
         }
         else {
             getBoard().movePlayer(currentPlayer.GetID(),currentmovement);

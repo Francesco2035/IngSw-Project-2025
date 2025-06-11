@@ -33,7 +33,10 @@ public class Client implements EventVisitor {
     private TileEvent[][] board;
     private UUID token;
     private boolean login = false;
+    private boolean lobby = false;
+    private final LoginClient loginClient = new LoginClient();
     HashMap<String, Integer> gameidToLV = new HashMap<>();
+    CommandInterpreter commandInterpreter;
 
 
     public boolean getLogin(){
@@ -44,25 +47,33 @@ public class Client implements EventVisitor {
         this.login = login;
     }
 
+    public boolean getLobby(){
+        return lobby;
+    }
+
+    public void setLobby(boolean lobby){
+        this.lobby = lobby;
+    }
+
 
     public synchronized boolean containsGameId(String gameid) {
-        System.out.println(this);
+        //System.out.println(this);
 
         return gameidToLV.containsKey(gameid);
     }
 
     public synchronized int getLevel(String gameid) {
-        System.out.println(this);
+        //System.out.println(this);
 
         return gameidToLV.get(gameid);
     }
 
     public synchronized void setGameIdToLV(String gameid, int lv) {
-        System.out.println(this);
+        //System.out.println(this);
 
-        System.out.println(gameid + " " + lv);
+        //System.out.println(gameid + " " + lv);
         this.gameidToLV.putIfAbsent(gameid, lv);
-        System.out.println(gameid + " " + gameidToLV.get(gameid)+" size: "+gameidToLV.size());
+        //System.out.println(gameid + " " + gameidToLV.get(gameid)+" size: "+gameidToLV.size());
     }
 
     public synchronized HashMap<String, Integer> getGameidToLV() {
@@ -128,7 +139,7 @@ public class Client implements EventVisitor {
         Client client = new Client();
 
         if (view1.equals("TUI")) {
-            TUI tui = new TUI();
+            TUI tui = new TUI(loginClient);
             tui.setClient(client);
             client.setView(tui);
         } else if (view1.equals("GUI")){
@@ -208,7 +219,7 @@ public class Client implements EventVisitor {
     }
 
     @Override
-    public void visit(RandomCardEffectEvent event) {
+    public void visit(LogEvent event) {
         this.view.effectCard(event);
     }
 
@@ -221,6 +232,18 @@ public class Client implements EventVisitor {
     @Override
     public void visit(PBInfoEvent event) {
         this.view.updatePBInfo(event);
+    }
+
+    @Override
+    public void visit(QuitEvent quitEvent) {
+        this.login = false;
+        this.lobby = false;
+        this.view.phaseChanged(new PhaseEvent(loginClient));
+    }
+
+    @Override
+    public void visit(HourglassEvent event) {
+        this.view.updateHourglass(event);
     }
 
     @Override

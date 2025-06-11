@@ -140,7 +140,7 @@ class MeteoritesTest {
     }
 
     @Test
-    void defendFromMeteorites() {
+    void defendFromMeteorites() throws InterruptedException {
         attacks.clear();
 
         attacks.add(1);

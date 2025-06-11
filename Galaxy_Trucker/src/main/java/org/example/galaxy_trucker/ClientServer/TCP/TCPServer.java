@@ -11,6 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,11 +20,13 @@ public class TCPServer implements  Runnable {
     private static GamesHandler gamesHandler;
     private ConcurrentHashMap<UUID, VirtualView> tokenMap;
     private ArrayList<UUID> DisconnectedClients;
+    private HashMap<MultiClientHandler,Thread> multiClientThreads;
 
     public TCPServer(GamesHandler gamesHandler, ConcurrentHashMap<UUID, VirtualView> tokenMap, ArrayList<UUID> DisconnectedClients) throws RemoteException {
         this.gamesHandler = gamesHandler;
         this.tokenMap = tokenMap;
         this.DisconnectedClients = DisconnectedClients;
+        multiClientThreads = new HashMap<>();
     }
 
     public void run() {
@@ -49,12 +52,30 @@ public class TCPServer implements  Runnable {
             }
 
             System.out.println("Accepted");
-            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, gamesHandler, tokenMap, DisconnectedClients);
+            MultiClientHandler clientHandler = new MultiClientHandler(clientSocket, gamesHandler, tokenMap, DisconnectedClients, this);
             gamesHandler.setListeners(clientHandler);
             Thread t = new Thread(clientHandler);
             t.start();
+            synchronized (multiClientThreads) {
+                multiClientThreads.put(clientHandler, t);
+            }
         }
     }
+
+    public void removeMC(MultiClientHandler clientHandler) {
+//        synchronized (multiClientThreads) {
+//            Thread t = multiClientThreads.remove(clientHandler);
+//            try {
+//                t.interrupt();
+//            }
+//            catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+    }
+
+
+
 
 
 }

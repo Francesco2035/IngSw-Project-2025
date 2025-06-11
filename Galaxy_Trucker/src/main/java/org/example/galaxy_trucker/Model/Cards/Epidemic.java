@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -17,8 +18,17 @@ import java.util.ArrayList;
 public class Epidemic extends Card {
     private ArrayList<HousingUnit> infected;
 
-    Player currentPlayer;
+    private Player currentPlayer;
+    private ArrayList<Player> losers;
 
+
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Epidemic"));
+        }
+    }
 
 
     public Epidemic(int level, int time, GameBoard board) {
@@ -27,7 +37,7 @@ public class Epidemic extends Card {
     }
 
     public void CardEffect() throws InterruptedException {
-
+        losers = new ArrayList<>();
         if(infected==null) {
             infected = new ArrayList<>();
         }
@@ -85,6 +95,23 @@ public class Epidemic extends Card {
 
         }
         System.out.println("card finished\n");
+
+        /// souldn't be possible
+        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+
+        for(Player p: getBoard().getPlayers()){
+            if(p.getmyPlayerBoard().getNumHumans()==0){
+                losers.remove(p);
+                losers.add(p);
+            }
+        }
+
+        for(Player p: losers){
+            getBoard().abandonRace(p);
+        }
+
+
         this.setFinished(true);
     }
 

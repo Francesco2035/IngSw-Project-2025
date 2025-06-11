@@ -28,6 +28,10 @@ public class DefendFromSmallCommand extends Command implements Serializable {
 
     @Override
     public void execute(Player player) {
-        player.getCurrentCard().DefendFromSmall(batteryComp,player);
+        try {
+            player.getCurrentCard().DefendFromSmall(batteryComp,player);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

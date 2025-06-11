@@ -63,6 +63,7 @@ public abstract class HousingUnit extends Component{
         //System.out.println("HousingUnit insert called, i'm here: " + x + ", " + y);
         //playerBoard.getHousingUnits().remove(this);
         playerBoard.getHousingUnits().add(this);
+        playerBoard.setNumHumans(getNumHumans());
         this.x = x;
         this.y = y;
         tile.sendUpdates(null,getNumHumans(),isPurpleAlien(),isBrownAlien(),0);
@@ -72,6 +73,7 @@ public abstract class HousingUnit extends Component{
     public void remove(PlayerBoard playerBoard)  {
         playerBoard.getHousingUnits().remove(this);
         playerBoard.getConnectedHousingUnits().remove(this);
+        playerBoard.setNumHumans(-getNumHumans());
         for (HousingUnit unit : nearbyHousingUnits){
             unit.notifyUnit(false, this);
         }

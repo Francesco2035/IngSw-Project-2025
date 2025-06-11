@@ -4,6 +4,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetGoodAction;
@@ -36,6 +37,8 @@ public class Smugglers extends Card{
     private double currentpower;
     private int energyUsage;
     private boolean isaPunishment;
+
+    ArrayList<Player> losers;
     // conviene creare una classe che lista gli attacchi o in qualche modo chiama solo una volta
     //il player da attaccare cambia Attack
 
@@ -53,10 +56,17 @@ public class Smugglers extends Card{
         this.isaPunishment=false;
     }
 
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Smugglers"));
+        }
+    }
 
     @Override
     public void CardEffect(){
-
+        losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
@@ -103,6 +113,8 @@ public class Smugglers extends Card{
 
 
     }
+
+
 
 
 
@@ -163,6 +175,9 @@ public class Smugglers extends Card{
 
     }
 
+
+
+    /// devo far si che se ho 0 energia termina subito perché senno devoi fare un consume energy vuoto
     public void checkStrength(){
 
 
@@ -202,9 +217,6 @@ public class Smugglers extends Card{
                 currentPlayer.setState(new ConsumingEnergy()); /// se il player va in consuming energy e poi si disconnette ma non ha abbastanza energie  sei fottuto
             /// non dovrebbe succedere perche prendo il minimo tra i due ma non si sa mai :)
             }
-
-
-
                 ///manca il loseCargo lose cargo semplicemente lancia
 
         }
@@ -308,6 +320,21 @@ public class Smugglers extends Card{
             ArrayList<Player> PlayerList = Board.getPlayers();
             for (int i = 0; i < PlayerList.size(); i++) {
                 PlayerList.get(i).setState(new BaseState());
+            }
+
+
+            losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+            losers.addAll(getBoard().checkDoubleLap());
+
+            for(Player p: getBoard().getPlayers()){
+                if(p.getmyPlayerBoard().getNumHumans()==0){
+                    losers.remove(p);
+                    losers.add(p);
+                }
+            }
+
+            for(Player p: losers){
+                getBoard().abandonRace(p);
             }
             System.out.println("card finished");
             this.setFinished(true);

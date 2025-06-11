@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.View.TUI;
 
+import javafx.scene.effect.Effect;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ViewPhase;
@@ -23,6 +24,9 @@ public class Out {
     String exception = "";
     String effect = "";
     String titleCard = "";
+    ArrayList<String> deck = new ArrayList<>();
+    private boolean hourglass = false;
+    ArrayList<String> log = new ArrayList<>();
 
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -173,6 +177,11 @@ public class Out {
 
     public void setPlayers(ArrayList<String> players) {
         this.players = players;
+        for (String playerId : otherPlayersBoard.keySet()) {
+            if (!players.contains(playerId)) {
+                otherPlayersBoard.remove(playerId);
+            }
+        }
     }
 
     public void setReady(ArrayList<Boolean> ready) {
@@ -262,7 +271,12 @@ public class Out {
     }
 
     public void setLobby(String gameid, String[]cell) {
-        lobby.put(gameid,cell);
+        if(cell == null){
+            lobby.remove(gameid);
+        }
+        else{
+            lobby.put(gameid,cell);
+        }
     }
 
     public void setPhase(ViewPhase phase) {
@@ -417,8 +431,6 @@ public class Out {
 
     public StringBuilder printHand(){
         StringBuilder toPrint = new StringBuilder();
-        //inputReader.clearScreen();
-        
         toPrint.append(ASCII_ART.Hand);
         for (String l : cacheHand) toPrint.append("\n"+l);
         toPrint.append("\n"+border + "\n");
@@ -584,10 +596,7 @@ public class Out {
             toPrint.append("\n\n");
             toPrint.append("\n\n"+ CacheCard+ "\n\n");
         }
-        else{
-            toPrint.append("empty bro");
-        }
-        
+
         return toPrint;
     }
 
@@ -642,6 +651,10 @@ public class Out {
 
     public void setEffectCard(String message) {
         this.effect = message;
+        StringBuilder sb = new StringBuilder();
+        sb.append(Ansi.ansi().fgYellow().a("[ " + effect + " ]").reset()+ "                                                                                                                                                                                                                                                         ");
+        sb.append("\n\n");
+        log.add(sb.toString());
     }
 
     public StringBuilder showCardEffect(){
@@ -649,7 +662,7 @@ public class Out {
         if (!effect.equals("")){
             sb.append(Ansi.ansi().fgYellow().a("[ " + effect + " ]").reset());
             sb.append("\n\n");
-            //effect = "";
+            effect = "";
         }
         return sb;
     }
@@ -664,5 +677,77 @@ public class Out {
 
     public StringBuilder showPbInfo(){
         return new StringBuilder(PBInfo);
+    }
+
+    public void setDeck(ArrayList<String> ids) {
+        deck = ids;
+    }
+
+    public StringBuilder showDeck() {
+        if (deck.isEmpty()){
+            return new StringBuilder("");
+        }
+        ArrayList<String[]> splittedCards = new ArrayList<>();
+        int maxLines = 0;
+
+        for (String card : deck) {
+            String[] lines = card.split("\n");
+            splittedCards.add(lines);
+            if (lines.length > maxLines) {
+                maxLines = lines.length;
+            }
+        }
+
+        StringBuilder combined = new StringBuilder();
+        for (int i = 0; i < maxLines; i++) {
+            for (int j = 0; j < splittedCards.size(); j++) {
+                String[] cardLines = splittedCards.get(j);
+                String line = i < cardLines.length ? cardLines[i] : "";
+                combined.append(String.format("%-30s", line));
+                if (j < splittedCards.size() - 1) {
+                    combined.append("         ");
+                }
+            }
+            combined.append("\n");
+
+
+        }
+        deck.clear();
+        return combined;
+
+
+    }
+
+    public void setHorglass(boolean start, String message) {
+        hourglass = start;
+        effect = message;
+    }
+
+    public StringBuilder showHorglass(){
+        StringBuilder sb = new StringBuilder();
+
+        if (hourglass){
+            sb = new StringBuilder(ASCII_ART.hourglassStart);
+        }
+        else{
+            sb = new StringBuilder(ASCII_ART.hourglassEnd);
+        }
+
+
+        return sb;
+    }
+
+    public StringBuilder showLog() {
+        StringBuilder sb = new StringBuilder();
+        for (String s : log){
+            sb.append(s);
+            sb.append("\n");
+        }
+        return sb;
+    }
+
+    public void clearOut() {
+        lobby.clear();
+        //TODO: pulire tutta OUT
     }
 }

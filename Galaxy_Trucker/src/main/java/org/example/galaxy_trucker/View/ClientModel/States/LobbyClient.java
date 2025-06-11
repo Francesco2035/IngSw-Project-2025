@@ -13,6 +13,7 @@ public class LobbyClient extends PlayerStateClient {
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
+        toPrint.append("lobby");
         toPrint.append(ASCII_ART.Title);
         toPrint.append(ASCII_ART.Border);
 

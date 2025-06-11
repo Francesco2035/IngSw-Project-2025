@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 //import org.example.galaxy_trucker.Model.InputHandlers.Accept;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.RandomCardEffectEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
@@ -32,6 +32,7 @@ public class Pirates extends Card{
     private int[] lines;
     private double currentpower;
     private int energyUsage;
+    ArrayList<Player> losers;
 
     @JsonProperty("punishment")
     private ArrayList<Integer> Punishment;
@@ -61,9 +62,19 @@ public class Pirates extends Card{
 
 
     }
+
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Pirates"));
+        }
+    }
+
+
  @Override
     public void CardEffect(){
-
+     losers = new ArrayList<>();
      this.lines = new int[this.Punishment.size()/2];
      for(int i=0;i< Punishment.size()/2;i++){
          lines[i] = this.getBoard().getPlayers().getFirst().RollDice()-1;
@@ -192,7 +203,8 @@ public class Pirates extends Card{
                 while (Movement < 10  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
 
                     if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                        location = new String(lines[ShotsOrder/2]+" "+Movement);
+                        Colpito= new String("hit you");
+                        location = new String("at "+lines[ShotsOrder/2]+" "+Movement);
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
@@ -201,12 +213,14 @@ public class Pirates extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
                             }
                             else{
                                 this.ShotsOrder+=2;
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }
@@ -215,7 +229,7 @@ public class Pirates extends Card{
                         }
                         else {//colpo piccolo
                             currentPlayer.setState(new DefendingFromSmall());
-                            Colpito= new String("hit you");
+
                         }
                         }
 
@@ -228,7 +242,8 @@ public class Pirates extends Card{
                 Movement = 0;
                 while (Movement < 10 && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {//guardo se la casella è occupata (spero basti fare questo controllo
-                        location = new String(Movement+" "+lines[ShotsOrder/2]);
+                        Colpito= new String("hit you");
+                        location = new String("at "+Movement+" "+lines[ShotsOrder/2]);
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
@@ -238,19 +253,21 @@ public class Pirates extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
                             }
                             else{
                                 this.ShotsOrder+=2;
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }
 
                         }
                         else {//colpo piccolo
-                            Colpito= new String("hit you");
+
                             currentPlayer.setState(new DefendingFromSmall());
                         }
 
@@ -264,7 +281,8 @@ public class Pirates extends Card{
                 Movement = 9;
                 while (Movement >= 0   && lines[ShotsOrder/2]<10&& shotsFlag == false) {
                     if (MeteoritesValidPlanche[lines[ShotsOrder / 2]][Movement] > 0) {
-                        location = new String(lines[ShotsOrder/2]+" "+Movement);
+                        Colpito= new String("hit you");
+                        location = new String("at "+lines[ShotsOrder/2]+" "+Movement);
 
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder/2]);
@@ -275,6 +293,7 @@ public class Pirates extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
@@ -282,13 +301,14 @@ public class Pirates extends Card{
                             else{
                                 System.out.println("non si è rotto nulla");
                                 this.ShotsOrder+=2;
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }
 
                         }
                         else {//colpo piccolo
-                            Colpito= new String("hit you");
+
                             currentPlayer.setState(new DefendingFromSmall());
                         }
 
@@ -302,7 +322,8 @@ public class Pirates extends Card{
                 Movement = 9;
                 while (Movement >= 0  && lines[ShotsOrder/2]<10 && shotsFlag == false) {
                     if (MeteoritesValidPlanche[Movement][lines[ShotsOrder / 2]] > 0) {
-                        location = new String(Movement+" "+lines[ShotsOrder/2]);
+                        Colpito= new String("hit you");
+                        location = new String("at "+Movement+" "+lines[ShotsOrder/2]);
                             shotsFlag = true;
                             hit.setValue(Movement, lines[ShotsOrder / 2]);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
@@ -311,19 +332,21 @@ public class Pirates extends Card{
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
                             }
                             else{
                                 this.ShotsOrder+=2;
+                                sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
                                 this.continueCard();
                                 return;
                             }
 
                         }
                         else {//colpo piccolo
-                            Colpito= new String("hit you");
+
                             currentPlayer.setState(new DefendingFromSmall());
                         }
                         }
@@ -336,7 +359,7 @@ public class Pirates extends Card{
             if(shotsFlag == false){
             this.ShotsOrder += 2;
             }
-            sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" at "+location));
+            sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location));
             /// Todo aggiungere il messaggio a client e chiedere a francio che fare perche potrebbeb fare più di una chiamata per stato in caso di miss lezgosk
         }
         if(this.ShotsOrder >=Punishment.size() ){
@@ -356,7 +379,7 @@ public class Pirates extends Card{
     }
 
     @Override
-    public void DefendFromSmall(IntegerPair energy, Player player){
+    public void DefendFromSmall(IntegerPair energy, Player player) throws InterruptedException {
         PlayerBoard currentBoard =this.currentPlayer.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if (energy!=null){
@@ -376,9 +399,14 @@ public class Pirates extends Card{
         else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
             currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
+            this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hit.getFirst()+" "+hit.getSecond()));
+            player.setState(new Waiting());
+            Thread.sleep(1000);
             if (currentBoard.getBroken()){
                 System.out.println("rottura nave");
                 this.currentPlayer.setState(new HandleDestruction());
+                this.sendRandomEffect(player.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep"));
+
                 return;
 
             }
@@ -395,6 +423,20 @@ public class Pirates extends Card{
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
 
+        }
+
+        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+
+        for(Player p: getBoard().getPlayers()){
+            if(p.getmyPlayerBoard().getNumHumans()==0){
+                losers.remove(p);
+                losers.add(p);
+            }
+        }
+
+        for(Player p: losers){
+            getBoard().abandonRace(p);
         }
         System.out.println("card finished");
         this.setFinished(true);

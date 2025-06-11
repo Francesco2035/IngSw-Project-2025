@@ -173,9 +173,12 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     else if (cmd.equals("Reconnect")) {
                         System.out.println("No need to reconnect!");
                     }
+                    else if(cmd.equals("Log")){
+                        client.getView().seeLog();
+                    }
                     else if (cmd.equals("Lobby")){
-                        if (!lobby){
-                            lobby = true;
+                        if (!client.getLobby()){
+                            client.setLobby(true);
                             LobbyCommand Lobby = new LobbyCommand("Lobby");
                             Lobby.setClient(this);
                             server.command(Lobby);
@@ -237,8 +240,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                 client.setLogin(true);
                                 int level = client.getLevel(gameId);
 
-                                String fullCommand = "Login " + playerId + " " + gameId + " " + level;
-                                System.out.println(fullCommand);
+                                //String fullCommand = "Login " + playerId + " " + gameId + " " + level;
+                                //System.out.println(fullCommand);
 
                                 commandInterpreter = new CommandInterpreter(playerId, gameId);
                                 commandInterpreter.setlv(level);

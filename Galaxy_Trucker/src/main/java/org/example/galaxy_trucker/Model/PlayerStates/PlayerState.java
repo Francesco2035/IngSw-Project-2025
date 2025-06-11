@@ -52,6 +52,10 @@ public abstract class PlayerState {
         return false;
     }
 
+    public boolean allows(TheftCommand command){
+        return false;
+    }
+
     public boolean allows(BuildingCommand command) {
         return false;
     }
@@ -63,6 +67,8 @@ public abstract class PlayerState {
     public boolean allows(LoginCommand command) {
         return false;
     }
+
+    public boolean allows(QuitCommand command){return false;}
 
     public boolean allows(ReadyCommand command) {
         return false;
@@ -114,6 +120,8 @@ public abstract class PlayerState {
     public Command createDefaultCommand(String gameId,Player player) {
         return null;
     }
+
+
 
     public void shouldAct(Player player) {
         player.SetHasActed(false);

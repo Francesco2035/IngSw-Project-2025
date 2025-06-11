@@ -37,11 +37,16 @@ public interface EventVisitor {
 
     void visit(PlayerTileEvent playerTileEvent);
 
-    void visit(RandomCardEffectEvent randomCardEffectEvent);
+    void visit(LogEvent event);
 
     void visit(ConnectionRefusedEvent connectionRefusedEvent);
 
     void visit(PBInfoEvent pbInfoEvent);
+
+    void visit(QuitEvent quitEvent);
+
+    void visit(HourglassEvent hourglassEvent);
+
 
 
     //public void visit(GameBoardEvent event);

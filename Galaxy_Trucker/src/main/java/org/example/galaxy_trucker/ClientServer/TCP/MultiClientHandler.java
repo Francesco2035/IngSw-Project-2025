@@ -6,6 +6,7 @@ import javafx.fxml.LoadListener;
 import javafx.scene.chart.ScatterChart;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
+import org.example.galaxy_trucker.Commands.QuitCommand;
 import org.example.galaxy_trucker.Controller.DisconnectedClient;
 import org.example.galaxy_trucker.Controller.GameController;
 import org.example.galaxy_trucker.Controller.GamesHandler;
@@ -34,14 +35,16 @@ public class MultiClientHandler implements Runnable, GhListener {
     private int attempts = 3;
     private UUID Token;
     private HashMap<String, LobbyEvent> lobbyEvents = new HashMap<>();
+    TCPServer TCP ;
 
     private long lastPingTime;
 
-    public MultiClientHandler(Socket clientSocket, GamesHandler gameHandler, ConcurrentHashMap<UUID, VirtualView> tokenMap, ArrayList<UUID> disconnectedClients) {
+    public MultiClientHandler(Socket clientSocket, GamesHandler gameHandler, ConcurrentHashMap<UUID, VirtualView> tokenMap, ArrayList<UUID> disconnectedClients, TCPServer TCP) {
         this.clientSocket = clientSocket;
         this.gameHandler = gameHandler;
         this.tokenMap = tokenMap;
         this.disconnectedClients = disconnectedClients;
+        this.TCP = TCP;
     }
 
     @Override
@@ -188,5 +191,10 @@ public class MultiClientHandler implements Runnable, GhListener {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void quitPlayer(QuitCommand event) {
+        TCP.removeMC(this);
     }
 }

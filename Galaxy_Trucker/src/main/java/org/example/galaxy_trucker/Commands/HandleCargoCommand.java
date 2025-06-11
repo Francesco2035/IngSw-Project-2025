@@ -41,10 +41,15 @@ public class HandleCargoCommand extends Command implements Serializable {
 
         PlayerBoard playerBoard = player.getmyPlayerBoard();
         Goods temp;
-        ArrayList<Goods> rewards = new ArrayList<>(playerBoard.getRewards());
+        ArrayList<Goods> rewards = null;
+        if (playerBoard.getRewards() != null){
+            rewards = new ArrayList<>(playerBoard.getRewards());
+        }
         try{
             switch (title) {
                 //TODO:getfromorewards non vuole nessun index per aggiungere, si può togliere nel chill
+
+                /// quando faccio la get from rewards faccio la remove prima di controllare che effettivamente faccia il command quindi quando ho errore consumo il good
                 case "GetFromRewards": {
                     playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),
                             new AddGoodAction(
@@ -63,6 +68,9 @@ public class HandleCargoCommand extends Command implements Serializable {
                     break;
                 }
                 case "Switch":{
+                    if (coordinate.getFirst() == coordinate2.getFirst() && coordinate.getSecond() == coordinate2.getSecond()) {
+                        throw new InvalidInput("You can't switch viva il cringe");
+                    }
                     GetGoodAction action = new GetGoodAction(position,playerBoard,coordinate.getFirst(),coordinate.getSecond());
                     playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()
                             , action, player.getPlayerState());

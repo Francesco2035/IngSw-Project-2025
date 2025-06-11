@@ -18,7 +18,11 @@ public class KillCommand extends Command implements Serializable {
 
     @Override
     public void execute(Player player) {
-        player.getCurrentCard().killHumans(coordinates);
+        try {
+            player.getCurrentCard().killHumans(coordinates);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
