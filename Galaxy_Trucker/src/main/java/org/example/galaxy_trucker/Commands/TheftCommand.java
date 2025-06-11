@@ -19,10 +19,18 @@ public class TheftCommand extends Command implements Serializable {
     }
     @Override
     public void execute(Player player) throws IOException {
-        PlayerBoard playerBoard = player.getmyPlayerBoard();
-        GetGoodAction action = new GetGoodAction(position,playerBoard,coordinate.getFirst(),coordinate.getSecond());
-        playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()
-                , action, player.getPlayerState());
+        try{
+            //TODO: chiamare metodo carta per controlalre il valore del good
+            PlayerBoard playerBoard = player.getmyPlayerBoard();
+            GetGoodAction action = new GetGoodAction(position,playerBoard,coordinate.getFirst(),coordinate.getSecond());
+            playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()
+                    , action, player.getPlayerState());
+        }
+        catch (Exception e){
+
+            System.out.println(e.getMessage());
+        }
+
     }
 
     @Override
