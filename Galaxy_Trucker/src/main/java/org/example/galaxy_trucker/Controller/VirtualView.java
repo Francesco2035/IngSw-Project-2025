@@ -468,4 +468,13 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     public void Effect(LogEvent event) {
         sendEvent(event);
     }
+
+    public void removeListeners(){
+        this.playersPBListeners.clear();
+    }
+
+    public void removeListener(PlayersPBListener listener){
+        this.playersPBListeners.remove(listener);
+    }
+
 }

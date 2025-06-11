@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTi
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.IntegerPair;
 
 import java.lang.reflect.InaccessibleObjectException;
 import java.util.ArrayList;
@@ -40,6 +41,10 @@ public class SpecialStorageCompartment extends Storage{
         }
         Goods good = goods.remove(position);
         playerBoard.setTotalValue(-good.getValue());
+        playerBoard.getStoredGoods().get(good.getValue()).remove(new IntegerPair(tile.x,tile.y));
+        if (playerBoard.getStoredGoods().get(good.getValue()).isEmpty()){
+            playerBoard.getStoredGoods().remove(good.getValue());
+        }
         tile.sendUpdates(goods,0, false, false, 0);
         return good;
 
@@ -56,6 +61,17 @@ public class SpecialStorageCompartment extends Storage{
         }
         goods.add(good);
         playerBoard.setTotalValue(good.getValue());
+        if (playerBoard.getStoredGoods().containsKey(good.getValue())){
+            System.out.println("Cargo add "+good.getValue()+ " in "+ tile.x+ " "+tile.y);
+            playerBoard.getStoredGoods().get(good.getValue()).add(new IntegerPair(tile.x, tile.y));
+        }
+        else{
+            ArrayList<IntegerPair> toAdd = new ArrayList<>();
+            toAdd.add(new IntegerPair(tile.x, tile.y));
+            System.out.println("Cargo add "+good.getValue()+ " in "+ tile.x+ " "+tile.y);
+            playerBoard.getStoredGoods().put(good.getValue(), toAdd);
+
+        }
         tile.sendUpdates(goods,0, false, false, 0);
 
     }
@@ -65,8 +81,23 @@ public class SpecialStorageCompartment extends Storage{
     public void insert(PlayerBoard playerBoard, int x, int y) {
         this.playerBoard = playerBoard;
         playerBoard.getStorages().add(this);
-        if (goods == null)
+        if (goods == null) {
             goods = new ArrayList<>();
+        }
+        else{
+            ArrayList<IntegerPair> toAdd = new ArrayList<>();
+            for (Goods good : goods){
+                playerBoard.setTotalValue(good.getValue());
+                if (playerBoard.getStoredGoods().containsKey(good.getValue())){
+                    playerBoard.getStoredGoods().get(good.getValue()).add(new IntegerPair(tile.x, tile.y));
+                }
+                else{
+                    toAdd.add(new IntegerPair(tile.x, tile.y));
+                    playerBoard.getStoredGoods().put(good.getValue(), toAdd);
+                    toAdd = new ArrayList<>();
+                }
+            }
+        }
         tile.sendUpdates(goods,0, false, false, 0);
 
     }
@@ -75,6 +106,13 @@ public class SpecialStorageCompartment extends Storage{
     @Override
     public void remove(PlayerBoard playerBoard) {
         playerBoard.getStorages().remove(this);
+        for (Goods good : goods){
+            playerBoard.setTotalValue(-good.getValue());
+            playerBoard.getStoredGoods().get(good.getValue()).remove(new IntegerPair(tile.x, tile.y));
+            if (playerBoard.getStoredGoods().get(good.getValue()).isEmpty()){
+                playerBoard.getStoredGoods().remove(good.getValue());
+            }
+        }
         tile.sendUpdates(new RemoveTileEvent());
 
     }

@@ -15,6 +15,7 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.Goods.*;
+import org.jline.builtins.SyntaxHighlighter;
 
 
 import java.util.*;
@@ -303,6 +304,13 @@ public class PlayerBoard {
     }
 
     public HashMap<Integer, ArrayList<IntegerPair>> getStoredGoods(){
+        System.out.println("getStoredGoods "+ storedGoods.size());
+        for (Integer i : storedGoods.keySet()){
+            System.out.println("there are "+ storedGoods.get(i).size() + " goods of value "+i);
+            for (IntegerPair pair : storedGoods.get(i)){
+                System.out.println("Value "+i+ "| |"+ pair.getFirst() + " " + pair.getSecond());
+            }
+        }
         return storedGoods;
     }
 
@@ -884,7 +892,7 @@ public class PlayerBoard {
 
 
     public void performAction(Component component, ComponentAction action, PlayerState state) {
-            component.accept(action, state);
+        component.accept(action, state);
     }
 
 
@@ -922,6 +930,7 @@ public class PlayerBoard {
         clonedPlayerBoard.Rewards = new ArrayList<>(this.Rewards);
         clonedPlayerBoard.rewardsListener = this.getRewardsListener();
         clonedPlayerBoard.setBuffer(this.Buffer);
+        clonedPlayerBoard.storedGoods = new HashMap<>();
         if (clonedPlayerBoard.rewardsListener == null){
             System.out.println("sincero non capisco il perchè");
         }
@@ -936,8 +945,9 @@ public class PlayerBoard {
                     Tile t = tile.clone(clonedPlayerBoard);
                     clonedPlayerBoard.PlayerBoard[i][j] = t;
                 }
-                else
+                else{
                     clonedPlayerBoard.PlayerBoard[i][j] = null;
+                }
 
 
                 if (tile != null) {
@@ -1120,7 +1130,10 @@ public class PlayerBoard {
         if (listener != null){
             int crew = 0;
             crew += numHumans;
-            if (purpleAlien || brownAlien){
+            if (purpleAlien){
+                crew++;
+            }
+            if (purpleAlien){
                 crew++;
             }
             int engine = 0;

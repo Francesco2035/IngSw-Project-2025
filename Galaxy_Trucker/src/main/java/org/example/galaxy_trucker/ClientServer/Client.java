@@ -34,6 +34,7 @@ public class Client implements EventVisitor {
     private UUID token;
     private boolean login = false;
     private boolean lobby = false;
+    private final LoginClient loginClient = new LoginClient();
     HashMap<String, Integer> gameidToLV = new HashMap<>();
     CommandInterpreter commandInterpreter;
 
@@ -56,23 +57,23 @@ public class Client implements EventVisitor {
 
 
     public synchronized boolean containsGameId(String gameid) {
-        System.out.println(this);
+        //System.out.println(this);
 
         return gameidToLV.containsKey(gameid);
     }
 
     public synchronized int getLevel(String gameid) {
-        System.out.println(this);
+        //System.out.println(this);
 
         return gameidToLV.get(gameid);
     }
 
     public synchronized void setGameIdToLV(String gameid, int lv) {
-        System.out.println(this);
+        //System.out.println(this);
 
-        System.out.println(gameid + " " + lv);
+        //System.out.println(gameid + " " + lv);
         this.gameidToLV.putIfAbsent(gameid, lv);
-        System.out.println(gameid + " " + gameidToLV.get(gameid)+" size: "+gameidToLV.size());
+        //System.out.println(gameid + " " + gameidToLV.get(gameid)+" size: "+gameidToLV.size());
     }
 
     public synchronized HashMap<String, Integer> getGameidToLV() {
@@ -138,7 +139,7 @@ public class Client implements EventVisitor {
         Client client = new Client();
 
         if (view1.equals("TUI")) {
-            TUI tui = new TUI();
+            TUI tui = new TUI(loginClient);
             tui.setClient(client);
             client.setView(tui);
         } else if (view1.equals("GUI")){
@@ -237,7 +238,7 @@ public class Client implements EventVisitor {
     public void visit(QuitEvent quitEvent) {
         this.login = false;
         this.lobby = false;
-        this.view.phaseChanged(new PhaseEvent(new LoginClient()));
+        this.view.phaseChanged(new PhaseEvent(loginClient));
     }
 
     @Override

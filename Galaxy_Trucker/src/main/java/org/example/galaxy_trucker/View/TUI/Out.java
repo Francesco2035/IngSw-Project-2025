@@ -177,6 +177,11 @@ public class Out {
 
     public void setPlayers(ArrayList<String> players) {
         this.players = players;
+        for (String playerId : otherPlayersBoard.keySet()) {
+            if (!players.contains(playerId)) {
+                otherPlayersBoard.remove(playerId);
+            }
+        }
     }
 
     public void setReady(ArrayList<Boolean> ready) {
@@ -739,5 +744,10 @@ public class Out {
             sb.append("\n");
         }
         return sb;
+    }
+
+    public void clearOut() {
+        lobby.clear();
+        //TODO: pulire tutta OUT
     }
 }

@@ -341,10 +341,15 @@ public class GameBoard {
 
     public ArrayList<Player> getPlayers(){
         ArrayList<Player> PlayersCopy = new ArrayList<>();
-
-        for (Player_IntegerPair player : players) {
-            PlayersCopy.add(player.getKey());
+        try{
+            for (Player_IntegerPair player : players) {
+                System.out.println("GAMEBOARD: "+ player.getKey().GetID());
+                PlayersCopy.add(player.getKey());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
 
         return PlayersCopy;
     }
@@ -358,23 +363,36 @@ public class GameBoard {
     public Hourglass getHourglass() {return hourglass;}
 
     public void abandonRace(Player loser){
+    System.out.println(loser.GetID()+ " HAI PERSO COGLIONE!");
+        try{
+            Player_IntegerPair pair = players.stream()
+                    .filter(p -> p.getKey().equals(loser))
+                    .findFirst()
+                    .orElseThrow();
+            positions[pair.getValue() % nPositions] = null;
+            Player playah = pair.getKey();
+            int finalScore = playah.finishRace(false);
+            //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
+            //--> ho fatto metodo finishGame per mettere in classifica anche quelli che vincono alla fine
+            //-palu
+            scoreboard.add(new Player_IntegerPair(playah, finalScore));
 
-        Player_IntegerPair pair = players.stream()
-                                         .filter(p -> p.getKey().equals(loser))
-                                         .findFirst()
-                                         .orElseThrow();
 
-        positions[pair.getValue() % nPositions] = null;
-        Player playah = pair.getKey();
-        int finalScore = playah.finishRace(false);
-        //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
-        //--> ho fatto metodo finishGame per mettere in classifica anche quelli che vincono alla fine
-        //-palu
-        scoreboard.add(new Player_IntegerPair(playah, finalScore));
+            /// controllare che anche lato controller il player che abbandona smetta di esistere
+            players.remove(pair);
+        }
+        catch (Exception e){
+            Player_IntegerPair pair = players.stream()
+                    .filter(p -> p.getKey().equals(loser))
+                    .findFirst()
+                    .orElseThrow();
+            players.remove(pair);
+            e.printStackTrace();
+        }
 
 
-        /// controllare che anche lato controller il player che abbandona smetta di esistere
-        players.remove(pair);
+
+
     }
 
     public void finishGame(){

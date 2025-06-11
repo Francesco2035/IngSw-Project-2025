@@ -7,6 +7,7 @@ import org.example.galaxy_trucker.Controller.Listeners.PhaseListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.ReadyListener;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
@@ -36,6 +37,15 @@ public class Player implements Serializable {
     private ArrayList<Goods> GoodsToHandle;
     private Card CurrentCard;
     private PhaseListener phaseListener;
+    private ReadyListener readyListener;
+
+    public ReadyListener getReadyListener() {
+        return readyListener;
+    }
+
+    public void setReadyListener(ReadyListener readyListener) {
+        this.readyListener = readyListener;
+    }
 
     public GameBoard getCommonBoard() {
         return CommonBoard;
@@ -257,7 +267,9 @@ public class Player implements Serializable {
 
     public void SetReady(boolean ready){
         this.ready = ready;
+        this.readyListener.onReady();
     }
+
     public void SetHasActed(boolean hasActed){
         this.HasActed = hasActed;
     }

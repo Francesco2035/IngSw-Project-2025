@@ -61,6 +61,42 @@ public class TUI implements View {
     private InputReader inputReader;
     private PlayerClient playerClient;
     private Client client;
+    private final SeeLog seeLog = new SeeLog();
+    private final SeeBoardsClient seeBoardsClient = new SeeBoardsClient();
+    private  LoginClient loginClient;
+
+
+
+    public TUI(){
+
+    }
+
+    public TUI(LoginClient loginClient) throws IOException {
+
+        this.loginClient = loginClient;
+        loadComponentNames();
+        loadCardsDescriptions();
+        cachedBoard = new String[10][10][7];
+        cacheHand = new String[7];
+        for (int i = 0; i < 7; i++) {
+            cacheHand[i] = "";
+        }
+        inputReader = new InputReader(inputQueue);
+        inputThread = new Thread(inputReader);
+        inputThread.setDaemon(true);
+        inputThread.start();
+        //phase = ViewPhase.LOBBY;
+        //inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));
+        playerClient = new PlayerClient();
+        playerClient.setPlayerState(new LoginClient());
+        playerClient.setCompleter(inputReader.getCompleter());
+        lastState = new LoginClient();
+        out = new Out(inputReader, playerClient);
+        onGameUpdate();
+        //inputReader.clearScreen();
+
+    }
+
 
 
     @Override
@@ -166,6 +202,10 @@ public class TUI implements View {
     public void phaseChanged(PhaseEvent event) {
         //System.out.println("STATE CHANGED: "+ event.getStateClient().getClass());
         //lastState = null;
+        if (event.getStateClient().equals(loginClient)){
+            firstUpdate = false;
+            out.clearOut();
+        }
         lastState = event.getStateClient();
         playerClient.setPlayerState(event.getStateClient());
         playerClient.getCompleter().setCommands(event.getStateClient().getCommands());
@@ -214,9 +254,10 @@ public class TUI implements View {
 
     @Override
     public void seeBoards() {
-
-        lastState = playerClient.getPlayerState();
-        playerClient.setPlayerState(new SeeBoardsClient());
+        if (!(playerClient.getPlayerState().equals(seeBoardsClient) || playerClient.getPlayerState().equals(seeLog))){
+            lastState = playerClient.getPlayerState();
+        }
+        playerClient.setPlayerState(seeBoardsClient);
         onGameUpdate();
     }
 
@@ -251,8 +292,10 @@ public class TUI implements View {
 
     @Override
     public void seeLog() {
-        lastState = playerClient.getPlayerState();
-        playerClient.setPlayerState(new SeeLog());
+        if (!(playerClient.getPlayerState().equals(seeBoardsClient) || playerClient.getPlayerState().equals(seeLog))){
+            lastState = playerClient.getPlayerState();
+        }
+        playerClient.setPlayerState(seeLog);
         onGameUpdate();
     }
 
@@ -302,31 +345,6 @@ public class TUI implements View {
         return cell;
     }
 
-    public TUI() throws IOException {
-
-        loadComponentNames();
-        loadCardsDescriptions();
-        cachedBoard = new String[10][10][7];
-        cacheHand = new String[7];
-        for (int i = 0; i < 7; i++) {
-            cacheHand[i] = "";
-        }
-        inputReader = new InputReader(inputQueue);
-        inputThread = new Thread(inputReader);
-        inputThread.setDaemon(true);
-        inputThread.start();
-        //phase = ViewPhase.LOBBY;
-        //inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));
-        playerClient = new PlayerClient();
-        playerClient.setPlayerState(new LoginClient());
-        playerClient.setCompleter(inputReader.getCompleter());
-        lastState = new LoginClient();
-        out = new Out(inputReader, playerClient);
-        onGameUpdate();
-        //inputReader.clearScreen();
-
-
-    }
 
     private void loadCardsDescriptions() {
         ObjectMapper mapper = new ObjectMapper();

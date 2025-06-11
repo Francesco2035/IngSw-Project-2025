@@ -8,6 +8,7 @@ import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Goods.*;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.HandleCargoClient;
+import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,7 @@ class OutTest {
     public static void setUp() throws IOException {
         input = new InputReader(new LinkedBlockingQueue<>());
         client = new PlayerClient();
-        tui = new TUI();
+        tui = new TUI(new LoginClient());
         out = new Out(input, client);
     }
 
