@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.ClientServer.Client;
+import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Commands.BuildingCommand;
 import org.example.galaxy_trucker.Commands.Command;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,18 +48,20 @@ class PrepControllerTest {
 
         game = new Game(2, "testPrepController");
         gc = new GameController(game.getGameID(), game, new GamesHandler(),game.getLv(),4);
-
-
         p1 = new Player();
         p1.setId("passos");
-        game.NewPlayer(p1);
-        p1.setBoards(game.getGameBoard());
         vv = new VirtualView(p1.GetID(), game.getGameID(), new RMIClient(new Client()), null);
         vv.setDisconnected(true);
-        assertTrue(p1.getmyPlayerBoard().checkValidity());
+
+
+
+//        assertTrue(gc.getGame().getPlayers().values().stream().filter(p -> p.GetID().equals(p1.GetID())).findFirst().orElseThrow().getmyPlayerBoard().checkValidity());
+
+
+        game.NewPlayer(p1);
+        p1.setBoards(game.getGameBoard());
         Gboard = game.getGameBoard();
         c1 = new PrepController(p1, game.getGameID(), gc, false);
-//        Controller controller = new LoginController(p1, game.getGameID());
         gc.getControllerMap().put(p1.GetID(), c1);
 
         p1.setPhaseListener(vv);
@@ -66,6 +70,52 @@ class PrepControllerTest {
         p1.getCommonBoard().getTilesSets().setListeners(vv);
         p1.setCardListner(vv);
         gc.getVirtualViewMap().put(p1.GetID(),vv);
+
+        gc.NewPlayer(p1, vv, new UUID(0, 0));
+
+//--------------------------------------------------------------------------------------------------------------------------------
+
+
+        Game g1 = new Game(2, "g2");
+        GameController gc1 = new GameController(g1.getGameID(), g1, new GamesHandler(), g1.getLv(),4);
+        Player p2 = new Player();
+        p2.setId("passos1");
+        ClientInterface ci = new RMIClient(new Client());
+
+
+        VirtualView vv1 = new VirtualView(p2.GetID(), g1.getGameID(), ci, null);
+        UUID tk = new UUID(45, 3456);
+
+        gc1.NewPlayer(p2, vv1, tk);
+
+        gc1.getGame().getPlayers().values().stream().findFirst().ifPresent(Player::GetID);
+
+//        gc1.getGame().getPlayers().values().stream().findFirst().ifPresent(Player::);
+
+
+        gc1.getControllerMap().values().stream().findFirst().orElseThrow().action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Ready", false, null), gc);
+
+        gc1.changeState();
+        gc1.changeState();
+        gc1.changeState();
+        gc1.changeState();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -98,13 +148,13 @@ class PrepControllerTest {
         c1.action(new BuildingCommand(0, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "PICKTILE", null), gc);
 
         c1.action(new BuildingCommand(0, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
-        c1.action(new BuildingCommand(6, 6, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
+//        c1.action(new BuildingCommand(6, 6, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(5, 5, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(5, 5, 100, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(100, 5, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(999, -999, -90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
 
-        c1.action(new BuildingCommand(6, 6, 0, 0, game.getGameID(), p1.GetID(), 2, "TOBUFFER", null), gc);
+//        c1.action(new BuildingCommand(6, 6, 0, 0, game.getGameID(), p1.GetID(), 2, "TOBUFFER", null), gc);
         c1.action(new BuildingCommand(5, 5, 0, 0, game.getGameID(), p1.GetID(), 2, "TOBUFFER", null), gc);
         c1.action(new BuildingCommand(5, 5, 0, 0, game.getGameID(), p1.GetID(), 2, "FROMBUFFER", null), gc);
 

@@ -156,7 +156,8 @@ public class GameController  implements ConcurrentCardListener {
             t.start();
             threads.put(playerId, t);
             ArrayList<String> players = new ArrayList<>(VirtualViewMap.keySet());
-            lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
+            if (lobbyListener != null)
+                lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
         }
 
 
@@ -219,7 +220,8 @@ public class GameController  implements ConcurrentCardListener {
             stopGame();
         }
         ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
-        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
+        if (lobbyListener != null)
+            lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
 
     }
 
