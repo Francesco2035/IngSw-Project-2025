@@ -30,8 +30,17 @@ public class BaseStateClient extends PlayerStateClient{
     }
 
     public void showGame(GuiOut out){
-        out.getRoot().LobbyGameScreen();
-        out.printGameLobby();
+        if(out.getRoot().isGameStarted()){
+
+            out.getRoot().flightScene();
+            out.printFlightScreen();
+        }
+        else{
+            out.getRoot().LobbyGameScreen();
+            out.printGameLobby();
+        }
+
+
     }
 
     @Override

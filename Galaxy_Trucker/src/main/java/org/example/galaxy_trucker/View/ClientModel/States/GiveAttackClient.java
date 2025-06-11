@@ -24,4 +24,6 @@ public class GiveAttackClient  extends PlayerStateClient{
     public List<String> getCommands() {
         return List.of("GiveAttack");
     }
+
+    //giveAttack x1 y1 ...
 }

@@ -23,4 +23,6 @@ public class KillingClient extends PlayerStateClient{
     public List<String> getCommands() {
         return List.of("Kill");
     }
+
+    //Kill x1 y1 x2 y2 ... (umani o alieni)
 }

@@ -24,4 +24,7 @@ public class DefendingFromSmallClient  extends PlayerStateClient{
     public List<String> getCommands() {
         return List.of("DefendSmall");
     }
+
+    //defendSmall x y (energia)
+    //doNothing
 }

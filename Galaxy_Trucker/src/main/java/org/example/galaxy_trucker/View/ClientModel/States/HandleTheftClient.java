@@ -23,4 +23,7 @@ public class HandleTheftClient  extends PlayerStateClient{
     public List<String> getCommands() {
         return List.of("Theft");
     }
+
+    //Theft x y p1
+    //per scegliere quale cargo buttare ai pirati
 }
