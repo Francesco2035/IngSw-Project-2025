@@ -910,9 +910,9 @@ public class PlayerBoard {
         clonedPlayerBoard.broken = broken;
         clonedPlayerBoard.purpleAlien = purpleAlien;
         clonedPlayerBoard.brownAlien = brownAlien;
-        clonedPlayerBoard.totalValue = totalValue;
+        //clonedPlayerBoard.totalValue = totalValue;
         clonedPlayerBoard.damage = damage;
-        clonedPlayerBoard.numHumans = numHumans;
+        //clonedPlayerBoard.numHumans = numHumans;
         clonedPlayerBoard.exposedConnectors = exposedConnectors;
         //clonedPlayerBoard.EnginePower = EnginePower;
         clonedPlayerBoard.PlasmaDrillsPower = PlasmaDrillsPower;
@@ -943,9 +943,12 @@ public class PlayerBoard {
 //                clonedPlayerBoard.PlayerBoard[i][j] = tile != null ? tile.clone(clonedPlayerBoard) : null;
                 if(tile != null) {
                     Tile t = tile.clone(clonedPlayerBoard);
+                    //clonedPlayerBoard.insertTile(t,i,j, false);
                     clonedPlayerBoard.PlayerBoard[i][j] = t;
                 }
                 else{
+                    Tile t = new Tile(new SpaceVoid(), NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
+                    //clonedPlayerBoard.insertTile(t,i,j, false);
                     clonedPlayerBoard.PlayerBoard[i][j] = null;
                 }
 
