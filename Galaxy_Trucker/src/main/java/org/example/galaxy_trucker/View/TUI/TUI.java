@@ -158,6 +158,7 @@ public class TUI implements View {
 
     @Override
     public void showLobby(LobbyEvent event) {
+        System.out.println("Arrivato lobbyevent "+event.getGameId()+event.getLv());
         if (!firstUpdate){
             firstUpdate = true;
             playerClient.setPlayerState(new LobbyClient());
@@ -165,6 +166,7 @@ public class TUI implements View {
         }
         //System.out.println(event.getGameId());
         if (event.getLv() != -1){
+            System.out.println("formatto");
             //System.out.println("put "+event.getGameId()+" "+event.getLv());
             try{
                 out.setLobby(event.getGameId(),formatCell(event)); //QUI
@@ -200,9 +202,8 @@ public class TUI implements View {
 
     @Override
     public void phaseChanged(PhaseEvent event) {
-        //System.out.println("STATE CHANGED: "+ event.getStateClient().getClass());
         //lastState = null;
-        if (event.getStateClient().equals(loginClient)){
+        if (event.getStateClient() == loginClient){
             firstUpdate = false;
             out.clearOut();
         }
