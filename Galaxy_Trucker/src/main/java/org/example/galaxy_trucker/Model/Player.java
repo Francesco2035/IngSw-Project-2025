@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Listeners.PhaseListener;
+import org.example.galaxy_trucker.Controller.Messages.FinishListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
@@ -38,6 +39,15 @@ public class Player implements Serializable {
     private Card CurrentCard;
     private PhaseListener phaseListener;
     private ReadyListener readyListener;
+    private FinishListener finishListener;
+
+    public FinishListener getFinishListener() {
+        return finishListener;
+    }
+
+    public void setFinishListener(FinishListener finishListener) {
+        this.finishListener = finishListener;
+    }
 
     public ReadyListener getReadyListener() {
         return readyListener;
