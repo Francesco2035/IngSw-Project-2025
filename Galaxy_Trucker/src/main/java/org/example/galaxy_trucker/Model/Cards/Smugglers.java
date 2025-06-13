@@ -203,6 +203,8 @@ public class Smugglers extends Card{
                     System.out.println( "tot energy:" +totenergy);
                 }
 
+
+                /// potrei dire che non è necessario fare nulla se ho anche 0 energie e andare avant diretto :)
                 energyUsage = min(tmpPunishment, CurrentPlanche.getEnergy());
                 System.out.println("energy usage (Check Strength):" +energyUsage);
                 this.setDefaultPunishment(energyUsage);

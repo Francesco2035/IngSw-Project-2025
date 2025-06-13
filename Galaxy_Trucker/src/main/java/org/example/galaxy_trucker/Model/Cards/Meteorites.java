@@ -365,6 +365,8 @@ public class   Meteorites extends Card {
         this.updateSates();
     }
 
+
+    /// non controlla che il cannone sia effettivamente un cannone
     @Override
     public void DefendFromLarge(IntegerPair CannonCoord,IntegerPair EnergyStorage, Player player) throws InterruptedException {
         PlayerBoard currentBoard =player.getmyPlayerBoard();

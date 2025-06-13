@@ -61,7 +61,9 @@ public class SolarSystem extends Card {
                 PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
 
-                this.sendRandomEffect(currentPlayer.GetID(),new RandomCardEffectEvent(message));
+                if(!message.equals(" ")) {
+                    this.sendRandomEffect(currentPlayer.GetID(), new RandomCardEffectEvent(message));
+                }
                 this.currentPlayer.setState(new ChoosingPlanet());
 
                 System.out.println(this.currentPlayer.GetID() + " : "+ this.currentPlayer.getPlayerState());
