@@ -25,4 +25,7 @@ public class DefendingFromLargeClient  extends PlayerStateClient{
     public List<String> getCommands() {
         return List.of("DefendLarge");
     }
+
+    //defendLarge x y x2 y2 (cannone, energia)
+    //doNothing
 }
