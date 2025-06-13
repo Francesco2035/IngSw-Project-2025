@@ -15,6 +15,7 @@ import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Goods.BLUE;
 import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.Goods.YELLOW;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.*;
@@ -124,6 +125,7 @@ public class SmugglersControllerTest {
         RewardList.add(new BLUE());
         RewardList.add(new BLUE());
         RewardList.add(new BLUE());
+        RewardList.add(new YELLOW());
 
         p1.setState(new HandleCargo());
         p1.getmyPlayerBoard().setRewards(RewardList);
@@ -134,9 +136,9 @@ public class SmugglersControllerTest {
         Tile specialStorage= playerBoard.getTile(7,8);
 
         System.out.println(specialStorage.getComponent().getClass() + " space is " + specialStorage.getComponent().getType());
-        playerBoard.performAction(specialStorage.getComponent(),new AddGoodAction(playerBoard.getFromRewards(1),playerBoard,7,8),state);
+        playerBoard.performAction(specialStorage.getComponent(),new AddGoodAction(playerBoard.getFromRewards(3),playerBoard,7,8),state);
         Tile normalStorage= playerBoard.getTile(7,9);
-        playerBoard.performAction(normalStorage.getComponent(),new AddGoodAction(playerBoard.getFromRewards(1),playerBoard,7,9),state);
+        playerBoard.performAction(normalStorage.getComponent(),new AddGoodAction(playerBoard.getFromRewards(0),playerBoard,7,9),state);
         playerBoard.performAction(normalStorage.getComponent(),new AddGoodAction(playerBoard.getFromRewards(0),playerBoard,7,9),state);
 
 
@@ -160,8 +162,13 @@ public class SmugglersControllerTest {
         if (p1.getmyPlayerBoard().getStoredGoods() != null) {
             assertEquals(HandleTheft.class,p1.getPlayerState().getClass());
 
-            TheftCommand theftCommand = new TheftCommand(0,new IntegerPair(7,8),game.getID(),p1.GetID(),game.getLv(),"theft","boh");
-            theftCommand.execute(p1);
+            TheftCommand theftCommand1 = new TheftCommand(0,new IntegerPair(7,8),game.getID(),p1.GetID(),game.getLv(),"theft","boh");
+            theftCommand1.execute(p1);
+            //theftCommand1.execute(p1);
+            TheftCommand theftCommand2 = new TheftCommand(0,new IntegerPair(7,9),game.getID(),p1.GetID(),game.getLv(),"theft","boh");
+            theftCommand2.execute(p1);
+            theftCommand2.execute(p1);
+
         }
         else {
             assertEquals(p1.getPlayerState().getClass(), ConsumingEnergy.class);
