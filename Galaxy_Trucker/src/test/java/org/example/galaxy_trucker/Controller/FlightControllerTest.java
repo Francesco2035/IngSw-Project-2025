@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Commands.HandleCargoCommand;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Goods.BLUE;
 import org.example.galaxy_trucker.Model.Goods.Goods;
@@ -12,6 +13,8 @@ import org.example.galaxy_trucker.Model.Goods.YELLOW;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.HandleCargo;
+import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.Test;
 
@@ -49,6 +52,7 @@ class FlightControllerTest {
         gc.getControllerMap().put(p1.GetID(), c1);
 
         p1.setPhaseListener(vv);
+        p1.setReadyListener(gc);
         p1.getmyPlayerBoard().setListener(vv);
         p1.setHandListener(vv);
         p1.getCommonBoard().getTilesSets().setListeners(vv);
@@ -56,6 +60,10 @@ class FlightControllerTest {
         gc.getVirtualViewMap().put(p1.GetID(), vv);
 
         p1.setMyPlance(TestSetupHelper.createInitializedBoard1());
+        p1.getmyPlayerBoard().insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6 ,6, false);
+
+
+
 
         ArrayList<Goods> goodsList = new ArrayList<>();
         goodsList.add(new BLUE());

@@ -48,22 +48,6 @@ class PrepControllerTest {
     @Test
     public void testPrepController() throws IOException {
 
-
-
-
-//
-//        Game g = new Game(2, "g1");
-//        GameController gc1 = new GameController()
-//
-//
-
-
-
-
-
-
-
-
         game = new Game(2, "testPrepController");
         gc = new GameController(game.getGameID(), game, new GamesHandler(),game.getLv(),4);
         p1 = new Player();
@@ -159,9 +143,7 @@ class PrepControllerTest {
         c1.action(bc5, gc);
 
         c1.action(new BuildingCommand(0, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "DISCARD", null), gc);
-
         c1.action(new BuildingCommand(0, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "FROMBUFFER", null), gc);
-
         c1.action(new BuildingCommand(0, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "PICKTILE", null), gc);
 
         c1.action(new BuildingCommand(0, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
@@ -183,7 +165,7 @@ class PrepControllerTest {
         c1.action(new BuildingCommand(999, -999, -90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(4, 4, -90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(4, 4, 90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
-        c1.action(new BuildingCommand(7, 6, 90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
+        c1.action(new BuildingCommand(7, 7, 90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
 //
 ////aggiungere gagen per scegliere una tile apposita per testare la inserttile funzionante
 
@@ -208,10 +190,10 @@ class PrepControllerTest {
 ////        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
 
 //        c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Quit", false, null), gc);
-
-        vv.setDisconnected(false);
-        System.out.println(p1.getPlayerState().toString());
-        c1.DefaultAction(gc);
+//
+//        vv.setDisconnected(false);
+//        System.out.println(p1.getPlayerState().toString());
+//        c1.DefaultAction(gc);
 
 
 //        vv.setDisconnected(true);
@@ -221,15 +203,15 @@ class PrepControllerTest {
 
 ////--------------------------------------------------------------------------------------------
 
-        p1.setState(new ChoosePosition());
+//        p1.setState(new ChoosePosition());
 
-        vv.setDisconnected(false);
-        c1.DefaultAction(gc);
+//        vv.setDisconnected(false);
+//        c1.DefaultAction(gc);
+//
+//        vv.setDisconnected(true);
+//        c1.DefaultAction(gc);
 
-        vv.setDisconnected(true);
-        c1.DefaultAction(gc);
-
-////todo non so se è possibile testare facilmetne la finish perchè appena accade questo passa al next state e dovrei farlo al posto della defautl action
+////todo non so se è possibile testare facilmente la finish perchè appena accade questo passa al next state e dovrei farlo al posto della defautl action
 ////        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
 
 

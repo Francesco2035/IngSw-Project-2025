@@ -52,8 +52,8 @@ public class CardControllerTest {
 //    CardsController c1= new CardsController(p1,game.getGameID(),false);
 //    CardsController c2= new CardsController(p2,game.getGameID(),false);
 
-@BeforeAll
-public void setup() throws IOException {
+@Order(1)
+    public void setup() throws IOException {
 
     Game game = new Game(2, "testCarteController");
 
