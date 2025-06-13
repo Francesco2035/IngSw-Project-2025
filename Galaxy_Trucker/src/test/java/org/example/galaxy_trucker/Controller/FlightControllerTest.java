@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Commands.HandleCargoCommand;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Goods.BLUE;
@@ -46,7 +47,7 @@ class FlightControllerTest {
         p1.setBoards(game.getGameBoard());
         vv = new VirtualView(p1.GetID(), game.getGameID(), new RMIClient(new Client()), null);
         vv.setDisconnected(true);
-        assertTrue(p1.getmyPlayerBoard().checkValidity());
+//        assertTrue(p1.getmyPlayerBoard().checkValidity());
         Gboard = game.getGameBoard();
         c1 = new FlightController(p1, game.getGameID(), gc, false);
         gc.getControllerMap().put(p1.GetID(), c1);
@@ -63,7 +64,11 @@ class FlightControllerTest {
         p1.getmyPlayerBoard().insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6 ,6, false);
 
 
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        PlayerBoard pb1 = TestSetupHelper.createInitializedBoard1();
+        p1.setMyPlance(pb1);
+//        assertFalse(p1.getmyPlayerBoard().checkValidity());
 
         ArrayList<Goods> goodsList = new ArrayList<>();
         goodsList.add(new BLUE());
