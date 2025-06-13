@@ -417,7 +417,7 @@ public class CommandInterpreter {
             return new DefendFromSmallCommand(null,gameId,playerId,lv, "DefendFromSmallCommand",token);
         }
         if (parts.length != 3) {
-            throw new IllegalArgumentException("Comando DefendFromSmall richiede 2 argomenti: le due coordinate dell'energia da consumare"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+            throw new IllegalArgumentException("Comando DefendFromSmall richiede 2 argomenti: le due coordinate dell'energia da consumare " + parts[0] + " " + parts[1]); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
         x=Integer.parseInt(parts[1]);
         y=Integer.parseInt(parts[2]);

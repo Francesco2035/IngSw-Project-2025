@@ -33,7 +33,6 @@ import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.image.ImageProducer;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -89,6 +88,14 @@ public class GuiRoot implements View {
     private Pane rocketsPane;
 
 
+    private boolean killing;
+    private VBox phaseButtons;
+    private ArrayList<IntegerPair> cmdCoords;
+    private boolean tilesClickable;
+    private Label prompt;
+    private ArrayList<IntegerPair> excludedTiles;
+
+
     private ImageView curCard;
 
     public void setStage(Stage primaryStage){
@@ -130,6 +137,11 @@ public class GuiRoot implements View {
 
         curCard =  new ImageView();
         curCard.setImage(null);
+        killing = false;
+        phaseButtons = new VBox(20);
+        cmdCoords = new ArrayList<>();
+        tilesClickable = false;
+        excludedTiles = new ArrayList<>();
 
         guiThread = new Thread(() -> GuiMain.launchApp(this));
         guiThread.start();
@@ -191,6 +203,8 @@ public class GuiRoot implements View {
 
             tileImg.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg")));
             tileImg.setOpacity(1);
+
+
             setColors(myName, event.getId());
 
             if(addcrew){
@@ -199,47 +213,63 @@ public class GuiRoot implements View {
                 ImageView crewImg = new ImageView();
                 crewImg.setFitWidth(40);
                 crewImg.setPreserveRatio(true);
-
+                crewImg.setOnMouseClicked(e -> {
+                    if(killing){
+                        IntegerPair coord =  new IntegerPair(event.getX(), event.getY());
+                        if(crewImg.getOpacity() == 1){
+                            cmdCoords.add(coord);
+                            crewImg.setOpacity(0.5);
+                        }
+//                        else{
+//                            cmdCoords.remove(coord);
+//                            crewImg.setOpacity(1);
+//                        }
+                    }
+                });
 
                 if(event.isBrownAlien()){
                     crewImg.setImage(brownAlien);
                     crewPane.getChildren().add(crewImg);
+                    excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
                 }
 
                 else if(event.isPurpleAlien()) {
                     crewImg.setImage(purpleAlien);
                     crewPane.getChildren().add(crewImg);
+                    excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
                 }
 
                 else if(event.getHumans() > 0) {
-
+                    excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
                     HBox humans = new HBox(2);
 
                     for (int i = 0; i < event.getHumans(); i++) {
                         ImageView crew = new ImageView(crewMate);
-                        crew.setFitWidth(40);
+                        crew.setFitWidth(25);
                         crew.setPreserveRatio(true);
+                        crew.setOnMouseClicked(e -> {
+                            if(killing){
+                                IntegerPair coord =  new IntegerPair(event.getX(), event.getY());
+                                if(crew.getOpacity() == 1){
+                                    cmdCoords.add(coord);
+                                    crew.setOpacity(0.5);
+                                }
+//                                else{
+//                                    cmdCoords.remove(coord);
+//                                    crew.setOpacity(1);
+//                                }
+                            }
+                        });
                         humans.getChildren().add(crew);
 
                     }
                     crewPane.getChildren().add(humans);
                 }
-
             }
         }
 
         tileStack = new StackPane(tileImg, crewPane);
         tileImg.setPreserveRatio(true);
-
-        ImageView bufferVoid = new ImageView();
-        bufferVoid.setImage(tilePlaceholder);
-        bufferVoid.setOpacity(0.5);
-        bufferVoid.setOnMouseEntered(e -> {
-            bufferVoid.setOpacity(1);
-        });
-        bufferVoid.setOnMouseExited(e -> {
-            bufferVoid.setOpacity(0.5);
-        });
 
             Platform.runLater(()->{
 
@@ -250,7 +280,7 @@ public class GuiRoot implements View {
                 }
 
 
-                if(!addcrew) {
+                if(!addcrew){
                     if(event.getX() == 3 && event.getY() == 8){
                         if(event.getId() == 158){
 
@@ -333,9 +363,9 @@ public class GuiRoot implements View {
 
             });
 
-
-
     }
+
+
 
     @Override
     public void updateOthersPB(PlayerTileEvent event) {
@@ -716,7 +746,7 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void showLobby(LobbyEvent event) {
+    public void showLobby(LobbyEvent event){
         //mi arriva il lobby event ogni volta che qualcuno crea/si aggiunge ad un game
 
         Label titleLabel = new Label("GALAXY TRUCKERS");
@@ -1287,41 +1317,59 @@ public class GuiRoot implements View {
     public void flightScene() {
             addcrew = false;
 
-            Label text = new Label("Flight Started!");
-            text.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+            prompt = new Label();
+            prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
             ImageView txtBackground = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/all_belt.png")));
             txtBackground.setFitWidth(600);
             txtBackground.setFitHeight(100);
 
-            StackPane textPanel = new StackPane(txtBackground, text);
-
-            AtomicReference<String> cmdType = new AtomicReference<>(null);
+            StackPane textPanel = new StackPane(txtBackground, prompt);
 
             AtomicInteger x = new AtomicInteger();
             AtomicInteger y = new AtomicInteger();
             ArrayList<Node> childrenCopy = new ArrayList<>(myBoard.getChildren());
+            boolean clickable;
 
-//            for(Node node : childrenCopy){
-//
-//                ImageView tile = (ImageView) node;
-//
-//                ImageView newTile =new ImageView(tile.getImage());
-//                tile.setFitWidth(70);
-//                tile.setPreserveRatio(true);
-//
-//                tile.setOnMouseClicked(e->{
-//                    if(cmdType.get() != null){
-//                        x.set(GridPane.getColumnIndex(node));
-//                        y.set(GridPane.getRowIndex(node));
-//                        inputQueue.add(cmdType.get() + " " + y.get() + " " + x.get());
+            for(Node node : childrenCopy){
+                clickable = true;
+
+                x.set(GridPane.getRowIndex(node));
+                y.set(GridPane.getColumnIndex(node));
+
+                int X = x.get();
+                int Y = y.get();
+
+                for(IntegerPair i : excludedTiles){
+                    if(x.get() == i.getFirst() && y.get() == i.getSecond()){
+                        clickable = false;
+                    }
+                }
+
+                if(clickable){
+                    ImageView tile = (ImageView) node;
+
+
+                    tile.setOnMouseClicked(e->{
+                        if(tilesClickable){
+                            System.out.println(X + " " +  Y);
+                            if(tile.getOpacity() == 1){
+                                cmdCoords.add(new IntegerPair(X, Y));
+                                tile.setOpacity(0.5);
+                            }
+//                    else{
+//                        cmdCoords.remove(new IntegerPair(event.getX(), event.getY()));
+//                        tileImage.setOpacity(0.5);
 //                    }
-//                });
-//
-//                if(newTile.getImage() != null && newTile.getImage().equals(tilePlaceholder))
-//                    newTile.setOpacity(0.5);
-//
-//            }
+
+                        }
+
+                    });
+
+                }
+
+
+            }
 
             Platform.runLater(()->{
 
@@ -1339,7 +1387,7 @@ public class GuiRoot implements View {
                     othersBox.getChildren().add(othersBoards.get(id));
                 }
 
-                HBox mainBox = new HBox(cardBox, new VBox(100, myBoard, textPanel), othersBox);
+                HBox mainBox = new HBox(cardBox, new VBox(100, myBoard, textPanel), phaseButtons, othersBox);
                 mainBox.setPadding(new Insets(150));
                 mainBox.setAlignment(Pos.CENTER);
                 Pane root = new Pane(mainBox);
@@ -1369,6 +1417,15 @@ public class GuiRoot implements View {
     public void exceptionOccurred(ExceptionEvent exceptionEvent){
 
         Platform.runLater(() -> {
+
+            for(IntegerPair p : cmdCoords){
+                ImageView tile = getTile(p.getFirst(), p.getSecond());
+                if(tile != null)
+                    tile.setOpacity(1);
+            }
+
+            cmdCoords.clear();
+
             Stage exceptionStage = new Stage();
             exceptionStage.setTitle("Exception");
 
@@ -1687,6 +1744,187 @@ public class GuiRoot implements View {
     }
 
     public boolean isGameStarted(){return !amIBuilding;}
+
+
+    private ImageView getTile(int col, int row){
+        for (Node node : myBoard.getChildren()) {
+            Integer nodeCol = GridPane.getColumnIndex(node);
+            Integer nodeRow = GridPane.getRowIndex(node);
+
+            for(IntegerPair i : excludedTiles) {
+                if (row == i.getFirst() && col == i.getSecond())
+                    return null;
+            }
+            if (nodeCol == col && nodeRow == row) {
+                return (ImageView) node;
+            }
+        }
+        return null;
+    }
+
+
+
+    public void baseState(){
+        Button ready = new Button("Ready!");
+        Button quit = new Button("Quit");
+
+        Platform.runLater(()->{
+            prompt.setText("Picking next card when everyone is ready...!");
+            phaseButtons.getChildren().setAll(ready,quit);
+
+            ready.setOnAction(e -> {
+                inputQueue.add("Ready True");
+            });
+
+            quit.setOnAction(e -> {
+
+            });
+
+            cmdCoords.clear();
+            tilesClickable = false;
+        });
+    }
+
+
+    public void killing(){
+        AtomicReference<String> cmd = new AtomicReference<>("Kill");
+        Button kill = new Button("Kill!");
+
+        Platform.runLater(()->{
+            killing = true;
+            prompt.setText("Select crew mates to kill!");
+            phaseButtons.getChildren().setAll(kill);
+
+            kill.setOnAction(e ->{
+                for(IntegerPair p : cmdCoords){
+                    cmd.set(cmd + " " + p.getFirst() + " " + p.getSecond());
+                }
+                inputQueue.add(cmd.get());
+                killing = false;
+            });
+        });
+
+    }
+
+
+
+    public void defend(String command, String txt){
+
+        AtomicReference<String> cmd = new AtomicReference<>(command);
+        Button defend = new Button("Defend!");
+        Button doNothing = new Button("Do Nothing");
+
+        Platform.runLater(()->{
+            tilesClickable = true;
+            prompt.setText(txt);
+            phaseButtons.getChildren().setAll(defend, doNothing);
+
+            doNothing.setOnAction(e ->{
+                inputQueue.add(cmd + " DoNothing");
+            });
+
+            defend.setOnAction(e ->{
+                for(IntegerPair p : cmdCoords){
+                    cmd.set(cmd + " " + p.getFirst() + " " + p.getSecond());
+                }
+
+                System.out.println(cmd.get());
+
+                inputQueue.add(cmd.get());
+
+                for(IntegerPair p : cmdCoords){
+                    System.out.println(p.getFirst() + " " + p.getSecond());
+                    ImageView tile = getTile(p.getSecond(), p.getFirst());
+                    tile.setOpacity(1);
+                }
+
+                cmdCoords.clear();
+                tilesClickable = false;
+            });
+        });
+
+    }
+
+
+
+    public void giveTiles(String command, String txt){
+
+
+        AtomicReference<String> cmd = new AtomicReference<>(command);
+        Button done = new Button("Done!");
+
+        Platform.runLater(()->{
+            tilesClickable = true;
+            prompt.setText(txt);
+            phaseButtons.getChildren().setAll(done);
+
+            done.setOnAction(e ->{
+                for(IntegerPair p : cmdCoords){
+                    cmd.set(cmd + " " + p.getFirst() + " " + p.getSecond());
+                }
+
+                System.out.println(cmd.get());
+
+                inputQueue.add(cmd.get());
+
+                for(IntegerPair p : cmdCoords){
+                    ImageView tile = getTile(p.getSecond(), p.getFirst());
+                    tile.setOpacity(1);
+                }
+
+                cmdCoords.clear();
+                tilesClickable = false;
+            });
+        });
+
+    }
+
+
+
+    public void choosingPlanet(){
+
+        AtomicReference<String> cmd = new AtomicReference<>("ChoosePlanet");
+        Button choose = new Button("See Planets");
+        Button doNothing = new Button("Do Nothing");
+
+        Platform.runLater(()->{
+            prompt.setText("Choose a planet to explore!");
+            phaseButtons.getChildren().setAll(choose, doNothing);
+
+            doNothing.setOnAction(e ->{
+                inputQueue.add("ChoosePlanet -1");
+            });
+
+            choose.setOnAction(e ->{
+
+            });
+        });
+
+    }
+
+
+
+    public void acceptState(){
+
+        AtomicReference<String> cmd = new AtomicReference<>("ChoosePlanet");
+        Button accept = new Button("Accept");
+        Button decline = new Button("Decline");
+
+        Platform.runLater(()->{
+            prompt.setText("Do you want to visit it?");
+            phaseButtons.getChildren().setAll(accept, decline);
+
+            accept.setOnAction(e ->{
+                inputQueue.add("Accept");
+            });
+
+            decline.setOnAction(e ->{
+                inputQueue.add("Decline");
+            });
+
+        });
+
+    }
 
 
 }
