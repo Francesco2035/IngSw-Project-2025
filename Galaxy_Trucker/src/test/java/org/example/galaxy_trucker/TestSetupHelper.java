@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class TestSetupHelper {
 
     static PlayerBoard playerBoard1 = new PlayerBoard(2);
@@ -51,25 +53,25 @@ public class TestSetupHelper {
         Tile t8 = tiles.get(56);  // universal, universal, double, double. sewerpips factos
         Tile t9 = tiles.get(32); //SINGLE", "NONE", "NONE", "UNIVERSAL housingjfoaihj factos
         Tile t10 = tiles.get(33); //SINGLE", "SINGLE", "DOUBLE", "SINGLE moudsajdahoyusingunit ruota dx factos
-        Tile t11 = tiles.get(73); //SINGLE", "DOUBLE", "NONE", "MOTOR" un motore factos
+        Tile t11 = tiles.get(73); //"None, "DOUBLE", "Universal", "MOTOR" un motore factos
         Tile t12 = tiles.get(145);
         Tile powerCenter = tiles.get(12);
-        Tile powerCenter2 = tiles.get(5);
+        Tile powerCenter2 = tiles.get(5); //single, uni, none, none
         Tile plasmaDrill = tiles.get(130);
-        Tile addonspurple = tiles.get(142);
+        Tile addonspurple = tiles.get(142); // uni, none,single, none
         Tile modular1 = tiles.get(39); // double , single double, none
         Tile sewerpipes = tiles.get(52); // uni, sigle ,uni , double
         Tile modular2 = tiles.get(47);
         Tile modular3 = tiles.get(48);
         Tile hotWaterHeater = tiles.get(92);
         Tile shield = tiles.get(151);
-        Tile replacement_house= tiles.get(44);
+        Tile replacement_house= tiles.get(45);
 
 
         shield.RotateSx();
 
 
-        addonspurple.RotateSx();
+        addonspurple.RotateSx(); //none single, none,uni
         plasmaDrill.RotateDx();
 
 
@@ -121,6 +123,15 @@ public class TestSetupHelper {
         for (Tile t :tiles){
             System.out.println(t.getComponent().getClass().getName());
         }
+
+
+    }
+
+    @Test
+    public void boardChecks(){
+        PlayerBoard playerBoard = createInitializedBoard1();
+        assertTrue(playerBoard.checkValidity());
+
     }
 
     public static PlayerBoard createInitializedBoard2(){

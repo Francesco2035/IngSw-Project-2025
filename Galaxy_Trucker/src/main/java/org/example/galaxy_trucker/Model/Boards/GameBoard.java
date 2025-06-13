@@ -16,8 +16,7 @@ import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-//TODO: vincolo player non può scegliere posizione nella gameboard se pos > numPlayer
-// dovrebbe essere stato fatto
+
 public class GameBoard {
 
     // questo arrayList tiene conto della posizione effettiva nel Game
@@ -342,10 +341,15 @@ public class GameBoard {
 
     public ArrayList<Player> getPlayers(){
         ArrayList<Player> PlayersCopy = new ArrayList<>();
-
-        for (Player_IntegerPair player : players) {
-            PlayersCopy.add(player.getKey());
+        try{
+            for (Player_IntegerPair player : players) {
+                System.out.println("GAMEBOARD: "+ player.getKey().GetID());
+                PlayersCopy.add(player.getKey());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
 
         return PlayersCopy;
     }
@@ -358,24 +362,38 @@ public class GameBoard {
 
     public Hourglass getHourglass() {return hourglass;}
 
-    public void abandonRace(Player loser){
+    public void abandonRace(Player loser, String message){
+    System.out.println(loser.GetID()+ " HAI PERSO!");
+        try{
+            Player_IntegerPair pair = players.stream()
+                    .filter(p -> p.getKey().equals(loser))
+                    .findFirst()
+                    .orElseThrow();
+            positions[pair.getValue() % nPositions] = null;
+            Player player = pair.getKey();
+            int finalScore = player.finishRace(false, message);
+            //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
+            //--> ho fatto metodo finishGame per mettere in classifica anche quelli che vincono alla fine
+            //-palu
+            scoreboard.add(new Player_IntegerPair(player, finalScore));
 
-        Player_IntegerPair pair = players.stream()
-                                         .filter(p -> p.getKey().equals(loser))
-                                         .findFirst()
-                                         .orElseThrow();
 
-        positions[pair.getValue() % nPositions] = null;
-        Player playah = pair.getKey();
-        int finalScore = playah.finishRace(false);
-        //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
-        //--> ho fatto metodo finishGame per mettere in classifica anche quelli che vincono alla fine
-        //-palu
-        scoreboard.add(new Player_IntegerPair(playah, finalScore));
+            /// controllare che anche lato controller il player che abbandona smetta di esistere
+            players.remove(pair);
+        }
+        catch (Exception e){
+            Player_IntegerPair pair = players.stream()
+                    .filter(p -> p.getKey().equals(loser))
+                    .findFirst()
+                    .orElseThrow();
+            players.remove(pair);
+            pair.getKey().finishRace(false, message);
+            //e.printStackTrace();
+        }
 
 
-        /// controllare che anche lato controller il player che abbandona smetta di esistere
-        players.remove(pair);
+
+
     }
 
     public void finishGame(){
@@ -383,7 +401,7 @@ public class GameBoard {
        for(Player_IntegerPair p : players){
            positions[p.getValue() % nPositions] = null;
            Player playah = p.getKey();
-           int finalScore = playah.finishRace(true);
+           int finalScore = playah.finishRace(true, "game finished");
            scoreboard.add(new Player_IntegerPair(playah, finalScore));
            players.remove(p);
 

@@ -27,7 +27,7 @@ public class ReadyCommand extends Command implements Serializable {
         System.out.print("execute.... ");
         switch (title){
             case "Quit": {
-             player.getCommonBoard().abandonRace(player);
+             //player.getCommonBoard().abandonRace(player);
              System.out.println(player.GetID() + " quit");
              break;
             }

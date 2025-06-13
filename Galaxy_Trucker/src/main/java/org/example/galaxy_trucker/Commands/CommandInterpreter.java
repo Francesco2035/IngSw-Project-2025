@@ -354,6 +354,11 @@ public class CommandInterpreter {
     }
 
     private Command createChoosingPlanetsCommand(String[] parts) {
+
+        if(parts.length==1 || parts[1].equals("DoNothing")){
+            return new ChoosingPlanetsCommand(-1,gameId,playerId,lv, "DefendFromSmallCommand",token);
+        }
+
         if (parts.length != 2) {
             throw new IllegalArgumentException("Comando ChoosingPlanets richiede 1 argomento: numero del pianeta");
         }
@@ -384,7 +389,7 @@ public class CommandInterpreter {
         int y;
         IntegerPair plasmaDrill;
         IntegerPair energyStorage;
-        if(parts[1].equals("DoNothing")){
+        if(parts.length==1 || parts[1].equals("DoNothing")|| parts.length==1){
             return new DefendFromLargeCommand(null,null,gameId,playerId,lv, "DefendFromLargeCommand",token);
         }
         if (parts.length != 5) {
@@ -413,7 +418,7 @@ public class CommandInterpreter {
         int x;
         int y;
         IntegerPair energyStorage;
-        if(parts[1].equals("DoNothing")){
+        if(parts.length==1 || parts[1].equals("DoNothing")){
             return new DefendFromSmallCommand(null,gameId,playerId,lv, "DefendFromSmallCommand",token);
         }
         if (parts.length != 3) {
@@ -434,7 +439,7 @@ public class CommandInterpreter {
         int x;
         int y;
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
-        if(parts[1].equals("DoNothing")){
+        if(parts.length==1 || parts[1].equals("DoNothing")){
             return new GiveAttackCommand(coordinates,gameId,playerId,lv,"GiveAttackCommand",token);
         }
         if ((parts.length-1)%2 != 0) {
@@ -452,7 +457,7 @@ public class CommandInterpreter {
         int x;
         int y;
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
-        if(parts[1].equals("DoNothing")){
+        if(parts.length==1 || parts[1].equals("DoNothing")){
             return new GiveSpeedCommand(coordinates,gameId,playerId,lv,"GiveAttackCommand",token);
         }
         if ((parts.length-1)%2 != 0) {

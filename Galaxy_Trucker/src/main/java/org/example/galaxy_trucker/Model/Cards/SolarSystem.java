@@ -23,6 +23,14 @@ public class SolarSystem extends Card {
 
     ArrayList<Player> losers;
 
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Planets"));
+        }
+    }
+
 
 
     /// caso base è non scendere sui pianeti
@@ -60,21 +68,29 @@ public class SolarSystem extends Card {
                 currentPlayer = PlayerList.get(this.order);
                 PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
+
+                if(!message.equals(" ")) {
+                    this.sendRandomEffect(currentPlayer.GetID(), new LogEvent(message));
+                }
                 this.currentPlayer.setState(new ChoosingPlanet());
-                this.sendRandomEffect(currentPlayer.GetID(),new LogEvent(message));
+
                 System.out.println(this.currentPlayer.GetID() + " : "+ this.currentPlayer.getPlayerState());
                 //this.currentPlayer.setInputHandler(new ChoosingPlanet(this));
 
                 this.order++;
             }
             else{
+                System.out.println("Players now have to handle the cargo :)");
                 for(Player p : PlayerList){
                     p.setState(new Waiting());
                 }
                 ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
                 concurrentCardListener.onConcurrentCard(true);
                 for(Planet p: this.planets){
+
                     if(p.isOccupied()){
+
+                        System.out.println(p.getOccupied().GetID()+" is occupying this planet");
                         this.getBoard().movePlayer(p.getOccupied().GetID(), -this.getTime());
 
                         p.getOccupied().setState(new HandleCargo());
@@ -88,26 +104,10 @@ public class SolarSystem extends Card {
     public void finishCard() {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
-        if(this.done==PlayerList.size()-1) {
-
-            for (int i = 0; i < PlayerList.size(); i++) {
-                PlayerList.get(i).setState(new BaseState());
-
-            }
-
-            losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
-            losers.addAll(getBoard().checkDoubleLap());
-
-            for(Player p: getBoard().getPlayers()){
-                if(p.getmyPlayerBoard().getNumHumans()==0){
-                    losers.remove(p);
-                    losers.add(p);
-                }
-            }
-
-            for(Player p: losers){
-                getBoard().abandonRace(p);
-            }
+        if(this.done>=PlayerList.size()-1) {
+            ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
+            concurrentCardListener.onConcurrentCard(false);
+            checkLosers();
 
             System.out.println("card finished");
             this.setFinished(true);

@@ -4,9 +4,11 @@ import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Listeners.PhaseListener;
+import org.example.galaxy_trucker.Controller.Messages.FinishListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.ReadyListener;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
@@ -36,6 +38,24 @@ public class Player implements Serializable {
     private ArrayList<Goods> GoodsToHandle;
     private Card CurrentCard;
     private PhaseListener phaseListener;
+    private ReadyListener readyListener;
+    private FinishListener finishListener;
+
+    public FinishListener getFinishListener() {
+        return finishListener;
+    }
+
+    public void setFinishListener(FinishListener finishListener) {
+        this.finishListener = finishListener;
+    }
+
+    public ReadyListener getReadyListener() {
+        return readyListener;
+    }
+
+    public void setReadyListener(ReadyListener readyListener) {
+        this.readyListener = readyListener;
+    }
 
     public GameBoard getCommonBoard() {
         return CommonBoard;
@@ -250,14 +270,24 @@ public class Player implements Serializable {
         else throw new IllegalStateException("Called a lv 2 command in a lv 1 game!");
     }
 
-    public  int finishRace(boolean finished){
-        return getmyPlayerBoard().finishRace(finished);
+    public int finishRace(boolean finished, String message){
+        int result = 0;
+        result =  getmyPlayerBoard().finishRace(finished);
+        if (result > 0){
+            finishListener.onEndGame(true, GetID(), message);
+        }
+        else{
+            finishListener.onEndGame(false, GetID(), message);
+        }
+        return result;
     }
 
 
     public void SetReady(boolean ready){
         this.ready = ready;
+        this.readyListener.onReady();
     }
+
     public void SetHasActed(boolean hasActed){
         this.HasActed = hasActed;
     }

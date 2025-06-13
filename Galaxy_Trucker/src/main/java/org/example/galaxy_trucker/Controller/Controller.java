@@ -32,21 +32,25 @@ public abstract class Controller {
             //throw new IllegalStateException("Command not accepted: " + command.getClass() + " \n" + curPlayer.getPlayerState());
         }
 
-        try {
-            System.out.println("Action called for " + gameId + ": " + command.getTitle() + " " + command.playerId);
-            command.execute(curPlayer);
-             gc.changeState();
-        } catch (Exception e) {
-            playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
-            playerBoardCopy.setRewardsListener(curPlayer.getmyPlayerBoard().getRewardsListener());
-            if (playerBoardCopy.getRewardsListener() == null) {
-                System.out.println("No rewards listener available mannaggia la democrazia cristiana");
+        else{
+            try {
+                System.out.println("Action called for " + gameId + ": " + command.getTitle() + " " + command.playerId);
+                command.execute(curPlayer);
+                gc.changeState();
+            } catch (Exception e) {
+                playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
+                playerBoardCopy.setRewardsListener(curPlayer.getmyPlayerBoard().getRewardsListener());
+                if (playerBoardCopy.getRewardsListener() == null) {
+                    System.out.println("No rewards listener available mannaggia la democrazia cristiana");
+                }
+                curPlayer.setMyPlance(playerBoardCopy);
+                e.printStackTrace();
+                sendException(e);
+                //throw new IllegalCallerException("illegal execution of command" + command.toString());
             }
-            curPlayer.setMyPlance(playerBoardCopy);
-            e.printStackTrace();
-            sendException(e);
-            //throw new IllegalCallerException("illegal execution of command" + command.toString());
         }
+
+
        // this.curPlayer.SetHasActed(true);
     }
 

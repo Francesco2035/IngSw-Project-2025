@@ -125,9 +125,6 @@ public class InputReader implements Runnable {
     }
 
 
-
-
-
     public synchronized void clearScreen() {
         System.out.print("\033[3J");
         terminal.puts(InfoCmp.Capability.clear_screen);

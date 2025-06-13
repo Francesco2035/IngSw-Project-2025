@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 //import org.example.galaxy_trucker.Model.InputHandlers.Accept;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -25,6 +26,14 @@ public class AbandonedStation extends Card{
     private ArrayList<Player> losers;
 
 
+
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Abandoned station"));
+        }
+    }
 
 
     /// in caso di disconnession il player sempluicemente non accetta se deve accttare la nave
@@ -87,18 +96,7 @@ public class AbandonedStation extends Card{
 
     @Override
     public void finishCard() {
-        GameBoard Board=this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
-        for(int i=0; i<PlayerList.size(); i++){
-            PlayerList.get(i).setState(new BaseState());
-
-        }
-
-        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
-        losers.addAll(getBoard().checkDoubleLap());
-        for(Player p: losers){
-            getBoard().abandonRace(p);
-        }
+        checkLosers();
         System.out.println("card finished!");
         this.setFinished(true);
     }

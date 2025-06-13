@@ -135,7 +135,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         }
         catch (Exception e){
 //            e.printStackTrace();
-            System.out.println("Error receiving event" + e.getMessage());
+            System.out.println("Error receiving event " + e.getMessage());
         }
     }
 
@@ -240,8 +240,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                 client.setLogin(true);
                                 int level = client.getLevel(gameId);
 
-                                String fullCommand = "Login " + playerId + " " + gameId + " " + level;
-                                System.out.println(fullCommand);
+                                //String fullCommand = "Login " + playerId + " " + gameId + " " + level;
+                                //System.out.println(fullCommand);
 
                                 commandInterpreter = new CommandInterpreter(playerId, gameId);
                                 commandInterpreter.setlv(level);

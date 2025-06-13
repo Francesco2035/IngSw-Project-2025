@@ -24,6 +24,7 @@ public class Out {
     String exception = "";
     String effect = "";
     String titleCard = "";
+    String outcome = "";
     ArrayList<String> deck = new ArrayList<>();
     private boolean hourglass = false;
     ArrayList<String> log = new ArrayList<>();
@@ -177,6 +178,11 @@ public class Out {
 
     public void setPlayers(ArrayList<String> players) {
         this.players = players;
+        for (String playerId : otherPlayersBoard.keySet()) {
+            if (!players.contains(playerId)) {
+                otherPlayersBoard.remove(playerId);
+            }
+        }
     }
 
     public void setReady(ArrayList<Boolean> ready) {
@@ -739,5 +745,23 @@ public class Out {
             sb.append("\n");
         }
         return sb;
+    }
+
+    public void clearOut() {
+        lobby.clear();
+        //TODO: pulire tutta OUT
+    }
+
+    public StringBuilder showOutcome() {
+        return new StringBuilder(outcome);
+    }
+
+    public void setOutcome(String message, boolean outcome) {
+        if (outcome){
+            this.outcome = "hai vinto";
+        }
+        else{
+            this.outcome = "hai perso";
+        }
     }
 }

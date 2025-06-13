@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
@@ -20,6 +21,14 @@ public class OpenSpace extends Card{
     private int energyUsage;
     private ArrayList<Player> losers;
 
+
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Open space"));
+        }
+    }
 
 
     ///  in caso di disconnessione non attiva motori doppi ma avanza lo stesso
@@ -68,25 +77,15 @@ public class OpenSpace extends Card{
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
             PlayerList.get(i).setState(new BaseState());
-
-        }
-
-
-        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
-        losers.addAll(getBoard().checkDoubleLap());
-
-        for(Player p: getBoard().getPlayers()){
-            if(p.getmyPlayerBoard().getNumHumans()==0){
-                losers.remove(p);
-                losers.add(p);
-            }
         }
 
         for(Player p: losers){
-            getBoard().abandonRace(p);
+            getBoard().abandonRace(p, "You don't have engine power");
         }
 
-        System.out.println("card finished");
+        checkLosers();
+
+
         this.setFinished(true);
     }
 
