@@ -11,10 +11,7 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTi
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
-import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
-import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
-import org.example.galaxy_trucker.View.ClientModel.States.PlayerStateClient;
-import org.example.galaxy_trucker.View.ClientModel.States.SeeBoardsClient;
+import org.example.galaxy_trucker.View.ClientModel.States.*;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
@@ -64,6 +61,42 @@ public class TUI implements View {
     private InputReader inputReader;
     private PlayerClient playerClient;
     private Client client;
+    private final SeeLog seeLog = new SeeLog();
+    private final SeeBoardsClient seeBoardsClient = new SeeBoardsClient();
+    private  LoginClient loginClient;
+
+
+
+    public TUI(){
+
+    }
+
+    public TUI(LoginClient loginClient) throws IOException {
+
+        this.loginClient = loginClient;
+        loadComponentNames();
+        loadCardsDescriptions();
+        cachedBoard = new String[10][10][7];
+        cacheHand = new String[7];
+        for (int i = 0; i < 7; i++) {
+            cacheHand[i] = "";
+        }
+        inputReader = new InputReader(inputQueue);
+        inputThread = new Thread(inputReader);
+        inputThread.setDaemon(true);
+        inputThread.start();
+        //phase = ViewPhase.LOBBY;
+        //inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));
+        playerClient = new PlayerClient();
+        playerClient.setPlayerState(new LoginClient());
+        playerClient.setCompleter(inputReader.getCompleter());
+        lastState = new LoginClient();
+        out = new Out(inputReader, playerClient);
+        onGameUpdate();
+        //inputReader.clearScreen();
+
+    }
+
 
 
     @Override
@@ -125,6 +158,7 @@ public class TUI implements View {
 
     @Override
     public void showLobby(LobbyEvent event) {
+        System.out.println("Arrivato lobbyevent "+event.getGameId()+event.getLv());
         if (!firstUpdate){
             firstUpdate = true;
             playerClient.setPlayerState(new LobbyClient());
@@ -132,6 +166,7 @@ public class TUI implements View {
         }
         //System.out.println(event.getGameId());
         if (event.getLv() != -1){
+            System.out.println("formatto");
             //System.out.println("put "+event.getGameId()+" "+event.getLv());
             try{
                 out.setLobby(event.getGameId(),formatCell(event)); //QUI
@@ -167,8 +202,11 @@ public class TUI implements View {
 
     @Override
     public void phaseChanged(PhaseEvent event) {
-        //System.out.println("STATE CHANGED: "+ event.getStateClient().getClass());
         //lastState = null;
+        if (event.getStateClient() == loginClient){
+            firstUpdate = false;
+            out.clearOut();
+        }
         lastState = event.getStateClient();
         playerClient.setPlayerState(event.getStateClient());
         playerClient.getCompleter().setCommands(event.getStateClient().getCommands());
@@ -217,9 +255,10 @@ public class TUI implements View {
 
     @Override
     public void seeBoards() {
-
-        lastState = playerClient.getPlayerState();
-        playerClient.setPlayerState(new SeeBoardsClient());
+        if (!(playerClient.getPlayerState().equals(seeBoardsClient) || playerClient.getPlayerState().equals(seeLog))){
+            lastState = playerClient.getPlayerState();
+        }
+        playerClient.setPlayerState(seeBoardsClient);
         onGameUpdate();
     }
 
@@ -231,7 +270,7 @@ public class TUI implements View {
     }
 
     @Override
-    public void effectCard(RandomCardEffectEvent event) {
+    public void effectCard(LogEvent event) {
         out.setEffectCard(event.message());
         onGameUpdate();
     }
@@ -249,6 +288,22 @@ public class TUI implements View {
     @Override
     public void updateHourglass(HourglassEvent event) {
         out.setHorglass(event.getStart(), event.message());
+        onGameUpdate();
+    }
+
+    @Override
+    public void seeLog() {
+        if (!(playerClient.getPlayerState().equals(seeBoardsClient) || playerClient.getPlayerState().equals(seeLog))){
+            lastState = playerClient.getPlayerState();
+        }
+        playerClient.setPlayerState(seeLog);
+        onGameUpdate();
+    }
+
+    @Override
+    public void showOutcome(FinishGameEvent event) {
+        out.setOutcome(event.message(), event.isWin());
+        playerClient.setPlayerState(new FinishStateClient());
         onGameUpdate();
     }
 
@@ -298,31 +353,6 @@ public class TUI implements View {
         return cell;
     }
 
-    public TUI() throws IOException {
-
-        loadComponentNames();
-        loadCardsDescriptions();
-        cachedBoard = new String[10][10][7];
-        cacheHand = new String[7];
-        for (int i = 0; i < 7; i++) {
-            cacheHand[i] = "";
-        }
-        inputReader = new InputReader(inputQueue);
-        inputThread = new Thread(inputReader);
-        inputThread.setDaemon(true);
-        inputThread.start();
-        //phase = ViewPhase.LOBBY;
-        //inputReader.renderScreen(new StringBuilder(ASCII_ART.Title));
-        playerClient = new PlayerClient();
-        playerClient.setPlayerState(new LoginClient());
-        playerClient.setCompleter(inputReader.getCompleter());
-        lastState = new LoginClient();
-        out = new Out(inputReader, playerClient);
-        onGameUpdate();
-        //inputReader.clearScreen();
-
-
-    }
 
     private void loadCardsDescriptions() {
         ObjectMapper mapper = new ObjectMapper();

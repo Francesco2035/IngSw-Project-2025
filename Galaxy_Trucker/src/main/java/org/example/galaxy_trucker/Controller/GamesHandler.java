@@ -77,7 +77,7 @@ public class GamesHandler implements LobbyListener {
             String gameId = command.getGameId();
             if ("Quit".equals(title)) {
                 if (gameControllerMap.containsKey(gameId)) {
-                    gameControllerMap.get(gameId).removePlayer(UUID.fromString(command.getToken()));
+                    gameControllerMap.get(gameId).removePlayer(UUID.fromString(command.getToken()), command);
 
                 } else {
                     System.out.println("No player found for token: " + command.getToken());
@@ -101,11 +101,13 @@ public class GamesHandler implements LobbyListener {
 
     public void removeGame(String gameId) {
         System.out.println("Removing game: " + gameId);
+        UUID toRemove = null;
         for (UUID token : tokenToGame.keySet()) {
             if (tokenToGame.get(token).equals(gameId)) {
-                tokenToGame.remove(token);
+                toRemove = token;
             }
         }
+        tokenToGame.remove(toRemove);
         gameControllerMap.remove(gameId);
     }
 

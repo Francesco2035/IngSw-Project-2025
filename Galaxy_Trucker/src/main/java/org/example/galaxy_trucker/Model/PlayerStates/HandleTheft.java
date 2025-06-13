@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.GiveAttackCommand;
 import org.example.galaxy_trucker.Commands.Theft;
+import org.example.galaxy_trucker.Commands.TheftCommand;
 import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
@@ -42,11 +43,6 @@ public class HandleTheft extends PlayerState {
 //            }
 //        }
 //    }
-
-    @Override
-    public boolean allows(GetGoodAction action) {
-        return true;
-    }
 
 
 
@@ -173,4 +169,18 @@ public class HandleTheft extends PlayerState {
 //            return  new Theft(index,coord,gameId,player.GetID(),lv,"TheftCommand","placeholder");
         //}
  //   }
+
+    @Override
+    public boolean allows(TheftCommand command){
+        return true;
+    }
+
+    @Override
+    public boolean allows(GetGoodAction action) {
+        return true;
+    }
+
+
+
+
 }

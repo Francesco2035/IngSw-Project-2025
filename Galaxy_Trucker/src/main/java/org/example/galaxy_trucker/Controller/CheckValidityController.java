@@ -23,19 +23,21 @@ public class CheckValidityController extends Controller{
         if (!command.allowedIn(curPlayer.getPlayerState())){
             sendException(new IllegalStateException("Command not accepted, you can only remove tile!"));
             //throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
+        }else{
+            try {
+                System.out.println("Action called for " + gameId + ": " + command.getTitle() + " "+ command.playerId);
+                command.execute(curPlayer);
+                nextState(gc);
+            } catch (Exception e) {
+                curPlayer.setMyPlance(playerBoardCopy);
+                playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
+                sendException(e);
+                //throw new IllegalCallerException("illegal execution of command" + command.toString());
+                e.printStackTrace();
+            }
         }
 
-        try {
-            System.out.println("Action called for " + gameId + ": " + command.getTitle() + " "+ command.playerId);
-            command.execute(curPlayer);
-            nextState(gc);
-        } catch (Exception e) {
-            curPlayer.setMyPlance(playerBoardCopy);
-            playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
-            sendException(e);
-            //throw new IllegalCallerException("illegal execution of command" + command.toString());
-            e.printStackTrace();
-        }
+
 
     }
 

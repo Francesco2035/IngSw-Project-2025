@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
@@ -30,6 +31,14 @@ public class AbandonedShip extends Card{
     private int order;
     private int totHumans;
     private ArrayList<Player> losers;
+
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Abandoned Ship"));
+        }
+    }
 
 
     public AbandonedShip(int requirement, int reward, int level, int time, GameBoard board) {
@@ -65,8 +74,8 @@ public class AbandonedShip extends Card{
             if (currentPlayer != null) {currentPlayer.setState(new Waiting());}
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
-            System.out.println("Cchecking:"+currentPlayer.GetID());
-            if(CurrentPlanche.getNumHumans()>=requirement){
+            System.out.println("Checking: "+currentPlayer.GetID());
+            if(CurrentPlanche.getNumHumans()>=requirement){ //TODO: capire se maggiore o maggiore uguale
                 this.totHumans=CurrentPlanche.getNumHumans();
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
@@ -104,17 +113,8 @@ public class AbandonedShip extends Card{
     @Override
     public void finishCard() {
         System.out.println("card finished");
-        GameBoard Board=this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
-        for(int i=0; i<PlayerList.size(); i++){
-            PlayerList.get(i).setState(new BaseState());
+        checkLosers();
 
-        }
-        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
-        losers.addAll(getBoard().checkDoubleLap());
-        for(Player p: losers){
-            getBoard().abandonRace(p);
-        }
         this.setFinished(true);
 
     }

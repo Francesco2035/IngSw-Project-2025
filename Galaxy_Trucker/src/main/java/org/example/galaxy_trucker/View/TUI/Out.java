@@ -24,8 +24,10 @@ public class Out {
     String exception = "";
     String effect = "";
     String titleCard = "";
+    String outcome = "";
     ArrayList<String> deck = new ArrayList<>();
     private boolean hourglass = false;
+    ArrayList<String> log = new ArrayList<>();
 
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -176,6 +178,11 @@ public class Out {
 
     public void setPlayers(ArrayList<String> players) {
         this.players = players;
+        for (String playerId : otherPlayersBoard.keySet()) {
+            if (!players.contains(playerId)) {
+                otherPlayersBoard.remove(playerId);
+            }
+        }
     }
 
     public void setReady(ArrayList<Boolean> ready) {
@@ -645,6 +652,10 @@ public class Out {
 
     public void setEffectCard(String message) {
         this.effect = message;
+        StringBuilder sb = new StringBuilder();
+        sb.append(Ansi.ansi().fgYellow().a("[ " + effect + " ]").reset()+ "                                                                                                                                                                                                                                                         ");
+        sb.append("\n\n");
+        log.add(sb.toString());
     }
 
     public StringBuilder showCardEffect(){
@@ -725,5 +736,32 @@ public class Out {
 
 
         return sb;
+    }
+
+    public StringBuilder showLog() {
+        StringBuilder sb = new StringBuilder();
+        for (String s : log){
+            sb.append(s);
+            sb.append("\n");
+        }
+        return sb;
+    }
+
+    public void clearOut() {
+        lobby.clear();
+        //TODO: pulire tutta OUT
+    }
+
+    public StringBuilder showOutcome() {
+        return new StringBuilder(outcome);
+    }
+
+    public void setOutcome(String message, boolean outcome) {
+        if (outcome){
+            this.outcome = "hai vinto";
+        }
+        else{
+            this.outcome = "hai perso";
+        }
     }
 }

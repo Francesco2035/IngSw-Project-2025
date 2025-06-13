@@ -26,24 +26,27 @@ public class PostPrepController extends Controller {
             sendException(new IllegalStateException("You can only add aliens or humans!"));
             //throw new IllegalStateException("Command not accepted: "+ command.getClass()+" \n" +curPlayer.getPlayerState());
         }
+        else{
+            try {
+                System.out.println("Action called for " + gameId + ": " + command.getTitle() + " "+ command.playerId);
+                command.execute(curPlayer);
+                count --;
+                System.out.println("Count for "+ curPlayer.GetID() + " : " + count);
+                if (count == 0) {
+                    System.out.println("Changing state");
+                    nextState(gc);
+                }
 
-        try {
-            System.out.println("Action called for " + gameId + ": " + command.getTitle() + " "+ command.playerId);
-            command.execute(curPlayer);
-            count --;
-            System.out.println("Count for "+ curPlayer.GetID() + " : " + count);
-            if (count == 0) {
-                System.out.println("Changing state");
-                nextState(gc);
+            } catch (Exception e) {
+                curPlayer.setMyPlance(playerBoardCopy);
+                playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
+                sendException(e);
+                //throw new IllegalCallerException("illegal execution of command" + command.toString());
+                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            curPlayer.setMyPlance(playerBoardCopy);
-            playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
-            sendException(e);
-            //throw new IllegalCallerException("illegal execution of command" + command.toString());
-            e.printStackTrace();
         }
+
+
 
     }
 

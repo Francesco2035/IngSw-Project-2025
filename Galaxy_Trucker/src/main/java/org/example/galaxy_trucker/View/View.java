@@ -57,9 +57,13 @@ public interface View {
 
     void refresh();
 
-    void effectCard(RandomCardEffectEvent event);
+    void effectCard(LogEvent event);
 
     void updatePBInfo(PBInfoEvent event);
 
     void updateHourglass(HourglassEvent event);
+
+    void seeLog();
+
+    void showOutcome(FinishGameEvent event);
 }

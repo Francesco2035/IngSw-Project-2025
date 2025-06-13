@@ -24,4 +24,7 @@ public class ConsumingEnergyClient  extends PlayerStateClient{
     public List<String> getCommands() {
         return List.of("ConsumeEnergy");
     }
+
+    //consumeEnergy x1 y2 x2 y2 ... (clic su tile batteria)
+    //pirates, sbugglers, slavers, openSpace, warzone
 }

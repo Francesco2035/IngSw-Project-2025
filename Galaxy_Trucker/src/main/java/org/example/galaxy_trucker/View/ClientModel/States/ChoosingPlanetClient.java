@@ -24,4 +24,6 @@ public class ChoosingPlanetClient  extends PlayerStateClient{
     public List<String> getCommands() {
         return List.of("ChoosePlanet");
     }
+
+    //chooseplanet (-1 ... n-1) -1 è il rifiuto (doNothing)
 }

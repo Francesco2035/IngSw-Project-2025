@@ -4,18 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.EventVisitor;
 
-public class RandomCardEffectEvent implements Event {
+public class LogEvent implements Event {
 
 
     @JsonProperty("effect")
     String effect;
 
 
-    public RandomCardEffectEvent() {
+    public LogEvent() {
 
     }
 
-    public RandomCardEffectEvent(String effect) {
+    public LogEvent(String effect) {
         this.effect = effect;
     }
     @Override

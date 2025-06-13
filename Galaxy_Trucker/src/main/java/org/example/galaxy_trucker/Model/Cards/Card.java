@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Controller.Listeners.RandomCardEffectListener;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.RandomCardEffectEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -66,6 +67,33 @@ public class Card implements Serializable {
 
 //    public GameBoard getBoard() {return this.Board;}
 
+    public void checkLosers(){
+        ArrayList<Player> losers = new ArrayList<>();
+        GameBoard Board=this.getBoard();
+        ArrayList<Player> PlayerList = Board.getPlayers();
+        for(int i=0; i<PlayerList.size(); i++){
+            PlayerList.get(i).setState(new BaseState());
+        }
+        losers.removeAll(getBoard().checkDoubleLap());   // così non ho doppioni :3
+        losers.addAll(getBoard().checkDoubleLap());
+        for(Player p: losers){
+            getBoard().abandonRace(p, "You have been doubled");
+        }
+
+        losers.clear();
+        PlayerList = Board.getPlayers();
+        for (Player p : PlayerList){
+            if (p.getmyPlayerBoard().getNumHumans() == 0){
+                losers.add(p);
+            }
+        }
+
+        for(Player p: losers){
+            getBoard().abandonRace(p, "No crew left");
+        }
+
+    }
+
 
     //toOverride
     public void setConcurrentCardListener(ConcurrentCardListener listener){
@@ -110,6 +138,10 @@ public class Card implements Serializable {
         return finished;
     }
 
+    public void sendTypeLog(){
+
+    }
+
     public void setFinished(boolean finished) {
         this.finished = finished;
     }
@@ -121,7 +153,7 @@ public class Card implements Serializable {
 
 
     /// usa questo per mandare notifiche al client lezgo
-    public void sendRandomEffect(String playerid, RandomCardEffectEvent randomCardEffectEvent) {
+    public void sendRandomEffect(String playerid, LogEvent randomCardEffectEvent) {
         System.out.println("invio a "+playerid+" "+randomCardEffectEvent.message());
         if(getRandomCardEffectListeners().get(playerid) != null) {
             getRandomCardEffectListeners().get(playerid).Effect(randomCardEffectEvent);

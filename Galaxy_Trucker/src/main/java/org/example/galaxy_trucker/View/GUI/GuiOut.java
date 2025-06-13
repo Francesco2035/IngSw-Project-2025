@@ -13,6 +13,7 @@ public class GuiOut {
     private Scene buildingScene;
     private Scene validityScene;
     private Scene addCrewScene;
+    private Scene flightScene;
 
     private Stage primaryStage;
 
@@ -100,6 +101,17 @@ public class GuiOut {
         Platform.runLater(() -> {
             primaryStage.setTitle("Check Validity");
             primaryStage.setScene(validityScene);
+            primaryStage.show();
+        });
+    }
+
+    public void setFlightScreen(Scene scene){
+        this.flightScene= scene;
+    }
+    public void printFlightScreen(){
+        Platform.runLater(() -> {
+            primaryStage.setTitle("Flight");
+            primaryStage.setScene(flightScene);
             primaryStage.show();
         });
     }

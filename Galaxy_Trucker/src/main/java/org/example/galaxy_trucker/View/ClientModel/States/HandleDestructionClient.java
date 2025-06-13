@@ -23,4 +23,6 @@ public class HandleDestructionClient  extends PlayerStateClient{
     public List<String> getCommands() {
         return List.of("SelectChunk");
     }
+
+    //Selectchunk x y coordinata di una tile nel chunk da tenere
 }

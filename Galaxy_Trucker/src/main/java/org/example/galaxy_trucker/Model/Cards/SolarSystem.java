@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.RandomCardEffectEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.WrongPlanetExeption;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -22,6 +22,14 @@ public class SolarSystem extends Card {
     private  String message;
 
     ArrayList<Player> losers;
+
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Planets"));
+        }
+    }
 
 
 
@@ -62,7 +70,7 @@ public class SolarSystem extends Card {
 
 
                 if(!message.equals(" ")) {
-                    this.sendRandomEffect(currentPlayer.GetID(), new RandomCardEffectEvent(message));
+                    this.sendRandomEffect(currentPlayer.GetID(), new LogEvent(message));
                 }
                 this.currentPlayer.setState(new ChoosingPlanet());
 
@@ -97,25 +105,9 @@ public class SolarSystem extends Card {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.done>=PlayerList.size()-1) {
-
-            for (int i = 0; i < PlayerList.size(); i++) {
-                PlayerList.get(i).setState(new BaseState());
-
-            }
-
-            losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
-            losers.addAll(getBoard().checkDoubleLap());
-
-            for(Player p: getBoard().getPlayers()){
-                if(p.getmyPlayerBoard().getNumHumans()==0){
-                    losers.remove(p);
-                    losers.add(p);
-                }
-            }
-
-            for(Player p: losers){
-                getBoard().abandonRace(p);
-            }
+            ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
+            concurrentCardListener.onConcurrentCard(false);
+            checkLosers();
 
             System.out.println("card finished");
             this.setFinished(true);

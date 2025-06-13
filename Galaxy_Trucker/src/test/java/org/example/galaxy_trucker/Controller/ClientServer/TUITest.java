@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller.ClientServer;
 
 import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
+import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
 import org.example.galaxy_trucker.View.TUI.TUI;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +11,7 @@ class TUITest {
 
     @Test
     void test() throws IOException {
-        TUI tui = new TUI();
+        TUI tui = new TUI(new LoginClient());
         tui.setGameboard(2);
         //tui.printGameboard();
 

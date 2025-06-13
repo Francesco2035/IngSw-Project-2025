@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -20,6 +21,14 @@ public class Epidemic extends Card {
     private Player currentPlayer;
     private ArrayList<Player> losers;
 
+
+    @Override
+    public void sendTypeLog(){
+        this.getBoard().getPlayers();
+        for (Player p : this.getBoard().getPlayers()){
+            sendRandomEffect(p.GetID(), new LogEvent("Epidemic"));
+        }
+    }
 
 
     public Epidemic(int level, int time, GameBoard board) {
@@ -79,30 +88,7 @@ public class Epidemic extends Card {
 
     @Override
     public void finishCard() {
-        GameBoard Board=this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
-        for(int i=0; i<PlayerList.size(); i++){
-            PlayerList.get(i).setState(new BaseState());
-
-        }
-        System.out.println("card finished\n");
-
-        /// souldn't be possible
-        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
-        losers.addAll(getBoard().checkDoubleLap());
-
-        for(Player p: getBoard().getPlayers()){
-            if(p.getmyPlayerBoard().getNumHumans()==0){
-                losers.remove(p);
-                losers.add(p);
-            }
-        }
-
-        for(Player p: losers){
-            getBoard().abandonRace(p);
-        }
-
-
+        checkLosers();
         this.setFinished(true);
     }
 
