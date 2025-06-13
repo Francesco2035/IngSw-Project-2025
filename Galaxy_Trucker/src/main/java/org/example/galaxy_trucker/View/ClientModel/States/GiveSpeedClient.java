@@ -24,4 +24,6 @@ public class GiveSpeedClient  extends PlayerStateClient{
     public List<String> getCommands() {
         return List.of("GiveSpeed");
     }
+
+    //giveSpeed x1 y1 ... motori doppi (ma va bene anche singoli)
 }
