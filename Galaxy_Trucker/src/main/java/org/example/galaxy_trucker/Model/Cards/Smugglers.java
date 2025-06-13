@@ -242,16 +242,21 @@ public class Smugglers extends Card{
         }
     }
 
+
+
     @Override
     public void loseCargo(IntegerPair coord,int index){
+
         PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
         ArrayList<Storage> storages=CurrentPlanche.getStorages();
         Tile tiles[][]=CurrentPlanche.getPlayerBoard();
 
 
         HashMap<Integer,ArrayList<IntegerPair>> cargoH= CurrentPlanche.getStoredGoods();
+        System.out.println("pre furto devo rubare "+tmpPunishment);
 
         if(cargoH.isEmpty()){
+            System.out.println("ho rubato tutto, passo alle energie");
             energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
             System.out.println("energy usage (lose Cargo) :" +energyUsage);
             this.setDefaultPunishment(energyUsage);
@@ -288,12 +293,15 @@ public class Smugglers extends Card{
                 throw new InvalidInput("this isn't a storage ");
             }
         }
+        System.out.println("pre furto devo rubare "+tmpPunishment);
+
         if(tmpPunishment==0){
             System.out.println("finished stealing");
             this.updateSates();
             return;
         }
         if(cargoH.isEmpty()){
+            System.out.println("ho rubato tutto, passo alle energie");
             energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
             this.setDefaultPunishment(energyUsage);
             this.isaPunishment=true;
@@ -304,6 +312,7 @@ public class Smugglers extends Card{
         else {
             currentPlayer.setState(new HandleTheft());
         }
+
 
     }
 
