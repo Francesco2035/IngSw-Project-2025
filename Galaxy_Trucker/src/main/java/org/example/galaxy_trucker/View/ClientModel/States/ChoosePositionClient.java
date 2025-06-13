@@ -12,7 +12,7 @@ public class ChoosePositionClient  extends PlayerStateClient{
         toPrint.append(out.getTitleCard());
         toPrint.append("ChoosePosition...\n");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.showException());
         out.render(toPrint);

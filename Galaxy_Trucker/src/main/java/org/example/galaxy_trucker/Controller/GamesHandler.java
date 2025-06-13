@@ -21,6 +21,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class GamesHandler implements LobbyListener {
 
+    private final HashMap<String, String> token_ToGame = new HashMap<>();
     private final HashMap<UUID, String> tokenToGame = new HashMap<>();
     private final HashMap<String, GameController> gameControllerMap;
     private final BlockingQueue<Pair<Command, VirtualView>> pendingLogins;

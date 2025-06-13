@@ -14,7 +14,7 @@ public class CheckValidityClient  extends PlayerStateClient{
         toPrint.append(out.getTitleCard());
         toPrint.append("CheckValidity...");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
         toPrint.append(out.showException());

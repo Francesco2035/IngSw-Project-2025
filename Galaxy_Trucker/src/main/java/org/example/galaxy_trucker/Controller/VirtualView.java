@@ -353,6 +353,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     public void setToken(UUID token) {
         this.token = token;
     }
+
     public UUID getToken() {
         return token;
     }

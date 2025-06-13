@@ -2,7 +2,6 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 
 import org.example.galaxy_trucker.View.TUI.Out;
 
-import java.awt.image.AffineTransformOp;
 import java.util.List;
 
 public class HandleCargoClient  extends PlayerStateClient{
@@ -12,7 +11,7 @@ public class HandleCargoClient  extends PlayerStateClient{
         toPrint.append(out.getTitleCard());
         toPrint.append("HandleCargo...\n\n");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showRewards());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());

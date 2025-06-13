@@ -12,7 +12,7 @@ public class ChoosingPlanetClient  extends PlayerStateClient{
         toPrint.append(out.getTitleCard());
         toPrint.append("Choosing Planet...\n");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showCard());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
