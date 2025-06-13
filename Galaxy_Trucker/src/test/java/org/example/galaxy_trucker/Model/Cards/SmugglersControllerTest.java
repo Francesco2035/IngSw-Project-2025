@@ -2,17 +2,24 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import org.example.galaxy_trucker.Commands.ConsumeEnergyCommand;
 import org.example.galaxy_trucker.Commands.GiveAttackCommand;
+import org.example.galaxy_trucker.Commands.TheftCommand;
 import org.example.galaxy_trucker.Controller.CardsController;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Listeners.PhaseListener;
 import org.example.galaxy_trucker.Controller.Messages.HandEvent;
 import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
+import org.example.galaxy_trucker.Model.Boards.Actions.AddGoodAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
+import org.example.galaxy_trucker.Model.Goods.BLUE;
+import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.Goods.YELLOW;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.*;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -75,7 +82,7 @@ public class SmugglersControllerTest {
     }
 
     @Test
-    public void testStealEnergy() throws IOException, InterruptedException {
+    public void testSteal() throws IOException, InterruptedException {
         game.setGameBoard(Gboard);
         GAGen gag = new GAGen();
         ArrayList<Card> cards = gag.getCardsDeck();
@@ -110,6 +117,37 @@ public class SmugglersControllerTest {
 //            p.setState(new BuildingShip());
 
         }
+
+
+
+        ArrayList<Goods> RewardList = new ArrayList<Goods>();
+
+        RewardList.add(new BLUE());
+        RewardList.add(new BLUE());
+        RewardList.add(new BLUE());
+        RewardList.add(new YELLOW());
+
+        p1.setState(new HandleCargo());
+        p1.getmyPlayerBoard().setRewards(RewardList);
+
+
+        PlayerBoard playerBoard = p1.getmyPlayerBoard();
+        PlayerState state = p1.getPlayerState();
+        Tile specialStorage= playerBoard.getTile(7,8);
+
+        System.out.println(specialStorage.getComponent().getClass() + " space is " + specialStorage.getComponent().getType());
+        playerBoard.performAction(specialStorage.getComponent(),new AddGoodAction(playerBoard.getFromRewards(3),playerBoard,7,8),state);
+        Tile normalStorage= playerBoard.getTile(7,9);
+        playerBoard.performAction(normalStorage.getComponent(),new AddGoodAction(playerBoard.getFromRewards(0),playerBoard,7,9),state);
+        playerBoard.performAction(normalStorage.getComponent(),new AddGoodAction(playerBoard.getFromRewards(0),playerBoard,7,9),state);
+
+
+        System.out.println("\n");
+
+
+
+
+        /// attiva smugglers
         CurrentCard.CardEffect();
 
 
@@ -119,14 +157,30 @@ public class SmugglersControllerTest {
         coordinates.clear();
         GiveAttackCommand fight = new GiveAttackCommand(coordinates,game.getID(),p1.GetID(),game.getLv(),"GiveAttackCommand","SK");
         fight.execute(p1);
-        assertEquals(p1.getPlayerState().getClass(), ConsumingEnergy.class);
 
 
-        coordinates.add(new IntegerPair(6,9));
-        coordinates.add(new IntegerPair(6,9));
-        coordinates.add(new IntegerPair(6,9));
-        ConsumeEnergyCommand consume = new ConsumeEnergyCommand(coordinates,game.getID(),p1.GetID(),game.getLv(),"GiveAttackCommand","SK");
-        consume.execute(p1);
+        if (p1.getmyPlayerBoard().getStoredGoods() != null) {
+            assertEquals(HandleTheft.class,p1.getPlayerState().getClass());
+
+            TheftCommand theftCommand1 = new TheftCommand(0,new IntegerPair(7,8),game.getID(),p1.GetID(),game.getLv(),"theft","boh");
+            theftCommand1.execute(p1);
+            //theftCommand1.execute(p1);
+            TheftCommand theftCommand2 = new TheftCommand(0,new IntegerPair(7,9),game.getID(),p1.GetID(),game.getLv(),"theft","boh");
+            theftCommand2.execute(p1);
+            theftCommand2.execute(p1);
+
+        }
+        else {
+            assertEquals(p1.getPlayerState().getClass(), ConsumingEnergy.class);
+
+
+            coordinates.add(new IntegerPair(6, 9));
+            coordinates.add(new IntegerPair(6, 9));
+            coordinates.add(new IntegerPair(6, 9));
+            ConsumeEnergyCommand consume = new ConsumeEnergyCommand(coordinates, game.getID(), p1.GetID(), game.getLv(), "GiveAttackCommand", "SK");
+            consume.execute(p1);
+        }
+
     }
 
 

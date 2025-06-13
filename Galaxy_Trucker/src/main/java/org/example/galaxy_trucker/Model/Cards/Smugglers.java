@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static java.lang.Math.min;
+import static java.util.Collections.max;
 
 public class Smugglers extends Card{
     private int requirement;
@@ -250,8 +251,11 @@ public class Smugglers extends Card{
         }
     }
 
+
+
     @Override
     public void loseCargo(IntegerPair coord,int index){
+
         PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
         ArrayList<Storage> storages=CurrentPlanche.getStorages();
         Tile tiles[][]=CurrentPlanche.getPlayerBoard();
@@ -259,7 +263,12 @@ public class Smugglers extends Card{
 
         HashMap<Integer,ArrayList<IntegerPair>> cargoH= CurrentPlanche.getStoredGoods();
 
+        int max;
+        max= max(cargoH.keySet());
+        System.out.println("\npre furto devo rubare "+tmpPunishment+"\n");
+
         if(cargoH.isEmpty()){
+            System.out.println("ho rubato tutto, passo alle energie");
             energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
             System.out.println("energy usage (lose Cargo) :" +energyUsage);
             this.setDefaultPunishment(energyUsage);
@@ -276,10 +285,10 @@ public class Smugglers extends Card{
             if (storages.contains(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond()).getComponent())){
                 int i=storages.indexOf(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
                 Storage currStorage=storages.get(i);
-                if (index>=currStorage.getGoodsArray().size() || index<0){
+                if (index>=currStorage.getGoods().size() || index<0){
                     throw new InvalidInput("there is nothing at this position in the storage");
                 }
-                if(currStorage.getValue(index)==cargoH.keySet().iterator().next() ){//iterator.next da il primo elemento non chiederti perché
+                if(currStorage.getValue(index)==max ){//iterator.next da il primo elemento non chiederti perché
                    CurrentPlanche.performAction(tiles[coord.getFirst()][coord.getSecond()].getComponent(), new GetGoodAction(index,CurrentPlanche,coord.getFirst(),coord.getSecond()),new HandleTheft());///prega dio sia giusto :)
                     this.tmpPunishment--;
                    this.setDefaultPunishment(tmpPunishment);
@@ -296,12 +305,15 @@ public class Smugglers extends Card{
                 throw new InvalidInput("this isn't a storage ");
             }
         }
+        System.out.println("\npost furto devo rubare "+tmpPunishment +"\n");
+
         if(tmpPunishment==0){
             System.out.println("finished stealing");
             this.updateSates();
             return;
         }
         if(cargoH.isEmpty()){
+            System.out.println("ho rubato tutto, passo alle energie");
             energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
             this.setDefaultPunishment(energyUsage);
             this.isaPunishment=true;
@@ -312,6 +324,7 @@ public class Smugglers extends Card{
         else {
             currentPlayer.setState(new HandleTheft());
         }
+
 
     }
 

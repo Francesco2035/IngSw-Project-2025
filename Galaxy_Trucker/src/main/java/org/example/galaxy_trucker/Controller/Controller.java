@@ -71,6 +71,8 @@ public abstract class Controller {
                curPlayer.setMyPlance(playerBoardCopy);
               // this.curPlayer.SetHasActed(false);
                throw new ImpossibleActionException("errore nelle azioni di default :)");
+           } catch (InterruptedException e) {
+               throw new RuntimeException(e);
            }
        }
 
