@@ -136,7 +136,7 @@ public class Client implements EventVisitor {
         terminal.close();
 
 
-        Client client = new Client();
+        Client client = this;
 
         if (view1.equals("TUI")) {
             TUI tui = new TUI(loginClient);

@@ -28,15 +28,17 @@ public class GetGoodAction extends ComponentAction {
         }
 
         good = storage.removeGood(position);
-        if (good!=null){
-            playerBoard.getStoredGoods().get(good.getValue()).remove(new IntegerPair(x,y));
-            if (playerBoard.getStoredGoods().get(good.getValue()).isEmpty()){
-                playerBoard.getStoredGoods().remove(good.getValue());
-            }
-        }
-        else {
+        if(good == null){
             throw new InvalidInput("Cannot remove a good because it is out of bounds");
         }
+//        if (good!=null){
+//            playerBoard.getStoredGoods().get(good.getValue()).remove(new IntegerPair(x,y));
+//            if (playerBoard.getStoredGoods().get(good.getValue()).isEmpty()){
+//                playerBoard.getStoredGoods().remove(good.getValue());
+//            }
+//        }
+//        else {
+//        }
     }
 
     public Goods getGood() {

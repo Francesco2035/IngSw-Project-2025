@@ -16,8 +16,7 @@ import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-//TODO: vincolo player non può scegliere posizione nella gameboard se pos > numPlayer
-// dovrebbe essere stato fatto
+
 public class GameBoard {
 
     // questo arrayList tiene conto della posizione effettiva nel Game
@@ -256,7 +255,8 @@ public class GameBoard {
             if(NewPos < 0) NewIndex = (nPositions + (NewPos % nPositions)) % nPositions;
             else NewIndex = NewPos % nPositions;
 
-                if (positions[NewIndex % nPositions] == null || positions[NewIndex % nPositions].equals(cur.getKey())) i++;
+            if (positions[NewIndex % nPositions] == null || positions[NewIndex % nPositions].equals(cur.getKey()))
+                i++;
 //            else if(cur.getKey().equals(players.getLast().getKey()) && players.getLast().getValue() + nSteps +nPositions <= players.getFirst().getValue()){
 //                abandonRace(players.getLast().getKey());
 //            }
@@ -363,19 +363,19 @@ public class GameBoard {
     public Hourglass getHourglass() {return hourglass;}
 
     public void abandonRace(Player loser){
-    System.out.println(loser.GetID()+ " HAI PERSO COGLIONE!");
+    System.out.println(loser.GetID()+ " HAI PERSO!");
         try{
             Player_IntegerPair pair = players.stream()
                     .filter(p -> p.getKey().equals(loser))
                     .findFirst()
                     .orElseThrow();
             positions[pair.getValue() % nPositions] = null;
-            Player playah = pair.getKey();
-            int finalScore = playah.finishRace(false);
+            Player player = pair.getKey();
+            int finalScore = player.finishRace(false);
             //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
             //--> ho fatto metodo finishGame per mettere in classifica anche quelli che vincono alla fine
             //-palu
-            scoreboard.add(new Player_IntegerPair(playah, finalScore));
+            scoreboard.add(new Player_IntegerPair(player, finalScore));
 
 
             /// controllare che anche lato controller il player che abbandona smetta di esistere
