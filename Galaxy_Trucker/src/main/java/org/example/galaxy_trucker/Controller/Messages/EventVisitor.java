@@ -47,6 +47,7 @@ public interface EventVisitor {
 
     void visit(HourglassEvent hourglassEvent);
 
+    void visit(FinishGameEvent finishGameEvent);
 
 
     //public void visit(GameBoardEvent event);

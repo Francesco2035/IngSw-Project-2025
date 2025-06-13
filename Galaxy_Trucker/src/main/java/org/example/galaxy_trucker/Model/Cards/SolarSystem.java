@@ -105,25 +105,9 @@ public class SolarSystem extends Card {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.done>=PlayerList.size()-1) {
-
-            for (int i = 0; i < PlayerList.size(); i++) {
-                PlayerList.get(i).setState(new BaseState());
-
-            }
-
-            losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
-            losers.addAll(getBoard().checkDoubleLap());
-
-            for(Player p: getBoard().getPlayers()){
-                if(p.getmyPlayerBoard().getNumHumans()==0){
-                    losers.remove(p);
-                    losers.add(p);
-                }
-            }
-
-            for(Player p: losers){
-                getBoard().abandonRace(p);
-            }
+            ConcurrentCardListener concurrentCardListener = this.getConcurrentCardListener();
+            concurrentCardListener.onConcurrentCard(false);
+            checkLosers();
 
             System.out.println("card finished");
             this.setFinished(true);

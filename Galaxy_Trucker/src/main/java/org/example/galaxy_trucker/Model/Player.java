@@ -270,8 +270,16 @@ public class Player implements Serializable {
         else throw new IllegalStateException("Called a lv 2 command in a lv 1 game!");
     }
 
-    public  int finishRace(boolean finished){
-        return getmyPlayerBoard().finishRace(finished);
+    public int finishRace(boolean finished, String message){
+        int result = 0;
+        result =  getmyPlayerBoard().finishRace(finished);
+        if (result > 0){
+            finishListener.onEndGame(true, GetID(), message);
+        }
+        else{
+            finishListener.onEndGame(false, GetID(), message);
+        }
+        return result;
     }
 
 

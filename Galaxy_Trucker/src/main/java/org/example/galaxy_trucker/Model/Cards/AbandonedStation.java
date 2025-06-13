@@ -96,18 +96,7 @@ public class AbandonedStation extends Card{
 
     @Override
     public void finishCard() {
-        GameBoard Board=this.getBoard();
-        ArrayList<Player> PlayerList = Board.getPlayers();
-        for(int i=0; i<PlayerList.size(); i++){
-            PlayerList.get(i).setState(new BaseState());
-
-        }
-
-        losers.remove(getBoard().checkDoubleLap());/// così non ho doppioni :3
-        losers.addAll(getBoard().checkDoubleLap());
-        for(Player p: losers){
-            getBoard().abandonRace(p);
-        }
+        checkLosers();
         System.out.println("card finished!");
         this.setFinished(true);
     }

@@ -300,6 +300,13 @@ public class TUI implements View {
         onGameUpdate();
     }
 
+    @Override
+    public void showOutcome(FinishGameEvent event) {
+        out.setOutcome(event.message(), event.isWin());
+        playerClient.setPlayerState(new FinishStateClient());
+        onGameUpdate();
+    }
+
     public String formatPBInfo(PBInfoEvent event) {
         StringBuilder sb = new StringBuilder();
         sb.append(ASCII_ART.compose("            ",

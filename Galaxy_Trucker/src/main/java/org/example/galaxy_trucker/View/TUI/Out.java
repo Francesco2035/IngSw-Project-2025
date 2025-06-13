@@ -24,6 +24,7 @@ public class Out {
     String exception = "";
     String effect = "";
     String titleCard = "";
+    String outcome = "";
     ArrayList<String> deck = new ArrayList<>();
     private boolean hourglass = false;
     ArrayList<String> log = new ArrayList<>();
@@ -749,5 +750,18 @@ public class Out {
     public void clearOut() {
         lobby.clear();
         //TODO: pulire tutta OUT
+    }
+
+    public StringBuilder showOutcome() {
+        return new StringBuilder(outcome);
+    }
+
+    public void setOutcome(String message, boolean outcome) {
+        if (outcome){
+            this.outcome = "hai vinto";
+        }
+        else{
+            this.outcome = "hai perso";
+        }
     }
 }
