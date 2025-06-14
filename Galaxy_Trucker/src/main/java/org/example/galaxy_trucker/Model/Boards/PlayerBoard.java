@@ -1097,11 +1097,11 @@ public class PlayerBoard {
         }
     }
 
-    public void clearBuffer() {
-        Buffer.clear();
-        sendUpdates( new TileEvent(159 , 7, 8, null, 0, false, false, 0, 0, null));
-
-    }
+//    public void clearBuffer() {
+//        Buffer.clear();
+//        sendUpdates( new TileEvent(159 , 7, 8, null, 0, false, false, 0, 0, null));
+//
+//    }
 
     public  int finishRace(boolean finished){
         int number =0;

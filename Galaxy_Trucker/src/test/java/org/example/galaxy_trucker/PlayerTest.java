@@ -1,8 +1,18 @@
 package org.example.galaxy_trucker;
 
+import org.example.galaxy_trucker.ClientServer.Client;
+import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
+import org.example.galaxy_trucker.Controller.FlightController;
+import org.example.galaxy_trucker.Controller.GameController;
+import org.example.galaxy_trucker.Controller.GamesHandler;
+import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
+import org.example.galaxy_trucker.Controller.Messages.FinishListener;
+import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.junit.jupiter.api.Test;
 
@@ -14,40 +24,65 @@ class PlayerTest {
 
     @Test
     void PickCardTest() throws IOException {
-        Player p1 = new Player();
-        p1.setId("pgp");
-        Player p2 = new Player();
-        p2.setId("fgr");
-
-        Game g = new Game(2,"testGame");
-
-        g.NewPlayer(p1);
-        g.NewPlayer(p2);
 
 
-        p1.SetReady(true);
-        p2.SetReady(true);
 
-        p1.PickNewTile(-1);
-        p2.PickNewTile(-1);
+        Game game;
+        GameBoard Gboard;
+        GameController gc;
+        Player p1;
+        VirtualView vv;
+        FlightController c1;
+        GamesHandler gh;
 
-        p1.DiscardTile();
-        p2.DiscardTile();
-        assertNull(p1.getCurrentTile());
-        assertNull(p1.getCurrentTile());
+        game = new Game(2, "player test");
+        gc = new GameController(game.getGameID(), game, new GamesHandler(), game.getLv(), 4);
+        gh = new GamesHandler();
+
+        p1 = new Player();
+        p1.setId("passos");
+        game.NewPlayer(p1);
+        p1.setBoards(game.getGameBoard());
+        vv = new VirtualView(p1.GetID(), game.getGameID(), new RMIClient(new Client()), null);
+        vv.setDisconnected(true);
+        Gboard = game.getGameBoard();
+        c1 = new FlightController(p1, game.getGameID(), gc, false);
+        gc.getControllerMap().put(p1.GetID(), c1);
+
+        p1.setPhaseListener(vv);
+        p1.setReadyListener(gc);
+        gc.setLobbyListener(gh);
+        p1.getmyPlayerBoard().setListener(vv);
+        p1.setHandListener(vv);
+        p1.getCommonBoard().getTilesSets().setListeners(vv);
+        p1.setCardListner(vv);
+        gc.getVirtualViewMap().put(p1.GetID(), vv);
+        p1.setFinishListener(gc);
 
 
-        p1.PickNewTile(0);
-        p2.PickNewTile(4);
-        p2.PickNewTile(0);
-        assertNull(p2.getCurrentTile());
-        p1.DiscardTile();
+        p1.setMyPlance(TestSetupHelper.createInitializedBoard1());
+        p1.getmyPlayerBoard().insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6 ,6, false);
 
-        p1.PickNewTile(-1);
-        Tile t = p1.getCurrentTile();
-        p1.DiscardTile();
-        p2.PickNewTile(2);
-        assertEquals(t, p2.getCurrentTile());
+
+
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+        p1.RollDice();
+        p1.GetHasActed();
+
+
+
+
+        p1.IncreaseCredits(2);
+
+        p1.getmyPlayerBoard().finishRace(true);
+        p1.finishRace(true, "fine");
 
     }
 

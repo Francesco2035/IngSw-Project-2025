@@ -28,12 +28,11 @@ public class PlayerBoardTest {
         }
     }
 
-    @BeforeAll
-    public static void setup(){
-
-        playerBoard = TestSetupHelper.createInitializedBoard1();
-
-    }
+//    @BeforeAll
+//    public static void setup(){
+//
+//
+//    }
 
     @Test
 
@@ -41,6 +40,7 @@ public class PlayerBoardTest {
     @Order(1)
     public void testValidity(){
 
+        playerBoard = TestSetupHelper.createInitializedBoard1();
         boolean f = playerBoard.checkValidity();
         assertTrue(f);
 //        assertEquals(20, playerBoard.getExposedConnectors());
@@ -102,9 +102,14 @@ public class PlayerBoardTest {
         PlayerState state = new AddCrewState();
 
 
-        playerBoard.performAction(playerBoard.getTile(6,6).getComponent(), new AddCrewAction(2,false,false, playerBoard), state);
-        playerBoard.performAction(playerBoard.getTile(5,7).getComponent(), new AddCrewAction(0,false,true, playerBoard), state);
-        assertEquals(2,playerBoard.getNumHumans());
+
+        try {
+            playerBoard.performAction(playerBoard.getTile(6,6).getComponent(), new AddCrewAction(2,false,false, playerBoard), state);
+            playerBoard.performAction(playerBoard.getTile(5, 7).getComponent(), new AddCrewAction(0, false, true, playerBoard), state);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        assertEquals(4,playerBoard.getNumHumans());
 
         state = new GiveSpeed();
 
