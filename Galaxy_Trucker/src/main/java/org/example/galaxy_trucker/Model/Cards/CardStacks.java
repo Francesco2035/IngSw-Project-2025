@@ -150,7 +150,8 @@ public class CardStacks implements Serializable {
             }
         }
         DeckEvent deck = new DeckEvent(ids);
-        cardListnerHashMap.get(player).seeDeck(deck);
+        if(cardListnerHashMap.get(player) != null)
+            cardListnerHashMap.get(player).seeDeck(deck);
     }
 
 }
