@@ -64,7 +64,7 @@ public abstract class Command implements Serializable {
         this.maxPlayers = maxPlayers;
     }
 
-    public abstract void execute(Player player) throws IOException;
+    public abstract void execute(Player player) throws IOException, InterruptedException;
 
     public String getTitle() {
         return title;

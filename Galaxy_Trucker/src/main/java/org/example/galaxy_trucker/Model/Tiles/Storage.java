@@ -48,7 +48,7 @@ public abstract class Storage extends Component{
 
     }
 
-    public ArrayList<Goods> getGoodsArray() {
+    public ArrayList<Goods> getGoods() {
         return goods;
     }
 

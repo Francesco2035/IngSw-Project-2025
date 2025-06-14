@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static java.lang.Math.min;
+import static java.util.Collections.max;
 
 
 //RISCRIVI ZONA DI GUERRA CHE PRENDE L'INPUT UN ARRAY DI METODI DA CHIAMARE E LI DIVIDE IN CONTROLLI
@@ -812,6 +813,9 @@ public class Warzone extends Card{
 
         HashMap<Integer,ArrayList<IntegerPair>> cargoH= CurrentPlanche.getStoredGoods();
 
+        int max;
+        max= max(cargoH.keySet());
+
         if(cargoH.isEmpty()){
             energyUsage=min(tmpPunishment,CurrentPlanche.getEnergy());
             System.out.println("energy usage (lose Cargo) :" +energyUsage);
@@ -829,10 +833,10 @@ public class Warzone extends Card{
             if (storages.contains(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond()).getComponent())){
                 int i=storages.indexOf(CurrentPlanche.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
                 Storage currStorage=storages.get(i);
-                if (index>=currStorage.getGoodsArray().size() || index<0){
+                if (index>=currStorage.getGoods().size() || index<0){
                     throw new InvalidInput("there is nothing at this position in the storage");
                 }
-                if(currStorage.getValue(index)==cargoH.keySet().iterator().next() ){//iterator.next da il primo elemento non chiederti perché
+                if(currStorage.getValue(index)==max){//iterator.next da il primo elemento non chiederti perché
                     CurrentPlanche.performAction(tiles[coord.getFirst()][coord.getSecond()].getComponent(), new GetGoodAction(index,CurrentPlanche,coord.getFirst(),coord.getSecond()),new HandleTheft());///prega dio sia giusto :)
                     this.tmpPunishment--;
                     this.setDefaultPunishment(tmpPunishment);
