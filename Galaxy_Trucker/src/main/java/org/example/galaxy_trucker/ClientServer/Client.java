@@ -247,6 +247,20 @@ public class Client implements EventVisitor {
     }
 
     @Override
+    public void visit(FinishGameEvent event) {
+        this.login = false;
+        this.lobby = false;
+        this.view.showOutcome(event);
+        try{
+            Thread.sleep(3000);
+        }
+        catch(InterruptedException e){
+            e.printStackTrace();
+        }
+        this.view.phaseChanged(new PhaseEvent(loginClient));
+    }
+
+    @Override
     public void visit(DeckEvent event) {
         this.view.showDeck(event);
     }

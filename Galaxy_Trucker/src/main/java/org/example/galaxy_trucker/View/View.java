@@ -64,4 +64,6 @@ public interface View {
     void updateHourglass(HourglassEvent event);
 
     void seeLog();
+
+    void showOutcome(FinishGameEvent event);
 }

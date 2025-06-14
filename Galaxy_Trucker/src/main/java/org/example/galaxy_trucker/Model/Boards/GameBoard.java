@@ -362,7 +362,7 @@ public class GameBoard {
 
     public Hourglass getHourglass() {return hourglass;}
 
-    public void abandonRace(Player loser){
+    public void abandonRace(Player loser, String message){
     System.out.println(loser.GetID()+ " HAI PERSO!");
         try{
             Player_IntegerPair pair = players.stream()
@@ -371,7 +371,7 @@ public class GameBoard {
                     .orElseThrow();
             positions[pair.getValue() % nPositions] = null;
             Player player = pair.getKey();
-            int finalScore = player.finishRace(false);
+            int finalScore = player.finishRace(false, message);
             //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
             //--> ho fatto metodo finishGame per mettere in classifica anche quelli che vincono alla fine
             //-palu
@@ -387,7 +387,8 @@ public class GameBoard {
                     .findFirst()
                     .orElseThrow();
             players.remove(pair);
-            e.printStackTrace();
+            pair.getKey().finishRace(false, message);
+            //e.printStackTrace();
         }
 
 
@@ -400,7 +401,7 @@ public class GameBoard {
        for(Player_IntegerPair p : players){
            positions[p.getValue() % nPositions] = null;
            Player playah = p.getKey();
-           int finalScore = playah.finishRace(true);
+           int finalScore = playah.finishRace(true, "game finished");
            scoreboard.add(new Player_IntegerPair(playah, finalScore));
            players.remove(p);
 

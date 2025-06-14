@@ -219,7 +219,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             try{
                 System.out.println("Player removed: " + playerId);
                 //TODO: RIMUOVERE TUTTI I LISTENER E RIMUOVERE PLAYER DA GAME E GAMEBOARD
-                game.getGameBoard().abandonRace(game.getPlayers().get(playerId));
+                game.getGameBoard().abandonRace(game.getPlayers().get(playerId), "Abandoned race");
                 //TODO: inviare notifica sconfitta o quello che è
 
 //        Thread t = threads.remove(playerId);
@@ -236,44 +236,44 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 //        ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
 //        if (lobbyListener != null)
 //            lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
-                Player p = game.getPlayers().remove(playerId);
-                p.removeCardListener();
-                p.removeHandListener();
-                p.getmyPlayerBoard().removeListener();
-                //...
-                VirtualView vv = getVirtualViewMap().remove(playerId);
-                //vv.setDisconnected(true);
-                for (VirtualView vv2 : getVirtualViewMap().values()){
-                    if (vv2 != vv){
-                        vv2.removeListener(vv);
-                    }
-                }
-                Thread t = threads.remove(playerId);
-                if (t != null) {
-                    t.interrupt();
-                }
-                commandQueues.remove(playerId);
-                ControllerMap.remove(playerId);
-                game.RemovePlayer(playerId);
-                if (game.getPlayers().isEmpty()) {
-                    System.out.println("Stop game");
-                    lobbyListener.sendEvent(new LobbyEvent(game.getGameID(), -1 ,null, maxPlayer));
-                    stopGame();
-                }
-                else {
-                    ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
-                    if (lobbyListener != null)
-                        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
-                }
-                //VirtualView vv2 = VirtualViewMap.remove(playerId);
-                sendMessage(new LogEvent(playerId + " quit"));
-                vv.sendEvent(new QuitEvent());
-                vv.removeListeners();
-                updatePlayers();
-            }
+//                Player p = game.getPlayers().remove(playerId);
+//            p.removeCardListener();
+//            p.removeHandListener();
+//            p.getmyPlayerBoard().removeListener();
+//            //...
+//            VirtualView vv = getVirtualViewMap().remove(playerId);
+//            //vv.setDisconnected(true);
+//            for (VirtualView vv2 : getVirtualViewMap().values()){
+//                if (vv2 != vv){
+//                    vv2.removeListener(vv);
+//                }
+//            }
+//            Thread t = threads.remove(playerId);
+//            if (t != null) {
+//                t.interrupt();
+//            }
+//            commandQueues.remove(playerId);
+//            ControllerMap.remove(playerId);
+//            game.RemovePlayer(playerId);
+//            if (game.getPlayers().isEmpty()) {
+//                System.out.println("Stop game");
+//                lobbyListener.sendEvent(new LobbyEvent(game.getGameID(), -1 ,null, maxPlayer));
+//                stopGame();
+//            }
+//            else {
+//                ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
+//                if (lobbyListener != null)
+//                    lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
+//            }
+//            //VirtualView vv2 = VirtualViewMap.remove(playerId);
+//            sendMessage(new LogEvent(playerId + " quit"));
+//            vv.sendEvent(new QuitEvent());
+//            vv.removeListeners();
+//            updatePlayers();
+        }
             catch (Exception e){
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+        }
 
         }
 
@@ -593,7 +593,51 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     }
 
     @Override
-    public void onEndGame(boolean success) {
+    public void onEndGame(boolean success, String playerId, String message) {
+            try{
+                System.out.println("Player removed: " + playerId);
+                //TODO: RIMUOVERE TUTTI I LISTENER E RIMUOVERE PLAYER DA GAME E GAMEBOARD
+                //TODO: inviare notifica sconfitta o quello che è
 
-    }
+
+                Player p = game.getPlayers().remove(playerId);
+                p.removeCardListener();
+                p.removeHandListener();
+                p.getmyPlayerBoard().removeListener();
+                //...
+                VirtualView vv = getVirtualViewMap().remove(playerId);
+                //vv.setDisconnected(true);
+                for (VirtualView vv2 : getVirtualViewMap().values()){
+                    if (vv2 != vv){
+                        vv2.removeListener(vv);
+                    }
+                }
+                Thread t = threads.remove(playerId);
+                if (t != null) {
+                    t.interrupt();
+                }
+                commandQueues.remove(playerId);
+                ControllerMap.remove(playerId);
+                game.RemovePlayer(playerId);
+                if (game.getPlayers().isEmpty()) {
+                    System.out.println("Stop game");
+                    lobbyListener.sendEvent(new LobbyEvent(game.getGameID(), -1 ,null, maxPlayer));
+                    stopGame();
+                }
+                else {
+                    ArrayList<String> players = new ArrayList<>(ControllerMap.keySet());
+                    if (lobbyListener != null)
+                        lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
+                }
+                //VirtualView vv2 = VirtualViewMap.remove(playerId);
+                sendMessage(new LogEvent(playerId + "quit"));
+                vv.sendEvent(new FinishGameEvent(success, message));
+                vv.removeListeners();
+                updatePlayers();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
 }
