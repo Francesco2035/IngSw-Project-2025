@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
 import java.util.List;
@@ -28,4 +29,8 @@ public class DefendingFromLargeClient  extends PlayerStateClient{
 
     //defendLarge x y x2 y2 (cannone, energia)
     //doNothing
+    public void showGame(GuiOut out){
+        out.getRoot().defend("DefendLarge", "1) Choose a cannon to activate \n2) Choose the energy to consume\n3) Defend!");
+    }
+
 }

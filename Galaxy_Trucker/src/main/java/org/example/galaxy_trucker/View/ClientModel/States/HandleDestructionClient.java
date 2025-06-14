@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
 import java.util.List;
@@ -25,4 +26,8 @@ public class HandleDestructionClient  extends PlayerStateClient{
     }
 
     //Selectchunk x y coordinata di una tile nel chunk da tenere
+
+    public void showGame(GuiOut out){
+        out.getRoot().giveTiles("SelectChunk", "Select one tile from the \nship chunk you want to keep!");
+    }
 }
