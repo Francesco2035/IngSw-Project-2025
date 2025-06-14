@@ -31,7 +31,7 @@ public class Client implements EventVisitor {
     private RMIClient rmiClient;
     private TCPClient tcpClient;
     private TileEvent[][] board;
-    private UUID token;
+    private String token;
     private boolean login = false;
     private boolean lobby = false;
     private final LoginClient loginClient = new LoginClient();
@@ -202,6 +202,7 @@ public class Client implements EventVisitor {
 
     @Override
     public void visit(PhaseEvent event) {
+        //System.out.println("------------------------------------------------------------------------------------nuove phase "+event.getStateClient().getClass());
         this.view.phaseChanged(event);
     }
 

@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CheckValidityClient  extends PlayerStateClient{
@@ -28,7 +29,7 @@ public class CheckValidityClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("RemoveTile");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("RemoveTile"));
     }
 }

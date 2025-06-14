@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HandleCargoClient  extends PlayerStateClient{
@@ -20,8 +21,8 @@ public class HandleCargoClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("GetReward","Switch", "DiscardCargo", "FinishCargo");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("GetReward","Switch", "DiscardCargo", "FinishCargo"));
     }
 
     //tutti questi comandi fino a finishCargo

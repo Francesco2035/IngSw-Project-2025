@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConsumingEnergyClient  extends PlayerStateClient{
@@ -21,8 +22,8 @@ public class ConsumingEnergyClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("ConsumeEnergy");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("ConsumeEnergy"));
     }
 
     //consumeEnergy x1 y2 x2 y2 ... (clic su tile batteria)

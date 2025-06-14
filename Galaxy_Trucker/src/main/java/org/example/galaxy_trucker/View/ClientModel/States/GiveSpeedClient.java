@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GiveSpeedClient  extends PlayerStateClient{
@@ -21,8 +22,8 @@ public class GiveSpeedClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("GiveSpeed");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("GiveSpeed"));
     }
 
     //giveSpeed x1 y1 ... motori doppi (ma va bene anche singoli)

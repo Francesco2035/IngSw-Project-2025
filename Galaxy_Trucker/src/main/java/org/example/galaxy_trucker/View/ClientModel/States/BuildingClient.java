@@ -1,17 +1,23 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class BuildingClient  extends PlayerStateClient{
 
 
-    @JsonProperty("type")
-    private final String type = "Building";
+
+    @JsonCreator
+    public BuildingClient() {
+
+    }
 
     @Override
     public void showGame(Out out) {
@@ -43,8 +49,9 @@ public class BuildingClient  extends PlayerStateClient{
         out.printBuildingScreen();
     }
 
+    @JsonIgnore
     @Override
-    public List<String> getCommands() {
-        return List.of("Discard", "PickTile", "FinishBuilding", "InsertTile", "SeeDeck");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("Discard", "PickTile", "FinishBuilding", "InsertTile", "SeeDeck"));
     }
 }

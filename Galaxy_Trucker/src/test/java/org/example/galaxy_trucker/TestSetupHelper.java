@@ -296,8 +296,8 @@ public class TestSetupHelper {
 
         VirtualView v2 = new VirtualView(p1.GetID(), "poggi", null, null);
 
-        gc.NewPlayer(p1, v1, UUID.randomUUID());
-        gc.NewPlayer(p2, v2, UUID.randomUUID());
+        gc.NewPlayer(p1, v1, UUID.randomUUID().toString());
+        gc.NewPlayer(p2, v2, UUID.randomUUID().toString());
         return gc;
 
     }

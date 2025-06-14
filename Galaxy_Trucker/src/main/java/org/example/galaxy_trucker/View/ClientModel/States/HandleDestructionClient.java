@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HandleDestructionClient  extends PlayerStateClient{
@@ -20,8 +21,8 @@ public class HandleDestructionClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("SelectChunk");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("SelectChunk"));
     }
 
     //Selectchunk x y coordinata di una tile nel chunk da tenere

@@ -18,11 +18,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TCPServer implements  Runnable {
 
     private static GamesHandler gamesHandler;
-    private ConcurrentHashMap<UUID, VirtualView> tokenMap;
-    private ArrayList<UUID> DisconnectedClients;
+    private ConcurrentHashMap<String, VirtualView> tokenMap;
+    private ArrayList<String> DisconnectedClients;
     private HashMap<MultiClientHandler,Thread> multiClientThreads;
 
-    public TCPServer(GamesHandler gamesHandler, ConcurrentHashMap<UUID, VirtualView> tokenMap, ArrayList<UUID> DisconnectedClients) throws RemoteException {
+    public TCPServer(GamesHandler gamesHandler, ConcurrentHashMap<String, VirtualView> tokenMap, ArrayList<String> DisconnectedClients) throws RemoteException {
         this.gamesHandler = gamesHandler;
         this.tokenMap = tokenMap;
         this.DisconnectedClients = DisconnectedClients;

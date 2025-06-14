@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class KillingClient extends PlayerStateClient{
@@ -20,8 +21,8 @@ public class KillingClient extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("Kill");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("Kill"));
     }
 
     //Kill x1 y1 x2 y2 ... (umani o alieni)

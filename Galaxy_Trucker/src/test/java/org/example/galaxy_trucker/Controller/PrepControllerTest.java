@@ -71,7 +71,7 @@ class PrepControllerTest {
         p1.setCardListner(vv);
         gc.getVirtualViewMap().put(p1.GetID(),vv);
 
-        gc.NewPlayer(p1, vv, new UUID(0, 0));
+        gc.NewPlayer(p1, vv, new UUID(0, 0).toString());
 
 //--------------------------------------------------------------------------------------------------------------------------------
 
@@ -86,7 +86,7 @@ class PrepControllerTest {
         VirtualView vv1 = new VirtualView(p2.GetID(), g1.getGameID(), ci, null);
         UUID tk = new UUID(45, 3456);
 
-        gc1.NewPlayer(p2, vv1, tk);
+        gc1.NewPlayer(p2, vv1, tk.toString());
 
         gc1.getGame().getPlayers().values().stream().findFirst().ifPresent(Player::GetID);
 

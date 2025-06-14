@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AcceptClient  extends PlayerStateClient{
@@ -23,7 +24,7 @@ public class AcceptClient  extends PlayerStateClient{
 
 
     @Override
-    public List<String> getCommands() {
-        return List.of("Accept", "Decline");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("Accept", "Decline"));
     }
 }

@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChoosePositionClient  extends PlayerStateClient{
@@ -21,7 +22,7 @@ public class ChoosePositionClient  extends PlayerStateClient{
 
 
     @Override
-    public List<String> getCommands() {
-        return List.of("FinishBuilding");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("FinishBuilding"));
     }
 }

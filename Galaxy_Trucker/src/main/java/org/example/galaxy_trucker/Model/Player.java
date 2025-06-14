@@ -132,7 +132,9 @@ public class Player implements Serializable {
     public void setState(PlayerState state) {
         this.PlayerState = state;
 
+        System.out.println("Listener null?");
         if (phaseListener != null) {
+            System.out.println("Phase listener not null "+ state.toClientState().getClass());
             phaseListener.PhaseChanged(state.toClientState());
         }
         state.shouldAct(this);

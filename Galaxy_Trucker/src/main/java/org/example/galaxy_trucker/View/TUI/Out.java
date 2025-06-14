@@ -718,7 +718,7 @@ public class Out {
 
     }
 
-    public void setHorglass(boolean start, String message) {
+    public void setHourglass(boolean start, String message) {
         hourglass = start;
         effect = message;
     }

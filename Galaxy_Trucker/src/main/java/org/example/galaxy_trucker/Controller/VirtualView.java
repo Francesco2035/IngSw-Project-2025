@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-//TODO: fare un solo listener, sono scemo non c'era bisogno di crearne 20000 tanto il dispatch viene fatto lato client col pattern, prima finiamo un game e poi cambiamo
 public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener, ExceptionListener, PlayersPBListener, RandomCardEffectListener{
 
     private boolean Disconnected = false;
@@ -30,7 +29,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private int coveredTiles= 0;
     private HashMap<Integer, ArrayList<Connectors>> uncoveredTilesMap = new HashMap<>();
     private HandEvent hand ;
-    private UUID token;
+    private String token;
     private CardEvent card = null;
     private GameLobbyEvent lobby = null;
     private GameBoardEvent board = null;
@@ -350,11 +349,11 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     }
 
-    public void setToken(UUID token) {
+    public void setToken(String token) {
         this.token = token;
     }
 
-    public UUID getToken() {
+    public String getToken() {
         return token;
     }
 
@@ -393,6 +392,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     @Override
     public void PhaseChanged(PhaseEvent event) {
+        System.out.println("Phase changed (vv) "+event.getStateClient().getClass());
         phase = event;
         sendEvent(event);
     }
@@ -403,6 +403,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 try{
                     ObjectMapper objectMapper = new ObjectMapper();
                     out.println(objectMapper.writeValueAsString(event));
+                    System.out.println("Send: "+objectMapper.writeValueAsString(event));
                 }
                 catch (JsonProcessingException e){
                     e.printStackTrace();

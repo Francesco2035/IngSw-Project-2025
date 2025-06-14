@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.Event;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
@@ -151,7 +152,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         this.commandInterpreter.setToken(token);
         this.client.getView().setGameboard(commandInterpreter.getLv());
-        System.out.println(token);
+        this.client.receiveEvent(new LogEvent(token));
+        //System.out.println(token);
         sendPongs();
 
     }
