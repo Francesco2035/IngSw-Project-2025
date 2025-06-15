@@ -151,14 +151,14 @@ public class CommandInterpreter {
                 return new TheftCommand(position1,new IntegerPair(x1,y1), gameId, playerId,lv,title,token);
             }
             case "GETREWARD":{
-                if (strings.length != 5) {
-                    throw new IllegalArgumentException("Comando Switch richiede 4 argomenti: posRewards, x1, y1, pos1");
+                if (strings.length != 4) {
+                    throw new IllegalArgumentException("Comando Switch richiede 3 argomenti: x1, y1, posRewards");
                 }
                 title = "GetFromRewards";
-                position2= Integer.parseInt(strings[1]);
-                x1 = Integer.parseInt(strings[2]);
-                y1 = Integer.parseInt(strings[3]);
-                position1= Integer.parseInt(strings[4]);
+                //position2= Integer.parseInt(strings[1]);
+                x1 = Integer.parseInt(strings[0]);
+                y1 = Integer.parseInt(strings[1]);
+                position1= Integer.parseInt(strings[2]);
                 break;
             }
         }

@@ -133,7 +133,6 @@ public class InputReader implements Runnable {
 
     }
 
-    private int lastRenderHeight = 0;
 
     public synchronized void renderScreen(StringBuilder content) {
 

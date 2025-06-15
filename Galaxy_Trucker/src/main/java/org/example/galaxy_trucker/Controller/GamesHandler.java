@@ -7,6 +7,7 @@ import org.example.galaxy_trucker.Controller.Listeners.GhListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
 import org.example.galaxy_trucker.Controller.Messages.ConnectionRefusedEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.Controller.Messages.ReconnectedEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
@@ -168,7 +169,6 @@ public class GamesHandler implements LobbyListener {
 
     public void PlayerDisconnected(String token) {
 
-
         String game;
 
         synchronized (tokenToGame) {
@@ -189,6 +189,7 @@ public class GamesHandler implements LobbyListener {
 
     public void PlayerReconnected(String token) {
         String game;
+
 
         synchronized (tokenToGame) {
             game = tokenToGame.get(token);

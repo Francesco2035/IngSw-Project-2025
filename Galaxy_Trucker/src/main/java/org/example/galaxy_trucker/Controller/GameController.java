@@ -514,6 +514,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
     public void startPlayer(String token) {
         String playerId = tokenToPlayerId.get(token);
+        VirtualViewMap.get(playerId).sendEvent(new ReconnectedEvent(token,game.getGameID(),playerId, lv));
         threads.get(playerId).interrupt();
         //setto booleano del controler
         threads.remove(playerId);
@@ -583,7 +584,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     public void sendMessage(LogEvent event){
         System.out.println("sending message " + event.message());
         for (VirtualView vv : VirtualViewMap.values()){
-            vv.sendEvent(event);
+            vv.sendLogEvent(event);
         }
     }
 
@@ -640,4 +641,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             }
 
         }
+
+
+    public HashMap<String, String> getTokenToPlayerId() {
+        return tokenToPlayerId;
+    }
 }

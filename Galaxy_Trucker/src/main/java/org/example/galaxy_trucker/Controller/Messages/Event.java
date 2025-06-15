@@ -36,7 +36,8 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = HourglassEvent.class, name = "HourglassEvent"),
         @JsonSubTypes.Type(value = FinishGameEvent.class, name = "FinishGameEvent"),
         @JsonSubTypes.Type(value = LogEvent.class, name = "LogEvent"),
-        @JsonSubTypes.Type(value = PlayerTileEvent.class, name = "PlayerTileEvent")
+        @JsonSubTypes.Type(value = PlayerTileEvent.class, name = "PlayerTileEvent"),
+        @JsonSubTypes.Type(value = ReconnectedEvent.class, name = "ReconnectedEvent")
 
 })
 

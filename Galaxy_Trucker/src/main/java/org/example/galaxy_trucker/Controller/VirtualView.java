@@ -16,7 +16,6 @@ import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 
 public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener, ExceptionListener, PlayersPBListener, RandomCardEffectListener{
 
@@ -37,6 +36,10 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private RewardsEvent rewardsEvent = null;
     private ArrayList<PlayersPBListener> playersPBListeners = new ArrayList<>();
     private PBInfoEvent pbInfoEvent = null;
+    private ArrayList<LogEvent> logEvents = new ArrayList<>();
+    private ArrayList<PlayerTileEvent> otherPlayerTileEvents = new ArrayList<>();
+    //non credo serva salvarsi rewards event
+    private HourglassEvent hourglassEvent = null;
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, PrintWriter echoSocket) {
@@ -101,8 +104,8 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-
     public void sendEvent(HandEvent event)  {
+        hand = event;
         if (!Disconnected) {
             if (out != null ) {
                 try{
@@ -126,6 +129,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     public void sendEvent(PlayerTileEvent event){
+        otherPlayerTileEvents.add(event);
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -146,6 +150,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             }
         }
     }
+
 
     public void sendEvent(TileEvent event) {
         if (!Disconnected) {
@@ -170,6 +175,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     }
 
+
     @Override
     public void playerBoardChanged(TileEvent event) {
         eventMatrix[event.getX()][event.getY()] = event;
@@ -177,17 +183,20 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         sendEvent(event);
     }
 
+
     @Override
     public void PBInfoChanged(PBInfoEvent event) {
         this.pbInfoEvent = event;
         sendEvent(event);
     }
 
+
     @Override
     public void handChanged(HandEvent event)  {
         hand = event;
         sendEvent(event);
     }
+
 
     @Override
     public void tilesSetChanged(CoveredTileSetEvent event)  {
@@ -212,6 +221,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         }
     }
 
+
     @Override
     public void tilesSetChanged(UncoverdTileSetEvent event) throws RemoteException {
         if (!Disconnected) {
@@ -235,6 +245,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         }
     }
 
+
     @Override
     public void seeDeck(DeckEvent event) {
         if (!Disconnected) {
@@ -257,6 +268,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             }
         }
     }
+
 
     @Override
     public void newCard(CardEvent event) {
@@ -310,7 +322,6 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-
     public void setDisconnected(boolean disconnected) {
         Disconnected = disconnected;
     }
@@ -349,21 +360,26 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     }
 
+
     public void setToken(String token) {
         this.token = token;
     }
+
 
     public String getToken() {
         return token;
     }
 
+
     public void setPrintWriter(PrintWriter printWriter) {
         this.out = printWriter;
     }
 
+
     public void setClient(ClientInterface client){
         this.client = client;
     }
+
 
     @Override
     public void GameLobbyChanged(GameLobbyEvent event) {
@@ -390,12 +406,13 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         }
     }
 
+
     @Override
     public void PhaseChanged(PhaseEvent event) {
-        System.out.println("Phase changed (vv) "+event.getStateClient().getClass());
         phase = event;
         sendEvent(event);
     }
+
 
     public void sendEvent(Event event) {
         if (!Disconnected) {
@@ -423,10 +440,11 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void rewardsChanged(RewardsEvent e) {
-        rewardsEvent = e;
-        sendEvent(e);
+    public void rewardsChanged(RewardsEvent event) {
+        rewardsEvent = event;
+        sendEvent(event);
     }
+
 
     @Override
     public void exceptionOccured(ExceptionEvent event) {
@@ -437,6 +455,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     public PlayersPBListener getPBlistener(){
         return this;
     }
+
 
     public void setPlayersPBListeners(PlayersPBListener listener){
         this.playersPBListeners.add(listener);
@@ -449,6 +468,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         }
     }
 
+
     public void updateOtherPlayers(TileEvent event){
         PlayerTileEvent newEvent = new PlayerTileEvent(playerName,event.getId(),event.getX(), event.getY(),event.getCargo(),event.getHumans()
         ,event.isPurpleAlien(),event.isBrownAlien(), event.getBatteries(),event.getRotation(),event.getConnectors());
@@ -457,26 +477,44 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         }
     }
 
+
     @Override
     public void receivePBupdate(PlayerTileEvent event){
+        //otherPlayerTileEvents.add(event);
         sendEvent(event);
     }
+
 
     public String getPlayerName(){
         return playerName;
     }
 
+
     @Override
     public void Effect(LogEvent event) {
+        logEvents.add(event);
         sendEvent(event);
     }
+
 
     public void removeListeners(){
         this.playersPBListeners.clear();
     }
 
+
     public void removeListener(PlayersPBListener listener){
         this.playersPBListeners.remove(listener);
     }
+
+    public void sendLogEvent(LogEvent event) {
+        logEvents.add(event);
+        sendEvent(event);
+    }
+
+
+//    public void sendEvent(LogEvent event){
+//        logEvents.add(event);
+//        sendEvent(event);
+//    }
 
 }
