@@ -28,15 +28,15 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
 
     GamesHandler gh;
-    private ConcurrentHashMap<UUID, VirtualView> tokenMap;
-    private final HashMap<ClientInterface, UUID> clients;
-    private  ArrayList<UUID> DisconnectedClients = new ArrayList<>();
+    private ConcurrentHashMap<String, VirtualView> tokenMap;
+    private final HashMap<ClientInterface, String> clients;
+    private  ArrayList<String> DisconnectedClients = new ArrayList<>();
     private final HashMap<ClientInterface, Integer> attempts = new HashMap<>();
     private ArrayList<ClientInterface> lobby = new ArrayList<>();
     private HashMap<String, LobbyEvent> lobbyEvents;
-    private HashMap<UUID, ClientInterface> pending = new HashMap<>();
+    private HashMap<String, ClientInterface> pending = new HashMap<>();
 
-    public RMIServer(GamesHandler gamesHandler, ConcurrentHashMap<UUID, VirtualView> tokenMap, ArrayList<UUID> DisconnectedClients) throws RemoteException {
+    public RMIServer(GamesHandler gamesHandler, ConcurrentHashMap<String, VirtualView> tokenMap, ArrayList<String> DisconnectedClients) throws RemoteException {
         this.tokenMap = tokenMap;
         gh = gamesHandler;
         clients = new HashMap<>();
@@ -55,7 +55,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
                 }
 
 
-                Map<ClientInterface, UUID> clientsSnapshot;
+                Map<ClientInterface, String> clientsSnapshot;
                 synchronized (clients) {
                     clientsSnapshot = new HashMap<>(clients);
                 }
@@ -87,7 +87,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 //                        int currentAttempts = attempts.get(client);
 //                        attempts.put(client, currentAttempts - 1);
                         //if (attempts.get(client) <= 0) {
-                            UUID token = clientsSnapshot.get(client);
+                            String token = clientsSnapshot.get(client);
                             if (token != null) {
                                 //attempts.remove(client);
                                 VirtualView vv = tokenMap.get(token);
@@ -111,7 +111,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
                         //}
                     }
                     catch (ExecutionException | InterruptedException e) {
-                        UUID token = clientsSnapshot.get(client);
+                        String token = clientsSnapshot.get(client);
                         if (token != null ) {
 
                             VirtualView vv = tokenMap.get(token);
@@ -209,17 +209,19 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
             UUID token  = null;
             VirtualView vv = new VirtualView(cmd.getPlayerId(), cmd.getGameId(), cmd.getClient(), null);
             System.out.println("genero token");
+            String shortToken = "";
             synchronized (tokenMap){
                 do{
                     token = UUID.randomUUID();
-                }while(tokenMap.containsKey(token));
-                tokenMap.put(token, vv);
-                System.out.println(token.toString());
+                    shortToken = token.toString().substring(0,8);
+                }while(tokenMap.containsKey(shortToken));
+                tokenMap.put(shortToken, vv);
+                System.out.println(shortToken);
             }
 
             System.out.println("metto in pending");
             synchronized (pending){
-                pending.put(token, cmd.getClient());
+                pending.put(shortToken, cmd.getClient());
             }
 //            try{
 //                Thread.sleep(10000);
@@ -229,17 +231,17 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 //                e.printStackTrace();
 //            }
             System.out.println("chiamo il metodo remoto per mandare token");
-            cmd.getClient().receiveToken(token.toString());
+            cmd.getClient().receiveToken(shortToken);
             System.out.println("token mandato");
-            vv.setToken(token);
+            vv.setToken(shortToken);
             gh.enqueuePlayerInit(cmd,vv);
-            clients.put(cmd.getClient(), token);
+            clients.put(cmd.getClient(), shortToken);
 
         }
         else if (cmd.getTitle().equals("Reconnect")){
             System.out.println("RECONNECT");
 
-            UUID token = UUID.fromString(cmd.getToken());
+            String token = cmd.getToken();
             System.out.println(cmd.getToken() + " " + cmd.getClient());
             if (tokenMap.containsKey(token) && DisconnectedClients.contains(token)) {
 
@@ -330,7 +332,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
         }
     }
 
-    public void addPending(UUID token){
+    public void addPending(String token){
         if (pending.containsKey(token)){
             System.out.println("removing pending ...");
             ClientInterface client;

@@ -31,7 +31,7 @@ public class Client implements EventVisitor {
     private RMIClient rmiClient;
     private TCPClient tcpClient;
     private TileEvent[][] board;
-    private UUID token;
+    private String token;
     private boolean login = false;
     private boolean lobby = false;
     private final LoginClient loginClient = new LoginClient();
@@ -56,16 +56,16 @@ public class Client implements EventVisitor {
     }
 
 
-    public synchronized boolean containsGameId(String gameid) {
+    public synchronized boolean containsGameId(String gameId) {
         //System.out.println(this);
 
-        return gameidToLV.containsKey(gameid);
+        return gameidToLV.containsKey(gameId);
     }
 
-    public synchronized int getLevel(String gameid) {
+    public synchronized int getLevel(String gameId) {
         //System.out.println(this);
 
-        return gameidToLV.get(gameid);
+        return gameidToLV.get(gameId);
     }
 
     public synchronized void setGameIdToLV(String gameid, int lv) {
@@ -84,7 +84,9 @@ public class Client implements EventVisitor {
         board = new TileEvent[10][10];
     }
 
-    public void startRMIClient() throws IOException, NotBoundException {
+    public void startRMIClient() throws IOException, NotBoundException, InterruptedException {
+        //this.commandInterpreter = new CommandInterpreter();
+
         //String ip = NetworkUtils.getLocalIPAddress();
 
         //TODO: da fare in modo dinamico, non so se la classe networkutils lo trova quello di zerotier
@@ -96,6 +98,7 @@ public class Client implements EventVisitor {
     }
 
     private void startTCPClient() throws IOException {
+        //this.commandInterpreter = new CommandInterpreter();
         tcpClient = new TCPClient(this);
         tcpClient.startClient();
     }
@@ -202,6 +205,7 @@ public class Client implements EventVisitor {
 
     @Override
     public void visit(PhaseEvent event) {
+        //System.out.println("------------------------------------------------------------------------------------nuove phase "+event.getStateClient().getClass());
         this.view.phaseChanged(event);
     }
 
@@ -258,6 +262,23 @@ public class Client implements EventVisitor {
             e.printStackTrace();
         }
         this.view.phaseChanged(new PhaseEvent(loginClient));
+    }
+
+    @Override
+    public void visit(ReconnectedEvent event) {
+        this.token = event.getToken();
+        this.lobby = true;
+        this.login = true;
+        commandInterpreter = new CommandInterpreter(event.getPlayerId(), event.getGameId());
+        commandInterpreter.setlv(event.getLv());
+        commandInterpreter.setToken(token);
+        this.view.setGameboard(event.getLv());
+        if (rmiClient != null){
+            rmiClient.setCommandInterpreter(commandInterpreter);
+        }
+        if (tcpClient != null){
+            tcpClient.setCommandInterpreter(commandInterpreter);
+        }
     }
 
     @Override

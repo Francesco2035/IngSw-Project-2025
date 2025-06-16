@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DefendingFromLargeClient  extends PlayerStateClient{
@@ -14,7 +15,7 @@ public class DefendingFromLargeClient  extends PlayerStateClient{
         toPrint.append(out.getTitleCard());
         toPrint.append("Defending From Large...\n");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
         toPrint.append(out.showCardEffect());
@@ -23,8 +24,8 @@ public class DefendingFromLargeClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("DefendLarge");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("DefendLarge"));
     }
 
     //defendLarge x y x2 y2 (cannone, energia)

@@ -3,7 +3,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
-import java.awt.image.AffineTransformOp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HandleCargoClient  extends PlayerStateClient{
@@ -13,7 +13,7 @@ public class HandleCargoClient  extends PlayerStateClient{
         toPrint.append(out.getTitleCard());
         toPrint.append("HandleCargo...\n\n");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showRewards());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
@@ -22,8 +22,8 @@ public class HandleCargoClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("GetReward","Switch", "DiscardCargo", "FinishCargo");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("GetReward","Switch", "DiscardCargo", "FinishCargo"));
     }
 
     //tutti questi comandi fino a finishCargo

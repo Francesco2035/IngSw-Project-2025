@@ -119,8 +119,15 @@ public class StorageCompartment extends Storage{
         return clone;
     }
 
+
+    @Override
     public ArrayList<Goods> getGoods() {
         return goods;
+    }
+
+    @Override
+    public int getValue(int i){
+        return goods.get(i).getValue();
     }
 
 }

@@ -2,12 +2,10 @@ package org.example.galaxy_trucker.Controller.Messages;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 
 import java.awt.desktop.QuitEvent;
 import java.io.Serializable;
@@ -36,7 +34,10 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = PBInfoEvent.class, name = "PBInfoEvent"),
         @JsonSubTypes.Type(value = QuitEvent.class, name = "QuitEvent"),
         @JsonSubTypes.Type(value = HourglassEvent.class, name = "HourglassEvent"),
-        @JsonSubTypes.Type(value = FinishGameEvent.class, name = "FinishGameEvent")
+        @JsonSubTypes.Type(value = FinishGameEvent.class, name = "FinishGameEvent"),
+        @JsonSubTypes.Type(value = LogEvent.class, name = "LogEvent"),
+        @JsonSubTypes.Type(value = PlayerTileEvent.class, name = "PlayerTileEvent"),
+        @JsonSubTypes.Type(value = ReconnectedEvent.class, name = "ReconnectedEvent")
 
 })
 

@@ -133,7 +133,6 @@ public class InputReader implements Runnable {
 
     }
 
-    private int lastRenderHeight = 0;
 
     public synchronized void renderScreen(StringBuilder content) {
 
@@ -151,9 +150,9 @@ public class InputReader implements Runnable {
         System.out.flush();
 
         String partialInput = Lreader.getBuffer().toString();
-        System.out.print("\033[3J");
-        terminal.puts(InfoCmp.Capability.clear_screen);
-        terminal.flush();
+//        System.out.print("\033[3J");
+//        terminal.puts(InfoCmp.Capability.clear_screen);
+//        terminal.flush();
         AttributedString colored = fillBackground(content.toString());
         terminal.writer().print(colored.toAnsi());
         terminal.writer().println();

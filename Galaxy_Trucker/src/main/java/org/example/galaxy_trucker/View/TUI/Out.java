@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.View.TUI;
 
-import javafx.scene.effect.Effect;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ViewPhase;
@@ -46,7 +45,7 @@ public class Out {
     private String[] cacheHand = null;
     private final String border = "+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━+";
     private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
-    private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap();
+    private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap<>();
     private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
     private String[][][] Gameboard;
     private StringBuilder Rewards;
@@ -440,7 +439,7 @@ public class Out {
     }
 
 
-    public  StringBuilder printGameboard(){
+    public  StringBuilder printGameBoard(){
 
         StringBuilder toPrint = new StringBuilder();
         toPrint.append(ASCII_ART.GameBoard);
@@ -719,7 +718,7 @@ public class Out {
 
     }
 
-    public void setHorglass(boolean start, String message) {
+    public void setHourglass(boolean start, String message) {
         hourglass = start;
         effect = message;
     }

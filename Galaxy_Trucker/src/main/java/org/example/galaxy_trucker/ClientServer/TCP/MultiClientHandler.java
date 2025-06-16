@@ -30,21 +30,23 @@ public class MultiClientHandler implements Runnable, GhListener {
 
     private Socket clientSocket;
     private GamesHandler gameHandler;
-    private ConcurrentHashMap<UUID, VirtualView> tokenMap;
-    private ArrayList<UUID> disconnectedClients;
+    private ConcurrentHashMap<String, VirtualView> tokenMap;
+    private ArrayList<String> disconnectedClients;
     private int attempts = 3;
-    private UUID Token;
+    private String Token;
     private HashMap<String, LobbyEvent> lobbyEvents = new HashMap<>();
     TCPServer TCP ;
 
     private long lastPingTime;
 
-    public MultiClientHandler(Socket clientSocket, GamesHandler gameHandler, ConcurrentHashMap<UUID, VirtualView> tokenMap, ArrayList<UUID> disconnectedClients, TCPServer TCP) {
+    public MultiClientHandler(Socket clientSocket, GamesHandler gameHandler, ConcurrentHashMap<String, VirtualView> tokenMap, ArrayList<String> disconnectedClients, TCPServer TCP) {
         this.clientSocket = clientSocket;
         this.gameHandler = gameHandler;
         this.tokenMap = tokenMap;
         this.disconnectedClients = disconnectedClients;
         this.TCP = TCP;
+        lobbyEvents = new HashMap<>();
+        lobbyEvents.put("EMPTY CREATE NEW GAME", new LobbyEvent("EMPTY CREATE NEW GAME", -1,null, -1));
     }
 
     @Override
@@ -102,23 +104,25 @@ public class MultiClientHandler implements Runnable, GhListener {
 
                         else if (command.getTitle().equals("Login")) {
                             UUID token;
+                            String shortToken = "";
                             VirtualView vv = new VirtualView(command.getPlayerId(), command.getGameId(), command.getClient(), out);
                             synchronized (tokenMap) {
                                 do {
                                     token = UUID.randomUUID();
-                                } while (tokenMap.containsKey(token));
-                                Token = token;
-                                vv.setToken(token);
-                                tokenMap.put(token, vv);
+                                    shortToken = token.toString().substring(0,8);
+                                } while (tokenMap.containsKey(shortToken));
+                                Token = shortToken;
+                                vv.setToken(shortToken);
+                                tokenMap.put(shortToken, vv);
                             }
                             gameHandler.enqueuePlayerInit(command, vv);
-                            out.println("Token: " + token.toString());
+                            out.println("Token: " + shortToken);
                         }
 
 
                         else if (command.getTitle().equals("Reconnect")) {
                             System.out.println("Reconnecting...");
-                            Token = UUID.fromString(command.getToken());
+                            Token = command.getToken();
 
                             if (Token != null && disconnectedClients.contains(Token)) {
                                 synchronized (tokenMap) {
@@ -180,6 +184,7 @@ public class MultiClientHandler implements Runnable, GhListener {
     @Override
     public void sendEvent(LobbyEvent event) {
         System.out.println(event + " " + event.getGameId());
+        lobbyEvents.remove("EMPTY CREATE NEW GAME");
         lobbyEvents.remove(event.getGameId());
         lobbyEvents.put(event.getGameId(), event);
         try{

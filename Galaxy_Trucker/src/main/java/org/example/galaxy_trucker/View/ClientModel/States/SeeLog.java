@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 import org.example.galaxy_trucker.View.TUI.ASCII_ART;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SeeLog extends PlayerStateClient{
@@ -20,7 +21,7 @@ public class SeeLog extends PlayerStateClient{
 
 
     @Override
-    public List<String> getCommands() {
-        return List.of();
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of());
     }
 }

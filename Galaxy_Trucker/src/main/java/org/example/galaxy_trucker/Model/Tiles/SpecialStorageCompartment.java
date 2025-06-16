@@ -17,9 +17,15 @@ public class SpecialStorageCompartment extends Storage{
 
 
 
+    @Override
     public ArrayList<Goods> getGoods() {
         return goods;
     }
+    @Override
+    public int getValue(int i){
+        return goods.get(i).getValue();
+    }
+
     public void setGoods(ArrayList<Goods> goods) {
         this.goods = goods;
     }

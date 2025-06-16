@@ -83,6 +83,7 @@ public class TestSetupHelper {
         //playerBoard.insertTile(t2, 7,7);
         t8.RotateDx();
         playerBoard.insertTile(t8, 7,6, false);
+//        t11.RotateSx();
         playerBoard.insertTile(t11, 6,5, false);
         playerBoard.insertTile(t9, 5,7, false);
         //playerBoard.insertTile(t3, 5,6);
@@ -296,8 +297,8 @@ public class TestSetupHelper {
 
         VirtualView v2 = new VirtualView(p1.GetID(), "poggi", null, null);
 
-        gc.NewPlayer(p1, v1, UUID.randomUUID());
-        gc.NewPlayer(p2, v2, UUID.randomUUID());
+        gc.NewPlayer(p1, v1, UUID.randomUUID().toString());
+        gc.NewPlayer(p2, v2, UUID.randomUUID().toString());
         return gc;
 
     }

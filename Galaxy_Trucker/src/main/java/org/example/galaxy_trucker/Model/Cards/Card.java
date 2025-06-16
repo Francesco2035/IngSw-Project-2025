@@ -154,7 +154,7 @@ public class Card implements Serializable {
 
     /// usa questo per mandare notifiche al client lezgo
     public void sendRandomEffect(String playerid, LogEvent randomCardEffectEvent) {
-        System.out.println("invio a "+playerid+" "+randomCardEffectEvent.message());
+        //System.out.println("invio a "+playerid+" "+randomCardEffectEvent.message());
         if(getRandomCardEffectListeners().get(playerid) != null) {
             getRandomCardEffectListeners().get(playerid).Effect(randomCardEffectEvent);
         }

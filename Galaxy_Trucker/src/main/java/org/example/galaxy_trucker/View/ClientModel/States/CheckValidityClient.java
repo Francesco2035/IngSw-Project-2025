@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CheckValidityClient  extends PlayerStateClient{
@@ -14,7 +15,7 @@ public class CheckValidityClient  extends PlayerStateClient{
         toPrint.append(out.getTitleCard());
         toPrint.append("CheckValidity...");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
         toPrint.append(out.showException());
@@ -28,7 +29,7 @@ public class CheckValidityClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("RemoveTile");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("RemoveTile"));
     }
 }

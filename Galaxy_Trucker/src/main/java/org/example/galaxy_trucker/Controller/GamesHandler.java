@@ -7,6 +7,7 @@ import org.example.galaxy_trucker.Controller.Listeners.GhListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
 import org.example.galaxy_trucker.Controller.Messages.ConnectionRefusedEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.Controller.Messages.ReconnectedEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
@@ -21,7 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class GamesHandler implements LobbyListener {
 
-    private final HashMap<UUID, String> tokenToGame = new HashMap<>();
+    private final HashMap<String, String> tokenToGame = new HashMap<>();
     private final HashMap<String, GameController> gameControllerMap;
     private final BlockingQueue<Pair<Command, VirtualView>> pendingLogins;
     private ArrayList<GhListener> listeners = new ArrayList<>();
@@ -77,7 +78,7 @@ public class GamesHandler implements LobbyListener {
             String gameId = command.getGameId();
             if ("Quit".equals(title)) {
                 if (gameControllerMap.containsKey(gameId)) {
-                    gameControllerMap.get(gameId).removePlayer(UUID.fromString(command.getToken()), command);
+                    gameControllerMap.get(gameId).removePlayer(command.getToken(), command);
 
                 } else {
                     System.out.println("No player found for token: " + command.getToken());
@@ -101,8 +102,8 @@ public class GamesHandler implements LobbyListener {
 
     public void removeGame(String gameId) {
         System.out.println("Removing game: " + gameId);
-        UUID toRemove = null;
-        for (UUID token : tokenToGame.keySet()) {
+        String toRemove = null;
+        for (String token : tokenToGame.keySet()) {
             if (tokenToGame.get(token).equals(gameId)) {
                 toRemove = token;
             }
@@ -166,8 +167,7 @@ public class GamesHandler implements LobbyListener {
         return gameControllerMap;
     }
 
-    public void PlayerDisconnected(UUID token) {
-
+    public void PlayerDisconnected(String token) {
 
         String game;
 
@@ -187,8 +187,9 @@ public class GamesHandler implements LobbyListener {
 
     }
 
-    public void PlayerReconnected(UUID token) {
+    public void PlayerReconnected(String token) {
         String game;
+
 
         synchronized (tokenToGame) {
             game = tokenToGame.get(token);

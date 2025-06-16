@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HandleDestructionClient  extends PlayerStateClient{
@@ -12,7 +13,7 @@ public class HandleDestructionClient  extends PlayerStateClient{
         toPrint.append(out.getTitleCard());
         toPrint.append("Handling destruction...\n");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showCard());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
@@ -21,8 +22,8 @@ public class HandleDestructionClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("SelectChunk");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("SelectChunk"));
     }
 
     //Selectchunk x y coordinata di una tile nel chunk da tenere

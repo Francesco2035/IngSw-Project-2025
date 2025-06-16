@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.View.ClientModel.States;
 import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConsumingEnergyClient  extends PlayerStateClient{
@@ -13,7 +14,7 @@ public class ConsumingEnergyClient  extends PlayerStateClient{
         toPrint.append(out.getTitleCard());
         toPrint.append("Consuming energy...\n");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showCard());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
@@ -22,8 +23,8 @@ public class ConsumingEnergyClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("ConsumeEnergy");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("ConsumeEnergy"));
     }
 
     //consumeEnergy x1 y2 x2 y2 ... (clic su tile batteria)

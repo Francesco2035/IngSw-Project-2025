@@ -1,9 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
@@ -28,7 +25,7 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = AddCrewCommand.class, name = "AddCrewCommand"),
 
         @JsonSubTypes.Type(value = RemoveTileCommand.class, name = "RemoveTileCommand"),
-        @JsonSubTypes.Type(value = LoginCommand.class, names = "LobbyCommand"),
+        @JsonSubTypes.Type(value = LobbyCommand.class, names = "LobbyCommand"),
         @JsonSubTypes.Type(value = HandleCargoCommand.class, names = "HandleCargoCommand"),
         @JsonSubTypes.Type(value = TheftCommand.class, names = "TheftCommand"),
         @JsonSubTypes.Type(value = SelectChunkCommand.class, name = "SelectChunkCommand"),
@@ -54,7 +51,7 @@ public abstract class Command implements Serializable {
     public Command() {
         System.out.println("Command default called");
     }
-
+    @JsonCreator
     public Command(String gameId, String playerId, int lv, String title, String token, int maxPlayers) {
         this.gameId = gameId;
         this.playerId = playerId;
@@ -64,7 +61,7 @@ public abstract class Command implements Serializable {
         this.maxPlayers = maxPlayers;
     }
 
-    public abstract void execute(Player player) throws IOException;
+    public abstract void execute(Player player) throws IOException, InterruptedException;
 
     public String getTitle() {
         return title;
