@@ -12,11 +12,14 @@ import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
+import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
 import org.example.galaxy_trucker.Model.PlayerStates.ChoosePosition;
+import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.example.galaxy_trucker.View.ClientModel.States.BuildingClient;
@@ -45,19 +48,13 @@ class PrepControllerTest {
     @Test
     public void testPrepController() throws IOException {
 
-
         game = new Game(2, "testPrepController");
         gc = new GameController(game.getGameID(), game, new GamesHandler(),game.getLv(),4);
         p1 = new Player();
         p1.setId("passos");
         vv = new VirtualView(p1.GetID(), game.getGameID(), new RMIClient(new Client()), null);
         vv.setDisconnected(true);
-
-
-
-//        assertTrue(gc.getGame().getPlayers().values().stream().filter(p -> p.GetID().equals(p1.GetID())).findFirst().orElseThrow().getmyPlayerBoard().checkValidity());
-
-
+////        assertTrue(gc.getGame().getPlayers().values().stream().filter(p -> p.GetID().equals(p1.GetID())).findFirst().orElseThrow().getmyPlayerBoard().checkValidity());
         game.NewPlayer(p1);
         p1.setBoards(game.getGameBoard());
         Gboard = game.getGameBoard();
@@ -65,6 +62,7 @@ class PrepControllerTest {
         gc.getControllerMap().put(p1.GetID(), c1);
 
         p1.setPhaseListener(vv);
+        p1.setReadyListener(gc);
         p1.getmyPlayerBoard().setListener(vv);
         p1.setHandListener(vv);
         p1.getCommonBoard().getTilesSets().setListeners(vv);
@@ -73,32 +71,36 @@ class PrepControllerTest {
 
         gc.NewPlayer(p1, vv, new UUID(0, 0).toString());
 
+        p1.getmyPlayerBoard().insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6 ,6, false);
+
+
+
 //--------------------------------------------------------------------------------------------------------------------------------
 
-
-        Game g1 = new Game(2, "g2");
-        GameController gc1 = new GameController(g1.getGameID(), g1, new GamesHandler(), g1.getLv(),4);
-        Player p2 = new Player();
-        p2.setId("passos1");
-        ClientInterface ci = new RMIClient(new Client());
-
-
-        VirtualView vv1 = new VirtualView(p2.GetID(), g1.getGameID(), ci, null);
-        UUID tk = new UUID(45, 3456);
-
-        gc1.NewPlayer(p2, vv1, tk.toString());
-
-        gc1.getGame().getPlayers().values().stream().findFirst().ifPresent(Player::GetID);
-
-//        gc1.getGame().getPlayers().values().stream().findFirst().ifPresent(Player::);
-
-
-        gc1.getControllerMap().values().stream().findFirst().orElseThrow().action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Ready", false, null), gc);
-
-        gc1.changeState();
-        gc1.changeState();
-        gc1.changeState();
-        gc1.changeState();
+//
+//        Game g1 = new Game(2, "g2");
+//        GameController gc1 = new GameController(g1.getGameID(), g1, new GamesHandler(), g1.getLv(),4);
+//        Player p2 = new Player();
+//        p2.setId("passos1");
+//        ClientInterface ci = new RMIClient(new Client());
+//
+//
+//        VirtualView vv1 = new VirtualView(p2.GetID(), g1.getGameID(), ci, null);
+//        UUID tk = new UUID(45, 3456);
+//
+//        gc1.NewPlayer(p2, vv1, tk);
+//
+//        gc1.getGame().getPlayers().values().stream().findFirst().ifPresent(Player::GetID);
+//
+////        gc1.getGame().getPlayers().values().stream().findFirst().ifPresent(Player::);
+//
+//
+//        gc1.getControllerMap().values().stream().findFirst().orElseThrow().action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Ready", false, null), gc);
+//
+//        gc1.changeState();
+//        gc1.changeState();
+//        gc1.changeState();
+//        gc1.changeState();
 
 
 
@@ -154,7 +156,9 @@ class PrepControllerTest {
         c1.action(new BuildingCommand(100, 5, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(999, -999, -90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
 
-//        c1.action(new BuildingCommand(6, 6, 0, 0, game.getGameID(), p1.GetID(), 2, "TOBUFFER", null), gc);
+
+
+        c1.action(new BuildingCommand(6, 6, 0, 0, game.getGameID(), p1.GetID(), 2, "TOBUFFER", null), gc);
         c1.action(new BuildingCommand(5, 5, 0, 0, game.getGameID(), p1.GetID(), 2, "TOBUFFER", null), gc);
         c1.action(new BuildingCommand(5, 5, 0, 0, game.getGameID(), p1.GetID(), 2, "FROMBUFFER", null), gc);
 
@@ -164,54 +168,57 @@ class PrepControllerTest {
         c1.action(new BuildingCommand(999, -999, -90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(4, 4, -90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(4, 4, 90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
-        c1.action(new BuildingCommand(7, 6, 90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
-
-//aggiungere gagen per scegliere una tile apposita per testare la inserttile funzionante
+        c1.action(new BuildingCommand(7, 7, 90, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
+//
+////aggiungere gagen per scegliere una tile apposita per testare la inserttile funzionante
 
         c1.action(new BuildingCommand(4, 4, 90, 0, game.getGameID(), p1.GetID(), 2, "HOURGLASS", null), gc);
 
 
         c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Ready", false, null), gc);
         c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Ready", false, null), gc);
-//        c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Ready", true, null), gc);
-
+////        c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Ready", true, null), gc);
+//
         System.out.println(p1.getPlayerState().toString());
         c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Ready", false, null), gc);
         System.out.println(p1.getPlayerState().toString());
 
-//        c1.action(new FinishBuildingCommand(10, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
-//        c1.action(new FinishBuildingCommand(4, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+////        c1.action(new FinishBuildingCommand(10, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+////        c1.action(new FinishBuildingCommand(4, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+//
+        c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Ready", true, null), gc);
+
+////        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+////        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "HEHEHEHA", null), gc);
+////        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+
+//        c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Quit", false, null), gc);
+//
+//        vv.setDisconnected(false);
+//        System.out.println(p1.getPlayerState().toString());
+//        c1.DefaultAction(gc);
 
 
+//        vv.setDisconnected(true);
+//        System.out.println(p1.getPlayerState().toString());
+//        c1.DefaultAction(gc);
+////loop infinito
 
-//        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
-//        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "HEHEHEHA", null), gc);
-//        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+////--------------------------------------------------------------------------------------------
 
-        c1.action(new ReadyCommand(game.getGameID(), p1.GetID(), game.getLv(), "Quit", false, null), gc);
+//        p1.setState(new ChoosePosition());
 
-        vv.setDisconnected(false);
-        c1.DefaultAction(gc);
+//        vv.setDisconnected(false);
+//        c1.DefaultAction(gc);
+//
+//        vv.setDisconnected(true);
+//        c1.DefaultAction(gc);
 
-
-        vv.setDisconnected(true);
-        c1.DefaultAction(gc);
-
-//--------------------------------------------------------------------------------------------
-
-        p1.setState(new ChoosePosition());
-
-        vv.setDisconnected(false);
-        c1.DefaultAction(gc);
-
-        vv.setDisconnected(true);
-        c1.DefaultAction(gc);
-
-//todo non so se è possibile testare facilmetne la finish perchè appena accade questo passa al next state e dovrei farlo al posto della defautl action
-//        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
+////todo non so se è possibile testare facilmente la finish perchè appena accade questo passa al next state e dovrei farlo al posto della defautl action
+////        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
 
 
-//--------------------------------------------------------------------------------------------------------------------------------
+////--------------------------------------------------------------------------------------------------------------------------------
 
         vv.setDisconnected(false);
         c1.nextState(gc);

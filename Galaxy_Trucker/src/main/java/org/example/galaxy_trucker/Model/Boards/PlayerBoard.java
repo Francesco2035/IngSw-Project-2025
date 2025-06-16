@@ -176,6 +176,7 @@ public class PlayerBoard {
         if (Buffer.size() >= 2) {
             throw new IllegalStateException("Buffer is full");
         }
+        if(t == null) throw new InvalidInput("Invalid input: your hand is empty");
         t.setChosen();
         sendUpdates(new TileEvent(t.getId(), 3, 8 + Buffer.size() , null, 0, false, false, 0, 0, t.getConnectors()));
         Buffer.add(t);
@@ -1096,11 +1097,11 @@ public class PlayerBoard {
         }
     }
 
-    public void clearBuffer() {
-        Buffer.clear();
-        sendUpdates( new TileEvent(159 , 7, 8, null, 0, false, false, 0, 0, null));
-
-    }
+//    public void clearBuffer() {
+//        Buffer.clear();
+//        sendUpdates( new TileEvent(159 , 7, 8, null, 0, false, false, 0, 0, null));
+//
+//    }
 
     public  int finishRace(boolean finished){
         int number =0;
@@ -1136,10 +1137,10 @@ public class PlayerBoard {
             if (purpleAlien){
                 crew++;
             }
-            if (purpleAlien){
+            if (brownAlien){
                 crew++;
             }
-            int engine = 0;
+//            int engine = 0;
             PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,crew, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien, this.totalValue);
             listener.PBInfoChanged(event);
         }

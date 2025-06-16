@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
 import java.util.ArrayList;
@@ -27,4 +28,7 @@ public class GiveSpeedClient  extends PlayerStateClient{
     }
 
     //giveSpeed x1 y1 ... motori doppi (ma va bene anche singoli)
+    public void showGame(GuiOut out){
+        out.getRoot().giveTiles("GiveSpeed", "Select the engines you want to activate!");
+    }
 }

@@ -34,8 +34,8 @@ public class BaseStateClient extends PlayerStateClient{
 
     public void showGame(GuiOut out){
         if(out.getRoot().isGameStarted()){
-
             out.getRoot().flightScene();
+            out.getRoot().baseState();
             out.printFlightScreen();
         }
         else{

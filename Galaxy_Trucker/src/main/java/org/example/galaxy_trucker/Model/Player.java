@@ -147,9 +147,9 @@ public class Player implements Serializable {
 
     public void  execute() {
         this.CurrentCard.ActivateCard();
-    }
+    } // possibilmente inutile
 
-    public void StartTimer() throws RuntimeException, IllegalStateException {
+    public void StartTimer() throws RuntimeException {
         CommonBoard.callHourglass(this);
     }
 
@@ -226,16 +226,16 @@ public class Player implements Serializable {
       }
 
 
-    /**
-     * sets the current tile on the shipboard
-     * this action is definitive: the tile cannot be moved or rotated after it is settled
-     * @param coords where the tile will be placed
-     */
-    public void PlaceTile(IntegerPair coords) {
-
-        this.myPlayerBoard.insertTile(CurrentTile, coords.getFirst(), coords.getSecond(), true);
-        CurrentTile = null;
-    }
+//    /**
+//     * sets the current tile on the shipboard
+//     * this action is definitive: the tile cannot be moved or rotated after it is settled
+//     * @param coords where the tile will be placed
+//     */
+//    public void PlaceTile(IntegerPair coords) {
+//
+//        this.myPlayerBoard.insertTile(CurrentTile, coords.getFirst(), coords.getSecond(), true);
+//        CurrentTile = null;
+//    }
 
     public void IncreaseCredits(int num){
         credits += num;
@@ -303,7 +303,7 @@ public class Player implements Serializable {
 
 
     public String GetID() {return this.ID;}
-    public int GetCredits() {return this.credits;}
+    public int GetCredits() {return this.credits;} //per ora inutile
     public boolean GetReady() {return this.ready;}
 
     public boolean GetHasActed() {

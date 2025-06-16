@@ -83,6 +83,7 @@ public class TestSetupHelper {
         //playerBoard.insertTile(t2, 7,7);
         t8.RotateDx();
         playerBoard.insertTile(t8, 7,6, false);
+//        t11.RotateSx();
         playerBoard.insertTile(t11, 6,5, false);
         playerBoard.insertTile(t9, 5,7, false);
         //playerBoard.insertTile(t3, 5,6);

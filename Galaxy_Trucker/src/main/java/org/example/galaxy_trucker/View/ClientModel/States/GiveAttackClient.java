@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
 import java.util.ArrayList;
@@ -27,4 +28,7 @@ public class GiveAttackClient  extends PlayerStateClient{
     }
 
     //giveAttack x1 y1 ...
+    public void showGame(GuiOut out){
+        out.getRoot().giveTiles("GiveAttack", "Select the cannons you want to use to defend!");
+    }
 }

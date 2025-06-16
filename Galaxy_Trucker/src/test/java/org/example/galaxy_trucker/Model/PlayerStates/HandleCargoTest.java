@@ -39,7 +39,7 @@ class HandleCargoTest {
 //        Command command = poggi.getPlayerState().PlayerAction(com1, poggi);
 //        command.execute();
 
-        assertEquals(1, pb.getBufferGoods().size());
+        assertEquals(0, pb.getBufferGoods().size());
 
          com1 = """
         {

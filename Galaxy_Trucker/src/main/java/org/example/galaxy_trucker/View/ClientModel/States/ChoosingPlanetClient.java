@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
 import java.util.ArrayList;
@@ -26,5 +27,8 @@ public class ChoosingPlanetClient  extends PlayerStateClient{
         return new ArrayList<>(List.of("ChoosePlanet"));
     }
 
-
+    //chooseplanet (-1 ... n-1) -1 è il rifiuto (doNothing)
+    public void showGame(GuiOut out){
+        out.getRoot().choosingPlanet();
+    }
 }
