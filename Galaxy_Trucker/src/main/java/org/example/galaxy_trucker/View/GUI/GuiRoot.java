@@ -26,6 +26,7 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTi
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
@@ -94,9 +95,16 @@ public class GuiRoot implements View {
     private boolean tilesClickable;
     private Label prompt;
     private ArrayList<IntegerPair> excludedTiles;
-
-
     private ImageView curCard;
+
+    private IntegerPair curCargoCoords;
+    private int curCargoIndex;
+    private ImageView curCargoImg;
+    private HashMap<IntegerPair, ArrayList<Goods>> storageCompartments;
+    private int rewardsLeft;
+    private int nPlanets;
+    private boolean handlingCargo;
+    private ArrayList<Goods> rewards;
 
     public void setStage(Stage primaryStage){
         printer.setStage(primaryStage);
@@ -117,7 +125,6 @@ public class GuiRoot implements View {
         buffer1 = new ImageView();
         buffer2 = new ImageView();
 
-
         coords = new HashMap<>();
         othersBoards = new HashMap<>();
         playerRockets = new HashMap<>();
@@ -127,7 +134,6 @@ public class GuiRoot implements View {
         brownAlien = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/alien-brown.png"));
         purpleAlien = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/alien-purple.png"));
         crewMate = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-white.png"));
-
 
         myBoard = new GridPane();
         printer = new GuiOut(this);
@@ -142,6 +148,12 @@ public class GuiRoot implements View {
         cmdCoords = new ArrayList<>();
         tilesClickable = false;
         excludedTiles = new ArrayList<>();
+        curCargoImg = new ImageView();
+        curCargoImg.setImage(null);
+        storageCompartments = new HashMap<>();
+        rewardsLeft = -1;
+        handlingCargo = false;
+        rewards = null;
 
         guiThread = new Thread(() -> GuiMain.launchApp(this));
         guiThread.start();
@@ -169,6 +181,7 @@ public class GuiRoot implements View {
 
     @Override
     public void updateBoard(TileEvent event){
+        boolean cargoTile = false;
 
         System.out.println(event.getId()+ " : " + event.getX() + " " + event.getY());
 
@@ -266,12 +279,107 @@ public class GuiRoot implements View {
                     crewPane.getChildren().add(humans);
                 }
             }
+            else if(event.getCargo() != null && !event.getCargo().isEmpty()){
+                System.out.println("CACCAPUPU");
+                cargoTile = true;
+                excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
+
+                ImageView cargoImg = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargo/cargo.png")));
+                cargoImg.setFitWidth(45);
+                cargoImg.setPreserveRatio(true);
+                crewPane.getChildren().setAll(cargoImg);
+
+                cargoImg.setOnMouseClicked(e -> {
+                    if(rewardsLeft > 0){
+                        inputQueue.add("GetReward "+ curCargoIndex + " " + event.getX() + " " + event.getY());
+                        rewardsLeft--;
+                        if(rewardsLeft == 0){
+                            handleCargo();
+                        }
+                        ///quando fai getRewards gli indici scalano o cazzate varie??
+                    }
+                    else{
+                        Platform.runLater(() -> {
+                            Stage cargoStage = new Stage();
+                            cargoStage.setTitle("Select Cargo");
+
+                            int i = 0;
+                            HBox cargobox = new HBox(30);
+                            Button cancelButton = goBackButtonMaker(cargoStage);
+                            cancelButton.setText("Back");
+
+                            for(Goods g : event.getCargo()){
+                                ImageView cargo = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargo/cargo" + g.getValue() + ".png")));
+                                cargo.setFitWidth(50);
+                                cargo.setPreserveRatio(true);
+                                int finalI = i;
+                                cargo.setOnMouseClicked(ev->{
+                                    if(handlingCargo){
+                                        if (curCargoCoords == null) {
+                                            curCargoCoords = new IntegerPair(event.getX(), event.getY());
+                                            curCargoIndex = finalI;
+                                            curCargoImg.setImage(new Image(getClass().getResourceAsStream("/GUI/cargo/cargo" + event.getCargo().get(finalI).getValue() + ".png")));
+                                            cargoStage.close();
+                                        }
+                                        else {
+                                            Stage confirmStage = new Stage();
+                                            confirmStage.setTitle("Switching Cargo");
+
+                                            Label quitLabel = new Label("Do you want to switch your current cargo with this one?");
+                                            quitLabel.setStyle("-fx-font-size: 15px");
+
+                                            Button confirmButton = new Button("Switch");
+                                            Button goBackButton = goBackButtonMaker(confirmStage);
+
+                                            HBox buttons = new HBox(50, goBackButton, confirmButton);
+                                            confirmButton.setOnAction(click -> {
+                                                inputQueue.add("Switch " + curCargoCoords.getFirst() + " " + curCargoCoords.getSecond() + " " + curCargoIndex + " " + event.getX() + " " + event.getY() + " " + finalI);
+                                                curCargoCoords = null;
+                                                curCargoImg.setImage(null);
+                                                confirmStage.close();
+                                                cargoStage.close();
+                                            });
+
+                                            buttons.setAlignment(Pos.CENTER);
+                                            buttons.setPadding(new Insets(5));
+
+                                            VBox quitBox = new VBox(3, quitLabel, buttons);
+                                            quitBox.setAlignment(Pos.CENTER);
+
+                                            Scene newGameScene = new Scene(quitBox, 300, 80);
+                                            confirmStage.setScene(newGameScene);
+                                            confirmStage.initOwner(cargoStage);
+                                            confirmStage.initModality(Modality.WINDOW_MODAL);
+
+                                            confirmStage.show();
+                                        }
+                                    }
+                                });
+                                i++;
+                                cargobox.getChildren().add(cargo);
+                            }
+
+                            VBox viewCargoBox = new VBox(5, cargobox, cancelButton);
+                            viewCargoBox.setAlignment(Pos.CENTER);
+
+                            Scene cargoScene = new Scene(viewCargoBox, 400, 200);
+                            cargoStage.setScene(cargoScene);
+                            cargoStage.initOwner(primaryStage);
+                            cargoStage.initModality(Modality.WINDOW_MODAL);
+                            cargoStage.show();
+                        });
+
+                    }
+                });
+
+            }
         }
 
         tileStack = new StackPane(tileImg, crewPane);
         tileImg.setPreserveRatio(true);
 
-            Platform.runLater(()->{
+        boolean finalCargoTile = cargoTile;
+        Platform.runLater(()->{
 
                 ArrayList<Node> nodes = new ArrayList<>(myBoard.getChildren());
                 for (Node node : nodes){
@@ -280,7 +388,7 @@ public class GuiRoot implements View {
                 }
 
 
-                if(!addcrew){
+                if(!addcrew && !finalCargoTile){
                     if(event.getX() == 3 && event.getY() == 8){
                         if(event.getId() == 158){
 
@@ -513,8 +621,24 @@ public class GuiRoot implements View {
         else if(event.getId() == 38 || event.getId() == 39){
             curCard.setImage(new Image(getClass().getResourceAsStream("/GUI/cards/card(stardust).jpg")));
         }
-        else
-            curCard.setImage(new Image(getClass().getResourceAsStream("/GUI/cards/card("+ event.getId() +").jpg")));
+        else {
+            curCard.setImage(new Image(getClass().getResourceAsStream("/GUI/cards/card(" + event.getId() + ").jpg")));
+
+            switch(event.getId()){
+                case 21, 27:{
+                    nPlanets = 4;
+                    break;
+                }
+                case 22, 24, 25, 28:{ nPlanets = 3;
+                    break;
+                }
+                case 23, 26:{
+                    nPlanets = 2;
+                    break;
+                }
+
+            }
+        }
 
     }
 
@@ -1098,9 +1222,82 @@ public class GuiRoot implements View {
     }
 
 
-    @Override
-    public void rewardsChanged(RewardsEvent event) {
+    private void rewardsScreen(){
+        ImageView rewardsBg = new ImageView(new Image(getClass().getResourceAsStream("/GUI/box_ship_slots_left.png")));
+        rewardsBg.setFitHeight(70);
+        rewardsBg.setPreserveRatio(true);
+        rewardsBg.setRotate(90);
+        VBox rewardsBox = new VBox(20);
+        rewardsBox.setPadding(new Insets(20));
 
+        Button discard = new Button("Discard");
+        discard.setOnAction(e -> {
+//            inputQueue.add("DiscardCargo " + );
+        });
+
+        int i = 0;
+
+        for(Goods g : rewards){
+            ImageView box = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargo/cargo"+ g.getValue() +".png")));
+            box.setFitHeight(50);
+            box.setPreserveRatio(true);
+            int finalI = i;
+            box.setOnMouseClicked(e ->{
+                curCargoIndex = finalI;
+                box.setOpacity(0.5);
+            });
+            rewardsBox.getChildren().add(box);
+            i++;
+        }
+
+        Pane boxes  = new Pane(rewardsBox);
+        StackPane stack = new StackPane(rewardsBg, boxes);
+
+        Platform.runLater(() ->{
+            phaseButtons.getChildren().setAll(stack, discard);
+        });
+
+
+        AtomicInteger x = new AtomicInteger();
+        AtomicInteger y = new AtomicInteger();
+        ArrayList<Node> childrenCopy = new ArrayList<>(myBoard.getChildren());
+        boolean clickable;
+
+        for(Node node : childrenCopy){
+            clickable = true;
+
+            x.set(GridPane.getRowIndex(node));
+            y.set(GridPane.getColumnIndex(node));
+
+            int X = x.get();
+            int Y = y.get();
+
+            for(IntegerPair p : excludedTiles){
+                if(X == p.getFirst() && Y == p.getSecond()){
+                    clickable = false;
+                }
+            }
+
+            if(clickable){
+                ImageView tile = (ImageView) node;
+
+                tile.setOnMouseClicked(e->{
+                    inputQueue.add("GetReward "+ curCargoIndex + " " + X + " " + Y + " 0");
+                    rewardsLeft--;
+                    if(rewardsLeft == 0)
+                        handleCargo();
+                });
+
+            }
+
+        }
+    }
+
+    @Override
+    public void rewardsChanged(RewardsEvent event){
+        rewards = event.getRewards();
+        rewardsLeft = event.getRewards().size();
+        handleCargo();
     }
 
     public void buildingScene(){
@@ -1583,8 +1780,6 @@ public class GuiRoot implements View {
     }
 
 
-
-
     public void goToFirstScene() {
         sceneSetup();
 
@@ -1887,21 +2082,45 @@ public class GuiRoot implements View {
 
 
     public void choosingPlanet(){
-
-        AtomicReference<String> cmd = new AtomicReference<>("ChoosePlanet");
-        Button choose = new Button("See Planets");
+        Button choose = new Button("Select");
         Button doNothing = new Button("Do Nothing");
+
+        ComboBox<String> planets = new ComboBox<>();
+        planets.setPromptText("Planets");
+        choose.disableProperty().bind(
+                planets.valueProperty().isNull()
+        );
+
+        for(int i = 0; i <nPlanets; i++)
+            planets.getItems().add("Planet "+ (i+1));
 
         Platform.runLater(()->{
             prompt.setText("Choose a planet to explore!");
-            phaseButtons.getChildren().setAll(choose, doNothing);
+            phaseButtons.getChildren().setAll(planets, choose, doNothing);
 
             doNothing.setOnAction(e ->{
                 inputQueue.add("ChoosePlanet -1");
             });
 
             choose.setOnAction(e ->{
-
+                switch(planets.getValue()){
+                    case "Planet 1":{
+                        inputQueue.add("ChoosePlanet 0");
+                        break;
+                    }
+                    case "Planet 2":{
+                        inputQueue.add("ChoosePlanet 1");
+                        break;
+                    }
+                    case "Planet 3":{
+                        inputQueue.add("ChoosePlanet 2");
+                        break;
+                    }
+                    case "Planet 4":{
+                        inputQueue.add("ChoosePlanet 3");
+                        break;
+                    }
+                }
             });
         });
 
@@ -1930,6 +2149,45 @@ public class GuiRoot implements View {
         });
 
     }
+
+
+    public void handleCargo(){
+        Platform.runLater(()->{
+            handlingCargo = true;
+            curCargoIndex = -1;
+            curCargoCoords = null;
+            curCargoImg.setFitHeight(50);
+            curCargoImg.setPreserveRatio(true);
+            Button finish = new Button("Finish");
+
+            prompt.setText("Move your cargo as you like!");
+
+            StackPane cargo = new StackPane();
+            ImageView slot = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargoBg.png")));
+            slot.setFitHeight(70);
+            slot.setPreserveRatio(true);
+
+
+            if(rewardsLeft > 0){
+                rewardsScreen();
+            }
+            else{
+                cargo.getChildren().setAll(slot, curCargoImg, finish);
+                phaseButtons.getChildren().setAll(cargo);
+            }
+
+
+
+            finish.setOnAction(e ->{
+                inputQueue.add("FinishCargo");
+                handlingCargo = false;
+            });
+
+
+
+        });
+    }
+
 
 
 }
