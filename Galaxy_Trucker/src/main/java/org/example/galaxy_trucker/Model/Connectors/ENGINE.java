@@ -11,7 +11,7 @@ import java.io.Serializable;
 @JsonTypeName("ENGINE")
 public class ENGINE implements Connectors , Serializable {
 
-    public static final ENGINE ISTANCE = new ENGINE();
+    public static final ENGINE INSTANCE = new ENGINE();
 
     private ENGINE() {}
 
@@ -19,7 +19,7 @@ public class ENGINE implements Connectors , Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
 
     public static ENGINE getInstance() {
-        return ISTANCE;
+        return INSTANCE;
     }
 
     @Override
