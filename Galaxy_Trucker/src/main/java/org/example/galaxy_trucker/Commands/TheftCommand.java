@@ -19,17 +19,17 @@ public class TheftCommand extends Command implements Serializable {
     }
     @Override
     public void execute(Player player) throws IOException, InterruptedException {
-//        try{
+        try{
            player.getCurrentCard().loseCargo(coordinate,position);
 //            PlayerBoard playerBoard = player.getmyPlayerBoard();
 //            GetGoodAction action = new GetGoodAction(position,playerBoard,coordinate.getFirst(),coordinate.getSecond());
 //            playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()
 //                    , action, player.getPlayerState());
-//        }
-//        catch (Exception e){
-//
-//            System.out.println(e.getMessage());
-//        }
+        }
+        catch (Exception e){
+
+            System.out.println(e.getMessage());
+        }
 
     }
 
