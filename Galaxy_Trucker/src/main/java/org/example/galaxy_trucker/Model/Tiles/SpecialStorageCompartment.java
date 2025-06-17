@@ -134,4 +134,9 @@ public class SpecialStorageCompartment extends Storage{
         return clone;
     }
 
+    @Override
+    public void sendState(){
+        tile.sendUpdates(goods,0, false, false, 0);
+    }
+
 }

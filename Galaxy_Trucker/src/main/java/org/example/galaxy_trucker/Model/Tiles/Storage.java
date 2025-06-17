@@ -52,6 +52,10 @@ public abstract class Storage extends Component{
         return goods;
     }
 
+    public void sendState(){
+
+    }
+
 
     private void orderGoods() {
         this.goods.sort(Comparator.comparingInt(Goods::getValue));

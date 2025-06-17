@@ -130,4 +130,9 @@ public class StorageCompartment extends Storage{
         return goods.get(i).getValue();
     }
 
+    @Override
+    public void sendState(){
+        tile.sendUpdates(goods,0, false, false, 0);
+    }
+
 }
