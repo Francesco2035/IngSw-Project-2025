@@ -291,7 +291,7 @@ public class GuiRoot implements View {
 
                 cargoImg.setOnMouseClicked(e -> {
                     if(rewardsLeft > 0){
-                        inputQueue.add("GetReward "+ curCargoIndex + " " + event.getX() + " " + event.getY());
+                        inputQueue.add("GetReward " + event.getX() + " " + event.getY() +  " " + curCargoIndex);
                         rewardsLeft--;
                         if(rewardsLeft == 0){
                             handleCargo();
@@ -1223,6 +1223,7 @@ public class GuiRoot implements View {
 
 
     private void rewardsScreen(){
+
         ImageView rewardsBg = new ImageView(new Image(getClass().getResourceAsStream("/GUI/box_ship_slots_left.png")));
         rewardsBg.setFitHeight(70);
         rewardsBg.setPreserveRatio(true);
@@ -1282,7 +1283,7 @@ public class GuiRoot implements View {
                 ImageView tile = (ImageView) node;
 
                 tile.setOnMouseClicked(e->{
-                    inputQueue.add("GetReward "+ curCargoIndex + " " + X + " " + Y + " 0");
+                    inputQueue.add("GetReward " +  X + " " + Y + " " + curCargoIndex);
                     rewardsLeft--;
                     if(rewardsLeft == 0)
                         handleCargo();
