@@ -19,10 +19,6 @@ public class StorageCompartment extends Storage{
         this.goods.sort(Comparator.comparingInt(Goods::getValue));
     }
 
-    //TODO: fixare hashmap
-
-
-
     @Override
     public Goods removeGood(int i){
         if (i >= goods.size() || i<0){
@@ -128,6 +124,11 @@ public class StorageCompartment extends Storage{
     @Override
     public int getValue(int i){
         return goods.get(i).getValue();
+    }
+
+    @Override
+    public void sendState(){
+        tile.sendUpdates(goods,0, false, false, 0);
     }
 
 }

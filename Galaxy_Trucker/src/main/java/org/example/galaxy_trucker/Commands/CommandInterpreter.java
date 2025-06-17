@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandInterpreter {
-//TODO: creare i comandi di rifiuto senza dover passare -1 -1
     private String playerId;
     private String gameId;
     private int lv;
@@ -156,9 +155,9 @@ public class CommandInterpreter {
                 }
                 title = "GetFromRewards";
                 //position2= Integer.parseInt(strings[1]);
-                x1 = Integer.parseInt(strings[0]);
-                y1 = Integer.parseInt(strings[1]);
-                position1= Integer.parseInt(strings[2]);
+                x1 = Integer.parseInt(strings[1]);
+                y1 = Integer.parseInt(strings[2]);
+                position1 = Integer.parseInt(strings[3]);
                 break;
             }
         }

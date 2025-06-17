@@ -56,13 +56,14 @@ public class Tile implements Serializable {
     public void RotateDx(){
         Collections.rotate(this.connectors, 1);
         this.getComponent().rotate(true);
-        rotation += 90 % 360;
+
     }
 
 
     public Tile clone(PlayerBoard clonedPlayerBoard){
         Tile clonedTile = new Tile();
         clonedTile.setId(this.id);
+        clonedTile.setRotation(this.rotation);
         clonedTile.setPlayerBoard(clonedPlayerBoard);
         component.setTile(clonedTile);
         Component component = this.component.clone(clonedPlayerBoard);
@@ -143,8 +144,8 @@ public class Tile implements Serializable {
     }
 
     public void setRotation(int rotations) {
-        rotations += rotation;
-        rotations = rotations % 360;
+        rotation += rotations;
+        rotation = rotation % 360;
     }
 }
 

@@ -44,7 +44,7 @@ public class TUI implements View {
     private final String gamboardBorder = "+━━━━━━━━━━━━━━━━━━━━━━━+";
     private final String border = "+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━+";
     private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
-    private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap();
+    private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap<>();
     private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
     private String[][][] Gameboard;
     private int lv;
