@@ -183,13 +183,12 @@ public class GuiRoot implements View {
     public void updateBoard(TileEvent event){
         boolean cargoTile = false;
 
-        System.out.println(event.getId()+ " : " + event.getX() + " " + event.getY());
+        System.out.println(event.getId()+ " : " + event.getX() + " " + event.getY() + "rotazione " + event.getRotation());
 
         StackPane tileStack;
         Pane crewPane = new Pane();
         ImageView tileImg = new ImageView();
         tileImg.setFitWidth(70);
-        tileImg.setRotate(event.getRotation());
         tileImage.setImage(tilePlaceholder);
         tileImage.setOpacity(0.5);
         tileRotation = 0;
@@ -215,12 +214,13 @@ public class GuiRoot implements View {
         else{
 
             tileImg.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg")));
+            tileImg.setRotate(event.getRotation());
             tileImg.setOpacity(1);
 
 
             setColors(myName, event.getId());
 
-            if(addcrew){
+            if(event.isBrownAlien() || event.isPurpleAlien() || event.getHumans() > 0){
 
                 tileImg.setFitWidth(70);
                 ImageView crewImg = new ImageView();
@@ -253,7 +253,17 @@ public class GuiRoot implements View {
                 }
 
                 else if(event.getHumans() > 0) {
-                    excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
+                    boolean exists = false;
+                    for(IntegerPair p : excludedTiles){
+                        if (p.getFirst() == event.getX() && p.getSecond() == event.getY()){
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if(!exists)
+                        excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
+
                     HBox humans = new HBox(2);
 
                     for (int i = 0; i < event.getHumans(); i++) {
