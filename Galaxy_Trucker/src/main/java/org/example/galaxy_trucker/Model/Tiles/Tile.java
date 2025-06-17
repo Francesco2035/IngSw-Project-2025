@@ -56,7 +56,7 @@ public class Tile implements Serializable {
     public void RotateDx(){
         Collections.rotate(this.connectors, 1);
         this.getComponent().rotate(true);
-        rotation += 90 % 360;
+
     }
 
 
