@@ -9,7 +9,7 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import java.lang.reflect.InaccessibleObjectException;
 import java.util.ArrayList;
 import java.util.Comparator;
-//TODO: non si capisce perchè ci entrino due (sistemare switch e discard)
+
 public class SpecialStorageCompartment extends Storage{
 
     private ArrayList<Goods> goods;

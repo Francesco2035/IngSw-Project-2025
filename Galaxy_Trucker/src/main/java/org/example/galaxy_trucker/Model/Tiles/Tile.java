@@ -144,8 +144,8 @@ public class Tile implements Serializable {
     }
 
     public void setRotation(int rotations) {
-        rotations += rotation;
-        rotations = rotations % 360;
+        rotation += rotations;
+        rotation = rotation % 360;
     }
 }
 

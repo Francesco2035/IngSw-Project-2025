@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandInterpreter {
-//TODO: creare i comandi di rifiuto senza dover passare -1 -1
     private String playerId;
     private String gameId;
     private int lv;
