@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
 import java.util.ArrayList;
@@ -31,4 +32,8 @@ public class HandleCargoClient  extends PlayerStateClient{
     //DiscardCargo x1 y1 p1
     //Switch x1 y1 p1 (indice cargo) x2 y2 p2
     //FinishCargo
+
+    public void showGame(GuiOut out){
+        out.getRoot().handleCargo();
+    }
 }
