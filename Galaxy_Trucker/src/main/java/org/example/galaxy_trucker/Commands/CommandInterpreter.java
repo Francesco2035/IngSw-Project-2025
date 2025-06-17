@@ -156,9 +156,9 @@ public class CommandInterpreter {
                 }
                 title = "GetFromRewards";
                 //position2= Integer.parseInt(strings[1]);
-                x1 = Integer.parseInt(strings[0]);
-                y1 = Integer.parseInt(strings[1]);
-                position1= Integer.parseInt(strings[2]);
+                x1 = Integer.parseInt(strings[1]);
+                y1 = Integer.parseInt(strings[2]);
+                position1 = Integer.parseInt(strings[3]);
                 break;
             }
         }
