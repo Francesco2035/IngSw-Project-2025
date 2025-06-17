@@ -9,6 +9,7 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.Tiles.Storage;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -38,7 +39,7 @@ public class HandleCargoCommand extends Command implements Serializable {
     @Override
     public void execute(Player player) {
 
-
+        PlayerBoard clone = player.getmyPlayerBoard().clone();
         PlayerBoard playerBoard = player.getmyPlayerBoard();
         Goods temp;
         ArrayList<Goods> rewards = null;
@@ -69,7 +70,7 @@ public class HandleCargoCommand extends Command implements Serializable {
                 }
                 case "Switch":{
                     if (coordinate.getFirst() == coordinate2.getFirst() && coordinate.getSecond() == coordinate2.getSecond()) {
-                        throw new InvalidInput("You can't switch viva il cringe");
+                        throw new InvalidInput("You can't switch within the same storage");
                     }
                     GetGoodAction action = new GetGoodAction(position,playerBoard,coordinate.getFirst(),coordinate.getSecond());
                     playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()
@@ -79,10 +80,12 @@ public class HandleCargoCommand extends Command implements Serializable {
                     playerBoard.performAction(playerBoard.getTile(coordinate2.getFirst(), coordinate2.getSecond()).getComponent()
                             , action2, player.getPlayerState());
                     Goods good2 = action2.getGood();
+                    AddGoodAction action3 = new AddGoodAction(good2,playerBoard,coordinate.getFirst(), coordinate.getSecond());
                     playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()
-                            , new AddGoodAction(good2,playerBoard,coordinate.getFirst(), coordinate.getSecond()), player.getPlayerState());
+                            , action3, player.getPlayerState());
+                    AddGoodAction action4 = new AddGoodAction(good1,playerBoard,coordinate2.getFirst(), coordinate2.getSecond());
                     playerBoard.performAction(playerBoard.getTile(coordinate2.getFirst(), coordinate2.getSecond()).getComponent()
-                            , new AddGoodAction(good1,playerBoard,coordinate2.getFirst(), coordinate2.getSecond()), player.getPlayerState());
+                            , action4, player.getPlayerState());
                     break;
                 }
                 case "Discard":{
@@ -94,7 +97,20 @@ public class HandleCargoCommand extends Command implements Serializable {
             }
         }
         catch (Exception e){
-            System.out.println("---------------mi è arrivata eccezione");
+            Storage storage1;
+            Storage storage2;
+            ArrayList<Storage> storages = clone.getStorages();
+//            storage1 = storages.get(storages.indexOf(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent()));
+//            storage2 = storages.get(storages.indexOf(playerBoard.getTile(coordinate2.getFirst(), coordinate2.getSecond()).getComponent()));
+//            if (storage1 != null){
+//                storage1.sendState();
+//            }
+//            if (storage2 != null){
+//                storage2.sendState();
+//            }
+            for (Storage storage : storages){
+                storage.sendState();
+            }
             e.printStackTrace();
             playerBoard.setRewards(rewards);
             throw new InvalidInput(e.getMessage());

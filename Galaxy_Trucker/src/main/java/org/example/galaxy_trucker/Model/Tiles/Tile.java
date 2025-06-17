@@ -63,6 +63,7 @@ public class Tile implements Serializable {
     public Tile clone(PlayerBoard clonedPlayerBoard){
         Tile clonedTile = new Tile();
         clonedTile.setId(this.id);
+        clonedTile.setRotation(this.rotation);
         clonedTile.setPlayerBoard(clonedPlayerBoard);
         component.setTile(clonedTile);
         Component component = this.component.clone(clonedPlayerBoard);

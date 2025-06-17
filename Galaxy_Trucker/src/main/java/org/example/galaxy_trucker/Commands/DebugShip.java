@@ -60,20 +60,28 @@ public class DebugShip extends Command implements Serializable {
         Tile shield = tiles.get(151);
 
         shield.RotateSx();
+        shield.setRotation(270);
 
         addonspurple.RotateSx();
+        addonspurple.setRotation(270);
         plasmaDrill.RotateDx();
+        plasmaDrill.setRotation(90);
 
         debugShip.setListener(player.getmyPlayerBoard().getListener());
         debugShip.setRewardsListener(player.getmyPlayerBoard().getRewardsListener());
 
         t2.RotateSx();
         t2.RotateSx();
+        t2.setRotation(180);
         t8.RotateDx();
+        t8.setRotation(90);
         t4.RotateSx();
+        t4.setRotation(270);
         t10.RotateDx();
+        t10.setRotation(90);
         specialStorage.RotateDx();
         specialStorage.RotateDx();
+        specialStorage.setRotation(180);
 
 
         debugShip.insertTile(t1, 6,7, false);
