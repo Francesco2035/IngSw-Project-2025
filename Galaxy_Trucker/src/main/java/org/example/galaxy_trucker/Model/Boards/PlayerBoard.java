@@ -490,7 +490,7 @@ public class PlayerBoard {
      */
     public boolean checkValidity(){
 
-        if(Buffer.size() != 0){
+        if(!Buffer.isEmpty()){
             this.damage+=Buffer.size();
             Buffer.clear();
             updateInfo();

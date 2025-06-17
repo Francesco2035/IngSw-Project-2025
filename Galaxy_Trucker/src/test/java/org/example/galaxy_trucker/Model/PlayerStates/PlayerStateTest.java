@@ -12,6 +12,7 @@ import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
+import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
@@ -19,6 +20,7 @@ import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,7 +35,7 @@ class PlayerStateTest {
 
 
     @Test
-    void allows() throws IOException {
+    void allows() throws IOException, InterruptedException {
 
         game = new Game(2, "g1");
         gc = new GameController(game.getGameID(), game, new GamesHandler(), game.getLv(), 4);
@@ -113,12 +115,65 @@ class PlayerStateTest {
         ac.toClientState();
 
 
-        //aggiungere housing units manualmente al player per eseguire la execute di addcrewstate
 
         AddCrewState adc = new AddCrewState();
         adc.allows(((AddCrewCommand) null));
-        adc.createDefaultCommand(game.getGameID(), p1);
-        ac.toClientState();
+        p1.setState(adc);
+        adc.createDefaultCommand(game.getGameID(), p1).execute(p1);
+        adc.toClientState();
 
+
+
+        BaseState bs = new BaseState();
+        bs.allows(new LoginCommand());
+        bs.allows(new ReadyCommand());
+        bs.allows(new QuitCommand());
+        bs.allows(new DebugShip());
+        p1.setState(bs);
+        bs.createDefaultCommand(game.getGameID(), p1).execute(p1);
+        bs.toClientState();
+
+
+
+        BuildingShip bgs = new BuildingShip();
+        bgs.allows(new BuildingCommand());
+        bgs.allows(new ReadyCommand());
+        bgs.allows(new FinishBuildingCommand());
+        p1.setState(bgs);
+        bgs.createDefaultCommand(game.getGameID(), p1).execute(p1);
+        bgs.toClientState();
+
+
+
+        CheckValidity cv = new CheckValidity();
+        cv.allows(new RemoveTileCommand());
+        cv.allows(new ReadyCommand());
+        p1.setState(cv);
+        cv.createDefaultCommand(game.getGameID(), p1).execute(p1); /// da aggiungere potenzialmente una board invalida per testare il resto dell'execute
+        cv.toClientState();
+
+
+
+        ChoosePosition chp = new ChoosePosition();
+        chp.allows(new FinishBuildingCommand());
+        p1.setState(chp);
+        chp.createDefaultCommand(game.getGameID(), p1).execute(p1);
+        chp.toClientState();
+
+
+
+        ChoosingPlanet cp = new ChoosingPlanet();
+        cp.allows(new ChoosingPlanetsCommand());
+        p1.setState(cp);
+        cp.createDefaultCommand(game.getGameID(), p1).execute(p1); // non funziona perchè bisogna settare anche currentcard
+        cp.toClientState();
+
+
+
+        ConsumingEnergy ce = new ConsumingEnergy();
+        ce.allows(new ConsumeEnergyCommand());
+        ce.allows(new UseEnergyAction(p1.getmyPlayerBoard()));
+        ce.createDefaultCommand(game.getGameID(), p1).execute(p1);
+        ce.toClientState();
     }
 }
