@@ -1,12 +1,19 @@
 package org.example.galaxy_trucker.Model.PlayerStates.DefaultActions;
 
+import org.example.galaxy_trucker.Commands.HandleCargoCommand;
 import org.example.galaxy_trucker.Controller.CardsController;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
+import org.example.galaxy_trucker.Model.Goods.BLUE;
+import org.example.galaxy_trucker.Model.Goods.GREEN;
+import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.Goods.YELLOW;
+import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.HandleCargo;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.Test;
 
@@ -96,6 +103,42 @@ public class DefaultSmugglersTest {
 
         System.out.println("\n\n\n\n\n");
         System.out.println(p2.getmyPlayerBoard().getEnergy());
+
+        ArrayList<Goods> rewards= new ArrayList<>();
+        rewards.add(new YELLOW());
+        rewards.add(new GREEN());
+        rewards.add(new GREEN());
+        rewards.add(new GREEN());
+        rewards.add(new BLUE());
+
+        p1.setState(new HandleCargo());
+        p1.getmyPlayerBoard().setRewards(rewards);
+
+
+
+        HandleCargoCommand p1Get1 = new HandleCargoCommand(4,new IntegerPair(7,8),0,null,game.getID(),p1.GetID(),game.getLv(),"GetFromRewards","boh");
+        p1Get1.execute(p1);
+        HandleCargoCommand p1Get2 = new HandleCargoCommand(1,new IntegerPair(7,9),0,null,game.getID(),p1.GetID(),game.getLv(),"GetFromRewards","boh");
+        p1Get2.execute(p1);
+        HandleCargoCommand p1Get3 = new HandleCargoCommand(0,new IntegerPair(7,9),0,null,game.getID(),p1.GetID(),game.getLv(),"GetFromRewards","boh");
+        p1Get3.execute(p1);
+        HandleCargoCommand p1finish = new HandleCargoCommand(4,new IntegerPair(7,8),0,null,game.getID(),p1.GetID(),game.getLv(),"FinishCargo","boh");
+        p1finish.execute(p1);
+
+
+        rewards.clear();
+        rewards.add(new GREEN());
+        rewards.add(new GREEN());
+
+        p2.setState(new HandleCargo());
+        p2.getmyPlayerBoard().setRewards(rewards);
+
+        HandleCargoCommand p2Get1 = new HandleCargoCommand(1,new IntegerPair(5,4),0,null,game.getID(),p2.GetID(),game.getLv(),"GetFromRewards","boh");
+        p2Get1.execute(p2);
+
+        HandleCargoCommand p2finish = new HandleCargoCommand(4,new IntegerPair(7,8),0,null,game.getID(),p2.GetID(),game.getLv(),"FinishCargo","boh");
+        p2finish.execute(p2);
+
         CurrentCard.CardEffect();
 
 
@@ -103,7 +146,7 @@ public class DefaultSmugglersTest {
 
 
         int i =0;
-        while(!CurrentCard.isFinished() && i<7){
+        while(!CurrentCard.isFinished() && i<15){
             System.out.println("\n\n prima che p1 agisca: \n p1: "+p1.getPlayerState().getClass()+ p1.GetHasActed()+"\n p2: "+p2.getPlayerState().getClass()+ p2.GetHasActed());
 
             if(!p1.GetHasActed()){

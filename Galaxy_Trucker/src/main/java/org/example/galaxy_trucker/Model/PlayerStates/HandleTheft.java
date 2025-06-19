@@ -58,6 +58,7 @@ public class HandleTheft extends PlayerState {
 
         IntegerPair coord = null;
         int index = 0;
+        boolean found = false;
 
         // prende la coordinata del primo elemeto di max valore
         int maxValue = max(cargoH.keySet());
@@ -66,9 +67,10 @@ public class HandleTheft extends PlayerState {
         ArrayList<Storage> storages = board.getStorages();
         int i=storages.indexOf(board.getTile(coord.getFirst(),coord.getSecond()).getComponent()); //per prendere l'iesimo elemento devo prima prenderne l'indice da storgaes fando indexof elemet e poi get i, non mi basta usare il primo perche il primo è component mentre preso dalla get lo considero come storage
         Storage currStorage=storages.get(i);
-        for(int j=0;j<currStorage.getType();j++) {
+        for(int j=0;j<currStorage.getType() && !found;j++) {
             if (currStorage.getValue(j) == maxValue) {
                 index = j;
+                found = true;
             }
 
         }
