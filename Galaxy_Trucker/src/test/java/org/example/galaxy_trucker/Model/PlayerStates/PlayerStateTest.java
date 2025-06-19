@@ -10,6 +10,7 @@ import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Cards.SolarSystem;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -165,6 +166,9 @@ class PlayerStateTest {
         ChoosingPlanet cp = new ChoosingPlanet();
         cp.allows(new ChoosingPlanetsCommand());
         p1.setState(cp);
+        game.getGag().getCardsDeck().get(22).setBoard(game.getGameBoard());
+        game.getGag().getCardsDeck().get(22).setConcurrentCardListener(gc);
+        p1.setCard(game.getGag().getCardsDeck().get(22));
         cp.createDefaultCommand(game.getGameID(), p1).execute(p1); // non funziona perchè bisogna settare anche currentcard
         cp.toClientState();
 
@@ -173,6 +177,12 @@ class PlayerStateTest {
         ConsumingEnergy ce = new ConsumingEnergy();
         ce.allows(new ConsumeEnergyCommand());
         ce.allows(new UseEnergyAction(p1.getmyPlayerBoard()));
+        p1.setState(ce);
+        game.getGag().getCardsDeck().get(30).setBoard(game.getGameBoard());
+        game.getGag().getCardsDeck().get(30).setConcurrentCardListener(gc);
+        game.getGag().getCardsDeck().get(30).updateSates();
+        game.getGag().getCardsDeck().get(30).CardEffect(); // forse questo è sbagliato nelle carte. perchè losers non viene creato nel caso di default command
+        p1.setCard(game.getGag().getCardsDeck().get(30));
         ce.createDefaultCommand(game.getGameID(), p1).execute(p1);
         ce.toClientState();
     }
