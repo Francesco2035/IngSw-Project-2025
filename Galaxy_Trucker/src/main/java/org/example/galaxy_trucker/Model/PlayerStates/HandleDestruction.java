@@ -30,7 +30,7 @@ public class HandleDestruction extends PlayerState {
 //        return new SelectChunkCommand(player, chunk);
 //    }
 
-    @Override
+    @Override ///  che cristo succede se Viene distrutta ogni singola tile?
     public Command createDefaultCommand(String gameId, Player player) {
         int lv= player.getCommonBoard().getLevel();
         /// prendi i tronconi e scegli il primo non ricordo come se fa
@@ -40,8 +40,21 @@ public class HandleDestruction extends PlayerState {
         int i=0;
         IntegerPair coord= null;
 
+        if (houses.size()==0){ //edge case difficle da testare ma tecnicmente possibile se meteoriti colpisca la tua ultima casa
+            for( int x=0; x<10;x++){
+                for( int y=0; y<10; y++){
+
+                    if( board.getValidPlayerBoard()[x][y]==1){
+                        coord= new IntegerPair(x,y);
+                        return new SelectChunkCommand(coord,gameId, player.GetID(),lv,"SelectChunkCommand","placeholder");
+                    }
+                }
+            }
+            ///  questo vuol dire che non ha trovato una singola tile nell'intera board Sei cucinato
+        }
+
             for (HousingUnit housingUnit : houses) {
-                if(housingUnit.getNumHumans()!=0&&housingUnit.isPurpleAlien()&&housingUnit.isBrownAlien()){
+                if(housingUnit.getNumHumans()!=0||housingUnit.isPurpleAlien()||housingUnit.isBrownAlien()){
 
                     coord = new IntegerPair(housingUnit.getX(),housingUnit.getY());
                     break;
