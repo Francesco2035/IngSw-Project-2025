@@ -155,7 +155,7 @@ public class Smugglers extends Card{
 
         if(coordinates.size()!=this.energyUsage){
             System.out.println("----->"+this.energyUsage);
-            throw new WrongNumofEnergyExeption("wrong number of energy cells to steal");
+            throw new WrongNumofEnergyExeption("wrong number of energy cells to steal you had to give "+this.energyUsage+" energy cells, you gave "+coordinates.size());
         }
         PlayerBoard CurrentPlanche = currentPlayer.getmyPlayerBoard();
         Tile[][] tiles = CurrentPlanche.getPlayerBoard();
@@ -216,7 +216,9 @@ public class Smugglers extends Card{
                 /// potrei dire che non è necessario fare nulla se ho anche 0 energie e andare avant diretto :)
                 energyUsage = min(tmpPunishment, CurrentPlanche.getEnergy());
                 System.out.println("energy usage (Check Strength):" +energyUsage);
-                this.setDefaultPunishment(energyUsage);
+                this.setDefaultPunishment(this.energyUsage);
+                int test = this.getDefaultPunishment();
+                if (test ==2 ){System.out.println("sgr");}
                 currentPlayer.setState(new ConsumingEnergy()); /// se il player va in consuming energy e poi si disconnette ma non ha abbastanza energie  sei fottuto
             /// non dovrebbe succedere perche prendo il minimo tra i due ma non si sa mai :)
             }
@@ -345,12 +347,16 @@ public class Smugglers extends Card{
         this.finishCard();
     }
 
+
+
     //json required
     public Smugglers(){}
     public int getRequirement() {return requirement;}
     public void setRequirement(int requirement) {this.requirement = requirement;}
     public ArrayList<Goods> getReward() {return rewardGoods;}
     public void setReward(ArrayList<Goods> reward) {this.rewardGoods = reward;}
-    public int getDefaultPunishment() {return Punishment;}
+
+
+    ///public int getDefaultPunishment() {return Punishment;}
     public void setPunishment(int punishment) {Punishment = punishment;}
 }

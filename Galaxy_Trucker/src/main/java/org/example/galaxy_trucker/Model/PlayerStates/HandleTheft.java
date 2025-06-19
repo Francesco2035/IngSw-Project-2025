@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static java.util.Collections.max;
+
 public class HandleTheft extends PlayerState {
 //    @Override
 //    public Command PlayerAction(String json, Player player) {
@@ -51,13 +53,14 @@ public class HandleTheft extends PlayerState {
     @Override
     public  Command createDefaultCommand(String gameId, Player player) { // se nono qui e non in consume energy ho sicuramente il cargo non vuoto
         PlayerBoard board =player.getmyPlayerBoard();
+        int lv = player.getCommonBoard().getLevel();
         HashMap<Integer, ArrayList<IntegerPair>> cargoH = board.getStoredGoods();
 
         IntegerPair coord = null;
-        int index;
+        int index = 0;
 
         // prende la coordinata del primo elemeto di max valore
-        int maxValue = cargoH.keySet().iterator().next();
+        int maxValue = max(cargoH.keySet());
         coord = cargoH.get(maxValue).getFirst();// cargoH è sempre aggiornata no?
 
         ArrayList<Storage> storages = board.getStorages();
@@ -69,9 +72,9 @@ public class HandleTheft extends PlayerState {
             }
 
         }
-        /// return  new Handlendle theft command
+        return  new Theft(index,coord,gameId,player.GetID(),lv,"HandleTheft","boh");
 
-        return  null;
+
     }
 
     @Override

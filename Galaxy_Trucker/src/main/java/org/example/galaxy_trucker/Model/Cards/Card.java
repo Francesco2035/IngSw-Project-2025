@@ -127,7 +127,12 @@ public class Card implements Serializable {
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) throws InterruptedException {}
     public void loseCargo(IntegerPair pair, int position) throws InterruptedException {}
     public void ActivateCard(){}
-    public int getDefaultPunishment(){return DefaultPunishment;}
+
+    /// todo la getDefault riesce in qualche modo a dare un risultato diverso da default
+    public int getDefaultPunishment(){
+        int r =this.DefaultPunishment;
+        return r;
+    }
     public void setDefaultPunishment(int p){DefaultPunishment = p;}
 
     public ConcurrentCardListener getConcurrentCardListener() {

@@ -148,6 +148,9 @@ public class TestSetupHelper {
         Tile t6 = tiles.get(137);//BrownAddon: uni,single,none,none
         Tile t7 = tiles.get(150);//Shield: uni,none,none,single
         Tile t8 = tiles.get(10);//battery uni,uni,none,none
+        Tile t9 = tiles.get(25);//storage normale dim 2 uni uni none none
+        Tile t10 = tiles.get(93);//DoubleEngine double uni none engine
+        Tile t11 = tiles.get(79);//Engine double none single engine
 
 
         t1.RotateSx();
@@ -156,6 +159,8 @@ public class TestSetupHelper {
         t3.RotateSx();
         t5.RotateDx();
         t6.RotateDx();
+        t9.RotateDx();
+        t9.RotateDx();
 
         playerBoard2.insertTile(t1,5,6, false);
         playerBoard2.insertTile(t7,6,7, false);
@@ -165,6 +170,9 @@ public class TestSetupHelper {
         playerBoard2.insertTile(t3,5,5, false);
         playerBoard2.insertTile(t4,4,5, false); // cannon looking up tipo1
         playerBoard2.insertTile(t8,8,8, false);
+        playerBoard2.insertTile(t9,5,4, false);
+        playerBoard2.insertTile(t10,6,4, false);
+        playerBoard2.insertTile(t11,8,7, false);
         MainCockpitComp mk = new MainCockpitComp();
         Tile mkk = new Tile(mk, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
         playerBoard2.insertTile(mkk,6,6, false);
