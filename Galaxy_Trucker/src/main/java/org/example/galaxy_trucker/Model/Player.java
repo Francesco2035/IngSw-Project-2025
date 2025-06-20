@@ -269,6 +269,12 @@ public class Player implements Serializable {
     public int finishRace(boolean finished, String message){
         int result = 0;
         result =  getmyPlayerBoard().finishRace(finished);
+        if(finished){
+            result= result + this.getCommonBoard().arrivalBonus(this);
+
+            result = result + this.getCommonBoard().beautyBonus(this);
+        }
+
         if (result > 0){
             finishListener.onEndGame(true, GetID(), message);
         }
