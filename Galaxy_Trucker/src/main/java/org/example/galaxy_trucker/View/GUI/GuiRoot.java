@@ -180,10 +180,10 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void updateBoard(TileEvent event){
-        boolean cargoTile = false;
-
-        System.out.println(event.getId()+ " : " + event.getX() + " " + event.getY() + "rotazione " + event.getRotation());
+    public void updateBoard(TileEvent event) {
+        boolean stackTile;
+        boolean exists = false;
+        IntegerPair pair = null;
 
         StackPane tileStack;
         Pane crewPane = new Pane();
@@ -194,12 +194,34 @@ public class GuiRoot implements View {
         tileRotation = 0;
         tileImage.setRotate(0);
 
-        if(event.getId() == 158)
+        exists = false;
+        for (IntegerPair p : excludedTiles) {
+            if (p.getFirst() == event.getX() && p.getSecond() == event.getY()) {
+                exists = true;
+                pair = p;
+                break;
+            }
+        }
+
+        if(event.isBrownAlien() || event.isPurpleAlien() || event.getHumans() > 0 || event.getCargo() != null || event.getBatteries() > 0){
+            stackTile = true;
+            if (!exists)
+                excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
+        }
+        else {
+            stackTile = false;
+            if(exists){
+                excludedTiles.remove(pair);
+            }
+        }
+
+
+        if (event.getId() == 158) {
             tileImg.setImage(null);
-        else if(event.getId() == 157){
+        } else if (event.getId() == 157) {
             tileImg.setImage(tilePlaceholder);
             tileImg.setOpacity(0.5);
-            if (amIBuilding){
+            if (amIBuilding) {
                 tileImg.setOnMouseClicked(e -> {
                     inputQueue.add("InsertTile " + event.getX() + " " + event.getY() + " " + tileRotation);
                 });
@@ -210,26 +232,24 @@ public class GuiRoot implements View {
                     tileImg.setOpacity(0.5);
                 });
             }
-        }
-        else{
+        } else {
 
-            tileImg.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg")));
+            tileImg.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile (" + event.getId() + ").jpg")));
             tileImg.setRotate(event.getRotation());
             tileImg.setOpacity(1);
 
-
             setColors(myName, event.getId());
 
-            if(event.isBrownAlien() || event.isPurpleAlien() || event.getHumans() > 0){
+            if (event.isBrownAlien() || event.isPurpleAlien() || event.getHumans() > 0) {
 
                 tileImg.setFitWidth(70);
                 ImageView crewImg = new ImageView();
                 crewImg.setFitWidth(40);
                 crewImg.setPreserveRatio(true);
                 crewImg.setOnMouseClicked(e -> {
-                    if(killing){
-                        IntegerPair coord =  new IntegerPair(event.getX(), event.getY());
-                        if(crewImg.getOpacity() == 1){
+                    if (killing) {
+                        IntegerPair coord = new IntegerPair(event.getX(), event.getY());
+                        if (crewImg.getOpacity() == 1) {
                             cmdCoords.add(coord);
                             crewImg.setOpacity(0.5);
                         }
@@ -240,29 +260,15 @@ public class GuiRoot implements View {
                     }
                 });
 
-                if(event.isBrownAlien()){
+                if (event.isBrownAlien()) {
                     crewImg.setImage(brownAlien);
                     crewPane.getChildren().add(crewImg);
                     excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
-                }
-
-                else if(event.isPurpleAlien()) {
+                } else if (event.isPurpleAlien()) {
                     crewImg.setImage(purpleAlien);
                     crewPane.getChildren().add(crewImg);
                     excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
-                }
-
-                else if(event.getHumans() > 0) {
-                    boolean exists = false;
-                    for(IntegerPair p : excludedTiles){
-                        if (p.getFirst() == event.getX() && p.getSecond() == event.getY()){
-                            exists = true;
-                            break;
-                        }
-                    }
-
-                    if(!exists)
-                        excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
+                } else if (event.getHumans() > 0) {
 
                     HBox humans = new HBox(2);
 
@@ -271,9 +277,9 @@ public class GuiRoot implements View {
                         crew.setFitWidth(25);
                         crew.setPreserveRatio(true);
                         crew.setOnMouseClicked(e -> {
-                            if(killing){
-                                IntegerPair coord =  new IntegerPair(event.getX(), event.getY());
-                                if(crew.getOpacity() == 1){
+                            if (killing) {
+                                IntegerPair coord = new IntegerPair(event.getX(), event.getY());
+                                if (crew.getOpacity() == 1) {
                                     cmdCoords.add(coord);
                                     crew.setOpacity(0.5);
                                 }
@@ -288,10 +294,7 @@ public class GuiRoot implements View {
                     }
                     crewPane.getChildren().add(humans);
                 }
-            }
-            else if(event.getCargo() != null && !event.getCargo().isEmpty()){
-                System.out.println("CACCAPUPU");
-                cargoTile = true;
+            } else if (event.getCargo() != null) {
                 excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
 
                 ImageView cargoImg = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargo/cargo.png")));
@@ -300,15 +303,13 @@ public class GuiRoot implements View {
                 crewPane.getChildren().setAll(cargoImg);
 
                 cargoImg.setOnMouseClicked(e -> {
-                    if(rewardsLeft > 0){
-                        inputQueue.add("GetReward " + event.getX() + " " + event.getY() +  " " + curCargoIndex);
+                    if (rewardsLeft > 0 && curCargoImg.getImage() != null && curCargoCoords == null) {
+                        inputQueue.add("GetReward " + event.getX() + " " + event.getY() + " " + curCargoIndex);
                         rewardsLeft--;
-                        if(rewardsLeft == 0){
+                        if (rewardsLeft == 0) {
                             handleCargo();
                         }
-                        ///quando fai getRewards gli indici scalano o cazzate varie??
-                    }
-                    else{
+                    } else {
                         Platform.runLater(() -> {
                             Stage cargoStage = new Stage();
                             cargoStage.setTitle("Select Cargo");
@@ -318,20 +319,19 @@ public class GuiRoot implements View {
                             Button cancelButton = goBackButtonMaker(cargoStage);
                             cancelButton.setText("Back");
 
-                            for(Goods g : event.getCargo()){
+                            for (Goods g : event.getCargo()) {
                                 ImageView cargo = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargo/cargo" + g.getValue() + ".png")));
                                 cargo.setFitWidth(50);
                                 cargo.setPreserveRatio(true);
                                 int finalI = i;
-                                cargo.setOnMouseClicked(ev->{
-                                    if(handlingCargo){
+                                cargo.setOnMouseClicked(ev -> {
+                                    if (handlingCargo) {
                                         if (curCargoCoords == null) {
                                             curCargoCoords = new IntegerPair(event.getX(), event.getY());
                                             curCargoIndex = finalI;
                                             curCargoImg.setImage(new Image(getClass().getResourceAsStream("/GUI/cargo/cargo" + event.getCargo().get(finalI).getValue() + ".png")));
                                             cargoStage.close();
-                                        }
-                                        else {
+                                        } else {
                                             Stage confirmStage = new Stage();
                                             confirmStage.setTitle("Switching Cargo");
 
@@ -383,103 +383,121 @@ public class GuiRoot implements View {
                 });
 
             }
+            else if(event.getBatteries() > 0){
+                HBox batteries = new HBox(2);
+
+                for (int i = 0; i < event.getHumans(); i++) {
+                    ImageView battery = new ImageView(new Image(getClass().getResourceAsStream("/GUI/battery.png")));
+                    battery.setFitHeight(30);
+                    battery.setPreserveRatio(true);
+                    battery.setOnMouseClicked(e -> {
+//                        if () {
+//                            IntegerPair coord = new IntegerPair(event.getX(), event.getY());
+//                            if (crew.getOpacity() == 1) {
+//                                cmdCoords.add(coord);
+//                                crew.setOpacity(0.5);
+//                            }
+////                                else{
+////                                    cmdCoords.remove(coord);
+////                                    crew.setOpacity(1);
+////                                }
+//                        }
+                    });
+                    batteries.getChildren().add(battery);
+
+                }
+                crewPane.getChildren().add(batteries);
+            }
         }
 
         tileStack = new StackPane(tileImg, crewPane);
         tileImg.setPreserveRatio(true);
 
-        boolean finalCargoTile = cargoTile;
-        Platform.runLater(()->{
+        boolean finalStackTile = stackTile;
+        Platform.runLater(() -> {
 
-                ArrayList<Node> nodes = new ArrayList<>(myBoard.getChildren());
-                for (Node node : nodes){
-                    if(node != null && GridPane.getRowIndex(node) == event.getX() && GridPane.getColumnIndex(node) == event.getY())
-                        myBoard.getChildren().remove(node);
-                }
-
-
-                if(!addcrew && !finalCargoTile){
-                    if(event.getX() == 3 && event.getY() == 8){
-                        if(event.getId() == 158){
-
-                            if(buffer2.getOpacity() == 1){
-                                buffer1.setOnMouseClicked(e->{inputQueue.add("FromBuffer 0");});
-                                buffer1.setImage(buffer2.getImage());
-                                buffer1.setOpacity(1);
-                                buffer1.setOnMouseEntered(null);
-                                buffer1.setOnMouseExited(null);
+            ArrayList<Node> nodes = new ArrayList<>(myBoard.getChildren());
+            for (Node node : nodes) {
+                if (node != null && GridPane.getRowIndex(node) == event.getX() && GridPane.getColumnIndex(node) == event.getY())
+                    myBoard.getChildren().remove(node);
+            }
 
 
-                                buffer2.setImage(tilePlaceholder);
-                                buffer2.setOpacity(0.5);
-                                buffer2.setOnMouseEntered(e -> {
-                                    buffer2.setOpacity(1);
-                                });
-                                buffer2.setOnMouseExited(e -> {
-                                    buffer2.setOpacity(0.5);
-                                });
-                                buffer2.setOnMouseClicked(e -> {
-                                    inputQueue.add("ToBuffer 1");
-                                });
+            if (event.getX() == 3 && event.getY() == 8) {
+                if (event.getId() == 158) {
 
-                            }
-                            else {
-                                buffer1.setImage(tilePlaceholder);
-                                buffer1.setOpacity(0.5);
-                                buffer1.setOnMouseEntered(e -> {
-                                    buffer1.setOpacity(1);
-                                });
-                                buffer1.setOnMouseExited(e -> {
-                                    buffer1.setOpacity(0.5);
-                                });
-                                buffer1.setOnMouseClicked(e -> {
-                                    inputQueue.add("ToBuffer 0");
-                                });
-                            }
-                        }
-                            else{
-                            buffer1.setImage(tileImg.getImage());
-                            buffer1.setOpacity(1);
-                            buffer1.setOnMouseEntered(null);
-                            buffer1.setOnMouseExited(null);
-                            buffer1.setOnMouseClicked(e->{
-                                inputQueue.add("FromBuffer 0");
-                            });
-                        }
+                    if (buffer2.getOpacity() == 1) {
+                        buffer1.setOnMouseClicked(e -> {
+                            inputQueue.add("FromBuffer 0");
+                        });
+                        buffer1.setImage(buffer2.getImage());
+                        buffer1.setOpacity(1);
+                        buffer1.setOnMouseEntered(null);
+                        buffer1.setOnMouseExited(null);
 
-                    }
-                    else if(event.getX() == 3 && event.getY() == 9){
-                        if(event.getId() == 158){
-                            buffer2.setImage(tilePlaceholder);
-                            buffer2.setOpacity(0.5);
-                            buffer2.setOnMouseEntered(e -> {
-                                buffer2.setOpacity(1);
-                            });
-                            buffer2.setOnMouseExited(e -> {
-                                buffer2.setOpacity(0.5);
-                            });
-                            buffer2.setOnMouseClicked(e -> {
-                                inputQueue.add("ToBuffer 1");
-                            });
-                        }
-                        else{
-                            buffer2.setImage(tileImg.getImage());
+
+                        buffer2.setImage(tilePlaceholder);
+                        buffer2.setOpacity(0.5);
+                        buffer2.setOnMouseEntered(e -> {
                             buffer2.setOpacity(1);
-                            buffer2.setOnMouseEntered(null);
-                            buffer2.setOnMouseExited(null);
-                            buffer2.setOnMouseClicked(e->{
-                                inputQueue.add("FromBuffer 1");
-                            });
-                        }
+                        });
+                        buffer2.setOnMouseExited(e -> {
+                            buffer2.setOpacity(0.5);
+                        });
+                        buffer2.setOnMouseClicked(e -> {
+                            inputQueue.add("ToBuffer 1");
+                        });
+
+                    } else {
+                        buffer1.setImage(tilePlaceholder);
+                        buffer1.setOpacity(0.5);
+                        buffer1.setOnMouseEntered(e -> {
+                            buffer1.setOpacity(1);
+                        });
+                        buffer1.setOnMouseExited(e -> {
+                            buffer1.setOpacity(0.5);
+                        });
+                        buffer1.setOnMouseClicked(e -> {
+                            inputQueue.add("ToBuffer 0");
+                        });
                     }
-                    else
-                        myBoard.add(tileImg, event.getY(), event.getX());
-                }
-                else{
-                    myBoard.add(tileStack, event.getY(), event.getX());
+                } else {
+                    buffer1.setImage(tileImg.getImage());
+                    buffer1.setOpacity(1);
+                    buffer1.setOnMouseEntered(null);
+                    buffer1.setOnMouseExited(null);
+                    buffer1.setOnMouseClicked(e -> {
+                        inputQueue.add("FromBuffer 0");
+                    });
                 }
 
-            });
+            } else if (event.getX() == 3 && event.getY() == 9) {
+                if (event.getId() == 158) {
+                    buffer2.setImage(tilePlaceholder);
+                    buffer2.setOpacity(0.5);
+                    buffer2.setOnMouseEntered(e -> {
+                        buffer2.setOpacity(1);
+                    });
+                    buffer2.setOnMouseExited(e -> {
+                        buffer2.setOpacity(0.5);
+                    });
+                    buffer2.setOnMouseClicked(e -> {
+                        inputQueue.add("ToBuffer 1");
+                    });
+                } else {
+                    buffer2.setImage(tileImg.getImage());
+                    buffer2.setOpacity(1);
+                    buffer2.setOnMouseEntered(null);
+                    buffer2.setOnMouseExited(null);
+                    buffer2.setOnMouseClicked(e -> {
+                        inputQueue.add("FromBuffer 1");
+                    });
+                }
+            } else if (!finalStackTile)
+                myBoard.add(tileImg, event.getY(), event.getX());
+            else
+                myBoard.add(tileStack, event.getY(), event.getX());
+        });
 
     }
 
@@ -520,7 +538,7 @@ public class GuiRoot implements View {
     @Override
     public void updateHand(HandEvent event){
 
-
+        tileRotation = 0;
         if(event.getId() == 158) {
             tileImage.setImage(tilePlaceholder);
             tileImage.setOpacity(0.5);
@@ -529,6 +547,7 @@ public class GuiRoot implements View {
             Image tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg"));
             tileImage.setImage(tile);
             tileImage.setOpacity(1);
+            tileImage.setRotate(0);
         }
 
     }
@@ -1306,6 +1325,8 @@ public class GuiRoot implements View {
 
     @Override
     public void rewardsChanged(RewardsEvent event){
+        curCargoImg.setImage(null);
+        curCargoCoords = null;
         rewards = event.getRewards();
         rewardsLeft = event.getRewards().size();
         handleCargo();
@@ -1993,6 +2014,7 @@ public class GuiRoot implements View {
 
             cmdCoords.clear();
             tilesClickable = false;
+            killing = false;
         });
     }
 
@@ -2011,7 +2033,6 @@ public class GuiRoot implements View {
                     cmd.set(cmd + " " + p.getFirst() + " " + p.getSecond());
                 }
                 inputQueue.add(cmd.get());
-                killing = false;
             });
         });
 
@@ -2050,7 +2071,6 @@ public class GuiRoot implements View {
                 }
 
                 cmdCoords.clear();
-                tilesClickable = false;
             });
         });
 
@@ -2059,7 +2079,6 @@ public class GuiRoot implements View {
 
 
     public void giveTiles(String command, String txt){
-
 
         AtomicReference<String> cmd = new AtomicReference<>(command);
         Button done = new Button("Done!");
@@ -2084,7 +2103,6 @@ public class GuiRoot implements View {
                 }
 
                 cmdCoords.clear();
-                tilesClickable = false;
             });
         });
 
@@ -2162,14 +2180,18 @@ public class GuiRoot implements View {
     }
 
 
-    public void handleCargo(){
-        Platform.runLater(()->{
+    public void handleCargo() {
+        Platform.runLater(() -> {
             handlingCargo = true;
             curCargoIndex = -1;
             curCargoCoords = null;
             curCargoImg.setFitHeight(50);
             curCargoImg.setPreserveRatio(true);
             Button finish = new Button("Finish");
+            Button discard = new Button("Discard");
+            Button unselect = new Button("Unselect");
+
+
 
             prompt.setText("Move your cargo as you like!");
 
@@ -2178,27 +2200,93 @@ public class GuiRoot implements View {
             slot.setFitHeight(70);
             slot.setPreserveRatio(true);
 
+            VBox rewardsBox = new VBox(20);
+            rewardsBox.setPadding(new Insets(20));
 
-            if(rewardsLeft > 0){
-                rewardsScreen();
+
+            if (rewardsLeft > 0) {
+                int i = 0;
+
+                for (Goods g : rewards) {
+                    ImageView box = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargo/cargo" + g.getValue() + ".png")));
+                    box.setFitHeight(50);
+                    box.setPreserveRatio(true);
+                    int finalI = i;
+                    box.setOnMouseClicked(e -> {
+                        curCargoIndex = finalI;
+                        curCargoCoords = null;
+                        curCargoImg.setImage(box.getImage());
+                    });
+                    rewardsBox.getChildren().add(box);
+                    i++;
+                }
+
+                AtomicInteger x = new AtomicInteger();
+                AtomicInteger y = new AtomicInteger();
+                ArrayList<Node> childrenCopy = new ArrayList<>(myBoard.getChildren());
+                boolean clickable;
+
+                for (Node node : childrenCopy) {
+                    clickable = true;
+
+                    x.set(GridPane.getRowIndex(node));
+                    y.set(GridPane.getColumnIndex(node));
+
+                    int X = x.get();
+                    int Y = y.get();
+
+                    for (IntegerPair p : excludedTiles) {
+                        if (X == p.getFirst() && Y == p.getSecond()) {
+                            clickable = false;
+                        }
+                    }
+
+                    if (clickable) {
+                        ImageView tile = (ImageView) node;
+
+                        tile.setOnMouseClicked(e -> {
+                            inputQueue.add("GetReward " + X + " " + Y + " " + curCargoIndex);
+                            rewardsLeft--;
+                            if (rewardsLeft == 0)
+                                handleCargo();
+                        });
+
+                    }
+                }
+
             }
-            else{
-                cargo.getChildren().setAll(slot, curCargoImg, finish);
-                phaseButtons.getChildren().setAll(cargo);
-            }
+
+            cargo.getChildren().setAll(slot, curCargoImg);
+            phaseButtons.getChildren().setAll(rewardsBox, cargo, unselect, discard, finish);
 
 
-
-            finish.setOnAction(e ->{
+            finish.setOnAction(e -> {
                 inputQueue.add("FinishCargo");
                 handlingCargo = false;
             });
 
+            discard.setOnAction(e -> {
+            inputQueue.add("DiscardCargo " + curCargoCoords.getFirst() + " " + curCargoCoords.getSecond() + " " + curCargoIndex);
+            curCargoCoords = null;
+            curCargoImg.setImage(null);
+            });
 
+            unselect.setOnAction(e -> {
+                curCargoCoords = null;
+                curCargoImg.setImage(null);
+            });
 
         });
     }
 
+
+    public void waiting() {
+        tilesClickable = false;
+        killing = false;
+
+        prompt.setText("Waiting for your turn...");
+
+    }
 
 
 }
