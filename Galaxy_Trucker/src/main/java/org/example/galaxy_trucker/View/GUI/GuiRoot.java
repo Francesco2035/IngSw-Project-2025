@@ -802,6 +802,7 @@ public class GuiRoot implements View {
     public void AddCrewScene(){
         amIBuilding = false;
         addcrew = true;
+        boolean clickable;
 
         Label text = new Label("Populate Your Ship!");
         text.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
@@ -849,22 +850,39 @@ public class GuiRoot implements View {
 
         for(Node node : childrenCopy){
 
-            ImageView tile = (ImageView) node;
+            clickable = true;
 
-            ImageView newTile =new ImageView(tile.getImage());
-            tile.setFitWidth(70);
-            tile.setPreserveRatio(true);
+            x.set(GridPane.getRowIndex(node));
+            y.set(GridPane.getColumnIndex(node));
 
-            tile.setOnMouseClicked(e->{
-                if(cmdType.get() != null){
-                    x.set(GridPane.getColumnIndex(node));
-                    y.set(GridPane.getRowIndex(node));
-                    inputQueue.add(cmdType.get() + " " + y.get() + " " + x.get());
+            int X = x.get();
+            int Y = y.get();
+
+            for(IntegerPair p : excludedTiles){
+                if(X == p.getFirst() && Y == p.getSecond()){
+                    clickable = false;
                 }
-            });
+            }
 
-            if(newTile.getImage() != null && newTile.getImage().equals(tilePlaceholder))
-                newTile.setOpacity(0.5);
+            if(clickable){
+                ImageView tile = (ImageView) node;
+
+                ImageView newTile =new ImageView(tile.getImage());
+                tile.setFitWidth(70);
+                tile.setPreserveRatio(true);
+
+                tile.setOnMouseClicked(e->{
+                    if(cmdType.get() != null){
+                        x.set(GridPane.getColumnIndex(node));
+                        y.set(GridPane.getRowIndex(node));
+                        inputQueue.add(cmdType.get() + " " + y.get() + " " + x.get());
+                    }
+                });
+
+                if(newTile.getImage() != null && newTile.getImage().equals(tilePlaceholder))
+                    newTile.setOpacity(0.5);
+            }
+
 
 //            Platform.runLater(()->{
 //               myBoard.getChildren().remove(node);
