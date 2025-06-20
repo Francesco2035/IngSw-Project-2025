@@ -98,6 +98,13 @@ public class NewTestSetupHelper {
         MainCockpitComp mp = new MainCockpitComp();
         Tile mc = new Tile(mp, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
         playerBoard1.insertTile(mc,6,6, false);
+
+//        for(int i=0; i<playerBoard1.getPlayerBoard().length; i++){
+//            for(int j=0; j<playerBoard1.getPlayerBoard().length; j++) {
+//                playerBoard1.getPlayerBoard()[i][j].setPlayerBoard(playerBoard1);
+//            }
+//        }
+
         return playerBoard1;
 
     }
