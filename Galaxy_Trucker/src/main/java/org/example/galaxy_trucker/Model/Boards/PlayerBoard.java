@@ -109,7 +109,11 @@ public class PlayerBoard {
         this.Storages= new ArrayList<>();
         this.ShieldGenerators= new ArrayList<>();
         this.PowerCenters= new ArrayList<>();
-
+        for (int x = 0; x < 10; x++) {
+            for (int y = 0; y < 10; y++) {
+                toRemovePB[x][y] = 0;
+            }
+        }
 
         if (lv == 2) {
             for (int x = 0; x < 10; x++) {
@@ -359,7 +363,8 @@ public class PlayerBoard {
             }
 
             if (x != 6 && y != 6){
-                if ((ValidPlayerBoard[x-1][y] != 1) && (ValidPlayerBoard[x][y-1] != 1) && (ValidPlayerBoard[x+1][y] != 1) && (ValidPlayerBoard[x][y+1] != 1)) {
+                if ((ValidPlayerBoard[x-1][y] != 1) && (ValidPlayerBoard[x][y-1] != 1) &&
+                        (x >= 9 || (ValidPlayerBoard[x+1][y] != 1)) && (y >= 9 || (ValidPlayerBoard[x][y+1] != 1))) {
                     throw new InvalidInput(x,y, "Invalid input : invalid position, there aren't tiles nearby!");
                 }
 
@@ -395,12 +400,17 @@ public class PlayerBoard {
         return t1.checkAdjacent(t2);
     }
 
-    public boolean checkConnection(Connectors t1, Connectors t2, int x, int y){
+    public boolean checkConnection(Connectors t1, Connectors t2, int x, int y, ArrayList<IntegerPair> visited, int fromX, int fromY){
 
         if (!t1.checkLegal(t2)){
             System.out.println("INVALID CONNECTION "+ t1.getClass() + " " + t2.getClass());
             valid = false;
-            toRemovePB[x][y] = -2;
+            if (visited.contains(new IntegerPair(x, y))){
+                toRemovePB[fromX][fromY] = -2;
+            }
+            else{
+                toRemovePB[x][y] = -2;
+            }
         }
         return t1.checkAdjacent(t2);
     }
@@ -418,7 +428,6 @@ public class PlayerBoard {
             for (int y = 0; y < 10; y++) {
 
                 if (ValidPlayerBoard[x][y] == 1 && !visited.contains(new IntegerPair(x,y))){
-                    //TODO: capire come fixare per il comando di def
                     toRemovePB[x][y] = -2;
                     findOne = true;
                 }
@@ -471,6 +480,9 @@ public class PlayerBoard {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
         }
+        if (x == 6 && y == 6){
+            throw new InvalidInput("You can't remove the Main Cockpit");
+        }
         PlayerBoard[x][y].setX(x);
 
         PlayerBoard[x][y].setY(y);
@@ -490,12 +502,12 @@ public class PlayerBoard {
      */
     public boolean checkValidity(){
 
-        if(Buffer.size() != 0){
+        if(!Buffer.isEmpty()){
             this.damage+=Buffer.size();
             Buffer.clear();
             updateInfo();
         }
-
+        //TODO: se non c'è la 6 6 booleano per dire di partire a controllare da una tile a caso
         int r = 6;
         int c = 6;
         valid = true;
@@ -542,24 +554,24 @@ public class PlayerBoard {
         System.out.println(r + " " + c);
 
 
-        if (valid && c - 1 >=0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2), r, c -1)) {
+        if (valid && c - 1 >=0 && ValidPlayerBoard[r][c-1] == 1 && checkConnection(getTile(r,c).getConnectors().get(0),getTile(r, c -1).getConnectors().get(2), r, c -1, visited, r,c)) {
             findPaths(r, c - 1, visited);
         }
 
 
 
-        if (valid && r - 1 >=0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3), r-1, c )){
+        if (valid && r - 1 >=0 && ValidPlayerBoard[r-1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(1),getTile(r-1, c ).getConnectors().get(3), r-1, c , visited, r,c)){
             findPaths(r -1,c ,visited);
         }
 
 
 
-        if (valid && c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0), r, c + 1)){
+        if (valid && c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0), r, c + 1, visited, r,c)){
             findPaths(r,c + 1 ,visited);
         }
 
 
-        if (valid && r + 1 <= 9 && ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1), r + 1, c)){
+        if (valid && r + 1 <= 9 && ValidPlayerBoard[r+1][c] == 1 && checkConnection(getTile(r,c).getConnectors().get(3),getTile(r + 1, c ).getConnectors().get(1), r + 1, c, visited, r,c)){
 
             findPaths(r +1,c ,visited);
         }
@@ -1147,4 +1159,7 @@ public class PlayerBoard {
 
     }
 
+    public int[][] getToRemovePB() {
+        return toRemovePB;
+    }
 }

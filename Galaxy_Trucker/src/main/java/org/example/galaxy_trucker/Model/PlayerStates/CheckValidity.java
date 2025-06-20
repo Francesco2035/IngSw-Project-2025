@@ -29,14 +29,14 @@ public class CheckValidity extends PlayerState{
 
     @Override
     public Command createDefaultCommand(String gameId,Player player) {
-        System.out.println("mannaggia i mortengueri de pietro");
+
         return new Command() {
             @Override
             public void execute(Player player) throws IOException {
                 while (!player.getmyPlayerBoard().checkValidity()){
                     for (int i = 0; i < 10 ; i ++){
                         for (int j = 0; j < 10 ; j ++){
-                            if (player.getmyPlayerBoard().getValidPlayerBoard()[i][j] == -2){
+                            if (player.getmyPlayerBoard().getToRemovePB()[i][j] == -2){
                                 player.getmyPlayerBoard().removeTile(i, j);
                             }
                         }
