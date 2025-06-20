@@ -76,7 +76,7 @@ public class GuiRoot implements View {
     private TilePane uncoveredTiles;
     private int tileRotation;
     private HashMap<String, GridPane> othersBoards;
-    private boolean addcrew;
+    private boolean checkvalidity;
     private VBox hourglassBox;
     private ImageView buffer1, buffer2;
 
@@ -106,11 +106,12 @@ public class GuiRoot implements View {
     private boolean handlingCargo;
     private ArrayList<Goods> rewards;
 
+
+
     public void setStage(Stage primaryStage){
         printer.setStage(primaryStage);
         this.primaryStage = primaryStage;
     }
-
 
 
     public GuiRoot(){
@@ -120,7 +121,7 @@ public class GuiRoot implements View {
         tileImage.setPreserveRatio(true);
         uncoveredTiles = new TilePane();
         amIBuilding = true;
-        addcrew = false;
+        checkvalidity = false;
         hourglassBox = new VBox();
         buffer1 = new ImageView();
         buffer2 = new ImageView();
@@ -191,8 +192,8 @@ public class GuiRoot implements View {
         tileImg.setFitWidth(70);
         tileImage.setImage(tilePlaceholder);
         tileImage.setOpacity(0.5);
-        tileRotation = 0;
-        tileImage.setRotate(0);
+//        tileRotation = 0;
+//        tileImage.setRotate(0);
 
         exists = false;
         for (IntegerPair p : excludedTiles) {
@@ -303,7 +304,10 @@ public class GuiRoot implements View {
                 crewPane.getChildren().setAll(cargoImg);
 
                 cargoImg.setOnMouseClicked(e -> {
-                    if (rewardsLeft > 0 && curCargoImg.getImage() != null && curCargoCoords == null) {
+                    if(checkvalidity){
+                        inputQueue.add("RemoveTile " + event.getX() + " " + event.getY());
+                    }
+                    else if(rewardsLeft > 0 && curCargoImg.getImage() != null && curCargoCoords == null) {
                         inputQueue.add("GetReward " + event.getX() + " " + event.getY() + " " + curCargoIndex);
                         rewardsLeft--;
                         if (rewardsLeft == 0) {
@@ -312,7 +316,10 @@ public class GuiRoot implements View {
                     } else {
                         Platform.runLater(() -> {
                             Stage cargoStage = new Stage();
-                            cargoStage.setTitle("Select Cargo");
+                            if(event.getCargo().size() > 0)
+                                cargoStage.setTitle("Select Cargo");
+                            else
+                                cargoStage.setTitle("Storage empty");
 
                             int i = 0;
                             HBox cargobox = new HBox(30);
@@ -385,12 +392,16 @@ public class GuiRoot implements View {
             }
             else if(event.getBatteries() > 0){
                 HBox batteries = new HBox(2);
-
-                for (int i = 0; i < event.getHumans(); i++) {
+                batteries.setPadding(new Insets(10));
+                for (int i = 0; i < event.getBatteries(); i++) {
                     ImageView battery = new ImageView(new Image(getClass().getResourceAsStream("/GUI/battery.png")));
-                    battery.setFitHeight(30);
+                    battery.setFitHeight(50);
+                    tileImg.setOpacity(0.8);
                     battery.setPreserveRatio(true);
                     battery.setOnMouseClicked(e -> {
+                        if(checkvalidity){
+                            inputQueue.add("RemoveTile " + event.getX() + " " + event.getY());
+                        }
 //                        if () {
 //                            IntegerPair coord = new IntegerPair(event.getX(), event.getY());
 //                            if (crew.getOpacity() == 1) {
@@ -536,19 +547,20 @@ public class GuiRoot implements View {
 
 
     @Override
-    public void updateHand(HandEvent event){
-
-        tileRotation = 0;
-        if(event.getId() == 158) {
-            tileImage.setImage(tilePlaceholder);
-            tileImage.setOpacity(0.5);
-        }
-        else{
-            Image tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg"));
-            tileImage.setImage(tile);
-            tileImage.setOpacity(1);
-            tileImage.setRotate(0);
-        }
+    public void updateHand(HandEvent event) {
+        Platform.runLater(() -> {
+            tileRotation = 0;
+            if (event.getId() == 158) {
+                tileImage.setImage(tilePlaceholder);
+                tileImage.setOpacity(0.5);
+                tileImage.setRotate(tileRotation);
+            } else {
+                Image tile = new Image(getClass().getResourceAsStream("/GUI/Tiles/tile (" + event.getId() + ").jpg"));
+                tileImage.setImage(tile);
+                tileImage.setOpacity(1);
+                tileImage.setRotate(tileRotation);
+            }
+        });
 
     }
 
@@ -688,16 +700,20 @@ public class GuiRoot implements View {
     }
 
     public void checkValidityScene(){
-        amIBuilding = false;
+        boolean clickable;
 
-        Label text = new Label("Remove Invalid Tiles!");
-        text.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+        amIBuilding = false;
+        checkvalidity = true;
+
+        prompt = new Label();
+        prompt.setText("Remove Invalid Tiles!");
+        prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
         ImageView txtBackground = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/all_belt.png")));
         txtBackground.setFitWidth(600);
         txtBackground.setFitHeight(100);
 
-        StackPane textPanel = new StackPane(txtBackground, text);
+        StackPane textPanel = new StackPane(txtBackground, prompt);
 
         Button finishButton = new Button("Done");
 
@@ -752,21 +768,37 @@ public class GuiRoot implements View {
         ArrayList<Node> childrenCopy = new ArrayList<>(myBoard.getChildren());
 
         for(Node node : childrenCopy){
+            clickable = true;
 
-            ImageView tile = (ImageView) node;
+            x.set(GridPane.getRowIndex(node));
+            y.set(GridPane.getColumnIndex(node));
 
-            ImageView newTile =new ImageView(tile.getImage());
-            tile.setFitWidth(70);
-            tile.setPreserveRatio(true);
+            int X = x.get();
+            int Y = y.get();
 
-            tile.setOnMouseClicked(e->{
-                x.set(GridPane.getColumnIndex(node));
-                y.set(GridPane.getRowIndex(node));
-                inputQueue.add("RemoveTile " + y.get() + " " + x.get());
-            });
+            for(IntegerPair p : excludedTiles){
+                if(X == p.getFirst() && Y == p.getSecond()){
+                    clickable = false;
+                }
+            }
+            if(clickable){
+                ImageView tile = (ImageView) node;
 
-            if(newTile.getImage() != null && newTile.getImage().equals(tilePlaceholder))
-                newTile.setOpacity(0.5);
+                ImageView newTile =new ImageView(tile.getImage());
+                tile.setFitWidth(70);
+                tile.setPreserveRatio(true);
+
+                tile.setOnMouseClicked(e->{
+                    x.set(GridPane.getColumnIndex(node));
+                    y.set(GridPane.getRowIndex(node));
+                    inputQueue.add("RemoveTile " + X + " " + Y);
+                });
+
+                if(newTile.getImage() != null && newTile.getImage().equals(tilePlaceholder))
+                    newTile.setOpacity(0.5);
+            }
+
+
 
 //            Platform.runLater(()->{
 //                myBoard.getChildren().remove(node);
@@ -798,20 +830,29 @@ public class GuiRoot implements View {
     }
 
 
+    public void choosePosition(){
+        Platform.runLater(()->{
+            prompt.setText("Your ship is valid, now choose a position!");
+        });
+
+    }
+
 
     public void AddCrewScene(){
         amIBuilding = false;
-        addcrew = true;
+        checkvalidity = false;
         boolean clickable;
 
-        Label text = new Label("Populate Your Ship!");
-        text.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+        prompt = new Label();
+        prompt.setText("Populate Your Ship!");
+        prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
 
         ImageView txtBackground = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/all_belt.png")));
         txtBackground.setFitWidth(600);
         txtBackground.setFitHeight(100);
 
-        StackPane textPanel = new StackPane(txtBackground, text);
+        StackPane textPanel = new StackPane(txtBackground, prompt);
 
         AtomicReference<String> cmdType = new AtomicReference<>(null);
 
@@ -1562,9 +1603,8 @@ public class GuiRoot implements View {
 
 
     public void flightScene() {
-            addcrew = false;
 
-            prompt = new Label();
+
             prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
             ImageView txtBackground = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/all_belt.png")));
@@ -2019,7 +2059,7 @@ public class GuiRoot implements View {
         Button quit = new Button("Quit");
 
         Platform.runLater(()->{
-            prompt.setText("Picking next card when everyone is ready...!");
+            prompt.setText("Picking next card when everyone is ready...");
             phaseButtons.getChildren().setAll(ready,quit);
 
             ready.setOnAction(e -> {
