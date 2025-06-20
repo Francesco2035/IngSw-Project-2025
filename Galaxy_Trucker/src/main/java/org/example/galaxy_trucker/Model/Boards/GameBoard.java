@@ -190,7 +190,9 @@ public class GameBoard {
                     System.out.println("@@@Set "+p.getKey().GetID()+" to "+shiftedPositions[i]+ " position: "+positions[shiftedPositions[i]]);
                     i++;
                 }
+            PlayersOnBoard--;
             updateAllPosition();
+
 
 
 

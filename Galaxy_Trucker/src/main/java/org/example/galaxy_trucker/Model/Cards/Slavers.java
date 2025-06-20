@@ -193,7 +193,7 @@ public class Slavers extends Card{
     @Override
     public void continueCard(boolean accepted){
         if(accepted){
-            currentPlayer.IncreaseCredits(this.reward);
+            currentPlayer.getmyPlayerBoard().setCredits(this.reward);
 
             //non ricordo se metto il time positivo o negativo nel json se positivo devo fare meno time;
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
