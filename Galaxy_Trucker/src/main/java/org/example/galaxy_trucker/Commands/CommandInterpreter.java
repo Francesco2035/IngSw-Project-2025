@@ -502,7 +502,14 @@ public class CommandInterpreter {
     private Command createDebugShip(String[] strings) {
 
         String title = strings[0];
-        return new DebugShip(gameId,playerId, lv, title, token);
+        int number = 0;
+        if(strings.length > 1){
+            number = Integer.parseInt(strings[1]);
+            if (number > 0){
+                number = 1;
+            }
+        }
+        return new DebugShip(gameId,playerId, lv, title, token, number);
     }
 
     public void setToken(String token) {
