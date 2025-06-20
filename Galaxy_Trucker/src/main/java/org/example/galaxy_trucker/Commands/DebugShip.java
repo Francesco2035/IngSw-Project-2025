@@ -20,11 +20,12 @@ public class DebugShip extends Command implements Serializable {
     private int number;
 
 
-    public DebugShip(String gameId, String playerId, int lv, String title, String token) {
+    public DebugShip(String gameId, String playerId, int lv, String title, String token, int number) {
         super(gameId, playerId, lv, title, token,-1);
         this.gameId = gameId;
         this.playerId = playerId;
         this.title = title;
+        this.number = number;
     }
 
     public DebugShip() {
@@ -35,7 +36,7 @@ public class DebugShip extends Command implements Serializable {
     @Override
     public void execute(Player player) throws IOException {
 
-        PlayerBoard debugShip = new PlayerBoard(lv);
+        PlayerBoard debugShip = player.getmyPlayerBoard();
         GAGen gag = new GAGen();
 
         ArrayList<Tile> tiles = gag.getTilesDeck();
@@ -287,28 +288,13 @@ public class DebugShip extends Command implements Serializable {
                 debugShip.insertTile(tile,7,3,false);
 
 
-
-
-
-
-
-
-
-
                 break;
             }
 
         }
 
-
-        player.setMyPlance(debugShip);
-
     }
 
-
-    public  void  setNumber(int number){
-        this.number = number;
-    }
     @Override
     public boolean allowedIn(PlayerState playerState) {
         return playerState.allows(this);
