@@ -197,6 +197,8 @@ public class Pirates extends Card{
                 else {
                     dimensione = new String("large");
                 }
+
+                location = "";
             if (Punishment.get(ShotsOrder) == 0) { ///sinistra
                 direction = new String("the left on line "+lines[ShotsOrder/2]);
                 Movement = 0;
