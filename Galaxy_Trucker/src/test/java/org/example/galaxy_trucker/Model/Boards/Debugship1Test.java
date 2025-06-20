@@ -21,7 +21,6 @@ public class Debugship1Test {
 
     @Test
     public void testDebugShip() throws NullPointerException, InvalidInput, IOException {
-        debugShip.setNumber(1);
 
         Tile mainCock = new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
 

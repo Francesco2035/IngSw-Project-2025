@@ -36,7 +36,7 @@ public class DebugShip extends Command implements Serializable {
     @Override
     public void execute(Player player) throws IOException {
 
-        PlayerBoard debugShip = new PlayerBoard(lv);
+        PlayerBoard debugShip = player.getmyPlayerBoard();
         GAGen gag = new GAGen();
 
         ArrayList<Tile> tiles = gag.getTilesDeck();
@@ -294,9 +294,6 @@ public class DebugShip extends Command implements Serializable {
             }
 
         }
-
-
-        player.setMyPlance(debugShip);
 
     }
 
