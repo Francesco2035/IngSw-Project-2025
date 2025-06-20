@@ -17,7 +17,7 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.TestSetupHelper;
+import org.example.galaxy_trucker.NewTestSetupHelper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -27,29 +27,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerStateTest {
 
-    Game game;
-    GameBoard Gboard;
-    GameController gc;
-    Player p1;
-    VirtualView vv;
-    FlightController c1;
-
 
     @Test
     void allows() throws IOException, InterruptedException {
 
-        game = new Game(2, "g1");
-        gc = new GameController(game.getGameID(), game, new GamesHandler(), game.getLv(), 4);
+        Game game = new Game(2, "g1");
+        GameController gc = new GameController(game.getGameID(), game, new GamesHandler(), game.getLv(), 4);
+        NewTestSetupHelper helper = new NewTestSetupHelper();
 
-        p1 = new Player();
+        Player p1 = new Player();
         p1.setId("passos");
         game.NewPlayer(p1);
         p1.setBoards(game.getGameBoard());
-        vv = new VirtualView(p1.GetID(), game.getGameID(), new RMIClient(new Client()), null);
+        VirtualView vv = new VirtualView(p1.GetID(), game.getGameID(), new RMIClient(new Client()), null);
         vv.setDisconnected(true);
-//        assertTrue(p1.getmyPlayerBoard().checkValidity());
-        Gboard = game.getGameBoard();
-        c1 = new FlightController(p1, game.getGameID(), gc, false);
+        assertTrue(p1.getmyPlayerBoard().checkValidity());
+        GameBoard Gboard = game.getGameBoard();
+        FlightController c1 = new FlightController(p1, game.getGameID(), gc, false);
         gc.getControllerMap().put(p1.GetID(), c1);
 
         p1.setPhaseListener(vv);
@@ -60,7 +54,7 @@ class PlayerStateTest {
         p1.setCardListner(vv);
         gc.getVirtualViewMap().put(p1.GetID(), vv);
 
-        p1.setMyPlance(TestSetupHelper.createInitializedBoard1());
+        p1.setMyPlance(helper.createInitializedBoard1());
         p1.getmyPlayerBoard().insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6 ,6, false);
 
 
