@@ -41,6 +41,7 @@ public class PlayerBoard {
     private int lv;
 
     private boolean valid;
+    private int credits;
 
 
     private ArrayList<HousingUnit> connectedHousingUnits;
@@ -59,7 +60,6 @@ public class PlayerBoard {
     private ArrayList<PowerCenter> PowerCenters;
 
     private int damage;
-    private int credits;
     private int exposedConnectors;
     private int[] shield;
     private int numHumans = 0;
@@ -1115,12 +1115,10 @@ public class PlayerBoard {
 //
 //    }
 
-    public  int finishRace(boolean finished){
+    public int finishRace(boolean finished){
         int number =0;
         int result=0;
-        for (int i = 0; i < this.storedGoods.size(); i++) {
 
-        }
         for (Integer key: storedGoods.keySet()) {
             number =this.storedGoods.get(key).size();
             result+= key*number;
@@ -1136,8 +1134,8 @@ public class PlayerBoard {
             }
         }
 
-        ///  TODO mettere anche i tasselli che rimangono nel buffer nel damage per adesso non è gestityo :)
         result -= this.damage;
+        result += this.credits;
         return result;
 
     }
@@ -1158,6 +1156,13 @@ public class PlayerBoard {
         }
 
     }
+
+
+    public void setCredits(int num){
+        credits += num;
+        updateInfo();
+    }
+
 
     public int[][] getToRemovePB() {
         return toRemovePB;

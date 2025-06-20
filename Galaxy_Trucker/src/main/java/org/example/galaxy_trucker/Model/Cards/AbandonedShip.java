@@ -147,7 +147,7 @@ public class AbandonedShip extends Card{
                 throw new ImpossibleBoardChangeException("there was an error in killing humans");
 
             }
-            currentPlayer.IncreaseCredits(this.reward);
+            currentPlayer.getmyPlayerBoard().setCredits(this.reward);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
 
 
