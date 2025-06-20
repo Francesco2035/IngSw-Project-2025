@@ -54,6 +54,7 @@ public class Slavers extends Card{
 
     @Override
     public void CardEffect(){
+        this.setDefaultPunishment(this.Punishment);
         losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
@@ -146,7 +147,7 @@ public class Slavers extends Card{
                 return;
             }
 
-            this.setDefaultPunishment(this.Punishment);
+
             this.currentPlayer.setState(new Killing());
             //this.currentPlayer.setInputHandler(new Killing(this));
         }

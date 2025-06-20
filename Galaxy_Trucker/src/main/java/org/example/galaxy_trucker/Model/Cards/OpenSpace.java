@@ -94,10 +94,12 @@ public class OpenSpace extends Card{
             System.out.println("checkMovement of "+currentPlayer.GetID()+" "+enginePower+" "+numofDouble);
             this.currentmovement=enginePower;
             this.energyUsage=numofDouble;
+            this.setDefaultPunishment(this.energyUsage);
             if(this.energyUsage==0){
                 this.moveplayer();
             }
             else{
+
                 this.currentPlayer.setState(new ConsumingEnergy());
             }
 
