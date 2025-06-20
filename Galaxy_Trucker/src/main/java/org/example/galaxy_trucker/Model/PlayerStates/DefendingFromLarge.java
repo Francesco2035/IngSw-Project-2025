@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.example.galaxy_trucker.Commands.ChoosingPlanetsCommand;
 import org.example.galaxy_trucker.Commands.DefendFromLargeCommand;
 import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
+import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -38,6 +39,12 @@ public class DefendingFromLarge extends PlayerState{
 //    }
     @Override
     public boolean allows(DefendFromLargeCommand command) {
+        return true;
+    }
+
+
+    @Override
+    public boolean allows(UseEnergyAction action) {
         return true;
     }
 
