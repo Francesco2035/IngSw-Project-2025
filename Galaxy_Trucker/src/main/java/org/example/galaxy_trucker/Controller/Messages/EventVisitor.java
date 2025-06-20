@@ -49,6 +49,8 @@ public interface EventVisitor {
 
     void visit(FinishGameEvent finishGameEvent);
 
+    void visit(ReconnectedEvent reconnectedEvent);
+
 
     //public void visit(GameBoardEvent event);
 }

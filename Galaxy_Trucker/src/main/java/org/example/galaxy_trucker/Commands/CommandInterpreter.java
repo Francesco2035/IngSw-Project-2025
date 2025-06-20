@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandInterpreter {
-//TODO: creare i comandi di rifiuto senza dover passare -1 -1
     private String playerId;
     private String gameId;
     private int lv;
@@ -151,14 +150,14 @@ public class CommandInterpreter {
                 return new TheftCommand(position1,new IntegerPair(x1,y1), gameId, playerId,lv,title,token);
             }
             case "GETREWARD":{
-                if (strings.length != 5) {
-                    throw new IllegalArgumentException("Comando Switch richiede 4 argomenti: posRewards, x1, y1, pos1");
+                if (strings.length != 4) {
+                    throw new IllegalArgumentException("Comando GetReward richiede 3 argomenti: x1, y1, posRewards");
                 }
                 title = "GetFromRewards";
-                position2= Integer.parseInt(strings[1]);
-                x1 = Integer.parseInt(strings[2]);
-                y1 = Integer.parseInt(strings[3]);
-                position1= Integer.parseInt(strings[4]);
+                //position2= Integer.parseInt(strings[1]);
+                x1 = Integer.parseInt(strings[1]);
+                y1 = Integer.parseInt(strings[2]);
+                position1 = Integer.parseInt(strings[3]);
                 break;
             }
         }
@@ -422,7 +421,7 @@ public class CommandInterpreter {
             return new DefendFromSmallCommand(null,gameId,playerId,lv, "DefendFromSmallCommand",token);
         }
         if (parts.length != 3) {
-            throw new IllegalArgumentException("Comando DefendFromSmall richiede 2 argomenti: le due coordinate dell'energia da consumare"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+            throw new IllegalArgumentException("Comando DefendFromSmall richiede 2 argomenti: le due coordinate dell'energia da consumare " + parts[0] + " " + parts[1]); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
         x=Integer.parseInt(parts[1]);
         y=Integer.parseInt(parts[2]);

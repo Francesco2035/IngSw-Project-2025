@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
 class OutTest {
@@ -78,7 +79,14 @@ class OutTest {
     public void gb1(){
         tui.setGameboard(1);
         //out.initGameBoard(1);
-        System.out.println(tui.getOut().printGameboard());
+        System.out.println(tui.getOut().printGameBoard());
+    }
+
+    @Test
+    public void UUID(){
+        for (int i = 0; i < 100; i ++){
+            System.out.println(UUID.randomUUID().toString());
+        }
     }
 
 

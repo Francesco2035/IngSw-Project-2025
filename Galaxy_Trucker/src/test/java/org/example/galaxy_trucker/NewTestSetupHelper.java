@@ -1,8 +1,6 @@
 package org.example.galaxy_trucker;
 
-import com.sun.tools.javac.Main;
 import org.example.galaxy_trucker.Controller.GameController;
-import org.example.galaxy_trucker.Controller.GameHandlerTest;
 import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
@@ -11,7 +9,6 @@ import org.example.galaxy_trucker.Model.Connectors.DOUBLE;
 import org.example.galaxy_trucker.Model.Connectors.SINGLE;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.GAGen;
-
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
@@ -24,26 +21,22 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestSetupHelper {
+public class NewTestSetupHelper {
 
-    static PlayerBoard playerBoard1 = new PlayerBoard(2);
-    static PlayerBoard playerBoard2 = new PlayerBoard(2);
-    static PlayerBoard playerBoard3 = new PlayerBoard(2);
-    static PlayerBoard playerBoard4 = new PlayerBoard(2);
-    static PlayerBoard playerBoard5 = new PlayerBoard(2);
+//    private final PlayerBoard playerBoard1 = new PlayerBoard(2);
+//    private final PlayerBoard playerBoard2 = new PlayerBoard(2);
+//    private final PlayerBoard playerBoard3 = new PlayerBoard(2);
+//    private final PlayerBoard playerBoard4 = new PlayerBoard(2);
+//    private final PlayerBoard playerBoard5 = new PlayerBoard(2);
 
-    static GAGen gag;
 
-    static {
-        try {
-            gag = new GAGen();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public static PlayerBoard createInitializedBoard1() {
+    public PlayerBoard createInitializedBoard1() throws IOException {
 
-        ArrayList<Tile> tiles = gag.getTilesDeck();
+
+        final PlayerBoard playerBoard1 = new PlayerBoard(2);
+
+        GAGen gag1 = new GAGen();
+        ArrayList<Tile> tiles = gag1.getTilesDeck();
         Tile t1 = tiles.get(133); //"SINGLE", "DOUBLE", "SINGLE", "NONE addons, br factos
         Tile t2 = tiles.get(102); //none,cannon, single, universal , plasmadrill    ruota sx due volte factos
         Tile t3 = tiles.get(128); //doublem cannon, none, unviersal. plasmadrill  factos
@@ -67,79 +60,62 @@ public class TestSetupHelper {
         Tile shield = tiles.get(151);
         Tile replacement_house= tiles.get(45);
 
-
         shield.RotateSx();
-
 
         addonspurple.RotateSx(); //none single, none,uni
         plasmaDrill.RotateDx();
 
-
-        PlayerBoard playerBoard = new PlayerBoard(2);
-
-        playerBoard.insertTile(t1, 6,7, true);
+        playerBoard1.insertTile(t1, 6,7, true);
         t2.RotateSx();
         t2.RotateSx();
-        //playerBoard.insertTile(t2, 7,7);
         t8.RotateDx();
-        playerBoard.insertTile(t8, 7,6, false);
-//        t11.RotateSx();
-        playerBoard.insertTile(t11, 6,5, false);
-        playerBoard.insertTile(t9, 5,7, false);
-        //playerBoard.insertTile(t3, 5,6);
-
+        playerBoard1.insertTile(t8, 7,6, false);
+        playerBoard1.insertTile(t11, 6,5, false);
+        playerBoard1.insertTile(t9, 5,7, false);
         t4.RotateSx();
-        playerBoard.insertTile(t4, 5,5, false);
+        playerBoard1.insertTile(t4, 5,5, false);
         t10.RotateDx();
-        playerBoard.insertTile(t10, 4,5, false);
+        playerBoard1.insertTile(t10, 4,5, false);
 
-        playerBoard.insertTile(t12, 6,8, false);
+        playerBoard1.insertTile(t12, 6,8, false);
 
         specialStorage.RotateDx();
         specialStorage.RotateDx();
-        playerBoard.insertTile(specialStorage, 7,8, false);
+        playerBoard1.insertTile(specialStorage, 7,8, false);
 
-        playerBoard.insertTile(normalStorage, 7,9, false);
-        playerBoard.insertTile(powerCenter, 6,9, false);
-        playerBoard.insertTile(powerCenter2, 5,4, false);
-        playerBoard.insertTile(plasmaDrill,8,9, false);
-        playerBoard.insertTile(addonspurple,6,4, false);
-        playerBoard.insertTile(replacement_house,7,4, false);
-        playerBoard.insertTile(sewerpipes,7,3, false);
-        playerBoard.insertTile(hotWaterHeater,8,3, false);
-      //  playerBoard.insertTile(modular1,5,6);
+        playerBoard1.insertTile(normalStorage, 7,9, false);
+        playerBoard1.insertTile(powerCenter, 6,9, false);
+        playerBoard1.insertTile(powerCenter2, 5,4, false);
+        playerBoard1.insertTile(plasmaDrill,8,9, false);
+        playerBoard1.insertTile(addonspurple,6,4, false);
+        playerBoard1.insertTile(replacement_house,7,4, false);
+        playerBoard1.insertTile(sewerpipes,7,3, false);
+        playerBoard1.insertTile(hotWaterHeater,8,3, false);
+        //  playerBoard.insertTile(modular1,5,6);
 //        playerBoard.insertTile(modular2,8,4);
 //        playerBoard.insertTile(modular3,8,5);
 //        playerBoard.insertTile(shield,6,3);
         MainCockpitComp mp = new MainCockpitComp();
         Tile mc = new Tile(mp, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
-        playerBoard.insertTile(mc,6,6, false);
-        return playerBoard;
+        playerBoard1.insertTile(mc,6,6, false);
+        return playerBoard1;
 
     }
 
-    @Test
-    public void print(){
-        ArrayList<Tile> tiles = gag.getTilesDeck();
-        for (Tile t :tiles){
-            System.out.println(t.getComponent().getClass().getName());
-        }
-
-
-    }
 
     @Test
-    public void boardChecks(){
+    public void boardChecks() throws IOException {
         PlayerBoard playerBoard = createInitializedBoard1();
         assertTrue(playerBoard.checkValidity());
-
     }
 
-    public static PlayerBoard createInitializedBoard2(){
-        /// crea la 39 e 48 ad hoc perché le usa gia la uno e ovviamente crea problemi popolarle entrambe
+    public PlayerBoard createInitializedBoard2() throws IOException {
+        // crea la 39 e 48 ad hoc perché le usa gia la uno e ovviamente crea problemi popolarle entrambe
 
+        final PlayerBoard playerBoard2 = new PlayerBoard(2);
 
-        ArrayList<Tile> tiles = gag.getTilesDeck();
+        GAGen gag2 = new GAGen();
+        ArrayList<Tile> tiles = gag2.getTilesDeck();
         Tile t1 = tiles.get(37); //House:  single,double,single,double
         Tile t2 = tiles.get(35); //House: singe,double,none,none
         Tile t3 = tiles.get(40);//house: double,double,single,double
@@ -182,8 +158,11 @@ public class TestSetupHelper {
 
     }
 
-    public static PlayerBoard createInitializedBoard3(){
+    public PlayerBoard createInitializedBoard3(){
         //test housing unit
+
+        final PlayerBoard playerBoard3 = new PlayerBoard(2);
+
         Tile modular1 = new Tile(new ModularHousingUnit(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
         Tile modular2 = new Tile(new ModularHousingUnit(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
         Tile modular3 = new Tile(new ModularHousingUnit(),UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
@@ -219,7 +198,10 @@ public class TestSetupHelper {
         return playerBoard3;
     }
 
-    public static PlayerBoard createInitializedBoard4(){
+    public PlayerBoard createInitializedBoard4(){
+
+        final PlayerBoard playerBoard4 = new PlayerBoard(2);
+
         SINGLE SS = SINGLE.INSTANCE;
         DOUBLE DD = DOUBLE.INSTANCE;
         Tile single = new Tile(new SewerPipes(),SS,SS,SS,SS);
@@ -231,9 +213,10 @@ public class TestSetupHelper {
         return playerBoard4;
     }
 
-    public static PlayerBoard createInitializedBoard5(){
+    public PlayerBoard createInitializedBoard5() throws IOException {
         //invalid
 
+        final PlayerBoard playerBoard5 = new PlayerBoard(2);
         //posizione non visitata
         //cannone adiacente a una tile
         //razzo adiacente a una tile
@@ -241,7 +224,8 @@ public class TestSetupHelper {
         //connessiojne illegae
         //connessione none none
         //connessione single none
-        ArrayList<Tile> tiles = gag.getTilesDeck();
+        GAGen gag5 = new GAGen();
+        ArrayList<Tile> tiles = gag5.getTilesDeck();
         Tile tile1 = tiles.get(20); //UNIVERSAL, NONE, NONE, NONE
         Tile tile2 = tiles.get(105);//CANNONE: NONE, CANNON, DOUBLE, UNIVERSAL
         Tile tile3 = tiles.get(70);//MOTORE: NONE, SINGLE, NONE, ENGINE
@@ -265,22 +249,18 @@ public class TestSetupHelper {
         return playerBoard5;
     }
 
-    public static void HumansSetter1(PlayerBoard playerBoard){
+    public void HumansSetter1(PlayerBoard playerBoard){
 
-
-        ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
-        HousingCoords.addAll(playerBoard.getHousingUnits());
         for(HousingUnit housingUnit : playerBoard.getHousingUnits()){
             System.out.println("added 2 humans in  "+housingUnit.getX()+" "+housingUnit.getY());
-
-           playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),new AddCrewState());
+            playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),new AddCrewState());
         }
-        HousingCoords.clear();
+//        playerBoard.getHousingUnits().clear();
     }
 
 
-    public static void HumansSetter2(PlayerBoard playerBoard){ ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
-        HousingCoords.addAll(playerBoard.getHousingUnits());
+    public void HumansSetter2(PlayerBoard playerBoard){
+        ArrayList<HousingUnit> HousingCoords = new ArrayList<>(playerBoard.getHousingUnits());
         for(HousingUnit housingUnit : HousingCoords){
             if(housingUnit.getX()==5 && housingUnit.getY()==5){
                 playerBoard.performAction(housingUnit,new AddCrewAction(0,false,true, playerBoard),new AddCrewState());
@@ -293,7 +273,7 @@ public class TestSetupHelper {
     }
 
 
-    public static GameController GameControllerSetup() throws IOException {
+    public GameController GameControllerSetup() throws IOException {
         Game game = new Game(2, "poggi");
         GamesHandler gh = new GamesHandler();
         GameController gc = new GameController(game.getGameID(), game, gh,2, 4);

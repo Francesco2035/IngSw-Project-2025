@@ -1,5 +1,7 @@
 package org.example.galaxy_trucker.Controller.Messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PBInfoEvent implements Event {
@@ -16,10 +18,11 @@ public class PBInfoEvent implements Event {
     private boolean brownAlien;
     private int[] shield;
 
+    public PBInfoEvent() {
 
+    }
 
-
-
+    @JsonCreator
     public PBInfoEvent(@JsonProperty("damage") int damage, @JsonProperty("credits") int credits, @JsonProperty("exposedConnectors") int exposedConnectors,
                        @JsonProperty("shield") int[]shield, @JsonProperty("numHumans") int numHumans, @JsonProperty("EnginePower") int EnginePower,
                        @JsonProperty("PlasmaDrillPower") double plasmaDrillsPower, @JsonProperty("Energy") int energy,
@@ -52,46 +55,57 @@ public class PBInfoEvent implements Event {
         return "";
     }
 
+    @JsonIgnore
     public int getCredits() {
         return credits;
     }
 
+    @JsonIgnore
     public int getTotValue() {
         return totValue;
     }
 
+    @JsonIgnore
     public int getEnergy() {
         return Energy;
     }
 
+    @JsonIgnore
     public int getExposedConnectors() {
         return exposedConnectors;
     }
 
+    @JsonIgnore
     public int getDamage() {
         return damage;
     }
 
+    @JsonIgnore
     public int getNumHumans() {
         return numHumans;
     }
 
+    @JsonIgnore
     public int getEnginePower() {
         return EnginePower;
     }
 
+    @JsonIgnore
     public double getPlasmaDrillsPower() {
         return PlasmaDrillsPower;
     }
 
+    @JsonIgnore
     public boolean isPurpleAlien() {
         return purpleAlien;
     }
 
+    @JsonIgnore
     public boolean isBrownAlien() {
         return brownAlien;
     }
 
+    @JsonIgnore
     public int[] getShield() {
         return shield;
     }

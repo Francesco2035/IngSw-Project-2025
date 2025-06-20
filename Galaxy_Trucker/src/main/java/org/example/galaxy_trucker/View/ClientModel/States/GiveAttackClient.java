@@ -1,7 +1,9 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GiveAttackClient  extends PlayerStateClient{
@@ -12,7 +14,7 @@ public class GiveAttackClient  extends PlayerStateClient{
         toPrint.append(out.getTitleCard());
         toPrint.append("Giving attack...\n");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showCard());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
@@ -21,9 +23,12 @@ public class GiveAttackClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("GiveAttack");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("GiveAttack"));
     }
 
     //giveAttack x1 y1 ...
+    public void showGame(GuiOut out){
+        out.getRoot().giveTiles("GiveAttack", "Select the cannons you want to use to defend!");
+    }
 }

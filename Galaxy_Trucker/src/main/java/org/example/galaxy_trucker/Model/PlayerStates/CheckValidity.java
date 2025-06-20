@@ -37,7 +37,7 @@ public class CheckValidity extends PlayerState{
                     for (int i = 0; i < 10 ; i ++){
                         for (int j = 0; j < 10 ; j ++){
                             if (player.getmyPlayerBoard().getValidPlayerBoard()[i][j] == -2){
-                                player.getmyPlayerBoard().removeTile(i, j);
+                                player.getmyPlayerBoard().removeTile(i, j); //non riesce a rimuovere le tile credo
                             }
                         }
                     }

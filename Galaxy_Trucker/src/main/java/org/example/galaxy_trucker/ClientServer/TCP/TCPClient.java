@@ -2,13 +2,11 @@ package org.example.galaxy_trucker.ClientServer.TCP;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.galaxy_trucker.Commands.CommandInterpreter;
-import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Commands.LobbyCommand;
-import org.example.galaxy_trucker.Commands.LoginCommand;
+import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.Event;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 
 import java.io.*;
 import java.net.Socket;
@@ -29,7 +27,7 @@ public class TCPClient{
     private long lastPongTime = 0;
     private Client client = null;
     private CommandInterpreter commandInterpreter = null;
-    private UUID token = null;
+    private String token = null;
     private Thread eventThread = null;
     private Thread pingThread = null;
     //private Thread clientLoop = null;
@@ -37,6 +35,10 @@ public class TCPClient{
 
     public TCPClient(Client c) {
         this.client = c;
+    }
+
+    public void setCommandInterpreter(CommandInterpreter commandInterpreter) {
+        this.commandInterpreter = commandInterpreter;
     }
 
     public TCPClient(Client c, CommandInterpreter commandInterpreter) throws IOException {
@@ -58,7 +60,7 @@ public class TCPClient{
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(command);
         out.println(json);
-        System.out.println("CommandSent: " + json);
+        //System.out.println("CommandSent: " + json);
     }
 
     private void EventListener() {
@@ -72,17 +74,18 @@ public class TCPClient{
                 }
                  else if (msg.startsWith("Token: ")) {
 
-                String tokenStr = msg.substring(7);
-                UUID token = UUID.fromString(tokenStr);
-                System.out.println("Token received: " + token);
+                String token = msg.substring(7);
+                //System.out.println("Token received: " + token);
+                this.client.receiveEvent(new LogEvent(token));
                 this.token = token;
                 this.client.getView().setGameboard(commandInterpreter.getLv());
-                commandInterpreter.setToken(tokenStr);
+                commandInterpreter.setToken(token);
             }
             else {
-                   System.out.println("Received msg: " + msg);
+                   //System.out.println("Received msg: " + msg);
                     ObjectMapper objectMapper = new ObjectMapper();
                     Event event = objectMapper.readValue(msg, Event.class);
+                    //System.out.println(">>>>>>>>>"+event.getClass());
                     client.receiveEvent(event);
             }
             }
@@ -92,6 +95,8 @@ public class TCPClient{
             System.out.println("End of stream reached: " + e.getMessage());
         } catch (IOException e) {
             System.out.println("IOException in EventListener: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -154,8 +159,6 @@ public class TCPClient{
     public void disconnect() throws IOException {
         if (connected){
             client.getView().disconnect();
-
-
             connected = false;
             try {
                 if (echoSocket != null && !echoSocket.isClosed()) {
@@ -236,11 +239,35 @@ public class TCPClient{
                     System.out.println("Null input, closing connection...");
                     return;
                 }
+                else if (userInput.equals("SeeBoards")){
+                    if (client.getLogin()){
+                        client.getView().seeBoards();
+                    }
+                    else{
+                        System.out.println("CHOOSE A GAME");
+                    }
+                }
+                else if(userInput.equals("Log")){
+                    client.getView().seeLog();
+                }
+                else if (userInput.equals("MainTerminal")){
+                    client.getView().refresh();
+                }
+                else if (userInput.equals("Reconnect") && client.getLogin()) {
+                    System.out.println("No need to reconnect!");
+                }
+                else if (userInput.equals("Reconnect") && !client.getLogin()) {
+                    String token = client.getView().askInput("Token: ");
+                    ReconnectCommand command = new ReconnectCommand(token,"","",-1,"Reconnect");
+                    mapper = new ObjectMapper();
+                    String json = mapper.writeValueAsString(command);
+                    out.println(json);
+                }
                 else if (userInput.equals("Lobby")) {
                     if (!this.client.getLobby()) {
                         this.client.setLobby(true);
                         LobbyCommand lobbyCommand = new LobbyCommand("Lobby");
-
+                        //System.out.println("invio lobby");
                         try{
                             jsonLogin = mapper.writeValueAsString(lobbyCommand);
                             out.println(jsonLogin);
@@ -277,6 +304,8 @@ public class TCPClient{
 
                         LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login", maxPlayers);
 
+//                        commandInterpreter.setPlayerId(playerId);
+//                        commandInterpreter.setGameId(gameId);
                         commandInterpreter = new CommandInterpreter(playerId, gameId);
                         commandInterpreter.setlv(gameLevel);
                         mapper = new ObjectMapper();
@@ -297,11 +326,12 @@ public class TCPClient{
                             int gameLevel = Integer.parseInt(client.getView().askInput("Game level: "));
 
                             LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login", -1);
-
+//                            commandInterpreter.setPlayerId(playerId);
+//                            commandInterpreter.setGameId(gameId);
                             commandInterpreter = new CommandInterpreter(playerId, gameId);
                             commandInterpreter.setlv(gameLevel);
-                             mapper = new ObjectMapper();
-                             jsonLogin = mapper.writeValueAsString(loginCommand);
+                            mapper = new ObjectMapper();
+                            jsonLogin = mapper.writeValueAsString(loginCommand);
 
                             out.println(jsonLogin);
                         }
@@ -335,7 +365,7 @@ public class TCPClient{
                     String json = mapper.writeValueAsString(command);
 
                     out.println(json);
-                    System.out.println("CommandSent: " + json);
+                    //System.out.println("CommandSent: " + json);
                 }
 
 

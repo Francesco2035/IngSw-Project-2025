@@ -1,7 +1,9 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DefendingFromSmallClient  extends PlayerStateClient{
@@ -12,7 +14,7 @@ public class DefendingFromSmallClient  extends PlayerStateClient{
         toPrint.append(out.getTitleCard());
         toPrint.append("Defending From Small...\n");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
         toPrint.append(out.showCardEffect());
@@ -21,10 +23,13 @@ public class DefendingFromSmallClient  extends PlayerStateClient{
     }
 
     @Override
-    public List<String> getCommands() {
-        return List.of("DefendSmall");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("DefendSmall"));
     }
 
     //defendSmall x y (energia)
     //doNothing
+    public void showGame(GuiOut out){
+        out.getRoot().defend("DefendSmall", "Choose the energy to consume!");
+    }
 }

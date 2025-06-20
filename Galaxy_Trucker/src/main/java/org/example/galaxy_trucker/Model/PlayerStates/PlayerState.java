@@ -8,7 +8,7 @@ public abstract class PlayerState {
 
 
     public boolean allows(Command command) {
-        System.out.println("allows di def");
+        System.out.println("Allows di default");
         return false;
     }
 
@@ -117,9 +117,7 @@ public abstract class PlayerState {
 
     public boolean allows(DebugShip command){return false;}
 
-    public Command createDefaultCommand(String gameId,Player player) {
-        return null;
-    }
+    public abstract Command createDefaultCommand(String gameId,Player player);
 
 
 

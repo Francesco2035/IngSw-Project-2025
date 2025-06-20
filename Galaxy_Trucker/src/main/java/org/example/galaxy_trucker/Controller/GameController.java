@@ -31,7 +31,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     private final HashMap<String, BlockingQueue<Command>> commandQueues = new HashMap<>();
     private final HashMap<String, Thread> threads = new HashMap<>();
     private final HashMap<String, VirtualView> VirtualViewMap = new HashMap<>();
-    private final HashMap<UUID, String> tokenToPlayerId = new HashMap<>();
+    private final HashMap<String, String> tokenToPlayerId = new HashMap<>();
     final Game game;
     private GamesHandler gh;
     //private BlockingQueue<Command> prepQueue = new LinkedBlockingQueue<>();
@@ -88,7 +88,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     }
 
 
-    public void NewPlayer(Player p, VirtualView vv, UUID token){
+    public void NewPlayer(Player p, VirtualView vv, String token){
         if (ControllerMap.keySet().contains(p.GetID())) {
             vv.sendEvent(new ConnectionRefusedEvent("Player ID " + p.GetID() + " already exists in game "+idGame));
             //throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists in game "+idGame);
@@ -207,7 +207,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
         }
     }
 
-    public void removePlayer(UUID token, Command command) {
+    public void removePlayer(String token, Command command) {
         String playerId = tokenToPlayerId.get(token);
         if (playerId == null || !ControllerMap.containsKey(playerId)) {
             throw new IllegalArgumentException("Player ID " + playerId + " non found");
@@ -487,7 +487,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
         return game;
     }
 
-    public void stopPlayer(UUID token) {
+    public void stopPlayer(String token) {
         String playerId = tokenToPlayerId.get(token);
         Controller curr = ControllerMap.get(playerId);
         curr.setDisconnected(true);
@@ -512,8 +512,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
     }
 
-    public void startPlayer(UUID token) {
+    public void startPlayer(String token) {
         String playerId = tokenToPlayerId.get(token);
+        VirtualViewMap.get(playerId).sendEvent(new ReconnectedEvent(token,game.getGameID(),playerId, lv));
         threads.get(playerId).interrupt();
         //setto booleano del controler
         threads.remove(playerId);
@@ -583,7 +584,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     public void sendMessage(LogEvent event){
         System.out.println("sending message " + event.message());
         for (VirtualView vv : VirtualViewMap.values()){
-            vv.sendEvent(event);
+            vv.sendLogEvent(event);
         }
     }
 
@@ -640,4 +641,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             }
 
         }
+
+
+    public HashMap<String, String> getTokenToPlayerId() {
+        return tokenToPlayerId;
+    }
 }

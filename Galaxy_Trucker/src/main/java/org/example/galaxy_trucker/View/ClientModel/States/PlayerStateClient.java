@@ -1,5 +1,7 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
@@ -8,19 +10,20 @@ import org.example.galaxy_trucker.View.TUI.Out;
 import org.example.galaxy_trucker.View.View;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
+        include = JsonTypeInfo.As.PROPERTY,
         property = "type"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = AcceptClient.class, name = "Accept"),
-        @JsonSubTypes.Type(value = AddCrewClient.class, name = "AddCrew"),
-        @JsonSubTypes.Type(value = BaseStateClient.class, name = "Base"),
-        @JsonSubTypes.Type(value = BuildingClient.class, name = "Building"),
+        @JsonSubTypes.Type(value = AcceptClient.class, name = "AcceptClient"),
+        @JsonSubTypes.Type(value = AddCrewClient.class, name = "AddCrewClient"),
+        @JsonSubTypes.Type(value = BaseStateClient.class, name = "BaseStateClient"),
+        @JsonSubTypes.Type(value = BuildingClient.class, name = "BuildingClient"),
         @JsonSubTypes.Type(value = CheckValidityClient.class, name = "Validity"),
         @JsonSubTypes.Type(value = ChoosePositionClient.class, name = "Position"),
         @JsonSubTypes.Type(value = ChoosingPlanetClient.class, name = "Planet"),
@@ -39,9 +42,7 @@ import java.util.List;
 
 public abstract class PlayerStateClient implements Serializable {
 
-
-
-    public void setView() {
+    public PlayerStateClient(){
 
     }
 
@@ -50,5 +51,7 @@ public abstract class PlayerStateClient implements Serializable {
 
     public void showGame(GuiOut out) {
     }
-    public abstract List<String> getCommands();
+
+    @JsonIgnore
+    public abstract ArrayList<String> getCommands();
 }

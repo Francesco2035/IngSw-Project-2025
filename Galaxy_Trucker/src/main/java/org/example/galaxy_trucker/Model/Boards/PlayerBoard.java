@@ -490,7 +490,7 @@ public class PlayerBoard {
      */
     public boolean checkValidity(){
 
-        if(Buffer.size() != 0){
+        if(!Buffer.isEmpty()){
             this.damage+=Buffer.size();
             Buffer.clear();
             updateInfo();
@@ -1097,11 +1097,11 @@ public class PlayerBoard {
         }
     }
 
-    public void clearBuffer() {
-        Buffer.clear();
-        sendUpdates( new TileEvent(159 , 7, 8, null, 0, false, false, 0, 0, null));
-
-    }
+//    public void clearBuffer() {
+//        Buffer.clear();
+//        sendUpdates( new TileEvent(159 , 7, 8, null, 0, false, false, 0, 0, null));
+//
+//    }
 
     public  int finishRace(boolean finished){
         int number =0;
@@ -1137,10 +1137,10 @@ public class PlayerBoard {
             if (purpleAlien){
                 crew++;
             }
-            if (purpleAlien){
+            if (brownAlien){
                 crew++;
             }
-            int engine = 0;
+//            int engine = 0;
             PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,crew, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien, this.totalValue);
             listener.PBInfoChanged(event);
         }

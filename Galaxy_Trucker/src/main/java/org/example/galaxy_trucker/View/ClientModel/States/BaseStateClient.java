@@ -1,28 +1,30 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BaseStateClient extends PlayerStateClient{
 
 
-    @JsonProperty("type")
-    private final String type = "Base";
-
+    @JsonCreator
     public BaseStateClient(){
 
     }
 
     @Override
     public void showGame(Out out) {
+        System.out.println("render di "+ this.getClass().getName());
 
         StringBuilder toPrint = new StringBuilder();
         toPrint.append("BaseState\n\n");
         toPrint.append(out.showPlayers());
-        toPrint.append(out.printGameboard());
+        toPrint.append(out.printGameBoard());
         toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
         toPrint.append(out.showException());
@@ -32,8 +34,8 @@ public class BaseStateClient extends PlayerStateClient{
 
     public void showGame(GuiOut out){
         if(out.getRoot().isGameStarted()){
-
             out.getRoot().flightScene();
+            out.getRoot().baseState();
             out.printFlightScreen();
         }
         else{
@@ -44,9 +46,10 @@ public class BaseStateClient extends PlayerStateClient{
 
     }
 
+    @JsonIgnore
     @Override
-    public List<String> getCommands() {
-        return List.of("Ready", "SeeBoard", "NotReady","Quit");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("Ready", "SeeBoard", "NotReady", "Quit"));
     }
 
 }

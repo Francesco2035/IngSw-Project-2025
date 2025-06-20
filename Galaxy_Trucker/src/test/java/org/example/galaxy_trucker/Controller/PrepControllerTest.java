@@ -69,6 +69,7 @@ class PrepControllerTest {
         p1.setCardListner(vv);
         gc.getVirtualViewMap().put(p1.GetID(),vv);
 
+        gc.NewPlayer(p1, vv, new UUID(0, 0).toString());
 
         p1.getmyPlayerBoard().insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6 ,6, false);
 
@@ -120,7 +121,7 @@ class PrepControllerTest {
 
 
 //--------------------------------------------------------------------------------------------------------------------------------
-//
+
         p1.setState(new BuildingShip());
 
         BuildingCommand bc1 = new BuildingCommand(1, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "SEEDECK", null);
@@ -143,11 +144,13 @@ class PrepControllerTest {
         c1.action(bc5, gc);
 
         c1.action(new BuildingCommand(0, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "DISCARD", null), gc);
+
         c1.action(new BuildingCommand(0, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "FROMBUFFER", null), gc);
+
         c1.action(new BuildingCommand(0, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "PICKTILE", null), gc);
 
         c1.action(new BuildingCommand(0, 0, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
-        c1.action(new BuildingCommand(6, 6, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
+//        c1.action(new BuildingCommand(6, 6, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(5, 5, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(5, 5, 100, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);
         c1.action(new BuildingCommand(100, 5, 0, 0, game.getGameID(), p1.GetID(), 2, "INSERTTILE", null), gc);

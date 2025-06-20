@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.ASCII_ART;
 import org.example.galaxy_trucker.View.TUI.Out;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LoginClient extends PlayerStateClient {
@@ -24,7 +25,7 @@ public class LoginClient extends PlayerStateClient {
     public void showGame(GuiOut out){}
 
     @Override
-    public List<String> getCommands() {
-        return List.of("Lobby", "Create", "Join");
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(List.of("Lobby", "Create", "Join"));
     }
 }

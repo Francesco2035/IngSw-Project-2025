@@ -16,7 +16,6 @@ import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
-import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ViewPhase;
 
 
@@ -32,7 +31,7 @@ public class TUI implements View {
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledTask;
-    private final int debounceDelayMs = 200;
+    private final int debounceDelayMs = 250;
     private PlayerStateClient lastState;
     private boolean firstUpdate = false;
 
@@ -45,7 +44,7 @@ public class TUI implements View {
     private final String gamboardBorder = "+━━━━━━━━━━━━━━━━━━━━━━━+";
     private final String border = "+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━+";
     private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
-    private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap();
+    private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap<>();
     private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
     private String[][][] Gameboard;
     private int lv;
@@ -74,6 +73,7 @@ public class TUI implements View {
     public TUI(LoginClient loginClient) throws IOException {
 
         this.loginClient = loginClient;
+
         loadComponentNames();
         loadCardsDescriptions();
         cachedBoard = new String[10][10][7];
@@ -158,7 +158,6 @@ public class TUI implements View {
 
     @Override
     public void showLobby(LobbyEvent event) {
-        System.out.println("Arrivato lobbyevent "+event.getGameId()+event.getLv());
         if (!firstUpdate){
             firstUpdate = true;
             playerClient.setPlayerState(new LobbyClient());
@@ -166,7 +165,6 @@ public class TUI implements View {
         }
         //System.out.println(event.getGameId());
         if (event.getLv() != -1){
-            System.out.println("formatto");
             //System.out.println("put "+event.getGameId()+" "+event.getLv());
             try{
                 out.setLobby(event.getGameId(),formatCell(event)); //QUI
@@ -202,15 +200,20 @@ public class TUI implements View {
 
     @Override
     public void phaseChanged(PhaseEvent event) {
+            if (!firstUpdate){
+                firstUpdate = true;
+            }
+
+            if (event.getStateClient() == loginClient){
+                firstUpdate = false;
+                out.clearOut();
+            }
+            lastState = event.getStateClient();
+            playerClient.setPlayerState(event.getStateClient());
+            playerClient.getCompleter().setCommands(event.getStateClient().getCommands());
+            onGameUpdate();
         //lastState = null;
-        if (event.getStateClient() == loginClient){
-            firstUpdate = false;
-            out.clearOut();
-        }
-        lastState = event.getStateClient();
-        playerClient.setPlayerState(event.getStateClient());
-        playerClient.getCompleter().setCommands(event.getStateClient().getCommands());
-        onGameUpdate();
+
     }
 
     @Override
@@ -287,7 +290,11 @@ public class TUI implements View {
 
     @Override
     public void updateHourglass(HourglassEvent event) {
-        out.setHorglass(event.getStart(), event.message());
+        System.out.println(event.getClass());
+        if (event.message() == null){
+            System.out.println("oioioi");
+        }
+        out.setHourglass(event.getStart(), event.message());
         onGameUpdate();
     }
 

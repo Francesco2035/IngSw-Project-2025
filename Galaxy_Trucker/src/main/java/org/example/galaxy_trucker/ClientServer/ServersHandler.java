@@ -29,10 +29,10 @@ public class ServersHandler implements Runnable {
 
         GamesHandler gameHandler = new GamesHandler();
 
-        ArrayList<UUID> DisconnectedClients = new ArrayList<>();
+        ArrayList<String> DisconnectedClients = new ArrayList<>();
 
         //start thread server tcp
-        ConcurrentHashMap<UUID, VirtualView> tokenMap = new ConcurrentHashMap<UUID, VirtualView>();
+        ConcurrentHashMap<String, VirtualView> tokenMap = new ConcurrentHashMap<String, VirtualView>();
         TCPServer TCP = null;
         try {
             TCP = new TCPServer(gameHandler, tokenMap, DisconnectedClients);
