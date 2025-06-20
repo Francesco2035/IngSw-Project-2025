@@ -180,7 +180,7 @@ public class Slavers extends Card{
         catch (Exception e){
             //devo rimanere allo stato di dare gli umani ezzz
             System.out.println("non ce sta più nessuno qui");
-            throw new ImpossibleBoardChangeException("there was an error in killing humans");
+            throw new ImpossibleBoardChangeException("no more humans to kill");
 
         }
         this.updateSates();

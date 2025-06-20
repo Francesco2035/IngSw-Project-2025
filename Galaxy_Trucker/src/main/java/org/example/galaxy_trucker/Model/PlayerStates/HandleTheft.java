@@ -75,8 +75,6 @@ public class HandleTheft extends PlayerState {
 
         }
         return  new Theft(index,coord,gameId,player.GetID(),lv,"HandleTheft","boh");
-
-
     }
 
     @Override
