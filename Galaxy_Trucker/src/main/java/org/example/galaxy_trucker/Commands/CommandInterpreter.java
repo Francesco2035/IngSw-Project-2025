@@ -151,7 +151,7 @@ public class CommandInterpreter {
             }
             case "GETREWARD":{
                 if (strings.length != 4) {
-                    throw new IllegalArgumentException("Comando Switch richiede 3 argomenti: x1, y1, posRewards");
+                    throw new IllegalArgumentException("Comando GetReward richiede 3 argomenti: x1, y1, posRewards");
                 }
                 title = "GetFromRewards";
                 //position2= Integer.parseInt(strings[1]);
