@@ -30,6 +30,7 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
+import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.jetbrains.annotations.NotNull;
@@ -115,6 +116,7 @@ public class GuiRoot implements View {
     private boolean theft;
     private ArrayList<Goods> rewards;
     private ArrayList<ImageView> selectedImages;
+    private LoginClient loginClient;
 
 
 
@@ -124,8 +126,9 @@ public class GuiRoot implements View {
     }
 
 
-    public GuiRoot(){
+    public GuiRoot(LoginClient loginClient){
         printer = new GuiOut(this);
+        this.loginClient = loginClient;
 
         brownAlien = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/alien-brown.png"));
         purpleAlien = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/alien-purple.png"));
@@ -1803,6 +1806,10 @@ public class GuiRoot implements View {
     public void phaseChanged(@NotNull PhaseEvent event) {
         playerClient.setPlayerState(event.getStateClient());
         playerClient.showGame(printer);
+
+        if(event.getStateClient() == loginClient){
+            goToFirstScene();
+        }
 
         //player.setstate(event.getpahse)
         //plary.state.showGUI
