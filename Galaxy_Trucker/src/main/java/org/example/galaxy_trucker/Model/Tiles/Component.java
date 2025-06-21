@@ -52,7 +52,7 @@ public abstract class Component implements Serializable {
 
 
     public void accept(ComponentAction visitor, PlayerState state){
-        throw new InvalidInput("Invalid input for the specific action");
+//        throw new InvalidInput("Invalid input for the specific action"); //TODO: viene veramente usata questa eccezione?
     };
 
     public abstract Component clone(PlayerBoard playerBoard);

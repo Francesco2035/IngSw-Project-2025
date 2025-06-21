@@ -217,8 +217,10 @@ public class DebugShip extends Command implements Serializable {
                 debugShip.insertTile(tile,8,4,false);
 
 
-                /// Todo Rotazione Tile  shield buggata
+                /// Todo Rotazione Tile  shield buggata : il problema è il fatto che non viene fatta una setrotation ma solo una rotate, quindi la rotation della tile rimane a 0
                 tile = tiles.get(145); //shield
+                tile.RotateDx();
+                tile.RotateSx();
                 tile.RotateDx();
                 debugShip.insertTile(tile,8,5,false);
 
