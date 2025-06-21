@@ -6,16 +6,12 @@ import org.example.galaxy_trucker.Controller.FlightController;
 import org.example.galaxy_trucker.Controller.GameController;
 import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Controller.VirtualView;
-import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.GiveAttack;
 import org.example.galaxy_trucker.Model.PlayerStates.GiveSpeed;
-import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.NewTestSetupHelper;
 import org.junit.jupiter.api.Test;
 
@@ -60,23 +56,62 @@ class TileAndComponentTest {
 
 
 
+        //hotwaterheater
 
-//        Component c = new HotWaterHeater();
-//        c.rotate(true);
-//        c.rotate(false);
-//
-//        c.controlValidity(null, 0 ,-1);
-//
-//        c.accept(new GetEnginePower(1), new GiveSpeed());
-//
-//        c.insert(p1.getmyPlayerBoard(), 8, 9);
-
-
-
-        game.getGag().getTilesDeck().get(95).getComponent().insert(p1.getmyPlayerBoard(), 7, 6);
-
+        //type 2
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(95), 6, 7, false);
+        HotWaterHeater hotWaterHeater = (HotWaterHeater) game.getGag().getTilesDeck().get(95).getComponent();
+        hotWaterHeater.getEnginePower();
+        hotWaterHeater.rotate(true);
+        hotWaterHeater.rotate(false);
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        hotWaterHeater.clone(p1.getmyPlayerBoard());
+        hotWaterHeater.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        hotWaterHeater.accept(new GetEnginePower(1), new GiveSpeed());
+        assertEquals(2, hotWaterHeater.getType());
 
 
+
+        //type 1
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(85), 6, 7, false);
+        HotWaterHeater hotWaterHeater2 = (HotWaterHeater) game.getGag().getTilesDeck().get(85).getComponent();
+        hotWaterHeater2.getEnginePower();
+        hotWaterHeater2.rotate(true);
+        hotWaterHeater2.rotate(false);
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        hotWaterHeater2.clone(p1.getmyPlayerBoard());
+        hotWaterHeater2.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        hotWaterHeater2.accept(new GetEnginePower(1), new GiveSpeed());
+        assertEquals(1, hotWaterHeater2.getType());
+
+
+
+
+
+        //alienaddon1
+
+
+        //type 0
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(132), 6, 7, false);
+        AlienAddons alienaddon = (AlienAddons) game.getGag().getTilesDeck().get(132).getComponent();
+        alienaddon.rotate(true);
+        alienaddon.rotate(false);
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        alienaddon.clone(p1.getmyPlayerBoard());
+        alienaddon.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        assertEquals(0, alienaddon.getType());
+
+
+
+        //type 1
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(139), 6, 7, false);
+        AlienAddons alienaddon1 = (AlienAddons) game.getGag().getTilesDeck().get(139).getComponent();
+        alienaddon1.rotate(true);
+        alienaddon1.rotate(false);
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        alienaddon1.clone(p1.getmyPlayerBoard());
+        alienaddon1.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        assertEquals(1, alienaddon1.getType());
 
 
 
