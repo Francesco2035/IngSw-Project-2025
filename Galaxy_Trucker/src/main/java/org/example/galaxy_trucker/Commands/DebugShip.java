@@ -318,6 +318,10 @@ public class DebugShip extends Command implements Serializable {
 
     }
 
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
     @Override
     public boolean allowedIn(PlayerState playerState) {
         return playerState.allows(this);

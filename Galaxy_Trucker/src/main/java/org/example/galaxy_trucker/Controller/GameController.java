@@ -462,8 +462,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     }
 
     public void setGameOver(){
+        getGame().getGameBoard().finishGame();
         GameOver = true;
-        System.out.println("Game over the winner is: " + game.getGameBoard().getPlayers().getFirst().GetID());
+        //System.out.println("Game over the winner is: " + game.getGameBoard().getPlayers().getFirst().GetID());
     }
 
     private void stopAllPlayerThreads() {
