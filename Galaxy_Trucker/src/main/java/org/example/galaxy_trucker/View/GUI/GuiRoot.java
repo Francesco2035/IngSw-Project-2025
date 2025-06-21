@@ -1,7 +1,6 @@
 package org.example.galaxy_trucker.View.GUI;
 
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -35,7 +34,6 @@ import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jline.utils.Log;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -68,6 +66,7 @@ public class GuiRoot implements View {
     private boolean amIReady;
     private boolean amIBuilding;
 
+
     private ArrayList<Integer> discardedTiles;
     private HashMap<Integer, VBox> discardedMap;
     private Image playerBoardImg;
@@ -90,6 +89,13 @@ public class GuiRoot implements View {
     private Image brownAlien, purpleAlien, crewMate;
     private Pane rocketsPane;
     private ListView<String> log;
+    private double totAtk;
+    private int totDef;
+    private int totSpeed;
+    private int totCredits;
+    private int totEnergy;
+    private int totDamages;
+    private int totHumans;
 
     private boolean killing;
     private VBox phaseButtons;
@@ -109,7 +115,7 @@ public class GuiRoot implements View {
     private boolean handlingCargo;
     private boolean theft;
     private ArrayList<Goods> rewards;
-    public ArrayList<ImageView> selectedImages;
+    private ArrayList<ImageView> selectedImages;
     private LoginClient loginClient;
 
 
@@ -121,7 +127,22 @@ public class GuiRoot implements View {
 
 
     public GuiRoot(LoginClient loginClient){
+        printer = new GuiOut(this);
         this.loginClient = loginClient;
+
+        brownAlien = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/alien-brown.png"));
+        purpleAlien = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/alien-purple.png"));
+        crewMate = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-white.png"));
+
+        guiThread = new Thread(() -> GuiMain.launchApp(this));
+        guiThread.start();
+    }
+
+    private void sceneSetup(){
+        primaryRoot = new StackPane();
+        contentRoot = new Pane();
+        primaryScene = new Scene(primaryRoot, 800, 600);
+
         tileImage = new ImageView();
         tileImage.setImage(null);
         tileImage.setFitWidth(100);
@@ -139,12 +160,7 @@ public class GuiRoot implements View {
         playerPositions = new HashMap<>();
         rocketsPane = new Pane();
 
-        brownAlien = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/alien-brown.png"));
-        purpleAlien = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/alien-purple.png"));
-        crewMate = new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-white.png"));
-
         myBoard = new GridPane();
-        printer = new GuiOut(this);
         playerClient = new PlayerClient();
         discardedTiles = new ArrayList<>();
         discardedMap = new HashMap<>();
@@ -159,18 +175,41 @@ public class GuiRoot implements View {
         curCargoImg = new ImageView();
         curCargoImg.setImage(null);
         storageCompartments = new HashMap<>();
-        rewardsLeft = -1;
+        rewardsLeft = 0;
         handlingCargo = false;
         theft = false;
         rewards = null;
         batteryClickable = false;
         selectedImages = new ArrayList<>();
 
-        guiThread = new Thread(() -> GuiMain.launchApp(this));
-        guiThread.start();
+        readyPlayers = new ListView<>();
+        log = new ListView<>();
+        prompt = new Label();
 
 
+        //tile setup
+        tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
+        tileImage.setImage(tilePlaceholder);
+        tileImage.setOpacity(0.5);
+
+        //background setup
+        Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setAutoPlay(true);
+
+        MediaView background = new MediaView(mediaPlayer);
+        background.setPreserveRatio(false);
+
+        background.fitHeightProperty().bind(primaryStage.heightProperty());
+        background.fitWidthProperty().bind(primaryStage.widthProperty());
+
+
+        primaryRoot.getChildren().addAll(background, contentRoot);
+        primaryScene.setRoot(primaryRoot);
     }
+
 
     @Override
     public void showMessage(String message) {
@@ -199,6 +238,7 @@ public class GuiRoot implements View {
         Pane crewPane = new Pane();
         ImageView tileImg = new ImageView();
         tileImg.setFitWidth(70);
+
         tileImage.setImage(tilePlaceholder);
         tileImage.setOpacity(0.5);
 
@@ -241,7 +281,6 @@ public class GuiRoot implements View {
                 });
             }
         } else {
-
             tileImg.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile (" + event.getId() + ").jpg")));
             tileImg.setRotate(event.getRotation());
             tileImg.setOpacity(1);
@@ -695,6 +734,41 @@ public class GuiRoot implements View {
 
     @Override
     public void disconnect() {
+        //quando si accorge di esseree disconnesso ->reconnect / exit / ChangeConnection
+        Platform.runLater(()->{
+            Stage disconnectStage = new Stage();
+            disconnectStage.setTitle("Connection lost");
+
+            Label disconnected = new Label("Connection lost.\nWhat do you want to do?");
+            disconnected.setStyle("-fx-font-size: 15px");
+
+            Button reconnect = new Button("Reconnect");
+            Button exit = new Button("Exit");
+            Button change = new Button("Chenge connection");
+
+            HBox buttons = new HBox(30, reconnect, change, exit);
+            reconnect.setOnAction(click -> {
+                inputQueue.add("Reconnect");
+            });
+            change.setOnAction(click -> {
+                inputQueue.add("ChangeConnection");
+            });
+            exit.setOnAction(click -> {
+                inputQueue.add("Exit");
+            });
+
+            buttons.setAlignment(Pos.CENTER);
+            buttons.setPadding(new Insets(5));
+
+            VBox quitBox = new VBox(3, disconnected, buttons);
+            quitBox.setAlignment(Pos.CENTER);
+
+            Scene disconnectedScene = new Scene(quitBox, 300, 80);
+            disconnectStage.setScene(disconnectedScene);
+            disconnectStage.initOwner(primaryStage);
+            disconnectStage.initModality(Modality.WINDOW_MODAL);
+            disconnectStage.show();
+        });
 
     }
 
@@ -972,9 +1046,8 @@ public class GuiRoot implements View {
         //mi arriva il lobby event ogni volta che qualcuno crea/si aggiunge ad un game
 
         Label titleLabel = new Label("GALAXY TRUCKERS");
-        titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+        titleLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
-        // Lista giocatori
 
         if(event.getLv() > 0)
             lobbyEvents.add(event);
@@ -998,8 +1071,6 @@ public class GuiRoot implements View {
 
                         VBox labels = new VBox(5, gameLabel, playersLabel);
                         HBox button = new HBox(5, joinButton);
-                        button.setAlignment(Pos.CENTER_RIGHT);
-                        labels.setAlignment(Pos.CENTER_LEFT);
                         HBox cell = new HBox(248, labels, button);
                         setText(null);
                         setGraphic(cell);
@@ -1014,7 +1085,6 @@ public class GuiRoot implements View {
 
 
 
-        // Bottone per avviare la partita
         Button newGame = new Button("New Game");
         newGame.setStyle("-fx-font-size: 14px;");
 
@@ -1105,18 +1175,17 @@ public class GuiRoot implements View {
             newGameStage.show();
         });
 
-        // Layout centrale
         VBox MainBox = new VBox(10, titleLabel, gamesList, newGame);
+        gamesList.setMaxWidth(800);
         MainBox.setAlignment(Pos.CENTER);
-        MainBox.setPadding(new Insets(20));
-        MainBox.setMaxWidth(600);
+//        MainBox.setPadding(new Insets(20));
+//        MainBox.setMaxWidth(600);
 
-        BorderPane lobbyRoot = new  BorderPane(MainBox);
-        lobbyRoot.setPadding(new Insets(10));
+        StackPane lobbyRoot = new  StackPane(MainBox);
+//        lobbyRoot.setPadding(new Insets(10));
 
-        lobbyRoot.prefHeightProperty().bind(primaryStage.widthProperty());
-        lobbyRoot.prefWidthProperty().bind(primaryStage.widthProperty());
-
+        MainBox.prefWidthProperty().bind(primaryStage.widthProperty());
+        MainBox.prefHeightProperty().bind(primaryStage.heightProperty());
 
         Platform.runLater(() -> {
             contentRoot.getChildren().setAll(lobbyRoot);
@@ -1149,6 +1218,115 @@ public class GuiRoot implements View {
                 else readyPlayers.getItems().add(s+ " --> Not Ready");
             }
         });
+
+    }
+
+
+    public void LobbyGameScreen() {
+        Label GameNameLabel = new Label("Game: " + myGameName);
+        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+
+        if (myGameLv == 1) {
+            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv1.jpg"));
+            gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv1.png"));
+        } else {
+            playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv2.jpg"));
+            gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv2.png"));
+            Lv2GameboardSetup();
+        }
+
+        ImageView playerBoard = new ImageView(playerBoardImg);
+        playerBoard.setPreserveRatio(true);
+        playerBoard.setSmooth(true);
+        playerBoard.setFitWidth(400);
+        playerBoard.maxWidth(300);
+
+
+        Button quitButton = new Button("Quit");
+        Button readyButton = new Button();
+        Button debugShip1 = new Button("Debug Ship 1");
+        Button debugShip2 = new Button("Debug Ship 2");
+
+        if (amIReady)
+            readyButton.setText("Not Ready");
+        else readyButton.setText("Ready!");
+
+        readyButton.setOnAction(e -> {
+            if (amIReady)
+                inputQueue.add("Ready false");
+            else inputQueue.add("Ready true");
+        });
+
+        debugShip1.setOnAction(e -> {
+            inputQueue.add("DebugShip 1");
+        });
+
+        debugShip2.setOnAction(e -> {
+            inputQueue.add("DebugShip 2");
+        });
+
+        quitButton.setOnAction(e -> {
+            Stage confirmStage = new Stage();
+            confirmStage.setTitle("Quitting");
+
+            Label quitLabel = new Label("Are You Sure?");
+            quitLabel.setStyle("-fx-font-size: 15px");
+
+            Button confirmButton = new Button("Pretty Sure");
+            Button goBackButton = goBackButtonMaker(confirmStage);
+
+            confirmButton.setOnAction(E -> {
+                inputQueue.add("Quit");
+            });
+
+            HBox buttons = new HBox(50, goBackButton, confirmButton);
+            buttons.setAlignment(Pos.CENTER);
+            buttons.setPadding(new Insets(5));
+
+            VBox quitBox = new VBox(3, quitLabel, buttons);
+            quitBox.setAlignment(Pos.CENTER);
+
+            Scene newGameScene = new Scene(quitBox, 250, 80);
+            confirmStage.setScene(newGameScene);
+            confirmStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
+            confirmStage.initModality(Modality.WINDOW_MODAL);
+
+            confirmStage.show();
+
+        });
+
+
+        HBox Buttons = new HBox(50, quitButton, debugShip1, debugShip2, readyButton);
+        Buttons.setPadding(new Insets(15));
+        Buttons.setAlignment(Pos.CENTER);
+
+        StackPane stack = new StackPane(myBoard, Buttons);
+
+        VBox mainBox = new VBox(10, GameNameLabel, readyPlayers, stack);
+        readyPlayers.setMaxWidth(800);
+        readyPlayers.setMaxHeight(200);
+        mainBox.setAlignment(Pos.TOP_CENTER);
+        mainBox.setPadding(new Insets(10));
+
+        StackPane gameLobbyRoot = new StackPane(mainBox);
+
+        gameLobbyRoot.setPadding(new Insets(10));
+        gameLobbyRoot.setAlignment(Pos.TOP_CENTER);
+
+        gameLobbyRoot.prefWidthProperty().bind(primaryStage.widthProperty());
+        gameLobbyRoot.prefHeightProperty().bind(primaryStage.heightProperty());
+
+        playerBoard.setTranslateY(200);
+        Buttons.setTranslateY(250);
+
+        Platform.runLater(() -> {
+            contentRoot.getChildren().setAll(gameLobbyRoot);
+            printer.setGameLobby(primaryScene);
+        });
+
+        //idplayer li salvo in un arraylist
+        //player->playerstate.showGame
 
     }
 
@@ -1213,112 +1391,6 @@ public class GuiRoot implements View {
 
         });
 
-    }
-
-
-
-    public void LobbyGameScreen(){
-        {
-            Label GameNameLabel = new Label("Game: " + myGameName);
-            GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
-
-
-            if(myGameLv == 1){
-                playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv1.jpg"));
-                gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv1.png"));
-            }
-            else{
-                playerBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/shipboard-lv2.jpg"));
-                gameBoardImg = new Image(getClass().getResourceAsStream("/GUI/Boards/gameboard-lv2.png"));
-                Lv2GameboardSetup();
-            }
-
-            ImageView playerBoard = new ImageView(playerBoardImg);
-            playerBoard.setPreserveRatio(true);
-            playerBoard.setSmooth(true);
-            playerBoard.setFitWidth(400);
-            playerBoard.maxWidth(300);
-
-
-            VBox mainBox = new VBox(10, GameNameLabel, readyPlayers);
-            mainBox.setAlignment(Pos.TOP_CENTER);
-            mainBox.setPadding(new Insets(10));
-
-            Button quitButton = new Button("Quit");
-            Button readyButton = new Button();
-            Button debugShip = new Button("Debug Ship");
-
-            if(amIReady)
-                readyButton.setText("Not Ready");
-            else readyButton.setText("Ready!");
-
-            readyButton.setOnAction(e -> {
-                if(amIReady)
-                    inputQueue.add("Ready false");
-                else inputQueue.add("Ready true");
-            });
-
-            debugShip.setOnAction(e -> {
-                inputQueue.add("DebugShip");
-            });
-
-            quitButton.setOnAction(e -> {
-                Stage confirmStage = new Stage();
-                confirmStage.setTitle("Quitting");
-
-                Label quitLabel = new Label("Are You Sure?");
-                quitLabel.setStyle("-fx-font-size: 15px");
-
-                Button confirmButton = new Button("Pretty Sure");
-                Button goBackButton = goBackButtonMaker(confirmStage);
-
-                confirmButton.setOnAction(E->{
-                    inputQueue.add("Quit");
-                });
-
-                HBox buttons = new HBox(50, goBackButton, confirmButton);
-                buttons.setAlignment(Pos.CENTER);
-                buttons.setPadding(new Insets(5));
-
-                VBox quitBox = new VBox(3, quitLabel, buttons);
-                quitBox.setAlignment(Pos.CENTER);
-
-                Scene newGameScene = new Scene(quitBox, 250, 80);
-                confirmStage.setScene(newGameScene);
-                confirmStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
-                confirmStage.initModality(Modality.WINDOW_MODAL);
-
-                confirmStage.show();
-
-            });
-
-
-            HBox Buttons = new HBox(50, quitButton, debugShip, readyButton);
-            Buttons.setPadding(new Insets(15));
-            Buttons.setAlignment(Pos.CENTER);
-
-            VBox imageBox = new VBox(playerBoard, Buttons);
-
-            StackPane gameLobbyRoot = new StackPane(mainBox, imageBox);
-
-            gameLobbyRoot.setPadding(new Insets(10));
-            gameLobbyRoot.setAlignment(Pos.TOP_CENTER);
-
-            gameLobbyRoot.prefWidthProperty().bind(primaryStage.widthProperty());
-            gameLobbyRoot.prefHeightProperty().bind(primaryStage.heightProperty());
-
-            playerBoard.setTranslateY(200);
-            Buttons.setTranslateY(250);
-
-            Platform.runLater(() ->{
-                contentRoot.getChildren().setAll(gameLobbyRoot);
-
-                printer.setGameLobby(primaryScene);
-            });
-
-            //idplayer li salvo in un arraylist
-            //player->playerstate.showGame
-        }
     }
 
 
@@ -1542,7 +1614,6 @@ public class GuiRoot implements View {
             confirmButton.setOnAction(ev -> {
                 ChoosePositionStage.close();
                 inputQueue.add("FinishBuilding "+ position.getValue());
-
             });
 
 
@@ -1584,28 +1655,26 @@ public class GuiRoot implements View {
             buildKit = new HBox(10, tileBox, Buttons, buffer);
 
 
-
-
         ScrollPane uncoveredBox = new ScrollPane(uncoveredTiles);
         uncoveredBox.setFitToWidth(true);
         uncoveredBox.setPrefWidth(500);
 
         uncoveredBox.setOpacity(0.4);
 
-        HBox mainBox;
-        if(myGameLv == 2)
-            mainBox = new HBox(10, uncoveredBox, new VBox(10, cards, myBoard, buildKit), others);
-        else
-            mainBox = new HBox(10, uncoveredBox, new VBox(10, myBoard, buildKit), others);
-
-
-        mainBox.setPadding(new Insets(50));
-
-        StackPane buildingRoot = new StackPane(mainBox);
-        buildingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
-        buildingRoot.prefHeightProperty().bind(primaryStage.heightProperty());
-
         Platform.runLater(() ->{
+            HBox mainBox;
+            if(myGameLv == 2)
+                mainBox = new HBox(10, uncoveredBox, new VBox(10, cards, myBoard, buildKit), others);
+            else
+                mainBox = new HBox(10, uncoveredBox, new VBox(10, myBoard, buildKit), others);
+
+            mainBox.setPadding(new Insets(50));
+
+            StackPane buildingRoot = new StackPane(mainBox);
+            buildingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
+            buildingRoot.prefHeightProperty().bind(primaryStage.heightProperty());
+
+
             contentRoot.getChildren().setAll(buildingRoot);
         });
 
@@ -1615,87 +1684,122 @@ public class GuiRoot implements View {
 
 
     public void flightScene() {
+        prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
-            prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+        ImageView txtBackground = new ImageView(new Image(getClass().getResourceAsStream("/GUI/all_belt.png")));
+        txtBackground.setFitWidth(600);
+        txtBackground.setFitHeight(100);
 
-            ImageView txtBackground = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/all_belt.png")));
-            txtBackground.setFitWidth(600);
-            txtBackground.setFitHeight(100);
+        ImageView cannons = new ImageView(new Image(getClass().getResourceAsStream("/GUI/boardInfo/cannons.png")));
+        cannons.setFitHeight(50);
+        cannons.setPreserveRatio(true);
+        Label nCannons = new Label("x"+ totAtk);
+        nCannons.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+        ImageView credits = new ImageView(new Image(getClass().getResourceAsStream("/GUI/boardInfo/credits.png")));
+        credits.setFitHeight(50);
+        credits.setPreserveRatio(true);
+        Label nCredits = new Label("x"+ totCredits);
+        nCredits.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+        ImageView damages = new ImageView(new Image(getClass().getResourceAsStream("/GUI/boardInfo/damages.png")));
+        damages.setFitHeight(50);
+        damages.setPreserveRatio(true);
+        Label nDamages = new Label("x"+ totDamages);
+        nDamages.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+        ImageView energy = new ImageView(new Image(getClass().getResourceAsStream("/GUI/boardInfo/energy.png")));
+        energy.setFitHeight(50);
+        energy.setPreserveRatio(true);
+        Label nEnergy = new Label("x"+ totEnergy);
+        nEnergy.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+        ImageView engine = new ImageView(new Image(getClass().getResourceAsStream("/GUI/boardInfo/engine.png")));
+        engine.setFitHeight(50);
+        engine.setPreserveRatio(true);
+        Label nEngines = new Label("x"+ totSpeed);
+        nEngines.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+
+        ImageView humans = new ImageView(new Image(getClass().getResourceAsStream("/GUI/boardInfo/humans.png")));
+        humans.setFitHeight(50);
+        humans.setPreserveRatio(true);
+        Label nHumans = new Label("x"+ totHumans);
+        nHumans.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
 
+        AtomicInteger x = new AtomicInteger();
+        AtomicInteger y = new AtomicInteger();
+        ArrayList<Node> childrenCopy = new ArrayList<>(myBoard.getChildren());
+        boolean clickable;
 
-            AtomicInteger x = new AtomicInteger();
-            AtomicInteger y = new AtomicInteger();
-            ArrayList<Node> childrenCopy = new ArrayList<>(myBoard.getChildren());
-            boolean clickable;
+        for (Node node : childrenCopy) {
+            clickable = true;
 
-            for(Node node : childrenCopy){
-                clickable = true;
+            x.set(GridPane.getRowIndex(node));
+            y.set(GridPane.getColumnIndex(node));
 
-                x.set(GridPane.getRowIndex(node));
-                y.set(GridPane.getColumnIndex(node));
+            int X = x.get();
+            int Y = y.get();
 
-                int X = x.get();
-                int Y = y.get();
-
-                for(IntegerPair i : excludedTiles){
-                    if(x.get() == i.getFirst() && y.get() == i.getSecond()){
-                        clickable = false;
-                    }
+            for (IntegerPair i : excludedTiles) {
+                if (x.get() == i.getFirst() && y.get() == i.getSecond()) {
+                    clickable = false;
                 }
+            }
 
-                if(clickable){
-                    ImageView tile = (ImageView) node;
+            if (clickable) {
+                ImageView tile = (ImageView) node;
 
-                    tile.setOnMouseClicked(e->{
-                        if(tilesClickable){
-                            System.out.println(X + " " +  Y);
-                            if(tile.getOpacity() == 1){
-                                cmdCoords.add(new IntegerPair(X, Y));
-                                selectedImages.add(tile);
-                                tile.setOpacity(0.5);
-                            }
+                tile.setOnMouseClicked(e -> {
+                    if (tilesClickable) {
+                        System.out.println(X + " " + Y);
+                        if (tile.getOpacity() == 1) {
+                            cmdCoords.add(new IntegerPair(X, Y));
+                            selectedImages.add(tile);
+                            tile.setOpacity(0.5);
+                        }
 //                    else{
 //                        cmdCoords.remove(new IntegerPair(event.getX(), event.getY()));
 //                        tileImage.setOpacity(0.5);
 //                    }
 
-                        }
+                    }
 
-                    });
-                }
+                });
+            }
+        }
+
+        Platform.runLater(() -> {
+            ImageView coveredCard = new ImageView(cardBack);
+            coveredCard.setFitHeight(300);
+            coveredCard.setPreserveRatio(true);
+            curCard.setFitHeight(300);
+            curCard.setPreserveRatio(true);
+            StackPane textPanel = new StackPane(txtBackground, prompt);
+            HBox cardBox = new HBox(20, coveredCard, curCard);
+
+            VBox othersBox = new VBox(20);
+            for (String id : othersBoards.keySet()) {
+                othersBox.getChildren().add(othersBoards.get(id));
             }
 
-            Platform.runLater(()->{
+            HBox stats = new HBox(20, new HBox(3,cannons, nCannons), new HBox(3,engine, nEngines), new HBox(3,energy, nEnergy), new HBox(3,humans, nHumans), new HBox(3,damages, nDamages), new HBox(3,credits, nCredits));
 
-                ImageView coveredCard = new ImageView(cardBack);
-                coveredCard.setFitHeight(300);
-                coveredCard.setPreserveRatio(true);
-                curCard.setFitHeight(300);
-                curCard.setPreserveRatio(true);
-                StackPane textPanel = new StackPane(txtBackground, prompt);
-                HBox cardBox =  new HBox(20, coveredCard, curCard);
+            log.setMaxHeight(100);
+            HBox mainBox = new HBox(new VBox(25, cardBox, log), new VBox(100,stats, myBoard, textPanel), phaseButtons, othersBox);
+            mainBox.setPadding(new Insets(150));
+            mainBox.setAlignment(Pos.CENTER);
+            Pane root = new Pane(mainBox);
 
-                VBox othersBox = new VBox(20);
-                for(String id : othersBoards.keySet()){
-                    othersBox.getChildren().add(othersBoards.get(id));
-                }
+            mainBox.prefWidthProperty().bind(primaryStage.widthProperty());
+            mainBox.prefHeightProperty().bind(primaryStage.heightProperty());
 
-                log.setMaxHeight(100);
-                HBox mainBox = new HBox(new VBox(25, cardBox, log), new VBox(100, myBoard, textPanel), phaseButtons, othersBox);
-                mainBox.setPadding(new Insets(150));
-                mainBox.setAlignment(Pos.CENTER);
-                Pane root = new Pane(mainBox);
-
-                mainBox.prefWidthProperty().bind(primaryStage.widthProperty());
-                mainBox.prefHeightProperty().bind(primaryStage.heightProperty());
-
-                contentRoot.getChildren().setAll(root);
-                printer.setFlightScreen(primaryScene);
-            });
+            contentRoot.getChildren().setAll(root);
+            printer.setFlightScreen(primaryScene);
+        });
 
 
-        }
+    }
 
 
     @Override
@@ -1703,8 +1807,8 @@ public class GuiRoot implements View {
         playerClient.setPlayerState(event.getStateClient());
         playerClient.showGame(printer);
 
-        if (event.getStateClient() == loginClient){
-
+        if(event.getStateClient() == loginClient){
+            goToFirstScene();
         }
 
         //player.setstate(event.getpahse)
@@ -1774,6 +1878,12 @@ public class GuiRoot implements View {
 
     @Override
     public void updatePBInfo(PBInfoEvent event) {
+        totAtk = event.getPlasmaDrillsPower();
+        totEnergy = event.getEnergy();
+        totSpeed = event.getEnginePower();
+        totHumans = event.getNumHumans();
+        totDamages = event.getDamage();
+        totCredits = event.getCredits();
     }
 
     @Override
@@ -1931,37 +2041,6 @@ public class GuiRoot implements View {
         });
     }
 
-    private void sceneSetup(){
-        primaryRoot = new StackPane();
-        contentRoot = new Pane();
-        primaryScene = new Scene(primaryRoot, 800, 600);
-        readyPlayers = new ListView<>();
-        log = new ListView<>();
-        prompt = new Label();
-
-
-        //tile setup
-        tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
-        tileImage.setImage(tilePlaceholder);
-        tileImage.setOpacity(0.5);
-
-        //background setup
-        Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setAutoPlay(true);
-
-        MediaView background = new MediaView(mediaPlayer);
-        background.setPreserveRatio(false);
-
-        background.fitHeightProperty().bind(primaryStage.heightProperty());
-        background.fitWidthProperty().bind(primaryStage.widthProperty());
-
-
-        primaryRoot.getChildren().addAll(background, contentRoot);
-        primaryScene.setRoot(primaryRoot);
-    }
 
     private void lv2PlayerboardBuilder(){
 

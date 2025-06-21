@@ -19,7 +19,6 @@ public class GuiMain extends Application {
 
     private static GuiRoot guiRoot;
 
-
     public GuiMain() {
         instance = this;
     }
