@@ -7,18 +7,18 @@ import org.example.galaxy_trucker.Controller.FlightController;
 import org.example.galaxy_trucker.Controller.GameController;
 import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Controller.VirtualView;
-import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
-import org.example.galaxy_trucker.Model.Boards.Actions.GetPlasmaDrillPower;
-import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
+import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
+import org.example.galaxy_trucker.Model.Goods.BLUE;
+import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.Goods.RED;
+import org.example.galaxy_trucker.Model.Goods.YELLOW;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.ConsumingEnergy;
-import org.example.galaxy_trucker.Model.PlayerStates.GiveAttack;
-import org.example.galaxy_trucker.Model.PlayerStates.GiveSpeed;
-import org.example.galaxy_trucker.Model.PlayerStates.Killing;
+import org.example.galaxy_trucker.Model.PlayerStates.*;
 import org.example.galaxy_trucker.NewTestSetupHelper;
 import org.junit.jupiter.api.Test;
 
@@ -345,7 +345,7 @@ class TileAndComponentTest {
 
 
 
-        //modularhousingunit
+        //modularhousingunit TODO: aumentare ancora la percentuale
 
         p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(36), 6, 7, false);
         ModularHousingUnit mhu2 = (ModularHousingUnit) game.getGag().getTilesDeck().get(36).getComponent();
@@ -372,37 +372,80 @@ class TileAndComponentTest {
         assertFalse(mhu2.isNearPurpleAddon());
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        for(HousingUnit housingUnit : p1.getmyPlayerBoard().getHousingUnits()){
+            housingUnit.controlValidity(p1.getmyPlayerBoard(), housingUnit.getX(), housingUnit.getY());
+        }
+        helper.HumansSetter1(p1.getmyPlayerBoard());
         mhu2.remove(p1.getmyPlayerBoard());
         mhu2.isPopulated();
         mhu2.checkNearbyUnits(p1.getmyPlayerBoard());
         p1.getmyPlayerBoard().getHousingUnits().getFirst().checkNearbyUnits(p1.getmyPlayerBoard());
+
+        for(HousingUnit housingUnit : p1.getmyPlayerBoard().getHousingUnits()){
+            housingUnit.kill();
+        }
         mhu2.clone(p1.getmyPlayerBoard());
+
+
+
+
+
+
+
+        //storage
+
+        //type 2
+
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(18), 6, 7, false);
+        Storage sc = (StorageCompartment) game.getGag().getTilesDeck().get(18).getComponent();
+        sc.rotate(true);
+        sc.rotate(false);
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        sc.clone(p1.getmyPlayerBoard());
+        ArrayList<Goods> goodsList = new ArrayList<>();
+        goodsList.add(new BLUE());
+        goodsList.add(new YELLOW());
+        goodsList.add(new RED());
+        p1.getmyPlayerBoard().setRewards(goodsList);
+        ((StorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[7][9].getComponent()).addGood(new BLUE());
+//        sc.accept(new GetGoodAction(1, p1.getmyPlayerBoard(), 7, 9), new HandleCargo()); TODO fixare questo che mi dice che lo storage è null
+        sc.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        assertEquals(2, sc.getType());
+
+
+
+        //type 3
+
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(27), 6, 7, false);
+        Storage sc2 = (StorageCompartment) game.getGag().getTilesDeck().get(27).getComponent();
+        sc2.rotate(true);
+        sc2.rotate(false);
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        sc2.clone(p1.getmyPlayerBoard());
+        sc2.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        assertEquals(3, sc2.getType());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

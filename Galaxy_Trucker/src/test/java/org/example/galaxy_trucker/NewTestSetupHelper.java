@@ -259,10 +259,11 @@ public class NewTestSetupHelper {
     public void HumansSetter1(PlayerBoard playerBoard){
 
         for(HousingUnit housingUnit : playerBoard.getHousingUnits()){
-            System.out.println("added 2 humans in  "+housingUnit.getX()+" "+housingUnit.getY());
-            playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),new AddCrewState());
+            if(!housingUnit.isPopulated()) {
+                System.out.println("added 2 humans in  " + housingUnit.getX() + " " + housingUnit.getY());
+                playerBoard.performAction(housingUnit, new AddCrewAction(2, false, false, playerBoard), new AddCrewState());
+            }
         }
-//        playerBoard.getHousingUnits().clear();
     }
 
 
