@@ -8,11 +8,15 @@ import org.example.galaxy_trucker.Controller.GameController;
 import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
+import org.example.galaxy_trucker.Model.Boards.Actions.GetPlasmaDrillPower;
+import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.ConsumingEnergy;
+import org.example.galaxy_trucker.Model.PlayerStates.GiveAttack;
 import org.example.galaxy_trucker.Model.PlayerStates.GiveSpeed;
 import org.example.galaxy_trucker.Model.PlayerStates.Killing;
 import org.example.galaxy_trucker.NewTestSetupHelper;
@@ -57,6 +61,17 @@ class TileAndComponentTest {
         p1.setMyPlance(helper.createInitializedBoard1());
         p1.getmyPlayerBoard().insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6 ,6, false);
         assertTrue(p1.getmyPlayerBoard().checkValidity());
+
+
+
+        //component
+
+        Component c = new SpaceVoid();
+        try{
+            c.accept(new GetPlasmaDrillPower(1), new GiveSpeed());
+        } catch (Exception e){
+            assertEquals("Invalid input for the specific action", e.getMessage());
+        }
 
 
 
@@ -197,10 +212,197 @@ class TileAndComponentTest {
 
 
 
+        //plasmadrill
+
+
+        //type 1
+        game.getGag().getTilesDeck().get(110).RotateDx();
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(110), 6, 7, false);
+        PlasmaDrill plasmaDrill = (PlasmaDrill) game.getGag().getTilesDeck().get(110).getComponent();
+        plasmaDrill.rotate(true);
+        plasmaDrill.rotate(false);
+        plasmaDrill.getCannonPower();
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        plasmaDrill.clone(p1.getmyPlayerBoard());
+        plasmaDrill.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        plasmaDrill.accept(new GetPlasmaDrillPower(1), new GiveAttack());
+        assertEquals(1, plasmaDrill.getType());
+
+        game.getGag().getTilesDeck().get(110).RotateSx();
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(110), 6, 7, false);
+        PlasmaDrill plasmaDrill_1 = (PlasmaDrill) game.getGag().getTilesDeck().get(110).getComponent();
+        plasmaDrill_1.rotate(true);
+        plasmaDrill_1.rotate(false);
+        plasmaDrill_1.getCannonPower();
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        plasmaDrill_1.clone(p1.getmyPlayerBoard());
+        plasmaDrill_1.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        plasmaDrill_1.accept(new GetPlasmaDrillPower(1), new GiveAttack());
+        assertEquals(1, plasmaDrill_1.getType());
+
+
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(125), 6, 7, false);
+        PlasmaDrill plasmaDrill2 = (PlasmaDrill) game.getGag().getTilesDeck().get(125).getComponent();
+        plasmaDrill2.rotate(true);
+        plasmaDrill2.rotate(false);
+        plasmaDrill2.getCannonPower();
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        plasmaDrill2.clone(p1.getmyPlayerBoard());
+        plasmaDrill2.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        plasmaDrill2.accept(new GetPlasmaDrillPower(1), new GiveAttack());
+        assertEquals(2, plasmaDrill2.getType());
+
+
+        game.getGag().getTilesDeck().get(125).RotateDx();
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(125), 6, 7, false);
+        PlasmaDrill plasmaDrill_2 = (PlasmaDrill) game.getGag().getTilesDeck().get(125).getComponent();
+        plasmaDrill_2.rotate(true);
+        plasmaDrill_2.rotate(false);
+        plasmaDrill_2.getCannonPower();
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        plasmaDrill_2.clone(p1.getmyPlayerBoard());
+        plasmaDrill_2.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        plasmaDrill_2.accept(new GetPlasmaDrillPower(1), new GiveAttack());
+        assertEquals(2, plasmaDrill_2.getType());
 
 
 
 
+
+        //powercenter
+
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(10), 6, 7, false);
+        PowerCenter powercenter = (PowerCenter) game.getGag().getTilesDeck().get(10).getComponent();
+        powercenter.rotate(true);
+        powercenter.rotate(false);
+        powercenter.setType(0);
+        powercenter.getX();
+        powercenter.getY();
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        powercenter.clone(p1.getmyPlayerBoard());
+        powercenter.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        try {
+            powercenter.accept(new UseEnergyAction(p1.getmyPlayerBoard()), new ConsumingEnergy());
+        } catch (Exception e) {
+            assertEquals("cannot exceed 0 energy", e.getMessage());
+        }
+
+
+
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(10), 6, 7, false);
+        PowerCenter powercenter2 = (PowerCenter) game.getGag().getTilesDeck().get(10).getComponent();
+        powercenter2.rotate(true);
+        powercenter2.rotate(false);
+        powercenter.setType(3);
+        powercenter.getX();
+        powercenter.getY();
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        powercenter2.clone(p1.getmyPlayerBoard());
+        powercenter2.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        powercenter2.accept(new UseEnergyAction(p1.getmyPlayerBoard()), new ConsumingEnergy());
+
+
+
+        //sewerpipes
+
+
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(50), 6, 7, false);
+        SewerPipes sewerPipes = (SewerPipes) game.getGag().getTilesDeck().get(50).getComponent();
+        sewerPipes.rotate(true);
+        sewerPipes.rotate(false);
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        sewerPipes.clone(p1.getmyPlayerBoard());
+        sewerPipes.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+
+
+
+        //shieldGenerator
+
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(145), 6, 7, false);
+        ShieldGenerator shieldGenerator = (ShieldGenerator) game.getGag().getTilesDeck().get(145).getComponent();
+        shieldGenerator.rotate(true);
+        shieldGenerator.rotate(false);
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        shieldGenerator.clone(p1.getmyPlayerBoard());
+        shieldGenerator.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        assertEquals(12, shieldGenerator.getType());
+
+
+
+        //spacevoid
+
+        SpaceVoid sv = new SpaceVoid();
+        try{
+            sv.rotate(false);
+        } catch (Exception e){
+            assertEquals("you can't rotate spaceVoid tile", e.getMessage());
+        }
+        sv.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        sv.insert(p1.getmyPlayerBoard(), 0,0);
+        sv.remove(p1.getmyPlayerBoard());
+        sv.clone(p1.getmyPlayerBoard());
+
+
+
+
+        //modularhousingunit
+
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(36), 6, 7, false);
+        ModularHousingUnit mhu2 = (ModularHousingUnit) game.getGag().getTilesDeck().get(36).getComponent();
+        mhu2.notifyUnit(true, new ModularHousingUnit());
+        mhu2.setNumHumans(2);
+        assertEquals(2,mhu2.getNumHumans());
+        mhu2.setNumHumans(0);
+        assertEquals(0,mhu2.getNumHumans());
+        mhu2.setPurpleAlien(true);
+        assertTrue(mhu2.isPurpleAlien());
+        mhu2.setPurpleAlien(false);
+        assertFalse(mhu2.isPurpleAlien());
+        mhu2.setBrownAlien(true);
+        assertTrue(mhu2.isBrownAlien());
+        mhu2.setBrownAlien(false);
+        assertFalse(mhu2.isBrownAlien());
+        mhu2.setNearBrownAddon(true);
+        assertTrue(mhu2.isNearBrownAddon());
+        mhu2.setNearBrownAddon(false);
+        assertFalse(mhu2.isNearBrownAddon());
+        mhu2.setNearPurpleAddon(true);
+        assertTrue(mhu2.isNearPurpleAddon());
+        mhu2.setNearPurpleAddon(false);
+        assertFalse(mhu2.isNearPurpleAddon());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        mhu2.remove(p1.getmyPlayerBoard());
+        mhu2.isPopulated();
+        mhu2.checkNearbyUnits(p1.getmyPlayerBoard());
+        p1.getmyPlayerBoard().getHousingUnits().getFirst().checkNearbyUnits(p1.getmyPlayerBoard());
+        mhu2.clone(p1.getmyPlayerBoard());
 
 
 
