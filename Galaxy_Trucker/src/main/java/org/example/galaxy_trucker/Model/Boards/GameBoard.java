@@ -374,9 +374,6 @@ public class GameBoard {
             positions[pair.getValue() % nPositions] = null;
             Player player = pair.getKey();
             int finalScore = player.finishRace(false, message);
-            //questo mi ritorna l'intero direi che posso salvarmelo in una qualche classifioca i guess
-            //--> ho fatto metodo finishGame per mettere in classifica anche quelli che vincono alla fine
-            //-palu
             scoreboard.add(new Player_IntegerPair(player, finalScore));
 
 
@@ -405,15 +402,10 @@ public class GameBoard {
            Player playah = p.getKey();
            int finalScore = playah.finishRace(true, "game finished");
            scoreboard.add(new Player_IntegerPair(playah, finalScore));
-           //spostato la remove player prima era qui
 
-          // players.remove(p);
            /// todo in qualche modo questo deve notificare il gioco che la partitra è finita:)
        }
-
-       for (Player_IntegerPair p : players){
-           players.remove(p);
-       }
+       players.clear();
 
     }
 

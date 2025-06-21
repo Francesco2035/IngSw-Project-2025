@@ -98,7 +98,7 @@ public class GuiRoot implements View {
     private int totHumans;
 
     private boolean killing;
-    private VBox phaseButtons;
+    private HBox phaseButtons;
     private ArrayList<IntegerPair> cmdCoords;
     private boolean tilesClickable;
     private Label prompt;
@@ -168,7 +168,7 @@ public class GuiRoot implements View {
         curCard =  new ImageView();
         curCard.setImage(null);
         killing = false;
-        phaseButtons = new VBox(20);
+        phaseButtons = new HBox(20);
         cmdCoords = new ArrayList<>();
         tilesClickable = false;
         excludedTiles = new ArrayList<>();
@@ -778,7 +778,13 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void setGameboard(int lv) {
+    public void setGameboard(int lv){
+        myGameLv = lv;
+        if(myGameLv == 1)
+            cardBack = new Image(getClass().getResourceAsStream("/GUI/cards/lv1-card.jpg"));
+
+        else
+            cardBack = new Image(getClass().getResourceAsStream("/GUI/cards/lv2-card.jpg"));
     }
 
     public void checkValidityScene(){
@@ -1125,15 +1131,10 @@ public class GuiRoot implements View {
 
                 if(level.equals("Tutorial")){
                     myGameLv = 1;
-                    cardBack = new Image(getClass().getResourceAsStream("/GUI/cards/lv1-card.jpg"));
-//                    lv1PlayerboardBuilder();
                 }
 
                 else {
                     myGameLv = 2;
-                    cardBack = new Image(getClass().getResourceAsStream("/GUI/cards/lv2-card.jpg"));
-
-//                    lv2PlayerboardBuilder();
                 }
                 newGameStage.close();
 
@@ -1786,7 +1787,7 @@ public class GuiRoot implements View {
             HBox stats = new HBox(20, new HBox(3,cannons, nCannons), new HBox(3,engine, nEngines), new HBox(3,energy, nEnergy), new HBox(3,humans, nHumans), new HBox(3,damages, nDamages), new HBox(3,credits, nCredits));
 
             log.setMaxHeight(100);
-            HBox mainBox = new HBox(new VBox(25, cardBox, log), new VBox(100,stats, myBoard, textPanel), phaseButtons, othersBox);
+            HBox mainBox = new HBox(new VBox(25, cardBox, log, phaseButtons), new VBox(100,stats, myBoard, textPanel), othersBox);
             mainBox.setPadding(new Insets(150));
             mainBox.setAlignment(Pos.CENTER);
             Pane root = new Pane(mainBox);
@@ -2208,6 +2209,7 @@ public class GuiRoot implements View {
                 for(IntegerPair p : cmdCoords){
                     cmd.set(cmd + " " + p.getFirst() + " " + p.getSecond());
                 }
+                System.out.println(cmd.get());
                 inputQueue.add(cmd.get());
                 for(ImageView i : selectedImages){
                     i.setOpacity(1);
@@ -2220,7 +2222,6 @@ public class GuiRoot implements View {
 
 
     public void defend(String command, String txt){
-
         AtomicReference<String> cmd = new AtomicReference<>(command);
         Button defend = new Button("Defend!");
         Button doNothing = new Button("Do Nothing");
@@ -2426,7 +2427,7 @@ public class GuiRoot implements View {
             slot.setFitHeight(70);
             slot.setPreserveRatio(true);
 
-            VBox rewardsBox = new VBox(20);
+            HBox rewardsBox = new HBox(20);
             rewardsBox.setPadding(new Insets(20));
 
 
@@ -2479,11 +2480,10 @@ public class GuiRoot implements View {
 
                     }
                 }
-
             }
 
             cargo.getChildren().setAll(slot, curCargoImg);
-            phaseButtons.getChildren().setAll(rewardsBox, cargo, unselect, discard, finish);
+            phaseButtons.getChildren().setAll(new VBox(10, new HBox (10, cargo, unselect, discard, finish), rewardsBox));
 
 
             finish.setOnAction(e -> {
@@ -2492,16 +2492,17 @@ public class GuiRoot implements View {
             });
 
             discard.setOnAction(e -> {
-            inputQueue.add("DiscardCargo " + curCargoCoords.getFirst() + " " + curCargoCoords.getSecond() + " " + curCargoIndex);
-            curCargoCoords = null;
-            curCargoImg.setImage(null);
+                if(curCargoCoords != null){
+                    inputQueue.add("DiscardCargo " + curCargoCoords.getFirst() + " " + curCargoCoords.getSecond() + " " + curCargoIndex);
+                    curCargoCoords = null;
+                    curCargoImg.setImage(null);
+                }
             });
 
             unselect.setOnAction(e -> {
                 curCargoCoords = null;
                 curCargoImg.setImage(null);
             });
-
         });
     }
 
@@ -2511,16 +2512,16 @@ public class GuiRoot implements View {
             theft = true;
             prompt.setText("Select cargo to give");
         });
-
     }
 
-    public void waiting() {
+    public void waiting(){
         Platform.runLater(() -> {
+            prompt.setText("Waiting for your turn...");
             curCard.setImage(curCardImg);
+            phaseButtons.getChildren().clear();
             tilesClickable = false;
             killing = false;
             theft = false;
-            prompt.setText("Waiting for your turn...");
         });
     }
 
