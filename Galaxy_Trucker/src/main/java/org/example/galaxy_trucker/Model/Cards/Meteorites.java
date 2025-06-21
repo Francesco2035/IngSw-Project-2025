@@ -411,10 +411,15 @@ public class   Meteorites extends Card {
                          throw new InvalidDefenceEceptiopn("you have to consume energy to use this cannon");
                      }
                      try {
-                         currentBoard.performAction(tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent(), new UseEnergyAction(currentBoard), new DefendingFromLarge());
+
+//                         CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),
+//                                 new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
+
+                         currentBoard.performAction(tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent(),
+                                 new UseEnergyAction(currentBoard), new DefendingFromLarge());
                      }
                  catch (Exception e){ // potrei splittare la catch in no energia e coord sbagliata
-                     throw new ImpossibleBoardChangeException("There was no energy to use");}
+                     throw new ImpossibleBoardChangeException("There was no energy to use the coordinates are " +EnergyStorage.getFirst() + " " + EnergyStorage.getSecond()+" the type of componet is "+tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent().getClass());}
                  }
                 System.out.println("DefendFromLarge");
             }

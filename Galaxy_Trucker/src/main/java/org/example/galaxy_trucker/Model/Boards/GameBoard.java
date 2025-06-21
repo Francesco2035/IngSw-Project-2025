@@ -405,10 +405,47 @@ public class GameBoard {
            Player playah = p.getKey();
            int finalScore = playah.finishRace(true, "game finished");
            scoreboard.add(new Player_IntegerPair(playah, finalScore));
-           players.remove(p);
+           //spostato la remove player prima era qui
 
+          // players.remove(p);
            /// todo in qualche modo questo deve notificare il gioco che la partitra è finita:)
        }
+
+       for (Player_IntegerPair p : players){
+           players.remove(p);
+       }
+
+    }
+
+    public int arrivalBonus(Player player){
+
+        ArrayList<Player> playersCopy = this.getPlayers();
+
+        int i = playersCopy.indexOf(player);
+
+        return (4-i)*getLevel();
+
+
+    }
+
+    public int beautyBonus(Player player){
+        ArrayList<Player> playersCopy = this.getPlayers();
+
+        int best= 100000;
+        String prettiest="";
+        for (Player p : playersCopy) {
+            if(p.getmyPlayerBoard().getExposedConnectors()<best ){
+                best= p.getmyPlayerBoard().getExposedConnectors();
+                prettiest=p.GetID();
+            }
+        }
+        if(player.GetID()==prettiest){
+            return 2*getLevel();
+        }
+        else {
+            return 0;
+        }
+
 
     }
 

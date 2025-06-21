@@ -260,8 +260,6 @@ public class DebugShip extends Command implements Serializable {
                 tile.setRotation(90);
                 debugShip.insertTile(tile,5,5,false);
 
-                /// todo per determinare se vinci o meno c'e anche il bonus nave più bella
-
                 tile = tiles.get(119); // plasmadrill
                 debugShip.insertTile(tile,4,5,false);
 
@@ -316,6 +314,10 @@ public class DebugShip extends Command implements Serializable {
 
         }
 
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 
     @Override

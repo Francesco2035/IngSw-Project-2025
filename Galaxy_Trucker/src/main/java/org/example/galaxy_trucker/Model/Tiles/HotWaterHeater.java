@@ -24,12 +24,11 @@ public class HotWaterHeater extends Component{
     public void rotate(Boolean direction) {
         if (direction){
             EngineDirection += 1;
-            EngineDirection = EngineDirection % 4;
         }
         else {
             EngineDirection -= 1;
-            EngineDirection = EngineDirection % 4;
         }
+        EngineDirection = EngineDirection % 4;
     }
 
 
