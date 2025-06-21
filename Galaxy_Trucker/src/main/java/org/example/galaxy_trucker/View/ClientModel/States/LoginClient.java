@@ -28,6 +28,6 @@ public class LoginClient extends PlayerStateClient {
 
     @Override
     public ArrayList<String> getCommands() {
-        return new ArrayList<>(List.of("Lobby", "Create", "Join"));
+        return new ArrayList<>(List.of("Lobby", "Create", "Join", "Reconnect"));
     }
 }
