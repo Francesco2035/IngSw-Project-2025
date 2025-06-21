@@ -372,6 +372,8 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                     //se è disconnesso chiami def action
                     //altrimenti esegui il blocco try
                     Controller cur = ControllerMap.get(currentPlayer.GetID());
+
+                    /// probabilmente da errore con meteoriti per la concorrenzialità e perché current non è molto deterministico, potrebbe essere che vada spostato dentro al controllo di current
                     if (cur != null && cur.disconnected){ // se è disconnesso chiamo il comando di default
                         try {
                             cur.DefaultAction(this);
@@ -404,7 +406,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                                     controller.action(cmd, this);
 
                                     ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
-                                //TODO: pietro esplodi
+
                                     System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>index "+ index);
                                     if (currentPlayer.GetHasActed()) {
                                         System.out.println("aggiornmo inpoxadasdophièhnkoiadfshnikodasj");
@@ -462,8 +464,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     }
 
     public void setGameOver(){
+        getGame().getGameBoard().finishGame();
         GameOver = true;
-        System.out.println("Game over the winner is: " + game.getGameBoard().getPlayers().getFirst().GetID());
+        //System.out.println("Game over the winner is: " + game.getGameBoard().getPlayers().getFirst().GetID());
     }
 
     private void stopAllPlayerThreads() {

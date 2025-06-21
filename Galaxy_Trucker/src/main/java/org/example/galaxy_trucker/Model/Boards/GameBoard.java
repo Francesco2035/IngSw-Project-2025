@@ -409,6 +409,38 @@ public class GameBoard {
 
     }
 
+    public int arrivalBonus(Player player){
+
+        ArrayList<Player> playersCopy = this.getPlayers();
+
+        int i = playersCopy.indexOf(player);
+
+        return (4-i)*getLevel();
+
+
+    }
+
+    public int beautyBonus(Player player){
+        ArrayList<Player> playersCopy = this.getPlayers();
+
+        int best= 100000;
+        String prettiest="";
+        for (Player p : playersCopy) {
+            if(p.getmyPlayerBoard().getExposedConnectors()<best ){
+                best= p.getmyPlayerBoard().getExposedConnectors();
+                prettiest=p.GetID();
+            }
+        }
+        if(player.GetID()==prettiest){
+            return 2*getLevel();
+        }
+        else {
+            return 0;
+        }
+
+
+    }
+
 //    public void finishGame(){
 //        int score;
 //        for(Player_IntegerPair p : players){

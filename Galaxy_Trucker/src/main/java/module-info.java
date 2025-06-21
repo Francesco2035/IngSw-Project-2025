@@ -34,9 +34,9 @@
         exports org.example.galaxy_trucker.ClientServer to java.rmi;
         exports org.example.galaxy_trucker.Model.Goods;
         opens org.example.galaxy_trucker.Model.Goods to com.fasterxml.jackson.databind, javafx.fxml;
-        exports org.example.galaxy_trucker;
+        exports org.example.galaxy_trucker.Model.Connectors;
         opens org.example.galaxy_trucker.Model.Connectors to com.fasterxml.jackson.databind;
-        exports org.example.galaxy_trucker.Model.Connectors to com.fasterxml.jackson.databind, javafx.fxml;
+//        exports org.example.galaxy_trucker.Model.Connectors to com.fasterxml.jackson.databind, javafx.fxml;
         exports org.example.galaxy_trucker.Model.Boards.Actions;
         opens org.example.galaxy_trucker.Model.Boards.Actions to com.fasterxml.jackson.databind, javafx.fxml;
         exports org.example.galaxy_trucker.Model.PlayerStates;

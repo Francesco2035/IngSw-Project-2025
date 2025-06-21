@@ -56,8 +56,6 @@ public class ConsumingEnergy extends PlayerState {
         ArrayList<IntegerPair> coords = new ArrayList<>();
 
         if(board.getEnergy()<p){ ///  possibile e il player sceglie più cannoni doppi ch energie che possiede e poi si disconnette
-
-
             //ritorno coordinatevuote cossicché dia errore nella carta e io possa poi tornare in choose cannon e non scegliere nulla che va sicuro bene;
             return new ConsumeEnergyCommand(coords,gameId,player.GetID(),lv,"ConsumeEnrgyCommand","placeholder");
             //throw new ImpossibleActionException("non ci sono abbasatanza energie da rubare");
@@ -71,6 +69,7 @@ public class ConsumingEnergy extends PlayerState {
                     coords.add(new IntegerPair(powerCenters.get(j).getX(),powerCenters.get(j).getY()));
                     i++;
                 }
+                j++;
             }
         }
 
