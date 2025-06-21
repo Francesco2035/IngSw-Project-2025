@@ -51,6 +51,8 @@ public interface EventVisitor {
 
     void visit(ReconnectedEvent reconnectedEvent);
 
+    void visit(TokenEvent tokenEvent);
+
 
     //public void visit(GameBoardEvent event);
 }

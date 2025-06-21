@@ -115,6 +115,7 @@ public class DebugShip extends Command implements Serializable {
 
                 tile = tiles.get(137);//brownalien
                 tile.RotateDx();
+                tile.setRotation(90);
                 debugShip.insertTile(tile,6,4,false);
 
                 tile = tiles.get(149); //shield
@@ -122,6 +123,7 @@ public class DebugShip extends Command implements Serializable {
 
                 tile = tiles.get(144);//shield
                 tile.RotateSx();
+                tile.setRotation(270);
                 debugShip.insertTile(tile,5,7,false);
 
                 tile = tiles.get(11); //triplepowercenter
@@ -130,6 +132,7 @@ public class DebugShip extends Command implements Serializable {
                 tile = tiles.get(15);//  powercenter
                 tile.RotateDx();
                 tile.RotateDx();
+                tile.setRotation(180);
                 debugShip.insertTile(tile,5,5,false);
 
                 tile = tiles.get(104); //plasmadrill
@@ -138,20 +141,24 @@ public class DebugShip extends Command implements Serializable {
                 tile = tiles.get(118); //plasmadrill
                 tile.RotateDx();
                 tile.RotateDx();
+                tile.setRotation(180);
                 debugShip.insertTile(tile,8,7,false);
 
                 tile = tiles.get(62);//special storage
                 tile.RotateDx();
                 tile.RotateDx();
+                tile.setRotation(180);
                 debugShip.insertTile(tile,7,4,false);
 
                 tile = tiles.get(33); //modular housing
                 tile.RotateDx();
                 tile.RotateDx();
+                tile.setRotation(180);
                 debugShip.insertTile(tile,6,8,false);
 
                 tile = tiles.get(142);//purplealien
                 tile.RotateSx();
+                tile.setRotation(270);
                 debugShip.insertTile(tile,7,8,false);
 
                 tile = tiles.get(78); // engine
@@ -165,6 +172,7 @@ public class DebugShip extends Command implements Serializable {
 
                 tile = tiles.get(120); // plasmadrill
                 tile.RotateSx();
+                tile.setRotation(270);
                 debugShip.insertTile(tile,7,3,false);
 
                 tile = tiles.get(29); //triple storage
@@ -179,10 +187,12 @@ public class DebugShip extends Command implements Serializable {
 
                 tile = tiles.get(17); /// storage
                 tile.RotateSx();
+                tile.setRotation(270);
                 debugShip.insertTile(tile,8,8,false);
 
                 tile = tiles.get(147); //shield
                 tile.RotateDx();
+                tile.setRotation(90);
                 debugShip.insertTile(tile,8,9,false);
 
                 tile = tiles.get(97);
@@ -217,16 +227,16 @@ public class DebugShip extends Command implements Serializable {
                 debugShip.insertTile(tile,8,4,false);
 
 
-                /// Todo Rotazione Tile  shield buggata : il problema è il fatto che non viene fatta una setrotation ma solo una rotate, quindi la rotation della tile rimane a 0
+                /// Todo Rotazione Tile  shield buggata
                 tile = tiles.get(145); //shield
                 tile.RotateDx();
-                tile.RotateSx();
-                tile.RotateDx();
+                tile.setRotation(90);
                 debugShip.insertTile(tile,8,5,false);
 
 
                 tile = tiles.get(10); // battery comp
                 tile.RotateDx();
+                tile.setRotation(90);
                 debugShip.insertTile(tile,8,3,false);
 
                 tile = tiles.get(75);//engine
@@ -234,10 +244,12 @@ public class DebugShip extends Command implements Serializable {
 
                 tile = tiles.get(63); //special storage
                 tile.RotateSx();
+                tile.setRotation(270);
                 debugShip.insertTile(tile,5,6,false);
 
                 tile = tiles.get(19); //storage
                 tile.RotateDx();
+                tile.setRotation(90);
                 debugShip.insertTile(tile,5,7,false);
 
                 tile = tiles.get(131); // double plasma
@@ -245,17 +257,22 @@ public class DebugShip extends Command implements Serializable {
 
                 tile = tiles.get(38); //housing
                 tile.RotateDx();
+                tile.setRotation(90);
                 debugShip.insertTile(tile,5,5,false);
+
+                /// todo per determinare se vinci o meno c'e anche il bonus nave più bella
 
                 tile = tiles.get(119); // plasmadrill
                 debugShip.insertTile(tile,4,5,false);
 
                 tile = tiles.get(47); //house
                 tile.RotateSx();
+                tile.setRotation(270);
                 debugShip.insertTile(tile,7,8,false);
 
                 tile = tiles.get(14); // triple power
                 tile.RotateSx();
+                tile.setRotation(270);
                 debugShip.insertTile(tile,8,8,false);
 
                 tile = tiles.get(87); //double hot water
@@ -263,10 +280,12 @@ public class DebugShip extends Command implements Serializable {
 
                 tile = tiles.get(126);//double plasma
                 tile.RotateDx();
+                tile.setRotation(90);
                 debugShip.insertTile(tile,7,9,false);
 
                 tile = tiles.get(18); //storage
                 tile.RotateDx();
+                tile.setRotation(90);
                 debugShip.insertTile(tile,6,9,false);
 
                 tile = tiles.get(49);//sewerpipes
@@ -283,10 +302,12 @@ public class DebugShip extends Command implements Serializable {
 
                 tile = tiles.get(127); //double plasma
                 tile.RotateSx();
+                tile.setRotation(270);
                 debugShip.insertTile(tile,6,3,false);
 
                 tile = tiles.get(36);
                 tile.RotateDx();
+                tile.setRotation(90);
                 debugShip.insertTile(tile,7,3,false);
 
 
