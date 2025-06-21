@@ -427,7 +427,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 }
 
 
-                System.out.println("PRIMO WHILE FINITO");
+                //System.out.println("PRIMO WHILE FINITO");
 
 
             }

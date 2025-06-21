@@ -377,7 +377,7 @@ public class   Meteorites extends Card {
 
     /// non controlla che il cannone sia effettivamente un cannone
     @Override
-    public void DefendFromLarge(IntegerPair CannonCoord,IntegerPair EnergyStorage, Player player) throws InterruptedException {
+    public void DefendFromLarge(IntegerPair CannonCoord,IntegerPair EnergyStorage, Player player){
         PlayerBoard currentBoard =player.getmyPlayerBoard();
         Tile[][] tiles =currentBoard.getPlayerBoard();
         if(CannonCoord !=null) {
@@ -426,7 +426,11 @@ public class   Meteorites extends Card {
 
             this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()));
             player.setState(new Waiting());
-            Thread.sleep(1000);
+            try{
+                Thread.sleep(1000);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
             if (currentBoard.getBroken()){
                 System.out.println("\nrottura nave\n");
 

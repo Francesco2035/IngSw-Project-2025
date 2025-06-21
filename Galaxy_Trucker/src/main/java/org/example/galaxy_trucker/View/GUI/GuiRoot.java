@@ -31,6 +31,7 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
+import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.jetbrains.annotations.NotNull;
@@ -109,6 +110,7 @@ public class GuiRoot implements View {
     private boolean theft;
     private ArrayList<Goods> rewards;
     public ArrayList<ImageView> selectedImages;
+    private LoginClient loginClient;
 
 
 
@@ -118,7 +120,8 @@ public class GuiRoot implements View {
     }
 
 
-    public GuiRoot(){
+    public GuiRoot(LoginClient loginClient){
+        this.loginClient = loginClient;
         tileImage = new ImageView();
         tileImage.setImage(null);
         tileImage.setFitWidth(100);
@@ -1699,6 +1702,10 @@ public class GuiRoot implements View {
     public void phaseChanged(@NotNull PhaseEvent event) {
         playerClient.setPlayerState(event.getStateClient());
         playerClient.showGame(printer);
+
+        if (event.getStateClient() == loginClient){
+
+        }
 
         //player.setstate(event.getpahse)
         //plary.state.showGUI
