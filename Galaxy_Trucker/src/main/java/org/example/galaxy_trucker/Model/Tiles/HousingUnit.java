@@ -39,18 +39,16 @@ public abstract class HousingUnit extends Component{
         return nearbyHousingUnits;
     }
 
-    public ArrayList<HousingUnit> getUnitsListeners() {
-        return unitsListeners;
-    }
-
-    public void setUnitsListeners(HousingUnit unitListener) {
-        unitsListeners.add(unitListener);
-    }
+//    public ArrayList<HousingUnit> getUnitsListeners() {
+//        return unitsListeners;
+//    }
+//
+//    public void setUnitsListeners(HousingUnit unitListener) {
+//        unitsListeners.add(unitListener);
+//    }
 
     //true addcrew
-    public void notifyUnit(boolean type, HousingUnit unit){
-
-    }
+    public abstract void notifyUnit(boolean type, HousingUnit unit);
 
     public abstract int kill();
 

@@ -68,6 +68,9 @@ public class MainCockpitComp extends HousingUnit {
         throw new IllegalArgumentException("can't have aliens");
     }
 
+    @Override
+    public void notifyUnit(boolean type, HousingUnit unit) {}
+
 
     @Override
     public boolean controlValidity(PlayerBoard pb, int x, int y) {
