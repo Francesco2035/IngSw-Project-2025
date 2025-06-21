@@ -31,6 +31,6 @@ public class ConsumingEnergyClient  extends PlayerStateClient{
     //pirates, sbugglers, slavers, openSpace, warzone
 
     public void showGame(GuiOut out){
-        out.getRoot().giveTiles("ConsumeEnergy", "Select the Energy tiles to consume!");
+        out.getRoot().consumingEnergy();
     }
 }

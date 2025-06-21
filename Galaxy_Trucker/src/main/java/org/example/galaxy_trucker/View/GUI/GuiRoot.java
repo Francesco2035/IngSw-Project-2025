@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.View.GUI;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -33,6 +34,7 @@ import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
 import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jline.utils.Log;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -45,7 +47,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class GuiRoot implements View {
 
     private Thread guiThread;
-    private HashMap<String,LobbyEvent> lobbyEventHashMap = new HashMap<>();
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private Stage primaryStage;
 
@@ -87,7 +88,7 @@ public class GuiRoot implements View {
     private HashMap<Integer, IntegerPair> coords;
     private Image brownAlien, purpleAlien, crewMate;
     private Pane rocketsPane;
-
+    private ListView<String> log;
 
     private boolean killing;
     private VBox phaseButtons;
@@ -96,7 +97,8 @@ public class GuiRoot implements View {
     private Label prompt;
     private ArrayList<IntegerPair> excludedTiles;
     private ImageView curCard;
-
+    private Image curCardImg;
+    private boolean batteryClickable;
     private IntegerPair curCargoCoords;
     private int curCargoIndex;
     private ImageView curCargoImg;
@@ -104,7 +106,9 @@ public class GuiRoot implements View {
     private int rewardsLeft;
     private int nPlanets;
     private boolean handlingCargo;
+    private boolean theft;
     private ArrayList<Goods> rewards;
+    public ArrayList<ImageView> selectedImages;
 
 
 
@@ -154,7 +158,10 @@ public class GuiRoot implements View {
         storageCompartments = new HashMap<>();
         rewardsLeft = -1;
         handlingCargo = false;
+        theft = false;
         rewards = null;
+        batteryClickable = false;
+        selectedImages = new ArrayList<>();
 
         guiThread = new Thread(() -> GuiMain.launchApp(this));
         guiThread.start();
@@ -183,7 +190,6 @@ public class GuiRoot implements View {
     @Override
     public void updateBoard(TileEvent event) {
         boolean stackTile;
-        boolean exists = false;
         IntegerPair pair = null;
 
         StackPane tileStack;
@@ -192,10 +198,8 @@ public class GuiRoot implements View {
         tileImg.setFitWidth(70);
         tileImage.setImage(tilePlaceholder);
         tileImage.setOpacity(0.5);
-//        tileRotation = 0;
-//        tileImage.setRotate(0);
 
-        exists = false;
+        boolean exists = false;
         for (IntegerPair p : excludedTiles) {
             if (p.getFirst() == event.getX() && p.getSecond() == event.getY()) {
                 exists = true;
@@ -253,11 +257,8 @@ public class GuiRoot implements View {
                         if (crewImg.getOpacity() == 1) {
                             cmdCoords.add(coord);
                             crewImg.setOpacity(0.5);
+                            selectedImages.add(crewImg);
                         }
-//                        else{
-//                            cmdCoords.remove(coord);
-//                            crewImg.setOpacity(1);
-//                        }
                     }
                 });
 
@@ -265,7 +266,7 @@ public class GuiRoot implements View {
                     crewImg.setImage(brownAlien);
                     crewPane.getChildren().add(crewImg);
                     excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
-                } else if (event.isPurpleAlien()) {
+                } else if (event.isPurpleAlien()){
                     crewImg.setImage(purpleAlien);
                     crewPane.getChildren().add(crewImg);
                     excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
@@ -283,6 +284,7 @@ public class GuiRoot implements View {
                                 if (crew.getOpacity() == 1) {
                                     cmdCoords.add(coord);
                                     crew.setOpacity(0.5);
+                                    selectedImages.add(crew);
                                 }
 //                                else{
 //                                    cmdCoords.remove(coord);
@@ -295,7 +297,8 @@ public class GuiRoot implements View {
                     }
                     crewPane.getChildren().add(humans);
                 }
-            } else if (event.getCargo() != null) {
+            }
+            else if (event.getCargo() != null) {
                 excludedTiles.add(new IntegerPair(event.getX(), event.getY()));
 
                 ImageView cargoImg = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargo/cargo.png")));
@@ -371,6 +374,10 @@ public class GuiRoot implements View {
                                             confirmStage.show();
                                         }
                                     }
+                                    else if(theft){
+                                        inputQueue.add("Theft " + event.getX() + " " + event.getY() + " " + finalI);
+                                        cargoStage.close();
+                                    }
                                 });
                                 i++;
                                 cargobox.getChildren().add(cargo);
@@ -402,17 +409,18 @@ public class GuiRoot implements View {
                         if(checkvalidity){
                             inputQueue.add("RemoveTile " + event.getX() + " " + event.getY());
                         }
-//                        if () {
-//                            IntegerPair coord = new IntegerPair(event.getX(), event.getY());
-//                            if (crew.getOpacity() == 1) {
-//                                cmdCoords.add(coord);
-//                                crew.setOpacity(0.5);
-//                            }
-////                                else{
-////                                    cmdCoords.remove(coord);
-////                                    crew.setOpacity(1);
-////                                }
-//                        }
+                        else if (batteryClickable) {
+                            IntegerPair coord = new IntegerPair(event.getX(), event.getY());
+                            if (battery.getOpacity() == 1) {
+                                cmdCoords.add(coord);
+                                battery.setOpacity(0.5);
+                                selectedImages.add(battery);
+                            }
+//                                else{
+//                                    cmdCoords.remove(coord);
+//                                    crew.setOpacity(1);
+//                                }
+                        }
                     });
                     batteries.getChildren().add(battery);
 
@@ -657,13 +665,13 @@ public class GuiRoot implements View {
         //planets -> chooseplaet x
 
         if(event.getId() >= 29 && event.getId() <= 35){
-            curCard.setImage(new Image(getClass().getResourceAsStream("/GUI/cards/card(openSpace).jpg")));
+            curCardImg = new Image(getClass().getResourceAsStream("/GUI/cards/card(openSpace).jpg"));
         }
         else if(event.getId() == 38 || event.getId() == 39){
-            curCard.setImage(new Image(getClass().getResourceAsStream("/GUI/cards/card(stardust).jpg")));
+            curCardImg = new Image(getClass().getResourceAsStream("/GUI/cards/card(stardust).jpg"));
         }
         else {
-            curCard.setImage(new Image(getClass().getResourceAsStream("/GUI/cards/card(" + event.getId() + ").jpg")));
+            curCardImg = new Image(getClass().getResourceAsStream("/GUI/cards/card(" + event.getId() + ").jpg"));
 
             switch(event.getId()){
                 case 21, 27:{
@@ -677,10 +685,8 @@ public class GuiRoot implements View {
                     nPlanets = 2;
                     break;
                 }
-
             }
         }
-
     }
 
 
@@ -696,7 +702,6 @@ public class GuiRoot implements View {
 
     @Override
     public void setGameboard(int lv) {
-
     }
 
     public void checkValidityScene(){
@@ -705,7 +710,6 @@ public class GuiRoot implements View {
         amIBuilding = false;
         checkvalidity = true;
 
-        prompt = new Label();
         prompt.setText("Remove Invalid Tiles!");
         prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
@@ -919,6 +923,9 @@ public class GuiRoot implements View {
                         inputQueue.add(cmdType.get() + " " + y.get() + " " + x.get());
                     }
                 });
+
+                tile.setOnMouseEntered(null);
+                tile.setOnMouseExited(null);
 
                 if(newTile.getImage() != null && newTile.getImage().equals(tilePlaceholder))
                     newTile.setOpacity(0.5);
@@ -1154,8 +1161,6 @@ public class GuiRoot implements View {
 
             StackPane root = new StackPane();
 
-            Pane pedLayer = new Pane();
-
             ImageView board = new ImageView(gameBoardImg);
             board.setFitHeight(639 * scaleRatio);
             board.setPreserveRatio(true);
@@ -1263,6 +1268,10 @@ public class GuiRoot implements View {
 
                 Button confirmButton = new Button("Pretty Sure");
                 Button goBackButton = goBackButtonMaker(confirmStage);
+
+                confirmButton.setOnAction(E->{
+                    inputQueue.add("Quit");
+                });
 
                 HBox buttons = new HBox(50, goBackButton, confirmButton);
                 buttons.setAlignment(Pos.CENTER);
@@ -1604,14 +1613,13 @@ public class GuiRoot implements View {
 
     public void flightScene() {
 
-
             prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
             ImageView txtBackground = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/all_belt.png")));
             txtBackground.setFitWidth(600);
             txtBackground.setFitHeight(100);
 
-            StackPane textPanel = new StackPane(txtBackground, prompt);
+
 
             AtomicInteger x = new AtomicInteger();
             AtomicInteger y = new AtomicInteger();
@@ -1636,12 +1644,12 @@ public class GuiRoot implements View {
                 if(clickable){
                     ImageView tile = (ImageView) node;
 
-
                     tile.setOnMouseClicked(e->{
                         if(tilesClickable){
                             System.out.println(X + " " +  Y);
                             if(tile.getOpacity() == 1){
                                 cmdCoords.add(new IntegerPair(X, Y));
+                                selectedImages.add(tile);
                                 tile.setOpacity(0.5);
                             }
 //                    else{
@@ -1652,10 +1660,7 @@ public class GuiRoot implements View {
                         }
 
                     });
-
                 }
-
-
             }
 
             Platform.runLater(()->{
@@ -1665,16 +1670,16 @@ public class GuiRoot implements View {
                 coveredCard.setPreserveRatio(true);
                 curCard.setFitHeight(300);
                 curCard.setPreserveRatio(true);
-
+                StackPane textPanel = new StackPane(txtBackground, prompt);
                 HBox cardBox =  new HBox(20, coveredCard, curCard);
-
 
                 VBox othersBox = new VBox(20);
                 for(String id : othersBoards.keySet()){
                     othersBox.getChildren().add(othersBoards.get(id));
                 }
 
-                HBox mainBox = new HBox(cardBox, new VBox(100, myBoard, textPanel), phaseButtons, othersBox);
+                log.setMaxHeight(100);
+                HBox mainBox = new HBox(new VBox(25, cardBox, log), new VBox(100, myBoard, textPanel), phaseButtons, othersBox);
                 mainBox.setPadding(new Insets(150));
                 mainBox.setAlignment(Pos.CENTER);
                 Pane root = new Pane(mainBox);
@@ -1748,11 +1753,20 @@ public class GuiRoot implements View {
     @Override
     public void effectCard(LogEvent event) {
         //messaggio di cosa è successo
+        Platform.runLater(()->{
+            String oldText = prompt.getText();
+//            prompt.setText(event.message());
+            log.getItems().addFirst(event.message());
+
+//            PauseTransition pause = new PauseTransition(Duration.seconds(5));
+//            pause.setOnFinished(e -> prompt.setText(oldText));
+//            pause.play();
+        });
+
     }
 
     @Override
     public void updatePBInfo(PBInfoEvent event) {
-
     }
 
     @Override
@@ -1799,13 +1813,14 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void seeLog() {
-
+    public void seeLog(){
     }
 
     @Override
     public void showOutcome(FinishGameEvent event) {
-
+        Platform.runLater(()->{
+            prompt.setText(event.message());
+        });
     }
 
 
@@ -1904,6 +1919,8 @@ public class GuiRoot implements View {
         contentRoot = new Pane();
         primaryScene = new Scene(primaryRoot, 800, 600);
         readyPlayers = new ListView<>();
+        log = new ListView<>();
+        prompt = new Label();
 
 
         //tile setup
@@ -2059,20 +2076,24 @@ public class GuiRoot implements View {
         Button quit = new Button("Quit");
 
         Platform.runLater(()->{
+            curCard.setImage(null);
             prompt.setText("Picking next card when everyone is ready...");
             phaseButtons.getChildren().setAll(ready,quit);
+
+            cmdCoords.clear();
+            selectedImages.clear();
+            tilesClickable = false;
+            killing = false;
+            theft = false;
+
 
             ready.setOnAction(e -> {
                 inputQueue.add("Ready True");
             });
 
             quit.setOnAction(e -> {
-
+                inputQueue.add("Quit");
             });
-
-            cmdCoords.clear();
-            tilesClickable = false;
-            killing = false;
         });
     }
 
@@ -2082,6 +2103,7 @@ public class GuiRoot implements View {
         Button kill = new Button("Kill!");
 
         Platform.runLater(()->{
+            curCard.setImage(curCardImg);
             killing = true;
             prompt.setText("Select crew mates to kill!");
             phaseButtons.getChildren().setAll(kill);
@@ -2091,6 +2113,9 @@ public class GuiRoot implements View {
                     cmd.set(cmd + " " + p.getFirst() + " " + p.getSecond());
                 }
                 inputQueue.add(cmd.get());
+                for(ImageView i : selectedImages){
+                    i.setOpacity(1);
+                }
             });
         });
 
@@ -2105,6 +2130,8 @@ public class GuiRoot implements View {
         Button doNothing = new Button("Do Nothing");
 
         Platform.runLater(()->{
+            curCard.setImage(curCardImg);
+            batteryClickable = true;
             tilesClickable = true;
             prompt.setText(txt);
             phaseButtons.getChildren().setAll(defend, doNothing);
@@ -2122,29 +2149,65 @@ public class GuiRoot implements View {
 
                 inputQueue.add(cmd.get());
 
-                for(IntegerPair p : cmdCoords){
-                    System.out.println(p.getFirst() + " " + p.getSecond());
-                    ImageView tile = getTile(p.getSecond(), p.getFirst());
-                    tile.setOpacity(1);
+//                for(IntegerPair p : cmdCoords){
+//                    System.out.println(p.getFirst() + " " + p.getSecond());
+//                    ImageView tile = getTile(p.getSecond(), p.getFirst());
+//                    tile.setOpacity(1);
+//                }
+                for(ImageView i : selectedImages){
+                    i.setOpacity(1);
                 }
-
                 cmdCoords.clear();
+                cmd.set(command);
             });
         });
 
     }
 
 
-
-    public void giveTiles(String command, String txt){
-
-        AtomicReference<String> cmd = new AtomicReference<>(command);
+    public void consumingEnergy(){
+        AtomicReference<String> cmd = new AtomicReference<>();
         Button done = new Button("Done!");
 
         Platform.runLater(()->{
+            curCard.setImage(curCardImg);
+            batteryClickable = true;
+            prompt.setText("Select the batteries to consume!");
+            phaseButtons.getChildren().setAll(done);
+            cmd.set("ConsumeEnergy");
+
+            done.setOnAction(e ->{
+                for(IntegerPair p : cmdCoords){
+                    cmd.set(cmd + " " + p.getFirst() + " " + p.getSecond());
+                }
+
+                System.out.println(cmd.get());
+                inputQueue.add(cmd.get());
+//                for(IntegerPair p : cmdCoords){
+//                    ImageView tile = getTile(p.getSecond(), p.getFirst());
+//                    tile.setOpacity(1);
+//                }
+                cmdCoords.clear();
+                cmd.set("ConsumeEnergy");
+                for(ImageView i : selectedImages){
+                    i.setOpacity(1);
+                }
+            });
+        });
+    }
+
+
+
+    public void giveTiles(String command, String txt){
+        AtomicReference<String> cmd = new AtomicReference<>(command);
+        Button done = new Button("Done!");
+        Button doNothing = new Button("Do Nothing");
+
+        Platform.runLater(()->{
+            curCard.setImage(curCardImg);
             tilesClickable = true;
             prompt.setText(txt);
-            phaseButtons.getChildren().setAll(done);
+            phaseButtons.getChildren().setAll(done, doNothing);
 
             done.setOnAction(e ->{
                 for(IntegerPair p : cmdCoords){
@@ -2155,15 +2218,25 @@ public class GuiRoot implements View {
 
                 inputQueue.add(cmd.get());
 
-                for(IntegerPair p : cmdCoords){
-                    ImageView tile = getTile(p.getSecond(), p.getFirst());
-                    tile.setOpacity(1);
+//                for(IntegerPair p : cmdCoords){
+//                    ImageView tile = getTile(p.getSecond(), p.getFirst());
+//                    tile.setOpacity(1);
+//                }
+                for(ImageView i : selectedImages){
+                    i.setOpacity(1);
                 }
+                cmdCoords.clear();
+                cmd.set(command);
+            });
 
+            doNothing.setOnAction(e->{
+                inputQueue.add(command + " DoNothing");
+                for(ImageView i : selectedImages){
+                    i.setOpacity(1);
+                }
                 cmdCoords.clear();
             });
         });
-
     }
 
 
@@ -2182,6 +2255,7 @@ public class GuiRoot implements View {
             planets.getItems().add("Planet "+ (i+1));
 
         Platform.runLater(()->{
+            curCard.setImage(curCardImg);
             prompt.setText("Choose a planet to explore!");
             phaseButtons.getChildren().setAll(planets, choose, doNothing);
 
@@ -2214,14 +2288,13 @@ public class GuiRoot implements View {
     }
 
 
-
     public void acceptState(){
-
         AtomicReference<String> cmd = new AtomicReference<>("ChoosePlanet");
         Button accept = new Button("Accept");
         Button decline = new Button("Decline");
 
         Platform.runLater(()->{
+            curCard.setImage(curCardImg);
             prompt.setText("Do you want to visit it?");
             phaseButtons.getChildren().setAll(accept, decline);
 
@@ -2240,6 +2313,7 @@ public class GuiRoot implements View {
 
     public void handleCargo() {
         Platform.runLater(() -> {
+            curCard.setImage(curCardImg);
             handlingCargo = true;
             curCargoIndex = -1;
             curCargoCoords = null;
@@ -2248,8 +2322,6 @@ public class GuiRoot implements View {
             Button finish = new Button("Finish");
             Button discard = new Button("Discard");
             Button unselect = new Button("Unselect");
-
-
 
             prompt.setText("Move your cargo as you like!");
 
@@ -2337,13 +2409,23 @@ public class GuiRoot implements View {
         });
     }
 
+    public void handleTheft(){
+        Platform.runLater(() -> {
+            curCard.setImage(curCardImg);
+            theft = true;
+            prompt.setText("Select cargo to give");
+        });
+
+    }
 
     public void waiting() {
-        tilesClickable = false;
-        killing = false;
-
-        prompt.setText("Waiting for your turn...");
-
+        Platform.runLater(() -> {
+            curCard.setImage(curCardImg);
+            tilesClickable = false;
+            killing = false;
+            theft = false;
+            prompt.setText("Waiting for your turn...");
+        });
     }
 
 
