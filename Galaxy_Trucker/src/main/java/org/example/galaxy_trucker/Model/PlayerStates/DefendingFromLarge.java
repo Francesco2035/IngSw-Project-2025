@@ -50,7 +50,7 @@ public class DefendingFromLarge extends PlayerState{
 
     @Override
     public Command createDefaultCommand(String gameId, Player player) {
-        int lv= player.getCommonBoard().getLevel();
+        int lv = player.getCommonBoard().getLevel();
         return new DefendFromLargeCommand(null,null,gameId,player.GetID(),lv,"DefendingFromLargeCommand","placeholder"); /// devo mettere il token
     }
 

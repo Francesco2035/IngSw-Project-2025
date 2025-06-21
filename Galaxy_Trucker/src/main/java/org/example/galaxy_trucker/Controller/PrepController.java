@@ -23,7 +23,7 @@ public class PrepController extends Controller implements ControllerHourGlassLis
         this.gc = gc;
         System.out.println("Prep Controller " + gameId + " - " + curPlayer);
         this.playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
-        this.disconnected = disconnected;
+        //this.disconnected = disconnected;
     }
 
     @Override
@@ -35,15 +35,16 @@ public class PrepController extends Controller implements ControllerHourGlassLis
 
     @Override
     public void nextState(GameController gc) {
+        System.out.println("called next state prepcontroller");
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
-            this.disconnected = false;
+            setDisconnected(false);
         }
         synchronized (gc) {
             curPlayer.getCommonBoard().getHourglass().stopHourglass();
         }
         if (curPlayer.getmyPlayerBoard().checkValidity()){
             curPlayer.setState(new AddCrewState());
-            PostPrepController newController = new PostPrepController(curPlayer, gameId,this.disconnected);
+            PostPrepController newController = new PostPrepController(curPlayer, gameId,getDisconnected());
             newController.setExceptionListener(exceptionListener);
             gc.setControllerMap(curPlayer,newController);
         }
@@ -53,7 +54,7 @@ public class PrepController extends Controller implements ControllerHourGlassLis
                 curPlayer.getCommonBoard().removePlayerAndShift(curPlayer);
             }
 
-            CheckValidityController newController = new CheckValidityController(curPlayer, gameId, disconnected);
+            CheckValidityController newController = new CheckValidityController(curPlayer, gameId, getDisconnected());
             newController.setExceptionListener(exceptionListener);
             gc.setControllerMap(curPlayer,newController);
             curPlayer.setState(new CheckValidity());
