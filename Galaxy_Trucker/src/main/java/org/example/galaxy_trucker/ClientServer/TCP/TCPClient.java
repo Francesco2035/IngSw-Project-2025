@@ -7,6 +7,7 @@ import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
+import org.example.galaxy_trucker.Controller.Messages.TokenEvent;
 
 import java.io.*;
 import java.net.Socket;
@@ -16,8 +17,6 @@ import java.util.UUID;
 
 //TODO: non possiamo far terminare l'input con end
 public class TCPClient{
-//TODO: settare lobby e login anche da fuori nel caso il client dovesse cambiare connessione
-    private boolean lobby = false;
 
     private boolean connected = false;
     private Socket echoSocket;
@@ -31,7 +30,6 @@ public class TCPClient{
     private Thread eventThread = null;
     private Thread pingThread = null;
     //private Thread clientLoop = null;
-    //TODO: modificare input come in RMI
 
     public TCPClient(Client c) {
         this.client = c;
@@ -76,7 +74,7 @@ public class TCPClient{
 
                 String token = msg.substring(7);
                 //System.out.println("Token received: " + token);
-                this.client.receiveEvent(new LogEvent(token));
+                this.client.receiveEvent(new TokenEvent(token));
                 this.token = token;
                 this.client.getView().setGameboard(commandInterpreter.getLv());
                 commandInterpreter.setToken(token);

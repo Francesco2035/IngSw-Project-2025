@@ -48,6 +48,8 @@ public class Tile implements Serializable {
     //spostare la rotazione delle direzioni protette in una chiamata della classe di shield generator
 
     //metodi rotate per le tiles
+
+
     public void RotateSx(){
         Collections.rotate(this.connectors, -1);
         this.getComponent().rotate(false);
@@ -56,8 +58,8 @@ public class Tile implements Serializable {
     public void RotateDx(){
         Collections.rotate(this.connectors, 1);
         this.getComponent().rotate(true);
-
     }
+
 
 
     public Tile clone(PlayerBoard clonedPlayerBoard){
@@ -65,9 +67,9 @@ public class Tile implements Serializable {
         clonedTile.setId(this.id);
         clonedTile.setRotation(this.rotation);
         clonedTile.setPlayerBoard(clonedPlayerBoard);
-        component.setTile(clonedTile);
-        Component component = this.component.clone(clonedPlayerBoard);
-        clonedTile.setComponent(component);
+        Component clonedComponent = this.component.clone(clonedPlayerBoard);
+        clonedComponent.setTile(clonedTile);
+        clonedTile.setComponent(clonedComponent);
         clonedTile.setConnectors(new ArrayList<>(this.connectors));
         clonedTile.chosen = this.chosen;
         return clonedTile;

@@ -274,7 +274,7 @@ public class TUI implements View {
 
     @Override
     public void effectCard(LogEvent event) {
-        out.setEffectCard(event.message());
+        out.setLog(event.message());
         onGameUpdate();
     }
 
@@ -312,6 +312,16 @@ public class TUI implements View {
         out.setOutcome(event.message(), event.isWin());
         playerClient.setPlayerState(new FinishStateClient());
         onGameUpdate();
+    }
+
+    @Override
+    public void reconnect() {
+        out.clearOut();
+    }
+
+    @Override
+    public void Token(TokenEvent tokenEvent) {
+        out.setLog(tokenEvent.getToken());
     }
 
     public String formatPBInfo(PBInfoEvent event) {
@@ -522,7 +532,7 @@ public class TUI implements View {
             }
 
             case "shieldGenerator" -> {
-                int rot = event.getRotation() % 360;
+                int rot = (event.getRotation() % 360) / 90;
                 if (rot == 0){
                     top ="\u001B[33m" + top + "\u001B[0m";
                     right ="\u001B[33m" + right + "\u001B[0m";

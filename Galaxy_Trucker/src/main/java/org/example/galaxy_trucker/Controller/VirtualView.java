@@ -31,7 +31,8 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private String token;
     private CardEvent card = null;
     private GameLobbyEvent lobby = null;
-    private GameBoardEvent board = null;
+    //TODO: forse è meglio fare che board sia un singolo evento che contenga tutti i player
+    private ArrayList<GameBoardEvent> board = new ArrayList<>();
     private PhaseEvent phase = null;
     private RewardsEvent rewardsEvent = null;
     private ArrayList<PlayersPBListener> playersPBListeners = new ArrayList<>();
@@ -129,7 +130,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     public void sendEvent(PlayerTileEvent event){
-        otherPlayerTileEvents.add(event);
+
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -298,7 +299,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     @Override
     public void gameBoardChanged(GameBoardEvent event)  {
-        board = event;
+        board.add(event);
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -340,7 +341,6 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         }
         if(hand != null) {
             sendEvent(hand);
-
         }
         if (card != null){
             newCard(card);
@@ -351,11 +351,19 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         if (lobby != null){
             sendEvent(lobby);
         }
-        if (board!= null){
-            sendEvent(board);
+        for (GameBoardEvent gbEvent : board){
+            System.out.println("Sending board" + board.size() + " " + gbEvent.getPlayerID() + " " +gbEvent.getPosition());
+            sendEvent(gbEvent);
         }
         if (rewardsEvent != null){
             sendEvent(rewardsEvent);
+        }
+        for (LogEvent log : logEvents){
+            sendEvent(log);
+        }
+        for (PlayerTileEvent playerTileEvent : otherPlayerTileEvents){
+            System.out.println("Sending PlayerTileEvent " + playerTileEvent.getPlayerName() + " " + playerTileEvent.getId());
+            sendEvent(playerTileEvent);
         }
 
     }
@@ -480,7 +488,8 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     @Override
     public void receivePBupdate(PlayerTileEvent event){
-        //otherPlayerTileEvents.add(event);
+        System.out.println("adding player tile event "+ event.getPlayerName()+ " "+ event.getId());
+        otherPlayerTileEvents.add(event);
         sendEvent(event);
     }
 

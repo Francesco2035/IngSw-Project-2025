@@ -54,6 +54,7 @@ public class Slavers extends Card{
 
     @Override
     public void CardEffect(){
+        this.setDefaultPunishment(this.Punishment);
         losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
@@ -146,7 +147,7 @@ public class Slavers extends Card{
                 return;
             }
 
-            this.setDefaultPunishment(this.Punishment);
+
             this.currentPlayer.setState(new Killing());
             //this.currentPlayer.setInputHandler(new Killing(this));
         }
@@ -192,7 +193,7 @@ public class Slavers extends Card{
     @Override
     public void continueCard(boolean accepted){
         if(accepted){
-            currentPlayer.IncreaseCredits(this.reward);
+            currentPlayer.getmyPlayerBoard().setCredits(this.reward);
 
             //non ricordo se metto il time positivo o negativo nel json se positivo devo fare meno time;
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());

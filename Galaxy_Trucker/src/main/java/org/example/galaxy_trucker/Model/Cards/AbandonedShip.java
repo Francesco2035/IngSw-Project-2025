@@ -53,6 +53,7 @@ public class AbandonedShip extends Card{
 
     @Override
     public void CardEffect() throws InterruptedException {
+        this.setDefaultPunishment(this.requirement);
         losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
@@ -125,6 +126,7 @@ public class AbandonedShip extends Card{
             if (coordinates.size() != this.requirement) {
                 //devo dirgli che ha scelto il num sbagliato di persone da shottare
                 this.currentPlayer.setState(new Accepting());
+                System.out.println( "numofHumans given: " +coordinates.size());
                 throw new WrongNumofHumansException("wrong number of humans");
             }
 
@@ -145,7 +147,7 @@ public class AbandonedShip extends Card{
                 throw new ImpossibleBoardChangeException("there was an error in killing humans");
 
             }
-            currentPlayer.IncreaseCredits(this.reward);
+            currentPlayer.getmyPlayerBoard().setCredits(this.reward);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
 
 

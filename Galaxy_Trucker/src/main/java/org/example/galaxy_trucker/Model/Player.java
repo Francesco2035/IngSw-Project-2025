@@ -31,7 +31,6 @@ public class Player implements Serializable {
     private String ID;
     private boolean ready;
     private  boolean HasActed;
-    private int credits;
     private CardListner cardListner;
     private Tile CurrentTile;   //the tile that Player has in his hand
     private PlayerState PlayerState;
@@ -83,7 +82,6 @@ public class Player implements Serializable {
 
 
     public Player()  {
-        credits = 0;
         ready = false;
         HasActed = false;
         CurrentTile = null;
@@ -237,10 +235,6 @@ public class Player implements Serializable {
 //        CurrentTile = null;
 //    }
 
-    public void IncreaseCredits(int num){
-        credits += num;
-    }
-
     public void setCard(Card NewCard){
         CurrentCard = NewCard;
 
@@ -303,7 +297,7 @@ public class Player implements Serializable {
 
 
     public String GetID() {return this.ID;}
-    public int GetCredits() {return this.credits;} //per ora inutile
+
     public boolean GetReady() {return this.ready;}
 
     public boolean GetHasActed() {
