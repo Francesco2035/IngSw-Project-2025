@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
+import org.example.galaxy_trucker.Commands.KillCommand;
 import org.example.galaxy_trucker.Controller.FlightController;
 import org.example.galaxy_trucker.Controller.GameController;
 import org.example.galaxy_trucker.Controller.GamesHandler;
@@ -10,12 +11,15 @@ import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
+import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.GiveSpeed;
+import org.example.galaxy_trucker.Model.PlayerStates.Killing;
 import org.example.galaxy_trucker.NewTestSetupHelper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +28,7 @@ class TileAndComponentTest {
 
 
     @Test
-    public void ComponentTest() throws IOException {
+    public void ComponentTest() throws IOException, InterruptedException {
 
 
 
@@ -90,7 +94,6 @@ class TileAndComponentTest {
 
         //alienaddon1
 
-
         //type 0
         p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(132), 6, 7, false);
         AlienAddons alienaddon = (AlienAddons) game.getGag().getTilesDeck().get(132).getComponent();
@@ -112,6 +115,92 @@ class TileAndComponentTest {
         alienaddon1.clone(p1.getmyPlayerBoard());
         alienaddon1.controlValidity(p1.getmyPlayerBoard(), 0, 0);
         assertEquals(1, alienaddon1.getType());
+
+
+
+
+        //housingunits
+
+        //type 0
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(35), 6, 7, false);
+        ModularHousingUnit mhu = (ModularHousingUnit) game.getGag().getTilesDeck().get(35).getComponent();
+        mhu.notifyUnit(true, new ModularHousingUnit());
+        mhu.remove(p1.getmyPlayerBoard());
+        mhu.getX();
+        mhu.getY();
+        mhu.setX(mhu.getX() + 1);
+        mhu.setY(mhu.getY() + 1);
+        mhu.isPopulated();
+        mhu.checkNearbyUnits(p1.getmyPlayerBoard());
+        helper.HumansSetter1(p1.getmyPlayerBoard()); //TODO: aggiungere i casi degli alieni, tramite un nuovo metodo sull'helper
+        p1.getmyPlayerBoard().getHousingUnits().getFirst().checkNearbyUnits(p1.getmyPlayerBoard());
+
+
+
+        //maincockpit
+        MainCockpitComp mc = new MainCockpitComp();
+        mc.setNumHumans(2);
+        assertEquals(2, mc.getNumHumans());
+        mc.setBrownAlien(false);
+        mc.setPurpleAlien(false);
+        try {
+            mc.setBrownAlien(true);
+        } catch (Exception e) {
+            assertEquals("MainCockpit can't have aliens", e.getMessage());
+        }
+        try {
+            mc.setPurpleAlien(true);
+        } catch (Exception e) {
+            assertEquals("MainCockpit can't have aliens", e.getMessage());
+        }
+        mc.isNearBrownAddon();
+        mc.isNearPurpleAddon();
+        mc.isBrownAlien();
+        mc.isPurpleAlien();
+
+        try {
+            mc.setNearBrownAddon(true);
+        } catch (Exception e) {
+            assertEquals("can't have aliens", e.getMessage());
+        }
+        try {
+            mc.setNearPurpleAddon(true);
+        } catch (Exception e) {
+            assertEquals("can't have aliens", e.getMessage());
+        }
+        mc.notifyUnit(true, new ModularHousingUnit());
+        mc.clone(p1.getmyPlayerBoard());
+
+
+        ArrayList<IntegerPair> alp = new ArrayList<>();
+        p1.setState(new Killing());
+        game.getGag().getCardsDeck().getFirst().setBoard(game.getGameBoard()); // per qualche motivo se chiamo questi metodi su carta 32 già usata crasha e perdo
+        game.getGag().getCardsDeck().getFirst().setConcurrentCardListener(gc);
+        game.getGag().getCardsDeck().getFirst().updateSates();
+        game.getGag().getCardsDeck().getFirst().CardEffect();
+        p1.setCard(game.getGag().getCardsDeck().getFirst());
+        alp.add(new IntegerPair(6,6));
+        alp.add(new IntegerPair(4,5));
+        alp.add(new IntegerPair(7,4));
+        KillCommand kc = new KillCommand(alp, game.getGameID(), p1.GetID(), game.getLv(), "KILL", null);
+        kc.execute(p1);
+        KillCommand kc2 = new KillCommand(alp, game.getGameID(), p1.GetID(), game.getLv(), "KILL", null);
+        kc2.execute(p1);
+        KillCommand kc3 = new KillCommand(alp, game.getGameID(), p1.GetID(), game.getLv(), "KILL", null);
+        try {
+            kc3.execute(p1);
+        } catch (Exception e) {
+            assertEquals("no more humans to kill", e.getMessage());
+        }
+
+
+
+
+
+
+
+
+
 
 
 
