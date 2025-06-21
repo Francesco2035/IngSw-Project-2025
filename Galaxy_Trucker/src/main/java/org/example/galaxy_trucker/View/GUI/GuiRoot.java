@@ -1521,6 +1521,16 @@ public class GuiRoot implements View {
 
     }
 
+    @Override
+    public void reconnect() {
+
+    }
+
+    @Override
+    public void Token(TokenEvent tokenEvent) {
+
+    }
+
 
     private @NotNull Button joinButtonMaker(LobbyEvent joining) {
         Button joinButton = new Button("Join");

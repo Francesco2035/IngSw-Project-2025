@@ -649,7 +649,7 @@ public class Out {
         inputReader.renderScreen(sb);
     }
 
-    public void setEffectCard(String message) {
+    public void setLog(String message) {
         this.effect = message;
         StringBuilder sb = new StringBuilder();
         sb.append(Ansi.ansi().fgYellow().a("[ " + effect + " ]").reset()+ "                                                                                                                                                                                                                                                         ");
@@ -748,7 +748,7 @@ public class Out {
 
     public void clearOut() {
         lobby.clear();
-        //TODO: pulire tutta OUT
+        log.clear();
     }
 
     public StringBuilder showOutcome() {

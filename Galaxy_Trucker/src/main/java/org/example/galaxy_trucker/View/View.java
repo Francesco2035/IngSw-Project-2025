@@ -46,7 +46,6 @@ public interface View {
 
     void rewardsChanged(RewardsEvent event);
 
-
     void phaseChanged(PhaseEvent event);
 
     void exceptionOccurred(ExceptionEvent exceptionEvent);
@@ -66,4 +65,8 @@ public interface View {
     void seeLog();
 
     void showOutcome(FinishGameEvent event);
+
+    void reconnect();
+
+    void Token(TokenEvent tokenEvent);
 }
