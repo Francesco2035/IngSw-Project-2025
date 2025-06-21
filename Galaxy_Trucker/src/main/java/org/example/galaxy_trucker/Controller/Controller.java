@@ -61,7 +61,7 @@ public abstract class Controller {
        if (!curPlayer.GetHasActed()) { //has acted non dovrebbe servire nelle azioni non automatiche, potrebbe anche non servire in generale tbh
            try {
                this.curPlayer.SetHasActed(true);
-               System.out.println("DefaultAction called for " + curPlayer.GetID());
+               System.out.println("DefaultAction called for " + curPlayer.GetID()+ " disconnected: " + disconnected);
                 /// forse potrei fare il controllo che sia != null anche se dovrebbe esssere ridondante
                cmd.execute(curPlayer);
               // curPlayer.SetReady(true);

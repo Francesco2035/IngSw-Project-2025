@@ -143,7 +143,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                     synchronized (ControllerMap) {
                         Controller current = ControllerMap.get(playerId);
                         if(current != null && current.disconnected){ //questo è il thread  dei command fuori dalla flight mode giusto?
-                            //current.DefaultAction(this);
+                            current.DefaultAction(this);
                         }
                         else{
                             Command cmd = queue.poll(); // se questa è esclusiva del player si potrebbe svuotare in caso di disconnessione
@@ -350,7 +350,6 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             card.sendTypeLog();
             try{
                 card.CardEffect();
-
             }
             catch (InterruptedException e){
                 e.printStackTrace();
@@ -373,6 +372,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                     //altrimenti esegui il blocco try
                     Controller cur = ControllerMap.get(currentPlayer.GetID());
                     if (cur != null && cur.disconnected){ // se è disconnesso chiamo il comando di default
+                        System.out.println("Player disconnected "+cur.getClass());
                         try {
                             cur.DefaultAction(this);
                         } catch (Exception e) {
@@ -407,7 +407,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                                 //TODO: pietro esplodi
                                     System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>index "+ index);
                                     if (currentPlayer.GetHasActed()) {
-                                        System.out.println("aggiornmo inpoxadasdophièhnkoiadfshnikodasj");
+                                        System.out.println("aggiornmo index");
                                         index++;
                                     }
                                 }
@@ -432,7 +432,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
             }
 
-            System.out.println("USCITO DAL SECONDO WHILE");
+            //System.out.println("USCITO DAL SECONDO WHILE");
             Controller ReadySetter;
             System.out.println("players "+ game.getPlayers().size());
             for (Player p : game.getPlayers().values()) {
@@ -513,9 +513,13 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     }
 
     public void startPlayer(String token) {
+        System.out.println("STARTING ");
         String playerId = tokenToPlayerId.get(token);
+        System.out.println("STARTING "+playerId);
         VirtualViewMap.get(playerId).sendEvent(new ReconnectedEvent(token,game.getGameID(),playerId, lv));
         threads.get(playerId).interrupt();
+        Controller curr = ControllerMap.get(playerId);
+        curr.setDisconnected(false);
         //setto booleano del controler
         threads.remove(playerId);
 

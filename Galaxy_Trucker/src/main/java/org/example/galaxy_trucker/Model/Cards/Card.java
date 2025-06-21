@@ -46,6 +46,12 @@ public class Card implements Serializable {
     public HashMap<String, RandomCardEffectListener> RandomCardEffectListeners = new HashMap<>();
 
 
+    private  final Object lock = new Object();
+
+    public  Object getLock() {
+        return lock;
+    }
+
     private int id;
     @JsonProperty("Level")
     private int Level;
