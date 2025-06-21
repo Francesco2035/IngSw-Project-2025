@@ -69,6 +69,7 @@ public class ConsumingEnergy extends PlayerState {
                     coords.add(new IntegerPair(powerCenters.get(j).getX(),powerCenters.get(j).getY()));
                     i++;
                 }
+                j++;
             }
         }
 
