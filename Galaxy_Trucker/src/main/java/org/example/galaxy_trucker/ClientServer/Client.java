@@ -146,7 +146,7 @@ public class Client implements EventVisitor {
             tui.setClient(client);
             client.setView(tui);
         } else if (view1.equals("GUI")){
-            GuiRoot gui = new GuiRoot();
+            GuiRoot gui = new GuiRoot(loginClient);
             client.setView(gui);
         }
 
