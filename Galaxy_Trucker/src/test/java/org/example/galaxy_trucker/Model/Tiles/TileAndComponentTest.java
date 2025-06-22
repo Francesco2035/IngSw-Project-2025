@@ -9,6 +9,7 @@ import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
@@ -505,6 +506,28 @@ class TileAndComponentTest {
         sc4.clone(p1.getmyPlayerBoard());
         sc4.controlValidity(p1.getmyPlayerBoard(), 0, 0);
         assertEquals(2, sc4.getType());
+
+
+
+        //storage
+
+        Storage str = new Storage() {
+            @Override
+            public Component clone(PlayerBoard playerBoard) {
+                return null;
+            }
+        };
+        str.insert(p1.getmyPlayerBoard(), 6, 7);
+        str.remove(p1.getmyPlayerBoard());
+        try {
+            str.getValue(0);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+        str.removeGood(-1);
+        str.addGood(new BLUE());
+        str.getGoods();
+        str.sendState();
 
 
 
