@@ -15,6 +15,7 @@ import org.example.galaxy_trucker.NewTestSetupHelper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,28 +56,51 @@ class PlayerTest {
 
 
 
-        Player player = new Player();
-        player.setId("prova1");
+        p1.setFinishListener(gc);
+        assertEquals(gc, p1.getFinishListener());
 
-        player.setFinishListener(gc);
-        assertEquals(gc, player.getFinishListener());
+        p1.setReadyListener(gc);
+        assertEquals(gc, p1.getReadyListener());
 
-        player.setReadyListener(gc);
-        assertEquals(gc, player.getReadyListener());
-
-        System.out.println(player.getCurrentTile());
-        player.setCurrentTile(null);
+        System.out.println(p1.getCurrentTile());
+        p1.setCurrentTile(null);
         try{
-            player.setCurrentTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE));
+            p1.setCurrentTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE));
         }catch(Exception e){
             assertEquals("Your hand is full!", e.getMessage());
         }
 
-        player.setCard(new AbandonedShip(3, 1, 2, 5, game.getGameBoard()));
-        player.execute();
+        p1.setCard(new AbandonedShip(3, 1, 2, 5, game.getGameBoard()));
+        p1.execute();
 
+        try {
+            p1.DiscardTile();
+        } catch (Exception e){
+            assertEquals("You can't discard a Tile, you don't have one!", e.getMessage());
+        }
 
+        game.getGag().getTilesDeck().get(19).setChosen();
+        try {
+            p1.PickNewTile(-2);
+        } catch (Exception e){
+            assertEquals("Valore non valido", e.getMessage());
+        }
 
+        p1.PickNewTile(-1);
+        p1.getCurrentTile().setChosen();
+        try {
+            p1.SelectFromBuffer(0);
+        } catch (Exception e){
+            assertEquals("You can't select a Tile, you have already one!", e.getMessage());
+        }
+
+//        p1.SelectFromBuffer(-20);
+
+        try {
+            p1.DiscardTile();
+        } catch (Exception e){
+            assertEquals("You can't discard this Tile!", e.getMessage());
+        }
 
 
 
