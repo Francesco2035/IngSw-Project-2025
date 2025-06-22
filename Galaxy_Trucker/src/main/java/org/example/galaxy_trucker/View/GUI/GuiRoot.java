@@ -139,77 +139,37 @@ public class GuiRoot implements View {
         guiThread.start();
     }
 
-    private void sceneSetup(){
-        primaryRoot = new StackPane();
-        contentRoot = new Pane();
-        primaryScene = new Scene(primaryRoot, 800, 600);
+    public void sceneSetup(){
+        Platform.runLater(()->{
+            primaryRoot = new StackPane();
+            contentRoot = new Pane();
+            primaryScene = new Scene(primaryRoot, 800, 600);
 
-        tileImage = new ImageView();
-        tileImage.setImage(null);
-        tileImage.setFitWidth(100);
-        tileImage.setPreserveRatio(true);
-        uncoveredTiles = new TilePane();
-        amIBuilding = true;
-        checkvalidity = false;
-        hourglassBox = new VBox();
-        buffer1 = new ImageView();
-        buffer2 = new ImageView();
+            tileImage = new ImageView();
+            tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
+            tileImage.setImage(tilePlaceholder);
+            tileImage.setOpacity(0.5);
 
-        coords = new HashMap<>();
-        othersBoards = new HashMap<>();
-        playerRockets = new HashMap<>();
-        playerPositions = new HashMap<>();
-        rocketsPane = new Pane();
+            //background setup
+            Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
 
-        myBoard = new GridPane();
-        playerClient = new PlayerClient();
-        discardedTiles = new ArrayList<>();
-        discardedMap = new HashMap<>();
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.setAutoPlay(true);
 
-        curCard =  new ImageView();
-        curCard.setImage(null);
-        curCardImg = null;
-        killing = false;
-        phaseButtons = new HBox(20);
-        cmdCoords = new ArrayList<>();
-        tilesClickable = false;
-        excludedTiles = new ArrayList<>();
-        curCargoImg = new ImageView();
-        curCargoImg.setImage(null);
-        storageCompartments = new HashMap<>();
-        rewardsLeft = 0;
-        handlingCargo = false;
-        theft = false;
-        rewards = null;
-        batteryClickable = false;
-        selectedImages = new ArrayList<>();
+            MediaView background = new MediaView(mediaPlayer);
+            background.setPreserveRatio(false);
 
-        readyPlayers = new ListView<>();
-        log = new ListView<>();
-        prompt = new Label();
+            background.fitHeightProperty().bind(primaryStage.heightProperty());
+            background.fitWidthProperty().bind(primaryStage.widthProperty());
 
 
-        //tile setup
-        tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
-        tileImage.setImage(tilePlaceholder);
-        tileImage.setOpacity(0.5);
+            primaryRoot.getChildren().addAll(background, contentRoot);
+            primaryScene.setRoot(primaryRoot);
 
-        //background setup
-        Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
+            goToFirstScene();
+        });
 
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setAutoPlay(true);
-
-        MediaView background = new MediaView(mediaPlayer);
-        background.setPreserveRatio(false);
-
-        background.fitHeightProperty().bind(primaryStage.heightProperty());
-        background.fitWidthProperty().bind(primaryStage.widthProperty());
-
-
-        primaryRoot.getChildren().addAll(background, contentRoot);
-        primaryScene.setRoot(primaryRoot);
     }
 
 
@@ -1312,6 +1272,7 @@ public class GuiRoot implements View {
 
                 confirmButton.setOnAction(E -> {
                     inputQueue.add("Quit");
+                    confirmStage.close();
                 });
 
                 HBox buttons = new HBox(50, goBackButton, confirmButton);
@@ -2092,31 +2053,75 @@ public class GuiRoot implements View {
 
 
     public void goToFirstScene() {
-        sceneSetup();
 
-        Label titleLabel = new Label("GALAXY TRUCKERS");
-        titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
+        Platform.runLater(() -> {
+            tileImage.setImage(null);
+            tileImage.setFitWidth(100);
+            tileImage.setPreserveRatio(true);
+            uncoveredTiles = new TilePane();
+            amIBuilding = true;
+            checkvalidity = false;
+            hourglassBox = new VBox();
+            buffer1 = new ImageView();
+            buffer2 = new ImageView();
 
-        Button startButton = new Button("Start!");
-        startButton.setStyle("-fx-font-size: 20px;");
+            coords = new HashMap<>();
+            othersBoards = new HashMap<>();
+            playerRockets = new HashMap<>();
+            playerPositions = new HashMap<>();
+            rocketsPane = new Pane();
 
-        VBox TitleScreenBox = new VBox(10, titleLabel, startButton);
-        TitleScreenBox.setAlignment(Pos.CENTER);
-        TitleScreenBox.setPadding(new Insets(20));
-        //TitleScreenBox.setMaxWidth(400);
-        StackPane titleRoot = new StackPane(TitleScreenBox);
-        TitleScreenBox.prefWidthProperty().bind(primaryStage.widthProperty());
-        TitleScreenBox.prefHeightProperty().bind(primaryStage.heightProperty());
+            myBoard = new GridPane();
+            playerClient = new PlayerClient();
+            discardedTiles = new ArrayList<>();
+            discardedMap = new HashMap<>();
 
-        contentRoot.getChildren().setAll(titleRoot);
+            curCard = new ImageView();
+            curCard.setImage(null);
+            curCardImg = null;
+            killing = false;
+            phaseButtons = new HBox(20);
+            cmdCoords = new ArrayList<>();
+            tilesClickable = false;
+            excludedTiles = new ArrayList<>();
+            curCargoImg = new ImageView();
+            curCargoImg.setImage(null);
+            storageCompartments = new HashMap<>();
+            rewardsLeft = 0;
+            handlingCargo = false;
+            theft = false;
+            rewards = null;
+            batteryClickable = false;
+            selectedImages = new ArrayList<>();
+
+            readyPlayers = new ListView<>();
+            log = new ListView<>();
+            prompt = new Label();
+
+            Label titleLabel = new Label("GALAXY TRUCKERS");
+            titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
+
+            Button startButton = new Button("Start!");
+            startButton.setStyle("-fx-font-size: 20px;");
+
+            VBox TitleScreenBox = new VBox(10, titleLabel, startButton);
+            TitleScreenBox.setAlignment(Pos.CENTER);
+            TitleScreenBox.setPadding(new Insets(20));
+            //TitleScreenBox.setMaxWidth(400);
+            StackPane titleRoot = new StackPane(TitleScreenBox);
+            TitleScreenBox.prefWidthProperty().bind(primaryStage.widthProperty());
+            TitleScreenBox.prefHeightProperty().bind(primaryStage.heightProperty());
+
+            contentRoot.getChildren().setAll(titleRoot);
 
 
-        printer.setTitleScreen(primaryScene);
-        printer.printTitleScreen();
+            printer.setTitleScreen(primaryScene);
+            printer.printTitleScreen();
 
-        startButton.setOnAction(e -> {
-            inputQueue.add("Lobby");
-            playerClient.setPlayerState(new LobbyClient());
+            startButton.setOnAction(e -> {
+                inputQueue.add("Lobby");
+                playerClient.setPlayerState(new LobbyClient());
+            });
         });
     }
 
@@ -2281,7 +2286,6 @@ public class GuiRoot implements View {
             killing = false;
             theft = false;
 
-
             ready.setOnAction(e -> {
                 inputQueue.add("Ready True");
             });
@@ -2289,9 +2293,9 @@ public class GuiRoot implements View {
             quit.setOnAction(e -> {
                 inputQueue.add("Quit");
             });
+            primaryStage.show();
         });
     }
-
 
     public void killing(){
         AtomicReference<String> cmd = new AtomicReference<>("Kill");
@@ -2313,11 +2317,10 @@ public class GuiRoot implements View {
                     i.setOpacity(1);
                 }
             });
+            primaryStage.show();
         });
 
     }
-
-
 
     public void defend(String command, String txt){
         AtomicReference<String> cmd = new AtomicReference<>(command);
@@ -2355,10 +2358,10 @@ public class GuiRoot implements View {
                 cmdCoords.clear();
                 cmd.set(command);
             });
+            primaryStage.show();
         });
 
     }
-
 
     public void consumingEnergy(){
         AtomicReference<String> cmd = new AtomicReference<>();
@@ -2388,10 +2391,9 @@ public class GuiRoot implements View {
                     i.setOpacity(1);
                 }
             });
+            primaryStage.show();
         });
     }
-
-
 
     public void giveTiles(String command, String txt){
         AtomicReference<String> cmd = new AtomicReference<>(command);
@@ -2431,10 +2433,9 @@ public class GuiRoot implements View {
                 }
                 cmdCoords.clear();
             });
+            primaryStage.show();
         });
     }
-
-
 
     public void choosingPlanet(){
         Button choose = new Button("Select");
@@ -2478,10 +2479,11 @@ public class GuiRoot implements View {
                     }
                 }
             });
+            primaryStage.show();
         });
 
-    }
 
+    }
 
     public void acceptState(){
         AtomicReference<String> cmd = new AtomicReference<>("ChoosePlanet");
@@ -2500,11 +2502,10 @@ public class GuiRoot implements View {
             decline.setOnAction(e ->{
                 inputQueue.add("Decline");
             });
-
+            primaryStage.show();
         });
 
     }
-
 
     public void handleCargo() {
         Platform.runLater(() -> {
@@ -2609,6 +2610,7 @@ public class GuiRoot implements View {
             curCard.setImage(curCardImg);
             theft = true;
             prompt.setText("Select cargo to give");
+            primaryStage.show();
         });
     }
 
@@ -2620,8 +2622,8 @@ public class GuiRoot implements View {
             tilesClickable = false;
             killing = false;
             theft = false;
+            primaryStage.show();
         });
+
     }
-
-
 }
