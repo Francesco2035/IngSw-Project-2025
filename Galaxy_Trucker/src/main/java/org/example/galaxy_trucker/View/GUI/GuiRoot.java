@@ -1291,11 +1291,11 @@ public class GuiRoot implements View {
         });
 
         debugShip1.setOnAction(e -> {
-            inputQueue.add("DebugShip 1");
+            inputQueue.add("DebugShip 0");
         });
 
         debugShip2.setOnAction(e -> {
-            inputQueue.add("DebugShip 2");
+            inputQueue.add("DebugShip 1");
         });
 
         quitButton.setOnAction(e -> {
@@ -1329,7 +1329,12 @@ public class GuiRoot implements View {
         });
 
 
-        HBox Buttons = new HBox(50, quitButton, debugShip1, debugShip2, readyButton);
+        HBox Buttons;
+        if(myGameLv == 2)
+            Buttons = new HBox(50, quitButton, debugShip1, debugShip2, readyButton);
+        else
+            Buttons = new HBox(50, quitButton, readyButton);
+
         Buttons.setPadding(new Insets(15));
         Buttons.setAlignment(Pos.CENTER);
 
