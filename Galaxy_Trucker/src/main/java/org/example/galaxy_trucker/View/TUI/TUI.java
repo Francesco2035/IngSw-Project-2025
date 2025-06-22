@@ -524,7 +524,7 @@ public class TUI implements View {
                 extra += "B: "+ brown + " | ";
                 extra += "P: "+purple;
             }
-            case "storageCompartment", "TripleStorageCompartment", "specialStorageCompartment" -> {
+            case "storage", "TripleStorage", "specialStorage", "doubleSpecialStorage" -> {
                 if (event.getCargo() != null && !event.getCargo().isEmpty()) {
                     StringBuilder sb = new StringBuilder();
                     for (Goods g : event.getCargo()) {

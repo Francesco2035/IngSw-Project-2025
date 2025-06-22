@@ -55,6 +55,7 @@ public class CommandCompleter implements DynamicCompleter {
         description.put("seedeck", "i: shows the i-th deck (only in full game mode)");
 
     }
+
     @Override
     public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
         String buffer = line.word().toLowerCase();
