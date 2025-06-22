@@ -347,11 +347,12 @@ public class   Meteorites extends Card {
             else {
                 try {
                     currentBoard.performAction(tiles[energy.getFirst()][energy.getSecond()].getComponent(),new UseEnergyAction(currentBoard), new ConsumingEnergy());
+
                 }
             catch (Exception e){
                 throw new ImpossibleBoardChangeException("There was no energy to use here");
             }
-                System.out.println("DefendFromSmall");
+                System.out.println(player.GetID()+" Defended From Small");
             }
         }
         else {
@@ -396,11 +397,12 @@ public class   Meteorites extends Card {
                     }
                     try {
                         currentBoard.performAction(tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent(), new UseEnergyAction(currentBoard), new DefendingFromLarge());
+
                     }
                     catch (Exception e){ // potrei splittare la catch in no energia e coord sbagliata
                         throw new ImpossibleBoardChangeException("There was no energy to use");}
                 }
-                System.out.println("DefendFromLarge");
+                System.out.println(player.GetID()+" Defended From Large");
             }
             else if (attacks.get(MeteoritesOrder) == 1 || attacks.get(MeteoritesOrder) == 3){//sopra o sotto
                  if(!((CannonCoord.getSecond() == hits.get(player.GetID()).getSecond() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(attacks.get(MeteoritesOrder))==(CANNON.INSTANCE))) ){
@@ -411,17 +413,18 @@ public class   Meteorites extends Card {
                          throw new InvalidDefenceEceptiopn("you have to consume energy to use this cannon");
                      }
                      try {
-
 //                         CurrentPlanche.performAction(tiles[i.getFirst()][i.getSecond()].getComponent(),
 //                                 new UseEnergyAction(CurrentPlanche), new ConsumingEnergy());
 
                          currentBoard.performAction(tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent(),
                                  new UseEnergyAction(currentBoard), new DefendingFromLarge());
+
+
                      }
                  catch (Exception e){ // potrei splittare la catch in no energia e coord sbagliata
                      throw new ImpossibleBoardChangeException("There was no energy to use the coordinates are " +EnergyStorage.getFirst() + " " + EnergyStorage.getSecond()+" the type of componet is "+tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent().getClass());}
                  }
-                System.out.println("DefendFromLarge");
+                System.out.println(player.GetID()+" Defended From Large");
             }
         }
         else  {
@@ -492,9 +495,15 @@ public class   Meteorites extends Card {
         this.getConcurrentCardListener().onConcurrentCard(true);
     }
 
+    public HashMap<String, IntegerPair> getHits() {
+        return hits;
+    }
 
+    public void setHits(HashMap<String, IntegerPair> hits) {
+        this.hits = hits;
+    }
 
-        //json required
+    //json required
     public Meteorites() {}
     public ArrayList<Integer> getAttacks() {return attacks;}
     @JsonCreator

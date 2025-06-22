@@ -138,6 +138,9 @@ public class CardStacks implements Serializable {
         if (i > 3 || i < 1){
             throw new InvalidInput("Selected deck doesnt exists or you are not allow to see it");
         }
+        if( level==1){
+            throw new InvalidInput("You are not allowed to see the cards in the tutorial");
+        }
         ArrayList<Integer> ids = new ArrayList<>();
         if (i == 1){
             for (Card card : VisibleCards1) {

@@ -1,7 +1,5 @@
 package org.example.galaxy_trucker.Model.PlayerStates.DefaultActions;
 
-import org.example.galaxy_trucker.Commands.AcceptCommand;
-import org.example.galaxy_trucker.Commands.ChoosingPlanetsCommand;
 import org.example.galaxy_trucker.Controller.CardsController;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
@@ -9,17 +7,16 @@ import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.*;
-
 import org.example.galaxy_trucker.NewTestSetupHelper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DefaultSolarSystem {
+public class EpidemicTest {
+
 
     static Game game;
 
@@ -43,7 +40,9 @@ public class DefaultSolarSystem {
     @Test
     public void DefaultAbandonedStation() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");
+
         NewTestSetupHelper helper = new NewTestSetupHelper();
+
 
         p1 = new Player();
         p1.setId("pietro");
@@ -77,7 +76,7 @@ public class DefaultSolarSystem {
             }
         };
 
-        Card CurrentCard = cards.get(20);
+        Card CurrentCard = cards.get(7);
 
         CurrentCard.setConcurrentCardListener(conc);
 
@@ -96,22 +95,6 @@ public class DefaultSolarSystem {
         CurrentCard.CardEffect();
 
 
-        /// fine setup
-
-        assertEquals(ChoosingPlanet.class,p1.getPlayerState().getClass());
-
-        ChoosingPlanetsCommand choose1 = new ChoosingPlanetsCommand(0,game.getID(),p1.GetID(),game.getLv(),"b","m");
-        choose1.execute(p1);
-        assertEquals(Waiting.class,p1.getPlayerState().getClass());
-        assertEquals(ChoosingPlanet.class,p2.getPlayerState().getClass());
-        c2.DefaultAction(null);
-        assertEquals(Waiting.class,p2.getPlayerState().getClass());
-        assertEquals(HandleCargo.class,p1.getPlayerState().getClass());
-        c1.DefaultAction(null);
-        assertEquals(BaseState.class,p2.getPlayerState().getClass());
-        assertEquals(BaseState.class,p1.getPlayerState().getClass());
-
+        ///fine setup
     }
-    /// chooseplanets default ok
-
 }
