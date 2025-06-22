@@ -90,12 +90,12 @@ public class GameBoard {
 
 
     public void StartHourglass() throws RuntimeException{
-            System.out.println("Gameboard attempting  to call start hourglass");
+        System.out.println("Gameboard attempting  to call start hourglass");
         if(this.GameLv == 1){
             throw new IllegalStateException("Cannot use Hourglass in a level 1 game!");
         }
         else if(!hourglass.isStartable())
-            throw new  IllegalStateException("Hourglass is already running.");
+            throw new IllegalStateException("Hourglass is already running.");
         else if(hourglass.getUsages() <= 0)
             throw new RuntimeException("No Hourglass usages left.");
         else{
@@ -369,7 +369,7 @@ public class GameBoard {
 
     public void abandonRace(Player loser, String message) {
         int arrayIndex;
-        System.out.println(loser.GetID() + " HAI PERSO!");
+//        System.out.println(loser.GetID() + " HAI PERSO!");
         try {
             Player_IntegerPair pair = players.stream()
                     .filter(p -> p.getKey().equals(loser))
