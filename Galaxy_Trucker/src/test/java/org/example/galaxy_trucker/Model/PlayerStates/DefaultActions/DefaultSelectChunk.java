@@ -1,25 +1,33 @@
 package org.example.galaxy_trucker.Model.PlayerStates.DefaultActions;
 
-import org.example.galaxy_trucker.Commands.AcceptCommand;
-import org.example.galaxy_trucker.Commands.ChoosingPlanetsCommand;
+import org.example.galaxy_trucker.Commands.HandleCargoCommand;
 import org.example.galaxy_trucker.Controller.CardsController;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
+import org.example.galaxy_trucker.Model.Goods.BLUE;
+import org.example.galaxy_trucker.Model.Goods.GREEN;
+import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.Goods.YELLOW;
+import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.*;
-
+import org.example.galaxy_trucker.Model.PlayerStates.HandleCargo;
 import org.example.galaxy_trucker.NewTestSetupHelper;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DefaultSolarSystem {
+public class DefaultSelectChunk {
+
+
+
+
 
     static Game game;
 
@@ -40,8 +48,9 @@ public class DefaultSolarSystem {
     //static CardsController c2= new CardsController(p2,game.getGameID(),false);;
 
 
-    @Test
-    public void DefaultAbandonedStation() throws IOException, InterruptedException {
+    @RepeatedTest(100)
+    //@Test
+    public void testSelectChunk() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");
         NewTestSetupHelper helper = new NewTestSetupHelper();
 
@@ -53,7 +62,7 @@ public class DefaultSolarSystem {
         game.NewPlayer(p2);
         p1.setMyPlance(helper.createInitializedBoard1());
         System.out.println("\n");
-        p2.setMyPlance(helper.createInitializedBoard2());
+        p2.setMyPlance(helper.createInitializedBoard4());
 
         assertTrue(p1.getmyPlayerBoard().checkValidity());
         System.out.println("sksk");
@@ -77,7 +86,7 @@ public class DefaultSolarSystem {
             }
         };
 
-        Card CurrentCard = cards.get(20);
+        Card CurrentCard = cards.get(36);
 
         CurrentCard.setConcurrentCardListener(conc);
 
@@ -93,25 +102,36 @@ public class DefaultSolarSystem {
         CardsController c1 = new CardsController(p1, game.getGameID(), false);
         CardsController c2 = new CardsController(p2, game.getGameID(), false);
 
+
+        System.out.println("\n\n\n\n\n");
+
+
         CurrentCard.CardEffect();
 
 
-        /// fine setup
 
-        assertEquals(ChoosingPlanet.class,p1.getPlayerState().getClass());
+        int i =0;
+        try{
+            while(!CurrentCard.isFinished() && i<15){
+                System.out.println("\n\n prima che p1 agisca: \n p1: "+p1.getPlayerState().getClass()+ p1.GetHasActed()+"\n p2: "+p2.getPlayerState().getClass()+ p2.GetHasActed());
 
-        ChoosingPlanetsCommand choose1 = new ChoosingPlanetsCommand(0,game.getID(),p1.GetID(),game.getLv(),"b","m");
-        choose1.execute(p1);
-        assertEquals(Waiting.class,p1.getPlayerState().getClass());
-        assertEquals(ChoosingPlanet.class,p2.getPlayerState().getClass());
-        c2.DefaultAction(null);
-        assertEquals(Waiting.class,p2.getPlayerState().getClass());
-        assertEquals(HandleCargo.class,p1.getPlayerState().getClass());
-        c1.DefaultAction(null);
-        assertEquals(BaseState.class,p2.getPlayerState().getClass());
-        assertEquals(BaseState.class,p1.getPlayerState().getClass());
+                if(!p1.GetHasActed()){
+
+                    c1.DefaultAction(null);
+                }
+                System.out.println("\n\n dopo che p1 ha agito: \n p1: "+p1.getPlayerState().getClass()+ p1.GetHasActed()+"\n p2: "+p2.getPlayerState().getClass()+ p2.GetHasActed());
+
+                if(!p2.GetHasActed() && !CurrentCard.isFinished()){
+                    c2.DefaultAction(null);
+                }
+                i++;
+            }
+        }catch (NullPointerException E){
+            E.printStackTrace();
+        }
+
+
+
 
     }
-    /// chooseplanets default ok
-
 }

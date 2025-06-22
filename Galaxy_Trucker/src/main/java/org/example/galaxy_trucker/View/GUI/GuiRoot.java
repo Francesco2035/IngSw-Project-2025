@@ -168,6 +168,7 @@ public class GuiRoot implements View {
 
         curCard =  new ImageView();
         curCard.setImage(null);
+        curCardImg = null;
         killing = false;
         phaseButtons = new HBox(20);
         cmdCoords = new ArrayList<>();
@@ -703,7 +704,7 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void showCard(CardEvent event) {
+    public void showCard(CardEvent event){
         //abandoned station -> accept o decline -> getreward x, coords
         //planets -> chooseplaet x
 
@@ -1271,87 +1272,93 @@ public class GuiRoot implements View {
 
 
     public void LobbyGameScreen() {
-        Label GameNameLabel = new Label("Game: " + myGameName);
-        GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+        Platform.runLater(() -> {
+            Label GameNameLabel = new Label("Game: " + myGameName);
+            GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
 
-        Button quitButton = new Button("Quit");
-        Button readyButton = new Button();
-        Button debugShip1 = new Button("Debug Ship 1");
-        Button debugShip2 = new Button("Debug Ship 2");
+            Button quitButton = new Button("Quit");
+            Button readyButton = new Button();
+            Button debugShip1 = new Button("Debug Ship 1");
+            Button debugShip2 = new Button("Debug Ship 2");
 
-        if (amIReady)
-            readyButton.setText("Not Ready");
-        else readyButton.setText("Ready!");
-
-        readyButton.setOnAction(e -> {
             if (amIReady)
-                inputQueue.add("Ready false");
-            else inputQueue.add("Ready true");
-        });
+                readyButton.setText("Not Ready");
+            else readyButton.setText("Ready!");
 
-        debugShip1.setOnAction(e -> {
-            inputQueue.add("DebugShip 1");
-        });
-
-        debugShip2.setOnAction(e -> {
-            inputQueue.add("DebugShip 2");
-        });
-
-        quitButton.setOnAction(e -> {
-            Stage confirmStage = new Stage();
-            confirmStage.setTitle("Quitting");
-
-            Label quitLabel = new Label("Are You Sure?");
-            quitLabel.setStyle("-fx-font-size: 15px");
-
-            Button confirmButton = new Button("Pretty Sure");
-            Button goBackButton = goBackButtonMaker(confirmStage);
-
-            confirmButton.setOnAction(E -> {
-                inputQueue.add("Quit");
+            readyButton.setOnAction(e -> {
+                if (amIReady)
+                    inputQueue.add("Ready false");
+                else inputQueue.add("Ready true");
             });
 
-            HBox buttons = new HBox(50, goBackButton, confirmButton);
-            buttons.setAlignment(Pos.CENTER);
-            buttons.setPadding(new Insets(5));
+            debugShip1.setOnAction(e -> {
+                inputQueue.add("DebugShip 0");
+            });
 
-            VBox quitBox = new VBox(3, quitLabel, buttons);
-            quitBox.setAlignment(Pos.CENTER);
+            debugShip2.setOnAction(e -> {
+                inputQueue.add("DebugShip 1");
+            });
 
-            Scene newGameScene = new Scene(quitBox, 250, 80);
-            confirmStage.setScene(newGameScene);
-            confirmStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
-            confirmStage.initModality(Modality.WINDOW_MODAL);
+            quitButton.setOnAction(e -> {
+                Stage confirmStage = new Stage();
+                confirmStage.setTitle("Quitting");
 
-            confirmStage.show();
+                Label quitLabel = new Label("Are You Sure?");
+                quitLabel.setStyle("-fx-font-size: 15px");
 
-        });
+                Button confirmButton = new Button("Pretty Sure");
+                Button goBackButton = goBackButtonMaker(confirmStage);
+
+                confirmButton.setOnAction(E -> {
+                    inputQueue.add("Quit");
+                });
+
+                HBox buttons = new HBox(50, goBackButton, confirmButton);
+                buttons.setAlignment(Pos.CENTER);
+                buttons.setPadding(new Insets(5));
+
+                VBox quitBox = new VBox(3, quitLabel, buttons);
+                quitBox.setAlignment(Pos.CENTER);
+
+                Scene newGameScene = new Scene(quitBox, 250, 80);
+                confirmStage.setScene(newGameScene);
+                confirmStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
+                confirmStage.initModality(Modality.WINDOW_MODAL);
+
+                confirmStage.show();
+
+            });
 
 
-        HBox Buttons = new HBox(50, quitButton, debugShip1, debugShip2, readyButton);
-        Buttons.setPadding(new Insets(15));
-        Buttons.setAlignment(Pos.CENTER);
+            HBox Buttons;
+            if (myGameLv == 2)
+                Buttons = new HBox(50, quitButton, debugShip1, debugShip2, readyButton);
+            else
+                Buttons = new HBox(50, quitButton, readyButton);
 
-        StackPane stack = new StackPane(myBoard, Buttons);
+            Buttons.setPadding(new Insets(15));
+            Buttons.setAlignment(Pos.CENTER);
 
-        VBox mainBox = new VBox(10, GameNameLabel, readyPlayers, stack);
-        readyPlayers.setMaxWidth(800);
-        readyPlayers.setMaxHeight(200);
-        mainBox.setAlignment(Pos.TOP_CENTER);
-        mainBox.setPadding(new Insets(10));
+            StackPane stack = new StackPane(myBoard, Buttons);
 
-        StackPane gameLobbyRoot = new StackPane(mainBox);
+            VBox mainBox = new VBox(10, GameNameLabel, readyPlayers, stack);
+            readyPlayers.setMaxWidth(800);
+            readyPlayers.setMaxHeight(200);
+            mainBox.setAlignment(Pos.TOP_CENTER);
+            mainBox.setPadding(new Insets(10));
 
-        gameLobbyRoot.setPadding(new Insets(10));
-        gameLobbyRoot.setAlignment(Pos.TOP_CENTER);
+            StackPane gameLobbyRoot = new StackPane(mainBox);
 
-        gameLobbyRoot.prefWidthProperty().bind(primaryStage.widthProperty());
-        gameLobbyRoot.prefHeightProperty().bind(primaryStage.heightProperty());
+            gameLobbyRoot.setPadding(new Insets(10));
+            gameLobbyRoot.setAlignment(Pos.TOP_CENTER);
 
-        Buttons.setTranslateY(250);
+            gameLobbyRoot.prefWidthProperty().bind(primaryStage.widthProperty());
+            gameLobbyRoot.prefHeightProperty().bind(primaryStage.heightProperty());
 
-        Platform.runLater(() -> {
+            Buttons.setTranslateY(250);
+
+
             contentRoot.getChildren().setAll(gameLobbyRoot);
             printer.setGameLobby(primaryScene);
         });
@@ -1726,7 +1733,6 @@ public class GuiRoot implements View {
         });
 
         printer.setBuildingScene(primaryScene);
-
     }
 
 
@@ -1996,7 +2002,7 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void Token(TokenEvent tokenEvent) {
+    public void Token(TokenEvent tokenEvent){
         Platform.runLater(()->{
             Stage stage = new Stage();
             stage.setTitle("Token");
@@ -2235,7 +2241,11 @@ public class GuiRoot implements View {
         System.out.println(pl +" "+ id);
     }
 
-    public boolean isGameStarted(){return !amIBuilding;}
+    public boolean isGameStarted(){
+        if(curCardImg != null || !amIBuilding)
+            return true;
+        else return false;
+    }
 
 
     private ImageView getTile(int col, int row){

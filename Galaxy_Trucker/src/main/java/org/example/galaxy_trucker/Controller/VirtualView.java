@@ -334,6 +334,9 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     public void reconnect() {
+        if (card != null){
+            newCard(card);
+        }
         for (int i = 0; i < 10; i ++){
             for(int j = 0; j < 10; j ++){
                 sendEvent(eventMatrix[i][j]);
@@ -342,9 +345,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         if(hand != null) {
             sendEvent(hand);
         }
-        if (card != null){
-            newCard(card);
-        }
+
         if (phase != null){
             sendEvent(phase);
         }

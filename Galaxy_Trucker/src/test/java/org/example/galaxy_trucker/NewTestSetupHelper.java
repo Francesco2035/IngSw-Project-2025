@@ -205,17 +205,37 @@ public class NewTestSetupHelper {
         return playerBoard3;
     }
 
-    public PlayerBoard createInitializedBoard4(){
+    public PlayerBoard createInitializedBoard4() throws IOException {
 
         final PlayerBoard playerBoard4 = new PlayerBoard(2);
 
-        SINGLE SS = SINGLE.INSTANCE;
-        DOUBLE DD = DOUBLE.INSTANCE;
-        Tile single = new Tile(new SewerPipes(),SS,SS,SS,SS);
-        Tile dd = new Tile(new SewerPipes(),DD,DD,DD,DD);
-        playerBoard4.insertTile(single,6,7, false);
-        playerBoard4.insertTile(dd,7,7, false);
-        playerBoard4.insertTile(dd,7,6, false);
+        GAGen gag4 = new GAGen();
+        ArrayList<Tile> tiles = gag4.getTilesDeck();
+        Tile t1 = tiles.get(3); //powerCenter:  single,double,single,double
+        Tile t2 = tiles.get(35);//House: singe,double,none,none
+        Tile t3 = tiles.get(5); //powerCenter: singe,universal,single,single
+        Tile t4 = tiles.get(33); //house: single,single,double,single
+        Tile t5 = tiles.get(50);//pipes: universal, single,universal,none
+        Tile t6 = tiles.get(137);//BrownAddon: uni,single,none,none
+        Tile t7 = tiles.get(150);//Shield: uni,none,none,single
+        Tile t8 = tiles.get(10);//battery uni,uni,none,none
+        Tile t9 = tiles.get(25);//storage normale dim 2 uni uni none none
+        Tile t10 = tiles.get(93);//DoubleEngine double uni none engine
+        Tile t11 = tiles.get(79);//Engine double none single engine
+
+        MainCockpitComp mk = new MainCockpitComp();
+        Tile mkk = new Tile(mk, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        playerBoard4.insertTile(mkk,6,6, false);
+        playerBoard4.insertTile(t2,7,6, false);
+        playerBoard4.insertTile(t1,6,5 , false);
+        t3.RotateSx();
+        playerBoard4.insertTile(t3,6,4, false);
+        playerBoard4.insertTile(t11, 6,3,false);
+        playerBoard4.insertTile(t4, 6,7,false);
+        playerBoard4.insertTile(t5,6, 8 , false);
+        playerBoard4.insertTile(t6, 6,9, false);
+
+
 
         return playerBoard4;
     }
@@ -267,6 +287,8 @@ public class NewTestSetupHelper {
     }
 
 
+
+
     public void HumansSetter2(PlayerBoard playerBoard){
         ArrayList<HousingUnit> HousingCoords = new ArrayList<>(playerBoard.getHousingUnits());
         for(HousingUnit housingUnit : HousingCoords){
@@ -275,6 +297,21 @@ public class NewTestSetupHelper {
             }
             else{
                 playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),new AddCrewState());
+            }
+        }
+
+    }
+
+    public void HumansSetter3(PlayerBoard playerBoard){
+        for(HousingUnit housingUnit : playerBoard.getHousingUnits()){
+            if(!housingUnit.isPopulated()) {
+                System.out.println("added 2 humans in  " + housingUnit.getX() + " " + housingUnit.getY());
+                if (housingUnit.getX()==6 && housingUnit.getY()==8){
+                    playerBoard.performAction(housingUnit, new AddCrewAction(0, true, false, playerBoard), new AddCrewState());
+                }
+                else{
+                    playerBoard.performAction(housingUnit, new AddCrewAction(2, false, false, playerBoard), new AddCrewState());
+                }
             }
         }
 

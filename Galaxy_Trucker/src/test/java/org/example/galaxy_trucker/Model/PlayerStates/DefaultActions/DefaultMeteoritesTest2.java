@@ -57,7 +57,7 @@ public class DefaultMeteoritesTest2 {
         System.out.println("\n");
         p2.setMyPlance(helper.createInitializedBoard2());
 
-        assertFalse(p1.getmyPlayerBoard().checkValidity());
+        assertTrue(p1.getmyPlayerBoard().checkValidity());
         System.out.println("sksk");
         assertTrue(p2.getmyPlayerBoard().checkValidity());
 

@@ -24,7 +24,7 @@ public class GiveAttackCommand extends Command implements Serializable {
     public void execute(Player player) {
         if (coordinates!= null){
             PlayerBoard playerBoard = player.getmyPlayerBoard();
-            GetPlasmaDrillPower action = new GetPlasmaDrillPower(playerBoard.getEnginePower());
+            GetPlasmaDrillPower action = new GetPlasmaDrillPower(playerBoard.getPlasmaDrillsPower());
             for (IntegerPair coordinate : coordinates) {
                 playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),
                         action ,player.getPlayerState());

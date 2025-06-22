@@ -615,9 +615,12 @@ public class PlayerBoard {
         //questo metodo non ha molto senso
         for (Integer i : this.shipSection.keySet()){
             if (this.shipSection.get(i).contains(input)){
-                return this.shipSection.get(i);
+                ArrayList<IntegerPair> temp = this.shipSection.get(i);
+                shipSection.clear();
+                return temp;
             }
         }
+
         throw new InvalidInput("Invalid input: selected chunk doesn't exists!");
     }
 
@@ -783,7 +786,7 @@ public class PlayerBoard {
             }
 
         }
-        if (shipSection.size() != 1){
+        if (shipSection.size() != 1 && shipSection.size() != 0){
             broken = true;
         }
 

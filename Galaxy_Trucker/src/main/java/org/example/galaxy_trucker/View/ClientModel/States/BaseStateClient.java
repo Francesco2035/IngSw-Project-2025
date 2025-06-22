@@ -42,8 +42,6 @@ public class BaseStateClient extends PlayerStateClient{
             out.getRoot().LobbyGameScreen();
             out.printGameLobby();
         }
-
-
     }
 
     @JsonIgnore
