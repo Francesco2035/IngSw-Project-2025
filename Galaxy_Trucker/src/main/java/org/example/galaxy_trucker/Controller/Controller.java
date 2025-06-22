@@ -57,10 +57,12 @@ public abstract class Controller {
        PlayerState state = curPlayer.getPlayerState();
        Command cmd =state.createDefaultCommand(gameId,curPlayer);
        playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
-       if (!curPlayer.GetHasActed()) { //has acted non dovrebbe servire nelle azioni non automatiche, potrebbe anche non servire in generale tbh
+       System.out.println("def action "+ this.getClass().getSimpleName()+ " "+ curPlayer.GetHasActed()+ " " +curPlayer.getPlayerState().getClass().getSimpleName());
+       if (cmd != null && !curPlayer.GetHasActed()) { //has acted non dovrebbe servire nelle azioni non automatiche, potrebbe anche non servire in generale tbh
            try {
+
                this.curPlayer.SetHasActed(true);
-               Thread.sleep(6000);
+               Thread.sleep(4000);
                System.out.println("DefaultAction called for " + curPlayer.GetID()+ " disconnected: " + disconnected);
                 /// forse potrei fare il controllo che sia != null anche se dovrebbe esssere ridondante
                cmd.execute(curPlayer);
@@ -79,7 +81,10 @@ public abstract class Controller {
            } catch (InterruptedException e) {
                throw new RuntimeException(e);
            }
+           System.out.println("def action finished dentro l'if "+ this.getClass().getSimpleName()+ " "+ curPlayer.GetHasActed() +  " " +curPlayer.getPlayerState().getClass().getSimpleName());
+
        }
+        System.out.println("def action finished fuori if  "+ this.getClass().getSimpleName()+ " "+ curPlayer.GetHasActed() +  " " +curPlayer.getPlayerState().getClass().getSimpleName());
 
     }
 
