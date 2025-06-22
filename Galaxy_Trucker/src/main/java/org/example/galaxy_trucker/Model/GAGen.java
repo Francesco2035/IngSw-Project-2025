@@ -21,30 +21,15 @@ public class GAGen implements Serializable {
         loadDecks();
     }
 
-    private void loadDecks() throws IOException {
+    private void loadDecks(){
         try {
             InputStream tilesStream = getClass().getClassLoader().getResourceAsStream("Tiles.JSON");
             InputStream cardsStream = getClass().getClassLoader().getResourceAsStream("Cards.JSON");
-//            FileReader fr1 = new FileReader("Tiles.JSON");
-//            FileReader fr2 = new FileReader("resources/org/example/galaxy_trucker/Cards.JSON");
-
-//            if (tilesStream == null) {
-//                throw new IOException("Tiles.JSON non trovato nel classpath");
-//            }
-//            if (cardsStream == null) {
-//                throw new IOException("Cards.JSON non trovato nel classpath");
-//            }
-
-//            tilesDeck = mapper.readValue(fr1, new TypeReference<>() {});
-//            cardsDeck = mapper.readValue(fr2, new TypeReference<>() {});
-
             tilesDeck = mapper.readValue(tilesStream, new TypeReference<>() {});
             cardsDeck = mapper.readValue(cardsStream, new TypeReference<>() {});
-
-
         }
-        catch (IOException ex) {
-            ex.printStackTrace();
+        catch (IOException e) {
+            System.out.println("Couldn't load decks: error "+e.getMessage());
         }
     }
     public Set<Tile> TileListToSet() {

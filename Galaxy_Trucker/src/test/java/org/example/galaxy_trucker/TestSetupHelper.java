@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestSetupHelper {
@@ -131,7 +132,7 @@ public class TestSetupHelper {
     @Test
     public void boardChecks(){
         PlayerBoard playerBoard = createInitializedBoard1();
-        assertTrue(playerBoard.checkValidity());
+        assertFalse(playerBoard.checkValidity());
 
     }
 

@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.View.ClientModel.States;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.View.GUI.GuiOut;
 import org.example.galaxy_trucker.View.TUI.Out;
 
 import java.util.ArrayList;
@@ -30,5 +31,9 @@ public class WaitingClient extends PlayerStateClient{
     @Override
     public ArrayList<String> getCommands() {
         return new ArrayList<>(List.of("SeeBoard"));
+    }
+
+    public void showGame(GuiOut out){
+        out.getRoot().waiting();
     }
 }

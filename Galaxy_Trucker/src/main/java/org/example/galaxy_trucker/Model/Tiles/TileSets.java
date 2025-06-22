@@ -45,7 +45,7 @@ public class TileSets {
 
     public Tile getNewTile(int index){
 
-        Tile SelectedTile = null;
+        Tile SelectedTile;
         synchronized (UncoveredTiles) {
             try {
                 SelectedTile = UncoveredTiles.remove(index);

@@ -14,8 +14,7 @@ public abstract class Storage extends Component{
     ArrayList<Goods> goods;
 
     @Override
-    public void rotate(Boolean direction) {
-    }
+    public void rotate(Boolean direction) {}
 
     @Override
     public void accept(ComponentAction visitor, PlayerState State) {
@@ -28,37 +27,30 @@ public abstract class Storage extends Component{
     }
 
     @Override
-    public void insert(PlayerBoard playerBoard, int x, int y) {
-    }
+    public void insert(PlayerBoard playerBoard, int x, int y) {}
 
     @Override
-    public void remove(PlayerBoard playerBoard) {
-
-    }
+    public void remove(PlayerBoard playerBoard) {}
 
     public int getValue(int i){
         return goods.get(i).getValue();
     }
 
-    public  Goods removeGood(int i){
+    public Goods removeGood(int i){
         return null;
     }
 
-    public void addGood(Goods good){
-
-    }
+    public void addGood(Goods good){}
 
     public ArrayList<Goods> getGoods() {
         return goods;
     }
 
-    public void sendState(){
+    public void sendState(){}
 
-    }
-
-
-    private void orderGoods() {
-        this.goods.sort(Comparator.comparingInt(Goods::getValue));
-    }
+//
+//    private void orderGoods() {
+//        this.goods.sort(Comparator.comparingInt(Goods::getValue));
+//    }
 
 }

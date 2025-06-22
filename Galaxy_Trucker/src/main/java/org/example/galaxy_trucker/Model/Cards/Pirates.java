@@ -197,8 +197,6 @@ public class Pirates extends Card{
                 else {
                     dimensione = new String("large");
                 }
-
-                location = "";
             if (Punishment.get(ShotsOrder) == 0) { ///sinistra
                 direction = new String("the left on line "+lines[ShotsOrder/2]);
                 Movement = 0;
@@ -373,7 +371,7 @@ public class Pirates extends Card{
     @Override
     public void continueCard(boolean accepted){
         if(accepted){
-            currentPlayer.getmyPlayerBoard().setCredits(this.reward);
+            currentPlayer.IncreaseCredits(this.reward);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
         }
 

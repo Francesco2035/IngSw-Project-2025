@@ -407,7 +407,6 @@ public class GameBoard {
        }
        players.clear();
 
-
     }
 
     public int arrivalBonus(Player player){

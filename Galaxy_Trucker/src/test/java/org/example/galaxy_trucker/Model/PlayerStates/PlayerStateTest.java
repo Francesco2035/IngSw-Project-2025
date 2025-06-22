@@ -200,6 +200,7 @@ class PlayerStateTest {
         DefendingFromLarge dfl = new DefendingFromLarge();
         p1.setState(dfl);
         dfl.allows(new DefendFromLargeCommand(new IntegerPair(4, 5), new IntegerPair(6, 7), game.getGameID(), p1.GetID(), game.getLv(), "DEFEND", null));
+        dfl.allows(new UseEnergyAction(p1.getmyPlayerBoard()));
         dfl.createDefaultCommand(game.getGameID(), p1).execute(p1);
         dfl.toClientState();
 
