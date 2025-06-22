@@ -10,7 +10,7 @@ import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.Accepting;
 import org.example.galaxy_trucker.Model.PlayerStates.Killing;
-import org.example.galaxy_trucker.TestSetupHelper;
+import org.example.galaxy_trucker.NewTestSetupHelper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -42,6 +42,8 @@ public class DefaultAbandonedShipTest {
     @Test
     public void DefaultAbandonedStation() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");
+        
+        NewTestSetupHelper helper = new NewTestSetupHelper();
 
 
         p1 = new Player();
@@ -50,16 +52,16 @@ public class DefaultAbandonedShipTest {
         p2.setId("FRA");
         game.NewPlayer(p1);
         game.NewPlayer(p2);
-        p1.setMyPlance(TestSetupHelper.createInitializedBoard1());
+        p1.setMyPlance(helper.createInitializedBoard1());
         System.out.println("\n");
-        p2.setMyPlance(TestSetupHelper.createInitializedBoard2());
+        p2.setMyPlance(helper.createInitializedBoard2());
 
         assertTrue(p1.getmyPlayerBoard().checkValidity());
         System.out.println("sksk");
         assertTrue(p2.getmyPlayerBoard().checkValidity());
 
-        TestSetupHelper.HumansSetter1(p1.getmyPlayerBoard());
-        TestSetupHelper.HumansSetter1(p2.getmyPlayerBoard());
+        helper.HumansSetter1(p1.getmyPlayerBoard());
+        helper.HumansSetter1(p2.getmyPlayerBoard());
         Gboard = game.getGameBoard();
 
         Gboard.SetStartingPosition(p1);
