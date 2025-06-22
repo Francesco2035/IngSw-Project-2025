@@ -180,7 +180,7 @@ public class Player implements Serializable {
             }
         }
         else {
-            System.out.println("mbà non va bene minore di 0");
+            System.out.println("mbà non va bene minore di -1");
         }
     }
 
