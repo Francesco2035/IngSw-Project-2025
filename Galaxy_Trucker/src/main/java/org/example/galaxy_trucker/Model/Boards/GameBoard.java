@@ -15,6 +15,7 @@ import org.example.galaxy_trucker.Model.Tiles.TileSets;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 
 
 public class GameBoard {
@@ -31,7 +32,6 @@ public class GameBoard {
     private int PlayersOnBoard;
     private CardStacks CardStack;
     private Card CurrentCard;
-
 
     private ArrayList<GameBoardListener> listeners = new ArrayList<>();
 
@@ -136,7 +136,7 @@ public class GameBoard {
     public void SetStartingPosition (Player pl, int index) throws IllegalArgumentException{
 
         Player_IntegerPair cur = players.stream()
-                .filter(p -> pl.equals( p.getKey()) )
+                .filter(p -> pl.equals(p.getKey()))
                 .findFirst().orElseThrow();
 
         if(index > players.size())
@@ -161,8 +161,6 @@ public class GameBoard {
         Player_IntegerPair cur = players.stream()
                 .filter(p -> pl.equals(p.getKey()) )
                 .findFirst().orElseThrow();
-
-
 
         if(cur.equals(players.getLast())) {
             positions[cur.getValue()] = null;
@@ -328,8 +326,8 @@ public class GameBoard {
     }
 
     public Card NewCard() {
-        //CurrentCard = CardStack.PickNewCard();
-        CurrentCard = getCardStack().getGaG().getCardsDeck().get(36);
+        CurrentCard = CardStack.PickNewCard();
+        //CurrentCard = getCardStack().getGaG().getCardsDeck().get(36);
         for(Player_IntegerPair p : players){
             p.getKey().setCard(CurrentCard);
         }
