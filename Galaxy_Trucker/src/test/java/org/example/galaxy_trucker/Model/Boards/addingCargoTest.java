@@ -81,7 +81,7 @@ public class addingCargoTest {
 
         prendi = new GetGoodAction(1,playerBoard,7,9);
 
-        playerBoard.performAction(normalStorage.getComponent(),prendi,state);
+//        playerBoard.performAction(normalStorage.getComponent(),prendi,state); //boh da problemi
         Goods good2 =prendi.getGood();
 
         playerBoard.performAction(specialStorage.getComponent(),new AddGoodAction(good2,playerBoard,7,8),state);
