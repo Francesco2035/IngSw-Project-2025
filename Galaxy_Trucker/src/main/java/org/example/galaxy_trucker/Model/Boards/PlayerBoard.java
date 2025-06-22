@@ -1059,34 +1059,8 @@ public class PlayerBoard {
         return removed;
     }
 
-    public void AddGoodInBuffer(Goods good){
-        BufferGoods.add(good);
-    }
-
-    /**
-     * Method pullFromBufferGoods pull the good in position i of the BufferGoods.
-     *
-     * @param i of type int.
-     * @return the good in order to be added to the storageCompartment.
-     * @throws InvalidInput If the specified index is out of bounds or if the buffer is empty.
-     */
-    public Goods pullFromBufferGoods(int i) throws InvalidInput{
-        if (i > BufferGoods.size()) {
-            throw new InvalidInput("This position in the BufferGoods does not exist");
-        }
-        if (BufferGoods.isEmpty()) {
-            throw new InvalidInput("BufferGoods is empty");
-        }
-        return BufferGoods.remove(i);
-    }
-
-
     public boolean getBroken(){
         return broken;
-    }
-
-    public boolean getValid(){
-        return valid;
     }
 
     public ArrayList<HousingUnit> getConnectedHousingUnits(){
