@@ -57,6 +57,10 @@ public class BuildingShip extends PlayerState {
 
 
     @Override
+    public void shouldAct(Player player) {
+        player.SetHasActed(false);
+    }
+    @Override
     public PhaseEvent toClientState() {
         return new PhaseEvent(new BuildingClient());
     }

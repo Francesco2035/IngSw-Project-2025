@@ -400,6 +400,8 @@ public class GameBoard {
 
     public void finishGame(){
         int arrayIndex;
+
+        //le positions vanno rimosse dopo imo
         for(Player_IntegerPair p : players){
 
            if(p.getValue() < 0) arrayIndex = nPositions - (-p.getValue() % nPositions);
@@ -412,6 +414,8 @@ public class GameBoard {
            /// todo in qualche modo questo deve notificare il gioco che la partitra è finita:)
        }
        players.clear();
+
+
     }
 
     public int arrivalBonus(Player player){
