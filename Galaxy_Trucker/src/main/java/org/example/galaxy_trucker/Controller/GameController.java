@@ -221,9 +221,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
         else{
             try{
                 System.out.println("Player removed: " + playerId);
-                //TODO: RIMUOVERE TUTTI I LISTENER E RIMUOVERE PLAYER DA GAME E GAMEBOARD
+
                 game.getGameBoard().abandonRace(game.getPlayers().get(playerId), "Abandoned race");
-                //TODO: inviare notifica sconfitta o quello che è
+
 
         }
             catch (Exception e){
@@ -572,17 +572,23 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     public void onEndGame(boolean success, String playerId, String message) {
             try{
                 System.out.println("Player removed: " + playerId);
-                //TODO: RIMUOVERE TUTTI I LISTENER E RIMUOVERE PLAYER DA GAME E GAMEBOARD
-                //TODO: inviare notifica sconfitta o quello che è
 
+
+                //REMOVING LISTENERS
 
                 Player p = game.getPlayers().remove(playerId);
+                p.getmyPlayerBoard().removeListener();
                 p.removeCardListener();
                 p.removeHandListener();
-                p.getmyPlayerBoard().removeListener();
-                //...
+                p.removeReadyListener();
+                p.removeFinishListener();
+
                 VirtualView vv = getVirtualViewMap().remove(playerId);
-                //vv.setDisconnected(true);
+                p.getCommonBoard().getCardStack().removeListener(p.GetID());
+                p.getCommonBoard().removeListener(vv);
+                p.getCommonBoard().getTilesSets().removeListeners(vv);
+                gameLobbyListeners.remove(vv);
+
                 for (VirtualView vv2 : getVirtualViewMap().values()){
                     if (vv2 != vv){
                         vv2.removeListener(vv);
@@ -611,6 +617,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 sendMessage(new LogEvent(playerId + "quit"));
                 vv.sendEvent(new FinishGameEvent(success, message));
                 vv.removeListeners();
+                vv.setDisconnected(true);
                 updatePlayers();
             }
             catch (Exception e){

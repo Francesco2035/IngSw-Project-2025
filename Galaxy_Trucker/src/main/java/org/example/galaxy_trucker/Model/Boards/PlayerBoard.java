@@ -860,8 +860,10 @@ public class PlayerBoard {
         ritorna la potenza singola (+2 se alieno)
      */
     public int getEnginePower() {
-        if (brownAlien){
-            return EnginePower +2;
+        if (EnginePower != 0){
+            if (brownAlien){
+                return EnginePower +2;
+            }
         }
         return EnginePower;
     }
@@ -872,8 +874,10 @@ public class PlayerBoard {
 
 
     public double getPlasmaDrillsPower() {
-        if(purpleAlien){
-            return PlasmaDrillsPower + 2;
+        if(PlasmaDrillsPower != 0){
+            if(purpleAlien){
+                return PlasmaDrillsPower + 2;
+            }
         }
         return PlasmaDrillsPower;
     }
@@ -931,7 +935,7 @@ public class PlayerBoard {
         //clonedPlayerBoard.numHumans = numHumans;
         clonedPlayerBoard.exposedConnectors = exposedConnectors;
         //clonedPlayerBoard.EnginePower = EnginePower;
-        clonedPlayerBoard.PlasmaDrillsPower = PlasmaDrillsPower;
+        //clonedPlayerBoard.PlasmaDrillsPower = PlasmaDrillsPower;
         //clonedPlayerBoard.Energy = Energy;
         clonedPlayerBoard.lv = lv;
         clonedPlayerBoard.valid = valid;

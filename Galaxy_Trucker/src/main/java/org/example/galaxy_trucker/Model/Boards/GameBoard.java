@@ -470,5 +470,9 @@ public class GameBoard {
         listeners.add(listener);
     }
 
+    public void removeListener(GameBoardListener listener) {
+        listeners.remove(listener);
+    }
+
 
 }
