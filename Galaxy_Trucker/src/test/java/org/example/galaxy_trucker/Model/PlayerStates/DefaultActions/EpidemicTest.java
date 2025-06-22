@@ -76,7 +76,7 @@ public class EpidemicTest {
             }
         };
 
-        Card CurrentCard = cards.get(7);
+        Card CurrentCard = cards.get(39);
 
         CurrentCard.setConcurrentCardListener(conc);
 
