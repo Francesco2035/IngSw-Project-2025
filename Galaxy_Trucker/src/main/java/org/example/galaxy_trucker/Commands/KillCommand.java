@@ -17,12 +17,10 @@ public class KillCommand extends Command implements Serializable {
     }
 
     @Override
-    public void execute(Player player) {
-        try {
+    public void execute(Player player) throws InterruptedException {
+
             player.getCurrentCard().killHumans(coordinates);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override
