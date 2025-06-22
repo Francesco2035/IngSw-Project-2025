@@ -13,7 +13,7 @@ public class GetPlasmaDrillPower extends ComponentAction {
     @Override
     public void visit(PlasmaDrill plasmaDrill, PlayerState playerState) {
         if (!playerState.allows(this)){
-            throw new IllegalStateException("illegal state");
+            throw new IllegalStateException("You are not allowed to perform this action in this state");
         }
         double temp = plasmaDrill.getCannonPower();
         if (temp != 0){

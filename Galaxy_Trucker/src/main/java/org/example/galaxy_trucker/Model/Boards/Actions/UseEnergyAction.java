@@ -13,7 +13,7 @@ public class UseEnergyAction extends ComponentAction {
     @Override
     public void visit(PowerCenter powerCenter, PlayerState playerState) {
         if (!playerState.allows(this)){
-            throw new IllegalStateException("illegal state");
+            throw new IllegalStateException("You are not allowed to perform this action in this state");
         }
         powerCenter.useEnergy();
         playerBoard.setEnergy(-1);
