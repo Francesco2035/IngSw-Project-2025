@@ -33,17 +33,16 @@ public class addingCargoTest {
         }
     }
 
-//    @BeforeAll
-//    public static void setup(){
+    @BeforeAll
+    public static void setup(){
 
+        playerBoard = TestSetupHelper.createInitializedBoard1();
 
-//    }
+    }
 
 
     @Test
     public void cargoTest(){
-
-        playerBoard = TestSetupHelper.createInitializedBoard1();
 
         // normal in 7,9
         //special in 7,8
@@ -78,18 +77,12 @@ public class addingCargoTest {
 
         playerBoard.performAction(specialStorage.getComponent(),prendi,state);
 
-        Goods good1 = prendi.getGood();
+        Goods good1 =prendi.getGood();
 
         prendi = new GetGoodAction(1,playerBoard,7,9);
 
-        try {
-            playerBoard.performAction(normalStorage.getComponent(), prendi, state);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-        Goods good2 = prendi.getGood();
+        playerBoard.performAction(normalStorage.getComponent(),prendi,state);
+        Goods good2 =prendi.getGood();
 
         playerBoard.performAction(specialStorage.getComponent(),new AddGoodAction(good2,playerBoard,7,8),state);
 
@@ -98,16 +91,16 @@ public class addingCargoTest {
         playerBoard.performAction(specialStorage.getComponent(),new AddGoodAction(playerBoard.getFromRewards(1),playerBoard,7,8),state);
 
         /// switch blu da normal a special yellow da special a normal
-        prendi = new GetGoodAction(0,playerBoard,7,8);
+         prendi= new GetGoodAction(0,playerBoard,7,8);
 
         playerBoard.performAction(specialStorage.getComponent(),prendi,state);
 
-        good1 = prendi.getGood();
+         good1 =prendi.getGood();
 
         prendi = new GetGoodAction(1,playerBoard,7,9);
 
         playerBoard.performAction(normalStorage.getComponent(),prendi,state);
-        good2 =prendi.getGood();
+         good2 =prendi.getGood();
 
         playerBoard.performAction(specialStorage.getComponent(),new AddGoodAction(good2,playerBoard,7,8),state);
 
