@@ -18,8 +18,11 @@ import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
@@ -847,7 +850,7 @@ public class GuiRoot implements View {
             formBox.setPadding(new Insets(15));
             formBox.setAlignment(Pos.CENTER);
 
-            Scene scene = new Scene(formBox, 250, 80);
+            Scene scene = new Scene(formBox, 300, 120);
             ChoosePositionStage.setScene(scene);
             ChoosePositionStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
             ChoosePositionStage.initModality(Modality.WINDOW_MODAL);
@@ -1102,6 +1105,9 @@ public class GuiRoot implements View {
         Button newGame = new Button("New Game");
         newGame.setStyle("-fx-font-size: 14px;");
 
+        Button reconnect = new Button("Reconnect");
+        reconnect.setStyle("-fx-font-size: 14px;");
+
         newGame.setOnAction(e -> {
             Stage newGameStage = new Stage();
             newGameStage.setTitle("Create New Game");
@@ -1155,10 +1161,7 @@ public class GuiRoot implements View {
                 inputQueue.add(myGameName);
                 inputQueue.add(String.valueOf(myGameLv));
                 inputQueue.add(playerBox.getValue());
-
             });
-
-
 
             HBox Buttons = new HBox(50, confirmButton, goBackButton);
 
@@ -1184,7 +1187,43 @@ public class GuiRoot implements View {
             newGameStage.show();
         });
 
-        VBox MainBox = new VBox(10, titleLabel, gamesList, newGame);
+        reconnect.setOnAction(e->{
+            Stage reconnectStage = new Stage();
+            reconnectStage.setTitle("Connection lost");
+
+            Label txt = new Label("Insert token: ");
+            txt.setStyle("-fx-font-size: 15px");
+
+            TextField tokenField = new TextField();
+            tokenField.setPromptText("abcd1234");
+
+            Button done = new Button("Reconnect");
+            Button exit = goBackButtonMaker(reconnectStage);
+
+
+            done.setOnAction(click -> {
+                inputQueue.add("Reconnect");
+                inputQueue.add(tokenField.getText());
+                reconnectStage.close();
+            });
+
+            done.disableProperty().bind(tokenField.textProperty().isEmpty());
+
+            HBox buttons = new HBox(30, done, exit);
+            buttons.setAlignment(Pos.CENTER);
+            buttons.setPadding(new Insets(5));
+
+            VBox reconBox = new VBox(3, txt, tokenField, buttons);
+            reconBox.setAlignment(Pos.CENTER);
+
+            Scene rconnectScene = new Scene(reconBox, 300, 100);
+            reconnectStage.setScene(rconnectScene);
+            reconnectStage.initOwner(primaryStage);
+            reconnectStage.initModality(Modality.WINDOW_MODAL);
+            reconnectStage.show();
+        });
+
+        VBox MainBox = new VBox(10, titleLabel, gamesList, newGame, reconnect);
         gamesList.setMaxWidth(800);
         MainBox.setAlignment(Pos.CENTER);
 //        MainBox.setPadding(new Insets(20));
@@ -1338,12 +1377,19 @@ public class GuiRoot implements View {
         Stage gbStage = new Stage();
         Platform.runLater(() -> {
             gbStage.setTitle("Game Board");
+//            gbStage.initStyle(StageStyle.TRANSPARENT);
 
             StackPane root = new StackPane();
 
             ImageView board = new ImageView(gameBoardImg);
             board.setFitHeight(imgY * scaleRatio);
             board.setPreserveRatio(true);
+
+            Rectangle background = new Rectangle(imgX * scaleRatio+ 5, imgY * scaleRatio + 5);
+            if(myGameLv == 2)
+                background.setFill(Color.rgb(86, 40, 110));
+            else
+                background.setFill(Color.rgb(6, 55, 105));
 
 //            ImageView pedine = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/among-us-white.png")));
 //            pedine.setFitHeight(40);
@@ -1359,11 +1405,11 @@ public class GuiRoot implements View {
 //
 //            });
 
-            root.getChildren().addAll(board, rocketsPane);
+            root.getChildren().addAll(background, board, rocketsPane);
+
 
             Scene scene = new Scene(root, imgX * scaleRatio, imgY * scaleRatio);
             gbStage.setScene(scene);
-
             gbStage.initModality(Modality.WINDOW_MODAL);
             gbStage.setResizable(false);
 
@@ -1630,9 +1676,9 @@ public class GuiRoot implements View {
             formBox.setPadding(new Insets(15));
             formBox.setAlignment(Pos.CENTER);
 
-            Scene scene = new Scene(formBox, 250, 80);
+            Scene scene = new Scene(formBox, 300, 120);
             ChoosePositionStage.setScene(scene);
-            ChoosePositionStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
+            ChoosePositionStage.initOwner(primaryStage);
             ChoosePositionStage.initModality(Modality.WINDOW_MODAL);
 
             ChoosePositionStage.show();
