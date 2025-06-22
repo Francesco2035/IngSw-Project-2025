@@ -9,8 +9,8 @@ import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
+import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Goods.BLUE;
 import org.example.galaxy_trucker.Model.Goods.Goods;
@@ -400,15 +400,26 @@ class TileAndComponentTest {
         Storage sc = (StorageCompartment) game.getGag().getTilesDeck().get(18).getComponent();
         sc.rotate(true);
         sc.rotate(false);
-        p1.getmyPlayerBoard().removeTile(6, 7);
         sc.clone(p1.getmyPlayerBoard());
-        ArrayList<Goods> goodsList = new ArrayList<>();
-        goodsList.add(new BLUE());
-        goodsList.add(new YELLOW());
-        goodsList.add(new RED());
-        p1.getmyPlayerBoard().setRewards(goodsList);
-        ((StorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[7][9].getComponent()).addGood(new BLUE());
-//        sc.accept(new GetGoodAction(1, p1.getmyPlayerBoard(), 7, 9), new HandleCargo()); TODO fixare questo che mi dice che lo storage è null
+//        ArrayList<Goods> goodsList = new ArrayList<>();
+//        goodsList.add(new BLUE());
+//        goodsList.add(new YELLOW());
+//        goodsList.add(new RED());
+//        p1.getmyPlayerBoard().setRewards(goodsList);
+
+        try {
+            ((StorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new RED());
+        } catch (Exception e){
+            assertEquals("StorageCompartment cannot contain special Goods", e.getMessage());
+        }
+        ((StorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new BLUE());
+        ((StorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new BLUE());
+        try {
+            ((StorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new BLUE());
+        } catch (Exception e){
+            assertEquals("StorageCompartment is full!", e.getMessage());
+        }
+        p1.getmyPlayerBoard().removeTile(6, 7);
         sc.controlValidity(p1.getmyPlayerBoard(), 0, 0);
         assertEquals(2, sc.getType());
 
@@ -416,10 +427,23 @@ class TileAndComponentTest {
 
         //type 3
 
-        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(27), 6, 7, false);
-        Storage sc2 = (StorageCompartment) game.getGag().getTilesDeck().get(27).getComponent();
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(28), 6, 7, false);
+        Storage sc2 = (StorageCompartment) game.getGag().getTilesDeck().get(28).getComponent();
         sc2.rotate(true);
         sc2.rotate(false);
+        try {
+            ((StorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new RED());
+        } catch (Exception e){
+            assertEquals("StorageCompartment cannot contain special Goods", e.getMessage());
+        }
+        ((StorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new BLUE());
+        ((StorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new BLUE());
+        ((StorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new BLUE());
+        try {
+            ((StorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new BLUE());
+        } catch (Exception e){
+            assertEquals("StorageCompartment is full!", e.getMessage());
+        }
         p1.getmyPlayerBoard().removeTile(6, 7);
         sc2.clone(p1.getmyPlayerBoard());
         sc2.controlValidity(p1.getmyPlayerBoard(), 0, 0);
@@ -431,15 +455,65 @@ class TileAndComponentTest {
 
 
 
+        //special storage
+
+
+        //type 1
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(60), 6, 7, false);
+        SpecialStorageCompartment sc3 = (SpecialStorageCompartment) game.getGag().getTilesDeck().get(60).getComponent();
+        sc3.rotate(true);
+        sc3.rotate(false);
+        ((SpecialStorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new RED());
+        try {
+            ((SpecialStorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new BLUE());
+        } catch (Exception e){
+            assertEquals("SpecialStorageCompartment is full!", e.getMessage());
+        }
+        sc3.getValue(0);
+        ArrayList<Goods> goodsList = new ArrayList<>();
+        goodsList.add(new RED());
+        sc3.setGoods(goodsList);
+        sc3.removeGood(-1);
+        sc3.removeGood(10);
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        sc3.clone(p1.getmyPlayerBoard());
+        sc3.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        assertEquals(1, sc3.getType());
 
 
 
+        //type 2
+
+        p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(65), 6, 7, false);
+        SpecialStorageCompartment sc4 = (SpecialStorageCompartment) game.getGag().getTilesDeck().get(65).getComponent();
+        sc4.rotate(true);
+        sc4.rotate(false);
+        ((SpecialStorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new RED());
+        ((SpecialStorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new RED());
+        try {
+            ((SpecialStorageCompartment) p1.getmyPlayerBoard().getPlayerBoard()[6][7].getComponent()).addGood(new BLUE());
+        } catch (Exception e){
+            assertEquals("SpecialStorageCompartment is full!", e.getMessage());
+        }
+        sc4.getValue(0);
+        ArrayList<Goods> goodsList2 = new ArrayList<>();
+        goodsList.add(new RED());
+        sc4.setGoods(goodsList2);
+        sc4.removeGood(-1);
+        sc4.removeGood(10);
+        p1.getmyPlayerBoard().removeTile(6, 7);
+        sc4.clone(p1.getmyPlayerBoard());
+        sc4.controlValidity(p1.getmyPlayerBoard(), 0, 0);
+        assertEquals(2, sc4.getType());
 
 
 
+        //tilesets TODO: mancherebbero le linee coperte da synchronized
 
-
-
+        TileSets ts = new TileSets(new GAGen());
+        ts.getNewTile(-1);
+        ts.removeListeners(vv);
+        ts.setListeners(vv);
 
 
 

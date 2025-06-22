@@ -29,19 +29,14 @@ public class SpecialStorageCompartment extends Storage{
     public void setGoods(ArrayList<Goods> goods) {
         this.goods = goods;
     }
-    private void orderGoods() {
-          this.goods.sort(Comparator.comparingInt(Goods::getValue));
-    }
-
-
-    @Override
-    public void rotate(Boolean direction) {}
+//    private void orderGoods() {
+//          this.goods.sort(Comparator.comparingInt(Goods::getValue));
+//    }
 
 
     @Override
     public Goods removeGood(int position){
         if (position >= goods.size() || position < 0){
-
             return null;
             //throw new InvalidInput("Cannot remove a good because it is out of bounds");
         }
@@ -63,7 +58,7 @@ public class SpecialStorageCompartment extends Storage{
             return;
         }
         if (goods.size() == type){
-            throw new InvalidInput("StorageCompartment is full!");
+            throw new InvalidInput("SpecialStorageCompartment is full!");
         }
         goods.add(good);
         playerBoard.setTotalValue(good.getValue());

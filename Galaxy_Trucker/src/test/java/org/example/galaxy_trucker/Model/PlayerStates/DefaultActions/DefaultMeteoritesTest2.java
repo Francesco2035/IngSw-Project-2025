@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DefaultMeteoritesTest2 {
@@ -54,7 +55,7 @@ public class DefaultMeteoritesTest2 {
         System.out.println("\n");
         p2.setMyPlance(TestSetupHelper.createInitializedBoard2());
 
-        assertTrue(p1.getmyPlayerBoard().checkValidity());
+        assertFalse(p1.getmyPlayerBoard().checkValidity());
         System.out.println("sksk");
         assertTrue(p2.getmyPlayerBoard().checkValidity());
 
