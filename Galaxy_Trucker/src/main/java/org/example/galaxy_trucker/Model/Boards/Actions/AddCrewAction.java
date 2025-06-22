@@ -23,7 +23,7 @@ public class AddCrewAction extends ComponentAction {
     @Override
     public void visit(HousingUnit housing, PlayerState playerState) {
         if (!playerState.allows(this)){
-            throw new IllegalStateException("illegal state");
+            throw new IllegalStateException("You are not allowed to perform this action in this state");
         }
         if ((playerBoard.getPurpleAlien() && purpleAlien) || (playerBoard.getBrownAlien() && brownAlien)) {
             throw new InvalidInput("An alien of the same type is already present in the board");

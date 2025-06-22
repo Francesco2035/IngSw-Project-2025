@@ -26,6 +26,9 @@ class PlayerTest {
     void testPlayer() throws IOException {
 
 
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
         Game game = new Game(2, "g1");
         GameController gc = new GameController(game.getGameID(), game, new GamesHandler(), game.getLv(), 4);
         NewTestSetupHelper helper = new NewTestSetupHelper();
@@ -53,7 +56,7 @@ class PlayerTest {
         p1.getmyPlayerBoard().insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6 ,6, false);
 
 
-
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
         p1.setFinishListener(gc);
