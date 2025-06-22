@@ -95,7 +95,7 @@ public class MainCockpitComp extends HousingUnit {
             nearbyunits.remove(u);
             nearbyunits.add(u);
         }
-        if (validPlayerBoard[x][y+1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(2), pb.getTile(x,y+1).getConnectors().get(0))&& playerBoard.getHousingUnits().contains(pb.getTile(x,y+1).getComponent())) {
+        if (y < 9 && validPlayerBoard[x][y+1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(2), pb.getTile(x,y+1).getConnectors().get(0))&& playerBoard.getHousingUnits().contains(pb.getTile(x,y+1).getComponent())) {
             HousingUnit u = pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y+1).getComponent())));
             nearbyunits.remove(u);
             nearbyunits.add(u);

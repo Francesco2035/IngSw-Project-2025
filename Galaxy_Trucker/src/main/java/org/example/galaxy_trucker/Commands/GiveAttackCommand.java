@@ -38,7 +38,7 @@ public class GiveAttackCommand extends Command implements Serializable {
         }
         else {
             PlayerBoard playerBoard = player.getmyPlayerBoard();
-            GetPlasmaDrillPower action = new GetPlasmaDrillPower(playerBoard.getEnginePower());
+            GetPlasmaDrillPower action = new GetPlasmaDrillPower(playerBoard.getPlasmaDrillsPower());
             try {
                 player.getCurrentCard().checkPower(action.getPower() ,action.getCountDoublePlasmaDrills());
             } catch (InterruptedException e) {

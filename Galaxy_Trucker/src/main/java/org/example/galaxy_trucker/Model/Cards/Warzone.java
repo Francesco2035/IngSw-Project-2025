@@ -115,10 +115,10 @@ public class Warzone extends Card{
 
     @Override
     public void CardEffect() throws InterruptedException {
-
-            if(losers==null){
-                losers = new ArrayList<>();
-            }
+        this.Minimum = 100000;
+        if(losers==null){
+            losers = new ArrayList<>();
+        }
 
         this.lines = new int[PunishmentShots.size()/2];
         for(int i=0;i< PunishmentShots.size()/2;i++){
@@ -195,7 +195,7 @@ public class Warzone extends Card{
 
                 /// killing
                 else if (this.PunishmentType[ChallengeOrder] == 2) {
-
+                    this.Minimum = 100000;
                     if(this.currentPlayer.getmyPlayerBoard().getNumHumans()<this.PunishmentHumans){ // dovrebbe bastare a evitare il caso in cui uno è forzato ad uccidere più umani di quanti de abbia
                         losers.add(currentPlayer);
                         this.updateSates();
@@ -203,7 +203,7 @@ public class Warzone extends Card{
                     }
 
                     System.out.println(Worst.GetID() + " has to kill" + this.PunishmentHumans);
-                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and has to kill "+this.PunishmentHumans));
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+" is the worst and has to kill "+this.PunishmentHumans));
                     this.setDefaultPunishment(this.PunishmentHumans);
                     this.Worst.setState(new Killing());
                     //this.currentPlayer.setInputHandler(new Killing(this));
@@ -211,8 +211,8 @@ public class Warzone extends Card{
 
                 /// lose cargo
                 else if (this.PunishmentType[ChallengeOrder] == 3) {
-
-                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and loses "+this.PunishmentCargo+" cargo"));
+                    this.Minimum = 100000;
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+" is the worst and loses "+this.PunishmentCargo+" cargo"));
 
                     //  chiamo il metodo di fottitura eterna :)
 
@@ -252,9 +252,9 @@ public class Warzone extends Card{
                 else {
                     this.Minimum = 1000000;
                     this.ChallengeOrder++;
-                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and has to kill "+this.PunishmentHumans));
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+" is the worst and has to kill "+this.PunishmentHumans));
 
-                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and he is going to get shot at ^_^"));
+                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+" is the worst and he is going to get shot at ^_^"));
                     Thread.sleep(1000);
                     this.continueCard();
                     return; // stessa cosa di lose time dato che ci torno automaticamente incremento qui che è meglio
@@ -312,7 +312,7 @@ public class Warzone extends Card{
     @Override
     public void checkPower(double power, int numofDouble) throws InterruptedException {
 //            double movement= currentPlayer.getMyPlance().getPower(coordinates);
-
+        System.out.println("Player : "+ currentPlayer.GetID()+ " power "+ power+ " numDouble "+numofDouble);
         this.currentpower = power;
         this.energyUsage=numofDouble;
         if(numofDouble==0){
@@ -445,7 +445,7 @@ public class Warzone extends Card{
         if(this.currentpower<Minimum){
             this.Worst=currentPlayer;
             this.Minimum=this.currentpower;
-            System.out.println(currentPlayer.GetID()+" is the worst, the minimum is now"+this.currentpower);
+            System.out.println(currentPlayer.GetID()+" is the worst, the minimum is now "+this.currentpower);
         }
         this.currentPlayer.setState(new Waiting());
         message= message+currentPlayer.GetID()+"has chosen strength "+this.currentpower +"\n";
@@ -502,7 +502,7 @@ public class Warzone extends Card{
 
 
     public void loseTime() throws InterruptedException {
-        this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+"is the worst and loses "+this.PunishmentMovement+" time"));
+        this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+" is the worst and loses "+this.PunishmentMovement+" time"));
         Thread.sleep(1000);
         this.getBoard().movePlayer(Worst.GetID(),-this.PunishmentMovement);
         System.out.println(this.Worst.GetID()+" loses the time");

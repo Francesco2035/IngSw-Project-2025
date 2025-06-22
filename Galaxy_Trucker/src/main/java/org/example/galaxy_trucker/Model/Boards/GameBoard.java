@@ -328,7 +328,8 @@ public class GameBoard {
     }
 
     public Card NewCard() {
-        CurrentCard = CardStack.PickNewCard();
+        //CurrentCard = CardStack.PickNewCard();
+        CurrentCard = getCardStack().getGaG().getCardsDeck().get(36);
         for(Player_IntegerPair p : players){
             p.getKey().setCard(CurrentCard);
         }
@@ -336,6 +337,7 @@ public class GameBoard {
         CurrentCard.setBoard(this);
 
         System.out.println("Id Card: " +CurrentCard.getId() + " "+ CurrentCard.getClass().getName());
+        //return getCardStack().getGaG().getCardsDeck().get(36);
         return CurrentCard;
     }
 

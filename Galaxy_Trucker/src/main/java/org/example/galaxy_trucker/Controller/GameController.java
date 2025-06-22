@@ -326,7 +326,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                         try {
                             cur.DefaultAction(this);
                         } catch (Exception e) {
+                            e.printStackTrace();
                             System.out.println(e.getMessage()+ "cristo de dio");
+                            System.exit(-1);
                             throw new ImpossibleActionException("errore nell'azione di default, che dio ci aiuti");
                         }
                         ///  credo ci vada una thìry ctch ma non la stava lanciando :)
