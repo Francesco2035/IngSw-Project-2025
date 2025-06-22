@@ -78,7 +78,7 @@ public class SlaversCoverage {
         System.out.println("sksk");
         assertTrue(p2.getmyPlayerBoard().checkValidity());
 
-        helper.HumansSetter1(p1.getmyPlayerBoard());
+        helper.HumansSetter3(p1.getmyPlayerBoard());
         helper.HumansSetter1(p2.getmyPlayerBoard());
         Gboard = game.getGameBoard();
 

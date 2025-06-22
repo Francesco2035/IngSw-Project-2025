@@ -287,6 +287,8 @@ public class NewTestSetupHelper {
     }
 
 
+
+
     public void HumansSetter2(PlayerBoard playerBoard){
         ArrayList<HousingUnit> HousingCoords = new ArrayList<>(playerBoard.getHousingUnits());
         for(HousingUnit housingUnit : HousingCoords){
@@ -295,6 +297,21 @@ public class NewTestSetupHelper {
             }
             else{
                 playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),new AddCrewState());
+            }
+        }
+
+    }
+
+    public void HumansSetter3(PlayerBoard playerBoard){
+        for(HousingUnit housingUnit : playerBoard.getHousingUnits()){
+            if(!housingUnit.isPopulated()) {
+                System.out.println("added 2 humans in  " + housingUnit.getX() + " " + housingUnit.getY());
+                if (housingUnit.getX()==6 && housingUnit.getY()==8){
+                    playerBoard.performAction(housingUnit, new AddCrewAction(0, true, false, playerBoard), new AddCrewState());
+                }
+                else{
+                    playerBoard.performAction(housingUnit, new AddCrewAction(2, false, false, playerBoard), new AddCrewState());
+                }
             }
         }
 

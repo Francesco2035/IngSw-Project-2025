@@ -63,6 +63,7 @@ public class HandleCargoCommand extends Command implements Serializable {
                     playerBoard.getBufferGoods().clear();
                     // non serve base state devi fare n'altra robaaaaa
                     //player.setState(new BaseState());
+
                     player.setState(new Waiting());
                     player.getCurrentCard().keepGoing();
 

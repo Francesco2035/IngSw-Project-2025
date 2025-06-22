@@ -152,15 +152,19 @@ public class Pirates extends Card{
 
     public void checkStrength(){
 
+        System.out.println("strength of "+currentPlayer.GetID()+" is: "+this.currentpower+" required: "+this.requirement);
         if(this.currentpower>this.getRequirement()){
+            System.out.println(currentPlayer.GetID()+" won");
             this.defeated=true;
             this.currentPlayer.setState(new Accepting());
             //this.currentPlayer.setInputHandler(new Accept(this));
         }
         else if (this.currentpower<this.getRequirement()){
+            System.out.println(currentPlayer.GetID()+" lost");
             this.continueCard();
         }
         else {
+            System.out.println(currentPlayer.GetID()+" was even");
             this.currentPlayer.setState(new Waiting());
             this.updateSates();
         }

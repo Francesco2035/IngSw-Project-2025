@@ -136,12 +136,14 @@ public class Slavers extends Card{
             System.out.println("Checking strengthof: "+currentPlayer.GetID());
             System.out.println("strength of "+currentPlayer.GetID()+" is: "+this.currentpower+" required: "+this.requirement);
         if(this.currentpower>this.getRequirement()){
+            System.out.println(currentPlayer.GetID()+" won");
             this.currentPlayer.setState(new Accepting());
             //this.currentPlayer.setInputHandler(new Accept(this));
             this.defeated=true;
             System.out.println("defeated");
         }
         else if(this.currentpower<this.getRequirement()){
+            System.out.println(currentPlayer.GetID()+" lost");
             if(this.currentPlayer.getmyPlayerBoard().getNumHumans()<this.Punishment){ // dovrebbe bastare a evitare il caso in cui uno è forzato ad uccidere più umani di quanti de abbia
                 losers.add(currentPlayer);
                 this.updateSates();
@@ -153,6 +155,7 @@ public class Slavers extends Card{
             //this.currentPlayer.setInputHandler(new Killing(this));
         }
         else {
+            System.out.println(currentPlayer.GetID()+" was even");
             this.currentPlayer.setState(new Waiting());
             this.updateSates();
         }
