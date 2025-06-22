@@ -13,51 +13,51 @@ public class JsonHelper {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    public static int readInt(JsonNode root, String fieldName) {
-        if (root.has(fieldName)) {
-            return root.get(fieldName).asInt();
-        }
-        throw new IllegalArgumentException("Missing or invalid integer field: " + fieldName);
-    }
+//    public static int readInt(JsonNode root, String fieldName) {
+//        if (root.has(fieldName)) {
+//            return root.get(fieldName).asInt();
+//        }
+//        throw new IllegalArgumentException("Missing or invalid integer field: " + fieldName);
+//    }
 
-    public static boolean readBoolean(JsonNode root, String fieldName) {
-        if (root.has(fieldName)) {
-            return root.get(fieldName).asBoolean();
-        }
-        throw new IllegalArgumentException("Missing or invalid boolean field: " + fieldName);
-    }
+//    public static boolean readBoolean(JsonNode root, String fieldName) {
+//        if (root.has(fieldName)) {
+//            return root.get(fieldName).asBoolean();
+//        }
+//        throw new IllegalArgumentException("Missing or invalid boolean field: " + fieldName);
+//    }
 
-    public static ArrayList<IntegerPair> readIntegerPairs(JsonNode root, String fieldName) {
-        ArrayList<IntegerPair> pairs = new ArrayList<>();
-        if (root.has(fieldName)) {
-            JsonNode coordsArray = root.get(fieldName);
-            for (JsonNode node : coordsArray) {
-                int x = node.get("x").asInt();
-                int y = node.get("y").asInt();
-                pairs.add(new IntegerPair(x, y));
-            }
-        }
-        else{
-            throw new IllegalArgumentException("Missing or invalid coordinate field: " + fieldName);
-        }
-        return pairs;
-    }
+//    public static ArrayList<IntegerPair> readIntegerPairs(JsonNode root, String fieldName) {
+//        ArrayList<IntegerPair> pairs = new ArrayList<>();
+//        if (root.has(fieldName)) {
+//            JsonNode coordsArray = root.get(fieldName);
+//            for (JsonNode node : coordsArray) {
+//                int x = node.get("x").asInt();
+//                int y = node.get("y").asInt();
+//                pairs.add(new IntegerPair(x, y));
+//            }
+//        }
+//        else{
+//            throw new IllegalArgumentException("Missing or invalid coordinate field: " + fieldName);
+//        }
+//        return pairs;
+//    }
 
-    public static ArrayList<IntegerPair> readUniqueIntegerPairs(JsonNode root, String fieldName) {
-        Set<IntegerPair> pairSet = new HashSet<>();
-        if (root.has(fieldName)) {
-            JsonNode coordsArray = root.get(fieldName);
-            for (JsonNode node : coordsArray) {
-                int x = node.get("x").asInt();
-                int y = node.get("y").asInt();
-                pairSet.add(new IntegerPair(x, y));
-            }
-        }
-        else{
-            throw new IllegalArgumentException("Missing or invalid coordinate field: " + fieldName);
-        }
-        return new ArrayList<>(pairSet);
-    }
+//    public static ArrayList<IntegerPair> readUniqueIntegerPairs(JsonNode root, String fieldName) {
+//        Set<IntegerPair> pairSet = new HashSet<>();
+//        if (root.has(fieldName)) {
+//            JsonNode coordsArray = root.get(fieldName);
+//            for (JsonNode node : coordsArray) {
+//                int x = node.get("x").asInt();
+//                int y = node.get("y").asInt();
+//                pairSet.add(new IntegerPair(x, y));
+//            }
+//        }
+//        else{
+//            throw new IllegalArgumentException("Missing or invalid coordinate field: " + fieldName);
+//        }
+//        return new ArrayList<>(pairSet);
+//    }
 
 
     public static JsonNode parseJson(String json) {
@@ -76,11 +76,11 @@ public class JsonHelper {
     }
 
 
-    public static JsonNode getNode(JsonNode root, String fieldName) {
-        if (root.has(fieldName)) {
-            return root.get(fieldName);
-        } else {
-            throw new IllegalArgumentException("Field '" + fieldName + "' is missing in the JSON.");
-        }
-    }
+//    public static JsonNode getNode(JsonNode root, String fieldName) {
+//        if (root.has(fieldName)) {
+//            return root.get(fieldName);
+//        } else {
+//            throw new IllegalArgumentException("Field '" + fieldName + "' is missing in the JSON.");
+//        }
+//    }
 }

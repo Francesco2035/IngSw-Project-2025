@@ -21,17 +21,15 @@ public class GAGen implements Serializable {
         loadDecks();
     }
 
-    private void loadDecks() throws IOException {
+    private void loadDecks(){
         try {
             InputStream tilesStream = getClass().getClassLoader().getResourceAsStream("Tiles.JSON");
             InputStream cardsStream = getClass().getClassLoader().getResourceAsStream("Cards.JSON");
             tilesDeck = mapper.readValue(tilesStream, new TypeReference<>() {});
             cardsDeck = mapper.readValue(cardsStream, new TypeReference<>() {});
-
-
         }
-        catch (IOException ex) {
-            ex.printStackTrace();
+        catch (IOException e) {
+            System.out.println("Couldn't load decks: error "+e.getMessage());
         }
     }
     public Set<Tile> TileListToSet() {
