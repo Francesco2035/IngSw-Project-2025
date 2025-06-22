@@ -328,7 +328,8 @@ public class GameBoard {
     }
 
     public Card NewCard() {
-        CurrentCard = CardStack.PickNewCard();
+        //CurrentCard = CardStack.PickNewCard();
+        CurrentCard = getCardStack().getGaG().getCardsDeck().get(36);
         for(Player_IntegerPair p : players){
             p.getKey().setCard(CurrentCard);
         }
@@ -336,6 +337,7 @@ public class GameBoard {
         CurrentCard.setBoard(this);
 
         System.out.println("Id Card: " +CurrentCard.getId() + " "+ CurrentCard.getClass().getName());
+        //return getCardStack().getGaG().getCardsDeck().get(36);
         return CurrentCard;
     }
 
@@ -364,14 +366,18 @@ public class GameBoard {
 
     public Hourglass getHourglass() {return hourglass;}
 
-    public void abandonRace(Player loser, String message){
-    System.out.println(loser.GetID()+ " HAI PERSO!");
-        try{
+
+    public void abandonRace(Player loser, String message) {
+        int arrayIndex;
+        System.out.println(loser.GetID() + " HAI PERSO!");
+        try {
             Player_IntegerPair pair = players.stream()
                     .filter(p -> p.getKey().equals(loser))
                     .findFirst()
                     .orElseThrow();
-            positions[pair.getValue() % nPositions] = null;
+            if (pair.getValue() < 0) arrayIndex = nPositions - (-pair.getValue() % nPositions);
+            else arrayIndex = pair.getValue() % nPositions;
+            positions[arrayIndex] = null;
             Player player = pair.getKey();
             int finalScore = player.finishRace(false, message);
             scoreboard.add(new Player_IntegerPair(player, finalScore));
@@ -379,8 +385,7 @@ public class GameBoard {
 
             /// controllare che anche lato controller il player che abbandona smetta di esistere
             players.remove(pair);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Player_IntegerPair pair = players.stream()
                     .filter(p -> p.getKey().equals(loser))
                     .findFirst()
@@ -391,14 +396,15 @@ public class GameBoard {
         }
 
 
-
-
     }
 
     public void finishGame(){
+        int arrayIndex;
+        for(Player_IntegerPair p : players){
 
-       for(Player_IntegerPair p : players){
-           positions[p.getValue() % nPositions] = null;
+           if(p.getValue() < 0) arrayIndex = nPositions - (-p.getValue() % nPositions);
+           else arrayIndex = p.getValue() % nPositions;
+           positions[arrayIndex] = null;
            Player playah = p.getKey();
            int finalScore = playah.finishRace(true, "game finished");
            scoreboard.add(new Player_IntegerPair(playah, finalScore));
@@ -406,7 +412,6 @@ public class GameBoard {
            /// todo in qualche modo questo deve notificare il gioco che la partitra è finita:)
        }
        players.clear();
-
     }
 
     public int arrivalBonus(Player player){

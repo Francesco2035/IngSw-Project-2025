@@ -27,6 +27,11 @@ public class CardStacks implements Serializable {
     private GAGen GaG;
     private HashMap<String, CardListner> cardListnerHashMap;
 
+
+    public GAGen getGaG(){
+        return GaG;
+    }
+
     public CardStacks(GAGen Gag, int lv) {
         this.level = lv;
         this.GaG=Gag;

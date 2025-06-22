@@ -60,10 +60,10 @@ public class PostPrepController extends Controller {
         PlayerState state = curPlayer.getPlayerState();
         Command cmd =state.createDefaultCommand(gameId,curPlayer);
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
-        if (!curPlayer.GetHasActed()) { //has acted non dovrebbe servire nelle azioni non automatiche, potrebbe anche non servire in generale tbh
+        if (!curPlayer.GetHasActed() ) { //has acted non dovrebbe servire nelle azioni non automatiche, potrebbe anche non servire in generale tbh
             try {
                 this.curPlayer.SetHasActed(true);
-                System.out.println("DefaultAction called for " + curPlayer.GetID());
+                System.out.println("DefaultAction called for " + curPlayer.GetID()+ " disconnected: " + disconnected);
                 /// forse potrei fare il controllo che sia != null anche se dovrebbe esssere ridondante
                 cmd.execute(curPlayer);
                 count = 0;

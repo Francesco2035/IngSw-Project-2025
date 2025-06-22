@@ -221,7 +221,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             }
 
                             String fullCommand = "Login " + playerId + " " + gameId + " " + level;
-                            System.out.println(fullCommand);
+                            //System.out.println(fullCommand);
 //                            commandInterpreter.setPlayerId(playerId);
 //                            commandInterpreter.setGameId(gameId);
                             commandInterpreter = new CommandInterpreter(playerId, gameId);
@@ -231,9 +231,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login", maxPlayers);
                             loginCommand.setClient(this);
 
-                            System.out.println(loginCommand);
+                            //System.out.println(loginCommand);
                             server.command(loginCommand);
-                            System.out.println("Sent login command");
+                            //System.out.println("Sent login command");
 
                         }
                         else{
@@ -265,7 +265,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                 System.out.println(loginCommand);
                                 server.command(loginCommand);
-                                System.out.println("Sent login command");
+                                //System.out.println("Sent login command");
                             }
                             else {
                                 System.out.println("Invalid game: "+gameId+"\n games:");
@@ -344,7 +344,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     public void sendPongs(){
         new Thread(()->{
-            System.out.println("PONG");
+            //System.out.println("PONG");
             while(running){
                 try {
                     Thread.sleep(100);

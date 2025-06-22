@@ -75,7 +75,7 @@ public class ChoosePositionController extends Controller{
     @Override
     public void nextState(GameController gc) {
         curPlayer.setState(new AddCrewState());
-        PostPrepController newController = new PostPrepController(curPlayer,gameId,disconnected);
+        PostPrepController newController = new PostPrepController(curPlayer,gameId,getDisconnected());
         newController.setExceptionListener(exceptionListener);
         gc.setControllerMap(curPlayer, newController);
     }

@@ -1157,7 +1157,10 @@ public class PlayerBoard {
 
     }
 
-
+    /***
+     *
+     * @param num
+     */
     public void setCredits(int num){
         credits += num;
         updateInfo();

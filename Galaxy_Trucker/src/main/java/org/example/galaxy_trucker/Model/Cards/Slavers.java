@@ -193,6 +193,8 @@ public class Slavers extends Card{
     @Override
     public void continueCard(boolean accepted){
         if(accepted){
+
+
             currentPlayer.getmyPlayerBoard().setCredits(this.reward);
 
             //non ricordo se metto il time positivo o negativo nel json se positivo devo fare meno time;

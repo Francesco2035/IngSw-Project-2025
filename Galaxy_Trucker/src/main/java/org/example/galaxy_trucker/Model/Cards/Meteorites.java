@@ -19,6 +19,9 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+
+
 //GESTISCI GLI ATTACCHI COME UN ARRAY LIST DI INTEGER E NON INTEGER PAIR
 
 // direzioni int sinistra 0 sopra 1...
@@ -123,7 +126,9 @@ public class   Meteorites extends Card {
                 for (Player p: this.getBoard().getPlayers()) {
                     p.setState(new Waiting());
                 }
-                Thread.sleep(2500);
+                synchronized (getLock()){ //TODO: si potrebbe togliere
+                    Thread.sleep(2500);
+                }
             }catch(InterruptedException e){
                 e.printStackTrace();
             }
@@ -355,7 +360,7 @@ public class   Meteorites extends Card {
             /// se metto la sleep rischia di far andare avanti il gamecontroller??
             this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()));
             player.setState(new Waiting());
-            Thread.sleep(1000);
+
             if (currentBoard.getBroken()){
 
                 System.out.println("\nrottura nave\n");
@@ -426,11 +431,7 @@ public class   Meteorites extends Card {
 
             this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()));
             player.setState(new Waiting());
-            try{
-                Thread.sleep(1000);
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }
+
             if (currentBoard.getBroken()){
                 System.out.println("\nrottura nave\n");
 
