@@ -34,6 +34,7 @@ public class AddCrewState extends PlayerState {
         return new Command() {
             @Override
             public void execute(Player player) throws IOException {
+                System.out.println("DEF ADD CREW");
                 ArrayList<HousingUnit> units = player.getmyPlayerBoard().getHousingUnits();
                 for (HousingUnit unit : units) {
                     if(unit.getNumHumans() == 0 && !unit.isPurpleAlien() && !unit.isBrownAlien()) {

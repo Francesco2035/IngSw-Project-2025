@@ -6,7 +6,7 @@ import org.example.galaxy_trucker.Model.Tiles.*;
 
 public abstract class ComponentAction {
 
-    public void visit(HotWaterHeater cannon, PlayerState state) {
+    public void visit(HotWaterHeater hotWaterHeater, PlayerState state) {
         throw new InvalidInput("Invalid input for the specific action");
     }
 

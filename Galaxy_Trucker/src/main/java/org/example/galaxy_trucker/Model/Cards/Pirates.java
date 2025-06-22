@@ -373,6 +373,7 @@ public class Pirates extends Card{
     @Override
     public void continueCard(boolean accepted){
         if(accepted){
+
             currentPlayer.getmyPlayerBoard().setCredits(this.reward);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
         }

@@ -200,6 +200,7 @@ class PlayerStateTest {
         DefendingFromLarge dfl = new DefendingFromLarge();
         p1.setState(dfl);
         dfl.allows(new DefendFromLargeCommand(new IntegerPair(4, 5), new IntegerPair(6, 7), game.getGameID(), p1.GetID(), game.getLv(), "DEFEND", null));
+        dfl.allows(new UseEnergyAction(p1.getmyPlayerBoard()));
         dfl.createDefaultCommand(game.getGameID(), p1).execute(p1);
         dfl.toClientState();
 
@@ -288,31 +289,25 @@ class PlayerStateTest {
         ip3.add(new IntegerPair(7, 8));
         k.allows(new KillCommand(ip3, game.getGameID(), p1.GetID(), game.getLv(), "KILLING", null));
         k.allows(new KillCrewAction(p1.getmyPlayerBoard()));
-
         game.getGag().getCardsDeck().get(1).setBoard(game.getGameBoard()); // per qualche motivo se chiamo questi metodi su carta 32 già usata crasha e perdo
         game.getGag().getCardsDeck().get(1).setConcurrentCardListener(gc);
         game.getGag().getCardsDeck().get(1).updateSates();
         game.getGag().getCardsDeck().get(1).CardEffect();
         p1.setCard(game.getGag().getCardsDeck().get(1));
-
-        p1.setMyPlance(helper.createInitializedBoard1());
-        helper.HumansSetter1(p1.getmyPlayerBoard());
-
         k.createDefaultCommand(game.getGameID(), p1).execute(p1);
         k.toClientState();
 
 
 
-
         ReadCardState rcs = new ReadCardState();
         rcs.shouldAct(p1);
-        rcs.createDefaultCommand(game.getGameID(), p1).execute(p1);
+        rcs.createDefaultCommand(game.getGameID(), p1);
         rcs.toClientState();
 
 
         Waiting w = new Waiting();
         w.shouldAct(p1);;
-        w.createDefaultCommand(game.getGameID(), p1).execute(p1);
+        w.createDefaultCommand(game.getGameID(), p1);
         w.toClientState();
 
     }

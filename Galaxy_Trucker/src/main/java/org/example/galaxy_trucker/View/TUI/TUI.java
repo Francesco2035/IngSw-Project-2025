@@ -512,11 +512,19 @@ public class TUI implements View {
         switch (name) {
             case "powerCenter", "TriplePowerCenter" -> extra = "B: "+event.getBatteries();
             case "modularHousingUnit", "MainCockpit" -> {
+                int brown = 0;
+                int purple = 0;
+                if (event.isBrownAlien()){
+                    brown = 1;
+                }
+                if (event.isPurpleAlien()){
+                    purple = 1;
+                }
                 extra += "H: " +event.getHumans() + " | ";
-                extra += "B: "+event.isBrownAlien() + " | ";
-                extra += "P: "+event.isPurpleAlien();
+                extra += "B: "+ brown + " | ";
+                extra += "P: "+purple;
             }
-            case "storageCompartment", "TripleStorageCompartment", "specialStorageCompartment" -> {
+            case "storage", "TripleStorage", "specialStorage", "doubleSpecialStorage" -> {
                 if (event.getCargo() != null && !event.getCargo().isEmpty()) {
                     StringBuilder sb = new StringBuilder();
                     for (Goods g : event.getCargo()) {
@@ -553,7 +561,7 @@ public class TUI implements View {
 
 
 
-        String leftPart = "" + event.getId();
+        String leftPart = "";
         String centeredPart = centerText(leftPart, contentWidth - 8);
         cellLines[3] = "| < "+ left + centeredPart + right + " > |";
 

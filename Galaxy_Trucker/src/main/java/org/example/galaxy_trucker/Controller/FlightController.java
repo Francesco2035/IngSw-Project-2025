@@ -13,7 +13,7 @@ public class FlightController extends Controller {
         this.curPlayer = curPlayer;
         this.gameId = gameId;
         curPlayer.setState(new BaseState());
-        this.disconnected = disconnected;
+        //this.disconnected = disconnected;
     }
 
     @Override
@@ -27,9 +27,9 @@ public class FlightController extends Controller {
     public void nextState(GameController gc) {
         System.out.println("Calling next state in fc for :" +curPlayer.GetID());
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
-           this.disconnected = false;
+           setDisconnected(false);
         }
-        CardsController newController = new CardsController(curPlayer, gameId, this.disconnected);
+        CardsController newController = new CardsController(curPlayer, gameId, getDisconnected());
         newController.setExceptionListener(exceptionListener);
         gc.setControllerMap(curPlayer,newController);
         gc.setFlightCount(1);

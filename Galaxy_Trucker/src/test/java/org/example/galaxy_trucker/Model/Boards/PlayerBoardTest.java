@@ -48,30 +48,30 @@ public class PlayerBoardTest {
 //        assertArrayEquals(shield,playerBoard.getShield());
     }
 
-    @Test
-    @DisplayName("Testing Exception")
-    @Disabled
-    void getBoardException() {
-
-        System.out.println("Testing InsertTile Exceptions");
-        assertThrows(
-                NullPointerException.class,
-                () -> playerBoard.insertTile(null, -1,6, false),
-                "A NullPointerException should be thrown.");
-
-        assertThrows(
-                InvalidInput.class,
-                () -> playerBoard.insertTile(gag.getTilesDeck().get(10) , 2,6, false),
-                "An InvalidInput should be thrown.");
-
-        System.out.println("Testing getTile Exception");
-        assertThrows(
-                InvalidInput.class,
-                () -> playerBoard.getTile(7,4),
-                "An InvalidInput should be thrown.");
-
-
-    }
+//    @Test
+//    @DisplayName("Testing Exception")
+//    @Disabled
+//    void getBoardException() {
+//
+//        System.out.println("Testing InsertTile Exceptions");
+//        assertThrows(
+//                NullPointerException.class,
+//                () -> playerBoard.insertTile(null, -1,6, false),
+//                "A NullPointerException should be thrown.");
+//
+//        assertThrows(
+//                InvalidInput.class,
+//                () -> playerBoard.insertTile(gag.getTilesDeck().get(10) , 2,6, false),
+//                "An InvalidInput should be thrown.");
+//
+//        System.out.println("Testing getTile Exception");
+//        assertThrows(
+//                InvalidInput.class,
+//                () -> playerBoard.getTile(7,4),
+//                "An InvalidInput should be thrown.");
+//
+//
+//    }
 
 
     @Test

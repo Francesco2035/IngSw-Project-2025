@@ -15,9 +15,9 @@ public class StorageCompartment extends Storage{
     private PlayerBoard playerBoard;
 
 
-    private void orderGoods() {
-        this.goods.sort(Comparator.comparingInt(Goods::getValue));
-    }
+//    private void orderGoods() {
+//        this.goods.sort(Comparator.comparingInt(Goods::getValue));
+//    }
 
     @Override
     public Goods removeGood(int i){

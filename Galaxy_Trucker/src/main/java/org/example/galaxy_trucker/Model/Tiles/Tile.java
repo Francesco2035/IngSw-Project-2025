@@ -79,8 +79,8 @@ public class Tile implements Serializable {
 
 
 
-    public boolean isAvailable() {return available;}
-    public void setAvailable(boolean available) {this.available = available;}
+//    public boolean isAvailable() {return available;}
+//    public void setAvailable(boolean available) {this.available = available;}
 
 
     //  json required

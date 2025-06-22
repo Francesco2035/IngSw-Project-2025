@@ -39,18 +39,16 @@ public abstract class HousingUnit extends Component{
         return nearbyHousingUnits;
     }
 
-    public ArrayList<HousingUnit> getUnitsListeners() {
-        return unitsListeners;
-    }
-
-    public void setUnitsListeners(HousingUnit unitListener) {
-        unitsListeners.add(unitListener);
-    }
+//    public ArrayList<HousingUnit> getUnitsListeners() {
+//        return unitsListeners;
+//    }
+//
+//    public void setUnitsListeners(HousingUnit unitListener) {
+//        unitsListeners.add(unitListener);
+//    }
 
     //true addcrew
-    public void notifyUnit(boolean type, HousingUnit unit){
-
-    }
+    public abstract void notifyUnit(boolean type, HousingUnit unit);
 
     public abstract int kill();
 
@@ -125,7 +123,7 @@ public abstract class HousingUnit extends Component{
                     nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y-1).getComponent()))));
                 }
             }
-            if (validPlayerBoard[x][y+1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(2), pb.getTile(x,y+1).getConnectors().get(0)) && pb.getHousingUnits().contains( pb.getTile(x,y+1).getComponent())) {
+            if (y < 9 && validPlayerBoard[x][y+1] == 1  && pb.checkConnection(pb.getTile(x,y).getConnectors().get(2), pb.getTile(x,y+1).getConnectors().get(0)) && pb.getHousingUnits().contains( pb.getTile(x,y+1).getComponent())) {
                 if (pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y+1).getComponent()))).isPopulated()){
                     nearbyunits.add(pb.getHousingUnits().get(pb.getHousingUnits().indexOf((pb.getTile(x,y+1).getComponent()))));
                 }

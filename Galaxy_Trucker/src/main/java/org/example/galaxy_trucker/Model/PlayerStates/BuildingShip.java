@@ -34,9 +34,19 @@ public class BuildingShip extends PlayerState {
         return new Command() {
             @Override
             public void execute(Player player) {
-                GameBoard board = player.getCommonBoard();
-                board.SetStartingPosition(player);
+                System.out.println("FINISH BUILDING");
+
+                try{
+                    GameBoard board = player.getCommonBoard();
+                    player.EndConstruction();
+
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
                 player.SetReady(true);
+                player.SetHasActed(true);
+                System.out.println("FINISH BUILDING FINISHED");
 
             }
         };
@@ -46,6 +56,10 @@ public class BuildingShip extends PlayerState {
     }
 
 
+    @Override
+    public void shouldAct(Player player) {
+        player.SetHasActed(false);
+    }
     @Override
     public PhaseEvent toClientState() {
         return new PhaseEvent(new BuildingClient());
