@@ -22,10 +22,12 @@ public class LoginClient extends PlayerStateClient {
     }
 
     @Override
-    public void showGame(GuiOut out){}
+    public void showGame(GuiOut out){
+        out.getRoot().goToFirstScene();
+    }
 
     @Override
     public ArrayList<String> getCommands() {
-        return new ArrayList<>(List.of("Lobby", "Create", "Join"));
+        return new ArrayList<>(List.of("Lobby", "Create", "Join", "Reconnect"));
     }
 }

@@ -98,6 +98,13 @@ public class NewTestSetupHelper {
         MainCockpitComp mp = new MainCockpitComp();
         Tile mc = new Tile(mp, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
         playerBoard1.insertTile(mc,6,6, false);
+
+//        for(int i=0; i<playerBoard1.getPlayerBoard().length; i++){
+//            for(int j=0; j<playerBoard1.getPlayerBoard().length; j++) {
+//                playerBoard1.getPlayerBoard()[i][j].setPlayerBoard(playerBoard1);
+//            }
+//        }
+
         return playerBoard1;
 
     }
@@ -252,10 +259,11 @@ public class NewTestSetupHelper {
     public void HumansSetter1(PlayerBoard playerBoard){
 
         for(HousingUnit housingUnit : playerBoard.getHousingUnits()){
-            System.out.println("added 2 humans in  "+housingUnit.getX()+" "+housingUnit.getY());
-            playerBoard.performAction(housingUnit,new AddCrewAction(2,false,false, playerBoard),new AddCrewState());
+            if(!housingUnit.isPopulated()) {
+                System.out.println("added 2 humans in  " + housingUnit.getX() + " " + housingUnit.getY());
+                playerBoard.performAction(housingUnit, new AddCrewAction(2, false, false, playerBoard), new AddCrewState());
+            }
         }
-//        playerBoard.getHousingUnits().clear();
     }
 
 

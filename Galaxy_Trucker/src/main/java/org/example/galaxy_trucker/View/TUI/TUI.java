@@ -274,7 +274,7 @@ public class TUI implements View {
 
     @Override
     public void effectCard(LogEvent event) {
-        out.setEffectCard(event.message());
+        out.setLog(event.message());
         onGameUpdate();
     }
 
@@ -312,6 +312,16 @@ public class TUI implements View {
         out.setOutcome(event.message(), event.isWin());
         playerClient.setPlayerState(new FinishStateClient());
         onGameUpdate();
+    }
+
+    @Override
+    public void reconnect() {
+        out.clearOut();
+    }
+
+    @Override
+    public void Token(TokenEvent tokenEvent) {
+        out.setLog(tokenEvent.getToken());
     }
 
     public String formatPBInfo(PBInfoEvent event) {
@@ -502,11 +512,19 @@ public class TUI implements View {
         switch (name) {
             case "powerCenter", "TriplePowerCenter" -> extra = "B: "+event.getBatteries();
             case "modularHousingUnit", "MainCockpit" -> {
+                int brown = 0;
+                int purple = 0;
+                if (event.isBrownAlien()){
+                    brown = 1;
+                }
+                if (event.isPurpleAlien()){
+                    purple = 1;
+                }
                 extra += "H: " +event.getHumans() + " | ";
-                extra += "B: "+event.isBrownAlien() + " | ";
-                extra += "P: "+event.isPurpleAlien();
+                extra += "B: "+ brown + " | ";
+                extra += "P: "+purple;
             }
-            case "storageCompartment", "TripleStorageCompartment", "specialStorageCompartment" -> {
+            case "storage", "TripleStorage", "specialStorage", "doubleSpecialStorage" -> {
                 if (event.getCargo() != null && !event.getCargo().isEmpty()) {
                     StringBuilder sb = new StringBuilder();
                     for (Goods g : event.getCargo()) {
@@ -522,7 +540,7 @@ public class TUI implements View {
             }
 
             case "shieldGenerator" -> {
-                int rot = event.getRotation() % 360;
+                int rot = (event.getRotation() % 360) / 90;
                 if (rot == 0){
                     top ="\u001B[33m" + top + "\u001B[0m";
                     right ="\u001B[33m" + right + "\u001B[0m";
@@ -543,7 +561,7 @@ public class TUI implements View {
 
 
 
-        String leftPart = "" + event.getId();
+        String leftPart = "";
         String centeredPart = centerText(leftPart, contentWidth - 8);
         cellLines[3] = "| < "+ left + centeredPart + right + " > |";
 

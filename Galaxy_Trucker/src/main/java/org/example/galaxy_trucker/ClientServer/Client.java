@@ -146,7 +146,7 @@ public class Client implements EventVisitor {
             tui.setClient(client);
             client.setView(tui);
         } else if (view1.equals("GUI")){
-            GuiRoot gui = new GuiRoot();
+            GuiRoot gui = new GuiRoot(loginClient);
             client.setView(gui);
         }
 
@@ -273,12 +273,18 @@ public class Client implements EventVisitor {
         commandInterpreter.setlv(event.getLv());
         commandInterpreter.setToken(token);
         this.view.setGameboard(event.getLv());
+        this.view.reconnect();
         if (rmiClient != null){
             rmiClient.setCommandInterpreter(commandInterpreter);
         }
         if (tcpClient != null){
             tcpClient.setCommandInterpreter(commandInterpreter);
         }
+    }
+
+    @Override
+    public void visit(TokenEvent tokenEvent) {
+        this.view.Token(tokenEvent);
     }
 
     @Override

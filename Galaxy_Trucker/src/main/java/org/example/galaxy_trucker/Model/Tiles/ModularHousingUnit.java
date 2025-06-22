@@ -148,7 +148,6 @@ public class ModularHousingUnit extends HousingUnit {
                 }
             }
         }
-        //System.out.println("salve");
         // Safe: getComponent() returns Component, and list contains Component
         if(validPlayerBoard[x+1][y] == 1 && playerBoard.getAlienAddons().contains(playerBoard.getTile(x +1,y).getComponent())){
             index = playerBoard.getAlienAddons().indexOf(playerBoard.getTile(x+1,y).getComponent());

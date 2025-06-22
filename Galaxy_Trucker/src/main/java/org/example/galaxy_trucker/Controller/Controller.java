@@ -1,7 +1,6 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Controller.Listeners.ExceptionListener;
 import org.example.galaxy_trucker.Controller.Messages.ExceptionEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
@@ -20,7 +19,7 @@ public abstract class Controller {
     Player curPlayer;
     String gameId;
     PlayerBoard playerBoardCopy;
-    boolean disconnected;
+    private boolean disconnected;
     ExceptionListener exceptionListener;
 
 
@@ -54,22 +53,28 @@ public abstract class Controller {
        // this.curPlayer.SetHasActed(true);
     }
 
-    public  void  DefaultAction(GameController gc) {
+    public void DefaultAction(GameController gc) {
        PlayerState state = curPlayer.getPlayerState();
        Command cmd =state.createDefaultCommand(gameId,curPlayer);
        playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
        if (!curPlayer.GetHasActed()) { //has acted non dovrebbe servire nelle azioni non automatiche, potrebbe anche non servire in generale tbh
            try {
                this.curPlayer.SetHasActed(true);
-               System.out.println("DefaultAction called for " + curPlayer.GetID());
+               Thread.sleep(6000);
+               System.out.println("DefaultAction called for " + curPlayer.GetID()+ " disconnected: " + disconnected);
                 /// forse potrei fare il controllo che sia != null anche se dovrebbe esssere ridondante
                cmd.execute(curPlayer);
+               //this.curPlayer.SetHasActed(true);
               // curPlayer.SetReady(true);
-               if(gc!= null){gc.changeState();}
+               if(gc!= null){
+                   System.out.println("changing state...");
+                   gc.changeState();
+               }
            } catch (IOException e) {
+               System.out.println(e);
                playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
                curPlayer.setMyPlance(playerBoardCopy);
-              // this.curPlayer.SetHasActed(false);
+               this.curPlayer.SetHasActed(false);
                throw new ImpossibleActionException("errore nelle azioni di default :)");
            } catch (InterruptedException e) {
                throw new RuntimeException(e);
@@ -78,7 +83,7 @@ public abstract class Controller {
 
     }
 
-    public void setDisconnected(boolean disconnected) {
+    public synchronized void setDisconnected(boolean disconnected) {
         this.disconnected = disconnected;
     }
 
@@ -101,5 +106,11 @@ public abstract class Controller {
             System.out.println("Exception occured but listener not set");
         }
     }
+
+
+    public synchronized boolean getDisconnected(){
+        return disconnected;
+    }
+
 
 }

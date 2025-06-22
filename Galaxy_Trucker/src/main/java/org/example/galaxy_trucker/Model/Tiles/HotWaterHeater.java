@@ -43,7 +43,6 @@ public class HotWaterHeater extends Component{
 
     @Override
     public void accept(ComponentAction visitor, PlayerState state) {
-
         visitor.visit(this, state);
     }
 
