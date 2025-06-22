@@ -62,7 +62,14 @@ public abstract class Controller {
            try {
 
                this.curPlayer.SetHasActed(true);
-               Thread.sleep(4000);
+
+               if(gc ==null){
+                   Thread.sleep(50);
+               }
+               else{
+                   Thread.sleep(4000);
+               }
+
                System.out.println("DefaultAction called for " + curPlayer.GetID()+ " disconnected: " + disconnected);
                 /// forse potrei fare il controllo che sia != null anche se dovrebbe esssere ridondante
                cmd.execute(curPlayer);

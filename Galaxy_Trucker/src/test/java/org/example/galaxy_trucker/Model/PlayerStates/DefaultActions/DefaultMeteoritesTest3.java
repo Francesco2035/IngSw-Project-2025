@@ -1,25 +1,29 @@
 package org.example.galaxy_trucker.Model.PlayerStates.DefaultActions;
 
-import org.example.galaxy_trucker.Commands.AcceptCommand;
-import org.example.galaxy_trucker.Commands.ChoosingPlanetsCommand;
 import org.example.galaxy_trucker.Controller.CardsController;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
+import org.example.galaxy_trucker.Model.Cards.Meteorites;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.*;
 
 import org.example.galaxy_trucker.NewTestSetupHelper;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DefaultSolarSystem {
+public class DefaultMeteoritesTest3 {
+
+
+
 
     static Game game;
 
@@ -40,10 +44,11 @@ public class DefaultSolarSystem {
     //static CardsController c2= new CardsController(p2,game.getGameID(),false);;
 
 
-    @Test
-    public void DefaultAbandonedStation() throws IOException, InterruptedException {
+    @RepeatedTest(25)
+    public void DefaultMeteorites() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");
         NewTestSetupHelper helper = new NewTestSetupHelper();
+
 
         p1 = new Player();
         p1.setId("pietro");
@@ -77,7 +82,9 @@ public class DefaultSolarSystem {
             }
         };
 
-        Card CurrentCard = cards.get(20);
+        ArrayList<Integer> attacks= new ArrayList<>(Arrays.asList(0,0,0,1,1,0,1,1,2,0,2,1,3,0,3,1));
+
+        Card CurrentCard = new Meteorites(2,0,Gboard,attacks);
 
         CurrentCard.setConcurrentCardListener(conc);
 
@@ -93,25 +100,33 @@ public class DefaultSolarSystem {
         CardsController c1 = new CardsController(p1, game.getGameID(), false);
         CardsController c2 = new CardsController(p2, game.getGameID(), false);
 
+
+        System.out.println("\n\n\n\n\n");
         CurrentCard.CardEffect();
 
 
         /// fine setup
 
-        assertEquals(ChoosingPlanet.class,p1.getPlayerState().getClass());
 
-        ChoosingPlanetsCommand choose1 = new ChoosingPlanetsCommand(0,game.getID(),p1.GetID(),game.getLv(),"b","m");
-        choose1.execute(p1);
-        assertEquals(Waiting.class,p1.getPlayerState().getClass());
-        assertEquals(ChoosingPlanet.class,p2.getPlayerState().getClass());
-        c2.DefaultAction(null);
-        assertEquals(Waiting.class,p2.getPlayerState().getClass());
-        assertEquals(HandleCargo.class,p1.getPlayerState().getClass());
-        c1.DefaultAction(null);
-        assertEquals(BaseState.class,p2.getPlayerState().getClass());
-        assertEquals(BaseState.class,p1.getPlayerState().getClass());
+
+        while(!CurrentCard.isFinished()){
+            System.out.println("\n\n p1: "+p1.getPlayerState().getClass()+ p1.GetHasActed()+"\n p2: "+p2.getPlayerState().getClass()+ p2.GetHasActed());
+
+
+
+            if(!p1.GetHasActed()){
+
+                c1.DefaultAction(null);
+            }
+            System.out.println("\n snuu \n");
+            if(!p2.GetHasActed() && !CurrentCard.isFinished()){
+                c2.DefaultAction(null);
+            }
+
+        }
+
+        // chiedere a fra la roba della board ma handle destruction ipoteticamente ok
+
 
     }
-    /// chooseplanets default ok
-
 }

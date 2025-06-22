@@ -1,25 +1,34 @@
 package org.example.galaxy_trucker.Model.PlayerStates.DefaultActions;
 
-import org.example.galaxy_trucker.Commands.AcceptCommand;
-import org.example.galaxy_trucker.Commands.ChoosingPlanetsCommand;
+import org.example.galaxy_trucker.Commands.DefendFromLargeCommand;
+import org.example.galaxy_trucker.Commands.DefendFromSmallCommand;
 import org.example.galaxy_trucker.Controller.CardsController;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
+import org.example.galaxy_trucker.Model.Cards.Meteorites;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
+import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.*;
-
+import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromLarge;
+import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromSmall;
 import org.example.galaxy_trucker.NewTestSetupHelper;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DefaultSolarSystem {
+public class MeteoriteDefenceTest {
+
+
+
+
 
     static Game game;
 
@@ -41,9 +50,10 @@ public class DefaultSolarSystem {
 
 
     @Test
-    public void DefaultAbandonedStation() throws IOException, InterruptedException {
+    public void DefaultMeteorites() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");
         NewTestSetupHelper helper = new NewTestSetupHelper();
+
 
         p1 = new Player();
         p1.setId("pietro");
@@ -77,7 +87,9 @@ public class DefaultSolarSystem {
             }
         };
 
-        Card CurrentCard = cards.get(20);
+        ArrayList<Integer> attacks = new ArrayList<>(Arrays.asList(0, 0, 0, 1, 1, 0, 1, 1, 2, 0, 2, 1, 3, 0, 3, 1));
+
+        Card CurrentCard = new Meteorites(2, 0, Gboard, attacks);
 
         CurrentCard.setConcurrentCardListener(conc);
 
@@ -93,25 +105,51 @@ public class DefaultSolarSystem {
         CardsController c1 = new CardsController(p1, game.getGameID(), false);
         CardsController c2 = new CardsController(p2, game.getGameID(), false);
 
-        CurrentCard.CardEffect();
+
+        System.out.println("\n\n\n\n\n");
+       // CurrentCard.CardEffect();
 
 
         /// fine setup
 
-        assertEquals(ChoosingPlanet.class,p1.getPlayerState().getClass());
+        HashMap hits = new HashMap();
+        hits.put(p1.GetID(),new IntegerPair(0,0));
+        hits.put(p2.GetID(),new IntegerPair(0,0));
 
-        ChoosingPlanetsCommand choose1 = new ChoosingPlanetsCommand(0,game.getID(),p1.GetID(),game.getLv(),"b","m");
-        choose1.execute(p1);
-        assertEquals(Waiting.class,p1.getPlayerState().getClass());
-        assertEquals(ChoosingPlanet.class,p2.getPlayerState().getClass());
-        c2.DefaultAction(null);
-        assertEquals(Waiting.class,p2.getPlayerState().getClass());
-        assertEquals(HandleCargo.class,p1.getPlayerState().getClass());
-        c1.DefaultAction(null);
-        assertEquals(BaseState.class,p2.getPlayerState().getClass());
-        assertEquals(BaseState.class,p1.getPlayerState().getClass());
+        ((Meteorites) CurrentCard).setHits(hits);
+
+        ((Meteorites) CurrentCard).setMeteoritesOrder(8);
+        ((Meteorites) CurrentCard).setHit(8,9,p1);
+        p1.setState(new DefendingFromSmall());
+
+
+        System.out.println("\n betty \n");
+        IntegerPair battery1 = new IntegerPair(6,9);
+        IntegerPair plasma1 = new IntegerPair(8,9);
+        DefendFromSmallCommand def1 = new DefendFromSmallCommand(battery1,game.getID(),p1.GetID(),game.getLv(),"boh","boh");
+        def1.execute(p1);
+
+
+        System.out.println("\n surtr \n");
+        ((Meteorites) CurrentCard).setMeteoritesOrder(10);
+        ((Meteorites) CurrentCard).setHit(7,7,p1);
+        p1.setState(new DefendingFromLarge());
+
+
+        DefendFromLargeCommand def2 = new DefendFromLargeCommand(plasma1,battery1,game.getID(),p1.GetID(),game.getLv(),"boh","boh");
+        def2.execute(p1);
+
+
+
+        System.out.println("\n roar \n");
+        IntegerPair battery2 = new IntegerPair(8,8);
+        IntegerPair plasma2 = new IntegerPair(4,5);
+        ((Meteorites) CurrentCard).setMeteoritesOrder(6);
+        ((Meteorites) CurrentCard).setHit(4,5,p2);
+        p2.setState(new DefendingFromLarge());
+
+        DefendFromLargeCommand def3 = new DefendFromLargeCommand(plasma2,battery2,game.getID(),p2.GetID(),game.getLv(),"boh","boh");
+        def3.execute(p2);
 
     }
-    /// chooseplanets default ok
-
 }

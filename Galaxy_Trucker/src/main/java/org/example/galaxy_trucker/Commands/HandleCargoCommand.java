@@ -9,6 +9,7 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
+import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 import org.example.galaxy_trucker.Model.Tiles.Storage;
 
 import java.io.Serializable;
@@ -62,6 +63,7 @@ public class HandleCargoCommand extends Command implements Serializable {
                     playerBoard.getBufferGoods().clear();
                     // non serve base state devi fare n'altra robaaaaa
                     //player.setState(new BaseState());
+                    player.setState(new Waiting());
                     player.getCurrentCard().keepGoing();
 
                     break;

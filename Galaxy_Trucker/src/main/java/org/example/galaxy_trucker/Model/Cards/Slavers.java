@@ -134,6 +134,7 @@ public class Slavers extends Card{
 
     public void checkStrength(){
             System.out.println("Checking strengthof: "+currentPlayer.GetID());
+            System.out.println("strength of "+currentPlayer.GetID()+" is: "+this.currentpower+" required: "+this.requirement);
         if(this.currentpower>this.getRequirement()){
             this.currentPlayer.setState(new Accepting());
             //this.currentPlayer.setInputHandler(new Accept(this));
