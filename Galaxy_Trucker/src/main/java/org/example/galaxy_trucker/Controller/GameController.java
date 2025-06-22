@@ -309,22 +309,15 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             catch (InterruptedException e){
                 e.printStackTrace();
             }
-            //SET
-                    //game.getGameBoard().getPlayers().getFirst()
+
             int index = 0;
 
             while (!card.isFinished()) {
 
-                /// il game pesca la carta automaticamente
-                //game.getGameBoard().NewCard();
-
+                index = 0;
                 while (index < players.size() && !card.isFinished()) {
                     Player currentPlayer = players.get(index);
-                    //System.out.println("PLAYER: " +currentPlayer + "cristo de dio "+ index);
 
-                    //prendi controller
-                    //se è disconnesso chiami def action
-                    //altrimenti esegui il blocco try
                     Controller cur = ControllerMap.get(currentPlayer.GetID());
 
                     /// probabilmente da errore con meteoriti per la concorrenzialità e perché current non è molto deterministico, potrebbe essere che vada spostato dentro al controllo di current
@@ -340,6 +333,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
                             ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
                             if (currentPlayer.GetHasActed()) {
+                                System.out.println("aggiorno index");
                                 index++;
                             }
 
@@ -460,15 +454,15 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             threads.get(playerId).interrupt();
             threads.remove(playerId);
             Thread t = new Thread(()->{
-                while (!getConnection(playerId)) {
-                    if (!game.getPlayers().get(playerId).GetHasActed() && !getConnection(playerId) && !flightMode){
+                while (!GameOver && !getConnection(playerId)) {
+                    if (!GameOver && !game.getPlayers().get(playerId).GetHasActed() && !getConnection(playerId) && !flightMode){
                         System.out.println("disconnection Thread");
                         Controller current = ControllerMap.get(playerId);
                         synchronized (lock){
                             current.DefaultAction(this);
                         }
                     }
-                    if (game.getPlayers().get(playerId).GetHasActed()){
+                    if (!GameOver && game.getPlayers().get(playerId).GetHasActed() && !flightMode){
                         //System.out.println("disconnection Thread: has acted");
                     }
                 }
@@ -594,7 +588,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 }
                 Thread t = threads.remove(playerId);
                 if (t != null) {
-                    t.interrupt();
+                    synchronized (lock){
+                        t.interrupt();
+                    }
                 }
                 commandQueues.remove(playerId);
                 ControllerMap.remove(playerId);
