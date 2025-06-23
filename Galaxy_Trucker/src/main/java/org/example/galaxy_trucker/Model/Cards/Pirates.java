@@ -220,6 +220,7 @@ public class Pirates extends Card{
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
                                 sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
+                                this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
@@ -260,6 +261,8 @@ public class Pirates extends Card{
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
                                 sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
+                                this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
+
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
@@ -300,6 +303,7 @@ public class Pirates extends Card{
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
                                 sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
+                                this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
@@ -339,6 +343,7 @@ public class Pirates extends Card{
                             if (CurrentPlanche.getBroken()){
                                 System.out.println("rottura nave");
                                 sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
+                                this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
                                 this.currentPlayer.setState(new HandleDestruction());
                                 return;
 
@@ -365,8 +370,8 @@ public class Pirates extends Card{
             if(shotsFlag == false){
             this.ShotsOrder += 2;
             }
-            sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
-            /// Todo aggiungere il messaggio a client e chiedere a francio che fare perche potrebbeb fare più di una chiamata per stato in caso di miss lezgosk
+            sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,hit.getFirst(),hit.getSecond(),Punishment.get(ShotsOrder),3));
+
         }
         if(this.ShotsOrder >=Punishment.size() ){
             this.ShotsOrder = 0;
@@ -400,13 +405,14 @@ public class Pirates extends Card{
                 catch (Exception e){
                     throw new ImpossibleBoardChangeException("There was no energy to use here");
                 }
-                System.out.println("DefendFromSmall");
+                this.sendRandomEffect(player.GetID(),new LogEvent("you defended your ship in " +hit.getFirst()+" "+hit.getSecond(),hit.getFirst(),hit.getSecond(),Punishment.get(ShotsOrder),3));
+                System.out.println(player.GetID()+" Defended From Small");
             }
         }
         else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
             currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
-            this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hit.getFirst()+" "+hit.getSecond(),-1,-1,-1,-1));
+            this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hit.getFirst()+" "+hit.getSecond(),hit.getFirst(),hit.getSecond(),Punishment.get(ShotsOrder),3));
             player.setState(new Waiting());
             Thread.sleep(1000);
             if (currentBoard.getBroken()){
