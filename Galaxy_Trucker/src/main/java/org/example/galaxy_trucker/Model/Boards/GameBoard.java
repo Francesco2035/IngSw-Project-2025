@@ -383,16 +383,13 @@ public class GameBoard {
             Player player = pair.getKey();
             int finalScore = player.CalculateResult(false);
             if(started) {
-
                 scoreboard.add(new Player_IntegerPair(player, finalScore));
                 pair.getKey().finishRace(finalScore,message);
             }
             else{
                 message="quit";
                 pair.getKey().finishRace(finalScore,message);
-
             }
-
             /// controllare che anche lato controller il player che abbandona smetta di esistere
             players.remove(pair);
         } catch (Exception e) {
@@ -402,10 +399,9 @@ public class GameBoard {
                     .orElseThrow();
             players.remove(pair);
             int score = pair.getKey().CalculateResult(false);
-            pair.getKey().finishRace(score,message);
             if(started) {
-                pair.getKey().finishRace(score,message);
                 scoreboard.add(new Player_IntegerPair(pair.getKey(), score));
+                pair.getKey().finishRace(score,message);
             }
             else{
                 message="quit";

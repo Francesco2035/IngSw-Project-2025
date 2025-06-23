@@ -314,7 +314,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             int index = 0;
 
             while (!card.isFinished()) {
-
+            System.out.println(players.size());
                 index = 0;
                 while (index < players.size() && !card.isFinished()) {
                     Player currentPlayer = players.get(index);
@@ -381,12 +381,12 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 }
 
 
-                //System.out.println("PRIMO WHILE FINITO");
+                System.out.println("PRIMO WHILE FINITO");
 
 
             }
 
-            //System.out.println("USCITO DAL SECONDO WHILE");
+            System.out.println("USCITO DAL SECONDO WHILE");
             Controller ReadySetter;
             System.out.println("players "+ game.getPlayers().size());
             for (Player p : game.getPlayers().values()) {
@@ -543,6 +543,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
 
     public String check(Command command) {
+        if(isStarted()){
+            return "Game already stated!";
+        }
         if (command.getLv() != lv){
             return "Game level doesn't match!";
         }

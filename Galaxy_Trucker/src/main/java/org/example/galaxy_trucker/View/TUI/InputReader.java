@@ -136,18 +136,18 @@ public class InputReader implements Runnable {
 
     public synchronized void renderScreen(StringBuilder content) {
 
-        try{
-            if(System.getProperty("os.name").contains("Windows")){
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            }
-            else
-                Runtime.getRuntime().exec("clear");
-        }
-        catch (IOException | InterruptedException _){
-            ;
-        }
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+//        try{
+//            if(System.getProperty("os.name").contains("Windows")){
+//                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+//            }
+//            else
+//                Runtime.getRuntime().exec("clear");
+//        }
+//        catch (IOException | InterruptedException _){
+//            ;
+//        }
+//        System.out.print("\033[H\033[2J");
+//        System.out.flush();
 
         String partialInput = Lreader.getBuffer().toString();
 //        System.out.print("\033[3J");

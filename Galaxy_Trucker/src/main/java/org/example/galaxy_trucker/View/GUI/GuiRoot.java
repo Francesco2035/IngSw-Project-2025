@@ -181,13 +181,12 @@ public class GuiRoot implements View {
 
     @Override
     public String askInput(String message) {
-        String toSend = inputQueue.poll();
-        //System.out.println("ask input: " + toSend);
-        if (toSend != null) {
+        try {
+            String toSend = inputQueue.take();
+            //System.out.println("to send: " + toSend);
             return toSend;
-
-        }
-        else {
+        } catch (InterruptedException e) {
+            //Thread.currentThread().interrupt();
             return "";
         }
     }
@@ -2177,6 +2176,7 @@ public class GuiRoot implements View {
             startButton.setOnAction(e -> {
                 inputQueue.add("Lobby");
                 playerClient.setPlayerState(new LobbyClient());
+                System.out.println("schiaccio bottone lobby");
             });
         });
     }
