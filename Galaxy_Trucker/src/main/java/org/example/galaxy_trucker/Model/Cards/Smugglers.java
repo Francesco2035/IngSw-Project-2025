@@ -344,7 +344,7 @@ public class Smugglers extends Card{
 
     @Override
     public void keepGoing(){
-        //this.finishCard();
+        this.finishCard();
     }
 
 
