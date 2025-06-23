@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller.Messages.TileSets;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.EventVisitor;
@@ -41,16 +42,19 @@ public class LogEvent implements Event {
     public String message() {
         return effect;
     }
-
+    @JsonIgnore
     public int getX() {
         return x;
     }
+    @JsonIgnore
     public int getY() {
         return y;
     }
+    @JsonIgnore
     public int getDirection() {
         return direction;
     }
+    @JsonIgnore
     public int getType() {
         return type;
     }
