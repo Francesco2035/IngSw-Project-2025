@@ -78,7 +78,15 @@ public class AbandonedStation extends Card{
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
-            if(CurrentPlanche.getNumHumans()>=this.requirement){
+
+            int NumHumans= CurrentPlanche.getNumHumans();
+            if(CurrentPlanche.isBrownAlien()){
+                NumHumans++;
+            }
+            if (CurrentPlanche.isPurpleAlien()){
+                NumHumans++;
+            }
+            if(NumHumans>=this.requirement){
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
                 currentPlayer.setState(new Accepting());
