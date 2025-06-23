@@ -38,7 +38,7 @@ public class EpidemicTest {
 
 
     @Test
-    public void DefaultAbandonedStation() throws IOException, InterruptedException {
+    public void epidemicTest() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");
 
         NewTestSetupHelper helper = new NewTestSetupHelper();
@@ -76,7 +76,7 @@ public class EpidemicTest {
             }
         };
 
-        Card CurrentCard = cards.get(7);
+        Card CurrentCard = cards.get(39);
 
         CurrentCard.setConcurrentCardListener(conc);
 

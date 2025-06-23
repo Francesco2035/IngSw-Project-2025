@@ -1959,7 +1959,7 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void reconnect() {
+    public void reconnect(ReconnectedEvent event) {
 
     }
 

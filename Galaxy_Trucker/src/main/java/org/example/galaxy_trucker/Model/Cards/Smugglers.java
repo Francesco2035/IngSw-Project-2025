@@ -61,7 +61,7 @@ public class Smugglers extends Card{
     public void sendTypeLog(){
         this.getBoard().getPlayers();
         for (Player p : this.getBoard().getPlayers()){
-            sendRandomEffect(p.GetID(), new LogEvent("Smugglers"));
+            sendRandomEffect(p.GetID(), new LogEvent("Smugglers",-1,-1,-1,-1));
         }
     }
 

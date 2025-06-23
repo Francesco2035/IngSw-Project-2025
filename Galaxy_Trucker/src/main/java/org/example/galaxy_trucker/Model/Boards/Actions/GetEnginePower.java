@@ -14,8 +14,8 @@ public class GetEnginePower extends ComponentAction {
     @Override
     public void visit(HotWaterHeater hotWaterHeater, PlayerState playerState) {
 
-        if (!playerState.allows(this)){ //overkill gay
-            throw new IllegalStateException("illegal state");
+        if (!playerState.allows(this)){
+            throw new IllegalStateException("You are not allowed to perform this action in this state");
         }
         int temp = hotWaterHeater.getEnginePower();
         if (temp != 0) {

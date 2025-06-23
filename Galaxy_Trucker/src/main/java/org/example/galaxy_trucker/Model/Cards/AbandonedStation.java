@@ -31,7 +31,7 @@ public class AbandonedStation extends Card{
     public void sendTypeLog(){
         this.getBoard().getPlayers();
         for (Player p : this.getBoard().getPlayers()){
-            sendRandomEffect(p.GetID(), new LogEvent("Abandoned station"));
+            sendRandomEffect(p.GetID(), new LogEvent("Abandoned station",-1,-1,-1,-1));
         }
     }
 

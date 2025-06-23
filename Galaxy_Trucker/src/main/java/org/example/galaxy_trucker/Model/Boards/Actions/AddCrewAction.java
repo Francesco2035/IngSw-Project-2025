@@ -33,13 +33,19 @@ public class AddCrewAction extends ComponentAction {
             throw new InvalidInput("Is possible to add only one type of alien");
         }
 
-        housing.addCrew(humans, purpleAlien, brownAlien);
-        playerBoard.setNumHumans(humans);
-        if (purpleAlien){
-            playerBoard.setPurpleAlien(true);
-        }
-        if (brownAlien){
-            playerBoard.setBrownAlien(true);
+        try{
+            housing.addCrew(humans, purpleAlien, brownAlien);
+            System.out.println("proseguo oltre");
+            playerBoard.setNumHumans(humans);
+            if (purpleAlien){
+                playerBoard.setPurpleAlien(true);
+            }
+            if (brownAlien){
+                playerBoard.setBrownAlien(true);
+            }
+
+        }catch (Exception e){
+            throw new InvalidInput(e.getMessage());
         }
 
     }

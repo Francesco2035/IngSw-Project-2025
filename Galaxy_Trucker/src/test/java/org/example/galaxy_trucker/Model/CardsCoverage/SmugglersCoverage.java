@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SlaversCoverage {
+public class SmugglersCoverage {
 
 
     static Game game;
@@ -68,7 +68,7 @@ public class SlaversCoverage {
 
         DebugShip debugShip2 = new DebugShip(game.getID(),p2.GetID(),game.getLv(),"ub","h",1);
 
-       // p1.setMyPlance(helper.createInitializedBoard1());
+        // p1.setMyPlance(helper.createInitializedBoard1());
 
         debugShip1.execute(p1);
         System.out.println("\n");
@@ -97,7 +97,7 @@ public class SlaversCoverage {
             }
         };
 
-        Card CurrentCard = cards.get(0);
+        Card CurrentCard = cards.get(3);
 
         CurrentCard.setConcurrentCardListener(conc);
 

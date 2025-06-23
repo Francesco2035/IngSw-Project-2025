@@ -27,7 +27,7 @@ public class SolarSystem extends Card {
     public void sendTypeLog(){
         this.getBoard().getPlayers();
         for (Player p : this.getBoard().getPlayers()){
-            sendRandomEffect(p.GetID(), new LogEvent("Planets"));
+            sendRandomEffect(p.GetID(), new LogEvent("Planets",-1,-1,-1,-1));
         }
     }
 
@@ -70,7 +70,7 @@ public class SolarSystem extends Card {
 
 
                 if(!message.equals(" ")) {
-                    this.sendRandomEffect(currentPlayer.GetID(), new LogEvent(message));
+                    this.sendRandomEffect(currentPlayer.GetID(), new LogEvent(message,-1,-1,-1,-1));
                 }
                 this.currentPlayer.setState(new ChoosingPlanet());
 

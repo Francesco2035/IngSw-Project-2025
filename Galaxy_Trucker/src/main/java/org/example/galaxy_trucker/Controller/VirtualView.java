@@ -19,6 +19,7 @@ import java.util.HashMap;
 
 public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener, ExceptionListener, PlayersPBListener, RandomCardEffectListener{
 
+    private int lv;
     private boolean Disconnected = false;
     private TileEvent[][] eventMatrix;
     private String playerName;
@@ -39,8 +40,11 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private PBInfoEvent pbInfoEvent = null;
     private ArrayList<LogEvent> logEvents = new ArrayList<>();
     private ArrayList<PlayerTileEvent> otherPlayerTileEvents = new ArrayList<>();
-    //non credo serva salvarsi rewards event
     private HourglassEvent hourglassEvent = null;
+
+    public void setLv(int lv){
+        this.lv = lv;
+    }
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, PrintWriter echoSocket) {
@@ -334,9 +338,17 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     public void reconnect() {
+
+        sendEvent(new ReconnectedEvent(token,idGame,playerName,lv));
+
         if (card != null){
             newCard(card);
         }
+
+        for (LogEvent log : logEvents){
+            sendEvent(log);
+        }
+
         for (int i = 0; i < 10; i ++){
             for(int j = 0; j < 10; j ++){
                 sendEvent(eventMatrix[i][j]);
@@ -352,20 +364,20 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         if (lobby != null){
             sendEvent(lobby);
         }
+        for (PlayerTileEvent playerTileEvent : otherPlayerTileEvents){
+            sendEvent(playerTileEvent);
+        }
         for (GameBoardEvent gbEvent : board){
-            System.out.println("Sending board" + board.size() + " " + gbEvent.getPlayerID() + " " +gbEvent.getPosition());
             sendEvent(gbEvent);
         }
+
         if (rewardsEvent != null){
             sendEvent(rewardsEvent);
         }
-        for (LogEvent log : logEvents){
-            sendEvent(log);
+        if (hourglassEvent != null){
+            sendEvent(hourglassEvent);
         }
-        for (PlayerTileEvent playerTileEvent : otherPlayerTileEvents){
-            System.out.println("Sending PlayerTileEvent " + playerTileEvent.getPlayerName() + " " + playerTileEvent.getId());
-            sendEvent(playerTileEvent);
-        }
+
 
     }
 
@@ -422,6 +434,10 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         sendEvent(event);
     }
 
+    public void sendHourglass(HourglassEvent event){
+        hourglassEvent = event;
+        sendEvent(event);
+    }
 
     public void sendEvent(Event event) {
         if (!Disconnected) {

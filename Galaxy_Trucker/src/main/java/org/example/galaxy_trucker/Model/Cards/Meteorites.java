@@ -47,7 +47,7 @@ public class   Meteorites extends Card {
     public void sendTypeLog(){
         this.getBoard().getPlayers();
         for (Player p : this.getBoard().getPlayers()){
-            sendRandomEffect(p.GetID(), new LogEvent("Meteor swarn"));
+            sendRandomEffect(p.GetID(), new LogEvent("Meteor swarn",-1,-1,-1,-1));
         }
     }
 
@@ -150,13 +150,16 @@ public class   Meteorites extends Card {
             String direction = new String();
             String Colpito = new String("missed you");
             String location = new String("");
+            int TypeOfHit= 0;
 
             if(attacks.get(MeteoritesOrder+1)==0) {
                 dimensione = new String("small");
+                TypeOfHit =0;
 
             }
             else {
                 dimensione = new String("large");
+                TypeOfHit =1;
             }
 
             if (attacks.get(MeteoritesOrder) == 0) { //sinistra
@@ -314,7 +317,7 @@ public class   Meteorites extends Card {
             }
 
             System.out.println("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" "+location);
-            this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" at "+location));
+            this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" at "+location,hits.get(currentPlayer.GetID()).getFirst(),hits.get(currentPlayer.GetID()).getSecond(),attacks.get(MeteoritesOrder),TypeOfHit));
 
             if (!DamageFlag){this.SuccessfulDefences++;}
             this.PlayerOrder++;
@@ -352,6 +355,7 @@ public class   Meteorites extends Card {
             catch (Exception e){
                 throw new ImpossibleBoardChangeException("There was no energy to use here");
             }
+                this.sendRandomEffect(player.GetID(),new LogEvent("you defended your ship in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond(),hits.get(currentPlayer.GetID()).getFirst(),hits.get(currentPlayer.GetID()).getSecond(),attacks.get(MeteoritesOrder),0));
                 System.out.println(player.GetID()+" Defended From Small");
             }
         }
@@ -359,7 +363,7 @@ public class   Meteorites extends Card {
             currentBoard.destroy(hits.get(player.GetID()).getFirst(), hits.get(player.GetID()).getSecond());
             currentBoard.handleAttack(hits.get(player.GetID()).getFirst(), hits.get(player.GetID()).getSecond());
             /// se metto la sleep rischia di far andare avanti il gamecontroller??
-            this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()));
+            this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond(),hits.get(currentPlayer.GetID()).getFirst(),hits.get(currentPlayer.GetID()).getSecond(),attacks.get(MeteoritesOrder),0));
             player.setState(new Waiting());
 
             if (currentBoard.getBroken()){
@@ -367,7 +371,7 @@ public class   Meteorites extends Card {
                 System.out.println("\nrottura nave\n");
 
                 System.out.println("destroyed: "+hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond());
-                this.sendRandomEffect(player.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep"));
+                this.sendRandomEffect(player.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
                 player.setState(new HandleDestruction());
                 System.out.println("Stato del player "+ player.getPlayerState().getClass().getName());
                 return;
@@ -402,6 +406,7 @@ public class   Meteorites extends Card {
                     catch (Exception e){ // potrei splittare la catch in no energia e coord sbagliata
                         throw new ImpossibleBoardChangeException("There was no energy to use");}
                 }
+                this.sendRandomEffect(player.GetID(),new LogEvent("you defended your ship in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond(),hits.get(currentPlayer.GetID()).getFirst(),hits.get(currentPlayer.GetID()).getSecond(),attacks.get(MeteoritesOrder),1));
                 System.out.println(player.GetID()+" Defended From Large");
             }
             else if (attacks.get(MeteoritesOrder) == 1 || attacks.get(MeteoritesOrder) == 3){//sopra o sotto
@@ -424,6 +429,7 @@ public class   Meteorites extends Card {
                  catch (Exception e){ // potrei splittare la catch in no energia e coord sbagliata
                      throw new ImpossibleBoardChangeException("There was no energy to use the coordinates are " +EnergyStorage.getFirst() + " " + EnergyStorage.getSecond()+" the type of componet is "+tiles[EnergyStorage.getFirst()][EnergyStorage.getSecond()].getComponent().getClass());}
                  }
+                this.sendRandomEffect(player.GetID(),new LogEvent("you defended your ship in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond(),hits.get(currentPlayer.GetID()).getFirst(),hits.get(currentPlayer.GetID()).getSecond(),attacks.get(MeteoritesOrder),1));
                 System.out.println(player.GetID()+" Defended From Large");
             }
         }
@@ -432,7 +438,7 @@ public class   Meteorites extends Card {
             currentBoard.handleAttack(hits.get(player.GetID()).getFirst(), hits.get(player.GetID()).getSecond());
             System.out.println("destryoyed: "+hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()+" of:"+player.GetID());
 
-            this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond()));
+            this.sendRandomEffect(player.GetID(),new LogEvent("your ship got destroyed in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond(),hits.get(currentPlayer.GetID()).getFirst(),hits.get(currentPlayer.GetID()).getSecond(),attacks.get(MeteoritesOrder),1));
             player.setState(new Waiting());
 
             if (currentBoard.getBroken()){
@@ -441,7 +447,7 @@ public class   Meteorites extends Card {
                 System.out.println(" rottura in "+hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond());
 
                 player.setState(new HandleDestruction());
-                this.sendRandomEffect(player.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep"));
+                this.sendRandomEffect(player.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
 
                 System.out.println("Stato del player "+ player.getPlayerState().getClass().getName());
                 return;

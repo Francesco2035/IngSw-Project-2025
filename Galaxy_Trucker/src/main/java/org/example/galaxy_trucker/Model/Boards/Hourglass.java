@@ -32,18 +32,13 @@ public class Hourglass{
     }
 
 
-    public synchronized void  startHourglass() {
-
+    public synchronized void startHourglass() {
         System.out.println("trying to start hourglass");
-
         hourglass = new Timer();
-
-
         for (ControllerHourGlassListener listener : listeners){
             listener.hourglassUpdate(new HourglassEvent("Hourglass Started: "+usages, true));
         }
         hourglass.schedule(new TimerTask(){
-
             @Override
             public void run() {
                 usages--;
@@ -84,5 +79,7 @@ public class Hourglass{
     public boolean isStartable() {return startable;}
 
     public void setLock(){startable = false;}
+
+    public void setUsages(int usages) {this.usages = usages;}
 
 }

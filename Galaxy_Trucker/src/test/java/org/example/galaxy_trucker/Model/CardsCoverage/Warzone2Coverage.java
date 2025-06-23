@@ -1,44 +1,37 @@
 package org.example.galaxy_trucker.Model.CardsCoverage;
 
-import org.example.galaxy_trucker.Commands.AcceptCommand;
-import org.example.galaxy_trucker.Commands.ConsumeEnergyCommand;
-import org.example.galaxy_trucker.Commands.DebugShip;
-import org.example.galaxy_trucker.Commands.GiveAttackCommand;
 import org.example.galaxy_trucker.Controller.CardsController;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
-import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
-import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.Accepting;
-import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.NewTestSetupHelper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SlaversCoverage {
+public class Warzone2Coverage {
+
+
+
 
 
     static Game game;
 
     static {
         try {
-            game = new Game(2, "pippo");
+            game = new Game(2,"pippo");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    static GameBoard Gboard = game.getGameBoard();
+    static GameBoard Gboard =game.getGameBoard();
 
     static Player p1;
     static Player p2;
@@ -58,28 +51,15 @@ public class SlaversCoverage {
         p2.setId("FRA");
         game.NewPlayer(p1);
         game.NewPlayer(p2);
-
-        p1.getmyPlayerBoard().insertTile(new Tile(new MainCockpitComp(),UNIVERSAL.getInstance(), UNIVERSAL.getInstance(), UNIVERSAL.getInstance(), UNIVERSAL.getInstance()),6,6,false);
-
-        p2.getmyPlayerBoard().insertTile(new Tile(new MainCockpitComp(),UNIVERSAL.getInstance(), UNIVERSAL.getInstance(), UNIVERSAL.getInstance(), UNIVERSAL.getInstance()),6,6,false);
-
-        DebugShip debugShip1 = new DebugShip(game.getID(),p1.GetID(),game.getLv(),"ub","h",0);
-
-
-        DebugShip debugShip2 = new DebugShip(game.getID(),p2.GetID(),game.getLv(),"ub","h",1);
-
-       // p1.setMyPlance(helper.createInitializedBoard1());
-
-        debugShip1.execute(p1);
+        p1.setMyPlance(helper.createInitializedBoard1());
         System.out.println("\n");
-        //p2.setMyPlance(helper.createInitializedBoard2());
-        debugShip2.execute(p2);
+        p2.setMyPlance(helper.createInitializedBoard2());
 
         assertTrue(p1.getmyPlayerBoard().checkValidity());
         System.out.println("sksk");
         assertTrue(p2.getmyPlayerBoard().checkValidity());
 
-        helper.HumansSetter3(p1.getmyPlayerBoard());
+        helper.HumansSetter1(p1.getmyPlayerBoard());
         helper.HumansSetter1(p2.getmyPlayerBoard());
         Gboard = game.getGameBoard();
 
@@ -97,7 +77,7 @@ public class SlaversCoverage {
             }
         };
 
-        Card CurrentCard = cards.get(0);
+        Card CurrentCard = cards.get(36);
 
         CurrentCard.setConcurrentCardListener(conc);
 
@@ -121,26 +101,24 @@ public class SlaversCoverage {
         /// fine setup
 
 
-        ArrayList<IntegerPair> coords1= new ArrayList<>();
 
-        coords1.add(new IntegerPair(5,6));
-        coords1.add(new IntegerPair(5,4));
+        while(!CurrentCard.isFinished()){
+            System.out.println("\n\n prima che p1 agisca: \n p1: "+p1.getPlayerState().getClass()+ p1.GetHasActed()+"\n p2: "+p2.getPlayerState().getClass()+ p2.GetHasActed());
 
-        ArrayList<IntegerPair> coords2= new ArrayList<>();
-        coords2.add(new IntegerPair(5,5));
-        coords2.add(new IntegerPair(5,5));
+            if(!p1.GetHasActed()){
 
+                c1.DefaultAction(null);
+            }
+            System.out.println("\n\n dpo che p1 ha agito: \n p1: "+p1.getPlayerState().getClass()+ p1.GetHasActed()+"\n p2: "+p2.getPlayerState().getClass()+ p2.GetHasActed());
+            System.out.println("\n snuu \n");
+            if(!p2.GetHasActed() && !CurrentCard.isFinished()){
+                c2.DefaultAction(null);
+            }
 
-        GiveAttackCommand attack = new GiveAttackCommand(coords1,game.getID(),p1.GetID(),game.getLv(),"","");
-        attack.execute(p1);
+        }
 
-        ConsumeEnergyCommand consume = new ConsumeEnergyCommand(coords2,game.getID(),p1.GetID(),game.getLv(),"","");
-        consume.execute(p1);
+        // chiedere a fra la roba della board ma handle destruction ipoteticamente ok
 
-        assertEquals(Accepting.class,p1.getPlayerState().getClass());
-
-        AcceptCommand accept = new AcceptCommand(game.getID(),p1.GetID(),game.getLv(),"",true,"");
-        accept.execute(p1);
 
     }
 }

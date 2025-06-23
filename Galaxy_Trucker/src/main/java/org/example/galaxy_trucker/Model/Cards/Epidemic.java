@@ -6,10 +6,7 @@ import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
-import org.example.galaxy_trucker.Model.PlayerStates.Killing;
-import org.example.galaxy_trucker.Model.PlayerStates.ReadCardState;
-import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
+import org.example.galaxy_trucker.Model.PlayerStates.*;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
@@ -26,7 +23,7 @@ public class Epidemic extends Card {
     public void sendTypeLog(){
         this.getBoard().getPlayers();
         for (Player p : this.getBoard().getPlayers()){
-            sendRandomEffect(p.GetID(), new LogEvent("Epidemic"));
+            sendRandomEffect(p.GetID(), new LogEvent("Epidemic",-1,-1,-1,-1));
         }
     }
 
@@ -60,6 +57,7 @@ public class Epidemic extends Card {
             this.currentPlayer.setState(new Waiting());
             CurrentPlanche=this.currentPlayer.getmyPlayerBoard();
             tiles = CurrentPlanche.getPlayerBoard();
+            HousingCoords.clear();
             HousingCoords.addAll(CurrentPlanche.getHousingUnits());
 
 
@@ -74,10 +72,13 @@ public class Epidemic extends Card {
             for(int k=0;k<infected.size();k++){
                 System.out.println(infected.get(k).getX()+" "+infected.get(k).getY());
             }
+            currentPlayer.setState(new WaitingEpidemic());
             for(int k=0;k<infected.size();k++){
 
                 System.out.println("killing in:"+infected.get(k).getX()+" "+infected.get(k).getY());
-                CurrentPlanche.performAction(tiles[this.infected.get(k).getX()][this.infected.get(k).getY()].getComponent(),new KillCrewAction(CurrentPlanche), new Killing());
+
+                System.out.println((currentPlayer.getPlayerState().getClass()));
+                CurrentPlanche.performAction(tiles[this.infected.get(k).getX()][this.infected.get(k).getY()].getComponent(),new KillCrewAction(CurrentPlanche), new WaitingEpidemic());
 
             }
 

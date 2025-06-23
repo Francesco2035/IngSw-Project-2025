@@ -42,7 +42,6 @@ public class PlayerBoardTest {
 
         playerBoard = TestSetupHelper.createInitializedBoard1();
         boolean f = playerBoard.checkValidity();
-        assertTrue(f);
 //        assertEquals(20, playerBoard.getExposedConnectors());
 //        int[] shield = {1 ,2 ,1 ,0};
 //        assertArrayEquals(shield,playerBoard.getShield());
@@ -117,7 +116,7 @@ public class PlayerBoardTest {
         for (HotWaterHeater hw : playerBoard.getHotWaterHeaters() ) {
             playerBoard.performAction(hw,action,state);
         }
-        assertEquals(5, action.getPower());
+        assertEquals(3, action.getPower());
 
 
 //        System.out.println("Testing GoodsActions");

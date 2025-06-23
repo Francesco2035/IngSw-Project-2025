@@ -12,6 +12,7 @@ import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Goods.BLUE;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
+import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.Killing;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.*;
@@ -157,9 +158,99 @@ class ActionTest {
 
 
         GetEnginePower gep = new GetEnginePower(1);
+        try {
+            gep.visit(((HotWaterHeater) p1.getmyPlayerBoard().getPlayerBoard()[8][3].getComponent()), new Killing());
+        } catch (Exception e){
+            assertEquals("You are not allowed to perform this action in this state", e.getMessage());
+        }
 
 
 
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+        GetGoodAction gga = new GetGoodAction(9, p1.getmyPlayerBoard(), 0, 0);
+        try {
+            gga.visit(((Storage) p1.getmyPlayerBoard().getPlayerBoard()[7][8].getComponent()), new Killing());
+        } catch (Exception e){
+            assertEquals("You are not allowed to perform this action in this state", e.getMessage());
+        }
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+        GetPlasmaDrillPower gpdp = new GetPlasmaDrillPower(1);
+        try {
+            gpdp.visit(((PlasmaDrill) p1.getmyPlayerBoard().getPlayerBoard()[8][9].getComponent()), new Killing());
+        } catch (Exception e){
+            assertEquals("You are not allowed to perform this action in this state", e.getMessage());
+        }
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+        KillCrewAction kca = new KillCrewAction(p1.getmyPlayerBoard());
+        ((ModularHousingUnit) p1.getmyPlayerBoard().getPlayerBoard()[5][7].getComponent()).setNumHumans(2);
+        try {
+            kca.visit(((ModularHousingUnit) p1.getmyPlayerBoard().getPlayerBoard()[5][7].getComponent()), new BaseState());
+        } catch (Exception e){
+            assertEquals("You are not allowed to perform this action in this state", e.getMessage());
+        }
+        kca.visit(((ModularHousingUnit) p1.getmyPlayerBoard().getPlayerBoard()[5][7].getComponent()), new Killing());
+
+
+        KillCrewAction kca2 = new KillCrewAction(p1.getmyPlayerBoard());
+        ((ModularHousingUnit) p1.getmyPlayerBoard().getPlayerBoard()[5][7].getComponent()).setPurpleAlien(true);
+        try {
+            kca2.visit(((ModularHousingUnit) p1.getmyPlayerBoard().getPlayerBoard()[5][7].getComponent()), new Killing());
+        } catch (Exception e){
+            assertEquals("You are not allowed to perform this action in this state", e.getMessage());
+        }
+
+
+        KillCrewAction kca3 = new KillCrewAction(p1.getmyPlayerBoard());
+        ((ModularHousingUnit) p1.getmyPlayerBoard().getPlayerBoard()[5][7].getComponent()).setPurpleAlien(true);
+        try {
+            kca3.visit(((ModularHousingUnit) p1.getmyPlayerBoard().getPlayerBoard()[5][7].getComponent()), new Killing());
+        } catch (Exception e){
+            assertEquals("You are not allowed to perform this action in this state", e.getMessage());
+        }
+
+
+        KillCrewAction kca4 = new KillCrewAction(p1.getmyPlayerBoard());
+        ((ModularHousingUnit) p1.getmyPlayerBoard().getPlayerBoard()[5][7].getComponent()).setBrownAlien(true);
+        try {
+            kca4.visit(((ModularHousingUnit) p1.getmyPlayerBoard().getPlayerBoard()[5][7].getComponent()), new Killing());
+        } catch (Exception e){
+            assertEquals("You are not allowed to perform this action in this state", e.getMessage());
+        }
+
+
+        KillCrewAction kca5 = new KillCrewAction(p1.getmyPlayerBoard());
+        ((ModularHousingUnit) p1.getmyPlayerBoard().getPlayerBoard()[5][7].getComponent()).setBrownAlien(true);
+        try {
+            kca5.visit(((ModularHousingUnit) p1.getmyPlayerBoard().getPlayerBoard()[5][7].getComponent()), new Killing());
+        } catch (Exception e){
+            assertEquals("You are not allowed to perform this action in this state", e.getMessage());
+        }
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+        UseEnergyAction uae = new UseEnergyAction(p1.getmyPlayerBoard());
+        try {
+            uae.visit(((PowerCenter) p1.getmyPlayerBoard().getPlayerBoard()[6][9].getComponent()), new Killing());
+        } catch (Exception e){
+            assertEquals("You are not allowed to perform this action in this state", e.getMessage());
+        }
 
 
 

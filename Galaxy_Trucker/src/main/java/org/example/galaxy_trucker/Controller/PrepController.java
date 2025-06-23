@@ -80,6 +80,6 @@ public class PrepController extends Controller implements ControllerHourGlassLis
 
     @Override
     public void hourglassUpdate(HourglassEvent event) {
-        vv.sendEvent(event);
+        vv.sendHourglass(event);
     }
 }

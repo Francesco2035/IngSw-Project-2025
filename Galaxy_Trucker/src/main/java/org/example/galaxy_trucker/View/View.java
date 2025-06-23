@@ -66,7 +66,7 @@ public interface View {
 
     void showOutcome(FinishGameEvent event);
 
-    void reconnect();
+    void reconnect(ReconnectedEvent event);
 
     void Token(TokenEvent tokenEvent);
 }
