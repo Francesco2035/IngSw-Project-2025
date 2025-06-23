@@ -1038,12 +1038,14 @@ public class GuiRoot implements View {
             if(e.getGameId().equals(event.getGameId())) {
                 System.out.println("Rimuovo " + e.getGameId() + ":- " + e.getPlayers());
                 index = lobbyEvents.indexOf(e);
-                lobbyEvents.remove(e);
+//                lobbyEvents.remove(e);
             }
         }
 
         if(index >= 0)
             lobbyEvents.remove(index);
+
+        System.out.println(event.getGameId() + ":- " + event.getPlayers() +" "+ event.getGameId() +" "+ event.getLv());
 
         if(event.getLv() > 0){
             lobbyEvents.add(event);
