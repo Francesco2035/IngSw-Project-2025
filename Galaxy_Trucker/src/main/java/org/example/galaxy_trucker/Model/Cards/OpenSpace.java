@@ -80,7 +80,7 @@ public class OpenSpace extends Card{
         }
 
         for(Player p: losers){
-            getBoard().abandonRace(p, "You don't have engine power");
+            getBoard().abandonRace(p, "You don't have engine power",true);
         }
 
         checkLosers();

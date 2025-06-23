@@ -83,7 +83,7 @@ public class Card implements Serializable {
         losers.removeAll(getBoard().checkDoubleLap());   // così non ho doppioni :3
         losers.addAll(getBoard().checkDoubleLap());
         for(Player p: losers){
-            getBoard().abandonRace(p, "You have been doubled");
+            getBoard().abandonRace(p, "You have been doubled",true);
         }
 
         losers.clear();
@@ -95,7 +95,7 @@ public class Card implements Serializable {
         }
 
         for(Player p: losers){
-            getBoard().abandonRace(p, "No crew left");
+            getBoard().abandonRace(p, "No crew left",true);
         }
 
     }
