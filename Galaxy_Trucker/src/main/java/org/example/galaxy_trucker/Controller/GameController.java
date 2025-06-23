@@ -318,9 +318,11 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 index = 0;
                 Player currentPlayer = players.get(index);
                 while (index < players.size() && !card.isFinished()) {
+                    System.out.println("CURRENT: "+currentPlayer.GetID()+ " "+currentPlayer.getPlayerState().getClass().getSimpleName());
                     for( int j=0; j<players.size();j++){
                         if(!players.get(j).GetHasActed()){
                             currentPlayer = players.get(j);
+                            break;
                         }
                     }
 

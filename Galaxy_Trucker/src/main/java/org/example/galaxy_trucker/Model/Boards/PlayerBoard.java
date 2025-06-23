@@ -890,6 +890,7 @@ public class PlayerBoard {
 
 
     public int getNumHumans() {
+
         return numHumans;
     }
 
