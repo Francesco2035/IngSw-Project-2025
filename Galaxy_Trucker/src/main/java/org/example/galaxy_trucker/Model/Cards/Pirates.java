@@ -407,6 +407,7 @@ public class Pirates extends Card{
                 }
                 this.sendRandomEffect(player.GetID(),new LogEvent("you defended your ship in " +hit.getFirst()+" "+hit.getSecond(),hit.getFirst(),hit.getSecond(),Punishment.get(ShotsOrder),3));
                 System.out.println(player.GetID()+" Defended From Small");
+                player.setState(new Waiting());
             }
         }
         else {
