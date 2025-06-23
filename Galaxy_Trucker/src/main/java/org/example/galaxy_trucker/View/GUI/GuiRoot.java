@@ -1035,7 +1035,6 @@ public class GuiRoot implements View {
 
         for(LobbyEvent e : lobbyEvents){
             if(e.getGameId().equals(event.getGameId())) {
-                System.out.println("Rimuovo " + e.getGameId() + ":- " + e.getPlayers());
                 index = lobbyEvents.indexOf(e);
 //                lobbyEvents.remove(e);
             }
@@ -1044,12 +1043,12 @@ public class GuiRoot implements View {
         if(index >= 0)
             lobbyEvents.remove(index);
 
-        System.out.println(event.getGameId() + ":- " + event.getPlayers() +" "+ event.getGameId() +" "+ event.getLv());
 
         if(event.getLv() > 0){
             lobbyEvents.add(event);
-            System.out.println("aggiungo " + event.getGameId() + ":- " + event.getPlayers());
         }
+        else
+            lobbyEvents.remove(event);
 
 
         ListView<LobbyEvent> gamesList = new ListView<>();
@@ -1267,9 +1266,8 @@ public class GuiRoot implements View {
             else readyButton.setText("Ready!");
 
             readyButton.setOnAction(e -> {
-                if (amIReady)
-                    inputQueue.add("Ready false");
-                else inputQueue.add("Ready true");
+                readyButton.disableProperty();
+                inputQueue.add("Ready");
             });
 
             debugShip1.setOnAction(e -> {
@@ -2358,7 +2356,8 @@ public class GuiRoot implements View {
             theft = false;
 
             ready.setOnAction(e -> {
-                inputQueue.add("Ready True");
+                inputQueue.add("Ready");
+                ready.disableProperty();
             });
 
             quit.setOnAction(e -> {
