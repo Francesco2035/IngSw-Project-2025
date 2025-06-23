@@ -86,7 +86,7 @@ public class DefaultSelectChunk {
             }
         };
 
-        Card CurrentCard = cards.get(36);
+        Card CurrentCard = cards.get(35);
 
         CurrentCard.setConcurrentCardListener(conc);
 
@@ -127,6 +127,7 @@ public class DefaultSelectChunk {
                 i++;
             }
         }catch (Exception E){
+            E.printStackTrace();
             throw new Exception(E.getMessage());
         }
 
