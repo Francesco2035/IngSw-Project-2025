@@ -84,7 +84,7 @@ class PlayerTest {
         p1.getmyPlayerBoard().setCredits(2);
 
         p1.getmyPlayerBoard().finishRace(true);
-        p1.finishRace(true, "fine");
+        p1.finishRace(12000, "fine");
 
     }
 
