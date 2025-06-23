@@ -287,7 +287,7 @@ public class Warzone extends Card{
             PlayerList.get(i).setState(new BaseState());
         }
         for(Player p: losers){
-            getBoard().abandonRace(p, "No crew left");
+            getBoard().abandonRace(p, "No crew left",true);
         }
         checkLosers();
         System.out.println("card finished");
