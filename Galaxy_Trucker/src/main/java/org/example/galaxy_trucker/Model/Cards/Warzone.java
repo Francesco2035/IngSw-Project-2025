@@ -751,8 +751,8 @@ public class Warzone extends Card{
             if(shotsFlag == false){
                 this.ShotsOrder += 2;
             }
-            sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
-            /// Todo aggiungere il messaggio a client e chiedere a francio che fare perche potrebbeb fare più di una chiamata per stato in caso di miss lezgosk
+            sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,hit.getFirst(),hit.getSecond(),PunishmentShots.get(ShotsOrder),3));
+
         }
         if(this.ShotsOrder >=PunishmentShots.size() ){
             this.ShotsOrder = 0;
@@ -776,15 +776,18 @@ public class Warzone extends Card{
                 catch (Exception e){
                     throw new ImpossibleBoardChangeException("There was no energy to use here");
                 }
-                System.out.println("DefendFromSmall");
+                this.sendRandomEffect(Worst.GetID(),new LogEvent("you defended your ship in " +hit.getFirst()+" "+hit.getSecond(),hit.getFirst(),hit.getSecond(),PunishmentShots.get(ShotsOrder),3));
+                System.out.println(Worst.GetID()+" Defended From Small");
             }
         }
         else {
             currentBoard.destroy(hit.getFirst(), hit.getSecond());
             currentBoard.handleAttack(hit.getFirst(), hit.getSecond());
+            this.sendRandomEffect(Worst.GetID(),new LogEvent("your ship got destroyed in " +hit.getFirst()+" "+hit.getSecond(),hit.getFirst(),hit.getSecond(),PunishmentShots.get(ShotsOrder),3));
             if (currentBoard.getBroken()){
                 System.out.println("rottura nave");
                 this.currentPlayer.setState(new HandleDestruction());
+                this.sendRandomEffect(Worst.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
                 return;
 
             }
