@@ -40,9 +40,11 @@ public class DebugShip extends Command implements Serializable {
         GAGen gag = new GAGen();
 
         //FIX PLAYERBOARD INIZIALI
+
+        int[][] valid = debugShip.getValidPlayerBoard();
         for(int i=0; i<10; i++) {
             for(int j=0; j<10; j++) {
-                if (debugShip.getValidPlayerBoard()[i][j] == 1 && (i!=6 && j!=6)) debugShip.removeTile(i, j);
+                if (valid[i][j] == 1 && (i!=6 && j!=6)) debugShip.removeTile(i, j);
             }
         }
 
