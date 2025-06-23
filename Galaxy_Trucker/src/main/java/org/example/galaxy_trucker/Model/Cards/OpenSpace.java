@@ -49,10 +49,10 @@ public class OpenSpace extends Card{
         for(Player p : PlayerList){
             p.setState(new Waiting());
         }
-        this.updateSates();
+        this.updateStates();
     }
     @Override
-    public void updateSates(){
+    public void updateStates(){
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         currentmovement=0;
@@ -134,11 +134,13 @@ public class OpenSpace extends Card{
     public void moveplayer(){
         if(currentmovement==0){
             losers.add(this.currentPlayer);
+            this.currentPlayer.setState(new Waiting());
+            this.updateStates();
         }
         else {
             getBoard().movePlayer(currentPlayer.GetID(),currentmovement);
             this.currentPlayer.setState(new Waiting());
-        this.updateSates();
+        this.updateStates();
         }
     }
 

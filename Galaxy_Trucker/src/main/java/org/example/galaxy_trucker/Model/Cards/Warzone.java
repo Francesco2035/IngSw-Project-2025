@@ -142,12 +142,12 @@ public class Warzone extends Card{
             return;
         }
 
-        this.updateSates();
+        this.updateStates();
     }
 
 
     @Override
-    public void updateSates() throws InterruptedException {
+    public void updateStates() throws InterruptedException {
         if(ChallengeOrder<3) {
             this.isaPunishment=false;
             message ="";
@@ -203,7 +203,7 @@ public class Warzone extends Card{
                     this.Minimum = 100000;
                     if(this.currentPlayer.getmyPlayerBoard().getNumHumans()<this.PunishmentHumans){ // dovrebbe bastare a evitare il caso in cui uno è forzato ad uccidere più umani di quanti de abbia
                         losers.add(currentPlayer);
-                        this.updateSates();
+                        this.updateStates();
                         return;
                     }
 
@@ -441,7 +441,7 @@ public class Warzone extends Card{
             }
         }
         this.isaPunishment=false;
-        this.updateSates();
+        this.updateStates();
 
 
     }
@@ -455,7 +455,7 @@ public class Warzone extends Card{
         }
         this.currentPlayer.setState(new Waiting());
         message= message+currentPlayer.GetID()+"has chosen strength "+this.currentpower +"\n";
-        this.updateSates();
+        this.updateStates();
     }
 
     public void checkSpeed() throws InterruptedException {
@@ -467,7 +467,7 @@ public class Warzone extends Card{
         this.currentPlayer.setState(new Waiting());
         message= message+currentPlayer.GetID()+"has chosen strength "+this.currentpower +"\n";
         System.out.println("end  speed order "+PlayerOrder);
-        this.updateSates();
+        this.updateStates();
     }
 
 
@@ -503,7 +503,7 @@ public class Warzone extends Card{
             }
         }
         this.PlayerOrder=PlayerList.size();
-        this.updateSates();
+        this.updateStates();
     }
 
 
@@ -514,7 +514,7 @@ public class Warzone extends Card{
         this.getBoard().movePlayer(Worst.GetID(),-this.PunishmentMovement);
         System.out.println(this.Worst.GetID()+" loses the time");
         this.PlayerOrder=0;
-        this.updateSates();
+        this.updateStates();
 
         return;
     }
@@ -564,7 +564,7 @@ public class Warzone extends Card{
 
 
 
-        this.updateSates();
+        this.updateStates();
     }
 
 
@@ -764,7 +764,7 @@ public class Warzone extends Card{
         }
         if(this.ShotsOrder >=PunishmentShots.size() ){
             this.ShotsOrder = 0;
-            this.updateSates();
+            this.updateStates();
         }
     }
 
@@ -786,6 +786,7 @@ public class Warzone extends Card{
                 }
                 this.sendRandomEffect(Worst.GetID(),new LogEvent("you defended your ship in " +hit.getFirst()+" "+hit.getSecond(),hit.getFirst(),hit.getSecond(),PunishmentShots.get(ShotsOrder),3));
                 System.out.println(Worst.GetID()+" Defended From Small");
+                player.setState(new Waiting());
             }
         }
         else {
@@ -866,7 +867,7 @@ public class Warzone extends Card{
         }
         if(tmpPunishment==0){
             System.out.println("finished stealing");
-            this.updateSates();
+            this.updateStates();
             return;
         }
         if(cargoH.isEmpty()){

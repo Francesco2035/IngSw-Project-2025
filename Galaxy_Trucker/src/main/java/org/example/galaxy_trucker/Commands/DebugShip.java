@@ -39,6 +39,13 @@ public class DebugShip extends Command implements Serializable {
         PlayerBoard debugShip = player.getmyPlayerBoard();
         GAGen gag = new GAGen();
 
+        //FIX PLAYERBOARD INIZIALI
+        for(int i=0; i<10; i++) {
+            for(int j=0; j<10; j++) {
+                if (debugShip.getValidPlayerBoard()[i][j] == 1) debugShip.removeTile(i, j);
+            }
+        }
+
         ArrayList<Tile> tiles = gag.getTilesDeck();
 //        Tile t1 = tiles.get(133); //"SINGLE", "DOUBLE", "SINGLE", "NONE addons, br factos
 //        Tile t2 = tiles.get(102); //none,cannon, single, universal , plasmadrill    ruota sx due volte factos

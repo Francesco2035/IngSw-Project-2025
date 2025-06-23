@@ -6,7 +6,6 @@ import org.example.galaxy_trucker.Exceptions.WrongPlanetExeption;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.ChoosingPlanet;
 import org.example.galaxy_trucker.Model.PlayerStates.HandleCargo;
 import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
@@ -53,12 +52,12 @@ public class SolarSystem extends Card {
             p.setState(new Waiting());
         }
         this.message=" ";
-        this.updateSates();
+        this.updateStates();
     }
 
 
     @Override
-    public void updateSates(){
+    public void updateStates(){
         if (!this.isFinished()){
             GameBoard Board=this.getBoard();
             ArrayList<Player> PlayerList = Board.getPlayers();
@@ -133,7 +132,7 @@ public class SolarSystem extends Card {
             } else {
                 this.planets.get(planet).setOccupied(this.currentPlayer);
                 message=message+currentPlayer.GetID()+"has chosen planet number "+planet+"\n";
-                this.updateSates();
+                this.updateStates();
             }
         }
         else{
@@ -141,7 +140,7 @@ public class SolarSystem extends Card {
             //dovrebbe non dare problemi ne se l'ultimo rifiuta il pianeta ne se tutti rifiutano
             // se  l'ultimo rifiuta dovrebbe chiamare update come se avesse accettato cioe scorre l lista di chi ha accettato e li manda in handle cargo
             // se tutti dicono di no tecnicamente fa prima finish card e poi fa anche update state che però non dovrebbe fare nulla
-            this.updateSates();
+            this.updateStates();
         }
     }
 

@@ -16,7 +16,6 @@ import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Goods.BLUE;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Goods.RED;
-import org.example.galaxy_trucker.Model.Goods.YELLOW;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.*;
@@ -192,7 +191,7 @@ class TileAndComponentTest {
         p1.setState(new Killing());
         game.getGag().getCardsDeck().getFirst().setBoard(game.getGameBoard()); // per qualche motivo se chiamo questi metodi su carta 32 già usata crasha e perdo
         game.getGag().getCardsDeck().getFirst().setConcurrentCardListener(gc);
-        game.getGag().getCardsDeck().getFirst().updateSates();
+        game.getGag().getCardsDeck().getFirst().updateStates();
         game.getGag().getCardsDeck().getFirst().CardEffect();
         p1.setCard(game.getGag().getCardsDeck().getFirst());
         alp.add(new IntegerPair(6,6));
