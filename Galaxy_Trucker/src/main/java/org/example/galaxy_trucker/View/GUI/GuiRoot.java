@@ -1960,7 +1960,9 @@ public class GuiRoot implements View {
 
     @Override
     public void reconnect(ReconnectedEvent event) {
-
+        myName = event.getPlayerId();
+        myGameName = event.getGameId();
+        myGameLv = event.getLv();
     }
 
     @Override
