@@ -134,6 +134,8 @@ public class OpenSpace extends Card{
     public void moveplayer(){
         if(currentmovement==0){
             losers.add(this.currentPlayer);
+            this.currentPlayer.setState(new Waiting());
+            this.updateSates();
         }
         else {
             getBoard().movePlayer(currentPlayer.GetID(),currentmovement);
