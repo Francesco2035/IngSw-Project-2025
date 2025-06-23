@@ -273,7 +273,7 @@ public class Client implements EventVisitor {
         commandInterpreter.setlv(event.getLv());
         commandInterpreter.setToken(token);
         this.view.setGameboard(event.getLv());
-        this.view.reconnect();
+        this.view.reconnect(event);
         if (rmiClient != null){
             rmiClient.setCommandInterpreter(commandInterpreter);
         }

@@ -34,7 +34,7 @@
   {"id": 33, "Card":"OpenSpace", "Level" : 2,  "Time": 0 },
   {"id": 34, "Card":"OpenSpace","Level" : 2,  "Time": 0 },
   {"id": 35, "Card":"OpenSpace","Level" : 2,  "Time": 0 },
-  {"id":36, "Card":"Warzone",   "Level" : 1,  "Time": 0,"RequirementOrder": [3,2,1],"PunishmentOrder": [1,2,4],"Punishment1": 3,"Punishment2": 2,"Punishment3": 0, "Punishment4":[3,0,3,1] },
+  {"id": 36, "Card":"Warzone",   "Level" : 1,  "Time": 0,"RequirementOrder": [3,2,1],"PunishmentOrder": [1,2,4],"Punishment1": 3,"Punishment2": 2,"Punishment3": 0, "Punishment4":[3,0,3,1] },
   {"id": 37, "Card":"Warzone",  "Level" : 2,  "Time":0 ,"RequirementOrder": [1,2,3],"PunishmentOrder": [1,3,4],"Punishment1": 4,"Punishment2":0 ,"Punishment3": 3,"Punishment4":[1,0,0,0,2,0,3,1] },
   {"id": 38, "Card":"Stardust",   "Level" :1 ,  "Time": 0 },
   {"id": 39, "Card":"Stardust",  "Level" : 2,  "Time": 0 },

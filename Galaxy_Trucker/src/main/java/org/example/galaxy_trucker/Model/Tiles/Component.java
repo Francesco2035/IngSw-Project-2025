@@ -52,8 +52,8 @@ public abstract class Component implements Serializable {
 
 
     public void accept(ComponentAction visitor, PlayerState state){
-        throw new InvalidInput("Invalid input for the specific action"); //TODO: viene veramente usata questa eccezione?
-    }; // TODO: testare un caso di getgoods quando sono tipo in killing
+        throw new InvalidInput("Invalid input for the specific action");
+    };
 
     public abstract Component clone(PlayerBoard playerBoard);
 

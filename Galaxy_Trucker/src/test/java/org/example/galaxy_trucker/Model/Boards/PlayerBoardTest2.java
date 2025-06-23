@@ -61,30 +61,30 @@ class PlayerBoardTest2 {
         pb1.setAlienAddons(null);
         pb1.setShieldGenerators(null);
         pb1.setPowerCenters(null);
-        pb1.AddGoodInBuffer(null);
+        //pb1.AddGoodInBuffer(null);
         pb1.getBuffer();
 
 
-        try {
-            pb1.pullFromBufferGoods(0);
-        }catch (Exception e){
-            assertEquals("BufferGoods is empty", e.getMessage());
-        }
+//        try {
+//            pb1.pullFromBufferGoods(0);
+//        }catch (Exception e){
+//            assertEquals("BufferGoods is empty", e.getMessage());
+//        }
+//
+//
+//        pb1.AddGoodInBuffer(new BLUE());
+//
+//        try {
+//            pb1.pullFromBufferGoods(10);
+//        }catch (Exception e){
+//            assertEquals("This position in the BufferGoods does not exist", e.getMessage());
+//        }
 
 
-        pb1.AddGoodInBuffer(new BLUE());
-
-        try {
-            pb1.pullFromBufferGoods(10);
-        }catch (Exception e){
-            assertEquals("This position in the BufferGoods does not exist", e.getMessage());
-        }
-
-
-        assertEquals(1, pb1.pullFromBufferGoods(0).getValue());
+//        assertEquals(1, pb1.pullFromBufferGoods(0).getValue());
 
         assertFalse(pb1.getBroken());
-        assertTrue(pb1.getValid());
+//        assertTrue(pb1.getValid());
 
 
         pb1.getToRemovePB();

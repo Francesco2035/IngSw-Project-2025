@@ -332,5 +332,13 @@ public class Player implements Serializable {
         this.cardListner = null;
     }
 
+    public void removeReadyListener(){
+        this.readyListener = null;
+    }
+
+    public void removeFinishListener(){
+        this.finishListener = null;
+    }
+
 
 }
