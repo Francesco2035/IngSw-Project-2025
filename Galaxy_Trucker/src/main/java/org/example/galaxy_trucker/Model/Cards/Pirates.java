@@ -86,11 +86,11 @@ public class Pirates extends Card{
         for(Player p : PlayerList){
             p.setState(new Waiting());
         }
-        this.updateSates();
+        this.updateStates();
     }
 
     @Override
-    public void updateSates(){
+    public void updateStates(){
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         System.out.println("player number "+this.order);
@@ -166,7 +166,7 @@ public class Pirates extends Card{
         else {
             System.out.println(currentPlayer.GetID()+" was even");
             this.currentPlayer.setState(new Waiting());
-            this.updateSates();
+            this.updateStates();
         }
 
 
@@ -375,7 +375,7 @@ public class Pirates extends Card{
         }
         if(this.ShotsOrder >=Punishment.size() ){
             this.ShotsOrder = 0;
-            this.updateSates();
+            this.updateStates();
         }
     }
 
