@@ -164,7 +164,7 @@ class GameBoardTest {
         }
 
         Gboard2.removePlayer(p3);
-        Gboard2.abandonRace(p4, "lost", true);
+        Gboard2.abandonRace(p4, "lost",true);
         try {
             Gboard2.abandonRace(null, "lost",true);
         } catch (RuntimeException e){

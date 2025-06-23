@@ -75,7 +75,15 @@ public class AbandonedShip extends Card{
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             System.out.println("Checking: "+currentPlayer.GetID());
-            if(CurrentPlanche.getNumHumans()>=requirement){ //TODO: capire se maggiore o maggiore uguale
+
+            int NumHumans= CurrentPlanche.getNumHumans();
+            if(CurrentPlanche.isBrownAlien()){
+                NumHumans++;
+            }
+            if (CurrentPlanche.isPurpleAlien()){
+                NumHumans++;
+            }
+            if(NumHumans>=requirement){ //TODO: capire se maggiore o maggiore uguale
                 this.totHumans=CurrentPlanche.getNumHumans();
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
