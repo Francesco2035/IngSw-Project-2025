@@ -128,7 +128,7 @@ public class DefaultSelectChunk {
             }
         }catch (Exception E){
             E.printStackTrace();
-            throw new Exception(E.getMessage());
+            //throw new Exception(E.getMessage());
         }
 
 
