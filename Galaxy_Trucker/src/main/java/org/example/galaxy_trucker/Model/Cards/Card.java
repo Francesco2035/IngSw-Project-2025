@@ -117,7 +117,7 @@ public class Card implements Serializable {
     public GameBoard getBoard() {
         return this.Board;
     }
-    public void updateSates() throws InterruptedException {}
+    public void updateStates() throws InterruptedException {}
     public void finishCard() {}
     public void continueCard(boolean accepted) {}
     public void checkPower(double power, int numofDouble) throws InterruptedException {}

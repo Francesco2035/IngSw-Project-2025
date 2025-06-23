@@ -8,7 +8,6 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.Accepting;
-import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.HandleCargo;
 import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
@@ -64,10 +63,10 @@ public class AbandonedStation extends Card{
             p.setState(new Waiting());
         }
         Thread.sleep(3000);
-        this.updateSates();
+        this.updateStates();
     }
     @Override
-    public void updateSates(){
+    public void updateStates(){
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         while(this.order<=PlayerList.size()&& !this.flag) {
@@ -114,7 +113,7 @@ public class AbandonedStation extends Card{
         else{
             currentPlayer.setState(new Waiting());
             this.flag = false;
-            this.updateSates();
+            this.updateStates();
         }
     }
 
