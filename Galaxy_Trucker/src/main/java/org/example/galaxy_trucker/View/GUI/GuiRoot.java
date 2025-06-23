@@ -85,7 +85,7 @@ public class GuiRoot implements View {
     private Stage gameBoardStage;
 
     private Image cardBack;
-    private HashMap<String, ImageView> playerRockets;
+    private HashMap<String, ImageView>playerRockets;
     private HashMap<String, Integer> playerPositions;
     private HashMap<Integer, IntegerPair> coords;
     private Image brownAlien, purpleAlien, crewMate;
@@ -97,6 +97,7 @@ public class GuiRoot implements View {
     private int totEnergy;
     private int totDamages;
     private int totHumans;
+    private IntegerPair shotCoords;
 
     private boolean killing;
     private HBox phaseButtons;
@@ -139,77 +140,37 @@ public class GuiRoot implements View {
         guiThread.start();
     }
 
-    private void sceneSetup(){
-        primaryRoot = new StackPane();
-        contentRoot = new Pane();
-        primaryScene = new Scene(primaryRoot, 800, 600);
+    public void sceneSetup(){
+        Platform.runLater(()->{
+            primaryRoot = new StackPane();
+            contentRoot = new Pane();
+            primaryScene = new Scene(primaryRoot, 800, 600);
 
-        tileImage = new ImageView();
-        tileImage.setImage(null);
-        tileImage.setFitWidth(100);
-        tileImage.setPreserveRatio(true);
-        uncoveredTiles = new TilePane();
-        amIBuilding = true;
-        checkvalidity = false;
-        hourglassBox = new VBox();
-        buffer1 = new ImageView();
-        buffer2 = new ImageView();
+            tileImage = new ImageView();
+            tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
+            tileImage.setImage(tilePlaceholder);
+            tileImage.setOpacity(0.5);
 
-        coords = new HashMap<>();
-        othersBoards = new HashMap<>();
-        playerRockets = new HashMap<>();
-        playerPositions = new HashMap<>();
-        rocketsPane = new Pane();
+            //background setup
+            Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
 
-        myBoard = new GridPane();
-        playerClient = new PlayerClient();
-        discardedTiles = new ArrayList<>();
-        discardedMap = new HashMap<>();
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.setAutoPlay(true);
 
-        curCard =  new ImageView();
-        curCard.setImage(null);
-        curCardImg = null;
-        killing = false;
-        phaseButtons = new HBox(20);
-        cmdCoords = new ArrayList<>();
-        tilesClickable = false;
-        excludedTiles = new ArrayList<>();
-        curCargoImg = new ImageView();
-        curCargoImg.setImage(null);
-        storageCompartments = new HashMap<>();
-        rewardsLeft = 0;
-        handlingCargo = false;
-        theft = false;
-        rewards = null;
-        batteryClickable = false;
-        selectedImages = new ArrayList<>();
+            MediaView background = new MediaView(mediaPlayer);
+            background.setPreserveRatio(false);
 
-        readyPlayers = new ListView<>();
-        log = new ListView<>();
-        prompt = new Label();
+            background.fitHeightProperty().bind(primaryStage.heightProperty());
+            background.fitWidthProperty().bind(primaryStage.widthProperty());
 
 
-        //tile setup
-        tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
-        tileImage.setImage(tilePlaceholder);
-        tileImage.setOpacity(0.5);
+            primaryRoot.getChildren().addAll(background, contentRoot);
+            primaryScene.setRoot(primaryRoot);
 
-        //background setup
-        Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
+            goToFirstScene();
+        });
 
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setAutoPlay(true);
-
-        MediaView background = new MediaView(mediaPlayer);
-        background.setPreserveRatio(false);
-
-        background.fitHeightProperty().bind(primaryStage.heightProperty());
-        background.fitWidthProperty().bind(primaryStage.widthProperty());
-
-
-        primaryRoot.getChildren().addAll(background, contentRoot);
-        primaryScene.setRoot(primaryRoot);
     }
 
 
@@ -567,7 +528,7 @@ public class GuiRoot implements View {
 
 
     @Override
-    public void updateOthersPB(PlayerTileEvent event) {
+    public void updateOthersPB(PlayerTileEvent event){
         if(!othersBoards.containsKey(event.getPlayerName()))
             othersBoards.put(event.getPlayerName(), new GridPane());
 
@@ -591,7 +552,6 @@ public class GuiRoot implements View {
                 if(node != null && GridPane.getRowIndex(node) == event.getX() && GridPane.getColumnIndex(node) == event.getY())
                     othersBoards.get(event.getPlayerName()).getChildren().remove(node);
             }
-
             othersBoards.get(event.getPlayerName()).add(tile, event.getY(), event.getX());
         });
     }
@@ -1312,6 +1272,7 @@ public class GuiRoot implements View {
 
                 confirmButton.setOnAction(E -> {
                     inputQueue.add("Quit");
+                    confirmStage.close();
                 });
 
                 HBox buttons = new HBox(50, goBackButton, confirmButton);
@@ -1442,9 +1403,7 @@ public class GuiRoot implements View {
                 playerRockets.get(event.getPlayerID()).setLayoutX((coords.get(event.getPosition()).getFirst() - 20) * 0.85);
                 playerRockets.get(event.getPlayerID()).setLayoutY((coords.get(event.getPosition()).getSecond() - 20) * 0.85);
             }
-
         });
-
     }
 
 
@@ -1863,6 +1822,7 @@ public class GuiRoot implements View {
         playerClient.setPlayerState(event.getStateClient());
         playerClient.showGame(printer);
 
+        System.out.println(event.getStateClient().getClass());
         if(event.getStateClient() == loginClient){
             goToFirstScene();
         }
@@ -1918,18 +1878,65 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void effectCard(LogEvent event) {
+    public void effectCard(LogEvent event){
         //messaggio di cosa è successo
         Platform.runLater(()->{
-            String oldText = prompt.getText();
 //            prompt.setText(event.message());
-            log.getItems().addFirst(event.message());
-
+                log.getItems().addFirst(event.message());
+                if (event.message().equals("Flight started")){
+                    flightScene();
+                }
 //            PauseTransition pause = new PauseTransition(Duration.seconds(5));
 //            pause.setOnFinished(e -> prompt.setText(oldText));
 //            pause.play();
-        });
+          //0 sx - 1 su - 2 dx - 3 sotto
+            //tipo 0 m piccolo - 1 m grande - 2 s piccolo - 3 s grande
 
+
+            if(shotCoords != null){
+                ArrayList<Node> nodes = new ArrayList<>(myBoard.getChildren());
+                for (Node node : nodes) {
+                    if (node != null && GridPane.getRowIndex(node) == shotCoords.getSecond() && GridPane.getColumnIndex(node) == shotCoords.getFirst())
+                        myBoard.getChildren().remove(node);
+                }
+
+                shotCoords = null;
+            }
+
+            if(event.getX() >= 0 && event.getY() >= 0){
+                ImageView shot = new ImageView(new Image(getClass().getResourceAsStream("/GUI/shots/shot_" + event.getType() + ".png")));
+                shot.setFitHeight(50);
+                shot.setPreserveRatio(true);
+
+                if(event.getType() == 0 ||  event.getType() == 2)
+                    shot.setFitHeight(40);
+
+                switch(event.getDirection()){
+                    case 0:{
+                        shot.setRotate(90);
+                        shotCoords = new IntegerPair(2, event.getX());
+                        break;
+                    }
+                    case 1:{
+                        shot.setRotate(180);
+                        shotCoords = new IntegerPair(event.getY(), 3);
+                        break;
+                    }
+                    case 2:{
+                        shot.setRotate(270);
+                        shotCoords = new IntegerPair(10, event.getX());
+                        break;
+                    }
+                    case 3:{
+                        shot.setRotate(0);
+                        shotCoords = new IntegerPair(event.getY(), 9);
+                        break;
+                    }
+                }
+                myBoard.add(shot, shotCoords.getFirst(), shotCoords.getSecond());
+            }
+
+        });
     }
 
     @Override
@@ -1998,7 +2005,9 @@ public class GuiRoot implements View {
 
     @Override
     public void reconnect(ReconnectedEvent event) {
-
+        myName = event.getPlayerId();
+        myGameName = event.getGameId();
+        myGameLv = event.getLv();
     }
 
     @Override
@@ -2009,8 +2018,15 @@ public class GuiRoot implements View {
 
             Label txt1 = new Label("This is your token:\n");
             txt1.setStyle("-fx-font-size: 15px");
-            Label txt2 = new Label(tokenEvent.getToken());
-            txt2.setStyle("-fx-font-size: 19px");
+
+            TextField txt2 = new TextField(tokenEvent.getToken());
+            txt2.setEditable(false);
+            txt2.setFocusTraversable(false);
+            txt2.setStyle("-fx-background-color: transparent; -fx-border-width: 0;-fx-font-size: 19px");
+            txt1.setAlignment(Pos.CENTER);
+
+//            Label txt2 = new Label(tokenEvent.getToken());
+//            txt2.setStyle("-fx-font-size: 19px");
             Label txt3 = new Label("\nRemember this, you will need it for reconnection!");
             txt3.setStyle("-fx-font-size: 15px");
             Button ok = new Button("Ok");
@@ -2092,31 +2108,76 @@ public class GuiRoot implements View {
 
 
     public void goToFirstScene() {
-        sceneSetup();
 
-        Label titleLabel = new Label("GALAXY TRUCKERS");
-        titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
+        Platform.runLater(() -> {
+            tileImage.setImage(null);
+            tileImage.setFitWidth(100);
+            tileImage.setPreserveRatio(true);
+            uncoveredTiles = new TilePane();
+            amIBuilding = true;
+            checkvalidity = false;
+            hourglassBox = new VBox();
+            buffer1 = new ImageView();
+            buffer2 = new ImageView();
 
-        Button startButton = new Button("Start!");
-        startButton.setStyle("-fx-font-size: 20px;");
+            coords = new HashMap<>();
+            othersBoards = new HashMap<>();
+            playerRockets = new HashMap<>();
+            playerPositions = new HashMap<>();
+            rocketsPane = new Pane();
 
-        VBox TitleScreenBox = new VBox(10, titleLabel, startButton);
-        TitleScreenBox.setAlignment(Pos.CENTER);
-        TitleScreenBox.setPadding(new Insets(20));
-        //TitleScreenBox.setMaxWidth(400);
-        StackPane titleRoot = new StackPane(TitleScreenBox);
-        TitleScreenBox.prefWidthProperty().bind(primaryStage.widthProperty());
-        TitleScreenBox.prefHeightProperty().bind(primaryStage.heightProperty());
+            myBoard = new GridPane();
+            playerClient = new PlayerClient();
+            discardedTiles = new ArrayList<>();
+            discardedMap = new HashMap<>();
 
-        contentRoot.getChildren().setAll(titleRoot);
+            curCard = new ImageView();
+            curCard.setImage(null);
+            curCardImg = null;
+            killing = false;
+            phaseButtons = new HBox(20);
+            cmdCoords = new ArrayList<>();
+            tilesClickable = false;
+            excludedTiles = new ArrayList<>();
+            curCargoImg = new ImageView();
+            curCargoImg.setImage(null);
+            storageCompartments = new HashMap<>();
+            rewardsLeft = 0;
+            handlingCargo = false;
+            theft = false;
+            rewards = null;
+            batteryClickable = false;
+            selectedImages = new ArrayList<>();
+            shotCoords = null;
+
+            readyPlayers = new ListView<>();
+            log = new ListView<>();
+            prompt = new Label();
+
+            Label titleLabel = new Label("GALAXY TRUCKERS");
+            titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
+
+            Button startButton = new Button("Start!");
+            startButton.setStyle("-fx-font-size: 20px;");
+
+            VBox TitleScreenBox = new VBox(10, titleLabel, startButton);
+            TitleScreenBox.setAlignment(Pos.CENTER);
+            TitleScreenBox.setPadding(new Insets(20));
+            //TitleScreenBox.setMaxWidth(400);
+            StackPane titleRoot = new StackPane(TitleScreenBox);
+            TitleScreenBox.prefWidthProperty().bind(primaryStage.widthProperty());
+            TitleScreenBox.prefHeightProperty().bind(primaryStage.heightProperty());
+
+            contentRoot.getChildren().setAll(titleRoot);
 
 
-        printer.setTitleScreen(primaryScene);
-        printer.printTitleScreen();
+            printer.setTitleScreen(primaryScene);
+            printer.printTitleScreen();
 
-        startButton.setOnAction(e -> {
-            inputQueue.add("Lobby");
-            playerClient.setPlayerState(new LobbyClient());
+            startButton.setOnAction(e -> {
+                inputQueue.add("Lobby");
+                playerClient.setPlayerState(new LobbyClient());
+            });
         });
     }
 
@@ -2218,7 +2279,7 @@ public class GuiRoot implements View {
             img.setFitHeight(40);
             img.setPreserveRatio(true);
 
-            if(!playerRockets.containsKey(pl)) {
+            if(!playerRockets.containsKey(pl)){
                 if (id == 153) {
                     img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-blue.png")));
                     playerRockets.put(pl, img);
@@ -2236,9 +2297,8 @@ public class GuiRoot implements View {
                     playerRockets.put(pl, img);
                 }
             }
-
         });
-        System.out.println(pl +" "+ id);
+
     }
 
     public boolean isGameStarted(){
@@ -2281,7 +2341,6 @@ public class GuiRoot implements View {
             killing = false;
             theft = false;
 
-
             ready.setOnAction(e -> {
                 inputQueue.add("Ready True");
             });
@@ -2289,9 +2348,9 @@ public class GuiRoot implements View {
             quit.setOnAction(e -> {
                 inputQueue.add("Quit");
             });
+            primaryStage.show();
         });
     }
-
 
     public void killing(){
         AtomicReference<String> cmd = new AtomicReference<>("Kill");
@@ -2313,11 +2372,10 @@ public class GuiRoot implements View {
                     i.setOpacity(1);
                 }
             });
+            primaryStage.show();
         });
 
     }
-
-
 
     public void defend(String command, String txt){
         AtomicReference<String> cmd = new AtomicReference<>(command);
@@ -2355,10 +2413,10 @@ public class GuiRoot implements View {
                 cmdCoords.clear();
                 cmd.set(command);
             });
+            primaryStage.show();
         });
 
     }
-
 
     public void consumingEnergy(){
         AtomicReference<String> cmd = new AtomicReference<>();
@@ -2388,10 +2446,9 @@ public class GuiRoot implements View {
                     i.setOpacity(1);
                 }
             });
+            primaryStage.show();
         });
     }
-
-
 
     public void giveTiles(String command, String txt){
         AtomicReference<String> cmd = new AtomicReference<>(command);
@@ -2431,10 +2488,9 @@ public class GuiRoot implements View {
                 }
                 cmdCoords.clear();
             });
+            primaryStage.show();
         });
     }
-
-
 
     public void choosingPlanet(){
         Button choose = new Button("Select");
@@ -2478,10 +2534,11 @@ public class GuiRoot implements View {
                     }
                 }
             });
+            primaryStage.show();
         });
 
-    }
 
+    }
 
     public void acceptState(){
         AtomicReference<String> cmd = new AtomicReference<>("ChoosePlanet");
@@ -2500,11 +2557,10 @@ public class GuiRoot implements View {
             decline.setOnAction(e ->{
                 inputQueue.add("Decline");
             });
-
+            primaryStage.show();
         });
 
     }
-
 
     public void handleCargo() {
         Platform.runLater(() -> {
@@ -2601,6 +2657,7 @@ public class GuiRoot implements View {
                 curCargoCoords = null;
                 curCargoImg.setImage(null);
             });
+            primaryStage.show();
         });
     }
 
@@ -2609,6 +2666,7 @@ public class GuiRoot implements View {
             curCard.setImage(curCardImg);
             theft = true;
             prompt.setText("Select cargo to give");
+            primaryStage.show();
         });
     }
 
@@ -2620,8 +2678,7 @@ public class GuiRoot implements View {
             tilesClickable = false;
             killing = false;
             theft = false;
+            primaryStage.show();
         });
     }
-
-
 }
