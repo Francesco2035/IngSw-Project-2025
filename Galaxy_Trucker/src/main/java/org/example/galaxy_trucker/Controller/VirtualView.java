@@ -19,6 +19,7 @@ import java.util.HashMap;
 
 public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener, ExceptionListener, PlayersPBListener, RandomCardEffectListener{
 
+    private int lv;
     private boolean Disconnected = false;
     private TileEvent[][] eventMatrix;
     private String playerName;
@@ -39,8 +40,11 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private PBInfoEvent pbInfoEvent = null;
     private ArrayList<LogEvent> logEvents = new ArrayList<>();
     private ArrayList<PlayerTileEvent> otherPlayerTileEvents = new ArrayList<>();
-    //non credo serva salvarsi rewards event
     private HourglassEvent hourglassEvent = null;
+
+    public void setLv(int lv){
+        this.lv = lv;
+    }
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, PrintWriter echoSocket) {
@@ -334,9 +338,17 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     public void reconnect() {
+
+        sendEvent(new ReconnectedEvent(token,idGame,playerName,lv));
+
         if (card != null){
             newCard(card);
         }
+
+        for (LogEvent log : logEvents){
+            sendEvent(log);
+        }
+
         for (int i = 0; i < 10; i ++){
             for(int j = 0; j < 10; j ++){
                 sendEvent(eventMatrix[i][j]);
@@ -359,9 +371,6 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             sendEvent(gbEvent);
         }
 
-        for (LogEvent log : logEvents){
-            sendEvent(log);
-        }
         if (rewardsEvent != null){
             sendEvent(rewardsEvent);
         }

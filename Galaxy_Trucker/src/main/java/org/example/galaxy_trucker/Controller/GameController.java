@@ -99,6 +99,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             vv.sendEvent(new ConnectionRefusedEvent(idGame + " is full!"));
         }
          else {
+            vv.setLv(lv);
             String playerId = p.GetID();
             System.out.println("Player ID: " + playerId);
             System.out.println("Token: " + token.toString());
@@ -477,10 +478,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     }
 
     public void startPlayer(String token) {
-        System.out.println("STARTING ");
         String playerId = tokenToPlayerId.get(token);
         System.out.println("STARTING "+playerId);
-        VirtualViewMap.get(playerId).sendEvent(new ReconnectedEvent(token,game.getGameID(),playerId, lv));
+        //VirtualViewMap.get(playerId).sendEvent(new ReconnectedEvent(token,game.getGameID(),playerId, lv));
         synchronized (lock){
             threads.get(playerId).interrupt();
         }
