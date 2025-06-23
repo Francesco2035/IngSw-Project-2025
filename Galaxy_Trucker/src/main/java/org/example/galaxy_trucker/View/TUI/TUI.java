@@ -315,7 +315,7 @@ public class TUI implements View {
     }
 
     @Override
-    public void reconnect() {
+    public void reconnect(ReconnectedEvent event) {
         out.clearOut();
     }
 

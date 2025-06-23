@@ -334,7 +334,6 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     public void reconnect() {
-        //hourglass event
         if (card != null){
             newCard(card);
         }
@@ -354,11 +353,9 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             sendEvent(lobby);
         }
         for (PlayerTileEvent playerTileEvent : otherPlayerTileEvents){
-            System.out.println("Sending PlayerTileEvent " + playerTileEvent.getPlayerName() + " " + playerTileEvent.getId());
             sendEvent(playerTileEvent);
         }
         for (GameBoardEvent gbEvent : board){
-            System.out.println("Sending board" + board.size() + " " + gbEvent.getPlayerID() + " " +gbEvent.getPosition());
             sendEvent(gbEvent);
         }
 
@@ -367,6 +364,9 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         }
         if (rewardsEvent != null){
             sendEvent(rewardsEvent);
+        }
+        if (hourglassEvent != null){
+            sendEvent(hourglassEvent);
         }
 
 
@@ -425,6 +425,10 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         sendEvent(event);
     }
 
+    public void sendHourglass(HourglassEvent event){
+        hourglassEvent = event;
+        sendEvent(event);
+    }
 
     public void sendEvent(Event event) {
         if (!Disconnected) {
