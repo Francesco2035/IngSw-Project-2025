@@ -32,6 +32,7 @@ public class GameBoard {
     private int PlayersOnBoard;
     private CardStacks CardStack;
     private Card CurrentCard;
+    private boolean GameOver;
 
     private ArrayList<GameBoardListener> listeners = new ArrayList<>();
 
@@ -365,7 +366,10 @@ public class GameBoard {
     public Hourglass getHourglass() {return hourglass;}
 
 
-    public void abandonRace(Player loser, String message) {
+
+
+
+    public void abandonRace(Player loser, String message,boolean started) {
         int arrayIndex;
 //        System.out.println(loser.GetID() + " HAI PERSO!");
         try {
@@ -377,9 +381,17 @@ public class GameBoard {
             else arrayIndex = pair.getValue() % nPositions;
             positions[arrayIndex] = null;
             Player player = pair.getKey();
-            int finalScore = player.finishRace(false, message);
-            scoreboard.add(new Player_IntegerPair(player, finalScore));
+            int finalScore = player.CalculateResult(false);
+            if(started) {
 
+                scoreboard.add(new Player_IntegerPair(player, finalScore));
+                pair.getKey().finishRace(finalScore,message);
+            }
+            else{
+                message="quit";
+                pair.getKey().finishRace(finalScore,message);
+
+            }
 
             /// controllare che anche lato controller il player che abbandona smetta di esistere
             players.remove(pair);
@@ -389,7 +401,16 @@ public class GameBoard {
                     .findFirst()
                     .orElseThrow();
             players.remove(pair);
-            pair.getKey().finishRace(false, message);
+            int score = pair.getKey().CalculateResult(false);
+            pair.getKey().finishRace(score,message);
+            if(started) {
+                pair.getKey().finishRace(score,message);
+                scoreboard.add(new Player_IntegerPair(pair.getKey(), score));
+            }
+            else{
+                message="quit";
+                pair.getKey().finishRace(score,message);
+            }
             //e.printStackTrace();
         }
 
@@ -397,23 +418,38 @@ public class GameBoard {
     }
 
     public void finishGame(){
-        int arrayIndex;
+        if (!GameOver){
+            int arrayIndex;
 
-        //le positions vanno rimosse dopo imo
-        for(Player_IntegerPair p : players){
+            //le positions vanno rimosse dopo imo
+            for(Player_IntegerPair p : players){
 
-           if(p.getValue() < 0) arrayIndex = nPositions - (-p.getValue() % nPositions);
-           else arrayIndex = p.getValue() % nPositions;
-           positions[arrayIndex] = null;
-           Player playah = p.getKey();
-           int finalScore = playah.finishRace(true, "game finished");
-           scoreboard.add(new Player_IntegerPair(playah, finalScore));
+               Player playah = p.getKey();
+               int finalScore = playah.CalculateResult(true);
+               scoreboard.add(new Player_IntegerPair(playah, finalScore));
 
-           /// todo in qualche modo questo deve notificare il gioco che la partitra è finita:)
-       }
-       players.clear();
+               /// todo in qualche modo questo deve notificare il gioco che la partitra è finita:)
+           }
+            for(Player_IntegerPair p:players){
+                int outcome = 0;
+                if(p.getValue() < 0) arrayIndex = nPositions - (-p.getValue() % nPositions);
+               else arrayIndex = p.getValue() % nPositions;
+                positions[arrayIndex] = null;
+                /// mando classifica
 
+                for(int i=0; i<scoreboard.size(); i++){
+                    if(scoreboard.get(i).getKey().GetID().equals(p.getKey().GetID())){
+                        outcome = scoreboard.get(i).getValue();
+                    }
+                }
 
+                p.getKey().finishRace(outcome,"sk");
+
+            }
+
+           players.clear();
+
+        }
     }
 
     public int arrivalBonus(Player player){

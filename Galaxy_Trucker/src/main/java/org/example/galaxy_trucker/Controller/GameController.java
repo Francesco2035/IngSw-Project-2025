@@ -222,7 +222,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             try{
                 System.out.println("Player removed: " + playerId);
 
-                game.getGameBoard().abandonRace(game.getPlayers().get(playerId), "Abandoned race");
+                game.getGameBoard().abandonRace(game.getPlayers().get(playerId), "Abandoned race",started);
 
 
         }
