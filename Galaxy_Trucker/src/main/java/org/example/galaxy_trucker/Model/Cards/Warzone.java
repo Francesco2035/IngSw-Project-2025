@@ -794,7 +794,7 @@ public class Warzone extends Card{
             this.sendRandomEffect(Worst.GetID(),new LogEvent("your ship got destroyed in " +hit.getFirst()+" "+hit.getSecond(),hit.getFirst(),hit.getSecond(),PunishmentShots.get(ShotsOrder),3));
             if (currentBoard.getBroken()){
                 System.out.println("rottura nave");
-                this.currentPlayer.setState(new HandleDestruction());
+                this.Worst.setState(new HandleDestruction());
                 this.sendRandomEffect(Worst.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
                 return;
 
