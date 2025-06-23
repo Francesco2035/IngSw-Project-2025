@@ -786,6 +786,7 @@ public class Warzone extends Card{
                 }
                 this.sendRandomEffect(Worst.GetID(),new LogEvent("you defended your ship in " +hit.getFirst()+" "+hit.getSecond(),hit.getFirst(),hit.getSecond(),PunishmentShots.get(ShotsOrder),3));
                 System.out.println(Worst.GetID()+" Defended From Small");
+                player.setState(new Waiting());
             }
         }
         else {
