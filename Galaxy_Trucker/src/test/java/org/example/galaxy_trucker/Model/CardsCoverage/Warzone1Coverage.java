@@ -1,4 +1,4 @@
-package org.example.galaxy_trucker.Model.PlayerStates.DefaultActions;
+package org.example.galaxy_trucker.Model.CardsCoverage;
 
 import org.example.galaxy_trucker.Controller.CardsController;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
@@ -15,7 +15,12 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class EpidemicTest {
+public class Warzone1Coverage {
+
+
+
+
+
 
 
     static Game game;
@@ -38,11 +43,9 @@ public class EpidemicTest {
 
 
     @Test
-    public void epidemicTest() throws IOException, InterruptedException {
+    public void DefaultSlavers() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");
-
         NewTestSetupHelper helper = new NewTestSetupHelper();
-
 
         p1 = new Player();
         p1.setId("pietro");
@@ -76,7 +79,7 @@ public class EpidemicTest {
             }
         };
 
-        Card CurrentCard = cards.get(39);
+        Card CurrentCard = cards.get(35);
 
         CurrentCard.setConcurrentCardListener(conc);
 
@@ -92,9 +95,32 @@ public class EpidemicTest {
         CardsController c1 = new CardsController(p1, game.getGameID(), false);
         CardsController c2 = new CardsController(p2, game.getGameID(), false);
 
+
+        System.out.println("\n\n\n\n\n");
         CurrentCard.CardEffect();
 
 
-        ///fine setup
+        /// fine setup
+
+
+
+        while(!CurrentCard.isFinished()){
+            System.out.println("\n\n prima che p1 agisca: \n p1: "+p1.getPlayerState().getClass()+ p1.GetHasActed()+"\n p2: "+p2.getPlayerState().getClass()+ p2.GetHasActed());
+
+            if(!p1.GetHasActed()){
+
+                c1.DefaultAction(null);
+            }
+            System.out.println("\n\n dpo che p1 ha agito: \n p1: "+p1.getPlayerState().getClass()+ p1.GetHasActed()+"\n p2: "+p2.getPlayerState().getClass()+ p2.GetHasActed());
+            System.out.println("\n snuu \n");
+            if(!p2.GetHasActed() && !CurrentCard.isFinished()){
+                c2.DefaultAction(null);
+            }
+
+        }
+
+        // chiedere a fra la roba della board ma handle destruction ipoteticamente ok
+
+
     }
 }
