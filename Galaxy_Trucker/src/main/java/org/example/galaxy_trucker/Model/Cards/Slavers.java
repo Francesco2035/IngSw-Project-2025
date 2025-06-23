@@ -48,7 +48,7 @@ public class Slavers extends Card{
     public void sendTypeLog(){
         this.getBoard().getPlayers();
         for (Player p : this.getBoard().getPlayers()){
-            sendRandomEffect(p.GetID(), new LogEvent("Slavers"));
+            sendRandomEffect(p.GetID(), new LogEvent("Slavers",-1,-1,-1,-1));
         }
     }
 

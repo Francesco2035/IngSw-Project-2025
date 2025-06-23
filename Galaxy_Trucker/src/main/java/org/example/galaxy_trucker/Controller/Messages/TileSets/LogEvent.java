@@ -9,10 +9,16 @@ public class LogEvent implements Event {
 
 
     String effect = "";
+    int x;
+    int y;
+    int direction;
+    int type;
+
+
 
 
     @JsonCreator
-    public LogEvent( @JsonProperty("effect") String Effect) {
+    public LogEvent( @JsonProperty("effect") String Effect, @JsonProperty("x") int x, @JsonProperty("y") int y, @JsonProperty("direction") int direction, @JsonProperty("type") int type) {
 
         if (Effect == null){
             this.effect = "";
@@ -20,6 +26,10 @@ public class LogEvent implements Event {
         else {
             this.effect = Effect;
         }
+        this.x = x;
+        this.y = y;
+        this.direction = direction;
+        this.type = type;
     }
 
     @Override
@@ -31,4 +41,18 @@ public class LogEvent implements Event {
     public String message() {
         return effect;
     }
+
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
+    }
+    public int getDirection() {
+        return direction;
+    }
+    public int getType() {
+        return type;
+    }
+
 }

@@ -26,7 +26,7 @@ public class OpenSpace extends Card{
     public void sendTypeLog(){
         this.getBoard().getPlayers();
         for (Player p : this.getBoard().getPlayers()){
-            sendRandomEffect(p.GetID(), new LogEvent("Open space"));
+            sendRandomEffect(p.GetID(), new LogEvent("Open space",-1,-1,-1,-1));
         }
     }
 

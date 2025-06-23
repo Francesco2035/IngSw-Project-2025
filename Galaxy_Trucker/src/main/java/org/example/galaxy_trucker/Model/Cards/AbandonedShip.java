@@ -36,7 +36,7 @@ public class AbandonedShip extends Card{
     public void sendTypeLog(){
         this.getBoard().getPlayers();
         for (Player p : this.getBoard().getPlayers()){
-            sendRandomEffect(p.GetID(), new LogEvent("Abandoned Ship"));
+            sendRandomEffect(p.GetID(), new LogEvent("Abandoned Ship",-1,-1,-1,-1));
         }
     }
 

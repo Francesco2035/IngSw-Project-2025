@@ -105,7 +105,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             Controller controller = new LoginController(p, idGame);
             controller.setExceptionListener(vv);
             ControllerMap.put(playerId, controller);
-            sendMessage(new LogEvent("New player: " + playerId));
+            sendMessage(new LogEvent("New player: " + playerId,-1,-1,-1,-1));
 
             System.out.println("New player " + playerId+" in "+ this);
             tokenToPlayerId.put(token, playerId);
@@ -251,7 +251,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             ControllerMap.put(player.GetID(), controller);
 
             if(buildingCount == ControllerMap.size()){
-                sendMessage(new LogEvent("Building started"));
+                sendMessage(new LogEvent("Building started",-1,-1,-1,-1));
                 try {
                     game.getGameBoard().StartHourglass();
                 }catch(RuntimeException e){
@@ -290,12 +290,12 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
         }
         firtflight = false;
         ArrayList<Player> players = game.getGameBoard().getPlayers();
-        sendMessage(new LogEvent("Flight started"));
+        sendMessage(new LogEvent("Flight started",-1,-1,-1,-1));
         flightThread = new Thread(() -> {
             System.out.println("PESCO CARTA!");
 
             Card card= game.getGameBoard().NewCard();
-            sendMessage(new LogEvent("New card drawn"));
+            sendMessage(new LogEvent("New card drawn",-1,-1,-1,-1));
 
 
             card.setConcurrentCardListener(this);
@@ -399,7 +399,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
 //                p.SetReady(true);
             }
-            sendMessage(new LogEvent("Flight finished"));
+            sendMessage(new LogEvent("Flight finished",-1,-1,-1,-1));
             flightMode = false;
         });
 
@@ -614,7 +614,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                         lobbyListener.sendEvent(new LobbyEvent(game.getGameID(),game.getLv() ,players, maxPlayer));
                 }
                 //VirtualView vv2 = VirtualViewMap.remove(playerId);
-                sendMessage(new LogEvent(playerId + "quit"));
+                sendMessage(new LogEvent(playerId + "quit",-1,-1,-1,-1));
                 vv.sendEvent(new FinishGameEvent(success, message));
                 vv.removeListeners();
                 vv.setDisconnected(true);
