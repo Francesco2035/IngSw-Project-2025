@@ -97,6 +97,7 @@ public class GuiRoot implements View {
     private int totEnergy;
     private int totDamages;
     private int totHumans;
+    private IntegerPair shotCoords;
 
     private boolean killing;
     private HBox phaseButtons;
@@ -1877,21 +1878,65 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void effectCard(LogEvent event) {
+    public void effectCard(LogEvent event){
         //messaggio di cosa è successo
         Platform.runLater(()->{
-            String oldText = prompt.getText();
 //            prompt.setText(event.message());
-            log.getItems().addFirst(event.message());
-            if(event.message().equals("Flight started")){
-                flightScene();
-            }
-
+                log.getItems().addFirst(event.message());
+                if (event.message().equals("Flight started")){
+                    flightScene();
+                }
 //            PauseTransition pause = new PauseTransition(Duration.seconds(5));
 //            pause.setOnFinished(e -> prompt.setText(oldText));
 //            pause.play();
-        });
+          //0 sx - 1 su - 2 dx - 3 sotto
+            //tipo 0 m piccolo - 1 m grande - 2 s piccolo - 3 s grande
 
+
+            if(shotCoords != null){
+                ArrayList<Node> nodes = new ArrayList<>(myBoard.getChildren());
+                for (Node node : nodes) {
+                    if (node != null && GridPane.getRowIndex(node) == shotCoords.getSecond() && GridPane.getColumnIndex(node) == shotCoords.getFirst())
+                        myBoard.getChildren().remove(node);
+                }
+
+                shotCoords = null;
+            }
+
+            if(event.getX() >= 0 && event.getY() >= 0){
+                ImageView shot = new ImageView(new Image(getClass().getResourceAsStream("/GUI/shots/shot_" + event.getType() + ".png")));
+                shot.setFitHeight(50);
+                shot.setPreserveRatio(true);
+
+                if(event.getType() == 0 ||  event.getType() == 2)
+                    shot.setFitHeight(40);
+
+                switch(event.getDirection()){
+                    case 0:{
+                        shot.setRotate(90);
+                        shotCoords = new IntegerPair(2, event.getX());
+                        break;
+                    }
+                    case 1:{
+                        shot.setRotate(180);
+                        shotCoords = new IntegerPair(event.getY(), 3);
+                        break;
+                    }
+                    case 2:{
+                        shot.setRotate(270);
+                        shotCoords = new IntegerPair(10, event.getX());
+                        break;
+                    }
+                    case 3:{
+                        shot.setRotate(0);
+                        shotCoords = new IntegerPair(event.getY(), 9);
+                        break;
+                    }
+                }
+                myBoard.add(shot, shotCoords.getFirst(), shotCoords.getSecond());
+            }
+
+        });
     }
 
     @Override
@@ -2103,6 +2148,7 @@ public class GuiRoot implements View {
             rewards = null;
             batteryClickable = false;
             selectedImages = new ArrayList<>();
+            shotCoords = null;
 
             readyPlayers = new ListView<>();
             log = new ListView<>();
@@ -2237,22 +2283,18 @@ public class GuiRoot implements View {
                 if (id == 153) {
                     img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-blue.png")));
                     playerRockets.put(pl, img);
-                    System.out.println(pl +" CACCAPUPU "+ id);
                 }
                 if (id == 154) {
                     img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-green.png")));
                     playerRockets.put(pl, img);
-                    System.out.println(pl +" CACCAPUPU "+ id);
                 }
                 if (id == 155) {
                     img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-red.png")));
                     playerRockets.put(pl, img);
-                    System.out.println(pl +" CACCAPUPU "+ id);
                 }
                 if (id == 156) {
                     img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-yellow.png")));
                     playerRockets.put(pl, img);
-                    System.out.println(pl +" CACCAPUPU "+ id);
                 }
             }
         });
