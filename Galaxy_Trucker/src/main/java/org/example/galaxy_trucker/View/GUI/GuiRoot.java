@@ -85,7 +85,7 @@ public class GuiRoot implements View {
     private Stage gameBoardStage;
 
     private Image cardBack;
-    private HashMap<String, ImageView> playerRockets;
+    private HashMap<String, ImageView>playerRockets;
     private HashMap<String, Integer> playerPositions;
     private HashMap<Integer, IntegerPair> coords;
     private Image brownAlien, purpleAlien, crewMate;
@@ -527,7 +527,7 @@ public class GuiRoot implements View {
 
 
     @Override
-    public void updateOthersPB(PlayerTileEvent event) {
+    public void updateOthersPB(PlayerTileEvent event){
         if(!othersBoards.containsKey(event.getPlayerName()))
             othersBoards.put(event.getPlayerName(), new GridPane());
 
@@ -551,7 +551,6 @@ public class GuiRoot implements View {
                 if(node != null && GridPane.getRowIndex(node) == event.getX() && GridPane.getColumnIndex(node) == event.getY())
                     othersBoards.get(event.getPlayerName()).getChildren().remove(node);
             }
-
             othersBoards.get(event.getPlayerName()).add(tile, event.getY(), event.getX());
         });
     }
@@ -1403,9 +1402,7 @@ public class GuiRoot implements View {
                 playerRockets.get(event.getPlayerID()).setLayoutX((coords.get(event.getPosition()).getFirst() - 20) * 0.85);
                 playerRockets.get(event.getPlayerID()).setLayoutY((coords.get(event.getPosition()).getSecond() - 20) * 0.85);
             }
-
         });
-
     }
 
 
@@ -1824,6 +1821,7 @@ public class GuiRoot implements View {
         playerClient.setPlayerState(event.getStateClient());
         playerClient.showGame(printer);
 
+        System.out.println(event.getStateClient().getClass());
         if(event.getStateClient() == loginClient){
             goToFirstScene();
         }
@@ -1885,6 +1883,9 @@ public class GuiRoot implements View {
             String oldText = prompt.getText();
 //            prompt.setText(event.message());
             log.getItems().addFirst(event.message());
+            if(event.message().equals("Flight started")){
+                flightScene();
+            }
 
 //            PauseTransition pause = new PauseTransition(Duration.seconds(5));
 //            pause.setOnFinished(e -> prompt.setText(oldText));
@@ -1970,8 +1971,15 @@ public class GuiRoot implements View {
 
             Label txt1 = new Label("This is your token:\n");
             txt1.setStyle("-fx-font-size: 15px");
-            Label txt2 = new Label(tokenEvent.getToken());
-            txt2.setStyle("-fx-font-size: 19px");
+
+            TextField txt2 = new TextField(tokenEvent.getToken());
+            txt2.setEditable(false);
+            txt2.setFocusTraversable(false);
+            txt2.setStyle("-fx-background-color: transparent; -fx-border-width: 0;-fx-font-size: 19px");
+            txt1.setAlignment(Pos.CENTER);
+
+//            Label txt2 = new Label(tokenEvent.getToken());
+//            txt2.setStyle("-fx-font-size: 19px");
             Label txt3 = new Label("\nRemember this, you will need it for reconnection!");
             txt3.setStyle("-fx-font-size: 15px");
             Button ok = new Button("Ok");
@@ -2223,27 +2231,30 @@ public class GuiRoot implements View {
             img.setFitHeight(40);
             img.setPreserveRatio(true);
 
-            if(!playerRockets.containsKey(pl)) {
+            if(!playerRockets.containsKey(pl)){
                 if (id == 153) {
                     img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-blue.png")));
                     playerRockets.put(pl, img);
+                    System.out.println(pl +" CACCAPUPU "+ id);
                 }
                 if (id == 154) {
                     img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-green.png")));
                     playerRockets.put(pl, img);
+                    System.out.println(pl +" CACCAPUPU "+ id);
                 }
                 if (id == 155) {
                     img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-red.png")));
                     playerRockets.put(pl, img);
+                    System.out.println(pl +" CACCAPUPU "+ id);
                 }
                 if (id == 156) {
                     img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-yellow.png")));
                     playerRockets.put(pl, img);
+                    System.out.println(pl +" CACCAPUPU "+ id);
                 }
             }
-
         });
-        System.out.println(pl +" "+ id);
+
     }
 
     public boolean isGameStarted(){
@@ -2602,6 +2613,7 @@ public class GuiRoot implements View {
                 curCargoCoords = null;
                 curCargoImg.setImage(null);
             });
+            primaryStage.show();
         });
     }
 
@@ -2624,6 +2636,5 @@ public class GuiRoot implements View {
             theft = false;
             primaryStage.show();
         });
-
     }
 }
