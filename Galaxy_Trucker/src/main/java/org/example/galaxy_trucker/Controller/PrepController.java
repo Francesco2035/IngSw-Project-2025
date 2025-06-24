@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Controller.Listeners.ControllerHourGlassListener;
-import org.example.galaxy_trucker.Controller.Messages.HourglassEvent;
+import org.example.galaxy_trucker.Messages.HourglassEvent;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;
@@ -48,7 +48,7 @@ public class PrepController extends Controller implements ControllerHourGlassLis
             newController.setExceptionListener(exceptionListener);
             gc.setControllerMap(curPlayer,newController);
         }
-        else{
+        else{ //TODO test
             //se la nave non è valida tolgo il razzo dalla gameboard, va ancora sistemato il fatto del cambio di stato/comandi chiamabili
             synchronized (curPlayer.getCommonBoard()) {
                 curPlayer.getCommonBoard().removePlayerAndShift(curPlayer);
@@ -64,7 +64,7 @@ public class PrepController extends Controller implements ControllerHourGlassLis
     }
 
     @Override
-    public void onFinish() {
+    public void onFinish() { //TODO test
 
         System.out.println("Hourglass finish ");
         //settiamo player a choosePosition

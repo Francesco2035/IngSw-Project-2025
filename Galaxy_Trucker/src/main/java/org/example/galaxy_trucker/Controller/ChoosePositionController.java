@@ -13,14 +13,14 @@ public class ChoosePositionController extends Controller{
 
 
 
-    public ChoosePositionController(Player player, String gameId, boolean disconnected) {
+    public ChoosePositionController(Player player, String gameId, boolean disconnected) { //TODO test
         this.curPlayer = player;
         this.gameId = gameId;
     }
 
 
     @Override
-    public synchronized void action(Command command, GameController gc) { //  devo overridare anche qui ok
+    public synchronized void action(Command command, GameController gc) { //TODO test //  devo overridare anche qui ok
 
         System.out.println("ChoosePositionController action");
 
@@ -47,7 +47,7 @@ public class ChoosePositionController extends Controller{
 
 
     @Override
-    public  void  DefaultAction(GameController gc) {
+    public  void  DefaultAction(GameController gc) { //TODO test
         PlayerState state = curPlayer.getPlayerState();
         Command cmd =state.createDefaultCommand(gameId,curPlayer);
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
@@ -73,7 +73,7 @@ public class ChoosePositionController extends Controller{
 
 
     @Override
-    public void nextState(GameController gc) {
+    public void nextState(GameController gc) { //TODO test
         curPlayer.setState(new AddCrewState());
         PostPrepController newController = new PostPrepController(curPlayer,gameId,getDisconnected());
         newController.setExceptionListener(exceptionListener);

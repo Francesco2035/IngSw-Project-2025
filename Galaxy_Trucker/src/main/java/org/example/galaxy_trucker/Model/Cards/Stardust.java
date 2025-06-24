@@ -1,10 +1,9 @@
 package org.example.galaxy_trucker.Model.Cards;
 
-import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
+import org.example.galaxy_trucker.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.ReadCardState;
 
 import java.util.ArrayList;

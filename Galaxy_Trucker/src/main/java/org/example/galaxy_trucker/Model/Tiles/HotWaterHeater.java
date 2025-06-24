@@ -1,13 +1,9 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
+import org.example.galaxy_trucker.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
-import org.example.galaxy_trucker.Model.Boards.Actions.GetEnginePower;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
-
-import java.util.ArrayList;
 
 public class HotWaterHeater extends Component{
 

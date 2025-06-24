@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
-import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
+import org.example.galaxy_trucker.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.WrongNumofHumansException;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;

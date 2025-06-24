@@ -1,19 +1,11 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Commands.DefendFromSmallCommand;
 import org.example.galaxy_trucker.Commands.GiveAttackCommand;
-import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
+import org.example.galaxy_trucker.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetPlasmaDrillPower;
-import org.example.galaxy_trucker.Model.Cards.Card;
-import org.example.galaxy_trucker.Model.IntegerPair;
-import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
 import org.example.galaxy_trucker.View.ClientModel.States.GiveAttackClient;
-
-import java.util.ArrayList;
 
 public class GiveAttack extends PlayerState {
 

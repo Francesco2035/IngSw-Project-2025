@@ -1,12 +1,12 @@
 package org.example.galaxy_trucker.Controller;
 
+import org.example.galaxy_trucker.ClientServer.GamesHandler;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Controller.Listeners.GameLobbyListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
-import org.example.galaxy_trucker.Controller.Messages.*;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
-import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
+import org.example.galaxy_trucker.Messages.*;
+import org.example.galaxy_trucker.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
@@ -14,18 +14,13 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
-import javax.swing.text.StyledEditorKit;
-import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 //TODO: rimozione dei player e notifica con -1 al posto del nome del player
 //TODO: aggiungere listener dei ready per il momento vedo se me la cavo senza listener: fare GameController un listener dei ready e semplicemente quando c'è un nuovo ready chiamare updatePlayers
-public class GameController  implements ConcurrentCardListener , ReadyListener, FinishListener{
+public class GameController  implements ConcurrentCardListener, ReadyListener, FinishListener {
     String idGame;
     private final HashMap<String,Controller> ControllerMap;
     private final HashMap<String, Boolean> connectedPlayers = new HashMap<>();
@@ -194,7 +189,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
         }
     }
 
-    public void addCommand(Command command) {
+    public void addCommand(Command command) { //TODO test
         if(!flightMode) {
             BlockingQueue<Command> queue = commandQueues.get(command.getPlayerId());
             if (queue != null && !VirtualViewMap.get(command.getPlayerId()).getDisconnected()) {
@@ -211,7 +206,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
         }
     }
 
-    public void removePlayer(String token, Command command) {
+    public void removePlayer(String token, Command command) { //TODO test
         String playerId = tokenToPlayerId.get(token);
         if (playerId == null || !ControllerMap.containsKey(playerId)) {
             throw new IllegalArgumentException("Player ID " + playerId + " non found");
@@ -428,9 +423,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
     public boolean checkGameOver() {
         return GameOver;
-    }
+    } //TODO test
 
-    public void setGameOver(){
+    public void setGameOver(){ //TODO test
         getGame().getGameBoard().finishGame();
         GameOver = true;
         //System.out.println("Game over the winner is: " + game.getGameBoard().getPlayers().getFirst().GetID());
@@ -455,9 +450,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
     public Game getGame() {
         return game;
-    }
+    } //TODO test
 
-    public void stopPlayer(String token) {
+    public void stopPlayer(String token) { //TODO test
         String playerId = tokenToPlayerId.get(token);
         Controller curr = ControllerMap.get(playerId);
         curr.setDisconnected(true);
@@ -491,7 +486,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
     }
 
-    public void startPlayer(String token) {
+    public void startPlayer(String token) { //TODO test
         String playerId = tokenToPlayerId.get(token);
         System.out.println("STARTING "+playerId);
         //VirtualViewMap.get(playerId).sendEvent(new ReconnectedEvent(token,game.getGameID(),playerId, lv));
@@ -553,10 +548,10 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
     public int getlv(){
         return this.lv;
-    }
+    } //TODO test
 
 
-    public String check(Command command) {
+    public String check(Command command) { //TODO test
         if(isStarted()){
             return "Game already stated!";
         }
@@ -652,5 +647,5 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
     public HashMap<String, String> getTokenToPlayerId() {
         return tokenToPlayerId;
-    }
+    } //TODO test
 }

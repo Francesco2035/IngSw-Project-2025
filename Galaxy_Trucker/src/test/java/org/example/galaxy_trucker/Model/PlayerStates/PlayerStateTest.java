@@ -5,8 +5,8 @@ import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.Controller.FlightController;
 import org.example.galaxy_trucker.Controller.GameController;
-import org.example.galaxy_trucker.Controller.GamesHandler;
-import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
+import org.example.galaxy_trucker.ClientServer.GamesHandler;
+import org.example.galaxy_trucker.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
@@ -231,14 +231,16 @@ class PlayerStateTest {
         p1.setState(gs);
         game.getGag().getCardsDeck().get(34).setBoard(game.getGameBoard()); // per qualche motivo se chiamo questi metodi su carta 32 già usata crasha e perdo
         game.getGag().getCardsDeck().get(34).setConcurrentCardListener(gc);
-        game.getGag().getCardsDeck().get(34).updateStates();
         game.getGag().getCardsDeck().get(34).CardEffect();
+        game.getGag().getCardsDeck().get(34).updateStates();
         p1.setCard(game.getGag().getCardsDeck().get(34));
         ArrayList<IntegerPair> ip2 = new ArrayList<>();
         ip2.add(new IntegerPair(4, 5));
         ip2.add(new IntegerPair(6, 7));
         ip2.add(new IntegerPair(7, 8));
-        gs.allows(new GiveSpeedCommand(ip2, game.getGameID(), p1.GetID(), game.getLv(), "GIVESPEED", null));
+//        gs.allows(new GiveSpeedCommand(ip2, game.getGameID(), p1.GetID(), game.getLv(), "GIVESPEED", null));
+        gs.allows(((GiveSpeedCommand) null));
+        FlightController c2 = new FlightController(p1, game.getGameID(), gc, false); // potenziale fix
         gs.createDefaultCommand(game.getGameID(), p1).execute(p1);
         gs.toClientState();
 

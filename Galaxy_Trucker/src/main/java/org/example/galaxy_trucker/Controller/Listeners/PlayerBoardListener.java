@@ -1,8 +1,7 @@
 package org.example.galaxy_trucker.Controller.Listeners;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.example.galaxy_trucker.Controller.Messages.PBInfoEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Messages.PBInfoEvent;
+import org.example.galaxy_trucker.Messages.PlayerBoardEvents.TileEvent;
 
 public interface PlayerBoardListener {
 

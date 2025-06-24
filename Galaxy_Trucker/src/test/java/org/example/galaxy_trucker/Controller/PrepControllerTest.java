@@ -1,35 +1,20 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.ClientServer.Client;
-import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
+import org.example.galaxy_trucker.ClientServer.GamesHandler;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Commands.BuildingCommand;
-import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Commands.FinishBuildingCommand;
 import org.example.galaxy_trucker.Commands.ReadyCommand;
-import org.example.galaxy_trucker.Controller.Listeners.PhaseListener;
-import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
-import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
-import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
-import org.example.galaxy_trucker.Model.PlayerStates.ChoosePosition;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
-import org.example.galaxy_trucker.Model.Tiles.TileSets;
-import org.example.galaxy_trucker.TestSetupHelper;
-import org.example.galaxy_trucker.View.ClientModel.States.BuildingClient;
-import org.example.galaxy_trucker.View.ClientModel.States.PlayerStateClient;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

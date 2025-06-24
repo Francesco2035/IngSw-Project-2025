@@ -1,14 +1,11 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Messages.PlayerBoardEvents.RemoveTileEvent;
+import org.example.galaxy_trucker.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.Goods.Goods;
-import org.example.galaxy_trucker.Model.IntegerPair;
 
 
 import java.io.Serializable;

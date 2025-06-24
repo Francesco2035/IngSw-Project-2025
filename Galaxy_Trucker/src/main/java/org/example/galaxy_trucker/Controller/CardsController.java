@@ -12,9 +12,9 @@ public class CardsController extends Controller {
     }
 
     @Override
-    public void nextState(GameController gc) {
+    public void nextState(GameController gc) { //TODO test
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
-            this.setDisconnected(false);
+            this.setDisconnected(false); // non bisongnerebbe anche fargli fare il resto del comando?
         }
         if (curPlayer.getCommonBoard().getCardStack().getFullAdventure().isEmpty()){
             gc.setGameOver();

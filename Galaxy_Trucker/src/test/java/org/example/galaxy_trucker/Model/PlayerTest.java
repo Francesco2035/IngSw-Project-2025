@@ -4,7 +4,7 @@ import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Controller.FlightController;
 import org.example.galaxy_trucker.Controller.GameController;
-import org.example.galaxy_trucker.Controller.GamesHandler;
+import org.example.galaxy_trucker.ClientServer.GamesHandler;
 import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Cards.AbandonedShip;
@@ -15,7 +15,6 @@ import org.example.galaxy_trucker.NewTestSetupHelper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

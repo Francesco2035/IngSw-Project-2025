@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Controller.Listeners;
 
-import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.Messages.LobbyEvent;
 
 public interface LobbyListener {
     public void sendEvent(LobbyEvent event);

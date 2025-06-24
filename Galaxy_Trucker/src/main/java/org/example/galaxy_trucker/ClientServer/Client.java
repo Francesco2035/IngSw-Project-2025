@@ -3,15 +3,13 @@ package org.example.galaxy_trucker.ClientServer;
 import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.ClientServer.TCP.TCPClient;
-import org.example.galaxy_trucker.Controller.Messages.*;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
-import org.example.galaxy_trucker.View.ClientModel.States.LobbyClient;
+import org.example.galaxy_trucker.Messages.*;
+import org.example.galaxy_trucker.Messages.PlayerBoardEvents.PlayerTileEvent;
+import org.example.galaxy_trucker.Messages.PlayerBoardEvents.RewardsEvent;
+import org.example.galaxy_trucker.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Messages.TileSets.*;
 import org.example.galaxy_trucker.View.ClientModel.States.LoginClient;
 import org.example.galaxy_trucker.View.GUI.GuiRoot;
-import org.example.galaxy_trucker.View.TUI.CommandCompleter;
 import org.example.galaxy_trucker.View.TUI.TUI;
 import org.example.galaxy_trucker.View.View;
 import org.jline.reader.LineReader;
@@ -20,10 +18,8 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.rmi.NotBoundException;
 import java.util.HashMap;
-import java.util.UUID;
 
 public class Client implements EventVisitor {
 

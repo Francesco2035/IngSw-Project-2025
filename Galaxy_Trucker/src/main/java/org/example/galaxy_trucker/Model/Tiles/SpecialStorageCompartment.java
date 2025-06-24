@@ -1,14 +1,12 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
+import org.example.galaxy_trucker.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
-import java.lang.reflect.InaccessibleObjectException;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class SpecialStorageCompartment extends Storage{
 

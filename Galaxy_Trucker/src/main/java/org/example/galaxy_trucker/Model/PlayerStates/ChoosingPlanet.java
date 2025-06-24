@@ -1,11 +1,9 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
-import org.example.galaxy_trucker.Commands.AcceptCommand;
 import org.example.galaxy_trucker.Commands.ChoosingPlanetsCommand;
 import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
+import org.example.galaxy_trucker.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
 import org.example.galaxy_trucker.View.ClientModel.States.ChoosingPlanetClient;
 
 public class ChoosingPlanet extends PlayerState{

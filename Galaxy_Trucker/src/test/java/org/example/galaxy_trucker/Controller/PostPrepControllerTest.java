@@ -1,21 +1,18 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.ClientServer.Client;
+import org.example.galaxy_trucker.ClientServer.GamesHandler;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Commands.AddCrewCommand;
-import org.example.galaxy_trucker.Commands.DebugShip;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
-import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
-import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.TestSetupHelper;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

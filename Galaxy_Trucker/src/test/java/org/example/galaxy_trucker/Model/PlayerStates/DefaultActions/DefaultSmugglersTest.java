@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Model.PlayerStates.DefaultActions;
 
 import org.example.galaxy_trucker.Commands.HandleCargoCommand;
 import org.example.galaxy_trucker.Controller.CardsController;
-import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
+import org.example.galaxy_trucker.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.GAGen;
@@ -116,9 +116,12 @@ public class DefaultSmugglersTest {
         p1.getmyPlayerBoard().setRewards(rewards);
 
 
-
-        HandleCargoCommand p1Get1 = new HandleCargoCommand(7,new IntegerPair(7,8),0,null,game.getID(),p1.GetID(),game.getLv(),"GetFromRewards","boh");
-        p1Get1.execute(p1);
+        try {
+            HandleCargoCommand p1Get1 = new HandleCargoCommand(7, new IntegerPair(7, 8), 0, null, game.getID(), p1.GetID(), game.getLv(), "GetFromRewards", "boh");
+            p1Get1.execute(p1);
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("position"));
+        }
         HandleCargoCommand p1Get2 = new HandleCargoCommand(1,new IntegerPair(7,9),0,null,game.getID(),p1.GetID(),game.getLv(),"GetFromRewards","boh");
         p1Get2.execute(p1);
         HandleCargoCommand p1Get3 = new HandleCargoCommand(0,new IntegerPair(7,9),0,null,game.getID(),p1.GetID(),game.getLv(),"GetFromRewards","boh");

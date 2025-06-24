@@ -3,7 +3,10 @@ package org.example.galaxy_trucker.Model.PlayerStates.DefaultActions;
 import org.example.galaxy_trucker.Commands.DefendFromLargeCommand;
 import org.example.galaxy_trucker.Commands.DefendFromSmallCommand;
 import org.example.galaxy_trucker.Controller.CardsController;
-import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
+import org.example.galaxy_trucker.Controller.FlightController;
+import org.example.galaxy_trucker.Controller.GameController;
+import org.example.galaxy_trucker.ClientServer.GamesHandler;
+import org.example.galaxy_trucker.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.Meteorites;
@@ -14,7 +17,6 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromLarge;
 import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromSmall;
 import org.example.galaxy_trucker.NewTestSetupHelper;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -127,6 +129,7 @@ public class MeteoriteDefenceTest {
         IntegerPair battery1 = new IntegerPair(6,9);
         IntegerPair plasma1 = new IntegerPair(8,9);
         DefendFromSmallCommand def1 = new DefendFromSmallCommand(battery1,game.getID(),p1.GetID(),game.getLv(),"boh","boh");
+        FlightController c3 = new FlightController(p1, game.getID(), new GameController(game.getID(), game, new GamesHandler(), 2, 4), false); //possibile fix
         def1.execute(p1);
 
 

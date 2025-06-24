@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Controller.Listeners.*;
-import org.example.galaxy_trucker.Controller.Messages.*;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
+import org.example.galaxy_trucker.Messages.*;
+import org.example.galaxy_trucker.Messages.PlayerBoardEvents.PlayerTileEvent;
+import org.example.galaxy_trucker.Messages.PlayerBoardEvents.RewardsEvent;
+import org.example.galaxy_trucker.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Messages.TileSets.*;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Connectors.NONE;
 
@@ -56,7 +56,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-    public void setEventMatrix(int lv) {
+    public void setEventMatrix(int lv) { //TODO test
         ArrayList<Connectors> noneConnectors = new ArrayList<>();
         noneConnectors.add(NONE.INSTANCE);
         noneConnectors.add(NONE.INSTANCE);
@@ -109,7 +109,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-    public void sendEvent(HandEvent event)  {
+    public void sendEvent(HandEvent event)  { //TODO test
         hand = event;
         if (!Disconnected) {
             if (out != null ) {
@@ -133,7 +133,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-    public void sendEvent(PlayerTileEvent event){
+    public void sendEvent(PlayerTileEvent event){ //TODO test
 
         if (!Disconnected) {
             if (out != null) {
@@ -157,7 +157,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-    public void sendEvent(TileEvent event) {
+    public void sendEvent(TileEvent event) { //TODO test
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -204,7 +204,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void tilesSetChanged(CoveredTileSetEvent event)  {
+    public void tilesSetChanged(CoveredTileSetEvent event)  { //TODO test
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -228,7 +228,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void tilesSetChanged(UncoverdTileSetEvent event) throws RemoteException {
+    public void tilesSetChanged(UncoverdTileSetEvent event) throws RemoteException { //TODO test
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -252,7 +252,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void seeDeck(DeckEvent event) {
+    public void seeDeck(DeckEvent event) { //TODO test
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -276,7 +276,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void newCard(CardEvent event) {
+    public void newCard(CardEvent event) { //TODO test
         card = event;
         if (!Disconnected) {
             if (out != null) {
@@ -302,7 +302,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void gameBoardChanged(GameBoardEvent event)  {
+    public void gameBoardChanged(GameBoardEvent event)  { //TODO test
         board.add(event);
         if (!Disconnected) {
             if (out != null) {
@@ -337,7 +337,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-    public void reconnect() {
+    public void reconnect() { //TODO test
 
         sendEvent(new ReconnectedEvent(token,idGame,playerName,lv));
 
@@ -392,26 +392,26 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     public void setToken(String token) {
         this.token = token;
-    }
+    } //TODO test
 
 
     public String getToken() {
         return token;
-    }
+    } //TODO test
 
 
     public void setPrintWriter(PrintWriter printWriter) {
         this.out = printWriter;
-    }
+    } //TODO test
 
 
     public void setClient(ClientInterface client){
         this.client = client;
-    }
+    } //TODO test
 
 
     @Override
-    public void GameLobbyChanged(GameLobbyEvent event) {
+    public void GameLobbyChanged(GameLobbyEvent event) { //TODO test
         lobby = event;
         if (!Disconnected) {
             if (out != null) {
@@ -447,7 +447,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         sendEvent(event);
     }
 
-    public void sendEvent(Event event) {
+    public void sendEvent(Event event) { //TODO test
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -473,7 +473,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void rewardsChanged(RewardsEvent event) {
+    public void rewardsChanged(RewardsEvent event) { //TODO test
         rewardsEvent = event;
         sendEvent(event);
     }
@@ -482,15 +482,15 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     @Override
     public void exceptionOccured(ExceptionEvent event) {
         sendEvent(event);
-    }
+    } //TODO test
 
 
     public PlayersPBListener getPBlistener(){
         return this;
-    }
+    } //TODO test
 
 
-    public void setPlayersPBListeners(PlayersPBListener listener){
+    public void setPlayersPBListeners(PlayersPBListener listener){ //TODO test
         this.playersPBListeners.add(listener);
         for (int i = 0; i < 10; i ++){
             for (int j = 0; j < 10; j ++){
@@ -512,7 +512,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void receivePBupdate(PlayerTileEvent event){
+    public void receivePBupdate(PlayerTileEvent event){ //TODO test
         //System.out.println("adding player tile event "+ event.getPlayerName()+ " "+ event.getId());
         otherPlayerTileEvents.add(event);
         sendEvent(event);
@@ -521,7 +521,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     public String getPlayerName(){
         return playerName;
-    }
+    } //TODO test
 
 
     @Override
@@ -538,7 +538,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     public void removeListener(PlayersPBListener listener){
         this.playersPBListeners.remove(listener);
-    }
+    } //TODO test
 
     public void sendLogEvent(LogEvent event) {
         logEvents.add(event);
