@@ -22,7 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
@@ -83,6 +82,7 @@ public class GuiRoot implements View {
     private VBox hourglassBox;
     private ImageView buffer1, buffer2;
     private Stage gameBoardStage;
+    private VBox others;
 
     private Image cardBack;
     private HashMap<String, ImageView>playerRockets;
@@ -535,9 +535,14 @@ public class GuiRoot implements View {
 
     @Override
     public void updateOthersPB(PlayerTileEvent event){
-        if(!othersBoards.containsKey(event.getPlayerName()))
-            othersBoards.put(event.getPlayerName(), new GridPane());
 
+        if(!othersBoards.containsKey(event.getPlayerName())) {
+            othersBoards.put(event.getPlayerName(), new GridPane());
+            Label name = new Label(event.getPlayerName());
+            name.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
+            others.getChildren().add(new VBox(name, othersBoards.get(event.getPlayerName())));
+            System.out.println("MERDA DI VACCA FUMANTE");
+        }
         ImageView tile = new ImageView();
         tile.setFitWidth(40);
         tile.setPreserveRatio(true);
@@ -1272,10 +1277,14 @@ public class GuiRoot implements View {
 
             debugShip1.setOnAction(e -> {
                 inputQueue.add("DebugShip 0");
+                debugShip1.setDisable(true);
+                debugShip2.setDisable(true);
             });
 
             debugShip2.setOnAction(e -> {
                 inputQueue.add("DebugShip 1");
+                debugShip1.setDisable(true);
+                debugShip2.setDisable(true);
             });
 
             quitButton.setOnAction(e -> {
@@ -1507,6 +1516,7 @@ public class GuiRoot implements View {
     }
 
     public void buildingScene(){
+        System.out.println("CACCAPUPU");
         Label GameNameLabel = new Label("Game: " + myGameName);
 
         GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
@@ -1672,10 +1682,10 @@ public class GuiRoot implements View {
             finishButton.setOnAction(e -> {inputQueue.add("FinishBuilding");});
 
 
-        VBox others = new VBox(20);
-        for(String PlayerName : othersBoards.keySet()){
-            others.getChildren().add(new HBox(5, new Label(PlayerName), othersBoards.get(PlayerName)));
-        }
+//        VBox others = new VBox(20);
+//        for(String PlayerName : othersBoards.keySet()){
+//            others.getChildren().add(new HBox(5, new Label(PlayerName), othersBoards.get(PlayerName)));
+//        }
 
         HBox tileBox =  new HBox(5, counterclockwiseArrow, tileImage, clockwiseArrow);
         VBox Buttons = new VBox(15, pickTile, board, discardTile, finishButton);
@@ -1695,9 +1705,9 @@ public class GuiRoot implements View {
         Platform.runLater(() ->{
             HBox mainBox;
             if(myGameLv == 2)
-                mainBox = new HBox(10, uncoveredBox, new VBox(10, cards, myBoard, buildKit), others);
+                mainBox = new HBox( uncoveredBox, new VBox(10, cards, myBoard, buildKit), others);
             else
-                mainBox = new HBox(10, uncoveredBox, new VBox(10, myBoard, buildKit), others);
+                mainBox = new HBox( uncoveredBox, new VBox(10, myBoard, buildKit), others);
 
             mainBox.setPadding(new Insets(50));
 
@@ -2015,7 +2025,7 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void showOutcome(FinishGameEvent event) {
+    public void showOutcome(FinishGameEvent event){
         Platform.runLater(()->{
             prompt.setText(event.message());
         });
@@ -2162,6 +2172,7 @@ public class GuiRoot implements View {
             batteryClickable = false;
             selectedImages = new ArrayList<>();
             shotCoords = null;
+            others = new VBox();
 
             readyPlayers = new ListView<>();
             log = new ListView<>();
@@ -2695,4 +2706,6 @@ public class GuiRoot implements View {
             primaryStage.show();
         });
     }
+
+
 }
