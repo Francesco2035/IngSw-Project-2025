@@ -363,6 +363,10 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             sendEvent(hand);
         }
 
+        for (PlayerTileEvent playerTileEvent : otherPlayerTileEvents){
+            sendEvent(playerTileEvent);
+        }
+
         if (phase != null){
             sendEvent(phase);
         }
@@ -371,9 +375,6 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             sendEvent(lobby);
         }
 
-        for (PlayerTileEvent playerTileEvent : otherPlayerTileEvents){
-            sendEvent(playerTileEvent);
-        }
 
         for (GameBoardEvent gbEvent : board){
             sendEvent(gbEvent);

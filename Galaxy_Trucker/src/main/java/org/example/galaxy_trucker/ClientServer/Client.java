@@ -256,7 +256,7 @@ public class Client implements EventVisitor {
         this.lobby = false;
         this.view.showOutcome(event);
         try{
-            Thread.sleep(3000);
+            Thread.sleep(10000);
         }
         catch(InterruptedException e){
             e.printStackTrace();

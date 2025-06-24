@@ -555,7 +555,6 @@ public class GuiRoot implements View {
             Label name = new Label(event.getPlayerName());
             name.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
             others.getChildren().add(new VBox(name, othersBoards.get(event.getPlayerName())));
-            System.out.println("MERDA DI VACCA FUMANTE");
         }
         ImageView tile = new ImageView();
         tile.setFitWidth(40);

@@ -211,6 +211,7 @@ public class Slavers extends Card{
 
     @Override
     public void finishCard() {
+        System.out.println("ODDIO FINISH CARD");
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
