@@ -443,32 +443,34 @@ public class Out {
 
         StringBuilder toPrint = new StringBuilder();
         toPrint.append(ASCII_ART.GameBoard);
+        if(Gameboard!= null){
+            if (lv == 2){
+                for (int i = 0; i < 6; i++) {
 
-        if (lv == 2){
-            for (int i = 0; i < 6; i++) {
-
-                for (int k = 0; k < 7; k++) {
-                    for (int j = 0; j < 12; j++) {
-                        toPrint.append(Gameboard[i][j][k]);
+                    for (int k = 0; k < 7; k++) {
+                        for (int j = 0; j < 12; j++) {
+                            toPrint.append(Gameboard[i][j][k]);
+                        }
+                        toPrint.append("\n");
                     }
-                    toPrint.append("\n");
+
                 }
 
             }
+            else{
+                for (int i = 0; i < 5; i++) {
 
-        }
-        else{
-            for (int i = 0; i < 5; i++) {
-
-                for (int k = 0; k < 7; k++) {
-                    for (int j = 0; j < 11; j++) {
-                        toPrint.append(Gameboard[i][j][k]);
+                    for (int k = 0; k < 7; k++) {
+                        for (int j = 0; j < 11; j++) {
+                            toPrint.append(Gameboard[i][j][k]);
+                        }
+                        toPrint.append("\n");
                     }
-                    toPrint.append("\n");
-                }
 
+                }
             }
         }
+
 
         toPrint.append(ASCII_ART.Border);
         return toPrint;

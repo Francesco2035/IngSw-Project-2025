@@ -319,7 +319,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 int k = 0;
                 Player currentPlayer = players.get(index);
                 while (index < players.size() && !card.isFinished()) {
-                    if (k >= 501){
+                    if (k >= 50001){
                         System.out.println("CURRENT: "+currentPlayer.GetID()+ " "+currentPlayer.getPlayerState().getClass().getSimpleName());
                         k = 0;
                     }
@@ -586,7 +586,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     }
 
     @Override
-    public void onEndGame(boolean success, String playerId, String message) {
+    public void onEndGame(boolean success, String playerId, String message, ScoreboardEvent event) {
             try{
                 System.out.println("Player removed: " + playerId);
 
@@ -632,7 +632,12 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 }
                 //VirtualView vv2 = VirtualViewMap.remove(playerId);
                 sendMessage(new LogEvent(playerId + "quit",-1,-1,-1,-1));
-                vv.sendEvent(new FinishGameEvent(success, message));
+                if (event != null){
+                    vv.sendEvent(event);
+                }
+                else {
+                    vv.sendEvent(new FinishGameEvent(success, message));
+                }
                 vv.removeListeners();
                 vv.setDisconnected(true);
                 updatePlayers();

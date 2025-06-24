@@ -53,6 +53,8 @@ public interface EventVisitor {
 
     void visit(TokenEvent tokenEvent);
 
+    void visit(ScoreboardEvent scoreboardEvent);
+
 
     //public void visit(GameBoardEvent event);
 }

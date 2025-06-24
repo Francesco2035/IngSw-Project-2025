@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HandleTheftClient  extends PlayerStateClient{
+
+    public HandleTheftClient() {
+
+    }
+
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
@@ -26,8 +31,7 @@ public class HandleTheftClient  extends PlayerStateClient{
         return new ArrayList<>(List.of("Theft"));
     }
 
-    //Theft x y p1
-    //per scegliere quale cargo buttare ai pirati
+
     public void showGame(GuiOut out){
         out.getRoot().handleTheft();
     }

@@ -8,6 +8,10 @@ import java.util.List;
 
 public class ChoosingPlanetClient  extends PlayerStateClient{
 
+    public ChoosingPlanetClient() {
+
+    }
+
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
@@ -27,7 +31,6 @@ public class ChoosingPlanetClient  extends PlayerStateClient{
         return new ArrayList<>(List.of("ChoosePlanet"));
     }
 
-    //chooseplanet (-1 ... n-1) -1 è il rifiuto (doNothing)
     public void showGame(GuiOut out){
         out.getRoot().choosingPlanet();
     }

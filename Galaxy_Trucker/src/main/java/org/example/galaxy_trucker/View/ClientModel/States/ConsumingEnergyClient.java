@@ -8,6 +8,10 @@ import java.util.List;
 
 public class ConsumingEnergyClient  extends PlayerStateClient{
 
+    public ConsumingEnergyClient() {
+
+    }
+
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
@@ -26,9 +30,6 @@ public class ConsumingEnergyClient  extends PlayerStateClient{
     public ArrayList<String> getCommands() {
         return new ArrayList<>(List.of("ConsumeEnergy"));
     }
-
-    //consumeEnergy x1 y2 x2 y2 ... (clic su tile batteria)
-    //pirates, sbugglers, slavers, openSpace, warzone
 
     public void showGame(GuiOut out){
         out.getRoot().consumingEnergy();

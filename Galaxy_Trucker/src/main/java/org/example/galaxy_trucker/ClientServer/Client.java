@@ -288,6 +288,20 @@ public class Client implements EventVisitor {
     }
 
     @Override
+    public void visit(ScoreboardEvent event) {
+        this.login = false;
+        this.lobby = false;
+        this.view.showScore(event);
+        try{
+            Thread.sleep(5000);
+        }
+        catch(InterruptedException e){
+            System.out.println("Error receiving scoreboard event: " + e.getMessage());
+        }
+        this.view.phaseChanged(new PhaseEvent(loginClient));
+    }
+
+    @Override
     public void visit(DeckEvent event) {
         this.view.showDeck(event);
     }

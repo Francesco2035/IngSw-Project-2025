@@ -4,11 +4,8 @@ import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Listeners.PhaseListener;
-import org.example.galaxy_trucker.Controller.Messages.FinishListener;
-import org.example.galaxy_trucker.Controller.Messages.HandEvent;
-import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
+import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.ReadyListener;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
@@ -278,22 +275,28 @@ public class Player implements Serializable {
     }
 
     public int finishRace(int result, String message){
-//        int result = 0;
-//        result =  getmyPlayerBoard().finishRace(finished);
-//        if(finished){
-//            result= result + this.getCommonBoard().arrivalBonus(this);
-//
-//            result = result + this.getCommonBoard().beautyBonus(this);
-//        }
 
         if (result > 0){
-            finishListener.onEndGame(true, GetID(), message);
+            finishListener.onEndGame(true, GetID(), message,null);
         }
         else{
-            finishListener.onEndGame(false, GetID(), message);
+            finishListener.onEndGame(false, GetID(), message,null);
         }
         return result;
     }
+
+
+    public int finishRace(ScoreboardEvent scoreboardEvent, int result, String message){
+
+        if (result > 0){
+            finishListener.onEndGame(true, GetID(), message,scoreboardEvent);
+        }
+        else{
+            finishListener.onEndGame(false, GetID(), message, scoreboardEvent);
+        }
+        return result;
+    }
+
 
 
     public void SetReady(boolean ready){

@@ -9,6 +9,11 @@ import java.util.List;
 
 public class WaitingClient extends PlayerStateClient{
 
+
+    public WaitingClient() {
+
+    }
+
     @JsonProperty("type")
     private final String type = "Waiting";
 
