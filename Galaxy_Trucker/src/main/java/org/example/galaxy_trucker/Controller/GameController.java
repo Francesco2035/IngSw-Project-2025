@@ -55,7 +55,7 @@ public class GameController  implements ConcurrentCardListener, ReadyListener, F
 
     public boolean isStarted() {
         return started;
-    }
+    } //TODO TEST
 
     public synchronized HashMap<String, VirtualView> getVirtualViewMap() {
         return VirtualViewMap;
@@ -90,10 +90,10 @@ public class GameController  implements ConcurrentCardListener, ReadyListener, F
             vv.sendEvent(new ConnectionRefusedEvent("Player ID " + p.GetID() + " already exists in game "+idGame));
             //throw new IllegalArgumentException("Player ID " + p.GetID() + " already exists in game "+idGame);
         }
-        else if (maxPlayer == ControllerMap.size()){
+        else if (maxPlayer == ControllerMap.size()){ //TODO TEST
             vv.sendEvent(new ConnectionRefusedEvent(idGame + " is full!"));
         }
-         else {
+         else { //TODO TEST
             vv.setLv(lv);
             String playerId = p.GetID();
             System.out.println("Player ID: " + playerId);
@@ -138,7 +138,7 @@ public class GameController  implements ConcurrentCardListener, ReadyListener, F
                 connectedPlayers.put(playerId, true);
             }
 
-            Thread t = new Thread(() -> {
+            Thread t = new Thread(() -> { //TODO TEST
                 while (getConnection(playerId)) {
                     synchronized (ControllerMap) {
                         Controller current = ControllerMap.get(playerId);
@@ -156,7 +156,7 @@ public class GameController  implements ConcurrentCardListener, ReadyListener, F
                     }
                 }
             });
-            t.start();
+            t.start(); //TODO TEST
             threads.put(playerId, t);
             ArrayList<String> players = new ArrayList<>(VirtualViewMap.keySet());
             if (lobbyListener != null)
@@ -351,7 +351,7 @@ public class GameController  implements ConcurrentCardListener, ReadyListener, F
 
                     }
 
-                    else { // se il player  non è disconneso prendo icommand dalla queue
+                    else { // se il player  non è disconneso prendo icommand dalla queue //TODO TEST
 
                         try {
                             Command cmd = flightQueue.poll();
@@ -431,7 +431,7 @@ public class GameController  implements ConcurrentCardListener, ReadyListener, F
         //System.out.println("Game over the winner is: " + game.getGameBoard().getPlayers().getFirst().GetID());
     }
 
-    private void stopAllPlayerThreads() {
+    public void stopAllPlayerThreads() {
 
         for (Thread t : threads.values()) {
             t.interrupt();
@@ -535,7 +535,7 @@ public class GameController  implements ConcurrentCardListener, ReadyListener, F
         sendGameLobbyUpdate(new GameLobbyEvent(players,ready));
     }
 
-    public void sendGameLobbyUpdate(GameLobbyEvent event){
+    public void sendGameLobbyUpdate(GameLobbyEvent event){ //TODO TEST
         for (GameLobbyListener listener : gameLobbyListeners) {
             listener.GameLobbyChanged(event);
         }

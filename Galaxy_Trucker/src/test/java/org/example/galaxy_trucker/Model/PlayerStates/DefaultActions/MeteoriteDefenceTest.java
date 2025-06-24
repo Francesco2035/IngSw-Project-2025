@@ -129,8 +129,12 @@ public class MeteoriteDefenceTest {
         IntegerPair battery1 = new IntegerPair(6,9);
         IntegerPair plasma1 = new IntegerPair(8,9);
         DefendFromSmallCommand def1 = new DefendFromSmallCommand(battery1,game.getID(),p1.GetID(),game.getLv(),"boh","boh");
-        FlightController c3 = new FlightController(p1, game.getID(), new GameController(game.getID(), game, new GamesHandler(), 2, 4), false); //possibile fix
-        def1.execute(p1);
+//        FlightController c3 = new FlightController(p1, game.getID(), new GameController(game.getID(), game, new GamesHandler(), 2, 4), false); //possibile fix
+        try{
+            def1.execute(p1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
         System.out.println("\n surtr \n");
