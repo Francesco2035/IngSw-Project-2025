@@ -146,7 +146,9 @@ public class GamesHandler implements LobbyListener {
 
                 if (gameControllerMap.containsKey(gameID)) {
                     System.out.println("Game exists: " + gameID);
-                        gameControllerMap.get(gameID).NewPlayer(temp, virtualView, virtualView.getToken());
+                    gameControllerMap.get(gameID).NewPlayer(temp, virtualView, virtualView.getToken());
+                    rmi.addPending(virtualView.getToken());
+
                 }
                 else {
                     System.out.println("Game doesn't exist: " + gameID);
@@ -158,9 +160,9 @@ public class GamesHandler implements LobbyListener {
                         gameControllerMap.putIfAbsent(gameID, gameController);
                         gameControllerMap.get(curGame.getGameID()).NewPlayer(temp, virtualView, virtualView.getToken());
                     }
+                    rmi.addPending(virtualView.getToken());
 
                 }
-                rmi.addPending(virtualView.getToken());
 
             }
 
