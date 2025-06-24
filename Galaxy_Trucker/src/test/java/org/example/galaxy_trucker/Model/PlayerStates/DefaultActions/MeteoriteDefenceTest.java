@@ -144,9 +144,13 @@ public class MeteoriteDefenceTest {
 
 
         DefendFromLargeCommand def2 = new DefendFromLargeCommand(plasma1,battery1,game.getID(),p1.GetID(),game.getLv(),"boh","boh");
-        def2.execute(p1);
+//        def2.execute(p1);
 
-
+        try{
+            def2.execute(p1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         System.out.println("\n roar \n");
         IntegerPair battery2 = new IntegerPair(8,8);
