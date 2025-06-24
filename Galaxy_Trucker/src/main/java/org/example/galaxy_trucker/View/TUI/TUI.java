@@ -324,6 +324,11 @@ public class TUI implements View {
         out.setLog(tokenEvent.getToken());
     }
 
+    @Override
+    public void showScore(ScoreboardEvent event) {
+
+    }
+
     public String formatPBInfo(PBInfoEvent event) {
         StringBuilder sb = new StringBuilder();
         sb.append(ASCII_ART.compose("            ",

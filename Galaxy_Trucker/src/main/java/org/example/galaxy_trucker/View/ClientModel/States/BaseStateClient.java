@@ -12,7 +12,6 @@ import java.util.List;
 public class BaseStateClient extends PlayerStateClient{
 
 
-    @JsonCreator
     public BaseStateClient(){
 
     }

@@ -8,6 +8,7 @@ public class ConnectionRefusedEvent implements Event{
     String message;
 
 
+
     @JsonCreator
     public ConnectionRefusedEvent(@JsonProperty("message") String message) {
         this.message = message;

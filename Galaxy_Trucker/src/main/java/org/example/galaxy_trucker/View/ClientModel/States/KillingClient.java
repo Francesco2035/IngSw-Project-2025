@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KillingClient extends PlayerStateClient{
+
+    public KillingClient() {
+
+    }
+
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
@@ -26,7 +31,6 @@ public class KillingClient extends PlayerStateClient{
         return new ArrayList<>(List.of("Kill"));
     }
 
-    //Kill x1 y1 x2 y2 ... (umani o alieni)
 
     public void showGame(GuiOut out){
         out.getRoot().killing();

@@ -8,6 +8,10 @@ import java.util.List;
 
 public class ChoosePositionClient  extends PlayerStateClient{
 
+    public ChoosePositionClient() {
+
+    }
+
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();

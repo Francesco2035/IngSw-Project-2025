@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HandleCargoClient  extends PlayerStateClient{
+
+    public HandleCargoClient() {
+
+    }
+
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
@@ -25,13 +30,6 @@ public class HandleCargoClient  extends PlayerStateClient{
     public ArrayList<String> getCommands() {
         return new ArrayList<>(List.of("GetReward","Switch", "DiscardCargo", "FinishCargo"));
     }
-
-    //tutti questi comandi fino a finishCargo
-
-    //GetRewards r1 (indice del reward) x1 y1
-    //DiscardCargo x1 y1 p1
-    //Switch x1 y1 p1 (indice cargo) x2 y2 p2
-    //FinishCargo
 
     public void showGame(GuiOut out){
         out.getRoot().handleCargo();

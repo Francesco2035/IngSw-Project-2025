@@ -8,6 +8,9 @@ import java.util.List;
 
 public class CheckValidityClient  extends PlayerStateClient{
 
+    public CheckValidityClient() {
+
+    }
 
     @Override
     public void showGame(Out out) {

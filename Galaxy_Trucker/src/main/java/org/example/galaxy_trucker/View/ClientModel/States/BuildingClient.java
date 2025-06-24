@@ -14,7 +14,6 @@ public class BuildingClient  extends PlayerStateClient{
 
 
 
-    @JsonCreator
     public BuildingClient() {
 
     }
@@ -52,6 +51,6 @@ public class BuildingClient  extends PlayerStateClient{
     @JsonIgnore
     @Override
     public ArrayList<String> getCommands() {
-        return new ArrayList<>(List.of("Discard", "PickTile", "FinishBuilding", "InsertTile", "SeeDeck"));
+        return new ArrayList<>(List.of("Discard", "PickTile", "FinishBuilding", "InsertTile", "SeeDeck", "FromBuffer", "ToBuffer"));
     }
 }

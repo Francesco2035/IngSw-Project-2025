@@ -220,6 +220,13 @@ public class MultiClientHandler implements Runnable, GhListener {
     }
 
     @Override
+    public void updateLobby(LobbyEvent event) {
+        lobbyEvents.remove("EMPTY CREATE NEW GAME");
+        lobbyEvents.remove(event.getGameId());
+        lobbyEvents.put(event.getGameId(), event);
+    }
+
+    @Override
     public void quitPlayer(QuitCommand event) {
         TCP.removeMC(this);
     }

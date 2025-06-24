@@ -8,6 +8,10 @@ import java.util.List;
 
 public class GiveSpeedClient  extends PlayerStateClient{
 
+    public GiveSpeedClient(){
+
+    }
+
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
@@ -27,7 +31,6 @@ public class GiveSpeedClient  extends PlayerStateClient{
         return new ArrayList<>(List.of("GiveSpeed"));
     }
 
-    //giveSpeed x1 y1 ... motori doppi (ma va bene anche singoli)
     public void showGame(GuiOut out){
         out.getRoot().giveTiles("GiveSpeed", "Select the engines you want to activate!");
     }

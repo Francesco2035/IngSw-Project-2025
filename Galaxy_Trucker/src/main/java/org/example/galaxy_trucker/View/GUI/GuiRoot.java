@@ -2068,6 +2068,11 @@ public class GuiRoot implements View {
         });
     }
 
+    @Override
+    public void showScore(ScoreboardEvent event) {
+
+    }
+
 
     private @NotNull Button joinButtonMaker(LobbyEvent joining) {
         Button joinButton = new Button("Join");
