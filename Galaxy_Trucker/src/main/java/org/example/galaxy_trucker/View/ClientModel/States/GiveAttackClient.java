@@ -32,6 +32,6 @@ public class GiveAttackClient  extends PlayerStateClient{
     }
 
     public void showGame(GuiOut out){
-        out.getRoot().giveTiles("GiveAttack", "Select the cannons you want to use to defend!");
+        out.getRoot().giveTiles("GiveAttack", "Select the cannons you want to use to defend!", false);
     }
 }

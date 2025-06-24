@@ -33,6 +33,6 @@ public class HandleDestructionClient  extends PlayerStateClient{
 
 
     public void showGame(GuiOut out){
-        out.getRoot().giveTiles("SelectChunk", "Select one tile from the \nship chunk you want to keep!");
+        out.getRoot().giveTiles("SelectChunk", "Select one tile from the \nship chunk you want to keep!", true);
     }
 }

@@ -100,6 +100,7 @@ public class GuiRoot implements View {
     private IntegerPair shotCoords;
 
     private boolean killing;
+    private boolean selectingChunk;
     private HBox phaseButtons;
     private ArrayList<IntegerPair> cmdCoords;
     private boolean tilesClickable;
@@ -271,6 +272,9 @@ public class GuiRoot implements View {
                             selectedImages.add(crewImg);
                         }
                     }
+                    else if(selectingChunk){
+                        inputQueue.add("SelectChunk "+event.getX() + event.getY());
+                    }
                 });
 
                 if (event.isBrownAlien()) {
@@ -302,6 +306,9 @@ public class GuiRoot implements View {
 //                                    crew.setOpacity(1);
 //                                }
                             }
+                            else if(selectingChunk){
+                                inputQueue.add("SelectChunk "+event.getX() + event.getY());
+                            }
                         });
                         humans.getChildren().add(crew);
 
@@ -327,7 +334,11 @@ public class GuiRoot implements View {
                         if (rewardsLeft == 0) {
                             handleCargo();
                         }
-                    } else {
+                    }
+                    else if(selectingChunk){
+                        inputQueue.add("SelectChunk "+event.getX() + event.getY());
+                    }
+                    else {
                         Platform.runLater(() -> {
                             Stage cargoStage = new Stage();
                             if(event.getCargo().size() > 0)
@@ -431,6 +442,9 @@ public class GuiRoot implements View {
 //                                    cmdCoords.remove(coord);
 //                                    crew.setOpacity(1);
 //                                }
+                        }
+                        else if(selectingChunk){
+                            inputQueue.add("SelectChunk "+event.getX() + event.getY());
                         }
                     });
                     batteries.getChildren().add(battery);
@@ -2117,6 +2131,7 @@ public class GuiRoot implements View {
             curCard.setImage(null);
             curCardImg = null;
             killing = false;
+            selectingChunk = false;
             phaseButtons = new HBox(20);
             cmdCoords = new ArrayList<>();
             tilesClickable = false;
@@ -2324,6 +2339,7 @@ public class GuiRoot implements View {
             tilesClickable = false;
             killing = false;
             theft = false;
+            selectingChunk = false;
 
             ready.setOnAction(e -> {
                 inputQueue.add("Ready");
@@ -2435,7 +2451,7 @@ public class GuiRoot implements View {
         });
     }
 
-    public void giveTiles(String command, String txt){
+    public void giveTiles(String command, String txt, boolean chunk){
         AtomicReference<String> cmd = new AtomicReference<>(command);
         Button done = new Button("Done!");
         Button doNothing = new Button("Do Nothing");
@@ -2443,6 +2459,7 @@ public class GuiRoot implements View {
         Platform.runLater(()->{
             curCard.setImage(curCardImg);
             tilesClickable = true;
+            selectingChunk = chunk;
             prompt.setText(txt);
             phaseButtons.getChildren().setAll(done, doNothing);
 
@@ -2521,8 +2538,6 @@ public class GuiRoot implements View {
             });
             primaryStage.show();
         });
-
-
     }
 
     public void acceptState(){
@@ -2532,7 +2547,7 @@ public class GuiRoot implements View {
 
         Platform.runLater(()->{
             curCard.setImage(curCardImg);
-            prompt.setText("Do you want to visit it?");
+            prompt.setText("Accept or decline?");
             phaseButtons.getChildren().setAll(accept, decline);
 
             accept.setOnAction(e ->{
@@ -2662,6 +2677,7 @@ public class GuiRoot implements View {
             tilesClickable = false;
             killing = false;
             theft = false;
+            selectingChunk = false;
             primaryStage.show();
         });
     }
