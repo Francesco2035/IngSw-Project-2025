@@ -72,12 +72,12 @@ public class TCPClient{
                 }
                  else if (msg.startsWith("Token: ")) {
 
-                String token = msg.substring(7);
-                //System.out.println("Token received: " + token);
-                this.client.receiveEvent(new TokenEvent(token));
-                this.token = token;
-                this.client.getView().setGameboard(commandInterpreter.getLv());
-                commandInterpreter.setToken(token);
+                    String token = msg.substring(7);
+                    //System.out.println("Token received: " + token);
+                    this.client.receiveEvent(new TokenEvent(token));
+                    this.token = token;
+                    this.client.getView().setGameboard(commandInterpreter.getLv());
+                    commandInterpreter.setToken(token);
             }
             else {
                    //System.out.println("Received msg: " + msg);

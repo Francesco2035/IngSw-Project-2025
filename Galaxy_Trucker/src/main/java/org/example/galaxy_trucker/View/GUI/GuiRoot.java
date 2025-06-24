@@ -1859,7 +1859,7 @@ public class GuiRoot implements View {
         Platform.runLater(()->{
 //            prompt.setText(event.message());
                 log.getItems().addFirst(event.message());
-                if (event.message().equals("Flight started")){
+                if (event.getEffect().equals("Flight started")){
                     flightScene();
                     flightStarted = true;
                 }

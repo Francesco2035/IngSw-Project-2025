@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.EventVisitor;
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class LogEvent implements Event {
 
 
@@ -16,6 +15,10 @@ public class LogEvent implements Event {
     int direction;
     int type;
 
+
+    public LogEvent(){
+
+    }
 
 
 
@@ -39,24 +42,24 @@ public class LogEvent implements Event {
         visitor.visit(this);
     }
 
-    @JsonIgnore
     @Override
     public String message() {
         return effect;
     }
-    @JsonIgnore
+
+    public String getEffect() {
+        return effect;
+    }
+
     public int getX() {
         return x;
     }
-    @JsonIgnore
     public int getY() {
         return y;
     }
-    @JsonIgnore
     public int getDirection() {
         return direction;
     }
-    @JsonIgnore
     public int getType() {
         return type;
     }
