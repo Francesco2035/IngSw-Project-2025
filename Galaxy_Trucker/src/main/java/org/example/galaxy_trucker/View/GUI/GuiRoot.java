@@ -82,7 +82,7 @@ public class GuiRoot implements View {
     private VBox hourglassBox;
     private ImageView buffer1, buffer2;
     private Stage gameBoardStage;
-    private VBox others;
+//    private VBox others;
 
     private Image cardBack;
     private HashMap<String, ImageView>playerRockets;
@@ -99,6 +99,7 @@ public class GuiRoot implements View {
     private int totHumans;
     private IntegerPair shotCoords;
 
+    private boolean flightStarted;
     private boolean killing;
     private boolean selectingChunk;
     private HBox phaseButtons;
@@ -121,6 +122,7 @@ public class GuiRoot implements View {
     private ArrayList<ImageView> selectedImages;
     private LoginClient loginClient;
 
+    private boolean reconnecting;
 
 
     public void setStage(Stage primaryStage){
@@ -197,6 +199,7 @@ public class GuiRoot implements View {
         myName = event.getPlayerId();
         myGameName = event.getGameId();
         myGameLv = event.getLv();
+        reconnecting = true;
     }
 
     @Override
@@ -548,32 +551,31 @@ public class GuiRoot implements View {
 
 
     @Override
-    public void updateOthersPB(PlayerTileEvent event){
+    public void updateOthersPB(PlayerTileEvent event) {
+        Platform.runLater(() -> {
+            if (!othersBoards.containsKey(event.getPlayerName())) {
+                othersBoards.put(event.getPlayerName(), new GridPane());
+                Label name = new Label(event.getPlayerName());
+                name.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
+//                others.getChildren().add(new VBox(name, othersBoards.get(event.getPlayerName())));
+            }
+            ImageView tile = new ImageView();
+            tile.setFitWidth(40);
+            tile.setPreserveRatio(true);
 
-        if(!othersBoards.containsKey(event.getPlayerName())) {
-            othersBoards.put(event.getPlayerName(), new GridPane());
-            Label name = new Label(event.getPlayerName());
-            name.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
-            others.getChildren().add(new VBox(name, othersBoards.get(event.getPlayerName())));
-        }
-        ImageView tile = new ImageView();
-        tile.setFitWidth(40);
-        tile.setPreserveRatio(true);
+            if (event.getId() == 157) {
+                tile.setImage(tilePlaceholder);
+                tile.setOpacity(0.5);
+            } else if (event.getId() < 157) {
+                setColors(event.getPlayerName(), event.getId());
+                tile.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile (" + event.getId() + ").jpg")));
+                tile.setRotate(event.getRotation());
+            }
 
-        if(event.getId() == 157) {
-            tile.setImage(tilePlaceholder);
-            tile.setOpacity(0.5);
-        }
-        else if(event.getId() < 157){
-            setColors(event.getPlayerName(), event.getId());
-            tile.setImage(new Image(getClass().getResourceAsStream("/GUI/Tiles/tile ("+ event.getId() +").jpg")));
-            tile.setRotate(event.getRotation());
-        }
 
-        Platform.runLater(()->{
             ArrayList<Node> nodes = new ArrayList<>(othersBoards.get(event.getPlayerName()).getChildren());
-            for (Node node : nodes){
-                if(node != null && GridPane.getRowIndex(node) == event.getX() && GridPane.getColumnIndex(node) == event.getY())
+            for (Node node : nodes) {
+                if (node != null && GridPane.getRowIndex(node) == event.getX() && GridPane.getColumnIndex(node) == event.getY())
                     othersBoards.get(event.getPlayerName()).getChildren().remove(node);
             }
             othersBoards.get(event.getPlayerName()).add(tile, event.getY(), event.getX());
@@ -1624,10 +1626,10 @@ public class GuiRoot implements View {
             finishButton.setOnAction(e -> {inputQueue.add("FinishBuilding");});
 
 
-//        VBox others = new VBox(20);
-//        for(String PlayerName : othersBoards.keySet()){
-//            others.getChildren().add(new HBox(5, new Label(PlayerName), othersBoards.get(PlayerName)));
-//        }
+        VBox others = new VBox(20);
+        for(String PlayerName : othersBoards.keySet()){
+            others.getChildren().add(new HBox(5, new Label(PlayerName), othersBoards.get(PlayerName)));
+        }
 
         HBox tileBox =  new HBox(5, counterclockwiseArrow, tileImage, clockwiseArrow);
         VBox Buttons = new VBox(15, pickTile, board, discardTile, finishButton);
@@ -1777,9 +1779,9 @@ public class GuiRoot implements View {
             mainBox.prefWidthProperty().bind(primaryStage.widthProperty());
             mainBox.prefHeightProperty().bind(primaryStage.heightProperty());
             Pane root = new Pane(mainBox);
-
             mainBox.prefWidthProperty().bind(primaryStage.widthProperty());
             mainBox.prefHeightProperty().bind(primaryStage.heightProperty());
+
 
             contentRoot.getChildren().setAll(root);
             printer.setFlightScreen(primaryScene);
@@ -1795,6 +1797,10 @@ public class GuiRoot implements View {
         System.out.println(event.getStateClient().getClass());
         if(event.getStateClient() == loginClient){
             goToFirstScene();
+        }
+        if(reconnecting && flightStarted){
+            reconnecting = false;
+            flightScene();
         }
 
         //player.setstate(event.getpahse)
@@ -1855,6 +1861,7 @@ public class GuiRoot implements View {
                 log.getItems().addFirst(event.message());
                 if (event.message().equals("Flight started")){
                     flightScene();
+                    flightStarted = true;
                 }
 //            PauseTransition pause = new PauseTransition(Duration.seconds(5));
 //            pause.setOnFinished(e -> prompt.setText(oldText));
@@ -2145,7 +2152,7 @@ public class GuiRoot implements View {
             batteryClickable = false;
             selectedImages = new ArrayList<>();
             shotCoords = null;
-            others = new VBox();
+            reconnecting = false;
 
             readyPlayers = new ListView<>();
             log = new ListView<>();
