@@ -24,6 +24,9 @@ public class HandleCargoCommand extends Command implements Serializable {
     IntegerPair coordinate2;
     int position2;
 
+    public HandleCargoCommand(){}
+
+
     public HandleCargoCommand(int position, IntegerPair coordinate, int position2,IntegerPair coordinate2, String gameId, String playerId, int lv, String title, String token) {
         super(gameId, playerId, lv, title, token,-1);
         this.title = title;

@@ -11,6 +11,9 @@ public class Theft extends Command implements Serializable {
     IntegerPair pair;
     int position;
 
+
+    public Theft(){}
+
     public Theft(int position,IntegerPair pair,String gameId, String playerId, int lv, String title, String token) {
         super(gameId, playerId, lv, title, token,-1);
         this.pair = pair;

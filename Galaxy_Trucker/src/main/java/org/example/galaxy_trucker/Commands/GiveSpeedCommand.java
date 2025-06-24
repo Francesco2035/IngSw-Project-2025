@@ -13,6 +13,9 @@ import java.util.ArrayList;
 public class GiveSpeedCommand extends Command implements Serializable {
 
     private ArrayList<IntegerPair> coordinates;
+
+    public GiveSpeedCommand() {}
+
     public GiveSpeedCommand( ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title, String token) {
         super(gameId, playerId, lv, title, token,-1);
         this.coordinates = coordinates;

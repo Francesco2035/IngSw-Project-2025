@@ -13,9 +13,7 @@ public class QuitCommand extends Command{
     }
 
 
-    public QuitCommand(){
-
-    }
+    public QuitCommand(){}
 
     @Override
     public void execute(Player player) throws IOException {

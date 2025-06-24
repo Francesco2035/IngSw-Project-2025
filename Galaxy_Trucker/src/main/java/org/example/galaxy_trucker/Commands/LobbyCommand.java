@@ -28,9 +28,7 @@ public class LobbyCommand extends Command implements Serializable {
 
 
     @Override
-    public void execute(Player player) throws IOException {
-
-    }
+    public void execute(Player player) throws IOException {}
 
     @Override
     public boolean allowedIn(PlayerState playerState) {
