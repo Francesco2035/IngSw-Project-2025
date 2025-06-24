@@ -7,14 +7,17 @@ import org.example.galaxy_trucker.Controller.Listeners.GhListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
 import org.example.galaxy_trucker.Controller.Messages.ConnectionRefusedEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.Controller.Messages.ReconnectedEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -24,15 +27,20 @@ public class GamesHandler implements LobbyListener {
     private final HashMap<String, GameController> gameControllerMap;
     private final BlockingQueue<Pair<Command, VirtualView>> pendingLogins;
     private ArrayList<GhListener> listeners = new ArrayList<>();
+    private ArrayList<LobbyEvent> lobbyEvents = new ArrayList<>();
     private RMIServer rmi;
 
     public void setRmiServer(RMIServer rmi) {
         this.rmi = rmi;
-    } //TODO test
+    }
 
     public void setListeners(GhListener listener) {
         this.listeners.add(listener);
-    } //TODO test
+        for (LobbyEvent lobbyEvent : lobbyEvents){
+            listener.updateLobby(lobbyEvent);
+        }
+
+    }
 
     public GamesHandler() {
         this.gameControllerMap = new HashMap<>();
@@ -44,7 +52,7 @@ public class GamesHandler implements LobbyListener {
         loginWorker.start();
     }
 
-    public void enqueuePlayerInit(Command command, VirtualView virtualView) { //TODO test
+    public void enqueuePlayerInit(Command command, VirtualView virtualView) {
         pendingLogins.offer(new Pair<>(command, virtualView));
     }
 
@@ -68,7 +76,7 @@ public class GamesHandler implements LobbyListener {
     }
 
 
-    public void receive(Command command) { //TODO test
+    public void receive(Command command) {
 
         try{
             System.out.println("Received: " + command.getTitle() + " " + command.getClass().getSimpleName());
@@ -110,8 +118,8 @@ public class GamesHandler implements LobbyListener {
         gameControllerMap.remove(gameId);
     }
 
-    public void initPlayer(Command command, VirtualView virtualView) { //TODO test
-        System.out.println("initplayer");
+    public void initPlayer(Command command, VirtualView virtualView) {
+        System.out.println("initPlayer");
         try {
             String gameID = command.getGameId();
             String check = "";
@@ -139,9 +147,10 @@ public class GamesHandler implements LobbyListener {
                 if (gameControllerMap.containsKey(gameID)) {
                     System.out.println("Game exists: " + gameID);
                     gameControllerMap.get(gameID).NewPlayer(temp, virtualView, virtualView.getToken());
-                    System.out.println("Pending?: ");
                     rmi.addPending(virtualView.getToken());
-                } else {
+
+                }
+                else {
                     System.out.println("Game doesn't exist: " + gameID);
                     Game curGame = new Game(lvl, gameID);
 
@@ -151,8 +160,8 @@ public class GamesHandler implements LobbyListener {
                         gameControllerMap.putIfAbsent(gameID, gameController);
                         gameControllerMap.get(curGame.getGameID()).NewPlayer(temp, virtualView, virtualView.getToken());
                     }
-                    System.out.println("Pending?: ");
                     rmi.addPending(virtualView.getToken());
+
                 }
 
             }
@@ -164,9 +173,9 @@ public class GamesHandler implements LobbyListener {
 
     public synchronized HashMap<String, GameController> getGameControllerMap() {
         return gameControllerMap;
-    } //TODO test
+    }
 
-    public void PlayerDisconnected(String token) { //TODO test
+    public void PlayerDisconnected(String token) {
 
         String game;
 
@@ -184,7 +193,7 @@ public class GamesHandler implements LobbyListener {
 
     }
 
-    public void PlayerReconnected(String token) { //TODO test
+    public void PlayerReconnected(String token) {
         String game;
         synchronized (tokenToGame) {
             game = tokenToGame.get(token);
@@ -199,7 +208,8 @@ public class GamesHandler implements LobbyListener {
     }
 
     @Override
-    public void sendEvent(LobbyEvent event) { //TODO test
+    public void sendEvent(LobbyEvent event) {
+        lobbyEvents.add(event);
         for (GhListener listener : listeners) {
             listener.sendEvent(event);
         }
@@ -207,5 +217,5 @@ public class GamesHandler implements LobbyListener {
 
     public ArrayList<GhListener> getListeners() {
         return listeners;
-    } //TODO test
+    }
 }

@@ -8,6 +8,10 @@ import java.util.List;
 
 public class ReadCardClient extends PlayerStateClient{
 
+    public ReadCardClient() {
+
+    }
+
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
         toPrint.append(out.getTitleCard());

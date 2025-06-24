@@ -27,6 +27,7 @@ public class InputReader implements Runnable {
     KeyMap<Binding> mainKeyMap;
     StringBuilder lastRender = new StringBuilder();
     BackgroundGenerator generator ;
+    private boolean background = true;
 
 
 
@@ -116,15 +117,6 @@ public class InputReader implements Runnable {
     }
 
 
-    public synchronized void printGraphicMessage(String s) {
-//        terminal.puts(InfoCmp.Capability.clear_screen); // pulisce lo schermo
-//        terminal.flush();
-        System.out.print(s); // mantiene spazi, newline, ecc.
-        Lreader.callWidget("redisplay");
-
-    }
-
-
     public synchronized void clearScreen() {
         System.out.print("\033[3J");
         terminal.puts(InfoCmp.Capability.clear_screen);
@@ -153,8 +145,13 @@ public class InputReader implements Runnable {
 //        System.out.print("\033[3J");
 //        terminal.puts(InfoCmp.Capability.clear_screen);
 //        terminal.flush();
-        AttributedString colored = fillBackground(content.toString());
-        terminal.writer().print(colored.toAnsi());
+        if (background) {
+            AttributedString colored = fillBackground(content.toString());
+            terminal.writer().print(colored.toAnsi());
+        }
+        else {
+            terminal.writer().print(content.toString());
+        }
         terminal.writer().println();
         terminal.flush();
         terminal.flush();
@@ -207,7 +204,9 @@ public class InputReader implements Runnable {
     }
 
 
-
+    public void ChangeBackground() {
+        background = !background;
+    }
 }
 
 

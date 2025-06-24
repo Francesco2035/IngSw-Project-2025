@@ -8,6 +8,10 @@ import java.util.List;
 
 public class GiveAttackClient  extends PlayerStateClient{
 
+    public GiveAttackClient() {
+
+    }
+
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
@@ -27,8 +31,7 @@ public class GiveAttackClient  extends PlayerStateClient{
         return new ArrayList<>(List.of("GiveAttack"));
     }
 
-    //giveAttack x1 y1 ...
     public void showGame(GuiOut out){
-        out.getRoot().giveTiles("GiveAttack", "Select the cannons you want to use to defend!");
+        out.getRoot().giveTiles("GiveAttack", "Select the cannons you want to use to defend!", false);
     }
 }

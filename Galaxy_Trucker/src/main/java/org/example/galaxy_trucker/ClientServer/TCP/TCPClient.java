@@ -70,12 +70,12 @@ public class TCPClient{
                 }
                  else if (msg.startsWith("Token: ")) {
 
-                String token = msg.substring(7);
-                //System.out.println("Token received: " + token);
-                this.client.receiveEvent(new TokenEvent(token));
-                this.token = token;
-                this.client.getView().setGameboard(commandInterpreter.getLv());
-                commandInterpreter.setToken(token);
+                    String token = msg.substring(7);
+                    //System.out.println("Token received: " + token);
+                    this.client.receiveEvent(new TokenEvent(token));
+                    this.token = token;
+                    this.client.getView().setGameboard(commandInterpreter.getLv());
+                    commandInterpreter.setToken(token);
             }
             else {
                    //System.out.println("Received msg: " + msg);
@@ -246,6 +246,10 @@ public class TCPClient{
                 else if(userInput.equals("Log")){
                     client.getView().seeLog();
                 }
+                else if (userInput.equals("Bg")){
+                    client.getView().background();
+                    client.getView().refresh();
+                }
                 else if (userInput.equals("MainTerminal")){
                     client.getView().refresh();
                 }
@@ -282,11 +286,32 @@ public class TCPClient{
                 }
                 else if (userInput.equals("Create")) {
                     if (!client.getLogin()) {
-                        client.setLogin(true);
+                        boolean aborted = false;
+                        String playerId = "";
+                        while (playerId.equals("") || playerId.length() > 20){
+                            playerId = client.getView().askInput("Insert player ID [max 20 characters || abort]: ");
+                            if (playerId.equals("abort")){
+                                aborted = true;
+                                break;
+                            }
+                        }
+                        if (aborted){
+                            client.getView().refresh();
+                            continue;
+                        }
 
-                        String playerId = client.getView().askInput("PlayerID: ");
-
-                        String gameId = client.getView().askInput("GameID: ");
+                        String gameId = "";
+                        while (gameId.equals("") || gameId.length() > 20){
+                            gameId = client.getView().askInput("Insert game ID [max 20 characters || abort]: ");
+                            if (gameId.equals("abort")){
+                                aborted = true;
+                                break;
+                            }
+                        }
+                        if (aborted){
+                            client.getView().refresh();
+                            continue;
+                        }
 
                         int gameLevel = Integer.parseInt(client.getView().askInput("Game level: "));
 
@@ -300,11 +325,11 @@ public class TCPClient{
 
                         LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login", maxPlayers);
 
-//                        commandInterpreter.setPlayerId(playerId);
-//                        commandInterpreter.setGameId(gameId);
+
                         commandInterpreter = new CommandInterpreter(playerId, gameId);
                         commandInterpreter.setlv(gameLevel);
                         mapper = new ObjectMapper();
+                        client.setLogin(true);
                         jsonLogin = mapper.writeValueAsString(loginCommand);
 
                         out.println(jsonLogin);
@@ -315,8 +340,32 @@ public class TCPClient{
 
                     if(!client.getLogin()) {
 
-                        String playerId = client.getView().askInput("PlayerID: ");
-                        String gameId = client.getView().askInput("GameID: ");
+                        boolean aborted = false;
+                        String playerId = "";
+                        while (playerId.equals("") || playerId.length() > 20){
+                            playerId = client.getView().askInput("Insert player ID [max 20 characters || abort]: ");
+                            if (playerId.equals("abort")){
+                                aborted = true;
+                                break;
+                            }
+                        }
+                        if (aborted){
+                            client.getView().refresh();
+                            continue;
+                        }
+
+                        String gameId = "";
+                        while (gameId.equals("") || gameId.length() > 20){
+                            gameId = client.getView().askInput("Insert game ID [max 20 characters || abort]: ");
+                            if (gameId.equals("abort")){
+                                aborted = true;
+                                break;
+                            }
+                        }
+                        if (aborted){
+                            client.getView().refresh();
+                            continue;
+                        }
                         if (client.containsGameId(gameId)) {
                             client.setLogin(true);
 

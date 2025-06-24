@@ -12,6 +12,7 @@ public class FinishStateClient extends PlayerStateClient{
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
         toPrint.append(out.showOutcome());
+        toPrint.append(out.showScoreboard());
         toPrint.append("\n");
         out.render(toPrint);
     }

@@ -69,4 +69,8 @@ public interface View {
     void reconnect(ReconnectedEvent event);
 
     void Token(TokenEvent tokenEvent);
+
+    void showScore(ScoreboardEvent event);
+
+    void background();
 }

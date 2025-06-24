@@ -252,7 +252,7 @@ public class Client implements EventVisitor {
         this.lobby = false;
         this.view.showOutcome(event);
         try{
-            Thread.sleep(3000);
+            Thread.sleep(10000);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -281,6 +281,20 @@ public class Client implements EventVisitor {
     @Override
     public void visit(TokenEvent tokenEvent) {
         this.view.Token(tokenEvent);
+    }
+
+    @Override
+    public void visit(ScoreboardEvent event) {
+        this.login = false;
+        this.lobby = false;
+        this.view.showScore(event);
+        try{
+            Thread.sleep(5000);
+        }
+        catch(InterruptedException e){
+            System.out.println("Error receiving scoreboard event: " + e.getMessage());
+        }
+        this.view.phaseChanged(new PhaseEvent(loginClient));
     }
 
     @Override

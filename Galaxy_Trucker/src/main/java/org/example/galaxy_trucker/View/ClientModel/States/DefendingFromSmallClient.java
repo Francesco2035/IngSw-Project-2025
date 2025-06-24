@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefendingFromSmallClient  extends PlayerStateClient{
+
+    public DefendingFromSmallClient() {
+
+    }
+
     @Override
     public void showGame(Out out) {
 
@@ -27,8 +32,7 @@ public class DefendingFromSmallClient  extends PlayerStateClient{
         return new ArrayList<>(List.of("DefendSmall"));
     }
 
-    //defendSmall x y (energia)
-    //doNothing
+
     public void showGame(GuiOut out){
         out.getRoot().defend("DefendSmall", "Choose the energy to consume!");
     }

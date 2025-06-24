@@ -22,6 +22,8 @@ import org.example.galaxy_trucker.View.ViewPhase;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 //TODO: salvare lo stesso in virtualview per il momento non sto gestendo f.a. del tutto
 //TODO: impostare vincolo lunghezza nome e gameid (anche lato server)
@@ -323,6 +325,20 @@ public class TUI implements View {
     public void Token(TokenEvent tokenEvent) {
         out.setLog(tokenEvent.getToken());
     }
+
+    @Override
+    public void showScore(ScoreboardEvent event) {
+        playerClient.setPlayerState(new FinishStateClient());
+        out.setScoreBoard(formatScoreboard(event.getScores()));
+        onGameUpdate();
+
+    }
+
+    @Override
+    public void background() {
+        inputReader.ChangeBackground();
+    }
+
 
     public String formatPBInfo(PBInfoEvent event) {
         StringBuilder sb = new StringBuilder();
@@ -824,6 +840,48 @@ public class TUI implements View {
             k++;
         }
         sb.append("\n");
+
+        return sb;
+    }
+
+    public StringBuilder formatScoreboard(HashMap<String,Integer> scoreboard){
+        StringBuilder sb = new StringBuilder();
+        final int PADDING = 125;
+        String pad = " ".repeat(PADDING);
+
+        List<Map.Entry<String, Integer>> sorted = scoreboard.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .toList();
+        sb.append(ASCII_ART.Title);
+        sb.append("                                                                                                                                                                                                                                                                                                              \n".repeat(20));
+
+        sb.append(pad).append("╔════╦═══════════════════════════╦═══════════════╗"+pad+"\n");
+        sb.append(pad).append("║ #  ║ Player                    ║ Score         ║"+pad+"\n");
+        sb.append(pad).append("╠════╬═══════════════════════════╬═══════════════╣"+pad+"\n");
+
+        int rank = 1;
+        for (Map.Entry<String, Integer> entry : sorted) {
+            String player = entry.getKey();
+            int score = entry.getValue();
+            String emoji = switch (rank) {
+                case 1 -> " 🥇";
+                case 2 -> " 🥈";
+                case 3 -> " 🥉";
+                default -> "";
+            };
+
+            String row = String.format("║ %-2d ║ %-25s ║ %-13d ║%s"+pad, rank, player, score, emoji);
+            sb.append(pad).append(row).append("\n");
+
+            rank++;
+        }
+
+        sb.append(pad).append("╚════╩═══════════════════════════╩═══════════════╝"+pad+"\n");
+        sb.append("                                                                                                                                                                                                                                                                                                              \n".repeat(20));
+
+        sb.append("\n".repeat(2));
+
 
         return sb;
     }

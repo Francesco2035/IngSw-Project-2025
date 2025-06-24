@@ -290,6 +290,10 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
     }
 
     @Override
+    public void updateLobby(LobbyEvent event) {
+    }
+
+    @Override
     public void quitPlayer(QuitCommand event) {
         synchronized (clients){
             clients.remove(event.getClient());

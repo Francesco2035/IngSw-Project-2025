@@ -349,6 +349,10 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             sendEvent(log);
         }
 
+        for (PlayerTileEvent playerTileEvent : otherPlayerTileEvents){
+            sendEvent(playerTileEvent);
+        }
+
         for (int i = 0; i < 10; i ++){
             for(int j = 0; j < 10; j ++){
                 sendEvent(eventMatrix[i][j]);
@@ -363,16 +367,8 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             sendEvent(hand);
         }
 
-        if (phase != null){
-            sendEvent(phase);
-        }
-
         if (lobby != null){
             sendEvent(lobby);
-        }
-
-        for (PlayerTileEvent playerTileEvent : otherPlayerTileEvents){
-            sendEvent(playerTileEvent);
         }
 
         for (GameBoardEvent gbEvent : board){
@@ -386,6 +382,9 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
             sendEvent(hourglassEvent);
         }
 
+        if (phase != null){
+            sendEvent(phase);
+        }
 
     }
 

@@ -9,6 +9,10 @@ import java.util.List;
 public class AcceptClient  extends PlayerStateClient{
 
 
+    public AcceptClient() {
+
+    }
+
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();

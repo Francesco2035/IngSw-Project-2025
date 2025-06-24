@@ -9,6 +9,10 @@ import java.util.List;
 
 public class AddCrewClient  extends PlayerStateClient{
 
+    public AddCrewClient() {
+
+    }
+
     @JsonProperty("type")
     private final String type = "AddCrew";
 

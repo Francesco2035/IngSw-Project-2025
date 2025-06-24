@@ -236,8 +236,6 @@ public class ModularHousingUnit extends HousingUnit {
             return 0;
         }
 
-
-
     }
 
     @Override
@@ -263,7 +261,6 @@ public class ModularHousingUnit extends HousingUnit {
         if ((purple && brownAlien) || (brown && purpleAlien) || (purple && purpleAlien) || (brown && brownAlien)){
             throw new InvalidInput("There is already an alien");
         }
-        System.out.println("supero throw");
         numHumans += humans;
         purpleAlien = purple;
         brownAlien = brown;

@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HandleDestructionClient  extends PlayerStateClient{
+
+    public HandleDestructionClient() {
+
+    }
+
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
@@ -26,9 +31,8 @@ public class HandleDestructionClient  extends PlayerStateClient{
         return new ArrayList<>(List.of("SelectChunk"));
     }
 
-    //Selectchunk x y coordinata di una tile nel chunk da tenere
 
     public void showGame(GuiOut out){
-        out.getRoot().giveTiles("SelectChunk", "Select one tile from the \nship chunk you want to keep!");
+        out.getRoot().giveTiles("SelectChunk", "Select one tile from the \nship chunk you want to keep!", true);
     }
 }

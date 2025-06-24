@@ -157,7 +157,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     }
 
-
+    //TODO: aggiungere background
     public void inputLoop(boolean fromConsole) throws IOException, InterruptedException {
         String cmd = "";
 
@@ -183,6 +183,10 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     else if(cmd.equals("Log")){
                         client.getView().seeLog();
                     }
+                    else if (cmd.equals("Bg")){
+                        client.getView().background();
+                        client.getView().refresh();
+                    }
                     else if (cmd.equals("Lobby")){
                         if (!client.getLobby()){
                             client.setLobby(true);
@@ -196,7 +200,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             }
                             else{
                                 System.out.println("No need to reconnect lobby!");
-
                             }
                         }
 
@@ -204,9 +207,34 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     else if (cmd.equals("Create")){
 
                          if (!client.getLogin()){
-                            client.setLogin(true);
-                            String playerId = client.getView().askInput("Insert player ID: ");
-                            String gameId = client.getView().askInput("Insert game ID: ");
+                            boolean aborted = false;
+                            String playerId = "";
+                            while (playerId.equals("") || playerId.length() > 20){
+                                playerId = client.getView().askInput("Insert player ID [max 20 characters || abort]: ");
+                                if (playerId.equals("abort")){
+                                    aborted = true;
+                                    break;
+                                }
+                            }
+                            if (aborted){
+                                client.getView().refresh();
+                                continue;
+                            }
+
+                            String gameId = "";
+                            while (gameId.equals("") || gameId.length() > 20){
+                                gameId = client.getView().askInput("Insert game ID [max 20 characters || abort]: ");
+                                if (gameId.equals("abort")){
+                                    aborted = true;
+                                    break;
+                                }
+                            }
+                             if (aborted){
+                                 client.getView().refresh();
+                                 continue;
+                             }
+
+
                             int level = Integer.parseInt(client.getView().askInput("Insert game level: "));
                             int maxPlayers = Integer.parseInt(client.getView().askInput("Insert number of players [1-4]: "));
                             if (maxPlayers < 1){
@@ -216,20 +244,15 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                 maxPlayers = 4;
                             }
 
-                            String fullCommand = "Login " + playerId + " " + gameId + " " + level;
-                            //System.out.println(fullCommand);
-//                            commandInterpreter.setPlayerId(playerId);
-//                            commandInterpreter.setGameId(gameId);
                             commandInterpreter = new CommandInterpreter(playerId, gameId);
                             commandInterpreter.setlv(level);
 
                             commandInterpreter.setClient(this);
+                            client.setLogin(true);
                             LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login", maxPlayers);
                             loginCommand.setClient(this);
 
-                            //System.out.println(loginCommand);
                             server.command(loginCommand);
-                            //System.out.println("Sent login command");
 
                         }
                         else{
@@ -239,19 +262,37 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     }
                     else if (cmd.equals("Join")) {
                         if (!client.getLogin()){
+                            boolean aborted = false;
+                            String playerId = "";
+                            while (playerId.equals("") || playerId.length() > 20){
+                                playerId = client.getView().askInput("Insert player ID [max 20 characters || abort]: ");
+                                if (playerId.equals("abort")){
+                                    aborted = true;
+                                    break;
+                                }
+                            }
+                            if (aborted){
+                                client.getView().refresh();
+                                continue;
+                            }
 
-                            String playerId = client.getView().askInput("Insert player ID: ");
-                            String gameId = client.getView().askInput("Insert game ID: ");
+                            String gameId = "";
+                            while (gameId.equals("") || gameId.length() > 20){
+                                gameId = client.getView().askInput("Insert game ID [max 20 characters || abort]: ");
+                                if (gameId.equals("abort")){
+                                    aborted = true;
+                                    break;
+                                }
+                            }
+                            if (aborted){
+                                client.getView().refresh();
+                                continue;
+                            }
                             if (client.containsGameId(gameId)) {
-//                                System.out.println("Invalid Game!");
-//                                break;
+
                                 client.setLogin(true);
                                 int level = client.getLevel(gameId);
 
-                                //String fullCommand = "Login " + playerId + " " + gameId + " " + level;
-                                //System.out.println(fullCommand);
-//                                commandInterpreter.setPlayerId(playerId);
-//                                commandInterpreter.setGameId(gameId);
                                 commandInterpreter = new CommandInterpreter(playerId, gameId);
                                 commandInterpreter.setlv(level);
 
@@ -261,7 +302,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                 System.out.println(loginCommand);
                                 server.command(loginCommand);
-                                //System.out.println("Sent login command");
                             }
                             else {
                                 System.out.println("Invalid game: "+gameId+"\n games:");

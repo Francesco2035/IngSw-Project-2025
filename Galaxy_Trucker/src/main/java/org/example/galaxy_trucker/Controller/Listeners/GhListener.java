@@ -6,5 +6,7 @@ import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
 public interface GhListener {
     public void sendEvent(LobbyEvent event);
 
+    public void updateLobby(LobbyEvent event);
+
     public void quitPlayer(QuitCommand event);
 }
