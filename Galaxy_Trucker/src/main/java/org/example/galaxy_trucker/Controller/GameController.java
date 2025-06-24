@@ -47,6 +47,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     private boolean concurrent = false;
     private int color = 153;
     int lv = 0;
+    int finished = 0;
     private int maxPlayer = 4;
     private final Object lock = new Object();
     private Thread prepThread;
@@ -182,7 +183,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 .count();
 
         if (readyCount == game.getPlayers().size()) {
-            System.out.println("change state successful");
+            System.out.println("change state successful, ready count "+ readyCount);
             synchronized (game) {
                 for (Player p : game.getPlayers().values()) {
                     String playerId = p.GetID();
@@ -266,11 +267,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 for (Player p : game.getPlayers().values()) {
                     p.SetReady(false);
                 }
-//
-//            if (!flightMode){
-//                stopAllPlayerThreads();
-//
-//            }
+
                 flightMode = true;
                 startFlightMode();
                 flightCount = 0;
@@ -321,8 +318,8 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 while (index < players.size() && !card.isFinished()) {
                     if (k >= 100000001){
                         System.out.println("CURRENT: "+currentPlayer.GetID()+ " "+currentPlayer.getPlayerState().getClass().getSimpleName());
-                        for( int j=0; j<players.size();j++){
-                            System.out.println("PLAYER: "+currentPlayer.GetID()+ " "+currentPlayer.getPlayerState().getClass().getSimpleName());
+                        for (Player p : game.getPlayers().values()) {
+                            System.out.println("PLAYER: "+p.GetID()+ " "+p.getPlayerState().getClass().getSimpleName()+ " "+ControllerMap.get(p.GetID()));
                         }
                         k = 0;
                     }
@@ -353,7 +350,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
                             ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
                             if (currentPlayer.GetHasActed()) {
-                                System.out.println("aggiorno index");
+                                //System.out.println("aggiorno index");
                                 index++;
                             }
 
@@ -376,9 +373,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
                                     ///  ready ce lomette la carta quando sa che il player deve smettere di dar input
 
-                                    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>index "+ index);
+                                    //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>index "+ index);
                                     if (currentPlayer.GetHasActed()) {
-                                        System.out.println("aggiornmo index");
+                                        //System.out.println("aggiornmo index");
                                         index++;
                                     }
                                 }
@@ -391,7 +388,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
 
                         } catch (Exception e) {
-                            System.out.println(e.getMessage()+ "cristo de dio");
+                            System.out.println("Exception: "+e.getMessage());
                             break;
                         }
                     }
@@ -405,7 +402,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
             System.out.println("USCITO DAL SECONDO WHILE");
             Controller ReadySetter;
-            System.out.println("players "+ game.getPlayers().size());
+            //System.out.println("players "+ game.getPlayers().size());
             for (Player p : game.getPlayers().values()) {
                 System.out.println("-------------------------------------------------FORCED");
                 System.out.println(p.GetID()+ " is in this state: "+ p.getPlayerState().getClass());
@@ -419,6 +416,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             }
             sendMessage(new LogEvent("Flight finished",-1,-1,-1,-1));
             flightMode = false;
+            for (Player p : game.getPlayers().values()) {
+                System.out.println("PLAYER: "+p.GetID()+ " "+p.getPlayerState().getClass().getSimpleName()+ " "+ControllerMap.get(p.GetID()));
+            }
         });
 
         flightThread.start();
@@ -434,8 +434,12 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
     }
 
     public void setGameOver(){
-        getGame().getGameBoard().finishGame();
         GameOver = true;
+        finished++;
+        if (finished == ControllerMap.size()){
+            getGame().getGameBoard().finishGame();
+        }
+
         //System.out.println("Game over the winner is: " + game.getGameBoard().getPlayers().getFirst().GetID());
     }
 
@@ -449,6 +453,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
     public void setFlightCount(int count) {
         flightCount += count;
+        System.out.println("FLIGHTCOUNT "+flightCount);
     }
 
     public void setBuildingCount(int count) {

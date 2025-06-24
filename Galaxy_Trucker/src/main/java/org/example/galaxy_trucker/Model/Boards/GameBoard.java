@@ -347,7 +347,6 @@ public class GameBoard {
         ArrayList<Player> PlayersCopy = new ArrayList<>();
         try{
             for (Player_IntegerPair player : players) {
-                System.out.println("GAMEBOARD: "+ player.getKey().GetID());
                 PlayersCopy.add(player.getKey());
             }
         }catch (Exception e){

@@ -32,6 +32,5 @@ public class FlightController extends Controller {
         CardsController newController = new CardsController(curPlayer, gameId, getDisconnected());
         newController.setExceptionListener(exceptionListener);
         gc.setControllerMap(curPlayer,newController);
-        gc.setFlightCount(1);
     }
 }

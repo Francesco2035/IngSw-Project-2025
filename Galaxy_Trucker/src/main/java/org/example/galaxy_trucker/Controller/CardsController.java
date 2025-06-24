@@ -13,9 +13,9 @@ public class CardsController extends Controller {
 
     @Override
     public void nextState(GameController gc) {
-        if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
-            this.setDisconnected(false);
-        }
+//        if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
+//            this.setDisconnected(false);
+//        }
         if (curPlayer.getCommonBoard().getCardStack().getFullAdventure().isEmpty()){
             gc.setGameOver();
         }
@@ -23,6 +23,7 @@ public class CardsController extends Controller {
         else{
             FlightController newController = new FlightController(curPlayer, gameId, gc, getDisconnected());
             newController.setExceptionListener(exceptionListener);
+            gc.setFlightCount(1);
             gc.setControllerMap(curPlayer,newController);
         }
     }
