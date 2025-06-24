@@ -1142,7 +1142,6 @@ public class GuiRoot implements View {
 
                 String level = levelBox.getValue();
 
-
                 if(level.equals("Tutorial")){
                     myGameLv = 1;
                 }
@@ -1155,12 +1154,31 @@ public class GuiRoot implements View {
                 myName = usernameField.getText();
                 myGameName = gameNameField.getText();
 
-                //create myname mygamename lv maxplayers
-                inputQueue.add("Create");
-                inputQueue.add(myName);
-                inputQueue.add(myGameName);
-                inputQueue.add(String.valueOf(myGameLv));
-                inputQueue.add(playerBox.getValue());
+                if(myName.length() > 20){
+                    Stage exceptionStage = new Stage();
+                    exceptionStage.setTitle("Exception");
+
+                    Label errorLabel = new Label("Name too long (max: 20 characters)");
+                    errorLabel.setStyle("-fx-font-size: 15px");
+
+                    Button okButton = goBackButtonMaker(exceptionStage);
+                    okButton.setText("Ok");
+
+                    VBox errorBox = new VBox(3, errorLabel, okButton);
+                    errorBox.setAlignment(Pos.CENTER);
+
+                    Scene errorScene = new Scene(errorBox, 300, 80);
+                    exceptionStage.setScene(errorScene);
+                    exceptionStage.initOwner(primaryStage);
+                    exceptionStage.initModality(Modality.WINDOW_MODAL);
+                    exceptionStage.show();
+                }else{
+                    inputQueue.add("Create");
+                    inputQueue.add(myName);
+                    inputQueue.add(myGameName);
+                    inputQueue.add(String.valueOf(myGameLv));
+                    inputQueue.add(playerBox.getValue());
+                }
             });
 
             HBox Buttons = new HBox(50, confirmButton, goBackButton);
@@ -1774,7 +1792,7 @@ public class GuiRoot implements View {
             });
 
             log.setMaxHeight(100);
-            HBox mainBox = new HBox(new VBox(25, cardBox, log, new HBox(15, phaseButtons, gameboard)), new VBox(100,stats, myBoard, textPanel), othersBox);
+            HBox mainBox = new HBox(new VBox(25, cardBox, log, new VBox(15, phaseButtons, gameboard)), new VBox(100,stats, myBoard, textPanel), othersBox);
             mainBox.setPadding(new Insets(15));
             mainBox.prefWidthProperty().bind(primaryStage.widthProperty());
             mainBox.prefHeightProperty().bind(primaryStage.heightProperty());
@@ -1982,7 +2000,7 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void showScore(ScoreboardEvent event) {
+    public void showScore(ScoreboardEvent event){
         int i = 1;
         VBox scoreboard = new VBox(25);
 
@@ -1990,10 +2008,11 @@ public class GuiRoot implements View {
             ImageView pos = new ImageView(new Image(getClass().getResourceAsStream("/GUI/ordinalTokens/"+ i +".png")));
             pos.setFitHeight(70);
             pos.setPreserveRatio(true);
-            Label name = new Label(s + "        " +  event.getScores().get(s));
-            name.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
+            Label name = new Label(s + "                " +  event.getScores().get(s));
+            name.setStyle("-fx-font-size: 27px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
 
             scoreboard.getChildren().add(new HBox(15, pos, name));
+            i++;
         }
 
         scoreboard.setAlignment(Pos.CENTER);
@@ -2086,14 +2105,35 @@ public class GuiRoot implements View {
                 myGameName = joining.getGameId();
                 myGameLv = joining.getLv();
 
-                InsertNameStage.close();
-                //Join myname mygamename
-                ///TODO: sistemare la join
-                inputQueue.add("Create");
-                inputQueue.add(myName);
-                inputQueue.add(myGameName);
-                inputQueue.add(String.valueOf(joining.getLv()));
-                inputQueue.add(String.valueOf(joining.getMaxPlayers()));
+                if(myName.length() > 20){
+                    Stage exceptionStage = new Stage();
+                    exceptionStage.setTitle("Exception");
+
+                    Label errorLabel = new Label("Name too long (max: 20 characters)");
+                    errorLabel.setStyle("-fx-font-size: 15px");
+
+                    Button okButton = goBackButtonMaker(exceptionStage);
+                    okButton.setText("Ok");
+
+                    VBox errorBox = new VBox(3, errorLabel, okButton);
+                    errorBox.setAlignment(Pos.CENTER);
+
+                    Scene errorScene = new Scene(errorBox, 300, 80);
+                    exceptionStage.setScene(errorScene);
+                    exceptionStage.initOwner(primaryStage);
+                    exceptionStage.initModality(Modality.WINDOW_MODAL);
+                    exceptionStage.show();
+                }
+                else{
+                    InsertNameStage.close();
+                    //Join myname mygamename
+                    ///TODO: sistemare la join
+                    inputQueue.add("Create");
+                    inputQueue.add(myName);
+                    inputQueue.add(myGameName);
+                    inputQueue.add(String.valueOf(joining.getLv()));
+                    inputQueue.add(String.valueOf(joining.getMaxPlayers()));
+                }
             });
         });
         return joinButton;
