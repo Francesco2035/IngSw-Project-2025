@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.Settings;
-import org.example.galaxy_trucker.Messages.Event;
-import org.example.galaxy_trucker.Messages.TokenEvent;
+import org.example.galaxy_trucker.Controller.Messages.Event;
+import org.example.galaxy_trucker.Controller.Messages.TokenEvent;
 
 import java.io.*;
 import java.net.Socket;

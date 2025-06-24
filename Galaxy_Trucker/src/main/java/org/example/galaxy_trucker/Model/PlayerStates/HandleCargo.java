@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.HandleCargoCommand;
-import org.example.galaxy_trucker.Messages.PhaseEvent;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddGoodAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetGoodAction;
 import org.example.galaxy_trucker.Model.Player;

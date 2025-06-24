@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 import org.example.galaxy_trucker.Controller.Listeners.ControllerHourGlassListener;
-import org.example.galaxy_trucker.Messages.HourglassEvent;
+import org.example.galaxy_trucker.Controller.Messages.HourglassEvent;
 
 import java.util.ArrayList;
 import java.util.Timer;

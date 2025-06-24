@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker.Model.PlayerStates.DefaultActions;
 
 import org.example.galaxy_trucker.Controller.CardsController;
-import org.example.galaxy_trucker.Messages.ConcurrentCardListener;
+import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.Meteorites;

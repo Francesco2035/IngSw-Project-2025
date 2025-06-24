@@ -1,12 +1,11 @@
 package org.example.galaxy_trucker.Controller;
 
-import org.example.galaxy_trucker.ClientServer.GamesHandler;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.ReadyCommand;
 import org.example.galaxy_trucker.Controller.Listeners.GameLobbyListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
-import org.example.galaxy_trucker.Messages.*;
-import org.example.galaxy_trucker.Messages.TileSets.LogEvent;
+import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;

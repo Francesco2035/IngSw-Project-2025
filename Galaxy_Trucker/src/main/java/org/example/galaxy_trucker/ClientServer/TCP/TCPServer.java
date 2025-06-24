@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker.ClientServer.TCP;
 
 import org.example.galaxy_trucker.ClientServer.Settings;
-import org.example.galaxy_trucker.ClientServer.GamesHandler;
+import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Controller.VirtualView;
 
 import java.io.IOException;

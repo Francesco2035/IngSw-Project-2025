@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.ClientServer.RMI;
 
-import org.example.galaxy_trucker.Messages.Event;
+import org.example.galaxy_trucker.Controller.Messages.Event;
 
 import java.io.IOException;
 import java.io.Serializable;

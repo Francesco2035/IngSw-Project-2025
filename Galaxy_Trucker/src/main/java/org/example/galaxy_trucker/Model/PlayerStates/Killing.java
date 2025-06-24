@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
 import org.example.galaxy_trucker.Commands.KillCommand;
-import org.example.galaxy_trucker.Messages.PhaseEvent;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Commands.Command;

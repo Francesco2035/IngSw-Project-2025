@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Controller.Listeners.*;
-import org.example.galaxy_trucker.Messages.*;
-import org.example.galaxy_trucker.Messages.PlayerBoardEvents.PlayerTileEvent;
-import org.example.galaxy_trucker.Messages.PlayerBoardEvents.RewardsEvent;
-import org.example.galaxy_trucker.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Messages.TileSets.*;
+import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Connectors.NONE;
 

@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
 import org.example.galaxy_trucker.Commands.DefendFromLargeCommand;
-import org.example.galaxy_trucker.Messages.PhaseEvent;
+import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Model.Player;

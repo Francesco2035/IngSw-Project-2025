@@ -1,7 +1,6 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.ClientServer.Client;
-import org.example.galaxy_trucker.ClientServer.GamesHandler;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
 import org.example.galaxy_trucker.Commands.AddCrewCommand;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;

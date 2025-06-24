@@ -1,13 +1,12 @@
 package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.ClientServer.Client;
-import org.example.galaxy_trucker.ClientServer.GamesHandler;
 import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
-import org.example.galaxy_trucker.Messages.*;
-import org.example.galaxy_trucker.Messages.PlayerBoardEvents.PlayerTileEvent;
-import org.example.galaxy_trucker.Messages.PlayerBoardEvents.RewardsEvent;
-import org.example.galaxy_trucker.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Messages.TileSets.*;
+import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
+import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Connectors.NONE;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;

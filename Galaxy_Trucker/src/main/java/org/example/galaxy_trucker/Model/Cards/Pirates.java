@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 //import org.example.galaxy_trucker.Model.InputHandlers.Accept;
-import org.example.galaxy_trucker.Messages.TileSets.LogEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleBoardChangeException;
 import org.example.galaxy_trucker.Exceptions.InvalidDefenceEceptiopn;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
