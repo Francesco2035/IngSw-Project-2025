@@ -276,7 +276,7 @@ public class GuiRoot implements View {
                         }
                     }
                     else if(selectingChunk){
-                        inputQueue.add("SelectChunk "+event.getX() + event.getY());
+                        inputQueue.add("SelectChunk "+event.getX() + " "+ event.getY());
                     }
                 });
 
@@ -310,7 +310,7 @@ public class GuiRoot implements View {
 //                                }
                             }
                             else if(selectingChunk){
-                                inputQueue.add("SelectChunk "+event.getX() + event.getY());
+                                inputQueue.add("SelectChunk "+event.getX() + " "+ event.getY());
                             }
                         });
                         humans.getChildren().add(crew);
@@ -339,7 +339,7 @@ public class GuiRoot implements View {
                         }
                     }
                     else if(selectingChunk){
-                        inputQueue.add("SelectChunk "+event.getX() + event.getY());
+                        inputQueue.add("SelectChunk "+event.getX() + " "+ event.getY());
                     }
                     else {
                         Platform.runLater(() -> {
@@ -447,7 +447,7 @@ public class GuiRoot implements View {
 //                                }
                         }
                         else if(selectingChunk){
-                            inputQueue.add("SelectChunk "+event.getX() + event.getY());
+                            inputQueue.add("SelectChunk "+event.getX() + " "+ event.getY());
                         }
                     });
                     batteries.getChildren().add(battery);
@@ -2278,7 +2278,6 @@ public class GuiRoot implements View {
     }
 
     private void setColors(String pl, int id){
-
         Platform.runLater(()->{
             ImageView img = new ImageView();
             img.setFitHeight(40);
