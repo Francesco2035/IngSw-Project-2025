@@ -22,7 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
@@ -83,6 +82,7 @@ public class GuiRoot implements View {
     private VBox hourglassBox;
     private ImageView buffer1, buffer2;
     private Stage gameBoardStage;
+    private VBox others;
 
     private Image cardBack;
     private HashMap<String, ImageView>playerRockets;
@@ -100,6 +100,7 @@ public class GuiRoot implements View {
     private IntegerPair shotCoords;
 
     private boolean killing;
+    private boolean selectingChunk;
     private HBox phaseButtons;
     private ArrayList<IntegerPair> cmdCoords;
     private boolean tilesClickable;
@@ -271,6 +272,9 @@ public class GuiRoot implements View {
                             selectedImages.add(crewImg);
                         }
                     }
+                    else if(selectingChunk){
+                        inputQueue.add("SelectChunk "+event.getX() + event.getY());
+                    }
                 });
 
                 if (event.isBrownAlien()) {
@@ -302,6 +306,9 @@ public class GuiRoot implements View {
 //                                    crew.setOpacity(1);
 //                                }
                             }
+                            else if(selectingChunk){
+                                inputQueue.add("SelectChunk "+event.getX() + event.getY());
+                            }
                         });
                         humans.getChildren().add(crew);
 
@@ -327,7 +334,11 @@ public class GuiRoot implements View {
                         if (rewardsLeft == 0) {
                             handleCargo();
                         }
-                    } else {
+                    }
+                    else if(selectingChunk){
+                        inputQueue.add("SelectChunk "+event.getX() + event.getY());
+                    }
+                    else {
                         Platform.runLater(() -> {
                             Stage cargoStage = new Stage();
                             if(event.getCargo().size() > 0)
@@ -432,6 +443,9 @@ public class GuiRoot implements View {
 //                                    crew.setOpacity(1);
 //                                }
                         }
+                        else if(selectingChunk){
+                            inputQueue.add("SelectChunk "+event.getX() + event.getY());
+                        }
                     });
                     batteries.getChildren().add(battery);
 
@@ -535,9 +549,14 @@ public class GuiRoot implements View {
 
     @Override
     public void updateOthersPB(PlayerTileEvent event){
-        if(!othersBoards.containsKey(event.getPlayerName()))
-            othersBoards.put(event.getPlayerName(), new GridPane());
 
+        if(!othersBoards.containsKey(event.getPlayerName())) {
+            othersBoards.put(event.getPlayerName(), new GridPane());
+            Label name = new Label(event.getPlayerName());
+            name.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
+            others.getChildren().add(new VBox(name, othersBoards.get(event.getPlayerName())));
+            System.out.println("MERDA DI VACCA FUMANTE");
+        }
         ImageView tile = new ImageView();
         tile.setFitWidth(40);
         tile.setPreserveRatio(true);
@@ -1266,16 +1285,20 @@ public class GuiRoot implements View {
             else readyButton.setText("Ready!");
 
             readyButton.setOnAction(e -> {
-                readyButton.disableProperty();
+//                readyButton.setDisable(true);
                 inputQueue.add("Ready");
             });
 
             debugShip1.setOnAction(e -> {
                 inputQueue.add("DebugShip 0");
+                debugShip1.setDisable(true);
+                debugShip2.setDisable(true);
             });
 
             debugShip2.setOnAction(e -> {
                 inputQueue.add("DebugShip 1");
+                debugShip1.setDisable(true);
+                debugShip2.setDisable(true);
             });
 
             quitButton.setOnAction(e -> {
@@ -1425,78 +1448,6 @@ public class GuiRoot implements View {
     }
 
 
-    private void rewardsScreen(){
-
-        ImageView rewardsBg = new ImageView(new Image(getClass().getResourceAsStream("/GUI/box_ship_slots_left.png")));
-        rewardsBg.setFitHeight(70);
-        rewardsBg.setPreserveRatio(true);
-        rewardsBg.setRotate(90);
-        VBox rewardsBox = new VBox(20);
-        rewardsBox.setPadding(new Insets(20));
-
-        Button discard = new Button("Discard");
-        discard.setOnAction(e -> {
-//            inputQueue.add("DiscardCargo " + );
-        });
-
-        int i = 0;
-
-        for(Goods g : rewards){
-            ImageView box = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargo/cargo"+ g.getValue() +".png")));
-            box.setFitHeight(50);
-            box.setPreserveRatio(true);
-            int finalI = i;
-            box.setOnMouseClicked(e ->{
-                curCargoIndex = finalI;
-                box.setOpacity(0.5);
-            });
-            rewardsBox.getChildren().add(box);
-            i++;
-        }
-
-        Pane boxes  = new Pane(rewardsBox);
-        StackPane stack = new StackPane(rewardsBg, boxes);
-
-        Platform.runLater(() ->{
-            phaseButtons.getChildren().setAll(stack, discard);
-        });
-
-
-        AtomicInteger x = new AtomicInteger();
-        AtomicInteger y = new AtomicInteger();
-        ArrayList<Node> childrenCopy = new ArrayList<>(myBoard.getChildren());
-        boolean clickable;
-
-        for(Node node : childrenCopy){
-            clickable = true;
-
-            x.set(GridPane.getRowIndex(node));
-            y.set(GridPane.getColumnIndex(node));
-
-            int X = x.get();
-            int Y = y.get();
-
-            for(IntegerPair p : excludedTiles){
-                if(X == p.getFirst() && Y == p.getSecond()){
-                    clickable = false;
-                }
-            }
-
-            if(clickable){
-                ImageView tile = (ImageView) node;
-
-                tile.setOnMouseClicked(e->{
-                    inputQueue.add("GetReward " +  X + " " + Y + " " + curCargoIndex);
-                    rewardsLeft--;
-                    if(rewardsLeft == 0)
-                        handleCargo();
-                });
-
-            }
-
-        }
-    }
-
     @Override
     public void rewardsChanged(RewardsEvent event){
         curCargoImg.setImage(null);
@@ -1506,7 +1457,9 @@ public class GuiRoot implements View {
         handleCargo();
     }
 
+
     public void buildingScene(){
+        System.out.println("CACCAPUPU");
         Label GameNameLabel = new Label("Game: " + myGameName);
 
         GameNameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
@@ -1529,7 +1482,7 @@ public class GuiRoot implements View {
 
         ImageView clockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow clockwise.png")));
         clockwiseArrow.setPreserveRatio(true);
-        clockwiseArrow.setFitHeight(100);
+        clockwiseArrow.setFitHeight(70);
         clockwiseArrow.setFitWidth(50);
         clockwiseArrow.setSmooth(false);
         clockwiseArrow.setOnMouseClicked(event -> {
@@ -1542,7 +1495,7 @@ public class GuiRoot implements View {
 
         ImageView counterclockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow counterclockwise.png")));
         counterclockwiseArrow.setPreserveRatio(true);
-        counterclockwiseArrow.setFitHeight(100);
+        counterclockwiseArrow.setFitHeight(70);
         counterclockwiseArrow.setFitWidth(50);
         counterclockwiseArrow.setSmooth(false);
         counterclockwiseArrow.setOnMouseClicked(event -> {
@@ -1672,10 +1625,10 @@ public class GuiRoot implements View {
             finishButton.setOnAction(e -> {inputQueue.add("FinishBuilding");});
 
 
-        VBox others = new VBox(20);
-        for(String PlayerName : othersBoards.keySet()){
-            others.getChildren().add(new HBox(5, new Label(PlayerName), othersBoards.get(PlayerName)));
-        }
+//        VBox others = new VBox(20);
+//        for(String PlayerName : othersBoards.keySet()){
+//            others.getChildren().add(new HBox(5, new Label(PlayerName), othersBoards.get(PlayerName)));
+//        }
 
         HBox tileBox =  new HBox(5, counterclockwiseArrow, tileImage, clockwiseArrow);
         VBox Buttons = new VBox(15, pickTile, board, discardTile, finishButton);
@@ -1695,9 +1648,9 @@ public class GuiRoot implements View {
         Platform.runLater(() ->{
             HBox mainBox;
             if(myGameLv == 2)
-                mainBox = new HBox(10, uncoveredBox, new VBox(10, cards, myBoard, buildKit), others);
+                mainBox = new HBox( uncoveredBox, new VBox(10, cards, myBoard, buildKit), others);
             else
-                mainBox = new HBox(10, uncoveredBox, new VBox(10, myBoard, buildKit), others);
+                mainBox = new HBox( uncoveredBox, new VBox(10, myBoard, buildKit), others);
 
             mainBox.setPadding(new Insets(50));
 
@@ -2014,13 +1967,41 @@ public class GuiRoot implements View {
     public void seeLog(){
     }
 
+
     @Override
-    public void showOutcome(FinishGameEvent event) {
+    public void showOutcome(FinishGameEvent event){
         Platform.runLater(()->{
             prompt.setText(event.message());
         });
     }
 
+    @Override
+    public void showScore(ScoreboardEvent event) {
+        int i = 1;
+        VBox scoreboard = new VBox(25);
+
+        for(String s : event.getScores().keySet()){
+            ImageView pos = new ImageView(new Image(getClass().getResourceAsStream("/GUI/ordinalTokens/"+ i +".png")));
+            pos.setFitHeight(70);
+            pos.setPreserveRatio(true);
+            Label name = new Label(s + "        " +  event.getScores().get(s));
+            name.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
+
+            scoreboard.getChildren().add(new HBox(15, pos, name));
+        }
+
+        scoreboard.setAlignment(Pos.CENTER);
+        scoreboard.prefWidthProperty().bind(primaryStage.widthProperty());
+        scoreboard.prefHeightProperty().bind(primaryStage.heightProperty());
+
+        Platform.runLater(()->{
+
+            contentRoot.getChildren().setAll(scoreboard);
+            primaryStage.setTitle("Final Scoreboard");
+            primaryStage.setScene(primaryScene);
+            primaryStage.show();
+        });
+    }
 
 
     @Override
@@ -2058,10 +2039,7 @@ public class GuiRoot implements View {
         });
     }
 
-    @Override
-    public void showScore(ScoreboardEvent event) {
 
-    }
 
 
     private @NotNull Button joinButtonMaker(LobbyEvent joining) {
@@ -2153,6 +2131,7 @@ public class GuiRoot implements View {
             curCard.setImage(null);
             curCardImg = null;
             killing = false;
+            selectingChunk = false;
             phaseButtons = new HBox(20);
             cmdCoords = new ArrayList<>();
             tilesClickable = false;
@@ -2167,6 +2146,7 @@ public class GuiRoot implements View {
             batteryClickable = false;
             selectedImages = new ArrayList<>();
             shotCoords = null;
+            others = new VBox();
 
             readyPlayers = new ListView<>();
             log = new ListView<>();
@@ -2359,10 +2339,11 @@ public class GuiRoot implements View {
             tilesClickable = false;
             killing = false;
             theft = false;
+            selectingChunk = false;
 
             ready.setOnAction(e -> {
                 inputQueue.add("Ready");
-                ready.disableProperty();
+//                ready.setDisable(true);
             });
 
             quit.setOnAction(e -> {
@@ -2470,7 +2451,7 @@ public class GuiRoot implements View {
         });
     }
 
-    public void giveTiles(String command, String txt){
+    public void giveTiles(String command, String txt, boolean chunk){
         AtomicReference<String> cmd = new AtomicReference<>(command);
         Button done = new Button("Done!");
         Button doNothing = new Button("Do Nothing");
@@ -2478,6 +2459,7 @@ public class GuiRoot implements View {
         Platform.runLater(()->{
             curCard.setImage(curCardImg);
             tilesClickable = true;
+            selectingChunk = chunk;
             prompt.setText(txt);
             phaseButtons.getChildren().setAll(done, doNothing);
 
@@ -2556,8 +2538,6 @@ public class GuiRoot implements View {
             });
             primaryStage.show();
         });
-
-
     }
 
     public void acceptState(){
@@ -2567,7 +2547,7 @@ public class GuiRoot implements View {
 
         Platform.runLater(()->{
             curCard.setImage(curCardImg);
-            prompt.setText("Do you want to visit it?");
+            prompt.setText("Accept or decline?");
             phaseButtons.getChildren().setAll(accept, decline);
 
             accept.setOnAction(e ->{
@@ -2697,7 +2677,10 @@ public class GuiRoot implements View {
             tilesClickable = false;
             killing = false;
             theft = false;
+            selectingChunk = false;
             primaryStage.show();
         });
     }
+
+
 }

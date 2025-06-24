@@ -32,6 +32,6 @@ public class GiveSpeedClient  extends PlayerStateClient{
     }
 
     public void showGame(GuiOut out){
-        out.getRoot().giveTiles("GiveSpeed", "Select the engines you want to activate!");
+        out.getRoot().giveTiles("GiveSpeed", "Select the engines you want to activate!", false);
     }
 }
