@@ -181,15 +181,21 @@ public class GuiRoot implements View {
 
     @Override
     public String askInput(String message) {
-        String toSend = inputQueue.poll();
-        //System.out.println("ask input: " + toSend);
-        if (toSend != null) {
+        try {
+            String toSend = inputQueue.take();
+            //System.out.println("to send: " + toSend);
             return toSend;
-
-        }
-        else {
+        } catch (InterruptedException e) {
+            //Thread.currentThread().interrupt();
             return "";
         }
+    }
+
+    @Override
+    public void reconnect(ReconnectedEvent event) {
+        myName = event.getPlayerId();
+        myGameName = event.getGameId();
+        myGameLv = event.getLv();
     }
 
     @Override
@@ -1021,21 +1027,35 @@ public class GuiRoot implements View {
 
     @Override
     public void showLobby(LobbyEvent event){
+        int index = -1;
         //mi arriva il lobby event ogni volta che qualcuno crea/si aggiunge ad un game
 
         Label titleLabel = new Label("GALAXY TRUCKERS");
         titleLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
+        for(LobbyEvent e : lobbyEvents){
+            if(e.getGameId().equals(event.getGameId())) {
+                index = lobbyEvents.indexOf(e);
+//                lobbyEvents.remove(e);
+            }
+        }
 
-        if(event.getLv() > 0)
+        if(index >= 0)
+            lobbyEvents.remove(index);
+
+
+        if(event.getLv() > 0){
             lobbyEvents.add(event);
+        }
+        else
+            lobbyEvents.remove(event);
+
 
         ListView<LobbyEvent> gamesList = new ListView<>();
         gamesList.setPrefHeight(150);
         gamesList.setPlaceholder(new Label("No existing games"));
 
-        for(LobbyEvent e : lobbyEvents)
-            gamesList.getItems().add(e);
+        gamesList.getItems().setAll(lobbyEvents);
 
         gamesList.setCellFactory(p -> new ListCell<>() {
             @Override
@@ -1057,7 +1077,6 @@ public class GuiRoot implements View {
                         setText(null);
                         setGraphic(null);
                     }
-
                 }
         });
 
@@ -1247,9 +1266,8 @@ public class GuiRoot implements View {
             else readyButton.setText("Ready!");
 
             readyButton.setOnAction(e -> {
-                if (amIReady)
-                    inputQueue.add("Ready false");
-                else inputQueue.add("Ready true");
+//                readyButton.setDisable(true);
+                inputQueue.add("Ready");
             });
 
             debugShip1.setOnAction(e -> {
@@ -2003,12 +2021,7 @@ public class GuiRoot implements View {
         });
     }
 
-    @Override
-    public void reconnect(ReconnectedEvent event) {
-        myName = event.getPlayerId();
-        myGameName = event.getGameId();
-        myGameLv = event.getLv();
-    }
+
 
     @Override
     public void Token(TokenEvent tokenEvent){
@@ -2177,6 +2190,7 @@ public class GuiRoot implements View {
             startButton.setOnAction(e -> {
                 inputQueue.add("Lobby");
                 playerClient.setPlayerState(new LobbyClient());
+                System.out.println("schiaccio bottone lobby");
             });
         });
     }
@@ -2342,7 +2356,8 @@ public class GuiRoot implements View {
             theft = false;
 
             ready.setOnAction(e -> {
-                inputQueue.add("Ready True");
+                inputQueue.add("Ready");
+//                ready.setDisable(true);
             });
 
             quit.setOnAction(e -> {
@@ -2562,7 +2577,7 @@ public class GuiRoot implements View {
 
     }
 
-    public void handleCargo() {
+    public void handleCargo(){
         Platform.runLater(() -> {
             curCard.setImage(curCardImg);
             handlingCargo = true;
@@ -2585,7 +2600,7 @@ public class GuiRoot implements View {
             rewardsBox.setPadding(new Insets(20));
 
 
-            if (rewardsLeft > 0) {
+            if (rewardsLeft > 0){
                 int i = 0;
 
                 for (Goods g : rewards) {
@@ -2617,7 +2632,7 @@ public class GuiRoot implements View {
                     int Y = y.get();
 
                     for (IntegerPair p : excludedTiles) {
-                        if (X == p.getFirst() && Y == p.getSecond()) {
+                        if (X == p.getFirst() && Y == p.getSecond()){
                             clickable = false;
                         }
                     }
@@ -2631,7 +2646,6 @@ public class GuiRoot implements View {
                             if (rewardsLeft == 0)
                                 handleCargo();
                         });
-
                     }
                 }
             }
@@ -2640,7 +2654,7 @@ public class GuiRoot implements View {
             phaseButtons.getChildren().setAll(new VBox(10, new HBox (10, cargo, unselect, discard, finish), rewardsBox));
 
 
-            finish.setOnAction(e -> {
+            finish.setOnAction(e ->{
                 inputQueue.add("FinishCargo");
                 handlingCargo = false;
             });

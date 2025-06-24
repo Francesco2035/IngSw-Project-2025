@@ -121,9 +121,9 @@ public class GamesHandler implements LobbyListener {
                 check = gameControllerMap.get(gameID).check(command);
 
             }
-
             if (!check.equals("")){
                 virtualView.sendEvent(new ConnectionRefusedEvent(check));
+                throw new InvalidInput(check);
             }
 
             else {
@@ -140,7 +140,9 @@ public class GamesHandler implements LobbyListener {
 
                 if (gameControllerMap.containsKey(gameID)) {
                     System.out.println("Game exists: " + gameID);
-                        gameControllerMap.get(gameID).NewPlayer(temp, virtualView, virtualView.getToken());
+                    gameControllerMap.get(gameID).NewPlayer(temp, virtualView, virtualView.getToken());
+                    System.out.println("Pending?: ");
+                    rmi.addPending(virtualView.getToken());
                 } else {
                     System.out.println("Game doesn't exist: " + gameID);
                     Game curGame = new Game(lvl, gameID);
@@ -153,7 +155,6 @@ public class GamesHandler implements LobbyListener {
                     }
                     System.out.println("Pending?: ");
                     rmi.addPending(virtualView.getToken());
-
                 }
 
             }
@@ -180,17 +181,13 @@ public class GamesHandler implements LobbyListener {
 
         synchronized (gameControllerMap) {
             gameControllerMap.get(game).stopPlayer(token);
-//            if (gameControllerMap.get(tokenToGame.get(token)).getNumPlayer() == 0) {
-//                removeGame(tokenToGame.get(token));
-//            }
+
         }
 
     }
 
     public void PlayerReconnected(String token) {
         String game;
-
-
         synchronized (tokenToGame) {
             game = tokenToGame.get(token);
         }

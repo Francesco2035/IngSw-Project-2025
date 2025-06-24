@@ -220,7 +220,7 @@ public class TCPClient{
 
 
     public void clientLoop() {
-        String userInput;
+        String userInput = "";
         String jsonLogin;
         ObjectMapper mapper = new ObjectMapper();
 
@@ -312,6 +312,7 @@ public class TCPClient{
                         out.println(jsonLogin);
                     }
                 }
+
                 else if (userInput.equals("Join")) {
 
                     if(!client.getLogin()) {

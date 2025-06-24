@@ -314,10 +314,16 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
             int index = 0;
 
             while (!card.isFinished()) {
-
+            System.out.println(players.size());
                 index = 0;
+                int k = 0;
                 Player currentPlayer = players.get(index);
                 while (index < players.size() && !card.isFinished()) {
+                    if (k >= 501){
+                        System.out.println("CURRENT: "+currentPlayer.GetID()+ " "+currentPlayer.getPlayerState().getClass().getSimpleName());
+                        k = 0;
+                    }
+                    k++;
                     for( int j=0; j<players.size();j++){
                         if(!players.get(j).GetHasActed()){
                             currentPlayer = players.get(j);
@@ -389,12 +395,12 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 }
 
 
-                //System.out.println("PRIMO WHILE FINITO");
+                System.out.println("PRIMO WHILE FINITO");
 
 
             }
 
-            //System.out.println("USCITO DAL SECONDO WHILE");
+            System.out.println("USCITO DAL SECONDO WHILE");
             Controller ReadySetter;
             System.out.println("players "+ game.getPlayers().size());
             for (Player p : game.getPlayers().values()) {
@@ -551,6 +557,9 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
 
     public String check(Command command) {
+        if(isStarted()){
+            return "Game already stated!";
+        }
         if (command.getLv() != lv){
             return "Game level doesn't match!";
         }

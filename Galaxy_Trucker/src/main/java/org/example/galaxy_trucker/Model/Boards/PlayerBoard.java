@@ -890,6 +890,7 @@ public class PlayerBoard {
 
 
     public int getNumHumans() {
+
         return numHumans;
     }
 
@@ -1132,7 +1133,7 @@ public class PlayerBoard {
                 crew++;
             }
 //            int engine = 0;
-            PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,crew, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien, this.totalValue);
+            PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,crew, getEnginePower(), getPlasmaDrillsPower(), this.Energy, this.purpleAlien, this.brownAlien, this.totalValue);
             listener.PBInfoChanged(event);
         }
 

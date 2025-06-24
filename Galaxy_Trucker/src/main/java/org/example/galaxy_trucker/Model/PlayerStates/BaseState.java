@@ -13,6 +13,9 @@ import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
 public class BaseState extends PlayerState {
 
 
+    public BaseState(){
+
+    }
 
     @Override
     public boolean allows(LoginCommand command){

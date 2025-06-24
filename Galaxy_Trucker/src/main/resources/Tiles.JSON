@@ -89,7 +89,7 @@
   { "id": 88, "component":  {"componentType": "hotWaterHeater" , "type":2}, "connectors": [{"type":"NONE"}, {"type":"SINGLE"}, {"type":"NONE"}, {"type":"ENGINE"}] },
   { "id": 89, "component":  {"componentType": "hotWaterHeater" , "type":2}, "connectors": [{"type":"NONE"}, {"type":"SINGLE"}, {"type":"DOUBLE"}, {"type":"ENGINE"}] },
   { "id": 90, "component":  {"componentType": "hotWaterHeater" , "type":2}, "connectors": [{"type":"NONE"}, {"type":"DOUBLE"}, {"type":"NONE"}, {"type":"ENGINE"}] },
-  { "id": 91, "component":  {"componentType": "hotWaterHeater" , "type":2}, "connectors": [{"type":"NONE"}, {"type":"DOUBLE"}, {"type":"SINGLE"}, {"type":"ENGINE"}] },
+  { "id": 91, "component":  {"componentType": "hotWaterHeater" , "type":2}, "connectors": [{"type":"NONE"}, {"type":"UNIVERSAL"}, {"type":"SINGLE"}, {"type":"ENGINE"}] },
   { "id": 92, "component":  {"componentType": "hotWaterHeater" , "type":2}, "connectors": [{"type":"SINGLE"}, {"type":"SINGLE"}, {"type":"SINGLE"}, {"type":"ENGINE"}] },
   { "id": 93, "component":  {"componentType": "hotWaterHeater" , "type":2}, "connectors": [{"type":"DOUBLE"}, {"type":"DOUBLE"}, {"type":"DOUBLE"}, {"type":"ENGINE"}] },
   { "id": 94, "component":  {"componentType": "hotWaterHeater" , "type":2}, "connectors": [{"type":"DOUBLE"}, {"type":"UNIVERSAL"}, {"type":"NONE"}, {"type":"ENGINE"}] },

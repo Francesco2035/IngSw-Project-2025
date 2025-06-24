@@ -354,6 +354,11 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 sendEvent(eventMatrix[i][j]);
             }
         }
+
+        if (pbInfoEvent != null){
+            sendEvent(pbInfoEvent);
+        }
+
         if(hand != null) {
             sendEvent(hand);
         }
@@ -361,12 +366,15 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         if (phase != null){
             sendEvent(phase);
         }
+
         if (lobby != null){
             sendEvent(lobby);
         }
+
         for (PlayerTileEvent playerTileEvent : otherPlayerTileEvents){
             sendEvent(playerTileEvent);
         }
+
         for (GameBoardEvent gbEvent : board){
             sendEvent(gbEvent);
         }
@@ -445,7 +453,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
                 try{
                     ObjectMapper objectMapper = new ObjectMapper();
                     out.println(objectMapper.writeValueAsString(event));
-                    System.out.println("Send: "+objectMapper.writeValueAsString(event));
+                    //System.out.println("Send: "+objectMapper.writeValueAsString(event));
                 }
                 catch (JsonProcessingException e){
                     e.printStackTrace();
@@ -505,7 +513,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     @Override
     public void receivePBupdate(PlayerTileEvent event){
-        System.out.println("adding player tile event "+ event.getPlayerName()+ " "+ event.getId());
+        //System.out.println("adding player tile event "+ event.getPlayerName()+ " "+ event.getId());
         otherPlayerTileEvents.add(event);
         sendEvent(event);
     }

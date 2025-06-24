@@ -12,8 +12,10 @@ import org.example.galaxy_trucker.Controller.GameController;
 import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Controller.Listeners.GhListener;
 import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
+import org.example.galaxy_trucker.Controller.Messages.ConnectionRefusedEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
 import org.example.galaxy_trucker.Controller.VirtualView;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +38,7 @@ public class MultiClientHandler implements Runnable, GhListener {
     private String Token;
     private HashMap<String, LobbyEvent> lobbyEvents = new HashMap<>();
     TCPServer TCP ;
+    private boolean connected = false;
 
     private long lastPingTime;
 
@@ -51,6 +54,7 @@ public class MultiClientHandler implements Runnable, GhListener {
 
     @Override
     public void run() {
+        connected = true;
         System.out.println("MultiClientHandler started");
         clientLoop();
     }
@@ -92,10 +96,9 @@ public class MultiClientHandler implements Runnable, GhListener {
                                     for (LobbyEvent event : lobbyEvents.values()) {
                                         ObjectMapper objectMapper1 = new ObjectMapper();
                                         try {
-                                            System.out.println("BROOO " + event + " "+ event.getGameId());
                                             finalOut.println(objectMapper1.writeValueAsString(event));
                                         } catch (JsonProcessingException e) {
-                                            e.printStackTrace();
+                                            System.out.println("Error serializing event: " + e.getMessage());
                                         }
                                     }
                                 }
@@ -115,8 +118,20 @@ public class MultiClientHandler implements Runnable, GhListener {
                                 vv.setToken(shortToken);
                                 tokenMap.put(shortToken, vv);
                             }
-                            gameHandler.enqueuePlayerInit(command, vv);
-                            out.println("Token: " + shortToken);
+                            try{
+                                gameHandler.initPlayer(command,vv);
+                                out.println("Token: " + shortToken);
+
+                            }catch (InvalidInput e){
+                                ConnectionRefusedEvent event = new ConnectionRefusedEvent(e.getMessage());
+                                ObjectMapper objectMapper1 = new ObjectMapper();
+                                out.println(objectMapper1.writeValueAsString(event));
+                                synchronized (tokenMap){
+                                    tokenMap.remove(shortToken);
+                                }
+
+                            }
+                            //gameHandler.enqueuePlayerInit(command, vv);
                         }
 
 
@@ -136,8 +151,11 @@ public class MultiClientHandler implements Runnable, GhListener {
                                 }
                                 gameHandler.PlayerReconnected(Token);
                             } else {
+                                ConnectionRefusedEvent event = new ConnectionRefusedEvent("Reconnection failed, token not valid");
+                                ObjectMapper objectMapper1 = new ObjectMapper();
+                                out.println(objectMapper1.writeValueAsString(event));
                                 System.out.println("Illegal token");
-                                attempts = -1;
+                                attempts = -1; //non capisco cosa faccia
                             }
                         } else {
                             gameHandler.receive(command);
@@ -148,16 +166,17 @@ public class MultiClientHandler implements Runnable, GhListener {
                     attempts--;
                     System.out.println("Socket timed out, attempts: " + attempts);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println("IO exception: " + e.getMessage());
                     break;
                 }
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         } finally {
             try {
                 if (Token != null) {
+                    connected = false;
                     synchronized (tokenMap) {
                         VirtualView vv = tokenMap.get(Token);
                         if (vv != null) {
@@ -188,12 +207,14 @@ public class MultiClientHandler implements Runnable, GhListener {
         lobbyEvents.remove(event.getGameId());
         lobbyEvents.put(event.getGameId(), event);
         try{
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            ObjectMapper objectMapper = new ObjectMapper();
-            out.println(objectMapper.writeValueAsString(event));
+            if (connected){
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                ObjectMapper objectMapper = new ObjectMapper();
+                out.println(objectMapper.writeValueAsString(event));
+            }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error sending log Event: " + e.getMessage());
         }
 
     }
