@@ -1434,78 +1434,6 @@ public class GuiRoot implements View {
     }
 
 
-    private void rewardsScreen(){
-
-        ImageView rewardsBg = new ImageView(new Image(getClass().getResourceAsStream("/GUI/box_ship_slots_left.png")));
-        rewardsBg.setFitHeight(70);
-        rewardsBg.setPreserveRatio(true);
-        rewardsBg.setRotate(90);
-        VBox rewardsBox = new VBox(20);
-        rewardsBox.setPadding(new Insets(20));
-
-        Button discard = new Button("Discard");
-        discard.setOnAction(e -> {
-//            inputQueue.add("DiscardCargo " + );
-        });
-
-        int i = 0;
-
-        for(Goods g : rewards){
-            ImageView box = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargo/cargo"+ g.getValue() +".png")));
-            box.setFitHeight(50);
-            box.setPreserveRatio(true);
-            int finalI = i;
-            box.setOnMouseClicked(e ->{
-                curCargoIndex = finalI;
-                box.setOpacity(0.5);
-            });
-            rewardsBox.getChildren().add(box);
-            i++;
-        }
-
-        Pane boxes  = new Pane(rewardsBox);
-        StackPane stack = new StackPane(rewardsBg, boxes);
-
-        Platform.runLater(() ->{
-            phaseButtons.getChildren().setAll(stack, discard);
-        });
-
-
-        AtomicInteger x = new AtomicInteger();
-        AtomicInteger y = new AtomicInteger();
-        ArrayList<Node> childrenCopy = new ArrayList<>(myBoard.getChildren());
-        boolean clickable;
-
-        for(Node node : childrenCopy){
-            clickable = true;
-
-            x.set(GridPane.getRowIndex(node));
-            y.set(GridPane.getColumnIndex(node));
-
-            int X = x.get();
-            int Y = y.get();
-
-            for(IntegerPair p : excludedTiles){
-                if(X == p.getFirst() && Y == p.getSecond()){
-                    clickable = false;
-                }
-            }
-
-            if(clickable){
-                ImageView tile = (ImageView) node;
-
-                tile.setOnMouseClicked(e->{
-                    inputQueue.add("GetReward " +  X + " " + Y + " " + curCargoIndex);
-                    rewardsLeft--;
-                    if(rewardsLeft == 0)
-                        handleCargo();
-                });
-
-            }
-
-        }
-    }
-
     @Override
     public void rewardsChanged(RewardsEvent event){
         curCargoImg.setImage(null);
@@ -1514,6 +1442,7 @@ public class GuiRoot implements View {
         rewardsLeft = event.getRewards().size();
         handleCargo();
     }
+
 
     public void buildingScene(){
         System.out.println("CACCAPUPU");
@@ -1539,7 +1468,7 @@ public class GuiRoot implements View {
 
         ImageView clockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow clockwise.png")));
         clockwiseArrow.setPreserveRatio(true);
-        clockwiseArrow.setFitHeight(100);
+        clockwiseArrow.setFitHeight(70);
         clockwiseArrow.setFitWidth(50);
         clockwiseArrow.setSmooth(false);
         clockwiseArrow.setOnMouseClicked(event -> {
@@ -1552,7 +1481,7 @@ public class GuiRoot implements View {
 
         ImageView counterclockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow counterclockwise.png")));
         counterclockwiseArrow.setPreserveRatio(true);
-        counterclockwiseArrow.setFitHeight(100);
+        counterclockwiseArrow.setFitHeight(70);
         counterclockwiseArrow.setFitWidth(50);
         counterclockwiseArrow.setSmooth(false);
         counterclockwiseArrow.setOnMouseClicked(event -> {
@@ -2024,6 +1953,7 @@ public class GuiRoot implements View {
     public void seeLog(){
     }
 
+
     @Override
     public void showOutcome(FinishGameEvent event){
         Platform.runLater(()->{
@@ -2031,6 +1961,33 @@ public class GuiRoot implements View {
         });
     }
 
+    @Override
+    public void showScore(ScoreboardEvent event) {
+        int i = 1;
+        VBox scoreboard = new VBox(25);
+
+        for(String s : event.getScores().keySet()){
+            ImageView pos = new ImageView(new Image(getClass().getResourceAsStream("/GUI/ordinalTokens/"+ i +".png")));
+            pos.setFitHeight(70);
+            pos.setPreserveRatio(true);
+            Label name = new Label(s + "        " +  event.getScores().get(s));
+            name.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
+
+            scoreboard.getChildren().add(new HBox(15, pos, name));
+        }
+
+        scoreboard.setAlignment(Pos.CENTER);
+        scoreboard.prefWidthProperty().bind(primaryStage.widthProperty());
+        scoreboard.prefHeightProperty().bind(primaryStage.heightProperty());
+
+        Platform.runLater(()->{
+
+            contentRoot.getChildren().setAll(scoreboard);
+            primaryStage.setTitle("Final Scoreboard");
+            primaryStage.setScene(primaryScene);
+            primaryStage.show();
+        });
+    }
 
 
     @Override
@@ -2068,10 +2025,7 @@ public class GuiRoot implements View {
         });
     }
 
-    @Override
-    public void showScore(ScoreboardEvent event) {
 
-    }
 
 
     private @NotNull Button joinButtonMaker(LobbyEvent joining) {
