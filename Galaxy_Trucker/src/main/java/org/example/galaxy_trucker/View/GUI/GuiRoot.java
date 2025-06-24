@@ -2009,6 +2009,11 @@ public class GuiRoot implements View {
         });
     }
 
+    @Override
+    public void background() {
+
+    }
+
 
     @Override
     public void Token(TokenEvent tokenEvent){

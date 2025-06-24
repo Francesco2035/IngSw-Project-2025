@@ -42,6 +42,7 @@ public class LogEvent implements Event {
         visitor.visit(this);
     }
 
+    @JsonIgnore
     @Override
     public String message() {
         return effect;

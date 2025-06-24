@@ -334,6 +334,11 @@ public class TUI implements View {
 
     }
 
+    @Override
+    public void background() {
+        inputReader.ChangeBackground();
+    }
+
 
     public String formatPBInfo(PBInfoEvent event) {
         StringBuilder sb = new StringBuilder();
@@ -849,11 +854,11 @@ public class TUI implements View {
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .toList();
         sb.append(ASCII_ART.Title);
-        sb.append("\n".repeat(20));
+        sb.append("                                                                                                                                                                                                                                                                                                              \n".repeat(20));
 
-        sb.append(pad).append("╔════╦════════════════╦═════════╗"+pad+"\n");
-        sb.append(pad).append("║ #  ║ Player         ║ Score   ║"+pad+"\n");
-        sb.append(pad).append("╠════╬════════════════╬═════════╣"+pad+"\n");
+        sb.append(pad).append("╔════╦═══════════════════════════╦═══════════════╗"+pad+"\n");
+        sb.append(pad).append("║ #  ║ Player                    ║ Score         ║"+pad+"\n");
+        sb.append(pad).append("╠════╬═══════════════════════════╬═══════════════╣"+pad+"\n");
 
         int rank = 1;
         for (Map.Entry<String, Integer> entry : sorted) {
@@ -866,13 +871,15 @@ public class TUI implements View {
                 default -> "";
             };
 
-            String row = String.format("║ %-2d ║ %-14s ║ %-7d ║%s"+pad, rank, player, score, emoji);
+            String row = String.format("║ %-2d ║ %-25s ║ %-13d ║%s"+pad, rank, player, score, emoji);
             sb.append(pad).append(row).append("\n");
 
             rank++;
         }
 
-        sb.append(pad).append("╚════╩════════════════╩═════════╝"+pad+"\n");
+        sb.append(pad).append("╚════╩═══════════════════════════╩═══════════════╝"+pad+"\n");
+        sb.append("                                                                                                                                                                                                                                                                                                              \n".repeat(20));
+
         sb.append("\n".repeat(2));
 
 

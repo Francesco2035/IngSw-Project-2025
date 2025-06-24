@@ -604,10 +604,6 @@ public class Out {
         return toPrint;
     }
 
-    public void printMessage(String s){
-        inputReader.printGraphicMessage(s);
-    }
-
 
     public void render(StringBuilder sb){
         inputReader.renderScreen(sb);

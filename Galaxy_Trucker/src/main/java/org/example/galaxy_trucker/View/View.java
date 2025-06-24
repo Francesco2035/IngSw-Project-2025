@@ -71,4 +71,6 @@ public interface View {
     void Token(TokenEvent tokenEvent);
 
     void showScore(ScoreboardEvent event);
+
+    void background();
 }
