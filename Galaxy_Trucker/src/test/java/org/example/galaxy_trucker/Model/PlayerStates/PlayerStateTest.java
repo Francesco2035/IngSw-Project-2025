@@ -240,7 +240,7 @@ class PlayerStateTest {
         ip2.add(new IntegerPair(7, 8));
 //        gs.allows(new GiveSpeedCommand(ip2, game.getGameID(), p1.GetID(), game.getLv(), "GIVESPEED", null));
         gs.allows(((GiveSpeedCommand) null));
-        FlightController c2 = new FlightController(p1, game.getGameID(), gc, false); // potenziale fix
+        c1 = new FlightController(p1, game.getGameID(), gc, false); // potenziale fix
         gs.createDefaultCommand(game.getGameID(), p1).execute(p1);
         gs.toClientState();
 

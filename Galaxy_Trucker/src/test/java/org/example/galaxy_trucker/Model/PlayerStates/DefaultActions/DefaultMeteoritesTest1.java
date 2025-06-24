@@ -115,7 +115,7 @@ public class DefaultMeteoritesTest1 {
 
 
         } catch (Exception e) {
-            assertEquals("Cannot invoke \"org.example.galaxy_trucker.Controller.Messages.FinishListener.onEndGame(boolean, String, String)\" because \"this.finishListener\" is null", e.getMessage());
+            assertEquals("Cannot invoke \"org.example.galaxy_trucker.Messages.FinishListener.onEndGame(boolean, String, String)\" because \"this.finishListener\" is null", e.getMessage());
         }
     }
 }
