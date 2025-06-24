@@ -321,6 +321,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                     for( int j=0; j<players.size();j++){
                         if(!players.get(j).GetHasActed()){
                             currentPlayer = players.get(j);
+                            break;
                         }
                     }
 
@@ -328,7 +329,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
 
                     Controller cur = ControllerMap.get(currentPlayer.GetID());
 
-                    /// probabilmente da errore con meteoriti per la concorrenzialità e perché current non è molto deterministico, potrebbe essere che vada spostato dentro al controllo di current
+                    /// probabilmente da errore con meteoriti per la concorrenzialità e perché current non è molto deterministiFFco, potrebbe essere che vada spostato dentro al controllo di current
                     if (cur != null && !getConnection(currentPlayer.GetID())){ // se è disconnesso chiamo il comando di default
                         System.out.println("Player disconnected "+cur.getClass());
                         try {
