@@ -11,6 +11,10 @@ public class HourglassEvent implements Event {
     @JsonProperty("start")
     boolean start;
 
+    public HourglassEvent() {
+
+    }
+
     @JsonCreator
     public HourglassEvent(@JsonProperty("message") String message, @JsonProperty("start") boolean start) {
         this.message = (message == null) ? "" : message;
@@ -22,13 +26,19 @@ public class HourglassEvent implements Event {
         visitor.visit(this);
     }
 
+    @JsonIgnore
     @Override
     public String message() {
         return message;
     }
 
-    @JsonIgnore
     public boolean getStart() {
         return start;
     }
+
+    public String getMessage(){
+        return message;
+    }
+
+
 }

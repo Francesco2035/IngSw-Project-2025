@@ -8,7 +8,6 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import java.io.IOException;
 import java.io.Serializable;
 
-// Aggiungi JsonTypeInfo per discriminare le sottoclassi
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
@@ -23,15 +22,12 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = FinishBuildingCommand.class, name = "FinishBuildingCommand"),
         @JsonSubTypes.Type(value = DebugShip.class, name = "DebugShip"),
         @JsonSubTypes.Type(value = AddCrewCommand.class, name = "AddCrewCommand"),
-
         @JsonSubTypes.Type(value = RemoveTileCommand.class, name = "RemoveTileCommand"),
         @JsonSubTypes.Type(value = LobbyCommand.class, names = "LobbyCommand"),
         @JsonSubTypes.Type(value = HandleCargoCommand.class, names = "HandleCargoCommand"),
         @JsonSubTypes.Type(value = TheftCommand.class, names = "TheftCommand"),
         @JsonSubTypes.Type(value = SelectChunkCommand.class, name = "SelectChunkCommand"),
-
         @JsonSubTypes.Type(value = ReconnectCommand.class, names = "ReconnectCommand")
-//TODO: AGGIUNGERE ALTRI COMANDI IN JSONSUBTYPES PER TCP E LE JSONPROPERTY NELLE SOTTOCLASSI: IMPORTANTISSIMO REGA'
 })
 public abstract class Command implements Serializable {
 

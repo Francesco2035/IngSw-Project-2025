@@ -50,62 +50,52 @@ public class PBInfoEvent implements Event {
         visitor.visit(this);
     }
 
+    @JsonIgnore
     @Override
     public String message() {
         return "";
     }
 
-    @JsonIgnore
     public int getCredits() {
         return credits;
     }
 
-    @JsonIgnore
     public int getTotValue() {
         return totValue;
     }
 
-    @JsonIgnore
     public int getEnergy() {
         return Energy;
     }
 
-    @JsonIgnore
     public int getExposedConnectors() {
         return exposedConnectors;
     }
 
-    @JsonIgnore
     public int getDamage() {
         return damage;
     }
 
-    @JsonIgnore
     public int getNumHumans() {
         return numHumans;
     }
 
-    @JsonIgnore
     public int getEnginePower() {
         return EnginePower;
     }
 
-    @JsonIgnore
     public double getPlasmaDrillsPower() {
         return PlasmaDrillsPower;
     }
 
-    @JsonIgnore
     public boolean isPurpleAlien() {
         return purpleAlien;
     }
 
-    @JsonIgnore
     public boolean isBrownAlien() {
         return brownAlien;
     }
 
-    @JsonIgnore
     public int[] getShield() {
         return shield;
     }
