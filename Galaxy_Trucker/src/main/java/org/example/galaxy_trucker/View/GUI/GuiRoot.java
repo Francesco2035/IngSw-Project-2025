@@ -1267,7 +1267,7 @@ public class GuiRoot implements View {
             else readyButton.setText("Ready!");
 
             readyButton.setOnAction(e -> {
-                readyButton.disableProperty();
+//                readyButton.setDisable(true);
                 inputQueue.add("Ready");
             });
 
@@ -2357,7 +2357,7 @@ public class GuiRoot implements View {
 
             ready.setOnAction(e -> {
                 inputQueue.add("Ready");
-                ready.disableProperty();
+//                ready.setDisable(true);
             });
 
             quit.setOnAction(e -> {
