@@ -60,19 +60,6 @@ class ControllerTest {
 //        gc.getControllerMap().put(p1.GetID(), c1);
 
 
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-//TESTARLO COME ULTIMO IN QUANTO MANDA IL GAMEOVER
-//        //gameover
-//        CardsController c1 = new CardsController(p1, game.getGameID(), false);
-//        gc.getControllerMap().put(p1.GetID(), c1);
-//
-//        vv.setDisconnected(false);
-//        c1.nextState(gc);
-
-// fixare la fulladventure
-
-
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -185,7 +172,31 @@ class ControllerTest {
         PostPrepController c9 = new PostPrepController(p1, game.getID(), true);
         c9.DefaultAction(gc);
 
+
+
+
+
+
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//TESTARLO COME ULTIMO IN QUANTO MANDA IL GAMEOVER
+        //gameover
+        CardsController c1 = new CardsController(p1, game.getGameID(), false);
+        gc.getControllerMap().put(p1.GetID(), c1);
+
+        vv.setDisconnected(false);
+        c1.nextState(gc);
+
+// fixare la fulladventure
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 
     }
 
