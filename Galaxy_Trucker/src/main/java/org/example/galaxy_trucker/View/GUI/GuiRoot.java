@@ -24,9 +24,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.galaxy_trucker.Controller.Messages.*;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
+import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
@@ -803,47 +804,47 @@ public class GuiRoot implements View {
 
         if(myGameLv == 2)
             finishButton.setOnAction(e -> {
-            Stage ChoosePositionStage = new Stage();
-            ChoosePositionStage.setTitle("Select Position");
+                Stage ChoosePositionStage = new Stage();
+                ChoosePositionStage.setTitle("Select Position");
 
-            ComboBox<String> position = new ComboBox<>();
-            position.getItems().addAll("1", "2", "3", "4");
-            position.setPromptText("Position");
+                ComboBox<String> position = new ComboBox<>();
+                position.getItems().addAll("1", "2", "3", "4");
+                position.setPromptText("Position");
 
-            Button confirmButton = new Button("Confirm");
-            Button goBackButton = goBackButtonMaker(ChoosePositionStage);
+                Button confirmButton = new Button("Confirm");
+                Button goBackButton = goBackButtonMaker(ChoosePositionStage);
 
-            confirmButton.disableProperty().bind(
-                    position.valueProperty().isNull()
-            );
+                confirmButton.disableProperty().bind(
+                        position.valueProperty().isNull()
+                );
 
-            confirmButton.setOnAction(ev -> {
-                ChoosePositionStage.close();
-                inputQueue.add("FinishBuilding "+ position.getValue());
+                confirmButton.setOnAction(ev -> {
+                    ChoosePositionStage.close();
+                    inputQueue.add("FinishBuilding "+ position.getValue());
+
+                });
+
+
+                HBox Buttons = new HBox(50, confirmButton, goBackButton);
+
+                Buttons.setAlignment(Pos.CENTER);
+                Buttons.setPadding(new Insets(15));
+
+                VBox formBox = new VBox(10,
+                        new Label("Select Yout Starting Position:"), position,
+                        Buttons
+                );
+                formBox.setPadding(new Insets(15));
+                formBox.setAlignment(Pos.CENTER);
+
+                Scene scene = new Scene(formBox, 300, 120);
+                ChoosePositionStage.setScene(scene);
+                ChoosePositionStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
+                ChoosePositionStage.initModality(Modality.WINDOW_MODAL);
+
+                ChoosePositionStage.show();
 
             });
-
-
-            HBox Buttons = new HBox(50, confirmButton, goBackButton);
-
-            Buttons.setAlignment(Pos.CENTER);
-            Buttons.setPadding(new Insets(15));
-
-            VBox formBox = new VBox(10,
-                    new Label("Select Yout Starting Position:"), position,
-                    Buttons
-            );
-            formBox.setPadding(new Insets(15));
-            formBox.setAlignment(Pos.CENTER);
-
-            Scene scene = new Scene(formBox, 300, 120);
-            ChoosePositionStage.setScene(scene);
-            ChoosePositionStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
-            ChoosePositionStage.initModality(Modality.WINDOW_MODAL);
-
-            ChoosePositionStage.show();
-
-        });
         else
             finishButton.setOnAction(e -> {inputQueue.add("FinishBuilding");});
 
@@ -1080,23 +1081,23 @@ public class GuiRoot implements View {
             @Override
             protected void updateItem(LobbyEvent newGame, boolean empty) {
                 super.updateItem(newGame, empty);
-                    if(!empty && newGame != null) {
-                        Label gameLabel = new Label("Game: " + newGame.getGameId());
-                        Label playersLabel = new Label("Players: " + String.join(", ", newGame.getPlayers()));
+                if(!empty && newGame != null) {
+                    Label gameLabel = new Label("Game: " + newGame.getGameId());
+                    Label playersLabel = new Label("Players: " + String.join(", ", newGame.getPlayers()));
 
-                        Button joinButton = joinButtonMaker(newGame);
+                    Button joinButton = joinButtonMaker(newGame);
 
-                        VBox labels = new VBox(5, gameLabel, playersLabel);
-                        HBox button = new HBox(5, joinButton);
-                        HBox cell = new HBox(248, labels, button);
-                        setText(null);
-                        setGraphic(cell);
-                    }
-                    else {
-                        setText(null);
-                        setGraphic(null);
-                    }
+                    VBox labels = new VBox(5, gameLabel, playersLabel);
+                    HBox button = new HBox(5, joinButton);
+                    HBox cell = new HBox(248, labels, button);
+                    setText(null);
+                    setGraphic(cell);
                 }
+                else {
+                    setText(null);
+                    setGraphic(null);
+                }
+            }
         });
 
 
@@ -1141,7 +1142,6 @@ public class GuiRoot implements View {
 
                 String level = levelBox.getValue();
 
-
                 if(level.equals("Tutorial")){
                     myGameLv = 1;
                 }
@@ -1154,12 +1154,31 @@ public class GuiRoot implements View {
                 myName = usernameField.getText();
                 myGameName = gameNameField.getText();
 
-                //create myname mygamename lv maxplayers
-                inputQueue.add("Create");
-                inputQueue.add(myName);
-                inputQueue.add(myGameName);
-                inputQueue.add(String.valueOf(myGameLv));
-                inputQueue.add(playerBox.getValue());
+                if(myName.length() > 20){
+                    Stage exceptionStage = new Stage();
+                    exceptionStage.setTitle("Exception");
+
+                    Label errorLabel = new Label("Name too long (max: 20 characters)");
+                    errorLabel.setStyle("-fx-font-size: 15px");
+
+                    Button okButton = goBackButtonMaker(exceptionStage);
+                    okButton.setText("Ok");
+
+                    VBox errorBox = new VBox(3, errorLabel, okButton);
+                    errorBox.setAlignment(Pos.CENTER);
+
+                    Scene errorScene = new Scene(errorBox, 300, 80);
+                    exceptionStage.setScene(errorScene);
+                    exceptionStage.initOwner(primaryStage);
+                    exceptionStage.initModality(Modality.WINDOW_MODAL);
+                    exceptionStage.show();
+                }else{
+                    inputQueue.add("Create");
+                    inputQueue.add(myName);
+                    inputQueue.add(myGameName);
+                    inputQueue.add(String.valueOf(myGameLv));
+                    inputQueue.add(playerBox.getValue());
+                }
             });
 
             HBox Buttons = new HBox(50, confirmButton, goBackButton);
@@ -1576,51 +1595,51 @@ public class GuiRoot implements View {
         });
 
         board.setOnAction(e -> {
-           gameBoardStage.show();
+            gameBoardStage.show();
         });
 
         if(myGameLv == 2)
             finishButton.setOnAction(e -> {
-            Stage ChoosePositionStage = new Stage();
-            ChoosePositionStage.setTitle("Select Position");
+                Stage ChoosePositionStage = new Stage();
+                ChoosePositionStage.setTitle("Select Position");
 
-            ComboBox<String> position = new ComboBox<>();
-            position.getItems().addAll("1", "2", "3", "4");
-            position.setPromptText("Position");
+                ComboBox<String> position = new ComboBox<>();
+                position.getItems().addAll("1", "2", "3", "4");
+                position.setPromptText("Position");
 
-            Button confirmButton = new Button("Confirm");
-            Button goBackButton = goBackButtonMaker(ChoosePositionStage);
+                Button confirmButton = new Button("Confirm");
+                Button goBackButton = goBackButtonMaker(ChoosePositionStage);
 
-            confirmButton.disableProperty().bind(
-                    position.valueProperty().isNull()
-            );
+                confirmButton.disableProperty().bind(
+                        position.valueProperty().isNull()
+                );
 
-            confirmButton.setOnAction(ev -> {
-                ChoosePositionStage.close();
-                inputQueue.add("FinishBuilding "+ position.getValue());
+                confirmButton.setOnAction(ev -> {
+                    ChoosePositionStage.close();
+                    inputQueue.add("FinishBuilding "+ position.getValue());
+                });
+
+
+                HBox Buttons = new HBox(50, confirmButton, goBackButton);
+
+                Buttons.setAlignment(Pos.CENTER);
+                Buttons.setPadding(new Insets(15));
+
+                VBox formBox = new VBox(10,
+                        new Label("Select Yout Starting Position:"), position,
+                        Buttons
+                );
+                formBox.setPadding(new Insets(15));
+                formBox.setAlignment(Pos.CENTER);
+
+                Scene scene = new Scene(formBox, 300, 120);
+                ChoosePositionStage.setScene(scene);
+                ChoosePositionStage.initOwner(primaryStage);
+                ChoosePositionStage.initModality(Modality.WINDOW_MODAL);
+
+                ChoosePositionStage.show();
+
             });
-
-
-            HBox Buttons = new HBox(50, confirmButton, goBackButton);
-
-            Buttons.setAlignment(Pos.CENTER);
-            Buttons.setPadding(new Insets(15));
-
-            VBox formBox = new VBox(10,
-                    new Label("Select Yout Starting Position:"), position,
-                    Buttons
-            );
-            formBox.setPadding(new Insets(15));
-            formBox.setAlignment(Pos.CENTER);
-
-            Scene scene = new Scene(formBox, 300, 120);
-            ChoosePositionStage.setScene(scene);
-            ChoosePositionStage.initOwner(primaryStage);
-            ChoosePositionStage.initModality(Modality.WINDOW_MODAL);
-
-            ChoosePositionStage.show();
-
-        });
         else
             finishButton.setOnAction(e -> {inputQueue.add("FinishBuilding");});
 
@@ -1773,7 +1792,7 @@ public class GuiRoot implements View {
             });
 
             log.setMaxHeight(100);
-            HBox mainBox = new HBox(new VBox(25, cardBox, log, new HBox(15, phaseButtons, gameboard)), new VBox(100,stats, myBoard, textPanel), othersBox);
+            HBox mainBox = new HBox(new VBox(25, cardBox, log, new VBox(15, phaseButtons, gameboard)), new VBox(100,stats, myBoard, textPanel), othersBox);
             mainBox.setPadding(new Insets(15));
             mainBox.prefWidthProperty().bind(primaryStage.widthProperty());
             mainBox.prefHeightProperty().bind(primaryStage.heightProperty());
@@ -1857,15 +1876,15 @@ public class GuiRoot implements View {
         //messaggio di cosa è successo
         Platform.runLater(()->{
 //            prompt.setText(event.message());
-                log.getItems().addFirst(event.message());
-                if (event.getEffect().equals("Flight started")){
-                    flightScene();
-                    flightStarted = true;
-                }
+            log.getItems().addFirst(event.message());
+            if (event.message().equals("Flight started")){
+                flightScene();
+                flightStarted = true;
+            }
 //            PauseTransition pause = new PauseTransition(Duration.seconds(5));
 //            pause.setOnFinished(e -> prompt.setText(oldText));
 //            pause.play();
-          //0 sx - 1 su - 2 dx - 3 sotto
+            //0 sx - 1 su - 2 dx - 3 sotto
             //tipo 0 m piccolo - 1 m grande - 2 s piccolo - 3 s grande
 
 
@@ -1981,7 +2000,7 @@ public class GuiRoot implements View {
     }
 
     @Override
-    public void showScore(ScoreboardEvent event) {
+    public void showScore(ScoreboardEvent event){
         int i = 1;
         VBox scoreboard = new VBox(25);
 
@@ -1989,10 +2008,11 @@ public class GuiRoot implements View {
             ImageView pos = new ImageView(new Image(getClass().getResourceAsStream("/GUI/ordinalTokens/"+ i +".png")));
             pos.setFitHeight(70);
             pos.setPreserveRatio(true);
-            Label name = new Label(s + "        " +  event.getScores().get(s));
-            name.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
+            Label name = new Label(s + "                " +  event.getScores().get(s));
+            name.setStyle("-fx-font-size: 27px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
 
             scoreboard.getChildren().add(new HBox(15, pos, name));
+            i++;
         }
 
         scoreboard.setAlignment(Pos.CENTER);
@@ -2090,14 +2110,35 @@ public class GuiRoot implements View {
                 myGameName = joining.getGameId();
                 myGameLv = joining.getLv();
 
-                InsertNameStage.close();
-                //Join myname mygamename
-                ///TODO: sistemare la join
-                inputQueue.add("Create");
-                inputQueue.add(myName);
-                inputQueue.add(myGameName);
-                inputQueue.add(String.valueOf(joining.getLv()));
-                inputQueue.add(String.valueOf(joining.getMaxPlayers()));
+                if(myName.length() > 20){
+                    Stage exceptionStage = new Stage();
+                    exceptionStage.setTitle("Exception");
+
+                    Label errorLabel = new Label("Name too long (max: 20 characters)");
+                    errorLabel.setStyle("-fx-font-size: 15px");
+
+                    Button okButton = goBackButtonMaker(exceptionStage);
+                    okButton.setText("Ok");
+
+                    VBox errorBox = new VBox(3, errorLabel, okButton);
+                    errorBox.setAlignment(Pos.CENTER);
+
+                    Scene errorScene = new Scene(errorBox, 300, 80);
+                    exceptionStage.setScene(errorScene);
+                    exceptionStage.initOwner(primaryStage);
+                    exceptionStage.initModality(Modality.WINDOW_MODAL);
+                    exceptionStage.show();
+                }
+                else{
+                    InsertNameStage.close();
+                    //Join myname mygamename
+                    ///TODO: sistemare la join
+                    inputQueue.add("Create");
+                    inputQueue.add(myName);
+                    inputQueue.add(myGameName);
+                    inputQueue.add(String.valueOf(joining.getLv()));
+                    inputQueue.add(String.valueOf(joining.getMaxPlayers()));
+                }
             });
         });
         return joinButton;
