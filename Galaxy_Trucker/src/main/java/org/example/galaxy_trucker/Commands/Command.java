@@ -2,6 +2,7 @@ package org.example.galaxy_trucker.Commands;
 
 import com.fasterxml.jackson.annotation.*;
 import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
+import org.example.galaxy_trucker.Model.Cards.CardEffect.DefendFromSmall;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
@@ -15,7 +16,10 @@ import java.io.Serializable;
 )
 
 @JsonSubTypes({
+        @JsonSubTypes.Type(value = AcceptCommand.class, name = "AcceptCommand"),
         @JsonSubTypes.Type(value = LoginCommand.class, name = "LoginCommand"),
+        @JsonSubTypes.Type(value = ChoosingPlanetsCommand.class, name = "ChoosePlanet"),
+        @JsonSubTypes.Type(value = ConsumeEnergyCommand.class, name = "ConsumeEnergy"),
         @JsonSubTypes.Type(value = QuitCommand.class, name = "QuitCommand"),
         @JsonSubTypes.Type(value = ReadyCommand.class, name = "ReadyCommand"),
         @JsonSubTypes.Type(value = BuildingCommand.class, name = "BuildingCommand"),
@@ -27,7 +31,15 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = HandleCargoCommand.class, names = "HandleCargoCommand"),
         @JsonSubTypes.Type(value = TheftCommand.class, names = "TheftCommand"),
         @JsonSubTypes.Type(value = SelectChunkCommand.class, name = "SelectChunkCommand"),
-        @JsonSubTypes.Type(value = ReconnectCommand.class, names = "ReconnectCommand")
+        @JsonSubTypes.Type(value = ReconnectCommand.class, name = "ReconnectCommand"),
+        @JsonSubTypes.Type(value = DefendFromLargeCommand.class, name = "DefendLarge"),
+        @JsonSubTypes.Type(value = DefendFromSmallCommand.class, name = "DefendSmall"),
+        @JsonSubTypes.Type(value = GiveSpeedCommand.class, name = "GiveSpeedCommand"),
+        @JsonSubTypes.Type(value = GiveAttackCommand.class, name = "GiveAttackCommand"),
+        @JsonSubTypes.Type(value = KillCommand.class, name = "KillCommand")
+
+
+
 })
 public abstract class Command implements Serializable {
 
