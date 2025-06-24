@@ -86,11 +86,11 @@ public class Pirates extends Card{
         for(Player p : PlayerList){
             p.setState(new Waiting());
         }
-        this.updateSates();
+        this.updateStates();
     }
 
     @Override
-    public void updateSates(){
+    public void updateStates(){
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         System.out.println("player number "+this.order);
@@ -166,7 +166,7 @@ public class Pirates extends Card{
         else {
             System.out.println(currentPlayer.GetID()+" was even");
             this.currentPlayer.setState(new Waiting());
-            this.updateSates();
+            this.updateStates();
         }
 
 
@@ -367,15 +367,15 @@ public class Pirates extends Card{
                 }
 
             }
-            if(shotsFlag == false){
-            this.ShotsOrder += 2;
-            }
-            sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,hit.getFirst(),hit.getSecond(),Punishment.get(ShotsOrder),3));
 
+            sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,hit.getFirst(),hit.getSecond(),Punishment.get(ShotsOrder),3));
+                if(shotsFlag == false){
+                    this.ShotsOrder += 2;
+                }
         }
         if(this.ShotsOrder >=Punishment.size() ){
             this.ShotsOrder = 0;
-            this.updateSates();
+            this.updateStates();
         }
     }
 
@@ -407,6 +407,7 @@ public class Pirates extends Card{
                 }
                 this.sendRandomEffect(player.GetID(),new LogEvent("you defended your ship in " +hit.getFirst()+" "+hit.getSecond(),hit.getFirst(),hit.getSecond(),Punishment.get(ShotsOrder),3));
                 System.out.println(player.GetID()+" Defended From Small");
+                player.setState(new Waiting());
             }
         }
         else {

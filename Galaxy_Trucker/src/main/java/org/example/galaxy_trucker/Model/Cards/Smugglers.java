@@ -73,12 +73,12 @@ public class Smugglers extends Card{
         for(Player p : PlayerList){
             p.setState(new Waiting());
         }
-        this.updateSates();
+        this.updateStates();
     }
 
 
     @Override
-    public void updateSates(){
+    public void updateStates(){
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.order<PlayerList.size() && !this.defeated){
@@ -171,7 +171,7 @@ public class Smugglers extends Card{
             }
         }
         this.isaPunishment=false;
-        this.updateSates();
+        this.updateStates();
 
 
     }
@@ -227,7 +227,7 @@ public class Smugglers extends Card{
         }
         else {
             this.currentPlayer.setState(new Waiting());
-            this.updateSates();
+            this.updateStates();
         }
 
     }
@@ -311,7 +311,7 @@ public class Smugglers extends Card{
 
         if(tmpPunishment==0){
             System.out.println("finished stealing");
-            this.updateSates();
+            this.updateStates();
             return;
         }
         if(cargoH.isEmpty()){
@@ -344,7 +344,7 @@ public class Smugglers extends Card{
 
     @Override
     public void keepGoing(){
-        //this.finishCard();
+        this.finishCard();
     }
 
 

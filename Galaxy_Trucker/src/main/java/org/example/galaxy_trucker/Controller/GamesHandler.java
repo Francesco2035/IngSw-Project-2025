@@ -121,9 +121,9 @@ public class GamesHandler implements LobbyListener {
                 check = gameControllerMap.get(gameID).check(command);
 
             }
-
             if (!check.equals("")){
                 virtualView.sendEvent(new ConnectionRefusedEvent(check));
+                throw new InvalidInput(check);
             }
 
             else {
@@ -181,17 +181,13 @@ public class GamesHandler implements LobbyListener {
 
         synchronized (gameControllerMap) {
             gameControllerMap.get(game).stopPlayer(token);
-//            if (gameControllerMap.get(tokenToGame.get(token)).getNumPlayer() == 0) {
-//                removeGame(tokenToGame.get(token));
-//            }
+
         }
 
     }
 
     public void PlayerReconnected(String token) {
         String game;
-
-
         synchronized (tokenToGame) {
             game = tokenToGame.get(token);
         }

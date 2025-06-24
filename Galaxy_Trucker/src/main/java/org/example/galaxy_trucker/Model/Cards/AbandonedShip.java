@@ -10,7 +10,6 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.Accepting;
-import org.example.galaxy_trucker.Model.PlayerStates.BaseState;
 import org.example.galaxy_trucker.Model.PlayerStates.Killing;
 import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 
@@ -61,10 +60,10 @@ public class AbandonedShip extends Card{
             p.setState(new Waiting());
         }
         Thread.sleep(3000);
-        this.updateSates();
+        this.updateStates();
     }
     @Override
-    public void updateSates(){
+    public void updateStates(){
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         while(this.order<=PlayerList.size()&& !this.flag) {
@@ -76,7 +75,15 @@ public class AbandonedShip extends Card{
             currentPlayer = PlayerList.get(this.order);
             PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
             System.out.println("Checking: "+currentPlayer.GetID());
-            if(CurrentPlanche.getNumHumans()>=requirement){ //TODO: capire se maggiore o maggiore uguale
+
+            int NumHumans= CurrentPlanche.getNumHumans();
+            if(CurrentPlanche.isBrownAlien()){
+                NumHumans++;
+            }
+            if (CurrentPlanche.isPurpleAlien()){
+                NumHumans++;
+            }
+            if(NumHumans>=requirement){ //TODO: capire se maggiore o maggiore uguale
                 this.totHumans=CurrentPlanche.getNumHumans();
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;
@@ -101,7 +108,7 @@ public class AbandonedShip extends Card{
             System.out.println(currentPlayer.GetID()+" has refused");
             currentPlayer.setState(new Waiting());
             this.flag = false;
-            this.updateSates();
+            this.updateStates();
         }
     }
 //    @Override

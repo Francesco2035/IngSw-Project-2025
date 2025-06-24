@@ -12,7 +12,7 @@ public class FlightController extends Controller {
     public FlightController(Player curPlayer, String gameId, GameController gc,boolean disconnected) {
         this.curPlayer = curPlayer;
         this.gameId = gameId;
-        curPlayer.setState(new BaseState());
+        //curPlayer.setState(new BaseState());
         //this.disconnected = disconnected;
     }
 

@@ -10,7 +10,6 @@ import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Boards.Actions.*;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
-import org.example.galaxy_trucker.Model.Cards.SolarSystem;
 import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Goods.BLUE;
@@ -22,7 +21,6 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.NewTestSetupHelper;
-import org.example.galaxy_trucker.View.TUI.InputReader;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -179,17 +177,17 @@ class PlayerStateTest {
         p1.setState(ce);
         game.getGag().getCardsDeck().get(30).setBoard(game.getGameBoard());
         game.getGag().getCardsDeck().get(30).setConcurrentCardListener(gc);
-        game.getGag().getCardsDeck().get(30).updateSates();
+        game.getGag().getCardsDeck().get(30).updateStates();
         game.getGag().getCardsDeck().get(30).CardEffect(); // forse questo è sbagliato nelle carte. perchè losers non viene creato nel caso di default command
         p1.setCard(game.getGag().getCardsDeck().get(30));
         game.getGag().getCardsDeck().get(31).setBoard(game.getGameBoard());
         game.getGag().getCardsDeck().get(31).setConcurrentCardListener(gc);
-        game.getGag().getCardsDeck().get(31).updateSates();
+        game.getGag().getCardsDeck().get(31).updateStates();
         game.getGag().getCardsDeck().get(31).CardEffect(); // forse questo è sbagliato nelle carte. perchè losers non viene creato nel caso di default command
         p1.setCard(game.getGag().getCardsDeck().get(31));
         game.getGag().getCardsDeck().get(32).setBoard(game.getGameBoard());
         game.getGag().getCardsDeck().get(32).setConcurrentCardListener(gc);
-        game.getGag().getCardsDeck().get(32).updateSates();
+        game.getGag().getCardsDeck().get(32).updateStates();
         game.getGag().getCardsDeck().get(32).CardEffect(); // forse questo è sbagliato nelle carte. perchè losers non viene creato nel caso di default command
         p1.setCard(game.getGag().getCardsDeck().get(32));
         ce.createDefaultCommand(game.getGameID(), p1).execute(p1);
@@ -233,7 +231,7 @@ class PlayerStateTest {
         p1.setState(gs);
         game.getGag().getCardsDeck().get(34).setBoard(game.getGameBoard()); // per qualche motivo se chiamo questi metodi su carta 32 già usata crasha e perdo
         game.getGag().getCardsDeck().get(34).setConcurrentCardListener(gc);
-        game.getGag().getCardsDeck().get(34).updateSates();
+        game.getGag().getCardsDeck().get(34).updateStates();
         game.getGag().getCardsDeck().get(34).CardEffect();
         p1.setCard(game.getGag().getCardsDeck().get(34));
         ArrayList<IntegerPair> ip2 = new ArrayList<>();
@@ -291,7 +289,7 @@ class PlayerStateTest {
         k.allows(new KillCrewAction(p1.getmyPlayerBoard()));
         game.getGag().getCardsDeck().get(1).setBoard(game.getGameBoard()); // per qualche motivo se chiamo questi metodi su carta 32 già usata crasha e perdo
         game.getGag().getCardsDeck().get(1).setConcurrentCardListener(gc);
-        game.getGag().getCardsDeck().get(1).updateSates();
+        game.getGag().getCardsDeck().get(1).updateStates();
         game.getGag().getCardsDeck().get(1).CardEffect();
         p1.setCard(game.getGag().getCardsDeck().get(1));
         k.createDefaultCommand(game.getGameID(), p1).execute(p1);

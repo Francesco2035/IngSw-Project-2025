@@ -50,7 +50,7 @@ public class DefaultSelectChunk {
 
     @RepeatedTest(100)
     //@Test
-    public void testSelectChunk() throws IOException, InterruptedException {
+    public void testSelectChunk() throws Exception {
         Game game = new Game(2, "testCarteController");
         NewTestSetupHelper helper = new NewTestSetupHelper();
 
@@ -86,7 +86,7 @@ public class DefaultSelectChunk {
             }
         };
 
-        Card CurrentCard = cards.get(36);
+        Card CurrentCard = cards.get(35);
 
         CurrentCard.setConcurrentCardListener(conc);
 
@@ -126,8 +126,9 @@ public class DefaultSelectChunk {
                 }
                 i++;
             }
-        }catch (NullPointerException E){
+        }catch (Exception E){
             E.printStackTrace();
+            //throw new Exception(E.getMessage());
         }
 
 

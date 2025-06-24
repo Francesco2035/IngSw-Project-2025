@@ -61,12 +61,12 @@ public class Slavers extends Card{
         for(Player p : PlayerList){
             p.setState(new Waiting());
         }
-        this.updateSates();
+        this.updateStates();
     }
 
 
     @Override
-    public void updateSates(){
+    public void updateStates(){
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         if(this.order<PlayerList.size() && !this.defeated){
@@ -146,7 +146,7 @@ public class Slavers extends Card{
             System.out.println(currentPlayer.GetID()+" lost");
             if(this.currentPlayer.getmyPlayerBoard().getNumHumans()<this.Punishment){ // dovrebbe bastare a evitare il caso in cui uno è forzato ad uccidere più umani di quanti de abbia
                 losers.add(currentPlayer);
-                this.updateSates();
+                this.updateStates();
                 return;
             }
 
@@ -157,7 +157,7 @@ public class Slavers extends Card{
         else {
             System.out.println(currentPlayer.GetID()+" was even");
             this.currentPlayer.setState(new Waiting());
-            this.updateSates();
+            this.updateStates();
         }
 
     }
@@ -187,7 +187,7 @@ public class Slavers extends Card{
             throw new ImpossibleBoardChangeException("no more humans to kill");
 
         }
-        this.updateSates();
+        this.updateStates();
     }
 
 
@@ -217,7 +217,7 @@ public class Slavers extends Card{
             PlayerList.get(i).setState(new BaseState());
         }
         for(Player p: losers){
-            getBoard().abandonRace(p, "No crew left");
+            getBoard().abandonRace(p, "No crew left",true);
         }
         checkLosers();
         System.out.println("card finished");

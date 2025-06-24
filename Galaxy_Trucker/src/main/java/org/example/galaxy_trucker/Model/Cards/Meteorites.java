@@ -94,7 +94,7 @@ public class   Meteorites extends Card {
 //            }
             System.out.println("attacco da "+attacks.get(MeteoritesOrder) +" alla riga:"+this.MeteoritesLine);
             System.out.println("attacco numero: "+(this.MeteoritesOrder/2));
-            this.updateSates();
+            this.updateStates();
         }
         else {
 //            this.pog=true;
@@ -111,11 +111,11 @@ public class   Meteorites extends Card {
     public void keepGoing(){
 
         this.SuccessfulDefences++;
-        updateSates();
+        updateStates();
     }
 
     @Override
-    public void updateSates(){
+    public void updateStates(){
         int Movement;
         boolean MeteoritesFlag=false;
         boolean DamageFlag=false;
@@ -322,10 +322,10 @@ public class   Meteorites extends Card {
             if (!DamageFlag){this.SuccessfulDefences++;}
             this.PlayerOrder++;
             if (PlayerOrder<this.getBoard().getPlayers().size()) {
-                this.updateSates();
+                this.updateStates();
             }
             else if(this.SuccessfulDefences==NumofDefences){
-                this.updateSates();
+                this.updateStates();
             }
         }
     }
@@ -357,6 +357,7 @@ public class   Meteorites extends Card {
             }
                 this.sendRandomEffect(player.GetID(),new LogEvent("you defended your ship in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond(),hits.get(currentPlayer.GetID()).getFirst(),hits.get(currentPlayer.GetID()).getSecond(),attacks.get(MeteoritesOrder),0));
                 System.out.println(player.GetID()+" Defended From Small");
+                player.setState(new Waiting());
             }
         }
         else {
@@ -381,7 +382,7 @@ public class   Meteorites extends Card {
             System.out.println("destroyed: "+hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond());
         }
         this.SuccessfulDefences++;
-        this.updateSates();
+        this.updateStates();
     }
 
 
@@ -408,6 +409,7 @@ public class   Meteorites extends Card {
                 }
                 this.sendRandomEffect(player.GetID(),new LogEvent("you defended your ship in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond(),hits.get(currentPlayer.GetID()).getFirst(),hits.get(currentPlayer.GetID()).getSecond(),attacks.get(MeteoritesOrder),1));
                 System.out.println(player.GetID()+" Defended From Large");
+                player.setState(new Waiting());
             }
             else if (attacks.get(MeteoritesOrder) == 1 || attacks.get(MeteoritesOrder) == 3){//sopra o sotto
                  if(!((CannonCoord.getSecond() == hits.get(player.GetID()).getSecond() && currentBoard.getTile(CannonCoord.getFirst(), CannonCoord.getSecond()).getConnectors().get(attacks.get(MeteoritesOrder))==(CANNON.INSTANCE))) ){
@@ -431,6 +433,7 @@ public class   Meteorites extends Card {
                  }
                 this.sendRandomEffect(player.GetID(),new LogEvent("you defended your ship in " +hits.get(player.GetID()).getFirst()+" "+hits.get(player.GetID()).getSecond(),hits.get(currentPlayer.GetID()).getFirst(),hits.get(currentPlayer.GetID()).getSecond(),attacks.get(MeteoritesOrder),1));
                 System.out.println(player.GetID()+" Defended From Large");
+                player.setState(new Waiting());
             }
         }
         else  {
@@ -455,7 +458,7 @@ public class   Meteorites extends Card {
             }
         }
         this.SuccessfulDefences++;
-        this.updateSates();
+        this.updateStates();
     }
     @Override
     public void finishCard() {
