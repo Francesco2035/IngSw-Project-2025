@@ -13,14 +13,13 @@ public class LoginController extends Controller {
     }
 
     @Override
-    public void nextState(GameController gc) {
+    public void nextState(GameController gc) { //TODO test
         System.out.println("login change state for "+ curPlayer.GetID());
         if (!gc.getVirtualViewMap().get(curPlayer.GetID()).getDisconnected()){ ///  la virtual view sa sempre se è disconnesso, questo è il caso in cui il player si sia riconnesso
             setDisconnected(false);
         }
 
         curPlayer.setState(new BuildingShip());
-        ;
         PrepController newController  = new PrepController(curPlayer, gameId, gc, getDisconnected());
         curPlayer.getCommonBoard().getHourglass().setListener(newController);
         newController.setExceptionListener(exceptionListener);

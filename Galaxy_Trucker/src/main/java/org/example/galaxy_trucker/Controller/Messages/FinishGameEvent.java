@@ -3,8 +3,6 @@ package org.example.galaxy_trucker.Controller.Messages;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
-
 public class FinishGameEvent implements Event {
 
     boolean win;

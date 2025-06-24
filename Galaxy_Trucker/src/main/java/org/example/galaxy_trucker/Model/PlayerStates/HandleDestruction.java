@@ -7,7 +7,6 @@ import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
-import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
 import org.example.galaxy_trucker.View.ClientModel.States.HandleDestructionClient;
 
 import java.util.ArrayList;

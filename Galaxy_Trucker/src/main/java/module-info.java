@@ -46,4 +46,5 @@
         exports org.example.galaxy_trucker.View.TUI to java.rmi;
         exports org.example.galaxy_trucker.View to java.rmi;
         opens org.example.galaxy_trucker.View.TUI to com.fasterxml.jackson.databind, com.google.gson;
+            exports org.example.galaxy_trucker.Controller to java.rmi;
     }

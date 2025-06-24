@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 //TODO: rimozione dei player e notifica con -1 al posto del nome del player
 //TODO: aggiungere listener dei ready per il momento vedo se me la cavo senza listener: fare GameController un listener dei ready e semplicemente quando c'è un nuovo ready chiamare updatePlayers
-public class GameController  implements ConcurrentCardListener , ReadyListener, FinishListener{
+public class GameController  implements ConcurrentCardListener, ReadyListener, FinishListener {
     String idGame;
     private final HashMap<String,Controller> ControllerMap;
     private final HashMap<String, Boolean> connectedPlayers = new HashMap<>();
@@ -443,7 +443,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
         //System.out.println("Game over the winner is: " + game.getGameBoard().getPlayers().getFirst().GetID());
     }
 
-    private void stopAllPlayerThreads() {
+    public void stopAllPlayerThreads() {
 
         for (Thread t : threads.values()) {
             t.interrupt();

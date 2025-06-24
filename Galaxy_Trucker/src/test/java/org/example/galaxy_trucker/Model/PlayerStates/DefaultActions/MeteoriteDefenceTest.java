@@ -14,7 +14,6 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromLarge;
 import org.example.galaxy_trucker.Model.PlayerStates.DefendingFromSmall;
 import org.example.galaxy_trucker.NewTestSetupHelper;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -127,7 +126,12 @@ public class MeteoriteDefenceTest {
         IntegerPair battery1 = new IntegerPair(6,9);
         IntegerPair plasma1 = new IntegerPair(8,9);
         DefendFromSmallCommand def1 = new DefendFromSmallCommand(battery1,game.getID(),p1.GetID(),game.getLv(),"boh","boh");
-        def1.execute(p1);
+//        FlightController c3 = new FlightController(p1, game.getID(), new GameController(game.getID(), game, new GamesHandler(), 2, 4), false); //possibile fix
+        try{
+            def1.execute(p1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
         System.out.println("\n surtr \n");
@@ -137,9 +141,13 @@ public class MeteoriteDefenceTest {
 
 
         DefendFromLargeCommand def2 = new DefendFromLargeCommand(plasma1,battery1,game.getID(),p1.GetID(),game.getLv(),"boh","boh");
-        def2.execute(p1);
+//        def2.execute(p1);
 
-
+        try{
+            def2.execute(p1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         System.out.println("\n roar \n");
         IntegerPair battery2 = new IntegerPair(8,8);

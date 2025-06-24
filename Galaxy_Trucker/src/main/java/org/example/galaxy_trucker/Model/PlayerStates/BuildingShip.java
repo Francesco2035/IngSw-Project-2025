@@ -2,15 +2,9 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 
 import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
-import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.Tiles.HousingUnit;
-import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
 import org.example.galaxy_trucker.View.ClientModel.States.BuildingClient;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class BuildingShip extends PlayerState {
 
