@@ -328,7 +328,7 @@ public class TUI implements View {
 
     @Override
     public void showScore(ScoreboardEvent event) {
-        HashMap<String, Integer> ScoreBoard = event.getScores();
+        playerClient.setPlayerState(new FinishStateClient());
         out.setScoreBoard(formatScoreboard(event.getScores()));
         onGameUpdate();
 

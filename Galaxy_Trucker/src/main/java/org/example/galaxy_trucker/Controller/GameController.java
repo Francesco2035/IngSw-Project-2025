@@ -319,7 +319,7 @@ public class GameController  implements ConcurrentCardListener , ReadyListener, 
                 int k = 0;
                 Player currentPlayer = players.get(index);
                 while (index < players.size() && !card.isFinished()) {
-                    if (k >= 50001){
+                    if (k >= 500001){
                         System.out.println("CURRENT: "+currentPlayer.GetID()+ " "+currentPlayer.getPlayerState().getClass().getSimpleName());
                         k = 0;
                     }
