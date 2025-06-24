@@ -563,7 +563,7 @@ public class Warzone extends Card{
         }
 
 
-
+        Worst.setState(new Waiting());
         this.updateStates();
     }
 
@@ -764,6 +764,7 @@ public class Warzone extends Card{
         }
         if(this.ShotsOrder >=PunishmentShots.size() ){
             this.ShotsOrder = 0;
+            Worst.setState(new Waiting());
             this.updateStates();
         }
     }
@@ -867,6 +868,7 @@ public class Warzone extends Card{
         }
         if(tmpPunishment==0){
             System.out.println("finished stealing");
+            Worst.setState(new Waiting());
             this.updateStates();
             return;
         }

@@ -42,7 +42,7 @@ public class Epidemic extends Card {
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(Player p : PlayerList){
-            p.setState(new ReadCardState());
+            p.setState(new Waiting());
         }
         Thread.sleep(5000);
         PlayerBoard CurrentPlanche;

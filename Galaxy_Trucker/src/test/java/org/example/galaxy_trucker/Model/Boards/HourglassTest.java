@@ -66,9 +66,9 @@ class HourglassTest {
 
 
         p1.StartTimer();
-        sleep(70000);
+        sleep(100000);
         p1.StartTimer();
-        sleep(70000);
+        sleep(100000);
 
         p1.EndConstruction(1);
         FinishBuildingCommand fbc = new FinishBuildingCommand(1, game.getID(), p1.GetID(), game.getLv(), "FinishBuilding1", null);

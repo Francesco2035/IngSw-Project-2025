@@ -24,7 +24,7 @@ public class Hourglass{
     public Hourglass(){}
 
     public Hourglass(int lv) {
-        time = 60000;
+        time = 90000;
         startable = true;
         if(lv == 2) usages = 3;
         else usages = -1;
