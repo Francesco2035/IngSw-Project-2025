@@ -10,23 +10,23 @@ public interface EventVisitor {
 
 
 
-    public void visit(DeckEvent event);
+    void visit(DeckEvent event);
 
-    public void visit(CardEvent event);
+    void visit(CardEvent event);
 
     void visit(GameLobbyEvent event);
 
-    public void visit(HandEvent event);
+    void visit(HandEvent event);
 
-    public void visit(VoidEvent event);
+    void visit(VoidEvent event);
 
-    public void visit(TileEvent event);
+    void visit(TileEvent event);
 
-    public void visit(UncoverdTileSetEvent event);
+    void visit(UncoverdTileSetEvent event);
 
-    public void visit(CoveredTileSetEvent event);
+    void visit(CoveredTileSetEvent event);
 
-    public void visit(GameBoardEvent gameBoardEvent);
+    void visit(GameBoardEvent gameBoardEvent);
 
     void visit(LobbyEvent lobbyEvent);
 

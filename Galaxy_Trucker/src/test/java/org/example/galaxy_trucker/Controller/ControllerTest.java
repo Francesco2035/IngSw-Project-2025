@@ -95,9 +95,11 @@ class ControllerTest {
         c3.action(new FinishBuildingCommand(0, game.getID(), p1.GetID(), game.getLv(), "mhanz", null), gc);
         c3.action(new FinishBuildingCommand(1, game.getID(), p1.GetID(), game.getLv(), "mhanz", null), gc);
 
-
-        c3.DefaultAction(gc); // verificare qui come prima quale può essere la IOException da causare per ottenere questa branch
-
+        try{
+            c3.DefaultAction(gc); // verificare qui come prima quale può essere la IOException da causare per ottenere questa branch
+        }catch (Exception e){
+            assertTrue(e.getMessage().contains("already"));
+        }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -6,9 +6,7 @@ import org.example.galaxy_trucker.Controller.VirtualView;
 
 public class QuitEvent implements Event {
 
-    public QuitEvent() {
-
-    }
+    public QuitEvent() {}
 
     @Override
     public void accept(EventVisitor visitor) {
