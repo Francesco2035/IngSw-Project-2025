@@ -175,6 +175,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             LobbyCommand Lobby = new LobbyCommand("Lobby");
                             Lobby.setClient(this);
                             server.command(Lobby);
+                            startPingMonitor();
                         }
                         else{
                             if (client.getLogin()){
@@ -236,7 +237,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                             server.command(loginCommand);
                             lastPingTime = System.currentTimeMillis();
-                            startPingMonitor();
+                            if (scheduler != null && scheduler.isShutdown()){
+                                startPingMonitor();
+                            }
 
                         }
                         else{
