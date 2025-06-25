@@ -165,7 +165,6 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
             new Thread(()->{
                 synchronized (lobbyEvents) {
-
                     ExecutorService executor = Executors.newSingleThreadExecutor();
                     Future<Void> future = executor.submit(() -> {
                         try {
@@ -194,12 +193,13 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
             pingExecutor.scheduleAtFixedRate(() -> {
                 try {
                     cmd.getClient().receivePing();
+                    System.out.println("PING");
                 } catch (RemoteException e) {
                     System.out.println("Client disconnected: " + cmd.getClient());
                     lobby.remove(cmd.getClient());
                     pingExecutor.shutdown();
                 }
-            }, 0, 5, TimeUnit.SECONDS);
+            }, 0, 3, TimeUnit.SECONDS);
             pingLobby.put(cmd.getClient(), pingExecutor);
 
         }
