@@ -30,6 +30,7 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = LobbyCommand.class, names = "LobbyCommand"),
         @JsonSubTypes.Type(value = HandleCargoCommand.class, names = "HandleCargoCommand"),
         @JsonSubTypes.Type(value = TheftCommand.class, names = "TheftCommand"),
+        @JsonSubTypes.Type(value = Theft.class, names = "Theft"),
         @JsonSubTypes.Type(value = SelectChunkCommand.class, name = "SelectChunkCommand"),
         @JsonSubTypes.Type(value = ReconnectCommand.class, name = "ReconnectCommand"),
         @JsonSubTypes.Type(value = DefendFromLargeCommand.class, name = "DefendLarge"),
