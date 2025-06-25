@@ -5,6 +5,7 @@ import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.TokenEvent;
+import org.example.galaxy_trucker.Model.Cards.SolarSystem;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 
@@ -14,6 +15,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.exit;
 
@@ -24,10 +28,28 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     private Game myGame;
     private CommandInterpreter commandInterpreter;
     private Client client;
+    private volatile long lastPingTime = System.currentTimeMillis();
+
 
     Boolean running = false;
     private Thread inputLoop = null;
-    boolean lobby = false;
+
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+    public void startPingMonitor() {
+        scheduler.scheduleAtFixedRate(() -> {
+            long now = System.currentTimeMillis();
+            if (now - lastPingTime > 10_000) {
+                try {
+                    handleDisconnection();
+                } catch (InterruptedException | IOException e) {
+                    System.out.println("Error while disconnecting: "+e.getMessage());
+                }
+                scheduler.shutdown();
+            }
+        }, 0, 2, TimeUnit.SECONDS);
+    }
+
 
 
 
@@ -142,7 +164,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     @Override
     public void receivePing() throws RemoteException {
 
-        //lastPingTime = System.currentTimeMillis();
+        lastPingTime = System.currentTimeMillis();
 
     }
 
@@ -253,6 +275,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             loginCommand.setClient(this);
 
                             server.command(loginCommand);
+                            startPingMonitor();
 
                         }
                         else{
@@ -302,6 +325,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                 System.out.println(loginCommand);
                                 server.command(loginCommand);
+                                startPingMonitor();
                             }
                             else {
                                 System.out.println("Invalid game: "+gameId+"\n games:");
@@ -443,8 +467,17 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             System.out.println("Error reconnecting!");
                             break;
                         }
-                        Command command = commandInterpreter.interpret("Reconnect");
-                        server.command(command);
+                        String command = "";
+                        if(client.getLobby() && !client.getLogin()){
+                            command = "Lobby";
+                        }
+                        else if (client.getLogin()){
+                            command = "Reconnect";
+                        }
+                        if (!command.isEmpty()){
+                            Command cmd = commandInterpreter.interpret(command);
+                            server.command(cmd);
+                        }
                         running = true;
                         inputLoop = new Thread(() -> {
                             try {
@@ -454,7 +487,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             }
                         });
                         inputLoop.setDaemon(true);
-                        //monitorPings();
+                        if (client.getLogin()){
+                            startPingMonitor();
+                        }
                         sendPongs();
                         inputLoop.start();
                         return;
