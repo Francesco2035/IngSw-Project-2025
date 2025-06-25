@@ -437,7 +437,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                         });
                         inputLoop.setDaemon(true);
                         sendPongs();
-                        if (client.getLogin()){
+                        if (client.getLogin() || client.getLobby()){
                             lastPingTime = System.currentTimeMillis();
                             startPingMonitor();
                         }
