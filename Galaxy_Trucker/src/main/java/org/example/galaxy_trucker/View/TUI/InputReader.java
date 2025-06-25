@@ -142,11 +142,13 @@ public class InputReader implements Runnable {
         }
         System.out.print("\033[H\033[2J");
         System.out.flush();
+        terminal.puts(InfoCmp.Capability.clear_screen);
+        terminal.flush();
 
         String partialInput = Lreader.getBuffer().toString();
-//        System.out.print("\033[3J");
-//        terminal.puts(InfoCmp.Capability.clear_screen);
-//        terminal.flush();
+        System.out.print("\033[3J");
+        terminal.puts(InfoCmp.Capability.clear_screen);
+        terminal.flush();
         if (background) {
             AttributedString colored = fillBackground(content.toString());
             terminal.writer().print(colored.toAnsi());
