@@ -122,33 +122,34 @@ public class GameBoard {
      * @param pl reference to the player
      */
     public void SetStartingPosition(Player pl){
-
         Player_IntegerPair cur = players.stream()
                 .filter(p -> pl.equals( p.getKey()) )
                 .findFirst().orElseThrow();
-
-        SetNewPosition(cur, startPos[PlayersOnBoard], startPos[PlayersOnBoard]);
-
-        PlayersOnBoard++;
+        if(cur.getValue() == -1){
+            SetNewPosition(cur, startPos[PlayersOnBoard], startPos[PlayersOnBoard]);
+            PlayersOnBoard++;
+        }
+        else throw new IllegalStateException("You already are on the board!");
     }
 
 
     public void SetStartingPosition (Player pl, int index) throws IllegalArgumentException{
-
         Player_IntegerPair cur = players.stream()
                 .filter(p -> pl.equals(p.getKey()))
                 .findFirst().orElseThrow();
+        if(cur.getValue() == -1) {
+            if (index > players.size())
+                throw new IllegalArgumentException("Cell not available!");
 
-        if(index > players.size())
-            throw new IllegalArgumentException("Cell not available!");
+            if (positions[startPos[index - 1]] == null) {
+                SetNewPosition(cur, startPos[index - 1], startPos[index - 1]);
+                sendUpdates(new GameBoardEvent(startPos[index - 1], pl.GetID()));
+                System.out.println("@@@" + startPos[index - 1] + ":" + pl.GetID());
+                PlayersOnBoard++;
+            } else throw new IllegalArgumentException("This cell is already taken!");
 
-        if(positions[startPos[index-1]] == null) {
-            SetNewPosition(cur, startPos[index-1], startPos[index-1]);
-            sendUpdates(new GameBoardEvent(startPos[index-1], pl.GetID()));
-            System.out.println("@@@"+startPos[index-1]+":"+pl.GetID());
-            PlayersOnBoard++;
         }
-        else throw new IllegalArgumentException("This cell is already taken!");
+        else throw new IllegalStateException("You already are on the board!");
     }
 
 
