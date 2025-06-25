@@ -143,6 +143,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     public void inputLoop(boolean fromConsole) throws IOException, InterruptedException {
         String cmd = "";
 
+        System.out.println("Input loop started: "+running+ " cmd "+cmd);
         if (running) {
             while (running && !cmd.equals("end")) {
                 try {
@@ -346,8 +347,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         else {
             handleDisconnection();
         }
-
-
         System.out.println("Fine input.");
     }
 
@@ -436,12 +435,12 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             }
                         });
                         inputLoop.setDaemon(true);
+                        inputLoop.start();
                         sendPongs();
                         if (client.getLogin() || client.getLobby()){
                             lastPingTime = System.currentTimeMillis();
                             startPingMonitor();
                         }
-                        inputLoop.start();
                         return;
                     }
                     default: {
