@@ -263,19 +263,25 @@ public class Client implements EventVisitor {
     @Override
     public void visit(ReconnectedEvent event) {
         this.token = event.getToken();
-        this.lobby = true;
-        this.login = true;
-        commandInterpreter = new CommandInterpreter(event.getPlayerId(), event.getGameId());
-        commandInterpreter.setlv(event.getLv());
-        commandInterpreter.setToken(token);
-        this.view.setGameboard(event.getLv());
-        this.view.reconnect(event);
-        if (rmiClient != null){
-            rmiClient.setCommandInterpreter(commandInterpreter);
+        if (event.getToken().equals("lobby")){
+            System.out.println("Reconnected to lobby");
         }
-        if (tcpClient != null){
-            tcpClient.setCommandInterpreter(commandInterpreter);
+        else {
+            this.lobby = true;
+            this.login = true;
+            commandInterpreter = new CommandInterpreter(event.getPlayerId(), event.getGameId());
+            commandInterpreter.setlv(event.getLv());
+            commandInterpreter.setToken(token);
+            this.view.setGameboard(event.getLv());
+            this.view.reconnect(event);
+            if (rmiClient != null){
+                rmiClient.setCommandInterpreter(commandInterpreter);
+            }
+            if (tcpClient != null){
+                tcpClient.setCommandInterpreter(commandInterpreter);
+            }
         }
+
     }
 
     @Override

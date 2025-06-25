@@ -34,7 +34,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     Boolean running = false;
     private Thread inputLoop = null;
 
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     @Override
     public void receivePing() throws RemoteException {
@@ -47,9 +47,10 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     public void startPingMonitor() {
         System.out.println("Start monitor pings");
+
         scheduler.scheduleAtFixedRate(() -> {
             long now = System.currentTimeMillis();
-            System.out.println(lastPingTime);
+            //System.out.println(lastPingTime);
             if (now - lastPingTime > 10000) {
                 System.out.println("Connection lost");
                 try {
@@ -183,6 +184,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             Lobby.setClient(this);
                             server.command(Lobby);
                             lastPingTime = System.currentTimeMillis();
+                            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+                            this.scheduler = scheduler;
                             startPingMonitor();
                         }
                         else{
@@ -246,6 +249,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             server.command(loginCommand);
                             if (scheduler != null && scheduler.isShutdown()){
                                 lastPingTime = System.currentTimeMillis();
+                                ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+                                this.scheduler = scheduler;
                                 startPingMonitor();
                             }
 
@@ -298,6 +303,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                 System.out.println(loginCommand);
                                 server.command(loginCommand);
                                 lastPingTime = System.currentTimeMillis();
+                                ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+                                this.scheduler = scheduler;
                                 startPingMonitor();
                             }
                             else {
@@ -439,18 +446,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                         command = "Reconnect";
                     }
                     if (!command.isEmpty()){
-                        System.out.println("chissà perchè non entra");
                         try{
                              cmd = commandInterpreter.interpret(command);
-
                         }
                         catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
                         try {
-                            System.out.println("try");
                             server.command(cmd);
-                            System.out.println("tryfine");
                             System.out.println(cmd.getClass().getSimpleName());
                         } catch (Exception e) {
                             System.out.println("catch");
@@ -471,6 +474,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     //sendPongs();
                     if (client.getLogin() || client.getLobby()){
                         lastPingTime = System.currentTimeMillis();
+                        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+                        this.scheduler = scheduler;
                         startPingMonitor();
                     }
                     System.out.println("se chiami qui sei fritto bro");

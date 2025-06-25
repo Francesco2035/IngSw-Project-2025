@@ -9,6 +9,7 @@ import org.example.galaxy_trucker.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Listeners.GhListener;
 import org.example.galaxy_trucker.Controller.Messages.ConnectionRefusedEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
+import org.example.galaxy_trucker.Controller.Messages.ReconnectedEvent;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -48,9 +49,11 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
                         ClientInterface client = entry.getKey();
                         System.out.println("Timeout: " + client);
                         lastPingMap.remove(client);
-                        lobby.remove(client);
                         ExecutorService pingExec = pingClient.remove(client);
-                        if (pingExec != null) pingExec.shutdown();
+                        if (pingExec != null) {
+                            pingExec.shutdown();
+                            System.out.println("pingExec shutdown");
+                        }
                         handleDisconnection(client);
                     }
                 }
@@ -215,7 +218,12 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
     public void command(Command cmd) throws RemoteException{
         if (cmd.getTitle().equals("Lobby")){
             System.out.println("LOBBY");
-            lobby.add(cmd.getClient());
+            if (lobby.contains(cmd.getClient())){
+                cmd.getClient().receiveMessage(new ReconnectedEvent("lobby", "placeholder", "placeholder", -1));
+            }
+            else {
+                lobby.add(cmd.getClient());
+            }
 
             new Thread(()->{
                 synchronized (lobbyEvents) {
@@ -251,7 +259,6 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
                     System.out.println("PING");
                 } catch (RemoteException e) {
                     System.out.println("Client disconnected: " + cmd.getClient());
-                    lobby.remove(cmd.getClient());
                     pingExecutor.shutdown();
                 }
             }, 0, 3, TimeUnit.SECONDS);
