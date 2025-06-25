@@ -257,12 +257,7 @@ public class Player implements Serializable {
 
     public void EndConstruction(int index) throws IllegalStateException, IllegalArgumentException{
         if(getCommonBoard().getLevel() ==2)
-            try {
-                CommonBoard.SetStartingPosition(this, index);
-            }catch(IllegalStateException e){
-                System.out.println("BRO ESPLOSA END OF CONSTRUCTION");
-                throw e;
-            }
+            CommonBoard.SetStartingPosition(this, index);
         else throw new IllegalStateException("Called a lv 2 command in a lv 1 game!");
     }
 

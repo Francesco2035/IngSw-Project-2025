@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Commands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
@@ -29,8 +30,7 @@ public class FinishBuildingCommand extends Command {
 
             player.SetReady(true);
         } catch (IllegalArgumentException | IllegalStateException e) {
-
-            System.out.println("FINISH ESPLOSA "+e.getMessage());
+            throw new InvalidInput(e.getMessage());
         }
     }
 
