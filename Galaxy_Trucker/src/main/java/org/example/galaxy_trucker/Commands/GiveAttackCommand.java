@@ -13,11 +13,10 @@ import java.util.ArrayList;
 public class GiveAttackCommand extends Command implements Serializable {
 
     private ArrayList<IntegerPair> coordinates;
-    private Player player;
 
     public GiveAttackCommand(){}
 
-    public GiveAttackCommand( ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title, String token) {
+    public GiveAttackCommand(ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title, String token) {
         super(gameId, playerId, lv, title, token,-1);
         this.coordinates = coordinates;
 
