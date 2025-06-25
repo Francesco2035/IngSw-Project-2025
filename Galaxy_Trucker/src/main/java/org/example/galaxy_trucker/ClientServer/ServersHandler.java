@@ -13,13 +13,7 @@ public class ServersHandler implements Runnable {
 
 
 
-//    public void main(String[] args){
-//        ServersHandler handler = new ServersHandler();
-//        handler.run();
-//    }
-
     public void run(){
-
 
         GamesHandler gameHandler = new GamesHandler();
 

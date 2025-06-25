@@ -17,6 +17,23 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+/**
+ * The HandleCargoCommand class represents a command in the game responsible
+ * for handling various cargo-related actions. It is executed by a player
+ * and performs actions on the player's board based on the specific command
+ * type defined by the 'title' attribute.
+ *
+ * This class extends the Command class and implements Serializable interface
+ * to allow for object serialization. It supports commands such as:
+ * - Retrieving goods from rewards and placing them on a specific location.
+ * - Clearing goods and rewards at the end of a cargo operation.
+ * - Switching goods between two storage locations.
+ * - Discarding goods from specified locations.
+ *
+ * The command ensures operations are only performed in a valid player state
+ * and handles exceptions by restoring the player board to its previous state
+ * and notifying affected storage areas.
+ */
 public class HandleCargoCommand extends Command implements Serializable {
 
 
@@ -36,6 +53,19 @@ public class HandleCargoCommand extends Command implements Serializable {
     public HandleCargoCommand(){}
 
 
+    /**
+     * Constructs a HandleCargoCommand object with specified parameters.
+     *
+     * @param position    the position of the cargo in the first set
+     * @param coordinate  the coordinates of the cargo in the first set as an IntegerPair
+     * @param position2   the position of the cargo in the second set
+     * @param coordinate2 the coordinates of the cargo in the second set as an IntegerPair
+     * @param gameId      the unique identifier of the game
+     * @param playerId    the unique identifier of the player
+     * @param lv          the level associated with the command
+     * @param title       the title or name of the command
+     * @param token       the token used for authentication or validation
+     */
     public HandleCargoCommand(int position, IntegerPair coordinate, int position2,IntegerPair coordinate2, String gameId, String playerId, int lv, String title, String token) {
         super(gameId, playerId, lv, title, token,-1);
         this.title = title;
@@ -48,6 +78,15 @@ public class HandleCargoCommand extends Command implements Serializable {
 
 
 
+    /**
+     * Executes the cargo handling command for the given player, based on the command type specified.
+     * Commands include actions like retrieving goods from rewards, finishing cargo operations, switching goods
+     * between storages, or discarding goods. In case of an error, it restores the previous state and propagates an exception.
+     *
+     * @param player the Player object on which the command will be executed. The player's current state, rewards, and storages are manipulated
+     *               as per the logic of the specific command type.
+     * @throws InvalidInput if any operation performed during execution of the command results in an invalid state or input being detected.
+     */
     @Override
     public void execute(Player player) {
 
@@ -131,6 +170,12 @@ public class HandleCargoCommand extends Command implements Serializable {
 
     }
 
+    /**
+     * Determines whether the current command is allowed in the specified player state.
+     *
+     * @param playerState the state of the player to check permissions against
+     * @return true if the command is allowed in the given player state, false otherwise
+     */
     @Override
     public boolean allowedIn(PlayerState playerState) {
         return playerState.allows(this);
