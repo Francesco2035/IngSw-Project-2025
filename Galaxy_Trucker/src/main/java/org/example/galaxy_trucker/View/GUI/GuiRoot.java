@@ -219,14 +219,15 @@ public class GuiRoot implements View {
             tileImage.setImage(tilePlaceholder);
             tileImage.setOpacity(0.5);
 
-            //background setup
-            Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-
-            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            mediaPlayer.setAutoPlay(true);
-
-            MediaView background = new MediaView(mediaPlayer);
+//            background setup
+//            Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
+//            MediaPlayer mediaPlayer = new MediaPlayer(media);
+//
+//            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+//            mediaPlayer.setAutoPlay(true);
+//
+//            MediaView background = new MediaView(mediaPlayer);
+            ImageView background = new ImageView(new Image(getClass().getResourceAsStream("/GUI/background.jpg")));
             background.setPreserveRatio(false);
 
             background.fitHeightProperty().bind(primaryStage.heightProperty());
