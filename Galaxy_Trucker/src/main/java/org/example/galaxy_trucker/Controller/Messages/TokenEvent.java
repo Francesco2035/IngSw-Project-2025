@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Controller.Messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TokenEvent implements Event{
@@ -20,6 +21,7 @@ public class TokenEvent implements Event{
         visitor.visit(this);
     }
 
+    @JsonIgnore
     @Override
     public String message() {
         return "";

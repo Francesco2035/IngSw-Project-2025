@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller.Messages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
@@ -13,6 +14,10 @@ public class ScoreboardEvent implements Event {
         return scores;
     }
 
+    public ScoreboardEvent(){
+
+    }
+
     @JsonCreator
     public ScoreboardEvent(@JsonProperty("scores") HashMap<String, Integer> scores) {
         this.scores = scores;
@@ -23,6 +28,7 @@ public class ScoreboardEvent implements Event {
         visitor.visit(this);
     }
 
+    @JsonIgnore
     @Override
     public String message() {
         return "";
