@@ -1,14 +1,10 @@
 package org.example.galaxy_trucker.Model.Cards;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sun.nio.sctp.AbstractNotificationHandler;
 import org.example.galaxy_trucker.Controller.Listeners.CardListner;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.GAGen;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +54,16 @@ public class CardStacks implements Serializable {
         }
 
         if(level==1){
-            HiddenCards = Level1Deck; /// non è proprio l'intero level 1 deck ma una specifica sezione
+            HiddenCards.clear();
+            HiddenCards.add(Gag.getCardsDeck().get(2));
+            HiddenCards.add(Gag.getCardsDeck().get(7));
+            HiddenCards.add(Gag.getCardsDeck().get(11));
+            HiddenCards.add(Gag.getCardsDeck().get(14));
+            HiddenCards.add(Gag.getCardsDeck().get(21));
+            HiddenCards.add(Gag.getCardsDeck().get(35));
+            HiddenCards.add(Gag.getCardsDeck().get(37));
+            HiddenCards.add(Gag.getCardsDeck().get(29));
+
         }
 
         else{

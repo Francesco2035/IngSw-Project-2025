@@ -26,9 +26,7 @@ public class RemoveTileCommand extends Command implements Serializable {
         //this.tile = new IntegerPair(x,y);
     }
 
-    public RemoveTileCommand(){
-
-    }
+    public RemoveTileCommand(){}
 
     @Override
     public boolean allowedIn(PlayerState playerState) {

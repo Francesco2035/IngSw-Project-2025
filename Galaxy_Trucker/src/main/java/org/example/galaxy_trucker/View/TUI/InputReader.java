@@ -40,6 +40,7 @@ public class InputReader implements Runnable {
     KeyMap<Binding> mainKeyMap;
     StringBuilder lastRender = new StringBuilder();
     BackgroundGenerator generator ;
+    private boolean background = true;
 
 
 
@@ -211,15 +212,17 @@ public class InputReader implements Runnable {
      * state with updated*/
     public synchronized void renderScreen(StringBuilder content) {
 
-        try{
-            if(System.getProperty("os.name").contains("Windows")){
+        String os = System.getProperty("os.name").toLowerCase();
+
+        try {
+            if (os.contains("windows")) {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                new ProcessBuilder("clear").inheritIO().start().waitFor();
             }
-            else
-                Runtime.getRuntime().exec("clear");
-        }
-        catch (IOException | InterruptedException _){
-            ;
+        } catch (IOException | InterruptedException e) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
         }
         System.out.print("\033[H\033[2J");
         System.out.flush();
@@ -228,8 +231,13 @@ public class InputReader implements Runnable {
 //        System.out.print("\033[3J");
 //        terminal.puts(InfoCmp.Capability.clear_screen);
 //        terminal.flush();
-        AttributedString colored = fillBackground(content.toString());
-        terminal.writer().print(colored.toAnsi());
+        if (background) {
+            AttributedString colored = fillBackground(content.toString());
+            terminal.writer().print(colored.toAnsi());
+        }
+        else {
+            terminal.writer().print(content.toString());
+        }
         terminal.writer().println();
         terminal.flush();
         terminal.flush();
@@ -301,6 +309,10 @@ public class InputReader implements Runnable {
         return asb.toAttributedString();
     }
 
+
+    public void ChangeBackground() {
+        background = !background;
+    }
 }
 
 

@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -72,6 +71,12 @@ public abstract class HousingUnit extends Component{
         playerBoard.getHousingUnits().remove(this);
         playerBoard.getConnectedHousingUnits().remove(this);
         playerBoard.setNumHumans(-getNumHumans());
+        if (isBrownAlien()){
+            playerBoard.setBrownAlien(false);
+        }
+        if (isPurpleAlien()){
+            playerBoard.setPurpleAlien(false);
+        }
         for (HousingUnit unit : nearbyHousingUnits){
             unit.notifyUnit(false, this);
         }

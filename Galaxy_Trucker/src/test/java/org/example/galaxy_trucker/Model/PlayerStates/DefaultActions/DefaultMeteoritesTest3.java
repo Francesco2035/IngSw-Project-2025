@@ -11,7 +11,6 @@ import org.example.galaxy_trucker.Model.Player;
 
 import org.example.galaxy_trucker.NewTestSetupHelper;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -127,7 +126,7 @@ public class DefaultMeteoritesTest3 {
 
 
         } catch (Exception e) {
-            assertEquals("Cannot invoke \"org.example.galaxy_trucker.Controller.Messages.FinishListener.onEndGame(boolean, String, String)\" because \"this.finishListener\" is null", e.getMessage());
+            assertEquals("Cannot invoke \"org.example.galaxy_trucker.Messages.FinishListener.onEndGame(boolean, String, String)\" because \"this.finishListener\" is null", e.getMessage());
         }
     }
 }

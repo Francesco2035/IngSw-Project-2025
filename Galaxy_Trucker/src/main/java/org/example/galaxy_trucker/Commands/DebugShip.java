@@ -10,6 +10,7 @@ import org.example.galaxy_trucker.Model.Tiles.Tile;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DebugShip extends Command implements Serializable {
 
@@ -28,9 +29,7 @@ public class DebugShip extends Command implements Serializable {
         this.number = number;
     }
 
-    public DebugShip() {
-
-    }
+    public DebugShip() {}
 
 
     @Override
@@ -39,9 +38,17 @@ public class DebugShip extends Command implements Serializable {
         PlayerBoard debugShip = player.getmyPlayerBoard();
         GAGen gag = new GAGen();
 
+        int[][]valid = debugShip.getValidPlayerBoard();
+
+
+        int[][]validCopy = new int[valid.length][valid[0].length];
+        for (int i = 0; i < valid.length; i++) {
+            validCopy[i] = Arrays.copyOf(valid[i], valid[i].length);
+        }
+
         for(int i=0; i<10; i++) {
             for(int j=0; j<10; j++) {
-                if (debugShip.getValidPlayerBoard()[i][j] == 1 && (i!=6 && j!=6)) debugShip.removeTile(i, j);
+                if (valid[i][j]== 1 && (i!=6 && j!=6)) debugShip.removeTile(i, j);
             }
         }
 

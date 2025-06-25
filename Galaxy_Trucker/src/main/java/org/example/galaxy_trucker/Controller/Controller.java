@@ -23,7 +23,7 @@ public abstract class Controller {
     ExceptionListener exceptionListener;
 
 
-    public synchronized void action(Command command, GameController gc) {
+    public synchronized void action(Command command, GameController gc) { // è realmente necessario avere questa action qui? non è sempre overridata?
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
         if (!command.allowedIn(curPlayer.getPlayerState())) {
@@ -53,7 +53,7 @@ public abstract class Controller {
        // this.curPlayer.SetHasActed(true);
     }
 
-    public void DefaultAction(GameController gc) {
+    public void DefaultAction(GameController gc) { //TODO test
        PlayerState state = curPlayer.getPlayerState();
        Command cmd =state.createDefaultCommand(gameId,curPlayer);
        playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
@@ -107,15 +107,15 @@ public abstract class Controller {
 
     public void removeExceptionListener() {
         this.exceptionListener = null;
-    }
+    } //TODO test
 
-    public void sendException(Exception e) {
+    public void sendException(Exception e) { //TODO test
         if (exceptionListener != null) {
             ExceptionEvent event = new ExceptionEvent(e.getMessage());
             exceptionListener.exceptionOccured(event);
         }
         else{
-            System.out.println("Exception occured but listener not set");
+            System.out.println("Exception occurred but listener set as null");
         }
     }
 

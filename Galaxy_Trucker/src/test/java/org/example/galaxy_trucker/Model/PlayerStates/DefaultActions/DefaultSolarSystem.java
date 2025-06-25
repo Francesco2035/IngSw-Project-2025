@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.Model.PlayerStates.DefaultActions;
 
-import org.example.galaxy_trucker.Commands.AcceptCommand;
 import org.example.galaxy_trucker.Commands.ChoosingPlanetsCommand;
 import org.example.galaxy_trucker.Controller.CardsController;
 import org.example.galaxy_trucker.Controller.Messages.ConcurrentCardListener;

@@ -1,15 +1,12 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Listeners.TileSestListener;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
-import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.GAGen;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Set;
 import java.util.Random;
 

@@ -1,15 +1,10 @@
 package org.example.galaxy_trucker.Model.PlayerStates;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Commands.AcceptCommand;
 import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
-import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Model.JsonHelper;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.View.ClientModel.States.AcceptClient;
-import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
 
 public class Accepting extends PlayerState{
 //    @Override

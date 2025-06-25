@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddGoodAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetGoodAction;
@@ -18,11 +19,22 @@ import java.util.ArrayList;
 
 public class HandleCargoCommand extends Command implements Serializable {
 
-    String title;
+
+    @JsonProperty("position")
     int position;
+    @JsonProperty("coordinate")
     IntegerPair coordinate;
-    IntegerPair coordinate2;
+    @JsonProperty("position2")
     int position2;
+    @JsonProperty("coordinate2")
+    IntegerPair coordinate2;
+
+    @JsonProperty("commandType")
+    private final String commandType = "HandleCargoCommand";
+
+
+    public HandleCargoCommand(){}
+
 
     public HandleCargoCommand(int position, IntegerPair coordinate, int position2,IntegerPair coordinate2, String gameId, String playerId, int lv, String title, String token) {
         super(gameId, playerId, lv, title, token,-1);

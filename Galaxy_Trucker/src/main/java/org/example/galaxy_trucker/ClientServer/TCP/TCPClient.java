@@ -6,14 +6,13 @@ import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.Event;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
+import org.example.galaxy_trucker.Controller.Messages.ReconnectedEvent;
 import org.example.galaxy_trucker.Controller.Messages.TokenEvent;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.rmi.NotBoundException;
-import java.util.UUID;
 
 //TODO: non possiamo far terminare l'input con end
 public class TCPClient{
@@ -39,28 +38,6 @@ public class TCPClient{
         this.commandInterpreter = commandInterpreter;
     }
 
-    public TCPClient(Client c, CommandInterpreter commandInterpreter) throws IOException {
-        this.client = c;
-        this.commandInterpreter = commandInterpreter;
-        if (!setup()){
-            disconnect();
-        }
-        System.out.println("Connection TCP started\n");
-        startThread();
-        client.getView().connect();
-        sendReconnect();
-        clientLoop();
-
-    }
-
-    private void sendReconnect() throws JsonProcessingException {
-        Command command = commandInterpreter.interpret("Reconnect");
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(command);
-        out.println(json);
-        //System.out.println("CommandSent: " + json);
-    }
-
     private void EventListener() {
         try {
             String msg;
@@ -72,12 +49,12 @@ public class TCPClient{
                 }
                  else if (msg.startsWith("Token: ")) {
 
-                String token = msg.substring(7);
-                //System.out.println("Token received: " + token);
-                this.client.receiveEvent(new TokenEvent(token));
-                this.token = token;
-                this.client.getView().setGameboard(commandInterpreter.getLv());
-                commandInterpreter.setToken(token);
+                    String token = msg.substring(7);
+                    //System.out.println("Token received: " + token);
+                    this.client.receiveEvent(new TokenEvent(token));
+                    this.token = token;
+                    this.client.getView().setGameboard(commandInterpreter.getLv());
+                    commandInterpreter.setToken(token);
             }
             else {
                    //System.out.println("Received msg: " + msg);
@@ -191,13 +168,10 @@ public class TCPClient{
                 System.out.println("\nServer Disconnected.");
 
                 while (true) {
-                    String whatNow = client.getView().askInput("<Reconnect> | <ChangeConnection> | <Exit> :");
+                    String whatNow = client.getView().askInput("<Reconnect> | <Exit> :");
                     switch (whatNow) {
                         case "Reconnect":
                             reconnect();
-                            return;
-                        case "ChangeConnection":
-                            changeConnection();
                             return;
                         case "Exit":
                             System.exit(0);
@@ -248,6 +222,10 @@ public class TCPClient{
                 else if(userInput.equals("Log")){
                     client.getView().seeLog();
                 }
+                else if (userInput.equals("Bg")){
+                    client.getView().background();
+                    client.getView().refresh();
+                }
                 else if (userInput.equals("MainTerminal")){
                     client.getView().refresh();
                 }
@@ -284,11 +262,32 @@ public class TCPClient{
                 }
                 else if (userInput.equals("Create")) {
                     if (!client.getLogin()) {
-                        client.setLogin(true);
+                        boolean aborted = false;
+                        String playerId = "";
+                        while (playerId.equals("") || playerId.length() > 20){
+                            playerId = client.getView().askInput("Insert player ID [max 20 characters || abort]: ");
+                            if (playerId.equals("abort")){
+                                aborted = true;
+                                break;
+                            }
+                        }
+                        if (aborted){
+                            client.getView().refresh();
+                            continue;
+                        }
 
-                        String playerId = client.getView().askInput("PlayerID: ");
-
-                        String gameId = client.getView().askInput("GameID: ");
+                        String gameId = "";
+                        while (gameId.equals("") || gameId.length() > 20){
+                            gameId = client.getView().askInput("Insert game ID [max 20 characters || abort]: ");
+                            if (gameId.equals("abort")){
+                                aborted = true;
+                                break;
+                            }
+                        }
+                        if (aborted){
+                            client.getView().refresh();
+                            continue;
+                        }
 
                         int gameLevel = Integer.parseInt(client.getView().askInput("Game level: "));
 
@@ -302,11 +301,11 @@ public class TCPClient{
 
                         LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login", maxPlayers);
 
-//                        commandInterpreter.setPlayerId(playerId);
-//                        commandInterpreter.setGameId(gameId);
+
                         commandInterpreter = new CommandInterpreter(playerId, gameId);
                         commandInterpreter.setlv(gameLevel);
                         mapper = new ObjectMapper();
+                        client.setLogin(true);
                         jsonLogin = mapper.writeValueAsString(loginCommand);
 
                         out.println(jsonLogin);
@@ -317,8 +316,32 @@ public class TCPClient{
 
                     if(!client.getLogin()) {
 
-                        String playerId = client.getView().askInput("PlayerID: ");
-                        String gameId = client.getView().askInput("GameID: ");
+                        boolean aborted = false;
+                        String playerId = "";
+                        while (playerId.equals("") || playerId.length() > 20){
+                            playerId = client.getView().askInput("Insert player ID [max 20 characters || abort]: ");
+                            if (playerId.equals("abort")){
+                                aborted = true;
+                                break;
+                            }
+                        }
+                        if (aborted){
+                            client.getView().refresh();
+                            continue;
+                        }
+
+                        String gameId = "";
+                        while (gameId.equals("") || gameId.length() > 20){
+                            gameId = client.getView().askInput("Insert game ID [max 20 characters || abort]: ");
+                            if (gameId.equals("abort")){
+                                aborted = true;
+                                break;
+                            }
+                        }
+                        if (aborted){
+                            client.getView().refresh();
+                            continue;
+                        }
                         if (client.containsGameId(gameId)) {
                             client.setLogin(true);
 
@@ -413,11 +436,27 @@ public class TCPClient{
                 if (response != null && response.equals("pong")) {
                     System.out.println("Server responded to ping. Connection is active.");
                     //connected = true; qui
+
                     ObjectMapper mapper = new ObjectMapper();
+                    if (client.getLobby() && !client.getLogin()) {
+                        LobbyCommand lobbyCommand = new LobbyCommand("Lobby");
+                        //System.out.println("invio lobby");
+                        try{
+                            String jsonLogin = mapper.writeValueAsString(lobbyCommand);
+                            out.println(jsonLogin);
+                            this.client.visit(new ReconnectedEvent("lobby", "placeholder", "placeholder", -1));
+                        } catch (JsonProcessingException e) {
+                            System.err.println(e.toString());
+                        }
 
-                    String reconnect = mapper.writeValueAsString(commandInterpreter.interpret("Reconnect"));
-                    out.println(reconnect);
+                    }
 
+
+                    if (client.getLogin()){
+                        String reconnect = mapper.writeValueAsString(commandInterpreter.interpret("Reconnect"));
+                        out.println(reconnect);
+                        this.client.visit(new ReconnectedEvent(token, commandInterpreter.getGame(), commandInterpreter.getPlayerId(), commandInterpreter.getLv()));
+                    }
                     eventThread  = new Thread(this::EventListener);
                     pingThread = new Thread(this::PingLoop);
                     eventThread.start();
@@ -439,31 +478,7 @@ public class TCPClient{
         }
     }
 
-    public void changeConnection() throws IOException {
-        try {
-            connected = false;
 
-            if (pingThread != null && pingThread.isAlive()) pingThread.interrupt();
-            if (eventThread != null && eventThread.isAlive()) eventThread.interrupt();
-
-            if (echoSocket != null && !echoSocket.isClosed()) {
-                echoSocket.close();
-                System.out.println("Closing echo socket...");
-                //Thread.sleep(5000);
-            }
-
-            //if (clientLoop != null && clientLoop.isAlive()) clientLoop.interrupt();
-
-
-            System.out.println("Switching to RMI...");
-            client.changeConnection("RMI", commandInterpreter);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NotBoundException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 
 }
 

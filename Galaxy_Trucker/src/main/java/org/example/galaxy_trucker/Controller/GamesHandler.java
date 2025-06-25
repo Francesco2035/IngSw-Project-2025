@@ -187,7 +187,10 @@ public class GamesHandler implements LobbyListener {
         }
 
         synchronized (gameControllerMap) {
-            gameControllerMap.get(game).stopPlayer(token);
+            GameController gc = gameControllerMap.get(game);
+            if (gc != null){
+                gc.stopPlayer(token);
+            }
 
         }
 

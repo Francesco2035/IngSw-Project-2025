@@ -4,6 +4,9 @@ import org.example.galaxy_trucker.Controller.Listeners.CardListner;
 import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
 import org.example.galaxy_trucker.Controller.Listeners.HandListener;
 import org.example.galaxy_trucker.Controller.Listeners.PhaseListener;
+import org.example.galaxy_trucker.Controller.Messages.FinishListener;
+import org.example.galaxy_trucker.Controller.Messages.HandEvent;
+import org.example.galaxy_trucker.Controller.Messages.ReadyListener;
 import org.example.galaxy_trucker.Controller.Messages.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.CardEvent;
@@ -254,12 +257,7 @@ public class Player implements Serializable {
 
     public void EndConstruction(int index) throws IllegalStateException, IllegalArgumentException{
         if(getCommonBoard().getLevel() ==2)
-            try {
-                CommonBoard.SetStartingPosition(this, index);
-            }catch(IllegalStateException e){
-                System.out.println("BRO ESPLOSA END OF CONSTRUCTION");
-                throw e;
-            }
+            CommonBoard.SetStartingPosition(this, index);
         else throw new IllegalStateException("Called a lv 2 command in a lv 1 game!");
     }
 
@@ -275,6 +273,13 @@ public class Player implements Serializable {
     }
 
     public int finishRace(int result, String message){
+//        int result = 0;
+//        result =  getmyPlayerBoard().finishRace(finished);
+//        if(finished){
+//            result= result + this.getCommonBoard().arrivalBonus(this);
+//
+//            result = result + this.getCommonBoard().beautyBonus(this);
+//        }
 
         if (result > 0){
             finishListener.onEndGame(true, GetID(), message,null);

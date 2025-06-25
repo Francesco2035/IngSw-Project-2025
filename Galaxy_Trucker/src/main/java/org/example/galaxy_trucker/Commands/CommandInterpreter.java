@@ -486,9 +486,13 @@ public class CommandInterpreter {
         return new KillCommand(coordinates,gameId,playerId,lv,"KillCommand",token);
     }
 
+    public String getGame() {
+        return gameId;
+    }
 
-
-
+    public String getPlayerId(){
+        return playerId;
+    }
 
 
     @FunctionalInterface

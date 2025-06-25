@@ -7,6 +7,7 @@ import org.jline.jansi.Ansi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -67,6 +68,7 @@ public class Out {
     private HashMap<String,Integer > PlayerToPosition = new HashMap<>();
     private HashMap<String, String[]> lobby = new HashMap<>();
     private ViewPhase phase;
+    private StringBuilder scoreboard = null;
 
 
 
@@ -405,6 +407,9 @@ public class Out {
 //        PlayerToPosition = playerToPosition;
 //    }
 
+    public void setConnected(Boolean connected) {
+        this.connected = connected;
+    }
 
     /**
      * Sets or updates the lobby for a specified game. If the provided cell data is null,
@@ -1136,10 +1141,18 @@ public class Out {
      */
     public void setOutcome(String message, boolean outcome) {
         if (outcome){
-            this.outcome = "hai vinto";
+            this.outcome = ASCII_ART.win;
         }
         else{
-            this.outcome = "hai perso";
+            this.outcome = ASCII_ART.lose;
         }
+    }
+
+    public void setScoreBoard(StringBuilder sb){
+        scoreboard = sb;
+    }
+
+    public StringBuilder showScoreboard(){
+        return Objects.requireNonNullElseGet(scoreboard, StringBuilder::new);
     }
 }

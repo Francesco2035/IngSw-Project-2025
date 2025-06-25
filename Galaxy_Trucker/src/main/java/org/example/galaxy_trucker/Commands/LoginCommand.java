@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Model.Player;
@@ -16,6 +17,7 @@ public class LoginCommand extends Command implements Serializable {
     @JsonProperty("commandType")
     private final String commandType = "LoginCommand";
 
+    @JsonIgnore //TODO VERIFICARE CHE QUESTO SERVA A QUALCOSA DAVVERO
     private ClientInterface client;
 
 

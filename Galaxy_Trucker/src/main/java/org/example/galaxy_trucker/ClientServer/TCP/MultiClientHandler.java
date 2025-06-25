@@ -2,16 +2,10 @@ package org.example.galaxy_trucker.ClientServer.TCP;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.fxml.LoadListener;
-import javafx.scene.chart.ScatterChart;
 import org.example.galaxy_trucker.Commands.Command;
-import org.example.galaxy_trucker.Commands.CommandInterpreter;
 import org.example.galaxy_trucker.Commands.QuitCommand;
-import org.example.galaxy_trucker.Controller.DisconnectedClient;
-import org.example.galaxy_trucker.Controller.GameController;
 import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Controller.Listeners.GhListener;
-import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
 import org.example.galaxy_trucker.Controller.Messages.ConnectionRefusedEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
 import org.example.galaxy_trucker.Controller.VirtualView;

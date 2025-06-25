@@ -7,7 +7,6 @@ import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.IntegerPair;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class StorageCompartment extends Storage{
 

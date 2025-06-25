@@ -1,34 +1,22 @@
 package org.example.galaxy_trucker.Model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public class IntegerPair implements Serializable {
+
+    @JsonProperty("first")
     private int first;
+
+    @JsonProperty("second")
     private int second;
 
     public IntegerPair(int first, int second) {
         this.first = first;
         this.second = second;
     }
-
-    public IntegerPair() {}
-    public int getFirst() {
-        return first;
-    }
-    public int getSecond() {
-        return second;
-    }
-
-    //setter per json
-    public void setSecond(int second) {
-        this.second = second;
-    }
-
-    public void setFirst(int first) {
-        this.first = first;
-    }
-
 
 
     @Override
@@ -61,5 +49,25 @@ public class IntegerPair implements Serializable {
         // Usa Objects.hash per combinare i campi
         return Objects.hash(first, second);
     }
+
+
+    //setter per json
+    public IntegerPair() {}
+
+    public int getFirst() {
+        return first;
+    }
+    public int getSecond() {
+        return second;
+    }
+
+    public void setFirst(int first) {
+        this.first = first;
+    }
+    public void setSecond(int second) {
+        this.second = second;
+    }
+
+
 }
 

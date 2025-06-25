@@ -1095,6 +1095,7 @@ public class GuiRoot implements View {
             HBox buttons = new HBox(30, reconnect, exit);
             reconnect.setOnAction(click -> {
                 inputQueue.add("Reconnect");
+                System.out.println("Reconnect");
             });
 
             exit.setOnAction(click -> {
@@ -1228,47 +1229,47 @@ public class GuiRoot implements View {
 
         if(myGameLv == 2)
             finishButton.setOnAction(e -> {
-            Stage ChoosePositionStage = new Stage();
-            ChoosePositionStage.setTitle("Select Position");
+                Stage ChoosePositionStage = new Stage();
+                ChoosePositionStage.setTitle("Select Position");
 
-            ComboBox<String> position = new ComboBox<>();
-            position.getItems().addAll("1", "2", "3", "4");
-            position.setPromptText("Position");
+                ComboBox<String> position = new ComboBox<>();
+                position.getItems().addAll("1", "2", "3", "4");
+                position.setPromptText("Position");
 
-            Button confirmButton = new Button("Confirm");
-            Button goBackButton = goBackButtonMaker(ChoosePositionStage);
+                Button confirmButton = new Button("Confirm");
+                Button goBackButton = goBackButtonMaker(ChoosePositionStage);
 
-            confirmButton.disableProperty().bind(
-                    position.valueProperty().isNull()
-            );
+                confirmButton.disableProperty().bind(
+                        position.valueProperty().isNull()
+                );
 
-            confirmButton.setOnAction(ev -> {
-                ChoosePositionStage.close();
-                inputQueue.add("FinishBuilding "+ position.getValue());
+                confirmButton.setOnAction(ev -> {
+                    ChoosePositionStage.close();
+                    inputQueue.add("FinishBuilding "+ position.getValue());
+
+                });
+
+
+                HBox Buttons = new HBox(50, confirmButton, goBackButton);
+
+                Buttons.setAlignment(Pos.CENTER);
+                Buttons.setPadding(new Insets(15));
+
+                VBox formBox = new VBox(10,
+                        new Label("Select Yout Starting Position:"), position,
+                        Buttons
+                );
+                formBox.setPadding(new Insets(15));
+                formBox.setAlignment(Pos.CENTER);
+
+                Scene scene = new Scene(formBox, 300, 120);
+                ChoosePositionStage.setScene(scene);
+                ChoosePositionStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
+                ChoosePositionStage.initModality(Modality.WINDOW_MODAL);
+
+                ChoosePositionStage.show();
 
             });
-
-
-            HBox Buttons = new HBox(50, confirmButton, goBackButton);
-
-            Buttons.setAlignment(Pos.CENTER);
-            Buttons.setPadding(new Insets(15));
-
-            VBox formBox = new VBox(10,
-                    new Label("Select Yout Starting Position:"), position,
-                    Buttons
-            );
-            formBox.setPadding(new Insets(15));
-            formBox.setAlignment(Pos.CENTER);
-
-            Scene scene = new Scene(formBox, 300, 120);
-            ChoosePositionStage.setScene(scene);
-            ChoosePositionStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
-            ChoosePositionStage.initModality(Modality.WINDOW_MODAL);
-
-            ChoosePositionStage.show();
-
-        });
         else
             finishButton.setOnAction(e -> {inputQueue.add("FinishBuilding");});
 
@@ -1633,23 +1634,23 @@ public class GuiRoot implements View {
             @Override
             protected void updateItem(LobbyEvent newGame, boolean empty) {
                 super.updateItem(newGame, empty);
-                    if(!empty && newGame != null) {
-                        Label gameLabel = new Label("Game: " + newGame.getGameId());
-                        Label playersLabel = new Label("Players: " + String.join(", ", newGame.getPlayers()));
+                if(!empty && newGame != null) {
+                    Label gameLabel = new Label("Game: " + newGame.getGameId());
+                    Label playersLabel = new Label("Players: " + String.join(", ", newGame.getPlayers()));
 
-                        Button joinButton = joinButtonMaker(newGame);
+                    Button joinButton = joinButtonMaker(newGame);
 
-                        VBox labels = new VBox(5, gameLabel, playersLabel);
-                        HBox button = new HBox(5, joinButton);
-                        HBox cell = new HBox(248, labels, button);
-                        setText(null);
-                        setGraphic(cell);
-                    }
-                    else {
-                        setText(null);
-                        setGraphic(null);
-                    }
+                    VBox labels = new VBox(5, gameLabel, playersLabel);
+                    HBox button = new HBox(5, joinButton);
+                    HBox cell = new HBox(248, labels, button);
+                    setText(null);
+                    setGraphic(cell);
                 }
+                else {
+                    setText(null);
+                    setGraphic(null);
+                }
+            }
         });
 
 
@@ -2431,51 +2432,51 @@ public class GuiRoot implements View {
         });
 
         board.setOnAction(e -> {
-           gameBoardStage.show();
+            gameBoardStage.show();
         });
 
         if(myGameLv == 2)
             finishButton.setOnAction(e -> {
-            Stage ChoosePositionStage = new Stage();
-            ChoosePositionStage.setTitle("Select Position");
+                Stage ChoosePositionStage = new Stage();
+                ChoosePositionStage.setTitle("Select Position");
 
-            ComboBox<String> position = new ComboBox<>();
-            position.getItems().addAll("1", "2", "3", "4");
-            position.setPromptText("Position");
+                ComboBox<String> position = new ComboBox<>();
+                position.getItems().addAll("1", "2", "3", "4");
+                position.setPromptText("Position");
 
-            Button confirmButton = new Button("Confirm");
-            Button goBackButton = goBackButtonMaker(ChoosePositionStage);
+                Button confirmButton = new Button("Confirm");
+                Button goBackButton = goBackButtonMaker(ChoosePositionStage);
 
-            confirmButton.disableProperty().bind(
-                    position.valueProperty().isNull()
-            );
+                confirmButton.disableProperty().bind(
+                        position.valueProperty().isNull()
+                );
 
-            confirmButton.setOnAction(ev -> {
-                ChoosePositionStage.close();
-                inputQueue.add("FinishBuilding "+ position.getValue());
+                confirmButton.setOnAction(ev -> {
+                    ChoosePositionStage.close();
+                    inputQueue.add("FinishBuilding "+ position.getValue());
+                });
+
+
+                HBox Buttons = new HBox(50, confirmButton, goBackButton);
+
+                Buttons.setAlignment(Pos.CENTER);
+                Buttons.setPadding(new Insets(15));
+
+                VBox formBox = new VBox(10,
+                        new Label("Select Yout Starting Position:"), position,
+                        Buttons
+                );
+                formBox.setPadding(new Insets(15));
+                formBox.setAlignment(Pos.CENTER);
+
+                Scene scene = new Scene(formBox, 300, 120);
+                ChoosePositionStage.setScene(scene);
+                ChoosePositionStage.initOwner(primaryStage);
+                ChoosePositionStage.initModality(Modality.WINDOW_MODAL);
+
+                ChoosePositionStage.show();
+
             });
-
-
-            HBox Buttons = new HBox(50, confirmButton, goBackButton);
-
-            Buttons.setAlignment(Pos.CENTER);
-            Buttons.setPadding(new Insets(15));
-
-            VBox formBox = new VBox(10,
-                    new Label("Select Yout Starting Position:"), position,
-                    Buttons
-            );
-            formBox.setPadding(new Insets(15));
-            formBox.setAlignment(Pos.CENTER);
-
-            Scene scene = new Scene(formBox, 300, 120);
-            ChoosePositionStage.setScene(scene);
-            ChoosePositionStage.initOwner(primaryStage);
-            ChoosePositionStage.initModality(Modality.WINDOW_MODAL);
-
-            ChoosePositionStage.show();
-
-        });
         else
             finishButton.setOnAction(e -> {inputQueue.add("FinishBuilding");});
 
@@ -2920,15 +2921,15 @@ public class GuiRoot implements View {
         //messaggio di cosa è successo
         Platform.runLater(()->{
 //            prompt.setText(event.message());
-                log.getItems().addFirst(event.message());
-                if (event.message().equals("Flight started")){
-                    flightScene();
-                    flightStarted = true;
-                }
+            log.getItems().addFirst(event.message());
+            if (event.message().equals("Flight started")){
+                flightScene();
+                flightStarted = true;
+            }
 //            PauseTransition pause = new PauseTransition(Duration.seconds(5));
 //            pause.setOnFinished(e -> prompt.setText(oldText));
 //            pause.play();
-          //0 sx - 1 su - 2 dx - 3 sotto
+            //0 sx - 1 su - 2 dx - 3 sotto
             //tipo 0 m piccolo - 1 m grande - 2 s piccolo - 3 s grande
 
 
@@ -3203,6 +3204,11 @@ public class GuiRoot implements View {
             primaryStage.setScene(primaryScene);
             primaryStage.show();
         });
+    }
+
+    @Override
+    public void background() {
+
     }
 
 

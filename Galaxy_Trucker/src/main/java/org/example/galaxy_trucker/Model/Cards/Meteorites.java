@@ -283,24 +283,23 @@ public class   Meteorites extends Card {
                         location= new String("at "+Movement+ " "+MeteoritesLine);
                         Tile tiles[][] = CurrentPlanche.getPlayerBoard();
 
-                        if (attacks.get(MeteoritesOrder + 1) == 0 ){ //caso meteoriti piccoli
-                            if(tiles[Movement][MeteoritesLine].getConnectors().get(3).equals(NONE.class)) {
+                        if (attacks.get(MeteoritesOrder + 1) == 0 && tiles[Movement][MeteoritesLine].getConnectors().get(3).equals(NONE.INSTANCE)) {
                             MeteoritesFlag = true;
                             System.out.println("lisciato");
-                                Colpito =new String("bounced off");
+                            Colpito =new String("bounced off");
 
                         }
-                            else if (attacks.get(MeteoritesOrder + 1) == 0) {
-                                MeteoritesFlag = true;
-                                DamageFlag = true;
-                                hits.get(currentPlayer.GetID()).setValue( Movement, MeteoritesLine);
-                                System.out.println("Meteorites hit in: " + Movement + " " + MeteoritesLine);
-                                Colpito = new String("hit you");
-                                currentPlayer.setState(new DefendingFromSmall());
-
-                            }
+//
+                        else if (attacks.get(MeteoritesOrder + 1) == 0) {
+                            MeteoritesFlag = true;
+                            DamageFlag = true;
+                            hits.get(currentPlayer.GetID()).setValue( Movement, MeteoritesLine);
+                            System.out.println("Meteorites hit in: " + Movement + " " + MeteoritesLine);
+                            Colpito = new String("hit you");
+                            currentPlayer.setState(new DefendingFromSmall());
 
                         }
+
                         else {// caso meteoriti grandi
                             MeteoritesFlag = true;
                             DamageFlag = true;
@@ -317,7 +316,7 @@ public class   Meteorites extends Card {
             }
 
             System.out.println("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" "+location);
-            this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" at "+location,hits.get(currentPlayer.GetID()).getFirst(),hits.get(currentPlayer.GetID()).getSecond(),attacks.get(MeteoritesOrder),TypeOfHit));
+            this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" meteorite came from "+direction+" and it "+Colpito+" "+location,hits.get(currentPlayer.GetID()).getFirst(),hits.get(currentPlayer.GetID()).getSecond(),attacks.get(MeteoritesOrder),TypeOfHit));
 
             if (!DamageFlag){this.SuccessfulDefences++;}
             this.PlayerOrder++;

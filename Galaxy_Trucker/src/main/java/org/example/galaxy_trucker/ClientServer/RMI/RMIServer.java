@@ -1,18 +1,15 @@
 package org.example.galaxy_trucker.ClientServer.RMI;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.LoginCommand;
 import org.example.galaxy_trucker.Commands.QuitCommand;
 import org.example.galaxy_trucker.Controller.*;
 import org.example.galaxy_trucker.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Listeners.GhListener;
-import org.example.galaxy_trucker.Controller.Listeners.LobbyListener;
 import org.example.galaxy_trucker.Controller.Messages.ConnectionRefusedEvent;
 import org.example.galaxy_trucker.Controller.Messages.LobbyEvent;
-import org.example.galaxy_trucker.Controller.Messages.TokenEvent;
-import org.example.galaxy_trucker.Exceptions.InvalidInput;
+import org.example.galaxy_trucker.Controller.Messages.ReconnectedEvent;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -39,6 +36,61 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
     private HashMap<String, LobbyEvent> lobbyEvents;
     private HashMap<String, ClientInterface> pending = new HashMap<>();
     private final ExecutorService asyncExecutor = Executors.newFixedThreadPool(8);
+    private HashMap<ClientInterface, ExecutorService> pingClient = new HashMap<>();
+    private final ConcurrentHashMap<ClientInterface, Long> lastPingMap = new ConcurrentHashMap<>();
+
+
+    private void startTimeoutChecker() {
+        new Thread(() -> {
+            while (true) {
+                long now = System.currentTimeMillis();
+                for (Map.Entry<ClientInterface, Long> entry : lastPingMap.entrySet()) {
+                    if (now - entry.getValue() > 10000) {
+                        ClientInterface client = entry.getKey();
+                        System.out.println("Timeout: " + client);
+                        lastPingMap.remove(client);
+                        ExecutorService pingExec = pingClient.remove(client);
+                        if (pingExec != null) {
+                            pingExec.shutdown();
+                            System.out.println("pingExec shutdown");
+                        }
+                        handleDisconnection(client);
+                    }
+                }
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+        }).start();
+    }
+
+
+    private void handleDisconnection(ClientInterface client) {
+        String token = clients.get(client);
+        if (token != null) {
+
+            VirtualView vv = tokenMap.get(token);
+
+            if (vv != null && !vv.getDisconnected()) {
+                vv.setDisconnected(true);
+                vv.setClient(null);
+
+                System.out.println("Client disconnected: " + client);
+                    synchronized (DisconnectedClients) {
+                        DisconnectedClients.add(token);
+                    }
+                    synchronized (clients) {
+                        clients.remove(client);
+                    }
+                gh.PlayerDisconnected(token);
+            }
+        }
+
+    }
 
     public RMIServer(GamesHandler gamesHandler, ConcurrentHashMap<String, VirtualView> tokenMap, ArrayList<String> DisconnectedClients) throws RemoteException {
         this.tokenMap = tokenMap;
@@ -47,90 +99,92 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
         this.DisconnectedClients = DisconnectedClients;
 
         //ping thread
-        Thread pingThread = new Thread(() -> {
+//        Thread pingThread = new Thread(() -> {
+//
+//            while (true) {
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//
+//                Map<ClientInterface, String> clientsSnapshot;
+//                synchronized (clients) {
+//                    clientsSnapshot = new HashMap<>(clients);
+//                }
+//
+//                for (ClientInterface client : clientsSnapshot.keySet()) {
+//                    try {
+//
+//                        ExecutorService executor = Executors.newSingleThreadExecutor();
+//                        Future<Void> future = executor.submit(() -> {
+//                            try {
+//                                client.receivePing();
+//                            } catch (RemoteException e) {
+//                                throw new ExecutionException(e);
+//                            }
+//                            return null;
+//                        });
+//
+//
+//                        future.get(1500, TimeUnit.MILLISECONDS);
+//
+//                        //System.out.println("Ping successful for client: " + client);
+//
+//                        executor.shutdown();
+//
+//                    } catch (TimeoutException e) {
+//
+//                        String token = clientsSnapshot.get(client);
+//                        if (token != null) {
+//
+//                            VirtualView vv = tokenMap.get(token);
+//
+//                            if (vv != null && !vv.getDisconnected()) {
+//                                vv.setDisconnected(true);
+//                                vv.setClient(null);
+//
+//                                System.out.println("Client disconnected: " + client);
+//                                    synchronized (DisconnectedClients) {
+//                                        DisconnectedClients.add(token);
+//                                    }
+//                                    synchronized (clients) {
+//                                        clients.remove(client);
+//                                    }
+//                                gh.PlayerDisconnected(token);
+//
+//                            }
+//                        }
+//                    }
+//                    catch (ExecutionException | InterruptedException e) {
+//                    String token = clientsSnapshot.get(client);
+//                        if (token != null ) {
+//
+//                            VirtualView vv = tokenMap.get(token);
+//                            //attempts.remove(client);
+//
+//                            if (vv != null && !vv.getDisconnected()) {
+//                                vv.setDisconnected(true);
+//                                vv.setClient(null);
+//                                System.out.println("Client disconnected: " + client);
+//
+//                                synchronized (DisconnectedClients) {
+//                                    DisconnectedClients.add(token);
+//                                }
+//                                synchronized (clients) {
+//                                    clients.remove(client);
+//                                }
+//                                gh.PlayerDisconnected(token);
+//                            }
+//                        }
+//                    }
+//             }}
+//            });
+//        pingThread.start();
+        startTimeoutChecker();
 
-            while (true) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
-
-                Map<ClientInterface, String> clientsSnapshot;
-                synchronized (clients) {
-                    clientsSnapshot = new HashMap<>(clients);
-                }
-
-                for (ClientInterface client : clientsSnapshot.keySet()) {
-                    try {
-
-                        ExecutorService executor = Executors.newSingleThreadExecutor();
-                        Future<Void> future = executor.submit(() -> {
-                            try {
-                                client.receivePing();
-                            } catch (RemoteException e) {
-                                throw new ExecutionException(e);
-                            }
-                            return null;
-                        });
-
-
-                        future.get(1500, TimeUnit.MILLISECONDS);
-
-                        //System.out.println("Ping successful for client: " + client);
-
-                        executor.shutdown();
-
-                    } catch (TimeoutException e) {
-
-                        String token = clientsSnapshot.get(client);
-                        if (token != null) {
-
-                            VirtualView vv = tokenMap.get(token);
-
-                            if (vv != null && !vv.getDisconnected()) {
-                                vv.setDisconnected(true);
-                                vv.setClient(null);
-
-                                System.out.println("Client disconnected: " + client);
-                                    synchronized (DisconnectedClients) {
-                                        DisconnectedClients.add(token);
-                                    }
-                                    synchronized (clients) {
-                                        clients.remove(client);
-                                    }
-                                gh.PlayerDisconnected(token);
-
-                            }
-                        }
-                    }
-                    catch (ExecutionException | InterruptedException e) {
-                    String token = clientsSnapshot.get(client);
-                        if (token != null ) {
-
-                            VirtualView vv = tokenMap.get(token);
-                            //attempts.remove(client);
-
-                            if (vv != null && !vv.getDisconnected()) {
-                                vv.setDisconnected(true);
-                                vv.setClient(null);
-                                System.out.println("Client disconnected: " + client);
-
-                                synchronized (DisconnectedClients) {
-                                    DisconnectedClients.add(token);
-                                }
-                                synchronized (clients) {
-                                    clients.remove(client);
-                                }
-                                gh.PlayerDisconnected(token);
-                            }
-                        }
-                    }
-             }}
-            });
-
-        pingThread.start();
         lobbyEvents = new HashMap<>();
         lobbyEvents.put("EMPTY CREATE NEW GAME", new LobbyEvent("EMPTY CREATE NEW GAME", -1,null, -1));
 
@@ -155,8 +209,8 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
     }
 
     @Override
-    public void receivePong() throws RemoteException {
-
+    public void receivePong(ClientInterface clientInterface) throws RemoteException {
+        lastPingMap.put(clientInterface, System.currentTimeMillis());
     }
 
 
@@ -164,11 +218,15 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
     public void command(Command cmd) throws RemoteException{
         if (cmd.getTitle().equals("Lobby")){
             System.out.println("LOBBY");
-            lobby.add(cmd.getClient());
+            if (lobby.contains(cmd.getClient())){
+                cmd.getClient().receiveMessage(new ReconnectedEvent("lobby", "placeholder", "placeholder", -1));
+            }
+            else {
+                lobby.add(cmd.getClient());
+            }
 
             new Thread(()->{
                 synchronized (lobbyEvents) {
-
                     ExecutorService executor = Executors.newSingleThreadExecutor();
                     Future<Void> future = executor.submit(() -> {
                         try {
@@ -191,11 +249,43 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
                 }
             }).start();
+
+            ScheduledExecutorService pingExecutor = Executors.newSingleThreadScheduledExecutor();
+
+            pingExecutor.scheduleAtFixedRate(() -> {
+
+                try {
+                    cmd.getClient().receivePing();
+                    System.out.println("PING");
+                } catch (RemoteException e) {
+                    System.out.println("Client disconnected: " + cmd.getClient());
+                    pingExecutor.shutdown();
+                }
+            }, 0, 3, TimeUnit.SECONDS);
+            pingClient.put(cmd.getClient(), pingExecutor);
+            lastPingMap.put(cmd.getClient(), System.currentTimeMillis());
+
         }
         else if (cmd.getTitle().equals("Login")){
             System.out.println("LOGIN");
             LoginCommand lcmd = (LoginCommand) cmd;
+            if (!pingClient.containsKey(lcmd.getClient())) {
+                ScheduledExecutorService pingExecutor = Executors.newSingleThreadScheduledExecutor();
 
+                pingExecutor.scheduleAtFixedRate(() -> {
+
+                    try {
+                        cmd.getClient().receivePing();
+                        System.out.println("PING");
+                    } catch (RemoteException e) {
+                        System.out.println("Client disconnected: " + cmd.getClient());
+                        lobby.remove(cmd.getClient());
+                        pingExecutor.shutdown();
+                    }
+                }, 0, 3, TimeUnit.SECONDS);
+                pingClient.put(cmd.getClient(), pingExecutor);
+                lastPingMap.put(cmd.getClient(), System.currentTimeMillis());
+            }
             lobby.remove(cmd.getClient());
             UUID token  = null;
             VirtualView vv = new VirtualView(cmd.getPlayerId(), cmd.getGameId(), cmd.getClient(), null);
@@ -219,6 +309,21 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
             System.out.println("RECONNECT:");
             String token = cmd.getToken();
             System.out.println(cmd.getToken() + " " + cmd.getClient());
+            ScheduledExecutorService pingExecutor = Executors.newSingleThreadScheduledExecutor();
+
+            pingExecutor.scheduleAtFixedRate(() -> {
+
+                try {
+                    cmd.getClient().receivePing();
+                    //System.out.println("PING");
+                } catch (RemoteException e) {
+                    System.out.println("Client disconnected: " + cmd.getClient());
+                    lobby.remove(cmd.getClient());
+                    pingExecutor.shutdown();
+                }
+            }, 0, 3, TimeUnit.SECONDS);
+            pingClient.put(cmd.getClient(), pingExecutor);
+            lastPingMap.put(cmd.getClient(), System.currentTimeMillis());
             if (tokenMap.containsKey(token) && DisconnectedClients.contains(token)) {
 
                 VirtualView temp = tokenMap.get(token);

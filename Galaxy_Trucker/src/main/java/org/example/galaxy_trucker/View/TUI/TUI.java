@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.*;
 import org.example.galaxy_trucker.View.View;
@@ -22,6 +22,8 @@ import org.example.galaxy_trucker.View.ViewPhase;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 
@@ -492,8 +494,17 @@ public class TUI implements View {
      */
     @Override
     public void showScore(ScoreboardEvent event) {
+        playerClient.setPlayerState(new FinishStateClient());
+        out.setScoreBoard(formatScoreboard(event.getScores()));
+        onGameUpdate();
 
     }
+
+    @Override
+    public void background() {
+        inputReader.ChangeBackground();
+    }
+
 
     /**
      * Formats the PBInfoEvent data into a structured string using ASCII art components.
@@ -1160,25 +1171,11 @@ public class TUI implements View {
         }, debounceDelayMs, TimeUnit.MILLISECONDS);
     }
 
-/**
- * Terminates the scheduler and releases any resources associated with it.
- * This method is typically called when the application is shutting down
- * and the scheduler is no longer needed. It ensures that all tasks
- * currently managed by the scheduler are halted and any remaining resources
- * are properly cleaned up.
- */
 //quando termina tutto chiamo questo anche se non credo dovrebbe particolamente servirmi
     public void shutdown() {
         scheduler.shutdown();
     }
 
-    /**
-     * Formats a list of rewards from a given RewardsEvent into a StringBuilder
-     * representation with colored blocks based on the value of the goods.
-     *
-     * @param event the RewardsEvent containing the list of rewards to format
-     * @return a StringBuilder containing the formatted rewards output
-     */
     public StringBuilder formatRewards(RewardsEvent event) {
         ArrayList<Goods> goodsList = event.getRewards();
         StringBuilder sb = new StringBuilder();
@@ -1200,6 +1197,48 @@ public class TUI implements View {
             k++;
         }
         sb.append("\n");
+
+        return sb;
+    }
+
+    public StringBuilder formatScoreboard(HashMap<String,Integer> scoreboard){
+        StringBuilder sb = new StringBuilder();
+        final int PADDING = 125;
+        String pad = " ".repeat(PADDING);
+
+        List<Map.Entry<String, Integer>> sorted = scoreboard.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .toList();
+        sb.append(ASCII_ART.Title);
+        sb.append("                                                                                                                                                                                                                                                                                                              \n".repeat(20));
+
+        sb.append(pad).append("╔════╦═══════════════════════════╦═══════════════╗"+pad+"\n");
+        sb.append(pad).append("║ #  ║ Player                    ║ Score         ║"+pad+"\n");
+        sb.append(pad).append("╠════╬═══════════════════════════╬═══════════════╣"+pad+"\n");
+
+        int rank = 1;
+        for (Map.Entry<String, Integer> entry : sorted) {
+            String player = entry.getKey();
+            int score = entry.getValue();
+            String emoji = switch (rank) {
+                case 1 -> " 🥇";
+                case 2 -> " 🥈";
+                case 3 -> " 🥉";
+                default -> "";
+            };
+
+            String row = String.format("║ %-2d ║ %-25s ║ %-13d ║%s"+pad, rank, player, score, emoji);
+            sb.append(pad).append(row).append("\n");
+
+            rank++;
+        }
+
+        sb.append(pad).append("╚════╩═══════════════════════════╩═══════════════╝"+pad+"\n");
+        sb.append("                                                                                                                                                                                                                                                                                                              \n".repeat(20));
+
+        sb.append("\n".repeat(2));
+
 
         return sb;
     }

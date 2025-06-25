@@ -281,6 +281,7 @@ public class Warzone extends Card{
 
     @Override
     public void finishCard() {
+        System.out.println("ODDIO FINISH DI WARZONE");
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
@@ -563,7 +564,7 @@ public class Warzone extends Card{
         }
 
 
-
+        Worst.setState(new Waiting());
         this.updateStates();
     }
 
@@ -764,6 +765,7 @@ public class Warzone extends Card{
         }
         if(this.ShotsOrder >=PunishmentShots.size() ){
             this.ShotsOrder = 0;
+            Worst.setState(new Waiting());
             this.updateStates();
         }
     }
@@ -867,6 +869,7 @@ public class Warzone extends Card{
         }
         if(tmpPunishment==0){
             System.out.println("finished stealing");
+            Worst.setState(new Waiting());
             this.updateStates();
             return;
         }

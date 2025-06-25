@@ -5,7 +5,6 @@ import org.example.galaxy_trucker.Commands.FinishBuildingCommand;
 import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.View.ClientModel.States.BaseStateClient;
 import org.example.galaxy_trucker.View.ClientModel.States.ChoosePositionClient;
 
 import java.io.IOException;

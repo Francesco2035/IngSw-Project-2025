@@ -1,12 +1,8 @@
 package org.example.galaxy_trucker.Model.Boards;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.example.galaxy_trucker.Controller.Controller;
 import org.example.galaxy_trucker.Controller.Listeners.ControllerHourGlassListener;
-import org.example.galaxy_trucker.Controller.Listeners.HourGlassListener;
 import org.example.galaxy_trucker.Controller.Messages.HourglassEvent;
 
-import java.lang.Thread;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,7 +20,7 @@ public class Hourglass{
     public Hourglass(){}
 
     public Hourglass(int lv) {
-        time = 60000;
+        time = 90000;
         startable = true;
         if(lv == 2) usages = 3;
         else usages = -1;

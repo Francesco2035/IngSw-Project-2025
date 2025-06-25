@@ -1,10 +1,10 @@
 package org.example.galaxy_trucker.View;
 
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 
 import java.io.IOException;
 
@@ -273,4 +273,6 @@ public interface View {
      * @param event The ScoreboardEvent containing the mapping of player names to their scores.
      */
     void showScore(ScoreboardEvent event);
+
+    void background();
 }

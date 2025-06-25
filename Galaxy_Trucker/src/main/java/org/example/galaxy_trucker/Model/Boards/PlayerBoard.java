@@ -1,7 +1,6 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Listeners.RewardsListener;
 import org.example.galaxy_trucker.Controller.Messages.PBInfoEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
@@ -15,7 +14,6 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.Goods.*;
-import org.jline.builtins.SyntaxHighlighter;
 
 
 import java.util.*;

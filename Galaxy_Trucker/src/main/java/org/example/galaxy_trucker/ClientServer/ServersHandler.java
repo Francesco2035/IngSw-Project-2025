@@ -7,7 +7,6 @@ import org.example.galaxy_trucker.Controller.VirtualView;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServersHandler implements Runnable {

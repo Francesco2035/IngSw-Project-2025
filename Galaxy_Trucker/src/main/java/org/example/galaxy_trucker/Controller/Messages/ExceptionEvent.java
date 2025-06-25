@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller.Messages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ExceptionEvent implements Event{
@@ -27,6 +28,7 @@ public class ExceptionEvent implements Event{
         return exception;
     }
 
+    @JsonIgnore
     @Override
     public String message() {
         return "";

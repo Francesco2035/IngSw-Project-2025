@@ -9,8 +9,6 @@ import org.example.galaxy_trucker.Controller.Messages.ScoreboardEvent;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
 import java.lang.*;
@@ -188,7 +186,7 @@ public class GameBoard {
                 if(p.getValue() >=0){
                     p.setValue(shiftedPositions[i]);
                     positions[shiftedPositions[i]] = p.getKey();
-                    System.out.println("@@@Set "+p.getKey().GetID()+" to "+shiftedPositions[i]+ " position: "+positions[shiftedPositions[i]]);
+                    //System.out.println("@@@Set "+p.getKey().GetID()+" to "+shiftedPositions[i]+ " position: "+positions[shiftedPositions[i]]);
                     i++;
                 }
             PlayersOnBoard--;
@@ -212,7 +210,7 @@ public class GameBoard {
     public void updateAllPosition(){
         for(Player_IntegerPair p : players) //come hashmap
             if(p.getValue() >=0){
-                System.out.println("@@@"+p.getValue()+":"+ p.getKey().GetID());
+                //System.out.println("@@@"+p.getValue()+":"+ p.getKey().GetID());
                 sendUpdates(new GameBoardEvent(p.getValue(), p.getKey().GetID()));
             }
     }
@@ -348,7 +346,6 @@ public class GameBoard {
         ArrayList<Player> PlayersCopy = new ArrayList<>();
         try{
             for (Player_IntegerPair player : players) {
-                System.out.println("GAMEBOARD: "+ player.getKey().GetID());
                 PlayersCopy.add(player.getKey());
             }
         }catch (Exception e){
