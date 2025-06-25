@@ -19,16 +19,15 @@ import java.util.ArrayList;
 
 public class HandleCargoCommand extends Command implements Serializable {
 
-    @JsonProperty("title")
-    String title;
+
     @JsonProperty("position")
     int position;
     @JsonProperty("coordinate")
     IntegerPair coordinate;
-    @JsonProperty("coordinate2")
-    IntegerPair coordinate2;
     @JsonProperty("position2")
     int position2;
+    @JsonProperty("coordinate2")
+    IntegerPair coordinate2;
 
     @JsonProperty("commandType")
     private final String commandType = "HandleCargoCommand";
