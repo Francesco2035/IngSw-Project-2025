@@ -10,14 +10,34 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 import java.io.IOException;
 
+/**
+ * The CheckValidityController class is responsible for handling game actions specific to the
+ * "Check Validity" state of a Player. It manages commands and transitions between states
+ * based on the validity of player's actions and game state.
+ * Extends the base Controller class.
+ */
 public class CheckValidityController extends Controller{
 
 
+    /**
+     * Constructs a CheckValidityController instance to manage the current player's game state and validity checks.
+     *
+     * @param player       The player for whom the validity is being checked.
+     * @param gameId       The identifier of the game session.
+     * @param disconnected Indicates whether the player is currently disconnected from the game.
+     */
     public CheckValidityController( Player player, String gameId,boolean disconnected) { //TODO test
         this.gameId = gameId;
         this.curPlayer = player;
     }
 
+    /**
+     * Processes the given command by checking its validity, executing it, and transitioning the game
+     * to the next state if applicable. Handles exceptions that may occur during command execution.
+     *
+     * @param command the command to be processed
+     * @param gc the game controller to manage game transitions; can be null
+     */
     @Override
     public synchronized void action(Command command, GameController gc) { //TODO test //  devo overridare anche qui ok
 
@@ -47,6 +67,13 @@ public class CheckValidityController extends Controller{
 
     }
 
+    /**
+     * Executes the default action for the current player in the game.
+     * This method verifies the player's state and performs the appropriate operations
+     * if the player has not yet acted.
+     *
+     * @param gc The GameController instance managing the game state and logic.
+     */
     @Override
     public  void  DefaultAction(GameController gc) { //TODO test
         PlayerState state = curPlayer.getPlayerState();
@@ -73,6 +100,15 @@ public class CheckValidityController extends Controller{
     }
 
 
+    /**
+     * Handles the transition of the player's state in the game based on the validity of their current state.
+     *
+     * If the player's state is valid, it transitions to the "ChoosePosition" state and initializes a
+     * new {@code ChoosePositionController}. Otherwise, it transitions to the "CheckValidity" state
+     * and initializes a new {@code CheckValidityController}.
+     *
+     * @param gc the {@code GameController} instance managing the current state and functionality of the game
+     */
     @Override
     public void nextState(GameController gc) { //TODO test
         System.out.println("CHECK_CONTROLLER callign next state for " + curPlayer.GetID());
