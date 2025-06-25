@@ -211,26 +211,38 @@ public class InputReader implements Runnable {
      * state with updated*/
     public synchronized void renderScreen(StringBuilder content) {
 
-        String os = System.getProperty("os.name").toLowerCase();
+//        String os = System.getProperty("os.name").toLowerCase();
+//
+//        try {
+//            if (os.contains("windows")) {
+//                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+//            } else {
+//                new ProcessBuilder("clear").inheritIO().start().waitFor();
+//            }
+//        } catch (IOException | InterruptedException e) {
+//            System.out.print("\033[H\033[2J");
+//            System.out.flush();
+//        }
+//        System.out.print("\033[H\033[2J");
+//        System.out.flush();
+//        terminal.puts(InfoCmp.Capability.clear_screen);
+//        terminal.flush();
 
-        try {
-            if (os.contains("windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                new ProcessBuilder("clear").inheritIO().start().waitFor();
-            }
-        } catch (IOException | InterruptedException e) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
-        }
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        terminal.puts(InfoCmp.Capability.clear_screen);
+
+
+
+        //System.out.print("\033[3J");
+        //terminal.puts(InfoCmp.Capability.clear_screen);
+        String partialInput = Lreader.getBuffer().toString();
+        // Usa InfoCmp per tornare su
+        terminal.puts(InfoCmp.Capability.cursor_address, 0, 0);
         terminal.flush();
 
-        String partialInput = Lreader.getBuffer().toString();
-        System.out.print("\033[3J");
-        terminal.puts(InfoCmp.Capability.clear_screen);
+// Poi, cancella anche il buffer di scroll manualmente (solo ANSI, JLine non espone direttamente questa funzionalità)
+        terminal.writer().print("\033[3J"); // cancella scrollback
+        terminal.flush();
+        terminal.puts(InfoCmp.Capability.cursor_address, 0, 0);
+        terminal.puts(InfoCmp.Capability.clr_eos);
         terminal.flush();
         if (background != 2) {
             AttributedString colored = fillBackground(content.toString());
@@ -239,8 +251,8 @@ public class InputReader implements Runnable {
         else {
             terminal.writer().print(content.toString());
         }
-        terminal.writer().println();
-        terminal.flush();
+        terminal.puts(InfoCmp.Capability.carriage_return); // Riporta a inizio riga
+        terminal.puts(InfoCmp.Capability.clr_eol);         // Pulisce il resto della riga
         terminal.flush();
         Lreader.getBuffer().clear();
         Lreader.getBuffer().write(partialInput);
