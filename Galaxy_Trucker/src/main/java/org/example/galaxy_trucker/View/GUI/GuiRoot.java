@@ -736,6 +736,7 @@ public class GuiRoot implements View {
             HBox buttons = new HBox(30, reconnect, change, exit);
             reconnect.setOnAction(click -> {
                 inputQueue.add("Reconnect");
+                System.out.println("Reconnect");
             });
             change.setOnAction(click -> {
                 inputQueue.add("ChangeConnection");

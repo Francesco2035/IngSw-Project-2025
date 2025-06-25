@@ -12,5 +12,5 @@ public interface ServerInterface extends Remote {
     void StartServer() throws RemoteException;
 
 
-    void receivePong() throws RemoteException;
+    void receivePong(ClientInterface clientInterface) throws RemoteException;
 }

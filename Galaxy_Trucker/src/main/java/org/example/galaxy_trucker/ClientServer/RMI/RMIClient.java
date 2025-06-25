@@ -40,7 +40,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     public void receivePing() throws RemoteException {
 
         lastPingTime = System.currentTimeMillis();
-        server.receivePong();
+        server.receivePong(this);
 
     }
 
@@ -51,6 +51,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
             long now = System.currentTimeMillis();
             System.out.println(lastPingTime);
             if (now - lastPingTime > 10000) {
+                System.out.println("Connection lost");
                 try {
                     handleDisconnection();
                 } catch (InterruptedException | IOException e) {
@@ -80,20 +81,22 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     private boolean setup(){
         try{
-            //System.out.println("Starting Client");
+            System.out.println("Starting Client");
             Registry registry;
-            //System.out.println(Settings.SERVER_NAME + " " + Settings.RMI_PORT);
+            System.out.println(Settings.SERVER_NAME + " " + Settings.RMI_PORT);
 
             registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.RMI_PORT);
 
             this.server = (ServerInterface) registry.lookup("CommandReader");
 
-            //System.out.println(server);
+            System.out.println(server);
             running = true;
+            System.out.println("running "+ running);
             return true;
         }
 
         catch(RemoteException | NotBoundException e){
+            System.out.println("error reconnecting "+ e.getMessage());
             return false;
         }
     }
@@ -150,6 +153,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         System.out.println("Input loop started: "+running+ " cmd "+cmd);
         if (running) {
             while (running && !cmd.equals("end")) {
+                System.out.println("CMD: "+cmd);
                 try {
                     cmd = client.getView().askInput("Command <RMI>: ");
                     if (cmd.equals("")){
@@ -368,7 +372,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                 try {
                     new Thread(() -> {
                         try {
-                            server.receivePong();
+                            server.receivePong(this);
                         } catch (RemoteException e) {
                             synchronized (running) {
                                 if (running) {
@@ -398,67 +402,85 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     private void handleDisconnection() throws InterruptedException, IOException {
         System.out.println("handle disconnection");
         running = false;
-        client.getView().disconnect();
         if (inputLoop != null && inputLoop.isAlive()) {
             inputLoop.interrupt();
             System.out.println("input loop interrupted");
         }
         if (scheduler != null && !scheduler.isShutdown()) {
-            System.out.println("Stop monitor pings");
             scheduler.shutdown();
+            System.out.println("Stop monitor pings");
         }
-        try{
-            while(true) {
-                String whatNow = client.getView().askInput("<Reconnect> | <Exit>: ");
-                switch (whatNow) {
-                    case "Exit": {
-                        exit(1);
-                        return;
-                    }
-                    case "Reconnect": {
-                        if (!setup()) {
-                            System.out.println("Error reconnecting!");
-                            break;
-                        }
-                        String command = "";
-                        if(client.getLobby() && !client.getLogin()){
-                            command = "Lobby";
-                            //TODO: credo che non sia una buona idea
-                        }
-                        else if (client.getLogin()){
-                            command = "Reconnect";
-                        }
-                        if (!command.isEmpty()){
-                            Command cmd = commandInterpreter.interpret(command);
-                            server.command(cmd);
-                        }
-                        running = true;
-                        inputLoop = new Thread(() -> {
-                            try {
-                                this.inputLoop(true);
-                            } catch (IOException | InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
-                        inputLoop.setDaemon(true);
-                        inputLoop.start();
-                        //sendPongs();
-                        if (client.getLogin() || client.getLobby()){
-                            lastPingTime = System.currentTimeMillis();
-                            startPingMonitor();
-                        }
-                        return;
-                    }
-                    default: {
-                        System.out.println("Unknown command: " + whatNow);
+        client.getView().disconnect();
+        System.out.println("popup");
+        String whatNow = "";
+        while(whatNow.isEmpty()|| !running) {
+            whatNow = client.getView().askInput("<Reconnect> | <Exit>: ");
+            System.out.println("User entered: " + whatNow);
+            System.out.println("<Reconnect> | <Exit>: ");
+            switch (whatNow) {
+                case "Exit": {
+                    System.out.println("Exit");
+                    exit(1);
+                    return;
+                }
+                case "Reconnect": {
+                    System.out.println("entro reconnect");
+                    if (!setup()) {
+                        System.out.println("Error reconnecting!");
                         break;
                     }
+                    String command = "";
+                    Command cmd = null;
+
+                    if(client.getLobby() && !client.getLogin()){
+                        cmd = new LobbyCommand("Lobby");
+                    }
+                    else if (client.getLogin()){
+                        command = "Reconnect";
+                    }
+                    if (!command.isEmpty()){
+                        System.out.println("chissà perchè non entra");
+                        try{
+                             cmd = commandInterpreter.interpret(command);
+
+                        }
+                        catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
+                        try {
+                            System.out.println("try");
+                            server.command(cmd);
+                            System.out.println("tryfine");
+                            System.out.println(cmd.getClass().getSimpleName());
+                        } catch (Exception e) {
+                            System.out.println("catch");
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    running = true;
+                    System.out.println("Creo input loop");
+                    inputLoop = new Thread(() -> {
+                        try {
+                            this.inputLoop(true);
+                        } catch (IOException | InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                    inputLoop.setDaemon(true);
+                    inputLoop.start();
+                    //sendPongs();
+                    if (client.getLogin() || client.getLobby()){
+                        lastPingTime = System.currentTimeMillis();
+                        startPingMonitor();
+                    }
+                    System.out.println("se chiami qui sei fritto bro");
+                    return;
+                }
+                default: {
+                    System.out.println("Unknown command: " + whatNow);
+                    break;
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
-            handleDisconnection();
-
         }
 
     }
