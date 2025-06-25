@@ -360,6 +360,11 @@ public class Warzone extends Card{
 
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) throws InterruptedException {
+        if(isaPunishment){
+            this.consumeEnergy2(coordinates);
+            return;
+        }
+
         if(coordinates==null) {
             System.out.println("coordinates is null");
             if (RequirementsType[ChallengeOrder] == 1) {
@@ -371,10 +376,7 @@ public class Warzone extends Card{
             }
         }
 
-        if(isaPunishment){
-            this.consumeEnergy2(coordinates);
-            return;
-        }
+
 
         if(coordinates.size()!=this.energyUsage){
 
@@ -452,6 +454,15 @@ public class Warzone extends Card{
             this.Worst=currentPlayer;
             this.Minimum=this.currentpower;
             System.out.println(currentPlayer.GetID()+" is the worst, the minimum is now "+this.currentpower);
+
+            ArrayList<Player> PlayerListMsg = this.getBoard().getPlayers();
+            for(Player p : PlayerListMsg){
+                if(p.GetID()== currentPlayer.GetID()){
+                    this.sendRandomEffect(p.GetID(),new LogEvent("You are now the worst with "+this.Minimum+" plasma drill power",-1,-1,-1,-1));
+                }
+                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" is now the worst with "+this.Minimum+" plasma drill power",-1,-1,-1,-1));
+            }
+
         }
         this.currentPlayer.setState(new Waiting());
         message= message+currentPlayer.GetID()+"has chosen strength "+this.currentpower +"\n";
@@ -463,6 +474,15 @@ public class Warzone extends Card{
         if(this.currentmovement<Minimum){
             this.Worst=currentPlayer;
             this.Minimum=this.currentmovement;
+
+            ArrayList<Player> PlayerListMsg = this.getBoard().getPlayers();
+            for(Player p : PlayerListMsg){
+                if(p.GetID()== currentPlayer.GetID()){
+                    this.sendRandomEffect(p.GetID(),new LogEvent("You are now the worst with "+this.Minimum+" engine power",-1,-1,-1,-1));
+                }
+                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" is now the worst with "+this.Minimum+" engine power",-1,-1,-1,-1));
+            }
+
         }
         this.currentPlayer.setState(new Waiting());
         message= message+currentPlayer.GetID()+"has chosen strength "+this.currentpower +"\n";
@@ -502,6 +522,15 @@ public class Warzone extends Card{
                 Minimum=totHumans;
             }
         }
+
+        ArrayList<Player> PlayerListMsg = this.getBoard().getPlayers();
+        for(Player p : PlayerListMsg){
+            if(p.GetID()== Worst.GetID()){
+                this.sendRandomEffect(p.GetID(),new LogEvent("You were the worst with "+this.Minimum+" people",-1,-1,-1,-1));
+            }
+            this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" was the worst with "+this.Minimum+" people",-1,-1,-1,-1));
+        }
+
         this.PlayerOrder=PlayerList.size();
         this.updateStates();
     }

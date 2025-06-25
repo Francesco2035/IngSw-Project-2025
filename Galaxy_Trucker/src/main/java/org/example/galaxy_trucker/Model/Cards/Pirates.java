@@ -383,9 +383,29 @@ public class Pirates extends Card{
     public void continueCard(boolean accepted){
         if(accepted){
 
+            ArrayList<Player> PlayerListMsg = this.getBoard().getPlayers();
+            for(Player p : PlayerListMsg){
+                if(p.GetID()== currentPlayer.GetID()){
+                    this.sendRandomEffect(p.GetID(),new LogEvent("You have accepted to loot the pirates",-1,-1,-1,-1));
+                }
+                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" has accepted to loot the pirates",-1,-1,-1,-1));
+            }
+
             currentPlayer.getmyPlayerBoard().setCredits(this.reward);
             this.getBoard().movePlayer(this.currentPlayer.GetID(), -this.getTime());
         }
+        else{
+            ArrayList<Player> PlayerListMsg = this.getBoard().getPlayers();
+            for(Player p : PlayerListMsg){
+                if(p.GetID()== currentPlayer.GetID()){
+                    this.sendRandomEffect(p.GetID(),new LogEvent("You have refused to loot the pirates",-1,-1,-1,-1));
+                }
+                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" has refused to loot the pirates",-1,-1,-1,-1));
+            }
+
+        }
+
+
 
         this.finishCard();
     }
