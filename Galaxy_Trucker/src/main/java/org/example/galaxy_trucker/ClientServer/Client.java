@@ -342,23 +342,4 @@ public class Client implements EventVisitor {
         this.view.updateGameboard(gameBoardEvent);
     }
 
-
-
-
-    public void changeConnection(String connection, CommandInterpreter interpreter) throws IOException, NotBoundException, InterruptedException {
-        if (connection.equals("RMI")) {
-//            String ip = NetworkUtils.getLocalIPAddress();
-//            System.setProperty("java.rmi.server.hostname", ip);
-//            System.out.println("RMI hostname set to: " + ip);
-
-            RMIClient rmiClient = new RMIClient(this, interpreter);
-
-
-        }
-        if (connection.equals("TCP")) {
-            TCPClient tcpClient = new TCPClient(this, interpreter);
-
-        }
-
-    }
 }
