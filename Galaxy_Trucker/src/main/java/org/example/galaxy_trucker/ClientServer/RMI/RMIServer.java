@@ -35,6 +35,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
     private HashMap<String, LobbyEvent> lobbyEvents;
     private HashMap<String, ClientInterface> pending = new HashMap<>();
     private final ExecutorService asyncExecutor = Executors.newFixedThreadPool(8);
+    private HashMap<ClientInterface, ExecutorService> pingLobby = new HashMap<>();
 
     public RMIServer(GamesHandler gamesHandler, ConcurrentHashMap<String, VirtualView> tokenMap, ArrayList<String> DisconnectedClients) throws RemoteException {
         this.tokenMap = tokenMap;
@@ -187,10 +188,28 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
                 }
             }).start();
+
+            ScheduledExecutorService pingExecutor = Executors.newSingleThreadScheduledExecutor();
+
+            pingExecutor.scheduleAtFixedRate(() -> {
+                try {
+                    cmd.getClient().receivePing();
+                } catch (RemoteException e) {
+                    System.out.println("Client disconnected: " + cmd.getClient());
+                    lobby.remove(cmd.getClient());
+                    pingExecutor.shutdown();
+                }
+            }, 0, 5, TimeUnit.SECONDS);
+            pingLobby.put(cmd.getClient(), pingExecutor);
+
         }
         else if (cmd.getTitle().equals("Login")){
             System.out.println("LOGIN");
             LoginCommand lcmd = (LoginCommand) cmd;
+            ExecutorService ex = pingLobby.remove(cmd.getClient());
+            if (ex != null && !ex.isTerminated()) {
+                ex.shutdown();
+            }
 
             lobby.remove(cmd.getClient());
             UUID token  = null;
