@@ -38,12 +38,12 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEven
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 /**
  * The `GuiRoot` class is responsible for handling the graphical user interface (GUI)
@@ -3132,62 +3132,32 @@ public class GuiRoot implements View {
     }
 
 
-
-
     /**
-     * Displays the final scoreboard with player rankings and scores.
-     * This method creates a visually appealing scoreboard that shows each player's
-     * position, name, and score using ordinal tokens and styled text.
+     * Displays the scores on the scoreboard based on the scores provided in the event.
      *
-     * <p>Visual Layout:
-     * <ul>
-     *   <li>Vertical layout with 25px spacing between player entries</li>
-     *   <li>Each player entry shows:
-     *     <ul>
-     *       <li>Position badge (1st, 2nd, etc. from /GUI/ordinalTokens/)</li>
-     *       <li>Player name and score with golden text styling</li>
-     *     </ul>
-     *   </li>
-     *   <li>Centered alignment for all elements</li>
-     *   <li>Responsive design bound to primary stage dimensions</li>
-     * </ul>
-     *
-     * <p>Behavior Details:
-     * <ul>
-     *   <li>Processes scores in the order received from the event</li>
-     *   <li>Uses Platform.runLater() for thread-safe UI updates</li>
-     *   <li>Updates the primary stage title to "Final Scoreboard"</li>
-     *   <li>Replaces all existing content in the contentRoot</li>
-     * </ul>
-     *
-     * @param event The ScoreboardEvent containing:
-     *              <ul>
-     *                <li>Map of player names to their scores</li>
-     *              </ul>
-     *
-     * @implNote Implementation details:
-     * <ul>
-     *   <li>Ordinal tokens are loaded from /GUI/ordinalTokens/ directory</li>
-     *   <li>Uses fixed 70px height for position badges</li>
-     *   <li>Applies consistent golden text styling (27px, bold)</li>
-     *   <li>Scoreboard is the only interactive element at this stage</li>
-     *   <li>Does not handle score sorting - assumes event provides ordered data</li>
-     * </ul>
-     *
-     * @see ScoreboardEvent
-     * @see Platform#runLater(Runnable)
+     * @param event The ScoreboardEvent object that contains the scores to display.
+     *              The scores should be provided as a map of player names to their
+     *              corresponding scores.
      */
     @Override
-    public void showScore(ScoreboardEvent event){
+    public void showScore(ScoreboardEvent event) {
         int i = 1;
         VBox scoreboard = new VBox(25);
 
+        LinkedHashMap<String, Integer> sortedScores = event.getScores().entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new
+                ));
 
-        for(String s : event.getScores().keySet()){
-            ImageView pos = new ImageView(new Image(getClass().getResourceAsStream("/GUI/ordinalTokens/"+ i +".png")));
+        for (String s : sortedScores.keySet()) {
+            ImageView pos = new ImageView(new Image(getClass().getResourceAsStream("/GUI/ordinalTokens/" + i + ".png")));
             pos.setFitHeight(70);
             pos.setPreserveRatio(true);
-            Label name = new Label(s + "                " +  event.getScores().get(s));
+            Label name = new Label(s + "                " + sortedScores.get(s));
             name.setStyle("-fx-font-size: 27px; -fx-font-weight: bold; -fx-text-fill: #fbcc18;");
 
             scoreboard.getChildren().add(new HBox(15, pos, name));
@@ -3198,7 +3168,7 @@ public class GuiRoot implements View {
         scoreboard.prefWidthProperty().bind(primaryStage.widthProperty());
         scoreboard.prefHeightProperty().bind(primaryStage.heightProperty());
 
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             contentRoot.getChildren().setAll(scoreboard);
             primaryStage.setTitle("Final Scoreboard");
             primaryStage.setScene(primaryScene);
