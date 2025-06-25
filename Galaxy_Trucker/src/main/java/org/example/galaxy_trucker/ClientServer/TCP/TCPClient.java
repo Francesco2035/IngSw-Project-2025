@@ -6,6 +6,7 @@ import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.Event;
+import org.example.galaxy_trucker.Controller.Messages.ReconnectedEvent;
 import org.example.galaxy_trucker.Controller.Messages.TokenEvent;
 
 import java.io.*;
@@ -435,10 +436,26 @@ public class TCPClient{
                 if (response != null && response.equals("pong")) {
                     System.out.println("Server responded to ping. Connection is active.");
                     //connected = true; qui
+
                     ObjectMapper mapper = new ObjectMapper();
+                    if (client.getLobby() && !client.getLogin()) {
+                        LobbyCommand lobbyCommand = new LobbyCommand("Lobby");
+                        //System.out.println("invio lobby");
+                        try{
+                            String jsonLogin = mapper.writeValueAsString(lobbyCommand);
+                            out.println(jsonLogin);
+                            this.client.visit(new ReconnectedEvent("lobby", "placeholder", "placeholder", -1));
+                        } catch (JsonProcessingException e) {
+                            System.err.println(e.toString());
+                        }
+
+                    }
+
+
                     if (client.getLogin()){
                         String reconnect = mapper.writeValueAsString(commandInterpreter.interpret("Reconnect"));
                         out.println(reconnect);
+                        this.client.visit(new ReconnectedEvent(token, commandInterpreter.getGame(), commandInterpreter.getPlayerId(), commandInterpreter.getLv()));
                     }
                     eventThread  = new Thread(this::EventListener);
                     pingThread = new Thread(this::PingLoop);
