@@ -6,13 +6,50 @@ import org.jline.utils.AttributedStyle;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * The BackgroundGenerator class provides functionality to generate random symbols with special attributes.
+ * It utilizes predefined sets of symbols, special symbols, and colors to create an attributed string.
+ * This class can be used for creating visually dynamic text elements.
+ *
+ * Fields:
+ * - random: A Random object used to generate random numbers.
+ * - symbols: A list or array of symbols to choose randomly.
+ * - specialSymbols: A collection of special symbols to add variability to the generated strings.
+ * - colors: A set of colors applied as attributes to the generated symbols.
+ *
+ * Methods:
+ * - BackgroundGenerator(): Constructs an instance of the BackgroundGenerator and initializes its fields.
+ * - getRandomSymbol(): Generates and returns a random symbol wrapped in an AttributedString with random styles and attributes.
+ *
+ * Superclasses:
+ * - java.lang.Object
+ */
 public class BackgroundGenerator {
 
+    /**
+     * An instance of the Random class used for generating random values
+     * to support the functionality of the BackgroundGenerator class.
+     */
     private  Random random;
+    /**
+     * An array of symbols used within the BackgroundGenerator class.
+     * This variable stores a predefined set of symbols that can be utilized
+     * for generating random symbols or other operations performed by the class.
+     */
     private  String[] symbols;
+    /**
+     * A set of predefined special symbols representing celestial and cosmic themes.
+     * These symbols are used within the BackgroundGenerator for decorative or visual
+     * representation purposes.
+     */
     private  Set<String> specialSymbols = Set.of( "☄️", "☀️" , "🌑",
             "🪐", "🌌","🛸", "🎇");
 
+    /**
+     * An array of {@link AttributedStyle} objects, each representing a different foreground color.
+     * The array contains styles for red, yellow, green, and blue colors.
+     * This variable is used to define and store the color styles for attributed text.
+     */
     private final AttributedStyle[] colors = {
             AttributedStyle.DEFAULT.foreground(AttributedStyle.RED),
             AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW),
@@ -20,6 +57,11 @@ public class BackgroundGenerator {
             AttributedStyle.DEFAULT.foreground(AttributedStyle.BLUE)
     };
 
+    /**
+     * Constructs a new BackgroundGenerator object. This generator is initialized
+     * with a Random instance for random operations and an array of symbols which
+     * can be utilized within the background generation process.
+     */
     public BackgroundGenerator() {
         this.random = new Random();
 
@@ -34,6 +76,15 @@ public class BackgroundGenerator {
         };
     }
 
+    /**
+     * Generates a random symbol and optionally applies a random color.
+     * The symbol is randomly selected from a predefined set of symbols.
+     * If the symbol is considered special, it is returned without a color.
+     * Otherwise, there is a chance to apply a color based on a random condition.
+     *
+     * @return an AttributedString containing the randomly generated symbol.
+     *         The string may include a color style or have a default style.
+     */
     public AttributedString getRandomSymbol() {
         String symbol = symbols[random.nextInt(symbols.length)];
 

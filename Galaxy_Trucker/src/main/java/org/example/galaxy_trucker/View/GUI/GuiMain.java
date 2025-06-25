@@ -50,20 +50,4 @@ public class GuiMain extends Application {
         launch();
     }
 
-    /**
-     * Stops the application
-     */
-    public void stop () {
-        Platform.exit();
-        System.exit(0);
-    }
-
-    /**
-     * @return A reference to the primary stage.
-     */
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
-
 }

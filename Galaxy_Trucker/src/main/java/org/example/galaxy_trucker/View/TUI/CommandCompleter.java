@@ -9,14 +9,55 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The CommandCompleter class is responsible for autocompleting command-line inputs
+ * using a predefined set of commands and their corresponding descriptions.
+ * It implements the DynamicCompleter interface and provides methods to dynamically
+ * update the list of commands as well as generate completion suggestions.
+ */
 public class CommandCompleter implements DynamicCompleter {
+    /**
+     * A list of command strings used for autocompletion functionality.
+     * This field initializes with default commands including "Create", "Join",
+     * "Lobby", and "Reconnect".
+     */
     private List<String> commands = new ArrayList<>(List.of("Create", "Join", "Lobby", "Reconnect"));
 
+    /**
+     * A mapping that associates command strings with their corresponding descriptions.
+     * This is used to provide detailed information or tooltips for commands during
+     * the completion process.
+     */
     private HashMap<String,String> description;
 
+    /**
+     * The inputReader variable is an instance of the InputReader class, which handles user input
+     * in a command-line interface environment. It uses a BlockingQueue to store input lines and provides
+     * various functionalities such as reading, highlighting, and rendering content to the terminal.
+     *
+     * The InputReader integrates a dynamic completer, a highlighter, and input bindings for specific key combinations,
+     * while also managing user input in a separate thread. It is designed for real-time interactivity
+     * in text-based user interfaces.
+     *
+     * This variable is used within the CommandCompleter class to facilitate user interaction
+     * and implement input-related features.
+     */
     private InputReader inputReader;
 
 
+    /**
+     * Constructs a new CommandCompleter instance. Initializes the command descriptions
+     * that map command names to their respective descriptions, providing detailed
+     * information about each supported command.
+     *
+     * This method sets up a predefined set of commands and their functionality,
+     * enabling a user-friendly interface for interacting with the system.
+     *
+     * The commands include functionalities such as joining a game, creating a game,
+     * managing crew, interacting with tiles, and other game-specific operations.
+     * Each command description includes the expected input format or parameters
+     * where applicable.
+     */
     public CommandCompleter() {
         //TODO: scrivere meglio qualche descrizione
         description = new HashMap<>();
@@ -56,6 +97,14 @@ public class CommandCompleter implements DynamicCompleter {
 
     }
 
+    /**
+     * Provides command-line auto-completion for a list of commands. When a user types a partial input,
+     * this method suggests possible completions based on the provided command list and their descriptions.
+     *
+     * @param reader the LineReader instance used for reading user input
+     * @param line the ParsedLine object representing the current input entered by the user
+     * @param candidates the list of Candidate objects to which valid completions should be added
+     */
     @Override
     public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
         String buffer = line.word().toLowerCase();
@@ -78,6 +127,13 @@ public class CommandCompleter implements DynamicCompleter {
         }
     }
 
+    /**
+     * Sets the list of command strings to be used by the command completer.
+     * The method clears any existing commands and then adds all the commands
+     * from the provided list.
+     *
+     * @param commands the list of commands to be set for the completer
+     */
     @Override
     public void setCommands(List<String> commands) {
         this.commands.clear();

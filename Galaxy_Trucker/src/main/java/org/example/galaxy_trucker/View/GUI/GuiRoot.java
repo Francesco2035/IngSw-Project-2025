@@ -45,6 +45,52 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * The `GuiRoot` class is responsible for handling the graphical user interface (GUI)
+ * and interaction logic for the game application. It manages the primary stage, scene
+ * graph components, game state updates, and player interactions within the UI.
+ *
+ * The class interfaces with various game events (e.g., `ReconnectedEvent`, `TileEvent`,
+ * `HandEvent`) to dynamically update the visuals and state of the game in response to
+ * player actions or server events. It ensures thread-safe updates using the
+ * JavaFX `Platform.runLater` method and provides interactive elements for players
+ * to engage with the game.
+ *
+ * Key responsibilities of the `GuiRoot` class include:
+ * - Setting up the JavaFX application window (`sceneSetup`).
+ * - Managing reconnection processes and restoring player state (`reconnect`).
+ * - Updating game boards, personal boards, or specific player-related UI elements (`updateBoard`, `updateOthersPB`).
+ * - Handling tile interactions, including placement, removal, or tiling mechanics (`updateBoard`, `updateHand`, `updateUncoveredTilesSet`).
+ * - Monitoring and processing various game events to reflect gameplay dynamics.
+ *
+ * Class fields:
+ * - `guiThread`: The thread in which the GUI is executed.
+ * - `primaryStage`: The primary stage for the JavaFX application.
+ * - `inputQueue`: Queue for processing player inputs.
+ * - `primaryRoot`, `contentRoot`, `primaryScene`: JavaFX scene components for rendering and layout structure.
+ * - `playerClient`: The client handling communication with the server.
+ * - `printer`: Utility responsible for logging and message display.
+ * - `lobbyEvents`, `myGameName`, `myName`, `myGameLv`: Fields to manage lobby and game session information.
+ * - `readyPlayers`, `amIReady`, `amIBuilding`: Fields tracking player readiness and game phases.
+ * - `players`, `discardedTiles`, `discardedMap`: Structures for managing player and tile-related data.
+ * - `gameBoardImg`, `myBoard`, `tilePlaceholder`, `tileImage`: UI elements for displaying game and player boards.
+ * - Numerous other fields to handle UI components related to game mechanics, interactivity, animations, and events.
+ *
+ * Methods:
+ * - `GuiRoot(LoginClient loginClient)`: Constructor initializing the GUI with the user's login client.
+ * - `void setStage(Stage primaryStage)`: Sets the primary stage for the application.
+ * - `void sceneSetup()`: Configures the JavaFX scene graph and initializes the application's opening view.
+ * - `void reconnect(ReconnectedEvent event)`: Handles reconnection events, showing a success dialog and restoring game state.
+ * - `void updateBoard(TileEvent event)`: Updates the game board UI to reflect changes based on a tile event.
+ * - `void updateOthersPB(PlayerTileEvent event)`: Updates the personal boards of other players based on a player tile event.
+ * - `void updateHand(HandEvent event)`: Updates the currently active tile in the player's hand.
+ * - `void updateCoveredTilesSet(CoveredTileSetEvent event)`: Updates the coverage state of tiles on the board.
+ * - `void updateUncoveredTilesSet(UncoverdTileSetEvent event)`: Updates the UI for uncovered tiles, including managing discarded tiles and their interactions.
+ *
+ * The implementation ensures seamless and fluid user experiences, maintaining thread safety
+ * by leveraging the JavaFX `Platform.runLater` method for any UI modifications. This class
+ * provides the backbone for the visual and interactive components of the application.
+ */
 public class GuiRoot implements View {
 
     private Thread guiThread;
@@ -124,12 +170,11 @@ public class GuiRoot implements View {
     private boolean reconnecting;
 
 
-    public void setStage(Stage primaryStage){
-        printer.setStage(primaryStage);
-        this.primaryStage = primaryStage;
-    }
-
-
+    /**
+     * Constructs a GuiRoot object, initializes GUI elements, and starts the GUI thread.
+     *
+     * @param loginClient the LoginClient instance used for authentication and communication
+     */
     public GuiRoot(LoginClient loginClient){
         printer = new GuiOut(this);
         this.loginClient = loginClient;
@@ -142,6 +187,27 @@ public class GuiRoot implements View {
         guiThread.start();
     }
 
+
+    /**
+     * Sets the primary stage for the application and updates the stage in the printer.
+     *
+     * @param primaryStage the primary Stage object to be set and used throughout the application
+     */
+    public void setStage(Stage primaryStage){
+        printer.setStage(primaryStage);
+        this.primaryStage = primaryStage;
+    }
+
+
+    /**
+     * Initializes and sets up the main application scene.
+     *
+     * This method is executed on the JavaFX application thread using `Platform.runLater`.
+     * It prepares the primary scene and its associated components such as the root pane,
+     * the content pane, the tile image, background media, and binds necessary properties
+     * for dynamic adjustment with the primary stage's dimensions. The scene is finalized
+     * by invoking the `goToFirstScene` method to transition to the initial scene.
+     */
     public void sceneSetup(){
         Platform.runLater(()->{
             primaryRoot = new StackPane();
@@ -178,9 +244,14 @@ public class GuiRoot implements View {
 
     @Override
     public void showMessage(String message) {
-
     }
 
+    /**
+     * Retrieves input from the inputQueue after displaying the specified message.
+     *
+     * @param message The message to be displayed before retrieving input.
+     * @return The input retrieved from the inputQueue, or an empty string if an interruption occurs.
+     */
     @Override
     public String askInput(String message) {
         try {
@@ -193,14 +264,106 @@ public class GuiRoot implements View {
         }
     }
 
+
+    /**
+     * Handles player reconnection by displaying a success dialog and restoring game state.
+     * This method performs two key functions:
+     * <ul>
+     *   <li>Displays a modal confirmation dialog on successful reconnection</li>
+     *   <li>Restores the player's game state from the reconnection event</li>
+     * </ul>
+     *
+     * <p>UI Behavior:
+     * <ul>
+     *   <li>Creates a modal dialog titled "Reconnection"</li>
+     *   <li>Displays success message with standard styling</li>
+     *   <li>Provides an exit button using the shared button maker utility</li>
+     *   <li>Blocks interaction with parent window until dismissed</li>
+     *   <li>Ensures thread-safe UI operations via Platform.runLater()</li>
+     * </ul>
+     *
+     * <p>State Restoration:
+     * <ul>
+     *   <li>Updates player name from event.getPlayerId()</li>
+     *   <li>Updates game name from event.getGameId()</li>
+     *   <li>Updates game level from event.getLv()</li>
+     *   <li>Sets reconnecting flag to true for phase handling</li>
+     *   <li>Only executes restoration if playerId is not null</li>
+     * </ul>
+     *
+     * @param event The ReconnectedEvent containing reconnection details:
+     *              <ul>
+     *                <li>playerId - The reconnected player's identifier</li>
+     *                <li>gameId - The game identifier being rejoined</li>
+     *                <li>lv - The game level (1 or 2)</li>
+     *              </ul>
+     *
+     * @implNote Implementation details:
+     * <ul>
+     *   <li>UI operations are thread-safe via Platform.runLater()</li>
+     *   <li>Uses WINDOW_MODAL modality to block parent window</li>
+     *   <li>Reuses goBackButtonMaker for consistent button styling</li>
+     *   <li>State restoration happens outside Platform.runLater()</li>
+     *   <li>Null check prevents overwriting state with empty values</li>
+     * </ul>
+     *
+     * @see ReconnectedEvent
+     * @see Platform#runLater(Runnable)
+     * @see Modality#WINDOW_MODAL
+     * @see #goBackButtonMaker(Stage)
+     */
     @Override
     public void reconnect(ReconnectedEvent event) {
-        myName = event.getPlayerId();
-        myGameName = event.getGameId();
-        myGameLv = event.getLv();
-        reconnecting = true;
+
+        Platform.runLater(()->{
+            Stage connectStage = new Stage();
+            connectStage.setTitle("Reconnection");
+
+            Label connected = new Label("Reconnected Succesfully!");
+            connected.setStyle("-fx-font-size: 15px");
+
+            Button exit = goBackButtonMaker(connectStage);
+
+            VBox quitBox = new VBox(3, connected, exit);
+            quitBox.setAlignment(Pos.CENTER);
+
+            Scene connectedScene = new Scene(quitBox, 330, 80);
+            connectStage.setScene(connectedScene);
+            connectStage.initOwner(primaryStage);
+            connectStage.initModality(Modality.WINDOW_MODAL);
+            connectStage.show();
+        });
+
+        if(event.getPlayerId() != null){
+            myName = event.getPlayerId();
+            myGameName = event.getGameId();
+            myGameLv = event.getLv();
+            reconnecting = true;
+        }
     }
 
+
+
+    /**
+     * Updates the game board UI to reflect a new tile placement or modification received via a {@link TileEvent}.
+     *
+     * <p>This method handles a wide range of tile update scenarios, including:
+     * <ul>
+     *   <li>Placing a new tile image on the board based on the tile ID and rotation.</li>
+     *   <li>Rendering alien crew members, human crew, cargo, and batteries over tiles.</li>
+     *   <li>Managing interactivity for specific tile types during different game phases (e.g., building, cargo handling, theft, selection).</li>
+     *   <li>Updating the internal list of {@code excludedTiles} depending on the tile content.</li>
+     *   <li>Handling special buffer tile cases at fixed coordinates (3,8) and (3,9).</li>
+     * </ul>
+     * If the tile includes interactive elements (e.g., crew or cargo), appropriate mouse event handlers are attached
+     * to support gameplay mechanics like removal, cargo selection, theft, or special commands.
+     *
+     * <p>Tile updates are applied on the JavaFX Application Thread using {@code Platform.runLater()} to safely
+     * manipulate UI components.
+     *
+     * @param event the {@link TileEvent} carrying all necessary data for rendering and interactivity, including tile ID,
+     *              coordinates, rotation, and contents such as aliens, crew, cargo, or batteries
+     */
     @Override
     public void updateBoard(TileEvent event) {
         boolean stackTile;
@@ -549,6 +712,25 @@ public class GuiRoot implements View {
 
 
 
+    /**
+     * Updates the personal board (PB) UI of another player based on a {@link PlayerTileEvent}.
+     *
+     * <p>This method handles the display of another player's board state by rendering tile images
+     * along with any associated game elements such as aliens, human crew, cargo, or batteries.
+     * If the player's board has not been displayed before, a new {@code GridPane} is created for them.
+     *
+     * <p>UI components are updated on the JavaFX Application Thread using {@link Platform#runLater(Runnable)}.
+     *
+     * <p>Displayed elements may include:
+     * <ul>
+     *     <li><b>Aliens</b>: Brown or purple alien images layered on the tile.</li>
+     *     <li><b>Humans</b>: A row of small crew images.</li>
+     *     <li><b>Cargo</b>: A clickable cargo icon that opens a dialog showing cargo contents.</li>
+     *     <li><b>Batteries</b>: Battery icons displayed with reduced tile opacity.</li>
+     * </ul>
+     *
+     * @param event the {@link PlayerTileEvent} containing the player name, tile position, tile ID, and any additional elements (aliens, crew, cargo, batteries)
+     */
     @Override
     public void updateOthersPB(PlayerTileEvent event) {
         Platform.runLater(() -> {
@@ -662,6 +844,21 @@ public class GuiRoot implements View {
 
 
 
+    /**
+     * Updates the currently held tile in the player's hand based on the {@link HandEvent}.
+     *
+     * <p>This method sets the tile image to either a placeholder (when the tile ID is 158,
+     * indicating an empty or removed tile) or to the corresponding tile image from resources.
+     * It also resets the rotation to 0 and ensures the visual opacity is appropriate:
+     * <ul>
+     *   <li>0.5 opacity for placeholder tiles (ID 158)</li>
+     *   <li>Full opacity (1.0) for active/valid tiles</li>
+     * </ul>
+     *
+     * <p>UI updates are executed on the JavaFX Application Thread using {@link Platform#runLater(Runnable)}.
+     *
+     * @param event the {@link HandEvent} containing the tile ID for the new tile to be displayed in the player's hand
+     */
     @Override
     public void updateHand(HandEvent event) {
         Platform.runLater(() -> {
@@ -685,6 +882,22 @@ public class GuiRoot implements View {
     public void updateCoveredTilesSet(CoveredTileSetEvent event) {
     }
 
+
+    /**
+     * Updates the UI to reflect the current state of the set of uncovered (discarded or available) tiles.
+     *
+     * <p>If the tile with the given ID already exists in the discarded map, it will be removed from both
+     * the `uncoveredTiles` UI container and the internal tracking structures (`discardedMap`, `discardedTiles`).
+     *
+     * <p>If the tile is not yet in the discarded map, it will be created as an {@link ImageView}, styled,
+     * wrapped in a {@link VBox}, and added to both the internal tracking structures and the UI container.
+     * A mouse click on the tile will queue a "PickTile" command with the index of that tile.
+     *
+     * <p>All UI updates are safely wrapped inside {@link Platform#runLater(Runnable)} to ensure execution
+     * on the JavaFX Application Thread.
+     *
+     * @param event the {@link UncoverdTileSetEvent} containing the ID of the tile to update
+     */
     @Override
     public void updateUncoveredTilesSet(UncoverdTileSetEvent event){
 
@@ -721,6 +934,26 @@ public class GuiRoot implements View {
 
     }
 
+
+    /**
+     * Displays a modal window showing a set of cards from the deck, typically used when spying the deck.
+     *
+     * <p>The method creates a new {@link Stage} and populates it with card images based on the
+     * IDs received in the {@link DeckEvent}. Specific ID ranges are handled with custom images:
+     * <ul>
+     *   <li>IDs between 29 and 35 are displayed as "open space" cards.</li>
+     *   <li>IDs 38 and 39 are displayed as "stardust" cards.</li>
+     *   <li>Other IDs are mapped to corresponding image files using their numeric value.</li>
+     * </ul>
+     *
+     * <p>A button labeled "Ok" is included to close the window. All card images are displayed in a horizontal
+     * layout and are scaled to a consistent width while maintaining aspect ratio.
+     *
+     * <p>All UI updates are wrapped in {@link Platform#runLater(Runnable)} to ensure execution on the
+     * JavaFX Application Thread.
+     *
+     * @param event the {@link DeckEvent} containing a list of card IDs to be shown
+     */
     @Override
     public void showDeck(DeckEvent event){
 
@@ -767,6 +1000,31 @@ public class GuiRoot implements View {
         });
     }
 
+
+    /**
+     * Displays the appropriate card image based on the given CardEvent and sets up
+     * the number of planets to display for planet choice cards.
+     *
+     * <p>The method handles different types of cards:
+     * <ul>
+     *   <li>Open Space cards (IDs 29-35) - displays a generic open space image</li>
+     *   <li>Stardust cards (IDs 38-39) - displays a stardust image</li>
+     *   <li>Other cards - displays the specific card image corresponding to the event ID</li>
+     * </ul>
+     *
+     * <p>For planet choice cards (IDs 21-28), this method also sets the number of planets
+     * that will be available for selection:
+     * <ul>
+     *   <li>4 planets for cards 21 and 27</li>
+     *   <li>3 planets for cards 22, 24, 25, and 28</li>
+     *   <li>2 planets for cards 23 and 26</li>
+     * </ul>
+     *
+     * @param event The CardEvent containing the card ID to display. The card image
+     *              is determined based on this ID.
+     *
+     * @see CardEvent
+     */
     @Override
     public void showCard(CardEvent event){
         //abandoned station -> accept o decline -> getreward x, coords
@@ -798,6 +1056,29 @@ public class GuiRoot implements View {
     }
 
 
+    /**
+     * Handles disconnection by showing a modal dialog with options to reconnect or exit.
+     * This method must be called on the JavaFX Application Thread, as it creates UI elements.
+     *
+     * <p>When invoked, this method:
+     * <ul>
+     *   <li>Creates a modal dialog titled "Connection lost"</li>
+     *   <li>Displays a message and two buttons: "Reconnect" and "Exit"</li>
+     *   <li>Adds the corresponding action ("Reconnect" or "Exit") to the inputQueue when a button is clicked</li>
+     *   <li>Blocks interaction with the parent window (primaryStage) until resolved</li>
+     * </ul>
+     *
+     * <p>The dialog is created and shown using {@code Platform.runLater()} to ensure thread safety
+     * with the JavaFX Application Thread. The method follows the WINDOW_MODAL modality pattern,
+     * meaning it only blocks the owning window (primaryStage) while allowing interaction with
+     * other application windows.
+     *
+     * @implNote The actual reconnection or exit logic should be handled by whatever processes
+     *           the messages added to the inputQueue. The dialog itself only queues these actions.
+     *
+     * @see Platform#runLater(Runnable)
+     * @see Modality#WINDOW_MODAL
+     */
     @Override
     public void disconnect() {
         //quando si accorge di esseree disconnesso ->reconnect / exit / ChangeConnection
@@ -838,6 +1119,32 @@ public class GuiRoot implements View {
     @Override
     public void connect() throws IOException {}
 
+    /**
+     * Initializes and displays the game board based on the specified level.
+     * This method must be called on the JavaFX Application Thread as it updates UI elements.
+     *
+     * <p>The method performs the following actions:
+     * <ul>
+     *   <li>Sets the current game level (myGameLv) to the specified level</li>
+     *   <li>Loads the appropriate game assets based on the level:
+     *     <ul>
+     *       <li>For level 1: loads level 1 game board image, card back image, and calls Lv1GameboardSetup()</li>
+     *       <li>For level 2: loads level 2 game board image, card back image, and calls Lv2GameboardSetup()</li>
+     *     </ul>
+     *   </li>
+     *   <li>Creates and displays the game board stage by calling setGameBoardStage()</li>
+     * </ul>
+     *
+     * <p>All UI operations are wrapped in {@code Platform.runLater()} to ensure thread safety
+     * with the JavaFX Application Thread.
+     *
+     * @param lv The game level to set up (1 or 2). Any other value will default to level 2 behavior.
+     *
+     * @implNote The actual game board setup is delegated to level-specific methods:
+     *           {@code Lv1GameboardSetup()} or {@code Lv2GameboardSetup()}.
+     *
+     * @see Platform#runLater(Runnable)
+     */
     @Override
     public void setGameboard(int lv){
         Platform.runLater(()->{
@@ -860,6 +1167,48 @@ public class GuiRoot implements View {
     }
 
 
+    /**
+     * Creates and displays a scene for validating and removing invalid tiles from the game board.
+     * This interactive scene allows players to:
+     * <ul>
+     *   <li>Identify and remove invalid tiles from their board</li>
+     *   <li>View other players' boards</li>
+     *   <li>Complete the building phase with level-specific options</li>
+     * </ul>
+     *
+     * <p>Key features:
+     * <ul>
+     *   <li>Displays a prominent "Remove Invalid Tiles!" prompt with golden text</li>
+     *   <li>Makes valid tiles clickable for removal (sends "RemoveTile X Y" to inputQueue)</li>
+     *   <li>Excludes tiles marked in excludedTiles from being interactive</li>
+     *   <li>Provides different completion behavior based on game level:
+     *     <ul>
+     *       <li>Level 1: Simple "FinishBuilding" command</li>
+     *       <li>Level 2: Opens a position selection dialog (1-4) before sending "FinishBuilding X"</li>
+     *     </ul>
+     *   </li>
+     *   <li>Displays other players' boards for reference</li>
+     *   <li>Includes a game board preview that can be clicked to show the full game board</li>
+     * </ul>
+     *
+     * <p>The scene layout includes:
+     * <ul>
+     *   <li>Left: Current player's board with interactive tiles</li>
+     *   <li>Center: Action buttons and game board preview</li>
+     *   <li>Right: Other players' boards</li>
+     * </ul>
+     *
+     * @implNote This method:
+     * <ul>
+     *   <li>Uses Platform.runLater() for thread-safe UI updates</li>
+     *   <li>Maintains game state through inputQueue commands</li>
+     *   <li>Binds layout properties to primaryStage dimensions</li>
+     *   <li>Sets checkValidity flag to true and amIBuilding to false</li>
+     * </ul>
+     *
+     * @see GridPane
+     * @see Platform#runLater(Runnable)
+     */
     public void checkValidityScene(){
         boolean clickable;
 
@@ -996,14 +1345,71 @@ public class GuiRoot implements View {
     }
 
 
+
+    /**
+     * Updates the user interface to prompt the user to choose a position
+     * for their valid ship. This method is executed on the JavaFX
+     * Application Thread using Platform.runLater to ensure thread safety
+     * when updating the UI.
+     */
     public void choosePosition(){
         Platform.runLater(()->{
             prompt.setText("Your ship is valid, now choose a position!");
         });
-
     }
 
 
+    /**
+     * Creates and displays the crew placement scene where players can add crew members to their ship.
+     * This interactive scene allows players to:
+     * <ul>
+     *   <li>Select different crew types (human, purple alien, brown alien - level 2 only)</li>
+     *   <li>Place selected crew members on valid tiles of their board</li>
+     *   <li>View other players' boards for reference</li>
+     * </ul>
+     *
+     * <p>Key features:
+     * <ul>
+     *   <li>Displays a prominent "Populate Your Ship!" prompt with golden text</li>
+     *   <li>Provides crew selection panel with clickable crew member images</li>
+     *   <li>Makes valid board tiles clickable for placement (sends commands to inputQueue)</li>
+     *   <li>Excludes tiles marked in excludedTiles from being interactive</li>
+     *   <li>Shows different crew options based on game level:
+     *     <ul>
+     *       <li>Level 1: Only human crew members available</li>
+     *       <li>Level 2: Human, purple alien, and brown alien crew members available</li>
+     *     </ul>
+     *   </li>
+     *   <li>Displays other players' boards in a separate panel</li>
+     * </ul>
+     *
+     * <p>The scene layout includes:
+     * <ul>
+     *   <li>Left: Current player's board with interactive tiles</li>
+     *   <li>Center: Crew selection panel (right of player's board)</li>
+     *   <li>Right: Other players' boards</li>
+     *   <li>Bottom: Action prompt with decorative background</li>
+     * </ul>
+     *
+     * <p>State management:
+     * <ul>
+     *   <li>Sets amIBuilding flag to false</li>
+     *   <li>Sets checkvalidity flag to false</li>
+     *   <li>Uses AtomicReference to track currently selected crew type</li>
+     * </ul>
+     *
+     * @implNote This method:
+     * <ul>
+     *   <li>Uses Platform.runLater() for thread-safe UI updates</li>
+     *   <li>Maintains game state through inputQueue commands</li>
+     *   <li>Binds layout properties to primaryStage dimensions</li>
+     *   <li>Command format: "[AddCrew|AddPurpleAlien|AddBrownAlien] Y X"</li>
+     * </ul>
+     *
+     * @see GridPane
+     * @see Platform#runLater(Runnable)
+     * @see AtomicReference
+     */
     public void AddCrewScene(){
         amIBuilding = false;
         checkvalidity = false;
@@ -1128,6 +1534,69 @@ public class GuiRoot implements View {
 
     }
 
+
+    /**
+     * Displays the game lobby interface where players can create or join games.
+     * This method handles both the initial lobby display and dynamic updates when lobby events occur.
+     *
+     * <p>The lobby provides:
+     * <ul>
+     *   <li>A list of available games with their players</li>
+     *   <li>Options to create new games or reconnect to existing ones</li>
+     *   <li>Dynamic updates when players join/create games</li>
+     * </ul>
+     *
+     * <p>Key components:
+     * <ul>
+     *   <li><b>Game List</b>:
+     *     <ul>
+     *       <li>Displays all active games with their IDs and player lists</li>
+     *       <li>Each entry has a "Join" button</li>
+     *       <li>Updates automatically when receiving LobbyEvents</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>New Game Button</b>:
+     *     <ul>
+     *       <li>Opens a form to create a new game</li>
+     *       <li>Collects: player name, game name, game mode (Tutorial/Complete), max players</li>
+     *       <li>Validates inputs before sending creation request</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Reconnect Button</b>:
+     *     <ul>
+     *       <li>Allows reconnection using a session token</li>
+     *       <li>Validates token before sending reconnect request</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * <p>Behavior details:
+     * <ul>
+     *   <li>Processes incoming LobbyEvents to add/remove games from the list</li>
+     *   <li>Maintains lobbyEvents collection to track current game states</li>
+     *   <li>Uses modal dialogs for game creation and reconnection</li>
+     *   <li>Enforces input validation (e.g., name length limits)</li>
+     *   <li>Routes all actions through the inputQueue</li>
+     * </ul>
+     *
+     * @param event The LobbyEvent triggering the update (new game created or player joined)
+     *
+     * @implNote This method:
+     * <ul>
+     *   <li>Uses Platform.runLater() for thread-safe UI updates</li>
+     *   <li>Maintains game state through inputQueue commands</li>
+     *   <li>Binds layout properties to primaryStage dimensions</li>
+     *   <li>Command formats:
+     *     <ul>
+     *       <li>Create: "Create", name, gameName, level, maxPlayers</li>
+     *       <li>Reconnect: "Reconnect", token</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * @see LobbyEvent
+     * @see Platform#runLater(Runnable)
+     */
     @Override
     public void showLobby(LobbyEvent event){
         int index = -1;
@@ -1348,6 +1817,42 @@ public class GuiRoot implements View {
 
 
 
+    /**
+     * Updates and displays the in-game lobby screen showing player readiness status.
+     * This method is called whenever there's a change in player readiness states.
+     *
+     * <p>The method performs the following:
+     * <ul>
+     *   <li>Clears and repopulates the player list with current readiness status</li>
+     *   <li>Identifies the current player with "(You)" suffix</li>
+     *   <li>Updates the local amIReady flag with the current player's readiness state</li>
+     *   <li>Formats each player entry to show either "Ready!" or "Not Ready" status</li>
+     * </ul>
+     *
+     * <p>Formatting details:
+     * <ul>
+     *   <li>Player names are displayed with "--> Ready!" or "--> Not Ready" suffixes</li>
+     *   <li>The current player is marked with "(You)" after their name</li>
+     *   <li>All updates are performed on the JavaFX Application Thread via Platform.runLater()</li>
+     * </ul>
+     *
+     * @param event The GameLobbyEvent containing:
+     *              <ul>
+     *                <li>List of all players in the game</li>
+     *                <li>List of boolean readiness states corresponding to each player</li>
+     *              </ul>
+     *
+     * @implNote This method:
+     * <ul>
+     *   <li>Uses Platform.runLater() for thread-safe UI updates</li>
+     *   <li>Maintains the amIReady flag to track local player's readiness state</li>
+     *   <li>Clears the readyPlayers ListView before repopulating</li>
+     *   <li>Does not modify the othersBoards display (commented code suggests this was considered)</li>
+     * </ul>
+     *
+     * @see GameLobbyEvent
+     * @see Platform#runLater(Runnable)
+     */
     @Override
     public void showLobbyGame(GameLobbyEvent event){
 
@@ -1377,6 +1882,67 @@ public class GuiRoot implements View {
     }
 
 
+
+    /**
+     * Creates and displays the in-game lobby screen where players can prepare before the game starts.
+     * This screen shows player readiness status and provides game management options.
+     *
+     * <p>The screen includes:
+     * <ul>
+     *   <li>Game name display (styled with golden text)</li>
+     *   <li>List of players and their readiness status (via readyPlayers ListView)</li>
+     *   <li>Interactive controls:
+     *     <ul>
+     *       <li>Ready/Not Ready toggle button</li>
+     *       <li>Quit game button (with confirmation dialog)</li>
+     *       <li>Debug ship buttons (only in level 2)</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * <p>Key functionality:
+     * <ul>
+     *   <li><b>Ready Button</b>:
+     *     <ul>
+     *       <li>Toggles between "Ready!" and "Not Ready" states</li>
+     *       <li>Sends "Ready" command to inputQueue when clicked</li>
+     *       <li>Updates based on amIReady flag</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Quit Button</b>:
+     *     <ul>
+     *       <li>Opens a confirmation dialog before quitting</li>
+     *       <li>Sends "Quit" command to inputQueue when confirmed</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Debug Buttons</b> (Level 2 only):
+     *     <ul>
+     *       <li>"Debug Ship 1" sends "DebugShip 0" command</li>
+     *       <li>"Debug Ship 2" sends "DebugShip 1" command</li>
+     *       <li>Buttons disable after use</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * <p>Layout details:
+     * <ul>
+     *   <li>Responsive design bound to primaryStage dimensions</li>
+     *   <li>Game name at top center</li>
+     *   <li>Player list below game name</li>
+     *   <li>Control buttons centered at bottom</li>
+     * </ul>
+     *
+     * @implNote This method:
+     * <ul>
+     *   <li>Must run on JavaFX Application Thread (uses Platform.runLater())</li>
+     *   <li>Shows different buttons based on game level (myGameLv)</li>
+     *   <li>Uses modal dialogs for critical actions (quit confirmation)</li>
+     *   <li>Maintains UI state through amIReady flag</li>
+     * </ul>
+     *
+     * @see Platform#runLater(Runnable)
+     * @see Modality#WINDOW_MODAL
+     */
     public void LobbyGameScreen() {
         Platform.runLater(() -> {
             Label GameNameLabel = new Label("Game: " + myGameName);
@@ -1479,6 +2045,46 @@ public class GuiRoot implements View {
     }
 
 
+
+    /**
+     * Creates and configures a modal Stage displaying the game board with appropriate scaling and styling.
+     * The game board appearance varies based on the current game level (myGameLv).
+     *
+     * <p>Key features:
+     * <ul>
+     *   <li>Creates a non-resizable modal window with title "Game Board"</li>
+     *   <li>Applies level-specific:
+     *     <ul>
+     *       <li>Board dimensions (985x546 for level 1, 1055x639 for level 2)</li>
+     *       <li>Background color (dark blue for level 1, purple for level 2)</li>
+     *     </ul>
+     *   </li>
+     *   <li>Scales the board image to 85% of original size</li>
+     *   <li>Includes rocketsPane overlay for displaying game elements</li>
+     * </ul>
+     *
+     * <p>Implementation details:
+     * <ul>
+     *   <li>All UI operations are performed on the JavaFX Application Thread</li>
+     *   <li>Uses a StackPane layout to layer background, board image, and rockets</li>
+     *   <li>Window modality is set to WINDOW_MODAL to block interaction with parent window</li>
+     *   <li>Maintains consistent padding around the scaled board image</li>
+     * </ul>
+     *
+     * @return The fully configured (but not yet shown) Stage containing the game board
+     *
+     * @implNote This method:
+     * <ul>
+     *   <li>Relies on the gameBoardImg and rocketsPane being properly initialized</li>
+     *   <li>Uses Platform.runLater() for thread-safe UI operations</li>
+     *   <li>Preserves the board image's aspect ratio during scaling</li>
+     *   <li>Contains commented-out code for potential pawn movement functionality</li>
+     * </ul>
+     *
+     * @see Stage
+     * @see Platform#runLater(Runnable)
+     * @see Modality#WINDOW_MODAL
+     */
     private Stage setGameBoardStage() {
         double scaleRatio = 0.85;
         int imgX, imgY;
@@ -1536,6 +2142,59 @@ public class GuiRoot implements View {
     }
 
 
+
+    /**
+     * Updates the visual representation of player positions on the game board.
+     * This method handles both adding/removing players and updating their positions
+     * based on incoming GameBoardEvents.
+     *
+     * <p>Behavior details:
+     * <ul>
+     *   <li>For new players (not in playerPositions):
+     *     <ul>
+     *       <li>Adds their position to playerPositions map</li>
+     *       <li>Adds their rocket visualization to rocketsPane</li>
+     *     </ul>
+     *   </li>
+     *   <li>When position is -1 (player leaving):
+     *     <ul>
+     *       <li>Removes player from playerPositions map</li>
+     *       <li>Removes their rocket from rocketsPane</li>
+     *     </ul>
+     *   </li>
+     *   <li>For position updates:
+     *     <ul>
+     *       <li>Calculates screen coordinates using pre-defined coords list</li>
+     *       <li>Applies 85% scaling factor to match game board scaling</li>
+     *       <li>Adjusts position by -20 pixels to center the rocket image</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * <p>Thread safety:
+     * <ul>
+     *   <li>All UI operations are wrapped in Platform.runLater()</li>
+     *   <li>Safely handles concurrent modifications to playerPositions</li>
+     * </ul>
+     *
+     * @param event The GameBoardEvent containing:
+     *              <ul>
+     *                <li>playerID - Unique identifier for the player</li>
+     *                <li>position - New board position (-1 indicates removal)</li>
+     *              </ul>
+     *
+     * @implNote This method:
+     * <ul>
+     *   <li>Relies on playerRockets containing pre-configured ImageViews for all players</li>
+     *   <li>Depends on coords list containing valid coordinate mappings</li>
+     *   <li>Assumes consistent 85% scaling factor matches setGameBoardStage()</li>
+     *   <li>Maintains synchronization between playerPositions map and rocketsPane</li>
+     * </ul>
+     *
+     * @see GameBoardEvent
+     * @see Platform#runLater(Runnable)
+     * @see #setGameBoardStage()
+     */
     @Override
     public void updateGameboard(GameBoardEvent event){
         Platform.runLater(()->{
@@ -1556,6 +2215,13 @@ public class GuiRoot implements View {
     }
 
 
+    /**
+     * Handles changes in rewards when a RewardsEvent occurs.
+     * Updates the current cargo image, coordinates, rewards list,
+     * and remaining rewards count, and initiates cargo handling.
+     *
+     * @param event the RewardsEvent containing details about the updated rewards
+     */
     @Override
     public void rewardsChanged(RewardsEvent event){
         curCargoImg.setImage(null);
@@ -1566,6 +2232,88 @@ public class GuiRoot implements View {
     }
 
 
+
+    /**
+     * Creates and displays the ship building scene where players construct their spaceships.
+     * This interactive scene provides all necessary tools for tile management and ship construction.
+     *
+     * <p>The scene includes:
+     * <ul>
+     *   <li><b>Game Information</b>:
+     *     <ul>
+     *       <li>Game name display (styled with golden text)</li>
+     *       <li>Preview of the game board</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Tile Management</b>:
+     *     <ul>
+     *       <li>Current tile display with rotation controls (90° clockwise/counter-clockwise)</li>
+     *       <li>"Pick Tile" and "Discard" buttons</li>
+     *       <li>Two tile buffers with hover effects</li>
+     *       <li>Hourglass button (level 2 only) for special actions</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Player Boards</b>:
+     *     <ul>
+     *       <li>Current player's board (interactive)</li>
+     *       <li>Other players' boards (view-only)</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Card Decks</b> (level 2 only):
+     *     <ul>
+     *       <li>Three face-down decks that can be inspected</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Completion Controls</b>:
+     *     <ul>
+     *       <li>Level 1: Simple "Done!" button</li>
+     *       <li>Level 2: Position selection dialog (1-4) before completion</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * <p>Interactive Features:
+     * <ul>
+     *   <li><b>Tile Rotation</b>:
+     *     <ul>
+     *       <li>Clockwise and counter-clockwise rotation buttons</li>
+     *       <li>Maintains rotation state in tileRotation variable</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Tile Buffers</b>:
+     *     <ul>
+     *       <li>Visual hover effects (opacity changes)</li>
+     *       <li>Sends "ToBuffer 0" or "ToBuffer 1" commands when clicked</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Action Buttons</b>:
+     *     <ul>
+     *       <li>All buttons send commands to inputQueue</li>
+     *       <li>Includes validation for required selections (level 2 position)</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * <p>Layout Organization:
+     * <ul>
+     *   <li>Left: Uncovered tiles scroll pane (40% opacity)</li>
+     *   <li>Center: Main building area with player board and controls</li>
+     *   <li>Right: Other players' boards</li>
+     *   <li>Responsive design bound to primaryStage dimensions</li>
+     * </ul>
+     *
+     * @implNote This method:
+     * <ul>
+     *   <li>Creates complex UI layouts with multiple nested containers</li>
+     *   <li>Uses Platform.runLater() for thread-safe UI updates</li>
+     *   <li>Maintains game state through inputQueue commands</li>
+     *   <li>Shows different components based on game level (myGameLv)</li>
+     *   <li>Uses modal dialogs for critical actions (position selection)</li>
+     * </ul>
+     *
+     * @see Platform#runLater(Runnable)
+     * @see Modality#WINDOW_MODAL
+     */
     public void buildingScene(){
         Label GameNameLabel = new Label("Game: " + myGameName);
 
@@ -1775,6 +2523,82 @@ public class GuiRoot implements View {
     }
 
 
+
+    /**
+     * Creates and displays the flight phase scene showing ship status and interactive elements.
+     * This scene provides real-time information about the player's ship and allows interaction
+     * during the flight phase of the game.
+     *
+     * <p>The scene includes:
+     * <ul>
+     *   <li><b>Ship Statistics Panel</b> displaying:
+     *     <ul>
+     *       <li>Cannons (Attack power)</li>
+     *       <li>Engines (Speed)</li>
+     *       <li>Energy</li>
+     *       <li>Human crew</li>
+     *       <li>Damage tokens</li>
+     *       <li>Credits</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Card Display Area</b> showing:
+     *     <ul>
+     *       <li>Current card (face-up)</li>
+     *       <li>Deck (face-down)</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Interactive Elements</b>:
+     *     <ul>
+     *       <li>Clickable tiles on player's board (when enabled)</li>
+     *       <li>Game board preview button</li>
+     *       <li>Phase-specific action buttons (via phaseButtons)</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Information Panels</b>:
+     *     <ul>
+     *       <li>Game log/messages</li>
+     *       <li>Prompt area with decorative background</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Other Players' Boards</b> for reference</li>
+     * </ul>
+     *
+     * <p>Interactive Features:
+     * <ul>
+     *   <li><b>Tile Selection</b>:
+     *     <ul>
+     *       <li>Only active when tilesClickable is true</li>
+     *       <li>Tracks selected tiles in cmdCoords list</li>
+     *       <li>Visual feedback through opacity changes</li>
+     *       <li>Excludes tiles marked in excludedTiles</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>Game Board Preview</b>:
+     *     <ul>
+     *       <li>Shows the main game board in a modal window</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * <p>Layout Organization:
+     * <ul>
+     *   <li>Left: Card display and game log</li>
+     *   <li>Center: Statistics and player board</li>
+     *   <li>Right: Other players' boards</li>
+     *   <li>Responsive design bound to primaryStage dimensions</li>
+     * </ul>
+     *
+     * @implNote This method:
+     * <ul>
+     *   <li>Uses Platform.runLater() for thread-safe UI updates</li>
+     *   <li>Maintains state through various atomic variables</li>
+     *   <li>Relies on properly initialized image resources</li>
+     *   <li>Coordinates with printer for scene management</li>
+     * </ul>
+     *
+     * @see Platform#runLater(Runnable)
+     * @see IntegerPair
+     */
     public void flightScene() {
         prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
 
@@ -1899,6 +2723,46 @@ public class GuiRoot implements View {
     }
 
 
+
+    /**
+     * Handles game phase transitions by updating the player's state and refreshing the UI.
+     * This callback method is invoked whenever the game progresses to a new phase.
+     *
+     * <p>Key responsibilities:
+     * <ul>
+     *   <li>Updates the player's state with the new phase information</li>
+     *   <li>Triggers a UI refresh to display the appropriate screen for the new phase</li>
+     *   <li>Handles special cases for login phase and flight phase reconnection</li>
+     * </ul>
+     *
+     * <p>Behavior details:
+     * <ul>
+     *   <li>Delegates state update to {@code playerClient.setPlayerState()}</li>
+     *   <li>Requests UI refresh through {@code playerClient.showGame()} with the printer</li>
+     *   <li>Prints debug information about the new state class</li>
+     *   <li>For login phase transitions, calls {@code goToFirstScene()} to reset the UI</li>
+     *   <li>When reconnecting during flight phase, resets flags and shows flight scene</li>
+     * </ul>
+     *
+     * @param event The phase change event containing:
+     *              <ul>
+     *                <li>The new client state ({@code stateClient})</li>
+     *                <li>Phase transition metadata</li>
+     *              </ul>
+     * @throws NullPointerException if event is null (enforced by {@code @NotNull} annotation)
+     *
+     * @implNote Important implementation details:
+     * <ul>
+     *   <li>Uses {@code reconnecting} and {@code flightStarted} flags to manage reconnection state</li>
+     *   <li>Contains debug output that could be replaced with proper logging</li>
+     *   <li>Includes commented pseudocode suggesting potential future enhancements</li>
+     *   <li>State comparison uses reference equality ({@code ==}) for {@code loginClient}</li>
+     * </ul>
+     *
+     * @see PhaseEvent
+     * @see #goToFirstScene()
+     * @see #flightScene()
+     */
     @Override
     public void phaseChanged(@NotNull PhaseEvent event) {
         playerClient.setPlayerState(event.getStateClient());
@@ -1918,6 +2782,47 @@ public class GuiRoot implements View {
     }
 
 
+
+
+    /**
+     * Handles exceptions by displaying an error dialog and resetting any pending tile selections.
+     * This method provides user-friendly error reporting and cleans up the UI state when exceptions occur.
+     *
+     * <p>Key functionality:
+     * <ul>
+     *   <li>Resets visual state of any selected tiles (sets opacity back to 1)</li>
+     *   <li>Clears the command coordinates collection</li>
+     *   <li>Displays a modal error dialog with the exception message</li>
+     *   <li>Ensures all UI operations are performed on the JavaFX Application Thread</li>
+     * </ul>
+     *
+     * <p>UI Behavior:
+     * <ul>
+     *   <li>Creates a modal dialog titled "Exception"</li>
+     *   <li>Displays the exception message in a centered label</li>
+     *   <li>Provides an "Ok" button to dismiss the dialog</li>
+     *   <li>Blocks interaction with the parent window until dismissed</li>
+     * </ul>
+     *
+     * @param exceptionEvent The exception event containing:
+     *                       <ul>
+     *                         <li>The exception that occurred</li>
+     *                       </ul>
+     *
+     * @implNote Implementation details:
+     * <ul>
+     *   <li>Uses {@code Platform.runLater()} for thread-safe UI operations</li>
+     *   <li>Maintains clean state by clearing {@code cmdCoords} collection</li>
+     *   <li>Reuses the {@code goBackButtonMaker} utility for consistent button styling</li>
+     *   <li>Dialog modality ensures user attention for error conditions</li>
+     *   <li>Tile reset functionality prevents UI inconsistency after errors</li>
+     * </ul>
+     *
+     * @see ExceptionEvent
+     * @see Platform#runLater(Runnable)
+     * @see Modality#WINDOW_MODAL
+     * @see #goBackButtonMaker(Stage)
+     */
     @Override
     public void exceptionOccurred(ExceptionEvent exceptionEvent){
 
@@ -1954,15 +2859,62 @@ public class GuiRoot implements View {
 
 
     @Override
-    public void seeBoards() {
-
-    }
+    public void seeBoards() {}
 
     @Override
-    public void refresh() {
+    public void refresh() {}
 
-    }
 
+
+    /**
+     * Handles card effect events by updating the game log and managing visual effects.
+     * This method processes game events that trigger visual changes on the board,
+     * particularly shot animations and flight phase transitions.
+     *
+     * <p>Key functionality:
+     * <ul>
+     *   <li>Adds event messages to the game log (displayed in reverse chronological order)</li>
+     *   <li>Manages transition to flight phase when flight starts</li>
+     *   <li>Handles shot animations with directional rendering</li>
+     *   <li>Cleans up previous shot effects before applying new ones</li>
+     * </ul>
+     *
+     * <p>Visual Effects Handling:
+     * <ul>
+     *   <li>Shot animations are positioned and rotated based on direction:
+     *     <ul>
+     *       <li>0 (left): Rotated 90° from right edge</li>
+     *       <li>1 (up): Rotated 180° from bottom edge</li>
+     *       <li>2 (right): Rotated 270° from left edge</li>
+     *       <li>3 (down): Standard orientation from top edge</li>
+     *     </ul>
+     *   </li>
+     *   <li>Different shot types (small/large) use different image sizes</li>
+     *   <li>Previous shots are automatically removed before new ones are placed</li>
+     *
+     * </ul>
+     *
+     * @param event The LogEvent containing:
+     *              <ul>
+     *                <li>Message to display in log</li>
+     *                <li>Optional coordinates for shot effects (x, y)</li>
+     *                <li>Shot type (0-3 indicating size and style)</li>
+     *                <li>Direction (0-3 indicating cardinal direction)</li>
+     *              </ul>
+     *
+     * @implNote Implementation details:
+     * <ul>
+     *   <li>Uses Platform.runLater() for thread-safe UI operations</li>
+     *   <li>Maintains flight state through flightStarted flag</li>
+     *   <li>Stores shot coordinates in shotCoords for cleanup</li>
+     *   <li>Images are loaded from /GUI/shots/ directory</li>
+     *   <li>Contains commented code for potential future enhancements</li>
+     * </ul>
+     *
+     * @see LogEvent
+     * @see Platform#runLater(Runnable)
+     * @see #flightScene()
+     */
     @Override
     public void effectCard(LogEvent event){
         //messaggio di cosa è successo
@@ -2026,16 +2978,74 @@ public class GuiRoot implements View {
         });
     }
 
+
+
+
+    /**
+     * Updates player board statistics with the latest game state information in a thread-safe manner.
+     * This method synchronizes player board metrics between the game engine and JavaFX UI,
+     * ensuring all updates occur on the JavaFX Application Thread.
+     *
+     * <p>Maintains and updates the following player statistics:
+     * <ul>
+     *   <li><b>Attack Power</b> (Plasma drills: {@code totAtk})</li>
+     *   <li><b>Energy Reserves</b> ({@code totEnergy})</li>
+     *   <li><b>Movement Capability</b> (Engine power: {@code totSpeed})</li>
+     *   <li><b>Crew Status</b> (Human count: {@code totHumans})</li>
+     *   <li><b>Ship Integrity</b> (Damage taken: {@code totDamages})</li>
+     *   <li><b>Financial Resources</b> (Credits: {@code totCredits})</li>
+     * </ul>
+     *
+     * @param event The PBInfoEvent containing:
+     *              <ul>
+     *                <li>{@code plasmaDrillsPower} - Current attack strength</li>
+     *                <li>{@code energy} - Available energy units</li>
+     *                <li>{@code enginePower} - Movement capacity</li>
+     *                <li>{@code numHumans} - Surviving crew members</li>
+     *                <li>{@code damage} - Accumulated damage points</li>
+     *                <li>{@code credits} - Available currency</li>
+     *              </ul>
+     *
+     * @implNote Important implementation details:
+     * <ul>
+     *   <li>All updates are wrapped in {@code Platform.runLater()} for thread safety</li>
+     *   <li>Only stores values - UI components should observe these variables</li>
+     *   <li>Variables use atomic or volatile references if accessed across threads</li>
+     *   <li>No input validation - assumes valid values from game engine</li>
+     *   <li>Updates occur asynchronously on JavaFX thread</li>
+     * </ul>
+     *
+     * @see PBInfoEvent
+     * @see Platform#runLater(Runnable)
+     * @see #totAtk
+     * @see #totEnergy
+     * @see #totSpeed
+     * @see #totHumans
+     * @see #totDamages
+     * @see #totCredits
+     */
     @Override
     public void updatePBInfo(PBInfoEvent event) {
-        totAtk = event.getPlasmaDrillsPower();
-        totEnergy = event.getEnergy();
-        totSpeed = event.getEnginePower();
-        totHumans = event.getNumHumans();
-        totDamages = event.getDamage();
-        totCredits = event.getCredits();
+        Platform.runLater(()->{
+            totAtk = event.getPlasmaDrillsPower();
+            totEnergy = event.getEnergy();
+            totSpeed = event.getEnginePower();
+            totHumans = event.getNumHumans();
+            totDamages = event.getDamage();
+            totCredits = event.getCredits();
+        });
     }
 
+
+
+
+
+    /**
+     * Updates the hourglass display based on the start or stop status of the event and manages the countdown progress.
+     *
+     * @param event the HourglassEvent object that contains metadata about the hourglass operation, including whether it
+     *              should start or stop.
+     */
     @Override
     public void updateHourglass(HourglassEvent event){
         ImageView hourglassImg = new ImageView();
@@ -2084,6 +3094,35 @@ public class GuiRoot implements View {
     }
 
 
+    /**
+     * Displays the game outcome message to the player at the end of a game session.
+     * This method updates the UI to show the final result of the game, whether it's
+     * a win, loss, or other conclusion state.
+
+     * <p>Behavior Details:
+     * <ul>
+     *   <li>Updates the prompt text with the game outcome message</li>
+     *   <li>Ensures thread-safe UI updates via {@code Platform.runLater()}</li>
+     *   <li>Uses the existing prompt component for consistent message display</li>
+     * </ul>
+
+     * @param event The FinishGameEvent containing:
+     *              <ul>
+     *                <li>The outcome message to display</li>
+     *                <li>Potentially additional game result details</li>
+     *              </ul>
+
+     * @implNote Implementation details:
+     * <ul>
+     *   <li>Performs a simple text update without additional formatting</li>
+     *   <li>Relies on the existing prompt component's styling</li>
+     *   <li>Does not clear previous messages automatically</li>
+     *   <li>Assumes the message is properly formatted for display</li>
+     * </ul>
+
+     * @see FinishGameEvent
+     * @see Platform#runLater(Runnable)
+     */
     @Override
     public void showOutcome(FinishGameEvent event){
         Platform.runLater(()->{
@@ -2091,6 +3130,52 @@ public class GuiRoot implements View {
         });
     }
 
+
+
+
+    /**
+     * Displays the final scoreboard with player rankings and scores.
+     * This method creates a visually appealing scoreboard that shows each player's
+     * position, name, and score using ordinal tokens and styled text.
+     *
+     * <p>Visual Layout:
+     * <ul>
+     *   <li>Vertical layout with 25px spacing between player entries</li>
+     *   <li>Each player entry shows:
+     *     <ul>
+     *       <li>Position badge (1st, 2nd, etc. from /GUI/ordinalTokens/)</li>
+     *       <li>Player name and score with golden text styling</li>
+     *     </ul>
+     *   </li>
+     *   <li>Centered alignment for all elements</li>
+     *   <li>Responsive design bound to primary stage dimensions</li>
+     * </ul>
+     *
+     * <p>Behavior Details:
+     * <ul>
+     *   <li>Processes scores in the order received from the event</li>
+     *   <li>Uses Platform.runLater() for thread-safe UI updates</li>
+     *   <li>Updates the primary stage title to "Final Scoreboard"</li>
+     *   <li>Replaces all existing content in the contentRoot</li>
+     * </ul>
+     *
+     * @param event The ScoreboardEvent containing:
+     *              <ul>
+     *                <li>Map of player names to their scores</li>
+     *              </ul>
+     *
+     * @implNote Implementation details:
+     * <ul>
+     *   <li>Ordinal tokens are loaded from /GUI/ordinalTokens/ directory</li>
+     *   <li>Uses fixed 70px height for position badges</li>
+     *   <li>Applies consistent golden text styling (27px, bold)</li>
+     *   <li>Scoreboard is the only interactive element at this stage</li>
+     *   <li>Does not handle score sorting - assumes event provides ordered data</li>
+     * </ul>
+     *
+     * @see ScoreboardEvent
+     * @see Platform#runLater(Runnable)
+     */
     @Override
     public void showScore(ScoreboardEvent event){
         int i = 1;
@@ -2120,6 +3205,48 @@ public class GuiRoot implements View {
     }
 
 
+
+
+    /**
+     * Displays a modal dialog containing the player's unique connection token.
+     * This dialog provides the player with their session token for potential reconnection
+     * and explains its importance.
+     *
+     * <p>Dialog Features:
+     * <ul>
+     *   <li>Title: "Token"</li>
+     *   <li>Non-editable, non-focusable text field displaying the token</li>
+     *   <li>Instructional text about token importance</li>
+     *   <li>OK button to dismiss the dialog</li>
+     *   <li>Window-modal to parent stage</li>
+     * </ul>
+     *
+     * <p>Visual Design:
+     * <ul>
+     *   <li>Clean, transparent text field for token display</li>
+     *   <li>Consistent 15px font for instructional text</li>
+     *   <li>19px font for the token itself</li>
+     *   <li>Centered alignment of all elements</li>
+     *   <li>Fixed 350x150 pixel window size</li>
+     * </ul>
+     *
+     * @param tokenEvent The TokenEvent containing:
+     *                   <ul>
+     *                     <li>token - The unique connection token string</li>
+     *                   </ul>
+     *
+     * @implNote Implementation details:
+     * <ul>
+     *   <li>Uses Platform.runLater() for thread-safe UI operations</li>
+     *   <li>Text field is disabled to prevent accidental modification</li>
+     *   <li>Contains commented-out alternative label implementation</li>
+     *   <li>Token is displayed exactly as received from the event</li>
+     * </ul>
+     *
+     * @see TokenEvent
+     * @see Platform#runLater(Runnable)
+     * @see Modality#WINDOW_MODAL
+     */
     @Override
     public void Token(TokenEvent tokenEvent){
         Platform.runLater(()->{
@@ -2149,7 +3276,6 @@ public class GuiRoot implements View {
 
             Scene scene = new Scene(txtBox, 350, 150);
             stage.setScene(scene);
-            stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.show();
         });
@@ -2157,7 +3283,60 @@ public class GuiRoot implements View {
 
 
 
-
+    /**
+     * Creates and configures a "Join" button for lobby game entries with full join workflow.
+     * The button triggers a multi-step joining process when clicked:
+     * <ol>
+     *   <li>Displays a username input dialog</li>
+     *   <li>Validates the username length</li>
+     *   <li>Initiates the game join process</li>
+     * </ol>
+     *
+     * <p>Button Behavior:
+     * <ul>
+     *   <li>Text: "Join"</li>
+     *   <li>On click: Opens username input dialog</li>
+     *   <li>Dialog title shows target game ID</li>
+     * </ul>
+     *
+     * <p>Username Dialog Features:
+     * <ul>
+     *   <li>Text field with "Player Name" prompt</li>
+     *   <li>Confirm button (disabled when empty)</li>
+     *   <li>Back button for cancellation</li>
+     *   <li>Input validation (20 character max)</li>
+     *   <li>Modal to parent window</li>
+     * </ul>
+     *
+     * <p>Join Process:
+     * <ul>
+     *   <li>Stores player name, game name, and level</li>
+     *   <li>Validates name length before proceeding</li>
+     *   <li>Sends join command to inputQueue</li>
+     *   <li>Includes game level and max players from lobby</li>
+     * </ul>
+     *
+     * @param joining The LobbyEvent containing game details:
+     *                <ul>
+     *                  <li>gameId - Game identifier to join</li>
+     *                  <li>lv - Game level (1 or 2)</li>
+     *                  <li>maxPlayers - Maximum player count</li>
+     *                </ul>
+     * @return Configured Button instance with join functionality
+     * @throws NullPointerException if joining parameter is null (enforced by @NotNull)
+     *
+     * @implNote Implementation details:
+     * <ul>
+     *   <li>Uses WINDOW_MODAL for all dialogs</li>
+     *   <li>Reuses goBackButtonMaker for consistent cancel buttons</li>
+     *   <li>Maintains local state (myName, myGameName, myGameLv)</li>
+     *   <li>Command format: "Create", name, gameName, level, maxPlayers</li>
+     * </ul>
+     *
+     * @see LobbyEvent
+     * @see #goBackButtonMaker(Stage)
+     * @see Modality#WINDOW_MODAL
+     */
     private @NotNull Button joinButtonMaker(LobbyEvent joining) {
         Button joinButton = new Button("Join");
         joinButton.setOnAction(e -> {
@@ -2217,8 +3396,6 @@ public class GuiRoot implements View {
                 }
                 else{
                     InsertNameStage.close();
-                    //Join myname mygamename
-                    ///TODO: sistemare la join
                     inputQueue.add("Create");
                     inputQueue.add(myName);
                     inputQueue.add(myGameName);
@@ -2231,6 +3408,30 @@ public class GuiRoot implements View {
     }
 
 
+
+
+
+    /**
+     * Creates a standardized "Cancel" button for closing modal dialogs.
+     *
+     * <p>The button is pre-configured with:
+     * <ul>
+     *   <li>Text: "Cancel"</li>
+     *   <li>Action: Closes the provided stage when clicked</li>
+     *   <li>Consistent behavior across all dialogs</li>
+     * </ul>
+     *
+     * @param stage The Stage window that this button should close
+     * @return A configured Button instance with cancel functionality
+     * @throws NullPointerException if stage parameter is null (enforced by @NotNull)
+     *
+     * @implNote This utility method:
+     * <ul>
+     *   <li>Promotes UI consistency for cancel operations</li>
+     *   <li>Simplifies dialog window creation</li>
+     *   <li>Follows standard JavaFX button patterns</li>
+     * </ul>
+     */
     private @NotNull Button goBackButtonMaker(Stage  stage) {
         Button GobackButton = new Button("Cancel");
         GobackButton.setOnAction(ev -> {
@@ -2240,6 +3441,48 @@ public class GuiRoot implements View {
     }
 
 
+
+
+    /**
+     * Resets the game state and displays the initial title screen.
+     * This method performs a complete application reset and prepares the UI for a new game session.
+     *
+     * <p>Key Responsibilities:
+     * <ul>
+     *   <li><b>State Reset</b>:
+     *     <ul>
+     *       <li>Clears all game state variables and collections</li>
+     *       <li>Reinitializes UI components to default states</li>
+     *       <li>Resets all game flags (e.g., amIBuilding, killing, etc.)</li>
+     *     </ul>
+     *   </li>
+     *   <li><b>UI Initialization</b>:
+     *     <ul>
+     *       <li>Creates title screen with game logo</li>
+     *       <li>Sets up the "Start!" button with lobby navigation</li>
+     *       <li>Configures responsive layout binding</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * <p>Visual Elements:
+     * <ul>
+     *   <li>Large "GALAXY TRUCKERS" title with gold styling</li>
+     *   <li>Centered "Start!" button with large font</li>
+     *   <li>Responsive layout that adapts to window size</li>
+     * </ul>
+     *
+     * @implNote Implementation Details:
+     * <ul>
+     *   <li>All operations are wrapped in Platform.runLater() for thread safety</li>
+     *   <li>Completely resets over 25 game state variables</li>
+     *   <li>Uses a StackPane as the root container for the title screen</li>
+     *   <li>The "Start!" button triggers a transition to the lobby state</li>
+     *   <li>Includes debug output for button press verification</li>
+     * </ul>
+     *
+     * @see Platform#runLater(Runnable)
+     */
     public void goToFirstScene() {
 
         Platform.runLater(() -> {
@@ -2319,62 +3562,37 @@ public class GuiRoot implements View {
     }
 
 
-    private void lv2PlayerboardBuilder(){
-
-        for(int i=0; i< 9; i++)
-            for(int j=0; j< 10; j++) {
-                ImageView emptyCell = new ImageView(tilePlaceholder);
-                emptyCell.setPreserveRatio(true);
-                emptyCell.setFitWidth(50);
-                int finalJ = j;
-                int finalI = i;
-                if ((i == 4 && (j == 5 || j == 7)) || (i == 5 && (j >= 4 && j <= 8)) || ((i == 6 || i == 7) && j>=3) || (i == 8 && (j>=3 && j != 6))){
-                    Platform.runLater(()->{
-                        myBoard.add(emptyCell, finalJ, finalI);
-                    });
-                }
-                emptyCell.setOpacity(0.5);
-                emptyCell.setOnMouseClicked(e -> {
-                    inputQueue.add("InsertTile "+ finalJ +" "+ finalI +" "+ tileRotation);
-                });
-                emptyCell.setOnMouseEntered(e -> {
-                    emptyCell.setOpacity(1);
-                });
-                emptyCell.setOnMouseExited(e -> {
-                    emptyCell.setOpacity(0.5);
-                });
-            }
-    }
-
-
-    private void lv1PlayerboardBuilder(){
-        for(int i=0; i< 9; i++)
-            for(int j=0; j< 10; j++) {
-                ImageView emptyCell = new ImageView(tilePlaceholder);
-                emptyCell.setPreserveRatio(true);
-                emptyCell.setFitWidth(50);
-                int finalJ = j;
-                int finalI = i;
-                if ((i == 4 && (j == 6)) || (i == 5 && (j >= 5 && j <= 7)) || ((i == 6 || i == 7) && (j>=4 && j<= 8)) || (i == 8 && (j>=4 && j != 6 && j!=9))){
-
-                    Platform.runLater(()->{
-                        myBoard.add(emptyCell, finalJ, finalI);
-                    });
-                }
-                emptyCell.setOpacity(0.5);
-                emptyCell.setOnMouseClicked(e -> {
-                    inputQueue.add("InsertTile "+ finalJ +" "+ finalI +" "+ tileRotation);
-                });
-                emptyCell.setOnMouseEntered(e -> {
-                    emptyCell.setOpacity(1);
-                });
-                emptyCell.setOnMouseExited(e -> {
-                    emptyCell.setOpacity(0.5);
-                });
-            }
-    }
-
-
+    /**
+     * Initializes the coordinate mapping for Level 1 game board positions.
+     * This method sets up the spatial relationships between grid positions
+     * and their corresponding pixel coordinates on the visual game board.
+     *
+     * <p>Coordinate Mapping Details:
+     * <ul>
+     *   <li>Processes a fixed array of alternating x,y coordinates</li>
+     *   <li>Creates 18 position mappings (indexed 0-17)</li>
+     *   <li>Stores mappings in the {@code coords} HashMap</li>
+     * </ul>
+     *
+     * <p>Coordinate Array Structure:
+     * <ul>
+     *   <li>36-element array (18 x/y pairs)</li>
+     *   <li>Alternating x and y values</li>
+     *   <li>Precise pixel positions for visual elements</li>
+     * </ul>
+     *
+     * @implNote Implementation Details:
+     * <ul>
+     *   <li>Uses temporary {@code IntegerPair} for coordinate processing</li>
+     *   <li>Even indices (0,2,4...) become x coordinates</li>
+     *   <li>Odd indices (1,3,5...) become y coordinates</li>
+     *   <li>Creates immutable coordinate entries in the map</li>
+     *   <li>Hard-coded values match specific Level 1 board layout</li>
+     * </ul>
+     *
+     * @see IntegerPair
+     * @see #coords
+     */
     private void Lv1GameboardSetup(){
         int[] coordsList = {263,124,348,92,442,82,534,85,629,94,717,126,797,180,842,280,791,371,713,422,625,453,527,465,435,463,341,449,254,419,170,361,127,259,181,168};
 
@@ -2392,6 +3610,25 @@ public class GuiRoot implements View {
         }
     }
 
+
+    /**
+     * Sets up the Level 2 gameboard by populating a map of coordinate pairs.
+     *
+     * This method initializes a predefined list of integers representing x and
+     * y coordinate values. It parses this list to create pairs of coordinates
+     * that are stored in the `coords` map. Each pair of integers (x, y) from
+     * the list is stored as a new `IntegerPair` object, which is then added
+     * to the map with an integer key.
+     *
+     * The method uses an index-based loop to iterate over the coordinate list.
+     * Odd indices represent y-values, while even indices represent x-values
+     * in the `coordsList` array.
+     *
+     * At each iteration:
+     * - The x-coordinate value is temporarily stored in a helper object.
+     * - Once both x and y values are available, a new `IntegerPair` is created
+     *   and added to the `coords` map with an incrementing key.
+     */
     private void Lv2GameboardSetup(){
         int[] coordsList = {257,153,332,121,408,106,487,96,567,98,645,107,721,126,796,157,868,207,916,282,909,374,854,442,784,486,709,516,630,533,554,539,471,539,395,530,317,508,243,478,174,426,126,349,138,259,192,194};
 
@@ -2409,6 +3646,18 @@ public class GuiRoot implements View {
         }
     }
 
+
+
+
+    /**
+     * Assigns a specific color and image to a player based on the input identifier
+     * and stores the association. If the player does not already have a rocket
+     * assigned, an {@code ImageView} with a designated image is created and added
+     * to the playerRockets map.
+     *
+     * @param pl The name or identifier of the player.
+     * @param id The unique identifier used to determine the color and image to assign.
+     */
     private void setColors(String pl, int id){
             ImageView img = new ImageView();
             img.setFitHeight(40);
@@ -2434,6 +3683,15 @@ public class GuiRoot implements View {
             }
     }
 
+
+
+
+    /**
+     * Determines if the game has started based on the current card image
+     * and the building state.
+     *
+     * @return true if the game has started (indicated by a non-null current card image
+     *         or if not in*/
     public boolean isGameStarted(){
         if(curCardImg != null || !amIBuilding)
             return true;
@@ -2441,6 +3699,21 @@ public class GuiRoot implements View {
     }
 
 
+
+    /**
+     * Returns the {@link ImageView} tile located at the specified column and row
+     * within {@code myBoard}, unless the position is listed in {@code excludedTiles}.
+     *
+     * The method iterates through all child nodes of {@code myBoard} and checks their
+     * grid position using {@link GridPane#getColumnIndex(Node)} and {@link GridPane#getRowIndex(Node)}.
+     * If a tile's position matches the given {@code col} and {@code row}, and it is not part of the
+     * {@code excludedTiles} list, it is returned as an {@code ImageView}.
+     *
+     * @param col the column index of the target tile
+     * @param row the row index of the target tile
+     * @return the {@code ImageView} at the specified grid position, or {@code null}
+     *         if the position is excluded or no matching node is found
+     */
     private ImageView getTile(int col, int row){
         for (Node node : myBoard.getChildren()) {
             Integer nodeCol = GridPane.getColumnIndex(node);
@@ -2459,10 +3732,22 @@ public class GuiRoot implements View {
 
 
 
+    /**
+     * Initializes the base state of the application interface and game settings.
+     *
+     * This method sets up the primary user interface components and resets game-related attributes to prepare for the next phase of the game.
+     * Buttons for "Ready" and "Quit" are added, event listeners are assigned, and specific game state variables are reinitialized.
+     *
+     * Functionality includes:
+     * - Clearing selected images and command coordinates.
+     * - Setting user interface elements to a non-selectable state.
+     * - Displaying a prompt message to indicate the next steps.
+     * - Assigning actions to the "Ready" and "Quit" buttons to send corresponding commands to an input queue.
+     *
+     * This method*/
     public void baseState(){
         Button ready = new Button("Ready!");
         Button quit = new Button("Quit");
-
 
         Platform.runLater(()->{
 //            for(Label name : players){
@@ -2494,6 +3779,13 @@ public class GuiRoot implements View {
         });
     }
 
+
+
+
+    /**
+     * Handles the "killing" phase of the game, allowing the user to select crew members to mark for elimination.
+     * This method updates the game's UI, setting up the appropriate prompts and buttons,
+     */
     public void killing(){
         AtomicReference<String> cmd = new AtomicReference<>("Kill");
         Button kill = new Button("Kill!");
@@ -2519,6 +3811,15 @@ public class GuiRoot implements View {
 
     }
 
+
+
+    /**
+     * Manages the defend phase of the game by adding buttons for actions such as "Defend!"
+     * and "Do Nothing". Updates the user interface and handles user input accordingly.
+     *
+     * @param command The initial command to be used or modified during the defend phase logic.
+     * @param txt The prompt text to be displayed to the user during the defend phase.
+     */
     public void defend(String command, String txt){
         AtomicReference<String> cmd = new AtomicReference<>(command);
         Button defend = new Button("Defend!");
@@ -2560,6 +3861,11 @@ public class GuiRoot implements View {
 
     }
 
+
+
+    /**
+     * Handles the action of consuming energy in the current game state. This method sets up the user interface
+     */
     public void consumingEnergy(){
         AtomicReference<String> cmd = new AtomicReference<>();
         Button done = new Button("Done!");
@@ -2592,6 +3898,15 @@ public class GuiRoot implements View {
         });
     }
 
+
+
+
+    /**
+     * Configures the interface and handles tile selection logic based on the provided parameters.
+     * Allows the user to interact with the visual components to create a command using tile coordinates.
+     *
+     * @param command The initial command string provided as input, used as a base for further updates.
+     * @param txt The text prompt displayed to the user*/
     public void giveTiles(String command, String txt, boolean chunk){
         AtomicReference<String> cmd = new AtomicReference<>(command);
         Button done = new Button("Done!");
@@ -2635,6 +3950,23 @@ public class GuiRoot implements View {
         });
     }
 
+
+
+
+    /**
+     * Displays a UI that allows the user to select a planet to explore
+     * or choose to do nothing. This method initializes a ComboBox
+     * containing a list of planets and updates the UI elements accordingly.
+     * It also defines actions for the "Select" and "Do Nothing" buttons.
+     *
+     * The "Select" button is disabled unless the user selects a planet from the ComboBox.
+     * When the "Select" button is clicked, the method maps the selected planet
+     * to a corresponding numeric index and adds the choice to the input queue.
+     * Clicking the "Do Nothing" button adds a default negative choice to the input queue.
+     *
+     * This method dynamically modifies the UI components using a JavaFX `Platform.runLater`
+     * block to ensure the UI update is performed on the JavaFX Application Thread.
+     */
     public void choosingPlanet(){
         Button choose = new Button("Select");
         Button doNothing = new Button("Do Nothing");
@@ -2681,6 +4013,25 @@ public class GuiRoot implements View {
         });
     }
 
+
+
+
+    /**
+     * Handles the "accept or decline" state by updating the user interface and setting actions
+     * for the provided buttons. This method modifies the current UI elements to display the state
+     * where the user is prompted to either accept or decline a choice, and their input is added to a queue.
+     *
+     * The method updates:
+     * - The current card image displayed on the UI.
+     * - The prompt text shown to the user.
+     * - The buttons displayed, as well as their respective actions.
+     *
+     * The "Accept" button enqueues an "Accept" command into the input queue when clicked.
+     * The "Decline" button enqueues a "Decline" command into the input queue when clicked.
+     *
+     * This method ensures that the UI updates and associated event-handling are executed on
+     * the JavaFX Application Thread.
+     */
     public void acceptState(){
         AtomicReference<String> cmd = new AtomicReference<>("ChoosePlanet");
         Button accept = new Button("Accept");
@@ -2703,6 +4054,37 @@ public class GuiRoot implements View {
 
     }
 
+
+
+
+    /**
+     * Manages the cargo-handling phase within the application. This method sets the appropriate UI
+     * components and logic for allowing users to move, select, discard, or finish handling their cargo.
+     * The cargo component interacts with the game board and updates the state of rewards and input queues
+     * based on user actions.
+     *
+     * The method accomplishes the following actions:
+     * - Updates the current card image and resets cargo-related state variables.
+     * - Configures interactive buttons for completing, discarding, or unselecting cargo.
+     * - Sets up the stack pane containing the cargo slot and its draggable image representation.
+     * - Dynamically creates clickable reward boxes based on available rewards, allowing users to
+     *   select which reward they wish to place and where.
+     * - Updates grid tiles to handle user interactions for placing selected rewards while enforcing
+     *   certain restrictions for excluded tiles.
+     * - Manages the appearance of phase-specific buttons and dynamically modifiable UI components.
+     *
+     * This method uses the JavaFX `Platform.runLater` to ensure updates to the UI components are made
+     * within the JavaFX Application Thread.
+     *
+     * Preconditions:
+     * - `curCard`, `curCardImg`, and other relevant UI components must be properly initialized.
+     * - `rewards`, `excludedTiles`, `myBoard`, and other related game state variables must contain
+     *   valid, up-to-date data.
+     *
+     * Postconditions:
+     * - Cargo handling UI and logic will be active, enabling interaction with rewards and grid tiles.
+     * - The state of `rewardsLeft`, input queues, and cargo indices will be updated based on user actions.
+     */
     public void handleCargo(){
         Platform.runLater(() -> {
             curCard.setImage(curCardImg);
@@ -2801,6 +4183,21 @@ public class GuiRoot implements View {
         });
     }
 
+
+
+    /**
+     * Handles the theft event within the application.
+     * This method updates the UI components on the JavaFX application thread to reflect
+     * the changes resulting from a theft scenario.
+     *
+     * Specifically:
+     * - Sets the current card image using the provided `curCardImg`.
+     * - Updates the internal theft status to `true`.
+     * - Displays a prompt message instructing the user to select cargo to give.
+     * - Ensures the primaryStage is visible to the user.
+     *
+     * This method ensures that all UI updates are executed correctly on the JavaFX thread.
+     */
     public void handleTheft(){
         Platform.runLater(() -> {
             curCard.setImage(curCardImg);
@@ -2810,6 +4207,23 @@ public class GuiRoot implements View {
         });
     }
 
+
+
+
+    /**
+     * Updates the user interface to indicate a waiting state for the user's turn.
+     * This method performs the UI updates on the JavaFX Application Thread using
+     * the Platform.runLater() mechanism. During this state, interactions are
+     * disabled, and specific states are reset.
+     *
+     * The actions performed in this method include:
+     * - Setting the prompt text to indicate the waiting status.
+     * - Updating the current card image.
+     * - Clearing any buttons related to the game phase.
+     * - Disabling tile interactions and specific gameplay actions, such as killing,
+     *   theft, and chunk selection.
+     * - Ensuring the primary stage is displayed to the user.
+     */
     public void waiting(){
         Platform.runLater(() -> {
             prompt.setText("Waiting for your turn...");
