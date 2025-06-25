@@ -24,19 +24,28 @@ public class GuiOut {
 
 
     /**
+     * Constructs a GuiOut instance and initializes it with the specified GuiRoot object.
      *
+     * @param root the GuiRoot object that provides the root element for the application's GUI.
      */
     public GuiOut(GuiRoot root){
         gui = root;
     }
 
 
+    /**
+     * Retrieves the root GUI element associated with this instance.
+     *
+     * @return the root GUI element as a GuiRoot object.
+     */
     public GuiRoot getRoot(){
         return gui;
     }
 
     /**
+     * Sets the primary stage for the application.
      *
+     * @param primaryStage the main JavaFX stage to be used by the application
      */
     public void setStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -44,14 +53,21 @@ public class GuiOut {
 
 
     /**
+     * Sets the scene for the title screen in the application.
      *
+     * @param titleScene the Scene to be set as the title screen.
      */
     public void setTitleScreen(Scene titleScene) {
         this.TitleScene=titleScene;
     }
 
     /**
+     * Displays the title screen for the application.
      *
+     * This method ensures that UI changes occur on the JavaFX Application thread
+     * by utilizing the `Platform.runLater` method. It sets the title of the primary
+     * stage to "Galaxy Truckers", assigns `TitleScene` to the primary stage, and makes
+     * the stage visible to the user.
      */
     public void printTitleScreen(){
         Platform.runLater(() -> {

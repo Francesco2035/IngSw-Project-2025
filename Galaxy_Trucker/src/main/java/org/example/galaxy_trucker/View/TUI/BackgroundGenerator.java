@@ -26,6 +26,8 @@ import java.util.Set;
  */
 public class BackgroundGenerator {
 
+
+    private int background;
     /**
      * An instance of the Random class used for generating random values
      * to support the functionality of the BackgroundGenerator class.
@@ -86,7 +88,12 @@ public class BackgroundGenerator {
      *         The string may include a color style or have a default style.
      */
     public AttributedString getRandomSymbol() {
-        String symbol = symbols[random.nextInt(symbols.length)];
+
+        String symbol = "";
+        do {
+            symbol = symbols[random.nextInt(symbols.length)];
+        } while (background == 1 && specialSymbols.contains(symbol));
+
 
         boolean isSpecial = specialSymbols.contains(symbol);
 
@@ -102,4 +109,7 @@ public class BackgroundGenerator {
     }
 
 
+    public void setSpecial(int background) {
+        this.background = background;
+    }
 }

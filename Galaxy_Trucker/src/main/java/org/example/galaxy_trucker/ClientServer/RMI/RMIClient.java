@@ -179,7 +179,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     else if(cmd.equals("Log")){
                         client.getView().seeLog();
                     }
-                    else if (cmd.equals("Bg")){
+                    else if (cmd.equals("BG")){
                         client.getView().background();
                         client.getView().refresh();
                     }
