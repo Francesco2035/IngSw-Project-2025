@@ -29,9 +29,7 @@ public class DebugShip extends Command implements Serializable {
         this.number = number;
     }
 
-    public DebugShip() {
-
-    }
+    public DebugShip() {}
 
 
     @Override

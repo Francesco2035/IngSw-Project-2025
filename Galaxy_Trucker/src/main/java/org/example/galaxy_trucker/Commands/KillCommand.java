@@ -11,6 +11,8 @@ import java.util.ArrayList;
 public class KillCommand extends Command implements Serializable {
     ArrayList<IntegerPair> coordinates;
 
+    public KillCommand() {}
+
     public KillCommand(ArrayList<IntegerPair> coordinates,String gameId, String playerId, int lv, String title, String token) {
         super(gameId, playerId, lv, title, token,-1);
         this.coordinates = coordinates;
@@ -18,9 +20,7 @@ public class KillCommand extends Command implements Serializable {
 
     @Override
     public void execute(Player player) throws InterruptedException {
-
-            player.getCurrentCard().killHumans(coordinates);
-
+        player.getCurrentCard().killHumans(coordinates);
     }
 
     @Override

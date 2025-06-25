@@ -16,15 +16,14 @@ public class ReconnectCommand extends Command implements Serializable {
 
     @JsonIgnore
     private ClientInterface client;
+
     public ReconnectCommand(String token, String gameId, String playerId, int lv, String title) {
         super(gameId, playerId, lv, title, token,-1);
     }
-    public void execute() {
-    }
 
-    public ReconnectCommand() {
+    public void execute() {}
 
-    }
+    public ReconnectCommand() {}
 
     @Override
     public void execute(Player player) throws IOException {
