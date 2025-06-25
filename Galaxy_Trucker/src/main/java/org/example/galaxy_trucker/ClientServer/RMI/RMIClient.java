@@ -48,6 +48,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     public void startPingMonitor() {
         System.out.println("Start monitor pings");
 
+
+        // Se esiste un scheduler attivo, spegnilo prima
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdownNow();
+        }
+
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+
         scheduler.scheduleAtFixedRate(() -> {
             long now = System.currentTimeMillis();
             //System.out.println(lastPingTime);
@@ -151,10 +159,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     public void inputLoop(boolean fromConsole) throws IOException, InterruptedException {
         String cmd = "";
 
-        System.out.println("Input loop started: "+running+ " cmd "+cmd);
         if (running) {
             while (running && !cmd.equals("end")) {
-                System.out.println("CMD: "+cmd);
                 try {
                     cmd = client.getView().askInput("Command <RMI>: ");
                     if (cmd.equals("")){
@@ -184,8 +190,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             Lobby.setClient(this);
                             server.command(Lobby);
                             lastPingTime = System.currentTimeMillis();
-                            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-                            this.scheduler = scheduler;
                             startPingMonitor();
                         }
                         else{
@@ -249,8 +253,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             server.command(loginCommand);
                             if (scheduler != null && scheduler.isShutdown()){
                                 lastPingTime = System.currentTimeMillis();
-                                ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-                                this.scheduler = scheduler;
                                 startPingMonitor();
                             }
 
@@ -303,8 +305,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                 System.out.println(loginCommand);
                                 server.command(loginCommand);
                                 lastPingTime = System.currentTimeMillis();
-                                ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-                                this.scheduler = scheduler;
                                 startPingMonitor();
                             }
                             else {
@@ -411,19 +411,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         running = false;
         if (inputLoop != null && inputLoop.isAlive()) {
             inputLoop.interrupt();
-            System.out.println("input loop interrupted");
         }
         if (scheduler != null && !scheduler.isShutdown()) {
             scheduler.shutdown();
-            System.out.println("Stop monitor pings");
         }
         client.getView().disconnect();
-        System.out.println("popup");
         String whatNow = "";
         while(whatNow.isEmpty()|| !running) {
             whatNow = client.getView().askInput("<Reconnect> | <Exit>: ");
-            System.out.println("User entered: " + whatNow);
-            System.out.println("<Reconnect> | <Exit>: ");
             switch (whatNow) {
                 case "Exit": {
                     System.out.println("Exit");
@@ -431,7 +426,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     return;
                 }
                 case "Reconnect": {
-                    System.out.println("entro reconnect");
                     if (!setup()) {
                         System.out.println("Error reconnecting!");
                         break;
@@ -440,7 +434,17 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     Command cmd = null;
 
                     if(client.getLobby() && !client.getLogin()){
-                        cmd = new LobbyCommand("Lobby");
+                        LobbyCommand lobby = new LobbyCommand("Lobby");
+                        lobby.setClient(this);
+                        try {
+                            server.command(lobby);
+                            //System.out.println(lobby.getClass().getSimpleName());
+                        } catch (Exception e) {
+                            System.out.println("catch "+e.getMessage());
+                            //e.printStackTrace();
+                            //throw new RuntimeException(e);
+                            break;
+                        }
                     }
                     else if (client.getLogin()){
                         command = "Reconnect";
@@ -454,14 +458,11 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                         }
                         try {
                             server.command(cmd);
-                            System.out.println(cmd.getClass().getSimpleName());
                         } catch (Exception e) {
-                            System.out.println("catch");
                             throw new RuntimeException(e);
                         }
                     }
                     running = true;
-                    System.out.println("Creo input loop");
                     inputLoop = new Thread(() -> {
                         try {
                             this.inputLoop(true);
@@ -474,11 +475,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     //sendPongs();
                     if (client.getLogin() || client.getLobby()){
                         lastPingTime = System.currentTimeMillis();
-                        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-                        this.scheduler = scheduler;
                         startPingMonitor();
                     }
-                    System.out.println("se chiami qui sei fritto bro");
                     return;
                 }
                 default: {
