@@ -265,6 +265,7 @@ public class Client implements EventVisitor {
         this.token = event.getToken();
         if (event.getToken().equals("lobby")){
             System.out.println("Reconnected to lobby");
+            this.view.reconnect(null);
         }
         else {
             this.lobby = true;
