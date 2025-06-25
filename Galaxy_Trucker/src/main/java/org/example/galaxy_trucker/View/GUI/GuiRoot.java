@@ -469,7 +469,6 @@ public class GuiRoot implements View {
                     myBoard.getChildren().remove(node);
             }
 
-
             if (event.getX() == 3 && event.getY() == 8) {
                 if (event.getId() == 158) {
 
@@ -2020,7 +2019,6 @@ public class GuiRoot implements View {
         scoreboard.prefHeightProperty().bind(primaryStage.heightProperty());
 
         Platform.runLater(()->{
-
             contentRoot.getChildren().setAll(scoreboard);
             primaryStage.setTitle("Final Scoreboard");
             primaryStage.setScene(primaryScene);
