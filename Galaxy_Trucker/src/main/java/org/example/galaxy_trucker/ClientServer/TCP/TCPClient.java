@@ -222,7 +222,7 @@ public class TCPClient{
                 else if(userInput.equals("Log")){
                     client.getView().seeLog();
                 }
-                else if (userInput.equals("Bg")){
+                else if (userInput.equals("BG")){
                     client.getView().background();
                     client.getView().refresh();
                 }

@@ -27,7 +27,7 @@ public class InputReader implements Runnable {
     KeyMap<Binding> mainKeyMap;
     StringBuilder lastRender = new StringBuilder();
     BackgroundGenerator generator ;
-    private boolean background = true;
+    private int background = 0;
 
 
 
@@ -68,7 +68,6 @@ public class InputReader implements Runnable {
         mainKeyMap.bind(new Macro("SeeBoards"), "\u0002"); // Ctrl+B
         mainKeyMap.bind(new Macro("MainTerminal"), "\u0014");   // Ctrl+T
         mainKeyMap.bind(new Macro("Log"), "\u000C");   // Ctrl+L
-        //mainKeyMap.bind(new Macro("Help"), "\u0008");   // Ctrl+H
 
 
         prompt = new AttributedStringBuilder()
@@ -149,7 +148,7 @@ public class InputReader implements Runnable {
         System.out.print("\033[3J");
         terminal.puts(InfoCmp.Capability.clear_screen);
         terminal.flush();
-        if (background) {
+        if (background != 2) {
             AttributedString colored = fillBackground(content.toString());
             terminal.writer().print(colored.toAnsi());
         }
@@ -209,7 +208,9 @@ public class InputReader implements Runnable {
 
 
     public void ChangeBackground() {
-        background = !background;
+        background++;
+        background = background % 3;
+        generator.setSpecial(background);
     }
 }
 
