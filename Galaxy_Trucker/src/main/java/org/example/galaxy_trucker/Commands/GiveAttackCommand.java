@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetPlasmaDrillPower;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 
 public class GiveAttackCommand extends Command implements Serializable {
 
+    @JsonProperty("coordinates")
     private ArrayList<IntegerPair> coordinates;
 
     public GiveAttackCommand(){}

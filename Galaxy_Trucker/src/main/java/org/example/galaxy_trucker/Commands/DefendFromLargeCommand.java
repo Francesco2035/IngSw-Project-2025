@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
@@ -9,7 +10,9 @@ import java.io.Serializable;
 
 public class DefendFromLargeCommand extends Command implements Serializable {
 
+    @JsonProperty("plasmaDrill")
     private IntegerPair plasmaDrill;
+    @JsonProperty("batteryComp")
     private IntegerPair batteryComp;
 
     public DefendFromLargeCommand() {}

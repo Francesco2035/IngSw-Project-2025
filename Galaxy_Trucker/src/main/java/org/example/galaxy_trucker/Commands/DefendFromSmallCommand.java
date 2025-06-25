@@ -13,6 +13,7 @@ public class DefendFromSmallCommand extends Command implements Serializable {
     @JsonProperty("commandType")
     private final String commandType = "DefendFromSmallCommand";
 
+    @JsonProperty("batteryComp")
     private IntegerPair batteryComp;
 
     public DefendFromSmallCommand() {}

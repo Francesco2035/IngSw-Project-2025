@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
@@ -7,7 +8,11 @@ import java.io.Serializable;
 
 public class ChoosingPlanetsCommand extends Command implements Serializable {
 
+    @JsonProperty("planet")
     int planet;
+
+    @JsonProperty("commandType")
+    private final String commandType = "ChoosingPlanetsCommand";
 
     public ChoosingPlanetsCommand() {}
 

@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetGoodAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -11,7 +12,9 @@ import java.io.Serializable;
 
 public class TheftCommand extends Command implements Serializable {
 
+    @JsonProperty("position")
     int position;
+    @JsonProperty("coordinate")
     IntegerPair coordinate;
 
     public TheftCommand(){}

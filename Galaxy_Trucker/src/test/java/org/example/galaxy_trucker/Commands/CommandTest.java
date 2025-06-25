@@ -34,7 +34,8 @@ class CommandTest {
         }
 
 
-
+        System.out.println("\n");
+        System.out.println("\n");
 
 
         AddCrewCommand acc = new AddCrewCommand(2, false, false, new IntegerPair(8, 9), "gameid", "",2, "title","token");
@@ -48,6 +49,9 @@ class CommandTest {
         }
 
 
+
+        System.out.println("\n");
+        System.out.println("\n");
 
 
 
@@ -64,6 +68,10 @@ class CommandTest {
 
 
 
+        System.out.println("\n");
+        System.out.println("\n");
+
+
         ChoosingPlanetsCommand cpc = new ChoosingPlanetsCommand(1, "gameid", "",2, "title", "token");
         try{
             String json = objectMapper.writeValueAsString(cpc);
@@ -74,6 +82,9 @@ class CommandTest {
             e.printStackTrace();
         }
 
+
+        System.out.println("\n");
+        System.out.println("\n");
 
 
 
@@ -88,6 +99,9 @@ class CommandTest {
             e.printStackTrace();
         }
 
+        System.out.println("\n");
+        System.out.println("\n");
+
 
 
         DefendFromLargeCommand dflc = new DefendFromLargeCommand(new IntegerPair(4, 4), new IntegerPair(7 ,8), "gameid", "",2, "title", "token");
@@ -99,6 +113,9 @@ class CommandTest {
         }catch (JsonProcessingException e){
             e.printStackTrace();
         }
+
+        System.out.println("\n");
+        System.out.println("\n");
 
 
 
@@ -114,6 +131,9 @@ class CommandTest {
 
 
 
+        System.out.println("\n");
+        System.out.println("\n");
+
 
         FinishBuildingCommand fbc = new FinishBuildingCommand(6, "gameid", "",2, "title", "token");
         try{
@@ -125,6 +145,9 @@ class CommandTest {
             e.printStackTrace();
         }
 
+
+        System.out.println("\n");
+        System.out.println("\n");
 
 
         GiveAttackCommand attackCommand = new GiveAttackCommand(pairs, "gameid", "",2, "title", "token");
@@ -138,6 +161,9 @@ class CommandTest {
         }
 
 
+        System.out.println("\n");
+        System.out.println("\n");
+
 
 
         GiveSpeedCommand speedCommand = new GiveSpeedCommand(pairs, "gameid", "",2, "title", "token");
@@ -150,6 +176,9 @@ class CommandTest {
             e.printStackTrace();
         }
 
+
+        System.out.println("\n");
+        System.out.println("\n");
 
 
 
@@ -165,6 +194,9 @@ class CommandTest {
         }
 
 
+        System.out.println("\n");
+        System.out.println("\n");
+
 
 
         KillCommand kc = new KillCommand(pairs, "gameid", "",2, "title", "token");
@@ -177,6 +209,9 @@ class CommandTest {
             e.printStackTrace();
         }
 
+
+        System.out.println("\n");
+        System.out.println("\n");
 
 
 
@@ -192,6 +227,9 @@ class CommandTest {
         }
 
 
+        System.out.println("\n");
+        System.out.println("\n");
+
 
 
 
@@ -205,6 +243,9 @@ class CommandTest {
             e.printStackTrace();
         }
 
+
+        System.out.println("\n");
+        System.out.println("\n");
 
 
 
@@ -220,6 +261,9 @@ class CommandTest {
         }
 
 
+        System.out.println("\n");
+        System.out.println("\n");
+
 
         ReadyCommand rc = new ReadyCommand("gameid", "",2, "title", true, "token");
         try{
@@ -231,6 +275,9 @@ class CommandTest {
             e.printStackTrace();
         }
 
+
+        System.out.println("\n");
+        System.out.println("\n");
 
 
 
@@ -245,6 +292,9 @@ class CommandTest {
         }
 
 
+        System.out.println("\n");
+        System.out.println("\n");
+
 
         RemoveTileCommand rtc = new RemoveTileCommand(3, 4, "gameid", "",2, "title", "token");
         try{
@@ -257,6 +307,9 @@ class CommandTest {
         }
 
 
+
+        System.out.println("\n");
+        System.out.println("\n");
 
 
 
@@ -271,6 +324,9 @@ class CommandTest {
         }
 
 
+        System.out.println("\n");
+        System.out.println("\n");
+
 
         Theft t = new Theft(4, new IntegerPair(7, 8), "gameid", "",2, "title", "token");
         try{
@@ -282,6 +338,9 @@ class CommandTest {
             e.printStackTrace();
         }
 
+
+        System.out.println("\n");
+        System.out.println("\n");
 
 
 

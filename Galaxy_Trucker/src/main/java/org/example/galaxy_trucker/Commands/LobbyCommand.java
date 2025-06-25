@@ -16,6 +16,7 @@ public class LobbyCommand extends Command implements Serializable {
     @JsonProperty("commandType")
     private final String commandType = "LobbyCommand";
 
+    @JsonIgnore //TODO VERIFICARE CHE QUESTO SERVA A QUALCOSA DAVVERO
     private ClientInterface client;
 
 

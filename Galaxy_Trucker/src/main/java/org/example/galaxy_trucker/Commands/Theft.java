@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
@@ -8,7 +9,9 @@ import java.io.Serializable;
 
 public class Theft extends Command implements Serializable {
 
+    @JsonProperty("pair")
     IntegerPair pair;
+    @JsonProperty("position")
     int position;
 
 
