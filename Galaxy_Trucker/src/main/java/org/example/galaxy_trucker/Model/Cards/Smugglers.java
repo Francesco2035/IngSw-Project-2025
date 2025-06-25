@@ -244,11 +244,29 @@ public class Smugglers extends Card{
     public void continueCard(boolean accepted){
         if(accepted){
 
+            ArrayList<Player> PlayerListMsg = this.getBoard().getPlayers();
+            for(Player p : PlayerListMsg){
+                if(p.GetID()== currentPlayer.GetID()){
+                    this.sendRandomEffect(p.GetID(),new LogEvent("You have accepted to loot the smugglers",-1,-1,-1,-1));
+                }
+                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" has accepted to loot the smugglers",-1,-1,-1,-1));
+            }
+
             this.getBoard().movePlayer(this.currentPlayer.GetID(), this.getTime());
             currentPlayer.setState(new HandleCargo());
             currentPlayer.getmyPlayerBoard().setRewards(rewardGoods);
         }
         else{
+
+            ArrayList<Player> PlayerListMsg = this.getBoard().getPlayers();
+            for(Player p : PlayerListMsg){
+                if(p.GetID()== currentPlayer.GetID()){
+                    this.sendRandomEffect(p.GetID(),new LogEvent("You have refused to loot the smugglers",-1,-1,-1,-1));
+                }
+                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" has refused to loot the smugglers",-1,-1,-1,-1));
+            }
+
+
             this.finishCard();
         }
     }
