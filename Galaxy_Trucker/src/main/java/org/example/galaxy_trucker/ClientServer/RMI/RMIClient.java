@@ -37,6 +37,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     public void startPingMonitor() {
+        System.out.println("Start monitor pings");
         scheduler.scheduleAtFixedRate(() -> {
             long now = System.currentTimeMillis();
             if (now - lastPingTime > 10000) {
@@ -45,7 +46,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                 } catch (InterruptedException | IOException e) {
                     System.out.println("Error while disconnecting: "+e.getMessage());
                 }
-                scheduler.shutdown();
+
             }
         }, 0, 2, TimeUnit.SECONDS);
     }
@@ -66,40 +67,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     }
 
-    public RMIClient(Client client, CommandInterpreter commandInterpreter) throws IOException, NotBoundException, InterruptedException {
-        this.client = client;
-        this.commandInterpreter = commandInterpreter;
-        reconnect();
-
-    }
-
-    private void reconnect() throws IOException, InterruptedException {
-        if (!setup()){
-            handleDisconnection();
-            return;
-        }
-        Command command = commandInterpreter.interpret("Reconnect");
-        if (commandInterpreter.getClient() == null){
-            System.out.println("Reconnecting failed client is null");
-            handleDisconnection();
-            return;
-        }
-        server.command(command);
-        System.out.println("Server started");
-        //monitorPings();
-        running = true;
-
-        sendPongs();
-        inputLoop = new Thread(() -> {
-            try {
-                this.inputLoop(true);
-            } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        inputLoop.setDaemon(true);
-        inputLoop.start();
-    }
 
     private boolean setup(){
         try{
@@ -126,16 +93,10 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     @Override
     public void StartClient() throws IOException, NotBoundException {
-        //System.out.println("Starting Client");
 
         if (!setup()){
             exit(1);
         }
-
-
-
-        //monitorPings();
-
 
         inputLoop = new Thread(() -> {
             try {
@@ -179,7 +140,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     }
 
-    //TODO: aggiungere background
     public void inputLoop(boolean fromConsole) throws IOException, InterruptedException {
         String cmd = "";
 
@@ -275,6 +235,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             loginCommand.setClient(this);
 
                             server.command(loginCommand);
+                            lastPingTime = System.currentTimeMillis();
                             startPingMonitor();
 
                         }
@@ -325,6 +286,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                 System.out.println(loginCommand);
                                 server.command(loginCommand);
+                                lastPingTime = System.currentTimeMillis();
                                 startPingMonitor();
                             }
                             else {
@@ -387,20 +349,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
 
-    public void changeConnection() throws NotBoundException, IOException, InterruptedException {
-        try {
-            //UnicastRemoteObject.unexportObject(this, true);
-            System.out.println("RMI connection closed.");
-        } catch (Exception e) {
-            System.out.println("Error RMI: " + e.getMessage());
-        }
-        this.server = null;
-
-        client.getView().disconnect();
-        client.changeConnection("TCP", commandInterpreter);
-
-    }
-
 
     public void sendPongs(){
         new Thread(()->{
@@ -446,20 +394,17 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         client.getView().disconnect();
         if (inputLoop != null && inputLoop.isAlive()) {
             inputLoop.interrupt();
-            //inputLoop.join();
         }
-
-        //client.getView().connect();
+        if (scheduler != null && !scheduler.isShutdown()) {
+            System.out.println("Stop monitor pings");
+            scheduler.shutdown();
+        }
         try{
             while(true) {
-                String whatNow = client.getView().askInput("<Reconnect> | <Exit> | <ChangeConnection> :");
+                String whatNow = client.getView().askInput("<Reconnect> | <Exit>: ");
                 switch (whatNow) {
                     case "Exit": {
                         exit(1);
-                        return;
-                    }
-                    case "ChangeConnection": {
-                        changeConnection();
                         return;
                     }
                     case "Reconnect": {
@@ -470,6 +415,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                         String command = "";
                         if(client.getLobby() && !client.getLogin()){
                             command = "Lobby";
+                            //TODO: credo che non sia una buona idea
                         }
                         else if (client.getLogin()){
                             command = "Reconnect";
@@ -487,10 +433,11 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             }
                         });
                         inputLoop.setDaemon(true);
+                        sendPongs();
                         if (client.getLogin()){
+                            lastPingTime = System.currentTimeMillis();
                             startPingMonitor();
                         }
-                        sendPongs();
                         inputLoop.start();
                         return;
                     }
@@ -500,7 +447,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     }
                 }
             }
-        } catch (NotBoundException | IOException e) {
+        } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
             handleDisconnection();
 
@@ -508,8 +455,4 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     }
 
-
-
-//TODO: usare metodo input reader per stamapre i messaggi di errore e usare [...] per capire se System o Server
-    //perchè tanto potrei salvarmi l'ultimo StringBuilder usato per il render
 }

@@ -37,28 +37,6 @@ public class TCPClient{
         this.commandInterpreter = commandInterpreter;
     }
 
-    public TCPClient(Client c, CommandInterpreter commandInterpreter) throws IOException {
-        this.client = c;
-        this.commandInterpreter = commandInterpreter;
-        if (!setup()){
-            disconnect();
-        }
-        System.out.println("Connection TCP started\n");
-        startThread();
-        client.getView().connect();
-        sendReconnect();
-        clientLoop();
-
-    }
-
-    private void sendReconnect() throws JsonProcessingException {
-        Command command = commandInterpreter.interpret("Reconnect");
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(command);
-        out.println(json);
-        //System.out.println("CommandSent: " + json);
-    }
-
     private void EventListener() {
         try {
             String msg;
@@ -189,13 +167,10 @@ public class TCPClient{
                 System.out.println("\nServer Disconnected.");
 
                 while (true) {
-                    String whatNow = client.getView().askInput("<Reconnect> | <ChangeConnection> | <Exit> :");
+                    String whatNow = client.getView().askInput("<Reconnect> | <Exit> :");
                     switch (whatNow) {
                         case "Reconnect":
                             reconnect();
-                            return;
-                        case "ChangeConnection":
-                            changeConnection();
                             return;
                         case "Exit":
                             System.exit(0);
@@ -461,10 +436,10 @@ public class TCPClient{
                     System.out.println("Server responded to ping. Connection is active.");
                     //connected = true; qui
                     ObjectMapper mapper = new ObjectMapper();
-
-                    String reconnect = mapper.writeValueAsString(commandInterpreter.interpret("Reconnect"));
-                    out.println(reconnect);
-
+                    if (client.getLogin()){
+                        String reconnect = mapper.writeValueAsString(commandInterpreter.interpret("Reconnect"));
+                        out.println(reconnect);
+                    }
                     eventThread  = new Thread(this::EventListener);
                     pingThread = new Thread(this::PingLoop);
                     eventThread.start();
@@ -486,31 +461,7 @@ public class TCPClient{
         }
     }
 
-    public void changeConnection() throws IOException {
-        try {
-            connected = false;
 
-            if (pingThread != null && pingThread.isAlive()) pingThread.interrupt();
-            if (eventThread != null && eventThread.isAlive()) eventThread.interrupt();
-
-            if (echoSocket != null && !echoSocket.isClosed()) {
-                echoSocket.close();
-                System.out.println("Closing echo socket...");
-                //Thread.sleep(5000);
-            }
-
-            //if (clientLoop != null && clientLoop.isAlive()) clientLoop.interrupt();
-
-
-            System.out.println("Switching to RMI...");
-            client.changeConnection("RMI", commandInterpreter);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NotBoundException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 
 }
 
