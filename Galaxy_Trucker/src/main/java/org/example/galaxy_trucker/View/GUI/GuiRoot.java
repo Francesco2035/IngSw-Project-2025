@@ -3181,6 +3181,7 @@ public class GuiRoot implements View {
         int i = 1;
         VBox scoreboard = new VBox(25);
 
+
         for(String s : event.getScores().keySet()){
             ImageView pos = new ImageView(new Image(getClass().getResourceAsStream("/GUI/ordinalTokens/"+ i +".png")));
             pos.setFitHeight(70);
@@ -3530,6 +3531,7 @@ public class GuiRoot implements View {
             reconnecting = false;
 
             readyPlayers = new ListView<>();
+            readyPlayers.setMaxHeight(100);
             log = new ListView<>();
             prompt = new Label();
 

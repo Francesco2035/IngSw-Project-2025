@@ -15,6 +15,19 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * The InputReader class is responsible for managing user input from the terminal and
+ * relaying it to a designated input queue for processing. It handles rendering the
+ * terminal output, providing command-line auto-completion, highlighting, and managing
+ * a custom interactive console experience.
+ *
+ * The class integrates with the LineReader and Terminal functionalities, supports
+ * dynamic command-line auto-completion, and provides methods for manipulating
+ * and displaying data in the terminal.
+ *
+ * Threading is utilized internally to allow continuous user input while performing
+ * other tasks, ensuring an interactive and responsive terminal application.
+ */
 public class InputReader implements Runnable {
     private final BlockingQueue<String> inputQueue;
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -30,6 +43,15 @@ public class InputReader implements Runnable {
 
 
 
+    /**
+     * Constructs an InputReader instance, initializing the terminal, command completer,
+     * highlighter, line reader, background generator, and key bindings for user input handling.
+     * This class is used for facilitating command-line interactions and managing user input.
+     *
+     * @param inputQueue the blocking queue that stores input lines provided by the user.
+     *                   This queue is used to pass user inputs between threads for processing.
+     * @throws IOException if an I/O error occurs during the initialization of the terminal.
+     */
     public InputReader(BlockingQueue<String> inputQueue) throws IOException {
 
         lastRender.append("");
@@ -79,6 +101,16 @@ public class InputReader implements Runnable {
         // Note that on the Windows platform you need to have either Jansi or JNA library in your classpath.
     }
 
+
+    /**
+     * Executes the main logic for continuously reading input from the user and
+     * placing it into the input queue for processing. This method starts a new
+     * thread that runs in the background. The thread reads a line of input from
+     * a line reader and adds it to the input queue. If the thread encounters an
+     * exception, it will terminate the input-reading loop.
+     *
+     * The input reading continues as long as the `running` flag is set to true.
+     * Once `running` is set to false,*/
     @Override
     public void run() {
         new Thread(() -> {
@@ -96,15 +128,36 @@ public class InputReader implements Runnable {
 
     }
 
+
+    /**
+     * Stops the input processing by clearing the input queue and
+     * adding an empty string to it. This method can be used to
+     * signal the end of input handling and to reset the input queue
+     * to its initial state.
+     */
     public void stop() {
         inputQueue.clear();
         inputQueue.add("");
     }
 
+
+    /**
+     * Starts the input processing by setting the `running` flag to true.
+     * This flag indicates that the input reading process is active and
+     * allows the InputReader instance to continue processing user inputs.
+     */
     public void start(){
         running = true;
     }
 
+
+    /**
+     * Displays a server message above the current input line in the terminal.
+     * The method ensures synchronized access to avoid conflicts when
+     * multiple threads attempt to display messages simultaneously.
+     *
+     * @param message the message to be displayed above the current input line.
+     */
     public synchronized void printServerMessage(String message) {
         //Lreader.callWidget(LineReader.CLEAR);          // Pulisce la riga corrente
         //String[] lines = message.split("\n");
@@ -116,6 +169,15 @@ public class InputReader implements Runnable {
     }
 
 
+    /**
+     * Displays a graphical message on the terminal. The method ensures
+     * synchronized access, maintaining thread safety when multiple threads
+     * attempt to modify the terminal output. Clears the screen, maintains
+     * formatting, and invokes a widget redisplay for consistent output.
+     *
+     * @param s the graphical message to be displayed, preserving spaces,
+     *          newlines, and any special characters.
+     */
     public synchronized void printGraphicMessage(String s) {
 //        terminal.puts(InfoCmp.Capability.clear_screen); // pulisce lo schermo
 //        terminal.flush();
@@ -125,6 +187,15 @@ public class InputReader implements Runnable {
     }
 
 
+    /**
+     * Clears the terminal screen and resets the display, ensuring consistent
+     * formatting and visibility of terminal output. This method uses terminal-specific
+     * commands to perform the screen clearing and then invokes a widget redisplay
+     * to update the terminal state.
+     *
+     * The method is synchronized to ensure thread safety, preventing concurrent
+     * modifications or output inconsistencies when multiple threads access the terminal.
+     */
     public synchronized void clearScreen() {
         System.out.print("\033[3J");
         terminal.puts(InfoCmp.Capability.clear_screen);
@@ -134,6 +205,10 @@ public class InputReader implements Runnable {
     }
 
 
+    /**
+     * Renders the current screen content on the terminal. This method clears
+     * the terminal screen, formats the content, and redisplays the terminal
+     * state with updated*/
     public synchronized void renderScreen(StringBuilder content) {
 
         try{
@@ -176,10 +251,30 @@ public class InputReader implements Runnable {
 
     }
 
+
+    /**
+     * Retrieves the current DynamicCompleter instance associated with this InputReader.
+     * The DynamicCompleter provides functionality for dynamic command-line auto-completion,
+     * enabling flexible and context-aware suggestions based on the application's state
+     * or user input.
+     *
+     * @return the DynamicCompleter instance used for managing command-line auto-completion.
+     */
     public DynamicCompleter getCompleter() {
         return completer;
     }
 
+
+    /**
+     * Processes the input string and replaces consecutive spaces with randomly generated symbols
+     * while preserving the non-space characters. The method ensures single spaces are retained,
+     * whereas double spaces are replaced by symbols generated using the background generator.
+     *
+     * @param input the input string to be processed and modified. This string may contain spaces,
+     *               which will be handled based on the specified replacement logic.
+     * @return an AttributedString representing the modified content with background symbols
+     *         applied where double spaces were encountered, and other characters preserved.
+     */
     public AttributedString fillBackground(String input) {
         AttributedStringBuilder asb = new AttributedStringBuilder();
         int i = 0;
@@ -205,8 +300,6 @@ public class InputReader implements Runnable {
         }
         return asb.toAttributedString();
     }
-
-
 
 }
 
