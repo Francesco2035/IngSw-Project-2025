@@ -39,7 +39,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     public void startPingMonitor() {
         scheduler.scheduleAtFixedRate(() -> {
             long now = System.currentTimeMillis();
-            if (now - lastPingTime > 10_000) {
+            if (now - lastPingTime > 10000) {
                 try {
                     handleDisconnection();
                 } catch (InterruptedException | IOException e) {
