@@ -17,9 +17,21 @@ import java.io.Serializable;
  */
 public class SelectChunkCommand extends Command implements Serializable {
 
+    /**
+     * Represents the specific chunk as an {@code IntegerPair} chosen in the game.
+     * The {@code chunk} variable contains the coordinates specifying a selected
+     * area of the game board. This is utilized in commands to modify the game state
+     * based on the chosen chunk.
+     *
+     * The property is serialized and deserialized using Jackson annotations.
+     */
     @JsonProperty("chunk")
     IntegerPair chunk;
 
+    /**
+     * Default constructor for the SelectChunkCommand class.
+     * Initializes a new instance of the SelectChunkCommand without any parameters.
+     */
     public SelectChunkCommand(){}
 
     /**

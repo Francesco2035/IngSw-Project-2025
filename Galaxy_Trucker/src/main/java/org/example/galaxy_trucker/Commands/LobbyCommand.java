@@ -25,10 +25,28 @@ import java.io.Serializable;
 public class LobbyCommand extends Command implements Serializable {
 
 
+    /**
+     * Represents the type of the command as a string, which is used to identify the specific
+     * type of the command being executed within the lobby system. This value is statically
+     * set to "LobbyCommand" to denote that the command pertains to the lobby management
+     * or interaction functionality.
+     *
+     * This property is intended for use with Jackson serialization and deserialization
+     * mechanisms through the `@JsonProperty` annotation.
+     */
     @JsonProperty("commandType")
     private final String commandType = "LobbyCommand";
 
-    @JsonIgnore //TODO VERIFICARE CHE QUESTO SERVA A QUALCOSA DAVVERO
+    /**
+     * The client associated with this command, implementing the {@link ClientInterface}.
+     * This variable is utilized to enable communication with a remote client or system
+     * and provides the necessary methods for interacting with the client-side operations,
+     * such as receiving events, managing tokens, or handling connectivity.
+     *
+     * The client variable is annotated with {@code @JsonIgnore} to exclude it from
+     * the serialization and deserialization process during JSON handling.
+     */
+    @JsonIgnore
     private ClientInterface client;
 
 

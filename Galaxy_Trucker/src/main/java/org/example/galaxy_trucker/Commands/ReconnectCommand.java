@@ -26,13 +26,48 @@ import java.io.Serializable;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReconnectCommand extends Command implements Serializable {
+
+    /**
+     * Represents the type of command being executed, specified as a static
+     * String "ReconnectCommand". This value identifies the command as a
+     * reconnection operation within the game's command system.
+     *
+     * The field is annotated with the `@JsonProperty` annotation to facilitate
+     * serialization and deserialization for JSON-based communication or storage.
+     *
+     * This variable is immutable and final, ensuring the command type cannot
+     * be altered once initialized.
+     */
     @JsonProperty("commandType")
     private final String commandType = "ReconnectCommand";
 
+    /**
+     * Represents the client associated with the command. The client is an instance
+     * of the {@link ClientInterface}, which defines the contract for client-side
+     * operations used in remote communication and interaction within the game.
+     *
+     * This field is annotated with {@code @JsonIgnore}, meaning that it will not
+     * be serialized or included in JSON representations of the containing class.
+     *
+     **/
     @JsonIgnore
     private ClientInterface client;
 
 
+    /**
+     * Represents a command used to facilitate the reconnection of a player to a game session.
+     * This class extends the base Command class and allows players to re-establish their
+     * connection to an ongoing game by providing the necessary authentication and game details.
+     *
+     * The ReconnectCommand is part of the command framework for the game and is responsible
+     * for handling player reconnections in a structured and secure manner.
+     *
+     * The command can be utilized both with and without specific parameters and includes
+     * mechanisms for managing interactions with client systems.
+     *
+     * This default constructor initializes a basic instance of the ReconnectCommand without
+     * any pre-specified attributes.
+     */
     public ReconnectCommand() {}
 
 

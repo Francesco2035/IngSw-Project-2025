@@ -21,9 +21,27 @@ import java.util.ArrayList;
  */
 public class GiveAttackCommand extends Command implements Serializable {
 
+    /**
+     * Represents the list of coordinates used in the context of an attack command within the game.
+     * Each coordinate is an instance of the IntegerPair class, which contains two integer values
+     * representing a specific position on the player's board. This field can be utilized for
+     * targeting specific areas during the execution of an attack command.
+     *
+     * The list of coordinates can be null, indicating that the attack command does not target
+     * specific positions, or it can contain one or more IntegerPair objects to define the targeted
+     * locations.
+     */
     @JsonProperty("coordinates")
     private ArrayList<IntegerPair> coordinates;
 
+    /**
+     * Represents a command in the game to execute an attack action.
+     * The GiveAttackCommand can be used to target specific locations
+     * on a player's board or perform a general attack without specific coordinates.
+     *
+     * This class is part of the game's command system and extends the
+     * functionality of the base Command class.
+     */
     public GiveAttackCommand(){}
 
     /**

@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.Serializable;
 
 
-//TODO:AGGIUNGERE NUMERO MASSIMO DI PLAYER E MODIFICARE DI CONSEGUENZA GAMECONTROLLER (QUANDO VIENE CREATO DA GAMEHANDLER)
 
 /**
  * LoginCommand is a specific implementation of the abstract Command class,
@@ -24,10 +23,36 @@ import java.io.Serializable;
  */
 public class LoginCommand extends Command implements Serializable {
 
+    /**
+     * Represents the type of the command associated with the current instance.
+     *
+     * This variable holds the command type identifier as a string, which in this case,
+     * is initialized to "LoginCommand". It is used to specify the nature of the command
+     * being executed, aiding in distinguishing different commands within the system.
+     *
+     * The `commandType` variable is immutable, ensuring that its value remains constant
+     * once initialized. This property may be utilized during serialization or internal
+     * operations where the command type is required for processing or validation.
+     */
     @JsonProperty("commandType")
     private final String commandType = "LoginCommand";
 
-    @JsonIgnore //TODO VERIFICARE CHE QUESTO SERVA A QUALCOSA DAVVERO
+    /**
+     * Represents the client instance associated with the LoginCommand.
+     * This variable holds a reference to a client implementing the
+     * ClientInterface, which is used to facilitate communication and
+     * interactions between the server and the client.
+     *
+     * The ClientInterface defines the required operations for the client side,
+     * including establishing connections, handling remote events, managing
+     * session tokens, and monitoring connectivity through pings.
+     *
+     * This field utilizes the @JsonIgnore annotation to exclude it from
+     * serialization and deserialization processes, ensuring that the client
+     * instance remains transient and is not included in JSON representations
+     * of the LoginCommand.
+     */
+    @JsonIgnore
     private ClientInterface client;
 
 

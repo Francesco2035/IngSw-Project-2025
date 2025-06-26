@@ -22,11 +22,41 @@ import java.io.Serializable;
  */
 public class DefendFromLargeCommand extends Command implements Serializable {
 
+    /**
+     * Represents the plasma drill resource used within the DefendFromLargeCommand class.
+     *
+     * This variable is an instance of IntegerPair, where the first and second integers
+     * may represent coordinates or properties associated with the plasma drill.
+     * The plasma drill is utilized during the execution of a command to defend against
+     * large-scale threats by interacting with the player state and resources.
+     *
+     * The variable is mapped to the JSON property "plasmaDrill" to enable
+     * serialization and deserialization for game actions or states.
+     */
     @JsonProperty("plasmaDrill")
     private IntegerPair plasmaDrill;
+    /**
+     * Represents the battery component resource used in the command. This variable is
+     * an instance of the IntegerPair class, which encapsulates a pair of integer values
+     * that define the properties or coordinates associated with the battery component.
+     *
+     * The batteryComp field is utilized in the DefendFromLargeCommand class to perform
+     * logic related to defending against large-scale threats using this specific resource.
+     *
+     * It is serialized and deserialized using Jackson's @JsonProperty annotation.
+     */
     @JsonProperty("batteryComp")
     private IntegerPair batteryComp;
 
+    /**
+     * Represents a command in the game designed to defend against large-scale threats,
+     * specifically utilizing resources such as a plasma drill and a battery compartment.
+     * This command is part of the game's command system and extends the base Command class.
+     *
+     * The DefendFromLargeCommand is tailored for scenarios where strategic use of resources
+     * and defensive actions are crucial, enabling players to counteract or mitigate threats
+     * effectively during the game.
+     */
     public DefendFromLargeCommand() {}
 
     /**

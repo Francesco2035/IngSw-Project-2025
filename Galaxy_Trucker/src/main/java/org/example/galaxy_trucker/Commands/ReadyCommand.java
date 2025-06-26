@@ -27,9 +27,27 @@ import java.io.Serializable;
 public class ReadyCommand extends Command implements Serializable {
 
 
+    /**
+     * Represents the type of command being executed in the context of game actions.
+     * The variable is statically defined as "ReadyCommand", identifying this specific
+     * command as related to the readiness state of a player within a game.
+     *
+     * This field is annotated for JSON serialization and is immutable after initialization.
+     */
     @JsonProperty("commandType")
     private final String commandType = "ReadyCommand";
 
+    /**
+     * Indicates the readiness state of a player within the game.
+     *
+     * This field is used to represent whether a player has marked themselves
+     * as ready or not to proceed with a specific action or phase of the game.
+     * A value of `true` indicates the player is ready, while `false` indicates
+     * the player is not ready.
+     *
+     * The field is serialized and deserialized using the "ready" property
+     * in JSON format.
+     */
     @JsonProperty("ready")
     boolean ready;
 

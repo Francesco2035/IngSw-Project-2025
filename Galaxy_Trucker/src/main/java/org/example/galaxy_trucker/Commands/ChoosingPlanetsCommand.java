@@ -13,12 +13,32 @@ import java.io.Serializable;
  */
 public class ChoosingPlanetsCommand extends Command implements Serializable {
 
+    /**
+     * Represents the identifier of the planet to be chosen by a player during gameplay.
+     * This variable is used within the context of commands that involve selecting a specific
+     * planet as part of the game's mechanics.
+     */
     @JsonProperty("planet")
     int planet;
 
+    /**
+     * Represents the type of the command as a constant value. This variable identifies
+     * the command as a "ChoosingPlanetsCommand" and is used to differentiate it from
+     * other command types within the game system.
+     *
+     * The commandType is serialized and deserialized using the Jackson annotation
+     * `@JsonProperty` to facilitate communication and data persistence in a structured
+     * format.
+     */
     @JsonProperty("commandType")
     private final String commandType = "ChoosingPlanetsCommand";
 
+    /**
+     * Represents a command that allows a player to choose a planet during gameplay.
+     * This class facilitates the selection of a planet by the player and ensures that
+     * the appropriate game logic is executed. It extends the abstract Command class
+     * and is part of the game's command execution system.
+     */
     public ChoosingPlanetsCommand() {}
 
     /**

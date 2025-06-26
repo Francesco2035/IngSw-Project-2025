@@ -37,19 +37,64 @@ import java.util.ArrayList;
 public class HandleCargoCommand extends Command implements Serializable {
 
 
+    /**
+     * Represents the position targeted in a cargo handling command.
+     * This attribute defines a specific location in the first set
+     * of cargo, utilized for actions like retrieval, transfer,
+     * or disposal of goods during command execution.
+     */
     @JsonProperty("position")
     int position;
+    /**
+     * Represents the coordinates of the cargo in the first set as an IntegerPair object.
+     * This variable is used to define a specific position or location associated with the cargo.
+     *
+     * The `coordinate` field is serialized and deserialized using Jackson annotations
+     * to allow seamless integration with JSON-based APIs and data exchanges.
+     */
     @JsonProperty("coordinate")
     IntegerPair coordinate;
+    /**
+     * Represents the position of the cargo in the second set of coordinates for the
+     * HandleCargoCommand. This field, annotated with @JsonProperty for serialization
+     * purposes, is used to define or*/
     @JsonProperty("position2")
     int position2;
+    /**
+     * Represents the coordinates of the cargo in the second set as an IntegerPair.
+     * This variable holds a pair of integer values that define a specific position
+     * or placement configuration related to cargo in the context of the command.
+     *
+     * Annotated with {@code @JsonProperty("coordinate2")}, this field allows
+     * serialization and deserialization, enabling its direct mapping during
+     * JSON processing. It is utilized as part of the handling logic in cargo*/
     @JsonProperty("coordinate2")
     IntegerPair coordinate2;
 
+    /**
+     * Represents the type of command being executed within the `HandleCargoCommand` class.
+     *
+     * This variable is a constant and its value is fixed to `"HandleCargoCommand"`, which
+     * uniquely identifies the command type for handling cargo operations in the game. The
+     * `commandType` is primarily used in the context of serialization or for distinguishing
+     * this command from other command types in the system.
+     *
+     * Annotated with `@JsonProperty("commandType")` to map the variable to its JSON*/
     @JsonProperty("commandType")
     private final String commandType = "HandleCargoCommand";
 
 
+    /**
+     * Represents a command for handling cargo in the game, allowing a variety of actions
+     * such as retrieving rewards, managing cargo between storage locations, or discarding goods.
+     * This command is designed to interact with the player's state and the game logic to
+     * facilitate cargo-related operations.
+     *
+     * The `HandleCargoCommand` class extends the base `Command` class, providing specific
+     * capabilities for managing cargo with flexibility and error handling, ensuring
+     * the previous state is restored in case of any failure.
+     *
+     * This*/
     public HandleCargoCommand(){}
 
 

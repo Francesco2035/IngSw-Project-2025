@@ -24,9 +24,21 @@ import java.util.ArrayList;
  */
 public class GiveSpeedCommand extends Command implements Serializable {
 
+    /**
+     * Represents a list of coordinate pairs used to target specific components or positions
+     * on a player's game board. Each coordinate pair consists of two integers: row and column.
+     *
+     * This field is annotated for JSON serialization and deserialization with the key "coordinates".
+     */
     @JsonProperty("coordinates")
     private ArrayList<IntegerPair> coordinates;
 
+    /**
+     * Default constructor for the GiveSpeedCommand class.
+     * Initializes an instance of the command without specifying any parameters.
+     * This command is used to provide engine power to specific components on a player's
+     * game board or to perform a generic engine power action.
+     */
     public GiveSpeedCommand() {}
 
     /**

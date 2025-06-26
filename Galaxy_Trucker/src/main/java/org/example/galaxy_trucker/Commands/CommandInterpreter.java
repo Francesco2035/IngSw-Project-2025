@@ -14,10 +14,34 @@ import java.util.Map;
  * in the context of a multiplayer game system.
  */
 public class CommandInterpreter {
+    /**
+     * A unique identifier representing a specific player.
+     * This value is used to distinguish between different players
+     * in the system or application.
+     */
     private String playerId;
+    /**
+     * A unique identifier representing a specific game instance.
+     * This identifier is used to distinguish one game from another
+     * and is typically assigned when the game is created.
+     */
     private String gameId;
+    /**
+     * Represents the level or value associated with a specific context.
+     * This integer variable may be used to indicate depth, rank,
+     * or any other measurable quantity defined in the program.
+     */
     private int lv;
+    /**
+     * A string variable used to store a token, which may represent
+     * a unique identifier, authentication credential, or other
+     * encoded information for specific application purposes.
+     */
     private String token;
+    /**
+     * Represents the client interface instance used to interact with the underlying client implementation.
+     * This variable provides access to client-specific operations and functionalities.
+     */
     private ClientInterface client;
 
     /**

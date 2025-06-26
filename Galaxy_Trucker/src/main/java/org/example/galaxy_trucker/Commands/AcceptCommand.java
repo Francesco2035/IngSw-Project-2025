@@ -30,6 +30,16 @@ import java.io.Serializable;
  */
 public class AcceptCommand extends Command implements Serializable {
 
+    /**
+     * Indicates whether a specific action or command is being accepted in the current context.
+     *
+     * This boolean variable is used to represent the state of acceptance for a game-related
+     * action, typically within the scope of an AcceptCommand. Its value can determine the
+     * behavior or outcome of the command execution.
+     *
+     * The variable is serialized and deserialized using the `@JsonProperty` annotation for
+     * compatibility with JSON-based data formats.
+     */
     @JsonProperty("accepting")
     boolean accepting;
 

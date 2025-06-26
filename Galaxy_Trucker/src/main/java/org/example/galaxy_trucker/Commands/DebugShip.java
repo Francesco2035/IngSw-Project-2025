@@ -40,11 +40,35 @@ import java.util.Arrays;
 public class DebugShip extends Command implements Serializable {
 
 
+    /**
+     * Represents the type of command being executed, identified as "DebugShip".
+     * This constant is used to specify the nature of the DebugShip command in the system.
+     *
+     * The value is serialized using Jackson annotations to maintain compatibility
+     * with external systems and facilitate data exchange during command processing.
+     *
+     * Being a part of the `DebugShip` class, this variable functions as a key
+     * identifier for the command type, ensuring proper handling within the command
+     * execution framework.
+     */
     @JsonProperty("commandType")
     private final String commandType = "DebugShip";
+    /**
+     * Represents the numerical value associated with the DebugShip command.
+     * This variable is serialized and deserialized using Jackson's @JsonProperty annotation.
+     * It is used to define an integral value that is significant in the context
+     * of the DebugShip's functionality and operations.
+     */
     @JsonProperty("number")
     private int number;
 
+    /**
+     * Default constructor for the DebugShip class.
+     *
+     * Initializes an instance of the DebugShip command without setting any specific properties.
+     * This constructor may be used to create a DebugShip instance before assigning any parameters
+     * or executing operations.
+     */
     public DebugShip() {}
 
 

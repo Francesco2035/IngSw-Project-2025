@@ -15,12 +15,45 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
  */
 public class FinishBuildingCommand extends Command {
 
+    /**
+     * Represents the type of command being executed in the game. This variable
+     * is specific to the `FinishBuildingCommand` and is used to differentiate
+     * and identify the command type within the game's command structure.
+     *
+     * The `commandType` is a predefined constant value indicating that the command
+     * pertains to completing the construction of a building. This is primarily
+     * utilized for serialization, deserialization, and logical identification
+     * of the command type in the game's mechanics.
+     *
+     * This variable is annotated with `@JsonProperty` to ensure compatibility
+     * with JSON data processes, allowing it to be recognized during
+     * serialization and deserialization.
+     */
     @JsonProperty("commandType")
     private final String commandType = "FinishBuildingCommand";
 
+    /**
+     * Represents the index indicating the specific building being finished.
+     *
+     * This variable is used to determine which building in the game is being targeted
+     * by the finish building command. It is initialized to a default value of -1
+     * to signify an uninitialized or invalid state until explicitly set during command
+     * creation or operation.
+     *
+     * The `index` is serialized and deserialized using Jackson annotations,
+     * facilitating its use in networked or persistence scenarios within the game.
+     */
     @JsonProperty("index")
     private int index = -1;
 
+    /**
+     * Represents a command for finishing the building process in the game. This class is part
+     * of the command system and is used to finalize the construction of a building for a player,
+     * marking the building process as complete.
+     *
+     * This command interacts with the game's logic to update the player's state based on the
+     * building completion and ensures that the construction process adheres to the game's rules.
+     */
     public FinishBuildingCommand() {}
 
     /**

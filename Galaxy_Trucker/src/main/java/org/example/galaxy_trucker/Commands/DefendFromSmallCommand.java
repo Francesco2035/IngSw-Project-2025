@@ -23,12 +23,39 @@ import java.io.Serializable;
  */
 public class DefendFromSmallCommand extends Command implements Serializable {
 
+    /**
+     * Represents the type of the command associated with the `DefendFromSmallCommand` class.
+     * This variable is used to identify the specific action being executed within the game's
+     * command system. It is a constant value that facilitates serialization and deserialization
+     * through Jackson annotations.
+     */
     @JsonProperty("commandType")
     private final String commandType = "DefendFromSmallCommand";
 
+    /**
+     * Represents the battery configuration used in the defense command.
+     * The `batteryComp` variable is an instance of the `IntegerPair` class,
+     * which stores two integer values representing specific battery-related
+     * parameters. This configuration is utilized during the execution of small-scale
+     * defensive actions initiated by the command.
+     *
+     * It is serialized using Jackson's `@JsonProperty` annotation to ensure proper
+     * handling of this variable during the serialization and deserialization process.
+     *
+     * The `batteryComp` parameter plays a crucial role in defining the behavior of
+     * the `DefendFromSmallCommand` execution logic, namely contributing to the defense
+     * process by interacting with the player's data.
+     */
     @JsonProperty("batteryComp")
     private IntegerPair batteryComp;
 
+    /**
+     * Default constructor for the DefendFromSmallCommand class.
+     *
+     * Initializes a new instance of the DefendFromSmallCommand without any specific
+     * parameters. This constructor is typically used for deserialization or
+     * default instantiation of the command.
+     */
     public DefendFromSmallCommand() {}
 
     /**

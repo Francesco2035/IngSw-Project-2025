@@ -30,16 +30,49 @@ import java.io.Serializable;
  */
 public class RemoveTileCommand extends Command implements Serializable {
 
+    /**
+     * Represents the type of command being executed in the context of a game.
+     * This variable is used to specify the command type for the associated action,
+     * in this case, identifying it as a "RemoveTileCommand".
+     *
+     * It is a constant, final field and is serialized using Jackson annotations
+     * to ensure it can be included in the serialized representation of the command.
+     */
     @JsonProperty("commandType")
     private final String commandType = "RemoveTileCommand";
 
 
+    /**
+     * The x-coordinate of the tile to be removed.
+     *
+     * This field is a required parameter representing the horizontal position
+     * of a tile in a game grid. It is used as part of a command to remove
+     * a specific tile from the board. This value is serialized or
+     * deserialized using the Jackson annotation.
+     */
     //IntegerPair tile;
     @JsonProperty("x")
     int x;
+    /**
+     * Represents the y-coordinate of the tile to be removed in the game board.
+     * This field is used to specify the vertical position of the tile that
+     * will be targeted by the RemoveTileCommand during execution.
+     *
+     * The value of this field is set when creating an instance of the
+     * RemoveTileCommand class and is utilized by the execute method to
+     * locate and remove the corresponding tile on the player's board.
+     */
     @JsonProperty("y")
     int y;
 
+    /**
+     * Represents a command to remove a tile in the game. The RemoveTileCommand class
+     * is a part of the game's command system, allowing the removal of a tile from
+     * a player's board at specific coordinates.
+     *
+     * This command includes logic to check if it is allowed in a player's current state
+     * and implements the actual removal action when executed.
+     */
     public RemoveTileCommand(){}
 
     /**

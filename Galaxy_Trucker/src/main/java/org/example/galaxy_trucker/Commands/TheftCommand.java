@@ -23,11 +23,34 @@ import java.io.Serializable;
  */
 public class TheftCommand extends Command implements Serializable {
 
+    /**
+     * Represents the specific position targeted in the theft action within the game.
+     * This field is used to identify a particular location or slot that is affected
+     * by the command's execution, defined as an integer value.
+     *
+     * The `position` variable is serialized and deserialized using the Jackson library
+     * and is annotated with `@JsonProperty` for mapping to the corresponding "position"
+     * property in JSON.
+     */
     @JsonProperty("position")
     int position;
+    /**
+     * Represents a coordinate in the form of an IntegerPair.
+     * This variable is utilized to define a specific location or point
+     * required for theft actions within the game's mechanics.
+     *
+     * The variable is serialized and deserialized using the Jackson annotation
+     * `@JsonProperty` with the key "coordinate".
+     */
     @JsonProperty("coordinate")
     IntegerPair coordinate;
 
+    /**
+     * Default constructor for the TheftCommand class.
+     * Initializes a new instance of TheftCommand with no parameters.
+     * This constructor is used primarily for creating an instance where
+     * no initial setup is required or for cases involving deserialization.
+     */
     public TheftCommand(){}
 
     /**

@@ -50,22 +50,69 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = GiveSpeedCommand.class, name = "GiveSpeedCommand"),
         @JsonSubTypes.Type(value = GiveAttackCommand.class, name = "GiveAttackCommand"),
         @JsonSubTypes.Type(value = KillCommand.class, name = "KillCommand")
-
-
-
 })
 public abstract class Command implements Serializable {
 
+    /**
+     * Represents the unique identifier for a game associated with this command.
+     * This field is used to distinguish and reference a specific game instance
+     * in the context of the application. The `gameId` ensures that operations
+     * or commands are executed within the correct game environment.
+     */
     @JsonProperty("gameId")
     public String gameId;
+    /**
+     * Represents the unique identifier of the player associated with this command.
+     * This ID is used to specify the player that the command is targeting or is executed by.
+     *
+     * The `playerId` serves as a crucial link between the command and the specific player,
+     * enabling individualized actions or behaviors in the game context.
+     *
+     * It is serialized and deserialized using the `@JsonProperty` annotation to ensure smooth
+     * data exchange in JSON-based communication.
+     */
     @JsonProperty("playerId")
     public String playerId;
+    /**
+     * Represents the level (lv) associated with the command.
+     * This value is used to denote the level at which the command operates
+     * or is applicable within the game's logic.
+     *
+     * Annotated with @JsonProperty to allow serialization and deserialization
+     * to and from JSON, ensuring the variable is correctly mapped during
+     * data exchange processes.
+     */
     @JsonProperty("lv")
     public int lv;
+    /**
+     * Represents the maximum number of players allowed in the context of a command.
+     * This variable is used to define or retrieve the upper limit of participants
+     * associated with the command or game instance.
+     *
+     * The value is typically set during initialization and is utilized for
+     * validation or enforcement of player limits within a game scenario.
+     */
     @JsonProperty("maxPlayers")
     int maxPlayers;
+    /**
+     * Represents the title or name of the command. This field is used to assign a descriptive
+     * or identifiable name to the command for better understanding and reference in the game.
+     * It is serialized and deserialized using Jackson annotations for seamless compatibility
+     * with JSON-based data exchange.
+     */
     @JsonProperty("title")
     public String title;
+    /**
+     * Represents the authentication or validation token associated with a command.
+     * This field is used to ensure secure and authorized execution of commands
+     * within the system.
+     *
+     * The token may be provided during the instantiation of a command and can be
+     * retrieved for validation purposes or other logic requiring secure identification.
+     *
+     * This field is serialized and deserialized utilizing the Jackson annotation
+     * for JSON compatibility.
+     */
     @JsonProperty("token")
     public String token;
 

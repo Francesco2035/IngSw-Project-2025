@@ -22,9 +22,25 @@ import java.util.ArrayList;
  */
 public class ConsumeEnergyCommand extends Command implements Serializable {
 
+    /**
+     * Represents a list of coordinate pairs used to specify locations where energy consumption
+     * or other related actions are executed within the game's context.
+     *
+     * Each coordinate is represented as an {@link IntegerPair}, defining a pair of integers
+     * that denote a specific position or target within the game.
+     *
+     * The coordinate list is utilized by commands such as {@code ConsumeEnergyCommand} to
+     * perform game mechanics based on user-defined inputs, ensuring precise targeting and execution.
+     */
     @JsonProperty("coordinate")
     private ArrayList<IntegerPair> coordinate;
 
+    /**
+     * Default constructor for the ConsumeEnergyCommand class.
+     *
+     * Initializes a new instance of the ConsumeEnergyCommand with no parameters.
+     * Typically used when constructing a command without predefined attributes.
+     */
     public ConsumeEnergyCommand() {}
 
     /**

@@ -12,6 +12,14 @@ import java.io.IOException;
  */
 public class QuitCommand extends Command{
 
+    /**
+     * Default constructor for the QuitCommand class.
+     *
+     * The QuitCommand is used to handle player quit functionality
+     * within the game, initializing an instance without any
+     * predefined parameters. This constructor is useful in cases
+     * where the command setup does not require additional context.
+     */
     public QuitCommand(){}
 
 

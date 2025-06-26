@@ -21,9 +21,23 @@ import java.util.ArrayList;
  */
 public class KillCommand extends Command implements Serializable {
 
+    /**
+     * Represents a list of coordinates in the form of IntegerPair objects, which
+     * typically denote pairs of integers (e.g., x and y positions) relevant to the
+     * game mechanics.
+     *
+     * This variable is serialized/deserialized using the "coordinates" JSON property
+     * and is primarily used to define the target locations for specific commands
+     * or actions in the game.
+     */
     @JsonProperty("coordinates")
     ArrayList<IntegerPair> coordinates;
 
+    /**
+     * Default constructor for the KillCommand class.
+     * Initializes a new instance without any predefined parameters.
+     * This is primarily used for object creation in serialization/deserialization scenarios.
+     */
     public KillCommand() {}
 
     /**

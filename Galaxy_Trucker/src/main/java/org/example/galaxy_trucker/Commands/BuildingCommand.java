@@ -24,20 +24,82 @@ import java.util.Objects;
 public class BuildingCommand extends Command implements Serializable {
 
 
+    /**
+     * Represents the type of command being executed, specifically designated
+     * as a "BuildingCommand" for this implementation.
+     *
+     * This variable is used to identify and classify the command as related to
+     * building actions within the game's command framework.
+     *
+     * The value of this field is constant and set to "BuildingCommand".
+     */
     @JsonProperty("commandType")
     private final String commandType = "BuildingCommand";
 
 
+    /**
+     * Represents the x-coordinate for the building placement in the game command.
+     *
+     * This field is used to define the horizontal position for a building or other
+     * object in the game's coordinate system. It is initialized by default to -1
+     * and can be updated when constructing or executing a BuildingCommand.
+     *
+     * Annotated with `@JsonProperty("x")` to enable serialization and deserialization
+     * via JSON during communication or data persistence.
+     */
     @JsonProperty("x")
     private int x = -1;
+    /**
+     * Represents the y-coordinate for the placement of a building in the game.
+     * This variable defines the vertical position where the building command
+     * will be executed.
+     *
+     * The default value is -1, indicating that the y-coordinate has not been
+     * explicitly set or initialized.
+     */
     @JsonProperty("y")
     private int y = -1;
+    /**
+     * Represents the rotation value for a building in a game scenario.
+     *
+     * The rotation variable determines the orientation of a building on the game board.
+     * It is typically an integer value that defines the angle or direction in which
+     * the building is placed.
+     *
+     * This property is serialized and deserialized using Jackson annotations to ensure
+     * proper data handling in JSON-based communication.
+     */
     @JsonProperty("rotation")
     int rotation;
+    /**
+     * Represents the position or index related to the building or action
+     * within the command.
+     *
+     * This field is utilized to determine the specific location or order
+     * where an operation is performed, such as placing a building or
+     * executing an action at a defined point.
+     *
+     * It is annotated with @JsonProperty to facilitate serialization
+     * and deserialization when interacting with external systems.
+     */
     @JsonProperty("position")
     int position;
 
 
+    /**
+     * Constructs a new BuildingCommand instance with default parameters.
+     * This constructor initializes a BuildingCommand object without setting
+     * specific values for its fields.
+     *
+     * The BuildingCommand class represents a command in the game that allows
+     * players to construct or place a building at designated coordinates with
+     * a specified rotation and position. This command is part of the game's
+     * command system and extends the Command base class.
+     *
+     * This default constructor may serve as a placeholder or be used in scenarios
+     * where a BuildingCommand object needs to be initialized prior to being configured
+     * with specific details.
+     */
     public BuildingCommand(){}
 
     /**

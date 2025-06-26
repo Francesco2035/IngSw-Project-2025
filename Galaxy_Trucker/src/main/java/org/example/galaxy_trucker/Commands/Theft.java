@@ -19,12 +19,35 @@ import java.io.Serializable;
  */
 public class Theft extends Command implements Serializable {
 
+    /**
+     * Represents a pair of integer values that define a specific configuration
+     * or parameter related to the Theft command in the game. The pair is used
+     * to denote associated numeric values for cargo manipulation during theft
+     * actions.
+     *
+     * This field is serialized and deserialized using the Jackson library
+     * and mapped to the JSON property "pair".
+     */
     @JsonProperty("pair")
     IntegerPair pair;
+    /**
+     * Represents the specific position targeted in a theft action within the game.
+     * The position is identified as an integer value, which corresponds to a location
+     * or index impacted by the command.
+     *
+     * This variable is annotated with Jackson's `@JsonProperty` to enable serialization
+     * and deserialization within the game's command system.
+     */
     @JsonProperty("position")
     int position;
 
 
+    /**
+     * Default constructor for the Theft command.
+     * This constructor initializes a new instance of the Theft class with no parameters.
+     * Primarily used for instantiation where detailed parameters are not immediately available
+     * or needed, including scenarios involving deserialization.
+     */
     public Theft(){}
 
     /**
