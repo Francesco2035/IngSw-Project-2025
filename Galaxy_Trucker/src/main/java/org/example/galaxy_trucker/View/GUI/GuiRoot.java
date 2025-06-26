@@ -649,14 +649,6 @@ public class GuiRoot implements View {
      *                <li>lv - The game level (1 or 2)</li>
      *              </ul>
      *
-     * @implNote Implementation details:
-     * <ul>
-     *   <li>UI operations are thread-safe via Platform.runLater()</li>
-     *   <li>Uses WINDOW_MODAL modality to block parent window</li>
-     *   <li>Reuses goBackButtonMaker for consistent button styling</li>
-     *   <li>State restoration happens outside Platform.runLater()</li>
-     *   <li>Null check prevents overwriting state with empty values</li>
-     * </ul>
      *
      * @see ReconnectedEvent
      * @see Platform#runLater(Runnable)
@@ -1725,13 +1717,6 @@ public class GuiRoot implements View {
      *   <li>Uses AtomicReference to track currently selected crew type</li>
      * </ul>
      *
-     * @implNote This method:
-     * <ul>
-     *   <li>Uses Platform.runLater() for thread-safe UI updates</li>
-     *   <li>Maintains game state through inputQueue commands</li>
-     *   <li>Binds layout properties to primaryStage dimensions</li>
-     *   <li>Command format: "[AddCrew|AddPurpleAlien|AddBrownAlien] Y X"</li>
-     * </ul>
      *
      * @see GridPane
      * @see Platform#runLater(Runnable)
@@ -4018,11 +4003,14 @@ public class GuiRoot implements View {
 
 
     /**
-     * Configures the interface and handles tile selection logic based on the provided parameters.
-     * Allows the user to interact with the visual components to create a command using tile coordinates.
+     * Handles the interaction logic for giving tiles in the current game phase.
+     * This method updates the UI components, handles user inputs via buttons,
+     * and processes the selected tiles based on the provided parameters.
      *
-     * @param command The initial command string provided as input, used as a base for further updates.
-     * @param txt The text prompt displayed to the user*/
+     * @param command The base command string that will be sent as user input after processing.
+     * @param txt The text to display in the prompt for the current interaction.
+     * @param chunk A boolean indicating whether chunk selection mode is enabled.
+     */
     public void giveTiles(String command, String txt, boolean chunk){
         AtomicReference<String> cmd = new AtomicReference<>(command);
         Button done = new Button("Done!");

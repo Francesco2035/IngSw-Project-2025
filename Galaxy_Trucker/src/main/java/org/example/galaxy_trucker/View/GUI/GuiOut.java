@@ -151,6 +151,11 @@ public class GuiOut {
     }
 
 
+    /**
+     * Sets the scene for the "Lobby" screen in the application.
+     *
+     * @param lobbyScene the Scene to be set as the "Lobby" screen.
+     */
     public void setLobby(Scene lobbyScene){
         this.LobbyScene=lobbyScene;
     }
@@ -224,6 +229,11 @@ public class GuiOut {
     }
 
 
+    /**
+     * Sets the scene for the "Add Crew" screen in the application.
+     *
+     * @param addCrewScene the Scene to be set as the "Add Crew" screen.
+     */
     public void setAddCrewScreen(Scene addCrewScene){
         this.addCrewScene=addCrewScene;
     }
@@ -272,7 +282,9 @@ public class GuiOut {
 
 
     /**
+     * Sets the scene for the "Flight" screen in the application.
      *
+     * @param scene the Scene to be set as the "Flight" screen.
      */
     public void setFlightScreen(Scene scene){
         this.flightScene= scene;

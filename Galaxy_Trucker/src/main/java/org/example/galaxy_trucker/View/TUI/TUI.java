@@ -683,9 +683,14 @@ public class TUI implements View {
 
 
     /**
-     * Formats the PBInfoEvent data into a structured string using ASCII art components.
-     * This method converts various attributes of the given PBInfoEvent object, such as credits,
-     * cargo value, connectors, damage*/
+     * Formats the PBInfoEvent into a string representation by composing various components
+     * using ASCII art and numerical data from the event.
+     *
+     * @param event the PBInfoEvent containing various metrics such as credits, cargo value,
+     *              exposed connectors, damage, number of humans, engine power, and plasma drills power
+     *              to be formatted.
+     * @return a formatted string representation of the PBInfoEvent using ASCII art and numeric details.
+     */
     public String formatPBInfo(PBInfoEvent event) {
         StringBuilder sb = new StringBuilder();
         sb.append(ASCII_ART.compose("            ",
@@ -707,11 +712,12 @@ public class TUI implements View {
 
 
     /**
-     * Formats a cell representation for displaying game information in a lobby.
+     * Formats a cell representation of a game lobby event into an array of strings.
      *
-     * @param event the {@code LobbyEvent} object containing information about the game,
-     *              such as game ID, level, players, and maximum players.
-     **/
+     * @param event the LobbyEvent object containing details of the game lobby, including game ID, level,
+     *              maximum players, and list of players in the lobby
+     * @return an array of strings where each string represents a line in the formatted cell.
+     */
     public String[] formatCell(LobbyEvent event) {
         String[] cell = new String[9];
         cell[0] = "+"+centerTextAnsi(event.getGameId(),25, "-")+"+";
@@ -1346,11 +1352,24 @@ public class TUI implements View {
         }, debounceDelayMs, TimeUnit.MILLISECONDS);
     }
 
-//quando termina tutto chiamo questo anche se non credo dovrebbe particolamente servirmi
+    /**
+     * Shuts down the scheduler, stopping all scheduled tasks and preventing
+     * new tasks from being scheduled. This method should be called when the
+     * scheduler is no longer needed to release resources and ensure a clean
+     * termination.
+     */
     public void shutdown() {
         scheduler.shutdown();
     }
 
+    /**
+     * Formats the rewards from a given event into a structured StringBuilder.
+     * The method iterates through the list of goods in the event's rewards,
+     * appending a visual representation of each reward based on its value.
+     *
+     * @param event the RewardsEvent containing the list of rewards to be formatted
+     * @return a StringBuilder with the formatted visual representation of the rewards
+     */
     public StringBuilder formatRewards(RewardsEvent event) {
         ArrayList<Goods> goodsList = event.getRewards();
         StringBuilder sb = new StringBuilder();
@@ -1376,6 +1395,13 @@ public class TUI implements View {
         return sb;
     }
 
+    /**
+     * Formats a scoreboard into a structured table-like string with ranks, player names, and scores.
+     * Provides a visually appealing representation of the data, including emojis for the top three ranks.
+     *
+     * @param scoreboard a HashMap where the keys are player names (type String) and the values are their scores (type Integer)
+     * @return a StringBuilder containing the formatted scoreboard
+     */
     public StringBuilder formatScoreboard(HashMap<String,Integer> scoreboard){
         StringBuilder sb = new StringBuilder();
         final int PADDING = 125;

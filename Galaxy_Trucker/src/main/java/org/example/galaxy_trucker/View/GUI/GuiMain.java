@@ -69,6 +69,12 @@ public class GuiMain extends Application {
     }
 
 
+    /**
+     * The main entry point of the application.
+     * This method initializes and launches the application.
+     *
+     * @param args Command-line arguments passed to the application, if any.
+     */
     public static void main(String[] args) {
         launch();
     }

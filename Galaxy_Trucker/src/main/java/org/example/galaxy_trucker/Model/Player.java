@@ -374,7 +374,20 @@ public class Player implements Serializable {
 
 
     /**
-     * discards the current tile and places it back in the uncovered tiles list
+     * Discards the current tile held by the player, if it is allowed to be discarded.
+     *
+     * This method performs the following steps:
+     * 1. Checks if the player currently holds a tile. If not, an IllegalStateException is thrown.
+     * 2. Verifies if the current tile has not been marked as chosen. If the tile is chosen,
+     *    an IllegalStateException is thrown to prevent it from being discarded.
+     * 3. Adds the current tile to the collection of uncovered tiles on the Common Board.
+     * 4. Sets the CurrentTile to null, signifying that the player no longer holds a tile.
+     * 5. Notifies listeners that the player's hand has changed by triggering a HandEvent.
+     *
+     * @throws IllegalStateException if the player attempts to discard a tile when no tile
+     *                               is held, or if the tile is marked as chosen.
+     * @throws RemoteException if there is an issue during remote communication.
+     * @throws JsonProcessingException if there is an error in JSON processing during the operation.
      */
     public void DiscardTile() throws RemoteException, JsonProcessingException {
         if (CurrentTile == null) {
@@ -439,7 +452,13 @@ public class Player implements Serializable {
 
 
     /**
-     * once a player is done building his ship (or the time is up), this method sets his starting position on the common board
+     * Finalizes the construction process for the current game state.
+     * This method sets up the starting position by invoking the
+     * necessary procedures from the CommonBoard class.
+     *
+     * @throws IllegalStateException if the method is invoked
+     *         in an invalid game state (e.g., attempting to use
+     *         a level 1 command in a level 2 game).
      */
     public void EndConstruction() throws IllegalStateException{
         if(true)
@@ -510,6 +529,14 @@ public class Player implements Serializable {
     }
 
 
+    /**
+     * Ends the race and notifies the finish listener with the appropriate result and message.
+     *
+     * @param scoreboardEvent an instance of ScoreboardEvent containing details about the race.
+     * @param result an integer indicating the outcome of the race, where a positive value signifies success.
+     * @param message a string containing a message to be passed to the finish listener.
+     * @return the result of the race as an integer.
+     */
     public int finishRace(ScoreboardEvent scoreboardEvent, int result, String message){
 
         if (result > 0){

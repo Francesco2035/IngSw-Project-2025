@@ -15,28 +15,12 @@ import org.example.galaxy_trucker.Model.PlayerStates.Waiting;
 import java.util.ArrayList;
 
 /**
- * Represents an Abandoned Station card in the Galaxy Trucker game.
+ * Represents an Abandoned Station card in the game. This card has specific
+ * requirements that players must meet in order to board the station, and it
+ * awards a set of goods as a reward to the successful player.
  *
- * <p>This card presents players with the opportunity to board an abandoned space station
- * and collect valuable goods.</p>
- *
- * <p>The card follows a turn-based approach where players are checked in order
- * to see if they meet the crew requirement. The first player who meets the
- * requirement can choose to accept or decline the opportunity.</p>
- *
- * <p>Card mechanics:
- * <ul>
- * <li>Players need a minimum number of crew members (including aliens) to qualify</li>
- * <li>If accepted, the player receives a collection of goods as reward</li>
- * <li>The player moves backward in time as a cost for the opportunity</li>
- * <li>Players enter a cargo handling state to manage the received goods</li>
- * </ul></p>
- *
- * <p>Note: In case of disconnection, the player automatically refuses the offer.</p>
- *
- * @author Pietro
- * @version 1.0
- * @since 1.0
+ * The card follows a sequence of player evaluations, interactions, and
+ * state transitions to determine the outcome of the card's effect.
  */
 public class AbandonedStation extends Card{
     /**
@@ -204,23 +188,16 @@ public class AbandonedStation extends Card{
     }
 
     /**
-     * Continues the card execution based on player's acceptance decision.
+     * Continues the execution of the Abandoned Station card based on the player's decision.
      *
-     * <p>If the player accepts:
-     * <ul>
-     * <li>Sends notification to all players about the acceptance</li>
-     * <li>Changes the current player's state to HandleCargo</li>
-     * <li>Awards the reward goods to the player's inventory</li>
-     * <li>Moves the player backward in time as the cost</li>
-     * </ul></p>
+     * If the player accepts to board the abandoned station, sends log messages to all players,
+     * grants rewards, updates the player's state to handle cargo, and moves the player on the board.
+     * If the player declines, updates the player's state to waiting, flags the card as incomplete,
+     * and proceeds to update the states for further processing.
      *
-     * <p>If the player refuses:
-     * <ul>
-     * <li>Returns the player to Waiting state</li>
-     * <li>Resets the flag and continues searching for the next qualified player</li>
-     * </ul></p>
-     *
-     * @param accepted true if the player accepts to board the station, false otherwise
+     * @param accepted a boolean indicating whether the player accepted to board the station.
+     *                 If true, the player will proceed with rewards and cargo handling.
+     *                 If false, the player is put into a waiting state.
      */
     @Override
     public void continueCard(boolean accepted) {
@@ -248,11 +225,11 @@ public class AbandonedStation extends Card{
     }
 
     /**
-     * Allows the card to continue its execution and finish.
+     * Continues the process of executing the Abandoned Station card.
      *
-     * <p>This method is typically called after cargo handling is complete
-     * to finalize the card's effects and clean up.</p>
-     *
+     * Delegates to the finishCard method to complete the card's execution
+     * and perform necessary cleanup tasks. This method ensures that any
+     * required termination logic associated with the card is handled.
      */
     public void keepGoing(){
         this.finishCard();
