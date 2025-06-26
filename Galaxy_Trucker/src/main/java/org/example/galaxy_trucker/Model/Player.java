@@ -144,7 +144,7 @@ public class Player implements Serializable {
 
     /**
      * Sets the finish listener that will be triggered when the associated event or process is completed.
-     *
+
      * @param finishListener the listener to handle finish events
      */
     public void setFinishListener(FinishListener finishListener) {
@@ -278,7 +278,8 @@ public class Player implements Serializable {
      * If a phase listener is set, it notifies the listener about the phase change.
      * The state also determines whether the player is required to act.
      *
-     * @param state The new {@link*/
+     * @param state The new {@link PlayerState}
+     */
     public void setState(PlayerState state) {
         this.PlayerState = state;
 
