@@ -24,7 +24,7 @@ public class LobbyClient extends PlayerStateClient {
      */
     @Override
     public void showGame(Out out) {
-        System.out.println("render di "+ this.getClass().getName());
+
         StringBuilder toPrint = new StringBuilder();
         toPrint.append(ASCII_ART.Title);
         toPrint.append(ASCII_ART.Border);

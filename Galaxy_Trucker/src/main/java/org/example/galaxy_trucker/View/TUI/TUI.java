@@ -725,7 +725,6 @@ public class TUI implements View {
         cell[8] = "+-------------------------+";
         int k = 1;
         if (!event.getGameId().equals("EMPTY CREATE NEW GAME")){
-            //TODO: chiama metodo speciale di out senza salvare la stringa su out se il titolo è questo
             ArrayList<String> players = event.getPlayers();
             cell[7] = "+"+centerTextAnsi("Game level: "+ event.getLv(),25, "-")+"+";
             cell[8] = "+"+centerTextAnsi("Max players: "+ event.getMaxPlayers(),25, "-")+"+";

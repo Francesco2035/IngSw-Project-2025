@@ -199,7 +199,6 @@ class PrepControllerTest {
 //        vv.setDisconnected(true);
 //        c1.DefaultAction(gc);
 
-////todo non so se è possibile testare facilmente la finish perchè appena accade questo passa al next state e dovrei farlo al posto della defautl action
 ////        c1.action(new FinishBuildingCommand(1, game.getGameID(), p1.GetID(), game.getLv(), "FINISH", null), gc);
 
 

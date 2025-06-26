@@ -49,7 +49,7 @@ import java.util.List;
         @JsonSubTypes.Type(value = DefendingFromSmallClient.class, name = "Small"),
         @JsonSubTypes.Type(value = GiveAttackClient.class, name = "Attack"),
         @JsonSubTypes.Type(value = GiveSpeedClient.class, name = "Speed"),
-        @JsonSubTypes.Type(value = HandleCargoClient.class, name = "Client"),
+        @JsonSubTypes.Type(value = HandleCargoClient.class, name = "Cargo"),
         @JsonSubTypes.Type(value = HandleDestructionClient.class, name = "Destruction"),
         @JsonSubTypes.Type(value = HandleTheftClient.class, name = "Theft"),
         @JsonSubTypes.Type(value = KillingClient.class, name = "Kill"),

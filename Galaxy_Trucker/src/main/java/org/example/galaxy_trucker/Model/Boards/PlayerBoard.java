@@ -620,7 +620,7 @@ public class PlayerBoard {
 
             }
 
-            if (x != 6 && y != 6){
+            if (!(x== 6 && y == 6)){
                 if ((ValidPlayerBoard[x-1][y] != 1) && (ValidPlayerBoard[x][y-1] != 1) &&
                         (x >= 9 || (ValidPlayerBoard[x+1][y] != 1)) && (y >= 9 || (ValidPlayerBoard[x][y+1] != 1))) {
                     throw new InvalidInput(x,y, "Invalid input : invalid position, there aren't tiles nearby!");

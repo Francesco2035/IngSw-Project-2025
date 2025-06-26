@@ -222,9 +222,11 @@ public class InputReader implements Runnable {
         mainKeyMap = Lreader.getKeyMaps().get(LineReader.MAIN);
 
 
-        mainKeyMap.bind(new Macro("SeeBoards"), "\u0002"); // Ctrl+B
+        mainKeyMap.bind(new Macro("SeeBoards"), "\u0013"); // Ctrl+S
         mainKeyMap.bind(new Macro("MainTerminal"), "\u0014");   // Ctrl+T
         mainKeyMap.bind(new Macro("Log"), "\u000C");   // Ctrl+L
+        mainKeyMap.bind(new Macro("Background"), "\u0002"); // Ctrl+B
+
 
 
         prompt = new AttributedStringBuilder()
@@ -232,8 +234,6 @@ public class InputReader implements Runnable {
                 .toAttributedString();
 
 
-        //The TerminalBuilder will figure out the current Operating System and which actual Terminal implementation to use.
-        // Note that on the Windows platform you need to have either Jansi or JNA library in your classpath.
     }
 
 
@@ -294,80 +294,20 @@ public class InputReader implements Runnable {
      * @param message the message to be displayed above the current input line.
      */
     public synchronized void printServerMessage(String message) {
-        //Lreader.callWidget(LineReader.CLEAR);          // Pulisce la riga corrente
-        //String[] lines = message.split("\n");
-        //for (int i = 0; i < lines.length; i++) {
+
             Lreader.printAbove(message);
-        //}
-        //Lreader.callWidget("redisplay");
-        //Lreader.callWidget("redisplay");               // Ridisegna l'input buffer
-    }
-
-
-    /**
-     * Displays a graphical message on the terminal. The method ensures
-     * synchronized access, maintaining thread safety when multiple threads
-     * attempt to modify the terminal output. Clears the screen, maintains
-     * formatting, and invokes a widget redisplay for consistent output.
-     *
-     * @param s the graphical message to be displayed, preserving spaces,
-     *          newlines, and any special characters.
-     */
-    public synchronized void printGraphicMessage(String s) {
-//        terminal.puts(InfoCmp.Capability.clear_screen); // pulisce lo schermo
-//        terminal.flush();
-        System.out.print(s); // mantiene spazi, newline, ecc.
-        Lreader.callWidget("redisplay");
 
     }
 
-
-    /**
-     * Clears the terminal screen and resets the display, ensuring consistent
-     * formatting and visibility of terminal output. This method uses terminal-specific
-     * commands to perform the screen clearing and then invokes a widget redisplay
-     * to update the terminal state.
-     *
-     * The method is synchronized to ensure thread safety, preventing concurrent
-     * modifications or output inconsistencies when multiple threads access the terminal.
-     */
-    public synchronized void clearScreen() {
-        System.out.print("\033[3J");
-        terminal.puts(InfoCmp.Capability.clear_screen);
-        terminal.flush();
-        Lreader.callWidget("redisplay");
-
-    }
 
 
     /**
      * Renders the current screen content on the terminal. This method clears
-     * the terminal screen, formats the content, and redisplays the terminal
+     * the terminal screen, formats the content, and redisplay the terminal
      * state with updated*/
     public synchronized void renderScreen(StringBuilder content) {
 
-//        String os = System.getProperty("os.name").toLowerCase();
-//
-//        try {
-//            if (os.contains("windows")) {
-//                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-//            } else {
-//                new ProcessBuilder("clear").inheritIO().start().waitFor();
-//            }
-//        } catch (IOException | InterruptedException e) {
-//            System.out.print("\033[H\033[2J");
-//            System.out.flush();
-//        }
-//        System.out.print("\033[H\033[2J");
-//        System.out.flush();
-//        terminal.puts(InfoCmp.Capability.clear_screen);
-//        terminal.flush();
 
-
-
-
-        //System.out.print("\033[3J");
-        //terminal.puts(InfoCmp.Capability.clear_screen);
         String partialInput = Lreader.getBuffer().toString();
         // Usa InfoCmp per tornare su
         terminal.puts(InfoCmp.Capability.cursor_address, 0, 0);
@@ -379,6 +319,7 @@ public class InputReader implements Runnable {
         terminal.puts(InfoCmp.Capability.cursor_address, 0, 0);
         terminal.puts(InfoCmp.Capability.clr_eos);
         terminal.flush();
+
         if (background != 2) {
             AttributedString colored = fillBackground(content.toString());
             terminal.writer().print(colored.toAnsi());

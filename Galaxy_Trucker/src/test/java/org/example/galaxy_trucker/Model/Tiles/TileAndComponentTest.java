@@ -147,7 +147,7 @@ class TileAndComponentTest {
         mhu.setY(mhu.getY() + 1);
         mhu.isPopulated();
         mhu.checkNearbyUnits(p1.getmyPlayerBoard());
-        helper.HumansSetter1(p1.getmyPlayerBoard()); //TODO: aggiungere i casi degli alieni, tramite un nuovo metodo sull'helper
+        helper.HumansSetter1(p1.getmyPlayerBoard());
         p1.getmyPlayerBoard().getHousingUnits().getFirst().checkNearbyUnits(p1.getmyPlayerBoard());
 
 
@@ -345,7 +345,7 @@ class TileAndComponentTest {
 
 
 
-        //modularhousingunit TODO: aumentare ancora la percentuale
+        //modularhousingunit
 
         p1.getmyPlayerBoard().insertTile(game.getGag().getTilesDeck().get(36), 6, 7, false);
         ModularHousingUnit mhu2 = (ModularHousingUnit) game.getGag().getTilesDeck().get(36).getComponent();
@@ -530,7 +530,7 @@ class TileAndComponentTest {
 
 
 
-        //tilesets TODO: mancherebbero le linee coperte da synchronized
+        //tilesets
 
         TileSets ts = new TileSets(new GAGen());
         ts.getNewTile(-1);

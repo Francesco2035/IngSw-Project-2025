@@ -37,6 +37,13 @@ public class LoginClient extends PlayerStateClient {
         StringBuilder sb = new StringBuilder();
         sb.append(ASCII_ART.Title);
         sb.append(ASCII_ART.Border);
+        sb.append(
+                "\n\n\nPress TAB for help.                                                                                                                                                                                                                                                                       \n" +
+                "Keybindings:                                                                                                                                                                                                                                                                                    \n" +
+                "- Ctrl+S see others board                                                                                                                                                                                                                                                                         \n"+
+                "- Ctrl+T go back to main scene (refresh)                                                                                                                                                                                                                                                          \n" +
+                "- Ctrl+B change background settings (special characters - no special characters - no background)                                                                                                                                                                                                  \n" +
+                "- Ctrl+L see log history (you will find you token here)                                                                                                                                                                                                                                           \n\n\n");
         out.render(sb);
     }
 

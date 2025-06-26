@@ -131,7 +131,6 @@ public class DefaultOpenspaceTest {
         assertTrue(!p2.GetHasActed());
         c2.DefaultAction(null);
 
-        /// Todo nella consume energy il base state non prende in considerazione il fatto che potrei avere scelto più motori / cannoni di quante energie possiedo
 
         assertEquals(BaseState.class,p2.getPlayerState().getClass());
         assertEquals(BaseState.class,p1.getPlayerState().getClass());

@@ -19,18 +19,80 @@ import java.util.ArrayList;
 
 
 
-/// in caso di disconnession il player sempluicemente non accetta se deve accttare la nave
-/// devo dividere la accept e la kill
+/**
+ * Represents an Abandoned Ship card in the Galaxy Trucker game.
+ *
+ * <p>This card presents players with the opportunity to board an abandoned ship
+ * in exchange for sacrificing crew members. Players must have sufficient crew
+ * to meet the requirement and choose which crew members to sacrifice.</p>
+ *
+ * <p>The card follows a turn-based approach where players are checked in order
+ * to see if they meet the crew requirement. The first player who meets the
+ * requirement can choose to accept or decline the opportunity.</p>
+ *
+ * <p>Card mechanics:
+ * <ul>
+ * <li>Players need a minimum number of crew members (including aliens) to qualify</li>
+ * <li>If accepted, the player must sacrifice the required number of crew members</li>
+ * <li>In return, the player receives credits and moves backward in time</li>
+ * <li>Players with no remaining crew are eliminated from the race</li>
+ * </ul></p>
+ *
+ * <p>Note: In case of disconnection, the player automatically refuses the offer.</p>
+ *
+ * @author Pietro
+ * @version 1.0
+ * @since 1.0
+ */
 
 public class AbandonedShip extends Card{
+    /**
+     * The minimum number of crew members required to board the abandoned ship.
+     * This includes both human crew and alien crew members.
+     */
     private int requirement;
+
+    /**
+     * The credit reward given to the player who successfully boards the ship.
+     * This compensation is provided after sacrificing the required crew.
+     */
     private int reward;
+
+    /**
+     * The player currently being evaluated or interacting with the card.
+     * This tracks which player is making the decision to accept or decline.
+     */
     private Player currentPlayer;
+
+    /**
+     * Flag indicating whether a player has been found who meets the requirements.
+     * Set to true when a qualified player is found, stopping further searches.
+     */
     private boolean flag;
+
+    /**
+     * The current order/index in the player list being evaluated.
+     * Used to iterate through players in turn order.
+     */
     private int order;
+
+    /**
+     * The total number of human crew members the current player has.
+     * Used for tracking crew count before the sacrifice decision.
+     */
     private int totHumans;
+
+    /**
+     * List of players who will be eliminated due to having no crew left.
+     * Populated when players sacrifice their last crew members.
+     */
     private ArrayList<Player> losers;
 
+
+    /**
+     * Sends type-specific log information to all players.
+     * Notifies all players that an Abandoned Ship card has been encountered.
+     */
     @Override
     public void sendTypeLog(){
         this.getBoard().getPlayers();
@@ -39,7 +101,15 @@ public class AbandonedShip extends Card{
         }
     }
 
-
+    /**
+     * Constructs a new AbandonedShip card with specified parameters.
+     *
+     * @param requirement the minimum number of crew members needed to qualify
+     * @param reward the credit reward for boarding the ship
+     * @param level the difficulty level of the card
+     * @param time the time cost associated with this card
+     * @param board the game board this card is associated with
+     */
     public AbandonedShip(int requirement, int reward, int level, int time, GameBoard board) {
         super(level, time, board);
         this.requirement = requirement;
@@ -49,6 +119,16 @@ public class AbandonedShip extends Card{
         this.order = 0;
         totHumans=0;
     }
+
+
+    /**
+     * Executes the main effect of the Abandoned Ship card.
+     *
+     * <p>Sets the default punishment to the crew requirement, initializes the losers list,
+     * puts all players in waiting state, and begins the evaluation process after a delay.</p>
+     *
+     * @throws InterruptedException if the thread is interrupted during the sleep period
+     */
 
     @Override
     public void CardEffect() throws InterruptedException {
@@ -62,6 +142,15 @@ public class AbandonedShip extends Card{
         Thread.sleep(3000);
         this.updateStates();
     }
+    /**
+     * Updates player states and evaluates players in turn order.
+     *
+     * <p>Iterates through players to find the first one who meets the crew requirement.
+     * The requirement includes human crew plus brown and purple aliens if present.
+     * When a qualified player is found, they are put in Accepting state.</p>
+     *
+     * <p>If no qualified player is found, the card finishes automatically.</p>
+     */
     @Override
     public void updateStates(){
         GameBoard Board=this.getBoard();
@@ -187,7 +276,9 @@ public class AbandonedShip extends Card{
         return currentPlayer;
     }
 
-    //json
+    /**
+     * Empty constructor required for JSON serialization.
+     */
     public AbandonedShip() {}
     public int getRequirement() {return requirement;}
     public void setRequirement(int requirement) {this.requirement = requirement;}

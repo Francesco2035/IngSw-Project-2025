@@ -40,8 +40,6 @@ public class BaseStateClient extends PlayerStateClient{
      */
     @Override
     public void showGame(Out out) {
-        System.out.println("render di "+ this.getClass().getName());
-
         StringBuilder toPrint = new StringBuilder();
         toPrint.append("BaseState\n\n");
         toPrint.append(out.showPlayers());

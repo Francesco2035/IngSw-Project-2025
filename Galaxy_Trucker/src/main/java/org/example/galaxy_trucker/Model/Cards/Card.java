@@ -74,7 +74,6 @@ public class Card implements Serializable {
 //    public GameBoard getBoard() {return this.Board;}
 
     public void checkLosers(){
-        System.out.println("ODDIO CHECK LOSERS");
         ArrayList<Player> losers = new ArrayList<>();
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
@@ -159,7 +158,6 @@ public class Card implements Serializable {
     }
 
     public void setRandomCardEffectListeners(String id, RandomCardEffectListener randomCardEffectListener) {
-        System.out.println("####Setto listener carta "+id+" "+randomCardEffectListener);
         getRandomCardEffectListeners().put(id, randomCardEffectListener);
     }
 

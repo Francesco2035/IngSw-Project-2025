@@ -43,9 +43,7 @@ public class BuildingClient  extends PlayerStateClient{
     @Override
     public void showGame(Out out) {
         synchronized (out.getLock()){
-
             StringBuilder toPrint = new StringBuilder();
-
             toPrint.append("Building\n\n");
             toPrint.append(out.showPlayers());
             toPrint.append(out.printGameBoard());

@@ -115,13 +115,11 @@ public class SpecialStorageCompartment extends Storage{
         goods.add(good);
         playerBoard.setTotalValue(good.getValue());
         if (playerBoard.getStoredGoods().containsKey(good.getValue())){
-            System.out.println("Cargo add "+good.getValue()+ " in "+ tile.x+ " "+tile.y);
             playerBoard.getStoredGoods().get(good.getValue()).add(new IntegerPair(tile.x, tile.y));
         }
         else{
             ArrayList<IntegerPair> toAdd = new ArrayList<>();
             toAdd.add(new IntegerPair(tile.x, tile.y));
-            System.out.println("Cargo add "+good.getValue()+ " in "+ tile.x+ " "+tile.y);
             playerBoard.getStoredGoods().put(good.getValue(), toAdd);
 
         }

@@ -50,35 +50,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
      * the RMIClient class.
      */
     private ServerInterface server;
-    /**
-     * Represents the local player instance of the client within the RMIClient context.
-     *
-     * This field is used to store and manage the state and actions
-     * of the player associated with this client session.
-     * It provides access to player-specific data and methods needed
-     * to interact with the game environment and server.
-     */
-    private Player me;
-    /**
-     * Represents the current game instance for the RMIClient.
-     *
-     * This variable holds a reference to a {@code Game} object, which encapsulates the state
-     * and logic of the game session that the client is participating in. The {@code myGame}
-     * variable is used to interact with various aspects of the game, including players,
-     * game board, card decks, and tiles.
-     *
-     * The {@code Game} object includes functionalities such as adding or removing players,
-     * retrieving game-specific components, and managing the overall state of the game.
-     *
-     * This field is used within the RMIClient to perform operations related to the game session,
-     * such as updating the game state, interacting with the game's board, or processing
-     * game-related events. It is typically initialized when a game is created or joined
-     * through user interaction or server responses.
-     *
-     * Access to this variable may be synchronized depending on the operations being performed
-     * to ensure thread safety during concurrent access.
-     */
-    private Game myGame;
+
+
     /**
      * Represents the command interpreter for the RMIClient.
      *
@@ -244,9 +217,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
      * @throws RemoteException if a remote communication error occurs.
      */
     public RMIClient(Client client) throws RemoteException{
-        //System.setProperty("java.rmi.server.hostname", "192.168.1.145");
-        me =  new Player();
-        myGame = null;
         this.client = client;
 
     }
@@ -309,7 +279,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         inputLoop = new Thread(() -> {
             try {
-                this.inputLoop(true);
+                this.inputLoop();
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -373,15 +343,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
      * such as reconnecting, creating or joining a game, viewing logs, or interacting with boards
      * can be performed.
      *
-     * @param fromConsole Specifies whether the input should be read from the console or handled differently.
      * @throws IOException If an input or output exception occurs during the loop's operations.
      * @throws InterruptedException If the thread running the input loop is interrupted.
      */
-    public void inputLoop(boolean fromConsole) throws IOException, InterruptedException {
+    public void inputLoop() throws IOException, InterruptedException {
         String cmd = "";
 
         if (running) {
-            while (running && !cmd.equals("end")) {
+            while (running ) {
                 try {
                     cmd = client.getView().askInput("Command <RMI>: ");
                     if (cmd.equals("")){
@@ -400,7 +369,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     else if(cmd.equals("Log")){
                         client.getView().seeLog();
                     }
-                    else if (cmd.equals("BG")){
+                    else if (cmd.equals("Background")){
                         client.getView().background();
                         client.getView().refresh();
                     }
@@ -673,7 +642,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     running = true;
                     inputLoop = new Thread(() -> {
                         try {
-                            this.inputLoop(true);
+                            this.inputLoop();
                         } catch (IOException | InterruptedException e) {
                             throw new RuntimeException(e);
                         }

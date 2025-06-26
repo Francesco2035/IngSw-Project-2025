@@ -281,7 +281,6 @@ public class Warzone extends Card{
 
     @Override
     public void finishCard() {
-        System.out.println("ODDIO FINISH DI WARZONE");
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){

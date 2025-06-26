@@ -15,9 +15,9 @@ class TUITest {
         tui.setGameboard(2);
         //tui.printGameBoard();
 
-        tui.updateGameboard(new GameBoardEvent(0, "paluGay"));
-        tui.updateGameboard(new GameBoardEvent(1, "paluMorto"));
-        tui.updateGameboard(new GameBoardEvent(2    , "paluSuperMorto"));
+        tui.updateGameboard(new GameBoardEvent(0, "pgp"));
+        tui.updateGameboard(new GameBoardEvent(1, "pgpgp"));
+        tui.updateGameboard(new GameBoardEvent(2    , "pgpgpgpgpgpg"));
 
 
     }

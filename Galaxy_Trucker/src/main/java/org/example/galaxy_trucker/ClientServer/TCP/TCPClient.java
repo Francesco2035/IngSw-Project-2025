@@ -478,19 +478,17 @@ public class TCPClient{
      * Various supported commands include:
      * - "SeeBoards": Displays the boards when the client is logged in.
      * - "Log": Shows the activity log.
-     * - "Bg": Handles background updates and refreshes the client view.
+     * - "Background": Handles background updates and refreshes the client view.
      * - "MainTerminal": Triggers a view refresh.
      * - "Reconnect": Allows reconnection using a token if not already logged in.
      * - "Lobby": Connects to or verifies connection to a lobby.
      * - "Create": Enables the creation of a new game with specified parameters.
      * - "Join": Allows joining an existing game using a valid game ID.
-     * - "end": Terminates the client loop.
      * - "ChangeConnection": Provides feedback regarding connection changes.
      * - Commands that are interpreted and sent to the server via a command interpreter.
      * Error handling mechanisms ensure the robustness of user interactions, and
      * invalid inputs or improperly handled scenarios are managed gracefully.
-     * The method terminates when disconnection occurs, an input is invalid, or the
-     * "end" command is invoked.
+     * The method terminates when disconnection occurs
      * Implementation details include the use of an {@code ObjectMapper} for JSON serialization
      * and parsing, client-side state checks, and command interpretation.
      */
@@ -523,7 +521,7 @@ public class TCPClient{
                 else if(userInput.equals("Log")){
                     client.getView().seeLog();
                 }
-                else if (userInput.equals("BG")){
+                else if (userInput.equals("Background")){
                     client.getView().background();
                     client.getView().refresh();
                 }
@@ -667,10 +665,6 @@ public class TCPClient{
                     else{
                         System.out.println("You are already logged in! [quit?]");
                     }
-                }
-
-                else if (userInput.equals("end")) {
-                    break;
                 }
 
                 else if (userInput.equals("ChangeConnection")) {

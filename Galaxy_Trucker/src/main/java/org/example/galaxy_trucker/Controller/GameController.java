@@ -640,8 +640,6 @@ public class GameController implements ConcurrentCardListener, ReadyListener, Fi
                         try {
                             cur.DefaultAction(this);
                         } catch (Exception e) {
-                            e.printStackTrace();
-                            System.out.println(e.getMessage() + "cristo de dio");
                             //System.exit(-1);
                             //throw new ImpossibleActionException("errore nell'azione di default, che dio ci aiuti");
                         }
@@ -657,8 +655,6 @@ public class GameController implements ConcurrentCardListener, ReadyListener, Fi
 
                         try {
                             Command cmd = flightQueue.poll();
-                            //TODO: notify della carta se è fase concorrenziale
-                            //game.getPlayers().get(cmd.getPlayerId()).getmyPlayerBoard().setRewardsListener(VirtualViewMap.get(currentPlayer.GetID()));
                             if (cmd != null) {
                                 if (concurrent) {
                                     Controller controller = ControllerMap.get(cmd.getPlayerId());
@@ -675,7 +671,6 @@ public class GameController implements ConcurrentCardListener, ReadyListener, Fi
                                         index++;
                                     }
                                 } else {
-                                    //TODO: non ho capito che minchia fa la offer
                                     flightQueue.offer(cmd);
                                 }
                             }
