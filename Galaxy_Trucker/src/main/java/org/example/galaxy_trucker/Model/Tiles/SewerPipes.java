@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 public class SewerPipes extends Component {
@@ -25,7 +24,7 @@ public class SewerPipes extends Component {
 
     @Override
     public void remove(PlayerBoard playerBoard) {
-        tile.sendUpdates(new RemoveTileEvent());
+        tile.sendUpdates();
 
     }
 

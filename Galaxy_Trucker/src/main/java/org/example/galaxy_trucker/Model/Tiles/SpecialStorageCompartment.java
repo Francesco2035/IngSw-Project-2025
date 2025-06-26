@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
@@ -112,7 +111,7 @@ public class SpecialStorageCompartment extends Storage{
                 playerBoard.getStoredGoods().remove(good.getValue());
             }
         }
-        tile.sendUpdates(new RemoveTileEvent());
+        tile.sendUpdates();
 
     }
 

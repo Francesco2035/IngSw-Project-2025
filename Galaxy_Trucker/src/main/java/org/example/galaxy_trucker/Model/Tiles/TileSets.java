@@ -3,6 +3,7 @@ package org.example.galaxy_trucker.Model.Tiles;
 import org.example.galaxy_trucker.Controller.Listeners.TileSestListener;
 import org.example.galaxy_trucker.ClientServer.Messages.TileSets.CoveredTileSetEvent;
 import org.example.galaxy_trucker.ClientServer.Messages.TileSets.UncoverdTileSetEvent;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.GAGen;
 
 import java.rmi.RemoteException;
@@ -23,6 +24,9 @@ public class TileSets {
     public Tile getNewTile() {
         synchronized (CoveredTiles) {
             Random r = new Random();
+            if (CoveredTiles.isEmpty()){
+                throw new InvalidInput("There are no tiles covered");
+            }
             int index = r.nextInt(CoveredTiles.size());
 
             Tile SelectedTile =  CoveredTiles.stream()
@@ -52,8 +56,7 @@ public class TileSets {
                 }
 
             }catch (IndexOutOfBoundsException e){
-                System.out.println("No valid tile selected!");
-                return null;
+                throw new InvalidInput("No valid tile selected!");
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }

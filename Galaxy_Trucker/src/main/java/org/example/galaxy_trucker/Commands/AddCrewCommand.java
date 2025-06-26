@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Commands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.IntegerPair;
@@ -111,6 +112,9 @@ public class AddCrewCommand extends Command implements Serializable {
      */
     @Override
     public void execute(Player player) {
+        if (player.getCommonBoard().getLevel() != 2 && (purpleAlien || brownAlien)) {
+            throw new InvalidInput("");
+        }
         PlayerBoard playerBoard = player.getmyPlayerBoard();
         AddCrewAction action = new AddCrewAction(numHumans,purpleAlien,brownAlien, playerBoard);
         playerBoard.performAction(playerBoard.getTile(coordinate.getFirst(), coordinate.getSecond()).getComponent(),action, player.getPlayerState());

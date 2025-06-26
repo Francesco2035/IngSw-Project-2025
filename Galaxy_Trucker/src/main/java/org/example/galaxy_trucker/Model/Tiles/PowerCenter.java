@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -35,7 +34,7 @@ public class PowerCenter extends Component{
     public void remove(@NotNull PlayerBoard playerBoard) {
         playerBoard.setEnergy(-type);
         playerBoard.getPowerCenters().remove(this);
-        tile.sendUpdates(new RemoveTileEvent());
+        tile.sendUpdates();
 
     }
 

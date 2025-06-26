@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 
@@ -48,7 +47,7 @@ public class ShieldGenerator extends Component{
     @Override
     public void remove(PlayerBoard playerBoard) {
         playerBoard.getShieldGenerators().remove(this);
-        tile.sendUpdates(new RemoveTileEvent());
+        tile.sendUpdates();
 
     }
 

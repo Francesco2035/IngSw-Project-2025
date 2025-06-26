@@ -8,6 +8,7 @@ import org.example.galaxy_trucker.ClientServer.Messages.FinishListener;
 import org.example.galaxy_trucker.ClientServer.Messages.HandEvent;
 import org.example.galaxy_trucker.ClientServer.Messages.ReadyListener;
 import org.example.galaxy_trucker.ClientServer.Messages.TileSets.CardEvent;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
@@ -36,6 +37,7 @@ public class Player implements Serializable {
     private PhaseListener phaseListener;
     private ReadyListener readyListener;
     private FinishListener finishListener;
+    private boolean debugCalled = false;
 
     public FinishListener getFinishListener() {
         return finishListener;
@@ -167,7 +169,7 @@ public class Player implements Serializable {
             }
             try{
                 CurrentTile = CommonBoard.getTilesSets().getNewTile(index);
-                System.out.println("Id Tile: " +CurrentTile.getId());
+                System.out.println("Id Tile: " +CurrentTile.getId()+ " "+ GetID());
                 if (handListener != null) {
                     handListener.handChanged(new HandEvent(CurrentTile.getId(), CurrentTile.getConnectors()));
                 }
@@ -177,7 +179,7 @@ public class Player implements Serializable {
             }
         }
         else {
-            System.out.println("Valore non valido");
+            throw new InvalidInput("Where are you picking?");
         }
     }
 
@@ -192,10 +194,8 @@ public class Player implements Serializable {
             throw new IllegalStateException("You can't discard this Tile!");
         }
 
-        System.out.println("\n discarding tile\n");
         CommonBoard.getTilesSets().AddUncoveredTile(CurrentTile);
         CurrentTile = null;
-        System.out.println("listener hand");
         handListener.handChanged(new HandEvent(158, null));
     }
 
@@ -356,5 +356,11 @@ public class Player implements Serializable {
         this.finishListener = null;
     }
 
+    public boolean isDebugCalled() {
+        return debugCalled;
+    }
 
+    public void setDebugCalled(boolean debugCalled) {
+        this.debugCalled = debugCalled;
+    }
 }

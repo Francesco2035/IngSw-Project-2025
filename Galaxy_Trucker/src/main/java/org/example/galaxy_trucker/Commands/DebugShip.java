@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Commands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Player;
@@ -100,7 +101,14 @@ public class DebugShip extends Command implements Serializable {
      */
     @Override
     public void execute(Player player) throws IOException {
+        if (player.getCommonBoard().getLevel() != 2) {
+            throw new InvalidInput("Tutorial: enjoy the experience of the building phase");
+        }
+        if (player.isDebugCalled()) {
+            throw new InvalidInput("You have already a ship");
+        }
 
+        player.setDebugCalled(true);
         PlayerBoard debugShip = player.getmyPlayerBoard();
         GAGen gag = new GAGen();
 
