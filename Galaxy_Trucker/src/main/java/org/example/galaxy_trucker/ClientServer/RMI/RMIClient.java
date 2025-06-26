@@ -276,7 +276,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     else if(cmd.equals("Log")){
                         client.getView().seeLog();
                     }
-                    else if (cmd.equals("Bg")){
+                    else if (cmd.equals("BG")){
                         client.getView().background();
                         client.getView().refresh();
                     }
@@ -460,46 +460,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
             handleDisconnection();
         }
         System.out.println("Fine input.");
-    }
-
-
-    public void sendPongs(){
-        new Thread(()->{
-            //System.out.println("PONG");
-            while(running){
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                try {
-                    new Thread(() -> {
-                        try {
-                            server.receivePong(this);
-                        } catch (RemoteException e) {
-                            synchronized (running) {
-                                if (running) {
-                                    running = false;
-                                    try {
-                                        handleDisconnection();
-                                    } catch (InterruptedException | IOException ex) {
-                                        throw new RuntimeException(ex);
-                                    }
-                                } else {
-                                    System.out.println("Error receiving pongs");
-                                }
-                            }
-                        }
-                    }).start();
-
-                } finally {
-
-                }
-
-
-            }
-        }).start();
-
     }
 
 

@@ -40,7 +40,7 @@ public class InputReader implements Runnable {
     KeyMap<Binding> mainKeyMap;
     StringBuilder lastRender = new StringBuilder();
     BackgroundGenerator generator ;
-    private boolean background = true;
+    private int background = 0;
 
 
 
@@ -90,7 +90,6 @@ public class InputReader implements Runnable {
         mainKeyMap.bind(new Macro("SeeBoards"), "\u0002"); // Ctrl+B
         mainKeyMap.bind(new Macro("MainTerminal"), "\u0014");   // Ctrl+T
         mainKeyMap.bind(new Macro("Log"), "\u000C");   // Ctrl+L
-        //mainKeyMap.bind(new Macro("Help"), "\u0008");   // Ctrl+H
 
 
         prompt = new AttributedStringBuilder()
@@ -212,34 +211,48 @@ public class InputReader implements Runnable {
      * state with updated*/
     public synchronized void renderScreen(StringBuilder content) {
 
-        String os = System.getProperty("os.name").toLowerCase();
-
-        try {
-            if (os.contains("windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                new ProcessBuilder("clear").inheritIO().start().waitFor();
-            }
-        } catch (IOException | InterruptedException e) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
-        }
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-
-        String partialInput = Lreader.getBuffer().toString();
-//        System.out.print("\033[3J");
+//        String os = System.getProperty("os.name").toLowerCase();
+//
+//        try {
+//            if (os.contains("windows")) {
+//                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+//            } else {
+//                new ProcessBuilder("clear").inheritIO().start().waitFor();
+//            }
+//        } catch (IOException | InterruptedException e) {
+//            System.out.print("\033[H\033[2J");
+//            System.out.flush();
+//        }
+//        System.out.print("\033[H\033[2J");
+//        System.out.flush();
 //        terminal.puts(InfoCmp.Capability.clear_screen);
 //        terminal.flush();
-        if (background) {
+
+
+
+
+        //System.out.print("\033[3J");
+        //terminal.puts(InfoCmp.Capability.clear_screen);
+        String partialInput = Lreader.getBuffer().toString();
+        // Usa InfoCmp per tornare su
+        terminal.puts(InfoCmp.Capability.cursor_address, 0, 0);
+        terminal.flush();
+
+// Poi, cancella anche il buffer di scroll manualmente (solo ANSI, JLine non espone direttamente questa funzionalità)
+        terminal.writer().print("\033[3J"); // cancella scrollback
+        terminal.flush();
+        terminal.puts(InfoCmp.Capability.cursor_address, 0, 0);
+        terminal.puts(InfoCmp.Capability.clr_eos);
+        terminal.flush();
+        if (background != 2) {
             AttributedString colored = fillBackground(content.toString());
             terminal.writer().print(colored.toAnsi());
         }
         else {
             terminal.writer().print(content.toString());
         }
-        terminal.writer().println();
-        terminal.flush();
+        terminal.puts(InfoCmp.Capability.carriage_return); // Riporta a inizio riga
+        terminal.puts(InfoCmp.Capability.clr_eol);         // Pulisce il resto della riga
         terminal.flush();
         Lreader.getBuffer().clear();
         Lreader.getBuffer().write(partialInput);
@@ -311,7 +324,9 @@ public class InputReader implements Runnable {
 
 
     public void ChangeBackground() {
-        background = !background;
+        background++;
+        background = background % 3;
+        generator.setSpecial(background);
     }
 }
 
