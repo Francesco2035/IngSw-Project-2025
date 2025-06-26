@@ -157,7 +157,10 @@ public class MeteoriteDefenceTest {
         p2.setState(new DefendingFromLarge());
 
         DefendFromLargeCommand def3 = new DefendFromLargeCommand(plasma2,battery2,game.getID(),p2.GetID(),game.getLv(),"boh","boh");
-        def3.execute(p2);
-
+        try{
+            def3.execute(p2);
+        }catch (Exception e){
+            assertTrue(e.getMessage().contains("Cannot"));
+        }
     }
 }

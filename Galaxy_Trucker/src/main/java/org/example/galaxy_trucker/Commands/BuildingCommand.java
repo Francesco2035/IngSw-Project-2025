@@ -10,6 +10,17 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Objects;
 
+/**
+ * BuildingCommand represents a specific type of command that is used for managing
+ * and executing actions related to building operations in the game. It extends the
+ * generic Command class and implements the Serializable interface.
+ *
+ * This class encapsulates data about the building operation, such as coordinates,
+ * rotation, and position, along with the game and player context. It also defines
+ * the logic for executing the command based on the building-related operation specified.
+ *
+ * The command type for this class is defined as "BuildingCommand".
+ */
 public class BuildingCommand extends Command implements Serializable {
 
 
@@ -29,6 +40,19 @@ public class BuildingCommand extends Command implements Serializable {
 
     public BuildingCommand(){}
 
+    /**
+     * Constructs a new BuildingCommand instance, initializing its parameters.
+     *
+     * @param x the x-coordinate for the building placement
+     * @param y the y-coordinate for the building placement
+     * @param rotation the rotation of the building
+     * @param position the position or index of the building
+     * @param gameId the unique identifier for the game
+     * @param playerId the unique identifier for the player issuing the command
+     * @param lv the level or stage of the game
+     * @param title the title or name of the command
+     * @param token a unique token for authentication or tracking
+     */
     public BuildingCommand(int x, int y, int rotation, int position, String gameId, String playerId, int lv, String title, String token) {
         super(gameId, playerId, lv, title, token,-1);
         this.x = x;
@@ -41,6 +65,14 @@ public class BuildingCommand extends Command implements Serializable {
     }
 
 
+    /**
+     * Executes the building command for the given player based on the specific action title.
+     *
+     * @param player The player on which the command is executed.
+     * @throws RemoteException If a remote invocation error occurs.
+     * @throws JsonProcessingException If there is an error processing JSON data.
+     * @throws IllegalStateException If the command is executed in an invalid state.
+     */
     @Override
     public void execute(Player player) throws RemoteException, JsonProcessingException, IllegalStateException {
 
@@ -101,16 +133,31 @@ public class BuildingCommand extends Command implements Serializable {
 
     }
 
+    /**
+     * Retrieves the title associated with this command.
+     *
+     * @return the title of the command as a String
+     */
     @Override
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Retrieves the ID of the player associated with this command.
+     *
+     * @return the player ID as a String
+     */
     @Override
     public String getPlayerId() {
         return playerId;
     }
 
+    /**
+     * Retrieves the unique identifier for the game associated with this command.
+     *
+     * @return the game ID as a string.
+     */
     @Override
     public String getGameId() {
         return gameId;
