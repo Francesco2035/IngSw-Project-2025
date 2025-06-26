@@ -15,9 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
@@ -84,7 +81,6 @@ import java.util.stream.Collectors;
  * - `void updateBoard(TileEvent event)`: Updates the game board UI to reflect changes based on a tile event.
  * - `void updateOthersPB(PlayerTileEvent event)`: Updates the personal boards of other players based on a player tile event.
  * - `void updateHand(HandEvent event)`: Updates the currently active tile in the player's hand.
- * - `void updateCoveredTilesSet(CoveredTileSetEvent event)`: Updates the coverage state of tiles on the board.
  * - `void updateUncoveredTilesSet(UncoverdTileSetEvent event)`: Updates the UI for uncovered tiles, including managing discarded tiles and their interactions.
  *
  * The implementation ensures seamless and fluid user experiences, maintaining thread safety
@@ -110,7 +106,7 @@ public class GuiRoot implements View {
     private String myName;
     private int myGameLv;
 
-    private ListView<String> readyPlayers;
+    private ListView<Label> readyPlayers;
     private boolean amIReady;
     private boolean amIBuilding;
 
@@ -219,14 +215,8 @@ public class GuiRoot implements View {
             tileImage.setImage(tilePlaceholder);
             tileImage.setOpacity(0.5);
 
-//            background setup
-//            Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
-//            MediaPlayer mediaPlayer = new MediaPlayer(media);
-//
-//            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-//            mediaPlayer.setAutoPlay(true);
-//
-//            MediaView background = new MediaView(mediaPlayer);
+
+
             ImageView background = new ImageView(new Image(getClass().getResourceAsStream("/GUI/background.jpg")));
             background.setPreserveRatio(false);
 
@@ -590,7 +580,7 @@ public class GuiRoot implements View {
                 HBox batteries = new HBox(2);
                 batteries.setPadding(new Insets(10));
                 for (int i = 0; i < event.getBatteries(); i++) {
-                    ImageView battery = new ImageView(new Image(getClass().getResourceAsStream("/GUI/battery.png")));
+                    ImageView battery = new ImageView(new Image(getClass().getResourceAsStream("/GUI/buildingPhase/battery.png")));
                     battery.setFitHeight(50);
                     tileImg.setOpacity(0.7);
                     battery.setPreserveRatio(true);
@@ -785,7 +775,7 @@ public class GuiRoot implements View {
                     HBox batteries = new HBox(2);
 //                    batteries.setPadding(new Insets(10));
                     for (int i = 0; i < event.getBatteries(); i++) {
-                        ImageView battery = new ImageView(new Image(getClass().getResourceAsStream("/GUI/battery.png")));
+                        ImageView battery = new ImageView(new Image(getClass().getResourceAsStream("/GUI/buildingPhase/battery.png")));
                         battery.setFitHeight(30);
                         tileImg.setOpacity(0.7);
                         battery.setPreserveRatio(true);
@@ -1082,7 +1072,6 @@ public class GuiRoot implements View {
      */
     @Override
     public void disconnect() {
-        //quando si accorge di esseree disconnesso ->reconnect / exit / ChangeConnection
         Platform.runLater(()->{
             Stage disconnectStage = new Stage();
             disconnectStage.setTitle("Connection lost");
@@ -1816,40 +1805,11 @@ public class GuiRoot implements View {
 
 
     /**
-     * Updates and displays the in-game lobby screen showing player readiness status.
-     * This method is called whenever there's a change in player readiness states.
+     * Displays the lobby game interface by updating the list of players and their readiness status.
+     * Updates the visual representation of player names and readiness using JavaFX components.
      *
-     * <p>The method performs the following:
-     * <ul>
-     *   <li>Clears and repopulates the player list with current readiness status</li>
-     *   <li>Identifies the current player with "(You)" suffix</li>
-     *   <li>Updates the local amIReady flag with the current player's readiness state</li>
-     *   <li>Formats each player entry to show either "Ready!" or "Not Ready" status</li>
-     * </ul>
-     *
-     * <p>Formatting details:
-     * <ul>
-     *   <li>Player names are displayed with "--> Ready!" or "--> Not Ready" suffixes</li>
-     *   <li>The current player is marked with "(You)" after their name</li>
-     *   <li>All updates are performed on the JavaFX Application Thread via Platform.runLater()</li>
-     * </ul>
-     *
-     * @param event The GameLobbyEvent containing:
-     *              <ul>
-     *                <li>List of all players in the game</li>
-     *                <li>List of boolean readiness states corresponding to each player</li>
-     *              </ul>
-     *
-     * @implNote This method:
-     * <ul>
-     *   <li>Uses Platform.runLater() for thread-safe UI updates</li>
-     *   <li>Maintains the amIReady flag to track local player's readiness state</li>
-     *   <li>Clears the readyPlayers ListView before repopulating</li>
-     *   <li>Does not modify the othersBoards display (commented code suggests this was considered)</li>
-     * </ul>
-     *
-     * @see GameLobbyEvent
-     * @see Platform#runLater(Runnable)
+     * @param event the GameLobbyEvent containing the list of players, their readiness status,
+     *              and other data related to the game lobby.
      */
     @Override
     public void showLobbyGame(GameLobbyEvent event){
@@ -1861,20 +1821,24 @@ public class GuiRoot implements View {
             for(int i=0; i< event.getPlayers().size(); i++){
                 if(event.getPlayers().get(i).equals(myName)) {
                     s = event.getPlayers().get(i) + " (You)";
-                    amIReady = event.getReady().get(i);
+                    if(event.getReady().get(i)){
+                        amIReady = true;
+                    }
+                    else {
+                        amIReady = false;
+                    }
                 }
                 else s= event.getPlayers().get(i);
 
+                Label name = new Label(s);
+
+
                 if(event.getReady().get(i))
-                    readyPlayers.getItems().add(s + " --> Ready!");
-                else readyPlayers.getItems().add(s+ " --> Not Ready");
+                    name.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill:  #3cc917;");
+                else name.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill:  #000000;");
+
+                readyPlayers.getItems().add(name);
             }
-//            for(int i = 0; i< event.getPlayers().size(); i++){
-//                if(event.getReady().get(i))
-//                    for(String name : othersBoards.keySet())
-//                        if(name.equals(event.getPlayers().get(i)))
-//                            name.setText(event);
-//            }
         });
 
     }
@@ -1948,17 +1912,21 @@ public class GuiRoot implements View {
 
 
             Button quitButton = new Button("Quit");
-            Button readyButton = new Button();
+            Button readyButton = new Button("Ready!");
             Button debugShip1 = new Button("Debug Ship 1");
             Button debugShip2 = new Button("Debug Ship 2");
 
-            if (amIReady)
-                readyButton.setText("Not Ready");
-            else readyButton.setText("Ready!");
 
             readyButton.setOnAction(e -> {
-//                readyButton.setDisable(true);
-                inputQueue.add("Ready");
+                if(amIReady){
+                    inputQueue.add("NotReady");
+                    readyButton.setText("Ready!");
+                }
+
+                else{
+                    inputQueue.add("Ready");
+                    readyButton.setText("Not Ready");
+                }
             });
 
             debugShip1.setOnAction(e -> {
@@ -2001,7 +1969,6 @@ public class GuiRoot implements View {
                 confirmStage.initModality(Modality.WINDOW_MODAL);
 
                 confirmStage.show();
-
             });
 
 
@@ -2018,7 +1985,6 @@ public class GuiRoot implements View {
 
             VBox mainBox = new VBox(10, GameNameLabel, readyPlayers, stack);
             readyPlayers.setMaxWidth(800);
-            readyPlayers.setMaxHeight(100);
             mainBox.setAlignment(Pos.TOP_CENTER);
             mainBox.setPadding(new Insets(10));
 
@@ -2045,48 +2011,17 @@ public class GuiRoot implements View {
 
 
     /**
-     * Creates and configures a modal Stage displaying the game board with appropriate scaling and styling.
-     * The game board appearance varies based on the current game level (myGameLv).
+     * Configures and initializes a new Stage for displaying the game board.
+     * Depending on the game level, the stage is customized with specific dimensions,
+     * background colors, and other visual elements such as an ImageView for the game board
+     * and a StackPane as its root layout.
      *
-     * <p>Key features:
-     * <ul>
-     *   <li>Creates a non-resizable modal window with title "Game Board"</li>
-     *   <li>Applies level-specific:
-     *     <ul>
-     *       <li>Board dimensions (985x546 for level 1, 1055x639 for level 2)</li>
-     *       <li>Background color (dark blue for level 1, purple for level 2)</li>
-     *     </ul>
-     *   </li>
-     *   <li>Scales the board image to 85% of original size</li>
-     *   <li>Includes rocketsPane overlay for displaying game elements</li>
-     * </ul>
-     *
-     * <p>Implementation details:
-     * <ul>
-     *   <li>All UI operations are performed on the JavaFX Application Thread</li>
-     *   <li>Uses a StackPane layout to layer background, board image, and rockets</li>
-     *   <li>Window modality is set to WINDOW_MODAL to block interaction with parent window</li>
-     *   <li>Maintains consistent padding around the scaled board image</li>
-     * </ul>
-     *
-     * @return The fully configured (but not yet shown) Stage containing the game board
-     *
-     * @implNote This method:
-     * <ul>
-     *   <li>Relies on the gameBoardImg and rocketsPane being properly initialized</li>
-     *   <li>Uses Platform.runLater() for thread-safe UI operations</li>
-     *   <li>Preserves the board image's aspect ratio during scaling</li>
-     *   <li>Contains commented-out code for potential pawn movement functionality</li>
-     * </ul>
-     *
-     * @see Stage
-     * @see Platform#runLater(Runnable)
-     * @see Modality#WINDOW_MODAL
+     * @return a Stage instance that represents the game board stage, fully configured
+     *         and initialized but not yet displayed on the screen.
      */
     private Stage setGameBoardStage() {
         double scaleRatio = 0.85;
         int imgX, imgY;
-//            final int[] i = {0};
         if(myGameLv == 2){
             imgX = 1055;
             imgY = 639;
@@ -2098,7 +2033,6 @@ public class GuiRoot implements View {
         Stage gbStage = new Stage();
         Platform.runLater(() -> {
             gbStage.setTitle("Game Board");
-//            gbStage.initStyle(StageStyle.TRANSPARENT);
 
             StackPane root = new StackPane();
 
@@ -2112,19 +2046,6 @@ public class GuiRoot implements View {
             else
                 background.setFill(Color.rgb(6, 55, 105));
 
-//            ImageView pedine = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/among-us-white.png")));
-//            pedine.setFitHeight(40);
-//            pedine.setPreserveRatio(true);
-//            pedine.setLayoutX((coords.get(i[0]).getFirst() - 20) * scaleRatio);
-//            pedine.setLayoutY((coords.get(i[0]).getSecond() - 25) * scaleRatio);
-//            pedLayer.getChildren().add(pedine);
-//
-//            pedine.setOnMouseClicked(e -> {
-//                i[0]++;
-//                pedine.setLayoutX((coords.get(i[0]).getFirst() - 20) * scaleRatio);
-//                pedine.setLayoutY((coords.get(i[0]).getSecond() - 20) * scaleRatio);
-//
-//            });
 
             root.getChildren().addAll(background, board, rocketsPane);
 
@@ -2323,7 +2244,7 @@ public class GuiRoot implements View {
         gameBoard.setFitWidth(400);
 
         ImageView hourglass = new ImageView();
-        hourglass.setImage((new Image(getClass().getResourceAsStream("/GUI/hourglass.png"))));
+        hourglass.setImage((new Image(getClass().getResourceAsStream("/GUI/buildingPhase/hourglass.png"))));
         hourglass.setPreserveRatio(true);
         hourglass.setSmooth(true);
         hourglass.setFitHeight(70);
@@ -2333,7 +2254,7 @@ public class GuiRoot implements View {
         hourglassBox.getChildren().setAll(hourglass);
 
 
-        ImageView clockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow clockwise.png")));
+        ImageView clockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/buildingPhase/rotate arrow clockwise.png")));
         clockwiseArrow.setPreserveRatio(true);
         clockwiseArrow.setFitHeight(70);
         clockwiseArrow.setFitWidth(50);
@@ -2346,7 +2267,7 @@ public class GuiRoot implements View {
         });
 
 
-        ImageView counterclockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow counterclockwise.png")));
+        ImageView counterclockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/buildingPhase/rotate arrow counterclockwise.png")));
         counterclockwiseArrow.setPreserveRatio(true);
         counterclockwiseArrow.setFitHeight(70);
         counterclockwiseArrow.setFitWidth(50);
@@ -2834,6 +2755,9 @@ public class GuiRoot implements View {
 
             cmdCoords.clear();
 
+            ImageView alert = new ImageView(new Image(getClass().getResourceAsStream("/GUI/alert.png")));
+            alert.setFitHeight(45);
+            alert.setPreserveRatio(true);
             Stage exceptionStage = new Stage();
             exceptionStage.setTitle("Exception");
 
@@ -2843,10 +2767,10 @@ public class GuiRoot implements View {
             Button okButton = goBackButtonMaker(exceptionStage);
             okButton.setText("Ok");
 
-            VBox errorBox = new VBox(3, errorLabel, okButton);
+            VBox errorBox = new VBox(3, new HBox(10, alert, errorLabel), okButton);
             errorBox.setAlignment(Pos.CENTER);
 
-            Scene errorScene = new Scene(errorBox, 300, 80);
+            Scene errorScene = new Scene(errorBox, 400, 80);
             exceptionStage.setScene(errorScene);
             exceptionStage.initOwner(primaryStage);
             exceptionStage.initModality(Modality.WINDOW_MODAL);
@@ -3067,7 +2991,7 @@ public class GuiRoot implements View {
 
         Platform.runLater(()->{
             if(event.getStart()){
-                hourglassImg.setImage((new Image(getClass().getResourceAsStream("/GUI/super-buu-hourglass.gif"))));
+                hourglassImg.setImage((new Image(getClass().getResourceAsStream("/GUI/buildingPhase/super-buu-hourglass.gif"))));
                 hourglassImg.setOnMouseClicked(null);
                 hourglassImg.setFitWidth(150);
                 hourglassImg.setFitHeight(100);
@@ -3077,7 +3001,7 @@ public class GuiRoot implements View {
 
             }
             else{
-                hourglassImg.setImage((new Image(getClass().getResourceAsStream("/GUI/hourglass.png"))));
+                hourglassImg.setImage((new Image(getClass().getResourceAsStream("/GUI/buildingPhase/hourglass.png"))));
                 hourglassImg.setFitHeight(70);
                 hourglassImg.setPreserveRatio(true);
                 hourglassImg.setOnMouseClicked(e->inputQueue.add("Hourglass"));
@@ -3227,6 +3151,10 @@ public class GuiRoot implements View {
             Stage stage = new Stage();
             stage.setTitle("Token");
 
+            ImageView alert = new ImageView(new Image(getClass().getResourceAsStream("/GUI/alert.png")));
+            alert.setFitHeight(45);
+            alert.setPreserveRatio(true);
+
             Label txt1 = new Label("This is your token:\n");
             txt1.setStyle("-fx-font-size: 15px");
 
@@ -3236,8 +3164,7 @@ public class GuiRoot implements View {
             txt2.setStyle("-fx-background-color: transparent; -fx-border-width: 0;-fx-font-size: 19px");
             txt1.setAlignment(Pos.CENTER);
 
-//            Label txt2 = new Label(tokenEvent.getToken());
-//            txt2.setStyle("-fx-font-size: 19px");
+
             Label txt3 = new Label("\nRemember this, you will need it for reconnection!");
             txt3.setStyle("-fx-font-size: 15px");
             Button ok = new Button("Ok");
@@ -3245,10 +3172,10 @@ public class GuiRoot implements View {
                 stage.close();
             });
 
-            VBox txtBox = new VBox(3, txt1, txt2, txt3, ok);
+            VBox txtBox = new VBox(3,new HBox(10, alert, txt1), txt2, txt3, ok);
             txtBox.setAlignment(Pos.CENTER);
 
-            Scene scene = new Scene(txtBox, 350, 150);
+            Scene scene = new Scene(txtBox, 400, 150);
             stage.setScene(scene);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.show();
@@ -3504,7 +3431,7 @@ public class GuiRoot implements View {
             reconnecting = false;
 
             readyPlayers = new ListView<>();
-            readyPlayers.setMaxHeight(100);
+            readyPlayers.setMaxHeight(110);
             log = new ListView<>();
             prompt = new Label();
 
@@ -3531,7 +3458,6 @@ public class GuiRoot implements View {
             startButton.setOnAction(e -> {
                 inputQueue.add("Lobby");
                 playerClient.setPlayerState(new LobbyClient());
-                System.out.println("schiaccio bottone lobby");
             });
         });
     }
@@ -3640,19 +3566,19 @@ public class GuiRoot implements View {
 
             if(!playerRockets.containsKey(pl)){
                 if (id == 153) {
-                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-blue.png")));
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/shuttles/shuttle_blue.png")));
                     playerRockets.put(pl, img);
                 }
                 if (id == 154) {
-                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-green.png")));
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/shuttles/shuttle_green.png")));
                     playerRockets.put(pl, img);
                 }
                 if (id == 155) {
-                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-red.png")));
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/shuttles/shuttle_red.png")));
                     playerRockets.put(pl, img);
                 }
                 if (id == 156) {
-                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-yellow.png")));
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/shuttles/shuttle_yellow.png")));
                     playerRockets.put(pl, img);
                 }
             }
@@ -4075,7 +4001,7 @@ public class GuiRoot implements View {
             prompt.setText("Move your cargo as you like!");
 
             StackPane cargo = new StackPane();
-            ImageView slot = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargoBg.png")));
+            ImageView slot = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargo/cargoBg.png")));
             slot.setFitHeight(70);
             slot.setPreserveRatio(true);
 
