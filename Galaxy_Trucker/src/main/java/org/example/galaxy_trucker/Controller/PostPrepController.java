@@ -56,7 +56,7 @@ public class PostPrepController extends Controller {
 
 
     @Override
-    public  void  DefaultAction(GameController gc) { //TODO test
+    public  void  DefaultAction(GameController gc) {  
         PlayerState state = curPlayer.getPlayerState();
         Command cmd =state.createDefaultCommand(gameId,curPlayer);
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();

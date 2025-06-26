@@ -4,7 +4,7 @@ import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 
 import java.util.UUID;
 
-public class DisconnectedClient { //TODO test
+public class DisconnectedClient {  
     public UUID token;
     public ClientInterface client;
 

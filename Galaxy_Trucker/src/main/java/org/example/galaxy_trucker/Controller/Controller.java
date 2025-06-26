@@ -53,7 +53,7 @@ public abstract class Controller {
        // this.curPlayer.SetHasActed(true);
     }
 
-    public void DefaultAction(GameController gc) { //TODO test
+    public void DefaultAction(GameController gc) { 
        PlayerState state = curPlayer.getPlayerState();
        Command cmd =state.createDefaultCommand(gameId,curPlayer);
        playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
@@ -107,9 +107,9 @@ public abstract class Controller {
 
     public void removeExceptionListener() {
         this.exceptionListener = null;
-    } //TODO test
+    }  
 
-    public void sendException(Exception e) { //TODO test
+    public void sendException(Exception e) {  
         if (exceptionListener != null) {
             ExceptionEvent event = new ExceptionEvent(e.getMessage());
             exceptionListener.exceptionOccured(event);
