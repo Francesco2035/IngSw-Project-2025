@@ -3217,40 +3217,33 @@ public class GuiRoot implements View {
     @Override
     public void updateHourglass(HourglassEvent event){
         ImageView hourglassImg = new ImageView();
-
+        hourglassImg.setImage((new Image(getClass().getResourceAsStream("/GUI/buildingPhase/hourglass.png"))));
+        hourglassImg.setFitHeight(70);
+        hourglassImg.setPreserveRatio(true);
+        hourglassImg.setOnMouseClicked(e->inputQueue.add("Hourglass"));
 
         ProgressBar progressBar = new ProgressBar(1);
         progressBar.setPrefWidth(150);
         progressBar.setPrefHeight(10);
 
-        AtomicInteger curSec = new AtomicInteger(600);
+        AtomicInteger curSec = new AtomicInteger(900);
 
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.millis(100), e ->{
                     curSec.getAndDecrement();
-                    double progress = (double) curSec.get() / 600;
+                    double progress = (double) curSec.get() / 900;
                     progressBar.setProgress(progress);
 
                 })
         );
-        timeline.setCycleCount(600);
+        timeline.setCycleCount(900);
 
         Platform.runLater(()->{
             if(event.getStart()){
-                hourglassImg.setImage((new Image(getClass().getResourceAsStream("/GUI/buildingPhase/super-buu-hourglass.gif"))));
-                hourglassImg.setOnMouseClicked(null);
-                hourglassImg.setFitWidth(150);
-                hourglassImg.setFitHeight(100);
-                hourglassImg.setSmooth(true);
                 hourglassBox.getChildren().setAll(hourglassImg,  progressBar);
                 timeline.play();
-
             }
             else{
-                hourglassImg.setImage((new Image(getClass().getResourceAsStream("/GUI/buildingPhase/hourglass.png"))));
-                hourglassImg.setFitHeight(70);
-                hourglassImg.setPreserveRatio(true);
-                hourglassImg.setOnMouseClicked(e->inputQueue.add("Hourglass"));
                 hourglassBox.getChildren().setAll(hourglassImg);
             }
         });
