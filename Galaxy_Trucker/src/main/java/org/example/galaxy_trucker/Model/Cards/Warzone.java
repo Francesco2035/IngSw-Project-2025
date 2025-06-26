@@ -26,50 +26,172 @@ import java.util.HashMap;
 import static java.lang.Math.min;
 import static java.util.Collections.max;
 
-
-//RISCRIVI ZONA DI GUERRA CHE PRENDE L'INPUT UN ARRAY DI METODI DA CHIAMARE E LI DIVIDE IN CONTROLLI
-//E PUNIZIONI QUINDI HA TUTTI I METODI E BONA COSì;
-
-//schiaccia contol shif alt freccetta su e giù per dulicare il curosre
-
-///ordine controlli: 1 cannoni,  2 movimento, 3 umani
-///
-/// CONTROLLA IL JSON TI SCONGIURO
-///
-///ordine punizioni: 1 movimento, 2 umani, 3 cargo, 4 spari
+/**
+ * Represents a Warzone card in the Galaxy Trucker game.
+ * This card creates combat scenarios where players must compete in various challenges
+ * and face punishments based on their performance.
+ *
+ * The warzone operates in phases:
+ * 1. Challenge phase - players compete in attack power, speed, or crew count
+ * 2. Punishment phase - the worst performer faces consequences like losing time, crew, cargo, or taking damage
+ *
+ * Requirements are checked in order: cannons (1), movement (2), humans (3)
+ * Punishments are applied in order: movement (1), humans (2), cargo (3), shots (4)
+ *
+ * @author Galaxy Trucker Development Team
+ * @version 1.0
+ */
 
 public class Warzone extends Card{
+
+    /**
+     * Array defining the order of requirement checks for challenges.
+     * Values: 1 = cannons/attack, 2 = movement/speed, 3 = humans/crew
+     */
+
     @JsonProperty("RequirementOrder")
     private int[] RequirementsType;
+
+    /**
+     * Array defining the order of punishment types to be applied.
+     * Values: 1 = movement penalty, 2 = kill humans, 3 = lose cargo, 4 = take shots
+     */
+
     @JsonProperty("PunishmentOrder")
     private int[] PunishmentType;
+    /**
+     * The amount of time/movement to be lost as punishment.
+     */
+
 
     @JsonProperty("Punishment1")
     private int PunishmentMovement;
+    /**
+     * The number of crew members to be killed as punishment.
+     */
+
+
     @JsonProperty("Punishment2")
     private int PunishmentHumans;
+    /**
+     * The amount of cargo to be lost as punishment.
+     */
+
+
     @JsonProperty("Punishment3")
     private int PunishmentCargo;
+
+    /**
+     * List of shot parameters for combat punishment.
+     * Pairs of values: direction and size for each shot.
+     */
+
     @JsonProperty("Punishment4")
     private ArrayList<Integer> PunishmentShots;
+
+    /**
+     * The player currently being evaluated in the challenge phase.
+     */
+
     private  Player currentPlayer;
+
+    /**
+     * The player with the worst performance who will face punishment.
+     */
+
     private Player Worst;
+
+    /**
+     * The minimum value recorded during the current challenge.
+     */
+
     private double Minimum;
+
+    /**
+     * Index tracking which player is currently being evaluated.
+     */
+
     private int PlayerOrder;
+
+    /**
+     * Index tracking which challenge is currently active.
+     */
+
     private int ChallengeOrder;
-    private int done;
+
+    /**
+     * Index tracking the current shot in the punishment sequence.
+     */
+
     private int ShotsOrder;
+
+    /**
+     * The line number for the current shot.
+     */
+
     private int ShotsLine;
+
+    /**
+     * Coordinates of the last hit during combat.
+     */
+
     private IntegerPair hit;
+
+    /**
+     * Array of dice roll results determining shot trajectories.
+     */
+
     private int[] lines;
+
+    /**
+     * The current power value being evaluated.
+     */
+
     private double currentpower;
+
+    /**
+     * The current movement value being evaluated.
+     */
+
     private int currentmovement;
+
+    /**
+     * The amount of energy required for the current operation.
+     */
+
+
     private int energyUsage;
+
+    /**
+     * Message string for player notifications.
+     */
+
     private String message;
+
+    /**
+     * Flag indicating whether the current operation is a punishment.
+     */
+
+
     boolean isaPunishment;
+
+    /**
+     * Temporary storage for punishment values during processing.
+     */
+
+
     int tmpPunishment;
+
+    /**
+     * List of players who have lost the game during this warzone.
+     */
+
     private ArrayList<Player> losers;
 
+    /**
+     * Sends a log event to all players indicating the start of a Combat Zone.
+     * This method notifies all players that a warzone card has been activated.
+     */
 
     @Override
     public void sendTypeLog(){
@@ -82,7 +204,20 @@ public class Warzone extends Card{
 
 
 
-    /// caso base è che non attiva nulla, e per le punizioni prendi le prime cose che trovi e non si difende
+    /**
+     * Constructs a new Warzone card with specified parameters.
+     *
+     * @param level The difficulty level of the card
+     * @param time The time cost associated with this card
+     * @param board The game board this card operates on
+     * @param RequirementOrder Array defining the order of challenges (1=attack, 2=speed, 3=crew)
+     * @param PunishmentOrder Array defining the order of punishments (1=time, 2=crew, 3=cargo, 4=shots)
+     * @param Punishment1 Amount of time/movement to lose
+     * @param Punishment2 Number of crew members to kill
+     * @param Punishment3 Amount of cargo to lose
+     * @param Punishment4 List of shot parameters (direction and size pairs)
+     */
+
     public Warzone(int level, int time, GameBoard board, int RequirementOrder[], int PunishmentOrder[], int Punishment1, int Punishment2, int Punishment3, ArrayList<Integer> Punishment4) {
         super(level, time, board);
         RequirementsType=RequirementOrder;
@@ -95,7 +230,6 @@ public class Warzone extends Card{
         this.PlayerOrder = 0;
         this.ChallengeOrder = 0;
         this.currentPlayer = null;
-        this.done = 0;
         this.Worst = null;
         this.Minimum = 10000000;
         this.ShotsOrder = 0;
@@ -112,6 +246,13 @@ public class Warzone extends Card{
     }
 
 
+    /**
+     * Activates the main effect of the Warzone card.
+     * Initializes the challenge sequence and sets up players for competition.
+     * If only one player remains, the card finishes immediately.
+     *
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
 
     @Override
     public void CardEffect() throws InterruptedException {
@@ -144,6 +285,14 @@ public class Warzone extends Card{
 
         this.updateStates();
     }
+
+    /**
+     * Updates the state machine managing the warzone progression.
+     * Handles the transition between challenge phases and punishment phases.
+     * Manages player turns and determines when punishments should be applied.
+     *
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
 
 
     @Override
@@ -274,10 +423,12 @@ public class Warzone extends Card{
         }
     }
 
-//    @Override
-//    public  void  ActivateCard() {
-//        currentPlayer.getInputHandler().action();
-//    }
+
+    /**
+     * Finalizes the warzone card execution.
+     * Resets all player states to base state and handles any players who lost during the warzone.
+     * Marks the card as finished.
+     */
 
     @Override
     public void finishCard() {
@@ -293,27 +444,18 @@ public class Warzone extends Card{
         System.out.println("card finished");
         this.setFinished(true);
     }
-//
-//    @Override
-//    public void continueCard(ArrayList<IntegerPair> coordinates) {
-//        if (RequirementsType[ChallengeOrder]==1){
-//            checkPower(coordinates);
-//        }
-//        else {
-//            checkMovement(coordinates);
-//        }
-//    }
 
 
+    /**
+     * Processes a player's attack power submission for the challenge.
+     * Evaluates the power value and energy consumption, then determines if this is the worst performance.
+     *
+     * @param power The attack power value provided by the player
+     * @param numofDouble The number of energy cells that need to be consumed
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
 
 
-
-
-    //controlli su chi è il peggiore
-
-
-
-    /// fornisce la potenza dei cannoni
     @Override
     public void checkPower(double power, int numofDouble) throws InterruptedException {
 //            double movement= currentPlayer.getMyPlance().getPower(coordinates);
@@ -332,7 +474,15 @@ public class Warzone extends Card{
 
 
 
-    /// da la potenza motrice
+    /**
+     * Processes a player's movement/speed submission for the challenge.
+     * Evaluates the movement value and energy consumption, then determines if this is the worst performance.
+     *
+     * @param movement The movement/speed value provided by the player
+     * @param numofDouble The number of energy cells that need to be consumed
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
+
     @Override
     public void checkMovement(int movement, int numofDouble) throws InterruptedException {
         System.out.println("start speed order "+PlayerOrder);
@@ -347,16 +497,17 @@ public class Warzone extends Card{
             this.currentPlayer.setState(new ConsumingEnergy());
         }
 
-//
-//        if(movement<Minimum){
-//            this.Worst=currentPlayer;
-//            this.Minimum=movement;
-//        }
-//        this.currentPlayer.setState(new Waiting());
-//        this.updateSates();
 
     }
 
+
+    /**
+     * Processes energy consumption for challenge requirements or punishments.
+     * Validates the energy cell coordinates and consumes energy from the specified locations.
+     *
+     * @param coordinates List of coordinates where energy should be consumed
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
 
     @Override
     public void consumeEnergy(ArrayList<IntegerPair> coordinates) throws InterruptedException {
@@ -422,6 +573,14 @@ public class Warzone extends Card{
         }
     }
 
+    /**
+     * Processes energy consumption specifically for punishment scenarios.
+     * This is a separate method for handling energy consumption during cargo loss punishment.
+     *
+     * @param coordinates List of coordinates where energy should be consumed as punishment
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
+
 
     public void consumeEnergy2(ArrayList<IntegerPair> coordinates) throws InterruptedException {
 
@@ -448,6 +607,14 @@ public class Warzone extends Card{
 
     }
 
+    /**
+     * Evaluates and records the current player's attack strength.
+     * Compares the strength against the current minimum and updates the worst performer if necessary.
+     * Sends appropriate notifications to all players about the results.
+     *
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
+
     public void checkStrength() throws InterruptedException {
         System.out.println("checking strength of "+currentPlayer.GetID()+ " strength is "+this.currentpower);
         if(this.currentpower<Minimum){
@@ -470,6 +637,14 @@ public class Warzone extends Card{
         message= message+currentPlayer.GetID()+"has chosen strength "+this.currentpower +"\n";
         this.updateStates();
     }
+
+    /**
+     * Evaluates and records the current player's movement speed.
+     * Compares the speed against the current minimum and updates the worst performer if necessary.
+     * Sends appropriate notifications to all players about the results.
+     *
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
 
     public void checkSpeed() throws InterruptedException {
         System.out.println("checking speed of "+currentPlayer.GetID()+" speed is: "+this.currentmovement);
@@ -494,7 +669,13 @@ public class Warzone extends Card{
         this.updateStates();
     }
 
-
+    /**
+     * Evaluates all players' crew count automatically.
+     * Determines which player has the fewest crew members and marks them as the worst performer.
+     * This challenge doesn't require player input as crew count is automatically calculated.
+     *
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
 
     public void checkPeople() throws InterruptedException {
         int Order=0;
@@ -515,11 +696,6 @@ public class Warzone extends Card{
             int totHumans = CurrentPlanche.getNumHumans();
 
 
-//            for (int j = 0; i < HousingCoords.size(); j++) {
-//                //somma per vedere il tot umani
-//                totHumans += TileBoard[HousingCoords.get(j).getFirst()][HousingCoords.get(j).getSecond()].getComponent().getAbility();
-//            }
-
 
             if(totHumans<Minimum){
                 Worst=PlayerList.get(i);
@@ -532,8 +708,8 @@ public class Warzone extends Card{
             if(p.GetID()== Worst.GetID()){
                 this.sendRandomEffect(p.GetID(),new LogEvent("You were the worst with "+this.Minimum+" people",-1,-1,-1,-1));
             }
-            else {
-                this.sendRandomEffect(p.GetID(), new LogEvent(currentPlayer.GetID() + " was the worst with " + this.Minimum + " people", -1, -1, -1, -1));
+            else{
+            this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" was the worst with "+this.Minimum+" people",-1,-1,-1,-1));
             }
         }
 
@@ -542,6 +718,12 @@ public class Warzone extends Card{
     }
 
 
+    /**
+     * Applies the time/movement loss punishment to the worst performing player.
+     * Moves the player backward on the game track by the specified punishment amount.
+     *
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
 
     public void loseTime() throws InterruptedException {
         this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+" is the worst and loses "+this.PunishmentMovement+" time",-1,-1,-1,-1));
@@ -554,24 +736,15 @@ public class Warzone extends Card{
         return;
     }
 
-
-    public void loseCargo() {
-//
-//
-//        for(int i=0;i<PunishmentCargo;i++){
-//            int index=Worst.getGoodsIndex();
-//            IntegerPair coord=Worst.getGoodsCoordinates();
-//
-//            Worst.getMyPlance().removeGood(coord,index);
-//        }
-    }
-
-
+    /**
+     * Legacy method for cargo loss punishment (currently unused).
+     * This method was likely replaced by the more comprehensive loseCargo method.
+     */
 
     @Override
     public void killHumans(ArrayList<IntegerPair> coordinates) throws InterruptedException {
 
-        System.out.println("killing "+PunishmentHumans+" humans of "+Worst.GetID());
+        System.out.println("killing " + PunishmentHumans+" humans of "+Worst.GetID());
         /// worst e non current
 
 
@@ -602,7 +775,13 @@ public class Warzone extends Card{
         this.updateStates();
     }
 
-
+    /**
+     * Continues the warzone card execution, specifically handling the shot punishment phase.
+     * Processes each shot in the punishment sequence, determining hit locations and damage.
+     * Handles both small shots (defendable) and large shots (automatic destruction).
+     *
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
 
     @Override
     public void continueCard() throws InterruptedException {
@@ -805,6 +984,19 @@ public class Warzone extends Card{
     }
 
 
+    /**
+     * Defends against a small shot attack during the punishment phase.
+     * The player can choose to use energy to activate a shield or take damage.
+     * If energy is provided, validates that the shield defends the correct side and consumes energy.
+     * If no energy is provided, the hit location is destroyed.
+     *
+     * @param energy The coordinates of the energy cell to use for defense, or null to take damage
+     * @param player The player defending against the attack
+     * @throws InterruptedException if the thread is interrupted during execution
+     * @throws InvalidDefenceEceptiopn if the shield doesn't defend the correct side
+     * @throws ImpossibleBoardChangeException if there's no energy available at the specified location
+     */
+
     @Override
     public void DefendFromSmall(IntegerPair energy, Player player) throws InterruptedException {
         PlayerBoard currentBoard =this.Worst.getmyPlayerBoard();
@@ -844,13 +1036,28 @@ public class Warzone extends Card{
     }
 
 
+    /**
+     * Continues the warzone card execution after handling destruction or other interruptions.
+     * This method resumes the shot punishment sequence where it left off.
+     *
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
 
     @Override
     public void keepGoing() throws InterruptedException {
         continueCard();
     }
 
-
+    /**
+     * Handles the cargo loss punishment by forcing the player to give up their most valuable goods.
+     * The player must select cargo from storage compartments in order of highest value first.
+     * If no cargo remains, energy is consumed instead as an alternative punishment.
+     *
+     * @param coord The coordinates of the storage compartment containing the cargo to lose
+     * @param index The index of the specific cargo item within the storage compartment
+     * @throws InterruptedException if the thread is interrupted during execution
+     * @throws InvalidInput if the coordinates don't contain a storage or the index is invalid
+     */
 
     @Override
     public void loseCargo(IntegerPair coord,int index) throws InterruptedException {
@@ -924,40 +1131,131 @@ public class Warzone extends Card{
 
 
 
+    /**
+     * Default constructor required for JSON deserialization.
+     * Initializes a Warzone object with default values.
+     */
 
-    //json required
     public Warzone() {}
+
+    /**
+     * Gets the array defining the order of requirement checks for challenges.
+     *
+     * @return Array where 1=cannons/attack, 2=movement/speed, 3=humans/crew
+     */
+
     public int[] getRequirementsType() {
         return RequirementsType;
     }
+
+    /**
+     * Sets the requirements type for challenges.
+     * This method creates a single-element array from the provided value.
+     *
+     * @param requirementsType The requirement type (1=attack, 2=speed, 3=crew)
+     */
+
     public void setRequirementsType(int requirementsType) {RequirementsType = new int[]{requirementsType};}
+
+    /**
+     * Gets the array defining the order of punishment types to be applied.
+     *
+     * @return Array where 1=movement penalty, 2=kill humans, 3=lose cargo, 4=take shots
+     */
+
     public int[] getPunishmentType() {
         return PunishmentType;
     }
+
+    /**
+     * Sets the punishment type order.
+     * This method creates a single-element array from the provided value.
+     *
+     * @param punishmentType The punishment type (1=time, 2=crew, 3=cargo, 4=shots)
+     */
+
     public void setPunishmentType(int punishmentType) {
         PunishmentType = new int[]{punishmentType};
     }
+
+    /**
+     * Gets the amount of time/movement to be lost as punishment.
+     *
+     * @return The movement penalty value
+     */
+
     public int getPunishmentMovement() {
         return PunishmentMovement;
     }
+
+    /**
+     * Sets the movement penalty for time-based punishment.
+     *
+     * @param punishmentMovement The amount of time/movement to lose
+     */
+
     public void setPunishmentMovement(int punishmentMovement) {
         PunishmentMovement = punishmentMovement;
     }
+
+    /**
+     * Gets the number of crew members to be killed as punishment.
+     *
+     * @return The number of humans to kill
+     */
+
     public int getPunishmentHumans() {
         return PunishmentHumans;
     }
+
+    /**
+     * Sets the crew killing penalty.
+     *
+     * @param punishmentHumans The number of crew members to kill
+     */
+
+
     public void setPunishmentHumans(int punishmentHumans) {
         PunishmentHumans = punishmentHumans;
     }
+
+    /**
+     * Gets the amount of cargo to be lost as punishment.
+     *
+     * @return The cargo loss penalty value
+     */
+
+
     public int getPunishmentCargo() {
         return PunishmentCargo;
     }
+
+    /**
+     * Sets the cargo loss penalty.
+     *
+     * @param punishmentCargo The amount of cargo to lose
+     */
+
     public void setPunishmentCargo(int punishmentCargo) {
         PunishmentCargo = punishmentCargo;
     }
+
+    /**
+     * Gets the list of shot parameters for combat punishment.
+     * Each pair of values represents direction and size for each shot.
+     *
+     * @return ArrayList containing shot parameters (direction, size pairs)
+     */
+
     public ArrayList<Integer> getPunishmentShots() {
         return PunishmentShots;
     }
+
+    /**
+     * Sets the shot punishment parameters.
+     *
+     * @param punishmentShots ArrayList of shot parameters where each pair represents (direction, size)
+     */
     public void setPunishmentShots(ArrayList<Integer> punishmentShots) {
         PunishmentShots = punishmentShots;
     }
