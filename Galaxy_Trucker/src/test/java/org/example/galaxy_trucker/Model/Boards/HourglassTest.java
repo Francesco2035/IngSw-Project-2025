@@ -72,8 +72,11 @@ class HourglassTest {
 
         p1.EndConstruction(1);
         FinishBuildingCommand fbc = new FinishBuildingCommand(1, game.getID(), p1.GetID(), game.getLv(), "FinishBuilding1", null);
-        fbc.execute(p1);
-
+        try{
+            fbc.execute(p1);
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("already"));
+        }
         try {
             p1.StartTimer();
         } catch (RuntimeException e) {

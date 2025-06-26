@@ -132,6 +132,16 @@ public class SolarSystem extends Card {
             } else {
                 this.planets.get(planet).setOccupied(this.currentPlayer);
                 message=message+currentPlayer.GetID()+"has chosen planet number "+planet+"\n";
+
+                ArrayList<Player> pMsg = this.getBoard().getPlayers();
+                for(Player p : pMsg){
+                    if (p.GetID() == currentPlayer.GetID()){
+                        this.sendRandomEffect(p.GetID(),new LogEvent("you have chosen planet number"+planet,-1,-1,-1,-1));
+                    }
+                    else {
+                        this.sendRandomEffect(p.GetID(), new LogEvent(currentPlayer.GetID() + "has chosen planet number " + planet, -1, -1, -1, -1));
+                    }
+                }
                 this.updateStates();
             }
         }

@@ -24,7 +24,7 @@ public class ChoosePositionController extends Controller{
      * @param gameId       The unique identifier of the game.
      * @param disconnected A flag indicating whether the player is currently disconnected.
      */
-    public ChoosePositionController(Player player, String gameId, boolean disconnected) { //TODO test
+    public ChoosePositionController(Player player, String gameId, boolean disconnected) {
         this.curPlayer = player;
         this.gameId = gameId;
     }
@@ -40,7 +40,7 @@ public class ChoosePositionController extends Controller{
      * @param gc The game controller that handles the game state and flow.
      */
     @Override
-    public synchronized void action(Command command, GameController gc) { //TODO test //  devo overridare anche qui ok
+    public synchronized void action(Command command, GameController gc) {  //  devo overridare anche qui ok
 
         System.out.println("ChoosePositionController action");
 
@@ -74,7 +74,7 @@ public class ChoosePositionController extends Controller{
      * @param gc the game controller instance that manages the game's flow and state
      */
     @Override
-    public  void  DefaultAction(GameController gc) { //TODO test
+    public  void  DefaultAction(GameController gc) {
         PlayerState state = curPlayer.getPlayerState();
         Command cmd =state.createDefaultCommand(gameId,curPlayer);
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
@@ -105,7 +105,7 @@ public class ChoosePositionController extends Controller{
      * @param gc the GameController object responsible for managing game logic
      */
     @Override
-    public void nextState(GameController gc) { //TODO test
+    public void nextState(GameController gc) {
         curPlayer.setState(new AddCrewState());
         PostPrepController newController = new PostPrepController(curPlayer,gameId,getDisconnected());
         newController.setExceptionListener(exceptionListener);

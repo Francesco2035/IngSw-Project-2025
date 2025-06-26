@@ -16,9 +16,7 @@ public class QuitEvent implements Event {
      * by an EventVisitor and may contain additional behaviors or actions
      * defined in its class implementation.
      */
-    public QuitEvent() {
-
-    }
+    public QuitEvent() {}
 
     /**
      * Accepts a visitor for processing this {@code QuitEvent}.

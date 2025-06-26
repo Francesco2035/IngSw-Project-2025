@@ -94,7 +94,7 @@ public class PrepController extends Controller implements ControllerHourGlassLis
             newController.setExceptionListener(exceptionListener);
             gc.setControllerMap(curPlayer,newController);
         }
-        else{ //TODO test
+        else{  
             //se la nave non è valida tolgo il razzo dalla gameboard, va ancora sistemato il fatto del cambio di stato/comandi chiamabili
             synchronized (curPlayer.getCommonBoard()) {
                 curPlayer.getCommonBoard().removePlayerAndShift(curPlayer);
@@ -121,7 +121,7 @@ public class PrepController extends Controller implements ControllerHourGlassLis
      * - For each player who is not ready (checked via the `GetReady` method),
      *   transitions their state to `ChoosePosition` using the*/
     @Override
-    public void onFinish() { //TODO test
+    public void onFinish() {  
 
         System.out.println("Hourglass finish ");
         //settiamo player a choosePosition
