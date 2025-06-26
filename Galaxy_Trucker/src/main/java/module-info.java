@@ -1,6 +1,5 @@
     module org.example.galaxy_trucker {
         requires javafx.controls;
-        requires javafx.media;
         requires javafx.fxml;
         requires org.controlsfx.controls;
         requires java.compiler;
@@ -16,9 +15,9 @@
         requires jdk.compiler;
 
 
-        opens org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents to com.fasterxml.jackson.databind;
-        opens org.example.galaxy_trucker.Controller.Messages to com.fasterxml.jackson.databind;
-        opens org.example.galaxy_trucker.Controller.Messages.TileSets to com.fasterxml.jackson.databind;
+        opens org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents to com.fasterxml.jackson.databind;
+        opens org.example.galaxy_trucker.ClientServer.Messages to com.fasterxml.jackson.databind;
+        opens org.example.galaxy_trucker.ClientServer.Messages.TileSets to com.fasterxml.jackson.databind;
 
         opens org.example.galaxy_trucker to javafx.fxml, com.fasterxml.jackson.databind;
 
@@ -36,6 +35,10 @@
         opens org.example.galaxy_trucker.Model.Goods to com.fasterxml.jackson.databind, javafx.fxml;
         exports org.example.galaxy_trucker.Model.Connectors;
         opens org.example.galaxy_trucker.Model.Connectors to com.fasterxml.jackson.databind;
+        exports org.example.galaxy_trucker.ClientServer.Messages;
+        exports org.example.galaxy_trucker.Controller.Listeners;
+        exports org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents;
+        exports org.example.galaxy_trucker.ClientServer.Messages.TileSets;
 //        exports org.example.galaxy_trucker.Model.Connectors to com.fasterxml.jackson.databind, javafx.fxml;
         exports org.example.galaxy_trucker.Model.Boards.Actions;
         opens org.example.galaxy_trucker.Model.Boards.Actions to com.fasterxml.jackson.databind, javafx.fxml;

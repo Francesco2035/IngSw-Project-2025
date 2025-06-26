@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Controller.Listeners.ExceptionListener;
-import org.example.galaxy_trucker.Controller.Messages.ExceptionEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.ExceptionEvent;
 import org.example.galaxy_trucker.Exceptions.ImpossibleActionException;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Player;

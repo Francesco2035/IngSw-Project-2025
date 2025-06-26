@@ -3,9 +3,8 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
-import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.ScoreboardEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.GameBoardEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.ScoreboardEvent;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;

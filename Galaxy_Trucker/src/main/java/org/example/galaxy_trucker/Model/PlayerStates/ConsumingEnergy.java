@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.ConsumeEnergyCommand;
-import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Cards.Card;

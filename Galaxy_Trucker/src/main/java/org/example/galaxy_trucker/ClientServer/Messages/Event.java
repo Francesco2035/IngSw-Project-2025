@@ -1,0 +1,52 @@
+package org.example.galaxy_trucker.ClientServer.Messages;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.example.galaxy_trucker.ClientServer.Messages.TileSets.*;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.PlayerTileEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RewardsEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.TileEvent;
+//import org.example.galaxy_trucker.Messages.TileSets.*;
+
+import java.io.Serializable;
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = CardEvent.class, name = "CardEvent"),
+        @JsonSubTypes.Type(value = TileEvent.class, name = "TileEvent"),
+        @JsonSubTypes.Type(value = VoidEvent.class, name = "VoidEvent"),
+        @JsonSubTypes.Type(value = HandEvent.class, name = "HandEvent"),
+        @JsonSubTypes.Type(value = CoveredTileSetEvent.class, name = "CoveredTileSetEvent"),
+        @JsonSubTypes.Type(value = UncoverdTileSetEvent.class, name = "UncoveredTileSetEvent"),
+        @JsonSubTypes.Type(value = DeckEvent.class, name = "DeckEvent"),
+        @JsonSubTypes.Type(value = LobbyEvent.class, name = "LobbyEvent"),
+        @JsonSubTypes.Type(value = GameLobbyEvent.class, name = "GameLobbyEvent"),
+        @JsonSubTypes.Type(value = PhaseEvent.class, name = "PhaseEvent"),
+        @JsonSubTypes.Type(value = RewardsEvent.class, name = "RewardsEvent"),
+        @JsonSubTypes.Type(value = GameBoardEvent.class, name = "GameBoardEvent" ),
+        @JsonSubTypes.Type(value = ExceptionEvent.class, name = "ExceptionEvent" ),
+        @JsonSubTypes.Type(value = ConnectionRefusedEvent.class, name = "ConnectionRefusedEvent" ),
+        @JsonSubTypes.Type(value = PBInfoEvent.class, name = "PBInfoEvent"),
+        @JsonSubTypes.Type(value = QuitEvent.class, name = "QuitEvent"),
+        @JsonSubTypes.Type(value = HourglassEvent.class, name = "HourglassEvent"),
+        @JsonSubTypes.Type(value = FinishGameEvent.class, name = "FinishGameEvent"),
+        @JsonSubTypes.Type(value = LogEvent.class, name = "LogEvent"),
+        @JsonSubTypes.Type(value = PlayerTileEvent.class, name = "PlayerTileEvent"),
+        @JsonSubTypes.Type(value = ReconnectedEvent.class, name = "ReconnectedEvent"),
+        @JsonSubTypes.Type(value = TokenEvent.class, name = "TokenEvent"),
+        @JsonSubTypes.Type(value = ScoreboardEvent.class, name = "ScoreboardEvent")
+
+})
+
+public interface Event extends Serializable {
+
+
+    public void accept(EventVisitor visitor);
+
+
+
+    public String message();
+}

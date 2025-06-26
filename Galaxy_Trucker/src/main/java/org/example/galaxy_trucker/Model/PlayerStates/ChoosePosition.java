@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Model.PlayerStates;
 
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Commands.FinishBuildingCommand;
-import org.example.galaxy_trucker.Controller.Messages.PhaseEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PhaseEvent;
 import org.example.galaxy_trucker.Model.Boards.GameBoard;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.View.ClientModel.States.ChoosePositionClient;

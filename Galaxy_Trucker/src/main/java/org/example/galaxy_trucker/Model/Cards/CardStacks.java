@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import org.example.galaxy_trucker.Controller.Listeners.CardListner;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.TileSets.DeckEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.GAGen;
 

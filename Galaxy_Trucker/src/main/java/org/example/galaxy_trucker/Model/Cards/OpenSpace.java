@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model.Cards;
 
-import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Exceptions.WrongNumofEnergyExeption;
 import org.example.galaxy_trucker.Model.Boards.Actions.UseEnergyAction;

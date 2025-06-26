@@ -1,75 +1,259 @@
 package org.example.galaxy_trucker.Model.Boards;
 
-
 import org.example.galaxy_trucker.Controller.Listeners.RewardsListener;
-import org.example.galaxy_trucker.Controller.Messages.PBInfoEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PBInfoEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RewardsEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
 import org.example.galaxy_trucker.Exceptions.*;
-
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Connectors.*;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.Goods.*;
-
-
 import java.util.*;
+
+
+/**
+ * The PlayerBoard class represents a player's spaceship board in the Galaxy Trucker game.
+ * This class manages the grid-based board where players place tiles to build their spaceship,
+ * handles connections between tiles, manages various components (engines, drills, storage, etc.),
+ * tracks damage and shields, and validates the board's structural integrity.
+ *
+ * <p>The board is represented as a 10x10 grid where tiles can be placed according to specific
+ * rules and constraints. The class also handles the ship's attributes like crew, energy,
+ * stored goods, and various alien bonuses.</p>
+ *
+ * <p>Key responsibilities include:</p>
+ * <ul>
+ *   <li>Tile placement and removal management</li>
+ *   <li>Connection validation between adjacent tiles</li>
+ *   <li>Board integrity checking using depth-first search algorithms</li>
+ *   <li>Component management (engines, drills, shields, etc.)</li>
+ *   <li>Damage tracking and handling</li>
+ *   <li>Goods storage and retrieval</li>
+ *   <li>Event notification to listeners</li>
+ * </ul>
+ *
+ * @author Francesco Rausa
+ * @version 1.0
+ * @since 1.0
+ */
 
 public class PlayerBoard {
 
+    /**
+     * Listener for player board events and changes.
+     * Receives notifications when the board state changes.
+     */
     PlayerBoardListener listener;
+
+    /**
+     * Listener for rewards-related events.
+     * Receives notifications when the rewards list is modified.
+     */
     private RewardsListener rewardsListener;
 
+    /**
+     * 2D array representing the game board with placed tiles.
+     * Each position can contain a Tile object or be null if empty.
+     * The board dimensions are typically 10x10.
+     */
     private Tile[][] PlayerBoard;
+
+    /**
+     * List of goods currently stored in the buffer area.
+     * These goods are available for use but not yet placed or consumed.
+     */
     private ArrayList<Goods> BufferGoods;
 
+    /**
+     * Map storing goods organized by their value/type.
+     * Key: Integer representing the goods value or category
+     * Value: List of coordinate pairs where these goods are located
+     */
     private HashMap<Integer, ArrayList<IntegerPair>> storedGoods;
+
+    /**
+     * List of tiles currently in the player's buffer.
+     * These tiles are available for placement on the board.
+     */
     private ArrayList<Tile> Buffer;
+
+    /**
+     * List of rewards that the player has earned.
+     * These can be goods, bonuses, or other beneficial items.
+     */
     private ArrayList<Goods> Rewards;
 
-
+    /**
+     * Flag indicating whether the player board is in a broken state.
+     * A broken board typically occurs when ship sections become disconnected.
+     */
     private boolean broken;
 
+    /**
+     * 2D array tracking valid positions on the player board.
+     * Values: 1 = valid/occupied position, 0 = invalid/empty position
+     * Used for pathfinding and connectivity checks.
+     */
     private int[][] ValidPlayerBoard;
-    private int[][] toRemovePB;
 
+    /**
+     * 2D array marking tiles that should be removed from the player board.
+     * Used to track damaged or destroyed tiles that need to be cleared.
+     */
+    private final int[][] toRemovePB;
+
+    /**
+     * Current level of the player board.
+     * May affect available features, difficulty, or board size.
+     */
     private int lv;
 
+    /**
+     * Flag indicating whether the current board configuration is valid.
+     * Invalid boards may have rule violations or connectivity issues.
+     */
     private boolean valid;
+
+    /**
+     * Current amount of credits/currency the player possesses.
+     * Used for purchasing items, tiles, or other game elements.
+     */
     private int credits;
 
-
+    /**
+     * List of housing units that are properly connected to the ship's systems.
+     * Only connected housing units contribute to crew capacity and bonuses.
+     */
     private ArrayList<HousingUnit> connectedHousingUnits;
 
-
-
-
+    /**
+     * Complete list of all housing units on the player board.
+     * Includes both connected and disconnected units.
+     */
     private ArrayList<HousingUnit> HousingUnits;
+
+    /**
+     * Map of ship sections organized by section ID.
+     * Key: Integer section identifier
+     * Value: List of coordinate pairs belonging to that section
+     * Used for tracking ship integrity after attacks.
+     */
     HashMap<Integer, ArrayList<IntegerPair>> shipSection;
 
+    /**
+     * List of all hot water heater components on the player board.
+     * These components typically provide crew comfort bonuses.
+     */
     private ArrayList<HotWaterHeater> HotWaterHeaters;
+
+    /**
+     * List of all plasma drill components on the player board.
+     * These components are used for mining and resource extraction.
+     */
     private ArrayList<PlasmaDrill> PlasmaDrills;
+
+    /**
+     * List of all alien addon components on the player board.
+     * These special components provide unique alien-related bonuses.
+     */
     private ArrayList<AlienAddons> AlienAddons;
+
+    /**
+     * List of all storage components on the player board.
+     * These components increase cargo capacity for goods.
+     */
     private ArrayList<Storage> Storages;
+
+    /**
+     * List of all shield generator components on the player board.
+     * These components provide defensive capabilities against attacks.
+     */
     private ArrayList<ShieldGenerator> ShieldGenerators;
+
+    /**
+     * List of all power center components on the player board.
+     * These components generate energy for ship systems.
+     */
     private ArrayList<PowerCenter> PowerCenters;
 
+    /**
+     * Current amount of damage sustained by the player board.
+     * Higher damage values negatively impact final scoring.
+     */
     private int damage;
+
+    /**
+     * Number of exposed connectors on the player board.
+     * Exposed connectors are connection points not linked to adjacent tiles.
+     * Higher numbers may indicate incomplete or damaged sections.
+     */
     private int exposedConnectors;
+
+    /**
+     * Array representing shield strength in different areas or types.
+     * Each element corresponds to a specific shield system or zone.
+     */
     private int[] shield;
+
+    /**
+     * Current number of human crew members on the ship.
+     * Initialized to 0, increased by housing units and crew additions.
+     */
     private int numHumans = 0;
+
+    /**
+     * Current engine power rating of the ship.
+     * Initialized to 0, increased by engine components.
+     * Brown alien provides +2 bonus when active.
+     */
     private int EnginePower = 0;
+
+    /**
+     * Current plasma drill power rating of the ship.
+     * Initialized to 0.0, increased by plasma drill components.
+     * Purple alien provides +2 bonus when active.
+     */
     private double PlasmaDrillsPower = 0;
+
+    /**
+     * Current energy level available to the ship's systems.
+     * Initialized to 0, generated by power centers and consumed by various actions.
+     */
     private int Energy = 0;
+
+    /**
+     * Flag indicating whether a purple alien crew member is present.
+     * Purple aliens provide bonuses to plasma drill power and crew count.
+     */
     private boolean purpleAlien;
+
+    /**
+     * Flag indicating whether a brown alien crew member is present.
+     * Brown aliens provide bonuses to engine power and crew count.
+     */
     private boolean brownAlien;
+
+    /**
+     * Total calculated value of the player board.
+     * Used for scoring and evaluation purposes.
+     * Initialized to 0 and updated based on components and achievements.
+     */
     private int totalValue = 0;
 
 
 
+    /**
+     * Constructs a new PlayerBoard with the specified level configuration.
+     * Initializes the board grid, validity matrix, and all component lists.
+     * Sets up the valid placement areas based on the level (different ship sizes).
+     *
+     * @param lv the level of the player board (affects the valid placement area)
+     *           Level 2 has a different valid area configuration than other levels
+     */
     public PlayerBoard(int lv) {
         this.lv = lv;
         this.broken = false;
@@ -81,8 +265,6 @@ public class PlayerBoard {
 
 
         this.Rewards = new ArrayList<>();
-
-
         this.valid = true;
 
         this.purpleAlien = false;
@@ -159,20 +341,34 @@ public class PlayerBoard {
     }
 
 
+    /**
+     * Adds the specified value from the cargo to the total value of the player board and updates the info display.
+     *
+     * @param i the value to add to the total value
+     */
     public void setTotalValue(int i){
         this.totalValue += i;
         updateInfo();
     }
 
+
+    /**
+     * Retrieves the current total value of the player board.
+     *
+     * @return the total value accumulated on this player board
+     */
     public int getTotalValue(){
         return this.totalValue;
     }
 
+
     /**
-     * Method insertBuffer inserts the tile passed by the player into the buffer.
+     * Inserts a tile into the buffer for later placement on the board.
+     * The buffer can hold a maximum of 2 tiles.
      *
-     * @param t of type Tile .
-     * @throws IllegalStateException if the buffer's size is = 2
+     * @param t the tile to be inserted into the buffer
+     * @throws IllegalStateException if the buffer is already full (contains 2 tiles)
+     * @throws InvalidInput if the tile is null (hand is empty)
      */
     public void insertBuffer(Tile t) throws IllegalStateException{
         if (Buffer.size() >= 2) {
@@ -184,6 +380,13 @@ public class PlayerBoard {
         Buffer.add(t);
     }
 
+    /**
+     * Retrieves and removes a tile from the buffer at the specified index.
+     *
+     * @param i the index of the tile to retrieve from the buffer
+     * @return the tile at the specified index
+     * @throws InvalidInput if the index is out of bounds or the buffer is empty
+     */
     public Tile getTileFromBuffer(int i) {
         if (i > Buffer.size()) {
             throw new InvalidInput("This position in the Buffer does not exist");
@@ -197,48 +400,84 @@ public class PlayerBoard {
     }
 
 
+    /**
+     * Sets the rewards listener that will be notified when rewards change.
+     *
+     * @param listener the RewardsListener to be set
+     */
     public void setRewardsListener(RewardsListener listener){
-        //System.out.println("Setto listner "+ listener);
         this.rewardsListener = listener;
     }
 
 
-// setter and getters for lists
+    /**
+     * Sets the buffer goods list.
+     *
+     * @param bufferGoods the ArrayList of Goods to set as buffer goods
+     */
     public void setBufferGoods(ArrayList<Goods> bufferGoods) {
         BufferGoods = bufferGoods;
     }
 
-
+    /**
+     * Sets the housing units list.
+     *
+     * @param housingUnits the ArrayList of HousingUnit to set
+     */
     public void setHousingUnits(ArrayList<HousingUnit> housingUnits) {
         HousingUnits = housingUnits;
     }
 
-
+    /**
+     * Sets the hot water heaters list.
+     *
+     * @param hotWaterHeaters the ArrayList of HotWaterHeater to set
+     */
     public void setHotWaterHeaters(ArrayList<HotWaterHeater> hotWaterHeaters) {
         HotWaterHeaters = hotWaterHeaters;
     }
 
-
+    /**
+     * Sets the plasma drills list.
+     *
+     * @param plasmaDrills the ArrayList of PlasmaDrill to set
+     */
     public void setPlasmaDrills(ArrayList<PlasmaDrill> plasmaDrills) {
         PlasmaDrills = plasmaDrills;
     }
 
-
+    /**
+     * Sets the storages list.
+     *
+     * @param storages the ArrayList of Storage to set
+     */
     public void setStorages(ArrayList<Storage> storages) {
         Storages = storages;
     }
 
-
+    /**
+     * Sets the alien addons list.
+     *
+     * @param alienAddons the ArrayList of AlienAddons to set
+     */
     public void setAlienAddons(ArrayList<AlienAddons> alienAddons) {
         AlienAddons = alienAddons;
     }
 
-
+    /**
+     * Sets the shield generators list.
+     *
+     * @param shieldGenerators the ArrayList of ShieldGenerator to set
+     */
     public void setShieldGenerators(ArrayList<ShieldGenerator> shieldGenerators) {
         ShieldGenerators = shieldGenerators;
     }
 
-
+    /**
+     * Sets the power centers list.
+     *
+     * @param powerCenters the ArrayList of PowerCenter to set
+     */
     public void setPowerCenters(ArrayList<PowerCenter> powerCenters) {
         PowerCenters = powerCenters;
     }
@@ -246,9 +485,11 @@ public class PlayerBoard {
 
 
     /**
-     * Method getExposedConnectors retrieves the number of exposed connectors on the player board.
+     * Retrieves the number of exposed connectors on the player board.
+     * Exposed connectors are those that are not connected to adjacent tiles
+     * and can cause damage during meteor storms.
      *
-     * @return the number of exposed connectors.
+     * @return the number of exposed connectors
      */
     public int getExposedConnectors(){
         return exposedConnectors;
@@ -257,7 +498,7 @@ public class PlayerBoard {
 
 
     /**
-     * Method getShield retrieves the shield status of the player board.
+     * Retrieves the shield status of the player board.
      * The shield is represented as an array of size 4, where each index corresponds to a direction:
      * <ul>
      *   <li>Index 0 - Left</li>
@@ -267,7 +508,7 @@ public class PlayerBoard {
      * </ul>
      * A value of 0 indicates no protection, while a non-zero value means the side is protected.
      *
-     * @return an integer array of size 4 representing the shield status in each direction.
+     * @return an integer array of size 4 representing the shield status in each direction
      */
     public int[] getShield(){
         return shield;
@@ -275,9 +516,9 @@ public class PlayerBoard {
 
 
     /**
-     * Method getPlayerBoard retrieves the player's board, which consists of a grid of tiles.
+     * Retrieves the player's board, which consists of a grid of tiles.
      *
-     * @return a 2D array of Tile objects representing the player's board.
+     * @return a 2D array of Tile objects representing the player's board
      */
     public Tile[][] getPlayerBoard(){
         return this.PlayerBoard;
@@ -285,10 +526,15 @@ public class PlayerBoard {
 
 
     /**
-     * Method getValidPlayerBoard retrieves the validity matrix of the player board.
-     * Each cell indicates whether the position is valid (1), invalid (-1), or empty (0).
+     * Retrieves the validity matrix of the player board.
+     * Each cell indicates whether the position is valid for placement:
+     * <ul>
+     *   <li>-1: Invalid position (outside ship boundaries)</li>
+     *   <li>0: Valid empty position</li>
+     *   <li>1: Position occupied by a tile</li>
+     * </ul>
      *
-     * @return a 2D array of integers representing the validity of each position.
+     * @return a 2D array of integers representing the validity of each position
      */
     public int[][] getValidPlayerBoard(){
         return this.ValidPlayerBoard;
@@ -298,33 +544,42 @@ public class PlayerBoard {
 
 
     /**
-     * Method getDamage retrieves the current damage value of the player board.
+     * Retrieves the current damage value of the player board.
+     * Damage is accumulated from various sources like meteor impacts,
+     * combat damage, and structural failures.
      *
-     * @return the amount of damage.
+     * @return the amount of damage sustained by the ship
      */
     public int getDamage(){
         return damage;
     }
 
+
+    /**
+     * Retrieves the stored goods organized by their value.
+     * The HashMap maps goods values to lists of positions where those goods are stored.
+     *
+     * @return a HashMap where keys are goods values and values are lists of storage positions
+     */
     public HashMap<Integer, ArrayList<IntegerPair>> getStoredGoods(){
-        System.out.println("getStoredGoods "+ storedGoods.size());
-        for (Integer i : storedGoods.keySet()){
-            System.out.println("there are "+ storedGoods.get(i).size() + " goods of value "+i);
-            for (IntegerPair pair : storedGoods.get(i)){
-                System.out.println("Value "+i+ "| |"+ pair.getFirst() + " " + pair.getSecond());
-            }
-        }
+//        System.out.println("getStoredGoods "+ storedGoods.size());
+//        for (Integer i : storedGoods.keySet()){
+//            //System.out.println("there are "+ storedGoods.get(i).size() + " goods of value "+i);
+//            for (IntegerPair pair : storedGoods.get(i)){
+//                System.out.println("Value "+i+ "| |"+ pair.getFirst() + " " + pair.getSecond());
+//            }
+//        }
         return storedGoods;
     }
 
 
     /**
-     * Method getTile retrieves the tile located at the specified coordinates on the player board.
+     * Retrieves the tile located at the specified coordinates on the player board.
      *
-     * @param x of type int - the x-coordinate of the tile.
-     * @param y of type int - the y-coordinate of the tile.
-     * @return the Tile object at the given coordinates.
-     * @throws InvalidInput If the coordinates are out of bounds or point to an invalid tile.
+     * @param x the x-coordinate of the tile
+     * @param y the y-coordinate of the tile
+     * @return the Tile object at the given coordinates
+     * @throws InvalidInput if the coordinates are out of bounds or point to an invalid tile
      */
     public Tile getTile(int x, int y) throws InvalidInput {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] != 1) {
@@ -335,15 +590,20 @@ public class PlayerBoard {
 
 
 
-
     /**
-     * Method insertTile inserts a tile into the player board at the specified coordinates.
+     * Inserts a tile into the player board at the specified coordinates.
+     * Performs validation checks if the check parameter is true, including:
+     * - Null tile check
+     * - Bounds checking
+     * - Position availability
+     * - Adjacent tile requirement (except for position 6,6)
      *
-     * @param tile of type Tile - the tile to be placed.
-     * @param x of type int - the x-coordinate where the tile should be placed.
-     * @param y of type int - the y-coordinate where the tile should be placed.
-     * @throws NullPointerException If the tile is null.
-     * @throws InvalidInput If the coordinates are out of bounds or if the target position is invalid.
+     * @param tile the tile to be placed
+     * @param x the x-coordinate where the tile should be placed
+     * @param y the y-coordinate where the tile should be placed
+     * @param check whether to perform validation checks
+     * @throws NullPointerException if the tile is null and check is true
+     * @throws InvalidInput if the coordinates are invalid, out of bounds, or position requirements are not met
      */
     public void insertTile(Tile tile, int x, int y, boolean check) throws NullPointerException, InvalidInput {
         if (check){
@@ -356,7 +616,7 @@ public class PlayerBoard {
             }
 
             if (ValidPlayerBoard[x][y] != 0) {
-                throw new InvalidInput(x,y, "Invalid input : invalid position, already occupied or spacevoid");
+                throw new InvalidInput(x,y, "Invalid input : invalid position, already occupied or space void");
 
             }
 
@@ -383,11 +643,13 @@ public class PlayerBoard {
 
 
     /**
-     * Method checkConnection checks whether two connectors can be soldered.
+     * Checks whether two connectors can be legally connected.
+     * Validates both the legal connection type and adjacency requirements.
+     * Sets the board validity to false if an illegal connection is detected.
      *
-     * @param t1 of type Connector .
-     * @param t2 of type Connector .
-     * @return true if the connection is legal, false otherwise.
+     * @param t1 the first connector
+     * @param t2 the second connector
+     * @return true if the connection is valid and adjacent, false otherwise
      */
     public boolean checkConnection(Connectors t1, Connectors t2){
 
@@ -398,6 +660,22 @@ public class PlayerBoard {
         return t1.checkAdjacent(t2);
     }
 
+
+    /**
+     * Checks whether two connectors can be legally connected, with additional tracking
+     * for tiles that should be removed due to invalid connections.
+     * This version is used during board validation to mark problematic tiles in order to create
+     * the default command.
+     *
+     * @param t1 the first connector
+     * @param t2 the second connector
+     * @param x the x-coordinate of the second connector's tile
+     * @param y the y-coordinate of the second connector's tile
+     * @param visited list of already visited positions
+     * @param fromX the x-coordinate of the first connector's tile
+     * @param fromY the y-coordinate of the first connector's tile
+     * @return true if the connection is valid and adjacent, false otherwise
+     */
     public boolean checkConnection(Connectors t1, Connectors t2, int x, int y, ArrayList<IntegerPair> visited, int fromX, int fromY){
 
         if (!t1.checkLegal(t2)){
@@ -414,11 +692,13 @@ public class PlayerBoard {
     }
 
 
+
     /**
-     * Method PathNotVisited checks if there are any tiles that have not been reached by the findPaths method.
+     * Checks if there are any tiles that have not been reached by the pathfinding algorithm.
+     * Marks unreachable tiles for removal in the toRemovePB matrix.
      *
-     * @param visited of type Arraylist<IntegerPair> - path calculated by the findPaths method.
-     * @return returns true if there is at least one unreached tile, false otherwise.
+     * @param visited list of positions that have been visited during pathfinding
+     * @return true if there is at least one unreachable tile, false if all tiles are reachable
      */
     public boolean PathNotVisited(ArrayList<IntegerPair> visited){
         boolean findOne = false;
@@ -438,14 +718,16 @@ public class PlayerBoard {
     }
 
 
+
     /**
-     * Method checkIllegal checks if there is at least one illegal hotWaterHeater or plasmaDrill.
+     * Checks if there are any illegal component placements on the board.
+     * Validates that components like hot water heaters and plasma drills
+     * meet their specific placement requirements.
      *
-     * @param visited of type ArrayList<IntegerPair> - player board saved as if it were a path.
-     * @return boolean true if everything is legal, false otherwise.
+     * @param visited list of positions representing the connected board area
+     * @return true if all components are legally placed, false if illegal placements exist
      */
     public boolean checkIllegal( ArrayList<IntegerPair> visited){
-        System.out.println("controllo illegalità");
         int x;
         int y;
         boolean legal = true;
@@ -454,7 +736,6 @@ public class PlayerBoard {
 
             x = pair.getFirst();
             y = pair.getSecond();
-            System.out.println(x+ " " + y);
 
             if(!PlayerBoard[x][y].controlDirections(this,x,y)){
                 legal = false;
@@ -467,13 +748,14 @@ public class PlayerBoard {
 
 
     /**
-     * Method removeTile removes the selected Tile.
+     * Removes a tile from the player board at the specified coordinates.
+     * The tile is replaced with a SpaceVoid tile and the position is marked as empty.
+     * The main cockpit at position (6,6) cannot be removed.
      *
-     * @param x of type int.
-     * @param y of type int.
-     * @throws InvalidInput if the input from the player is invalid.
+     * @param x the x-coordinate of the tile to remove
+     * @param y the y-coordinate of the tile to remove
+     * @throws InvalidInput if the coordinates are out of bounds, invalid, or point to the main cockpit
      */
-
     public void removeTile(int x, int y) throws InvalidInput {
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || ValidPlayerBoard[x][y] == -1) {
             throw new InvalidInput(x, y, "Invalid input: coordinates out of bounds or invalid tile.");
@@ -493,10 +775,14 @@ public class PlayerBoard {
 
 
     /**
-     * Method checkValidity check if the player board is valid according to the rules of the game : there can be no unreachable pieces
-     * and the constraints on the hotWaterHeaters and plasmaDrills must be respected.
+     * Validates the player board according to game rules.
+     * Checks that:
+     * - All tiles are reachable from the main cockpit
+     * - All connections between tiles are legal
+     * - Component placement constraints are satisfied
+     * - No tiles remain in the buffer (adds damage if any exist)
      *
-     * @return true if the player board is valid, false otherwise.
+     * @return true if the player board is valid, false otherwise
      */
     public boolean checkValidity(){
 
@@ -505,7 +791,6 @@ public class PlayerBoard {
             Buffer.clear();
             updateInfo();
         }
-        //TODO: se non c'è la 6 6 booleano per dire di partire a controllare da una tile a caso
         int r = 6;
         int c = 6;
         valid = true;
@@ -518,7 +803,6 @@ public class PlayerBoard {
         }
 
         if (PathNotVisited(visitedPositions)){
-            System.out.println("percorso non visitato");
             return false;
         }
 
@@ -536,12 +820,13 @@ public class PlayerBoard {
 
 
     /**
-     * Method findPaths finds all paths reachable using the dfs algorithm.
+     * Performs a depth-first search to find all reachable tiles from the starting position.
+     * Validates connections between adjacent tiles during traversal.
+     * Used for board integrity checking.
      *
-     *
-     * @param r of type int - x coordinate.
-     * @param c of type int - y coordinate.
-     * @param visited of type Arraylist<IntegerPair> - keeps track of all the tiles already visited.
+     * @param r the starting x-coordinate
+     * @param c the starting y-coordinate
+     * @param visited list to track visited positions during the search
      */
     public void findPaths(int r, int c, ArrayList<IntegerPair> visited) {
 
@@ -564,7 +849,7 @@ public class PlayerBoard {
 
 
 
-        if (valid && c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0), r, c + 1, visited, r,c)){
+        if (valid && c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1 && checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().getFirst(), r, c + 1, visited, r,c)){
             findPaths(r,c + 1 ,visited);
         }
 
@@ -578,10 +863,12 @@ public class PlayerBoard {
 
 
     /**
-     * Method destroy destroys the designated tile adding a SpaceVoid tile in its place, possibly updating the class attributes.
+     * Destroys a tile at the specified coordinates, replacing it with a SpaceVoid.
+     * Increases damage counter, updates board attributes, validates housing units,
+     * and updates stored goods locations.
      *
-     * @param x of type int - x coordinate.
-     * @param y of type int - y coordinate.
+     * @param x the x-coordinate of the tile to destroy
+     * @param y the y-coordinate of the tile to destroy
      */
     public void destroy(int x, int y) {
 
@@ -596,6 +883,11 @@ public class PlayerBoard {
         updateStoredGoods();
     }
 
+
+    /**
+     * Updates the stored goods locations by removing goods from destroyed tiles.
+     * Removes entries for positions that are no longer valid (ValidPlayerBoard != 1).
+     */
     public void updateStoredGoods(){
 
         for (Integer Goods : storedGoods.keySet()){
@@ -605,12 +897,14 @@ public class PlayerBoard {
     }
 
     /**
-     * Method chosePlayerBoard returns the selected chunk and calculates the actual damage suffered.
+     * Allows the player to choose which ship section to keep after the ship breaks apart.
+     * Searches through available ship sections to find the one containing the specified position.
      *
-     * @param input of type IntegerPair - the chunk selected.
+     * @param input the position (chunk) selected by the player
+     * @return the list of positions representing the chosen ship section
+     * @throws InvalidInput if the selected chunk doesn't exist in any ship section
      */
     public ArrayList<IntegerPair> choosePlayerBoard(IntegerPair input){
-        //questo metodo non ha molto senso
         for (Integer i : this.shipSection.keySet()){
             if (this.shipSection.get(i).contains(input)){
                 ArrayList<IntegerPair> temp = this.shipSection.get(i);
@@ -624,10 +918,11 @@ public class PlayerBoard {
 
 
     /**
-     * Method modifyPlayerBoard modifies the player board according to the chunk chosen by the player at the time of the destruction of the ship. The method
-     * updates the class attributes by calling updateAttributes.
+     * Modifies the player board to keep only the tiles in the specified section.
+     * All other tiles are removed and replaced with SpaceVoids.
+     * Increases damage for each removed tile and updates all board attributes.
      *
-     * @param newPlayerBoard of type ArrayList<IntegerPair> - x coordinate.
+     * @param newPlayerBoard the list of positions representing the section to keep
      */
     public void modifyPlayerBoard(ArrayList<IntegerPair> newPlayerBoard)  {
         for (int x = 0; x <10; x++ ){
@@ -653,11 +948,12 @@ public class PlayerBoard {
 
 
     /**
-     * Method updateAttributes clears all the attributes of the player board and then updates
-     * them starting from the coordinates of a tile by calling the updateBoardAttributes method.
+     * Resets and updates all board attributes starting from the specified coordinates.
+     * Clears exposed connectors and shield values, then recalculates them
+     * by traversing the connected board area.
      *
-     * @param x of type int - x coordinate.
-     * @param y of type int - y coordinate.
+     * @param x the starting x-coordinate for attribute calculation
+     * @param y the starting y-coordinate for attribute calculation
      */
     public void updateAttributes(int x, int y){
         this.exposedConnectors = 0;
@@ -667,13 +963,20 @@ public class PlayerBoard {
 
         ArrayList<IntegerPair> visitedPositions = new ArrayList<>();
         updateBoardAttributes(x,y, visitedPositions);
-        updateGloabalAttributes(visitedPositions);
+        updateGlobalAttributes(visitedPositions);
         updateStoredGoods();
         updateInfo();
 
     }
 
-    public void updateGloabalAttributes(ArrayList<IntegerPair> board){
+    /**
+     * Updates global attributes for all tiles on the board by controlling their directions.
+     * This method iterates through each position in the provided board list and calls
+     * controlDirections for each tile to update its directional attributes.
+     *
+     * @param board ArrayList of IntegerPair coordinates representing tiles to update
+     */
+    public void updateGlobalAttributes(ArrayList<IntegerPair> board){
         for (IntegerPair pair : board)     {
             int r = pair.getFirst();
             int c = pair.getSecond();
@@ -714,7 +1017,7 @@ public class PlayerBoard {
             exposedConnectors++;
         }
 
-        if (c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1&& checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().get(0))){
+        if (c + 1 <= 9 && ValidPlayerBoard[r][c+1] == 1&& checkConnection(getTile(r,c).getConnectors().get(2),getTile(r, c + 1).getConnectors().getFirst())){
             updateBoardAttributes(r,c + 1 ,visited);
         }
         else if (getTile(r,c).getConnectors().get(2).isExposed() && (c + 1 > 9 || ValidPlayerBoard[r][c + 1] != 1)) {
@@ -784,7 +1087,7 @@ public class PlayerBoard {
             }
 
         }
-        if (shipSection.size() != 1 && shipSection.size() != 0){
+        if (shipSection.size() != 1 && !shipSection.isEmpty()){
             broken = true;
         }
 
@@ -792,70 +1095,121 @@ public class PlayerBoard {
 
 
 
-
+    /**
+     * Gets the current status of the purple alien.
+     *
+     * @return true if purple alien is present, false otherwise
+     */
     public boolean getPurpleAlien(){
         return this.purpleAlien;
     }
 
-
+    /**
+     * Gets the current status of the brown alien.
+     *
+     * @return true if brown alien is present, false otherwise
+     */
     public boolean getBrownAlien(){
         return this.brownAlien;
     }
 
-
+    /**
+     * Sets the brown alien status and updates board information.
+     *
+     * @param brownAlien true to activate brown alien, false to deactivate
+     */
     public void setBrownAlien(boolean brownAlien) {
         this.brownAlien = brownAlien;
         updateInfo();
     }
 
-
+    /**
+     * Sets the purple alien status and updates board information.
+     *
+     * @param purpleAlien true to activate purple alien, false to deactivate
+     */
     public void setPurpleAlien(boolean purpleAlien) {
         this.purpleAlien = purpleAlien;
         updateInfo();
     }
 
-
+    /**
+     * Gets the list of goods currently in the buffer.
+     *
+     * @return ArrayList of Goods in the buffer
+     */
     public ArrayList<Goods> getBufferGoods() {
         return BufferGoods;
     }
 
-
+    /**
+     * Gets the list of housing units on the player board.
+     *
+     * @return ArrayList of HousingUnit objects
+     */
     public ArrayList<HousingUnit> getHousingUnits() {
         return HousingUnits;
     }
 
-
+    /**
+     * Gets the list of hot water heaters on the player board.
+     *
+     * @return ArrayList of HotWaterHeater objects
+     */
     public ArrayList<HotWaterHeater> getHotWaterHeaters() {
         return HotWaterHeaters;
     }
 
-
+    /**
+     * Gets the list of plasma drills on the player board.
+     *
+     * @return ArrayList of PlasmaDrill objects
+     */
     public ArrayList<PlasmaDrill> getPlasmaDrills() {
         return PlasmaDrills;
     }
 
-
+    /**
+     * Gets the list of alien addons on the player board.
+     *
+     * @return ArrayList of AlienAddons objects
+     */
     public ArrayList<AlienAddons> getAlienAddons() {
         return AlienAddons;
     }
 
-
+    /**
+     * Gets the list of storage units on the player board.
+     *
+     * @return ArrayList of Storage objects
+     */
     public ArrayList<Storage> getStorages() {
         return Storages;
     }
 
-
+    /**
+     * Gets the list of shield generators on the player board.
+     *
+     * @return ArrayList of ShieldGenerator objects
+     */
     public ArrayList<ShieldGenerator> getShieldGenerators() {
         return ShieldGenerators;
     }
 
-
+    /**
+     * Gets the list of power centers on the player board.
+     *
+     * @return ArrayList of PowerCenter objects
+     */
     public ArrayList<PowerCenter> getPowerCenters() {
         return PowerCenters;
     }
 
-    /*
-        ritorna la potenza singola (+2 se alieno)
+    /**
+     * Gets the current engine power with alien bonus if applicable.
+     * Returns the base engine power plus 2 if brown alien is active.
+     *
+     * @return current engine power value
      */
     public int getEnginePower() {
         if (EnginePower != 0){
@@ -865,12 +1219,22 @@ public class PlayerBoard {
         }
         return EnginePower;
     }
-
+    /**
+     * Increases the engine power by the specified amount.
+     *
+     * @param enginePower amount to add to current engine power
+     */
     public void setEnginePower(int enginePower) {
         EnginePower += enginePower;
     }
 
 
+    /**
+     * Gets the current plasma drill power with alien bonus if applicable.
+     * Returns the base plasma drill power plus 2 if purple alien is active.
+     *
+     * @return current plasma drill power value
+     */
     public double getPlasmaDrillsPower() {
         if(PlasmaDrillsPower != 0){
             if(purpleAlien){
@@ -880,50 +1244,92 @@ public class PlayerBoard {
         return PlasmaDrillsPower;
     }
 
-
+    /**
+     * Increases the plasma drill power by the specified amount and updates board info.
+     *
+     * @param plasmaDrillsPower amount to add to current plasma drill power
+     */
     public void setPlasmaDrillsPower(double plasmaDrillsPower) {
         PlasmaDrillsPower += plasmaDrillsPower;
         updateInfo();
     }
 
-
+    /**
+     * Gets the current number of humans on the ship.
+     *
+     * @return number of humans
+     */
     public int getNumHumans() {
 
         return numHumans;
     }
 
-
+    /**
+     * Increases the number of humans by the specified amount and updates board info.
+     *
+     * @param numHumans number of humans to add
+     */
     public void setNumHumans(int numHumans) {
         this.numHumans += numHumans;
         updateInfo();
     }
 
-
+    /**
+     * Gets the current energy level.
+     *
+     * @return current energy value
+     */
     public int getEnergy() {
         return Energy;
     }
 
-
+    /**
+     * Increases the energy by the specified amount and updates board info.
+     *
+     * @param energy amount of energy to add
+     */
     public void setEnergy(int energy) {
         Energy += energy;
         updateInfo();
     }
 
-
+    /**
+     * Performs a specified action on a component with the given player state.
+     *
+     * @param component the Component to perform action on
+     * @param action the ComponentAction to execute
+     * @param state the PlayerState context for the action
+     */
     public void performAction(Component component, ComponentAction action, PlayerState state) {
         component.accept(action, state);
     }
 
-
+    /**
+     * Gets the current tile buffer.
+     *
+     * @return ArrayList of Tile objects in the buffer
+     */
     public ArrayList<Tile> getBuffer(){
         return Buffer;
     }
 
+
+    /**
+     * Sets the tile buffer to a new list of tiles.
+     *
+     * @param newBuffer new ArrayList of Tile objects to set as buffer
+     */
     public void setBuffer (ArrayList<Tile> newBuffer) {
         this.Buffer = newBuffer;
     }
 
-
+    /**
+     * Creates a deep copy of the current PlayerBoard instance.
+     * This method clones all essential properties including tiles, alien status,
+     * various component lists, and board state arrays.
+     *
+     * @return a new PlayerBoard instance that is a deep copy of this board
+     */
     public PlayerBoard clone(){
         PlayerBoard clonedPlayerBoard = new PlayerBoard(lv);
         clonedPlayerBoard.broken = broken;
@@ -950,9 +1356,7 @@ public class PlayerBoard {
         clonedPlayerBoard.rewardsListener = this.getRewardsListener();
         clonedPlayerBoard.setBuffer(this.Buffer);
         clonedPlayerBoard.storedGoods = new HashMap<>();
-        if (clonedPlayerBoard.rewardsListener == null){
-            System.out.println("sincero non capisco il perchè");
-        }
+
         clonedPlayerBoard.setListener(null);
 
         clonedPlayerBoard.PlayerBoard = new Tile[PlayerBoard.length][PlayerBoard[0].length];
@@ -989,51 +1393,80 @@ public class PlayerBoard {
 
         clonedPlayerBoard.shield = Arrays.copyOf(shield, shield.length);
 
-//        for(HousingUnit unit : clonedPlayerBoard.getHousingUnits()){
-//            unit.controlValidity(clonedPlayerBoard, unit.getX(), unit.getY());
-//        }
+
         clonedPlayerBoard.setListener(this.getListener());
 
         for(HousingUnit unit : clonedPlayerBoard.getHousingUnits()){
             unit.checkNearbyUnits(clonedPlayerBoard);
         }
-        //clonedPlayerBoard.setListener(this.getListener());
-        //clonedPlayerBoard.setRewardsListener(this.getRewardsListener());
+
 
         return clonedPlayerBoard;
 
     }
 
+
+    /**
+     * Gets the rewards listener for this player board.
+     *
+     * @return the RewardsListener instance
+     */
     public RewardsListener getRewardsListener() {
         return rewardsListener;
     }
 
-
+    /**
+     * Checks if the player board is in a broken state.
+     *
+     * @return true if the board is broken, false otherwise
+     */
     public boolean isBroken() {
         return broken;
     }
 
-
+    /**
+     * Gets the current level of the player board.
+     *
+     * @return the level value
+     */
     public int getLv() {
         return lv;
     }
 
 
+    /**
+     * Checks if the player board is in a valid state.
+     *
+     * @return true if the board is valid, false otherwise
+     */
     public boolean isValid() {
         return valid;
     }
 
 
+    /**
+     * Checks if the purple alien is active.
+     *
+     * @return true if purple alien is active, false otherwise
+     */
     public boolean isPurpleAlien() {
         return purpleAlien;
     }
 
-
+    /**
+     * Checks if the brown alien is active.
+     *
+     * @return true if brown alien is active, false otherwise
+     */
     public boolean isBrownAlien() {
         return brownAlien;
     }
 
-
+    /**
+     * Sets the rewards list and notifies listeners of the change.
+     *
+     * @param rewards ArrayList of Goods to set as rewards
+     */
     public void setRewards(ArrayList<Goods> rewards){
         this.Rewards = rewards;
         if (rewardsListener!= null && rewards != null){
@@ -1044,10 +1477,23 @@ public class PlayerBoard {
         }
     }
 
+    /**
+     * Gets the current rewards list.
+     *
+     * @return ArrayList of Goods representing current rewards
+     */
     public ArrayList<Goods> getRewards(){
         return Rewards;
     }
 
+
+    /**
+     * Removes and returns a specific reward from the rewards list.
+     *
+     * @param i index of the reward to remove
+     * @return the Goods object that was removed
+     * @throws InvalidInput if the index is out of bounds or rewards list is empty
+     */
     public Goods getFromRewards(int i){
         if (i > Rewards.size()) {
             throw new InvalidInput("This position in the Rewards does not exist");
@@ -1062,45 +1508,79 @@ public class PlayerBoard {
         return removed;
     }
 
+    /**
+     * Gets the broken status of the player board.
+     *
+     * @return true if the board is broken, false otherwise
+     */
     public boolean getBroken(){
         return broken;
     }
 
+
+    /**
+     * Gets the list of connected housing units.
+     *
+     * @return ArrayList of connected HousingUnit objects
+     */
     public ArrayList<HousingUnit> getConnectedHousingUnits(){
         return connectedHousingUnits;
     }
 
 
+    /**
+     * Sets the player board listener for receiving board change events.
+     *
+     * @param listener the PlayerBoardListener to set
+     */
     public void setListener(PlayerBoardListener listener){
         this.listener = listener;
     }
 
+
+    /**
+     * Removes the current player board listener.
+     */
     public void removeListener(){
         this.listener = null;
     }
 
+
+    /**
+     * Gets the current player board listener.
+     *
+     * @return the current PlayerBoardListener instance
+     */
     public PlayerBoardListener getListener(){
         return listener;
     }
 
+
+    /**
+     * Sends tile update events to the registered listener.
+     *
+     * @param event the TileEvent to send to the listener
+     */
     public void sendUpdates(TileEvent event){
         if(listener != null) {
             listener.playerBoardChanged(event);
         }
     }
 
-//    public void clearBuffer() {
-//        Buffer.clear();
-//        sendUpdates( new TileEvent(159 , 7, 8, null, 0, false, false, 0, 0, null));
-//
-//    }
 
+    /**
+     * Calculates the final score for the race based on stored goods, damage, and credits.
+     * If the race is not finished, the score is halved (rounded up for odd numbers).
+     *
+     * @param finished true if the race was completed, false if not finished
+     * @return the calculated final score
+     */
     public int finishRace(boolean finished){
-        int number =0;
+        int number;
         int result=0;
 
         for (Integer key: storedGoods.keySet()) {
-            number =this.storedGoods.get(key).size();
+            number = this.storedGoods.get(key).size();
             result+= key*number;
         }
 
@@ -1120,6 +1600,11 @@ public class PlayerBoard {
 
     }
 
+    /**
+     * Updates the board information and notifies listeners of changes.
+     * Calculates crew count including aliens and creates a PBInfoEvent
+     * with current board statistics.
+     */
     public void updateInfo(){
         if (listener != null){
             int crew = 0;
@@ -1130,16 +1615,16 @@ public class PlayerBoard {
             if (brownAlien){
                 crew++;
             }
-//            int engine = 0;
             PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,crew, getEnginePower(), getPlasmaDrillsPower(), this.Energy, this.purpleAlien, this.brownAlien, this.totalValue);
             listener.PBInfoChanged(event);
         }
 
     }
 
-    /***
+    /**
+     * Increases the credits by the specified amount and updates board information.
      *
-     * @param num
+     * @param num amount of credits to add (can be negative to subtract)
      */
     public void setCredits(int num){
         credits += num;
@@ -1147,6 +1632,11 @@ public class PlayerBoard {
     }
 
 
+    /**
+     * Gets the array representing tiles to be removed from the player board.
+     *
+     * @return 2D int array representing positions of tiles to remove
+     */
     public int[][] getToRemovePB() {
         return toRemovePB;
     }

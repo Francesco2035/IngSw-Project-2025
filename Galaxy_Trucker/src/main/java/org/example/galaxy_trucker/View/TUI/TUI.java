@@ -1,19 +1,16 @@
 package org.example.galaxy_trucker.View.TUI;
-//si occupa di ricevere gli eventi, formattarli e inviarli ad out. Chiama la show di out, la show di out chiama il metodo di player che in base allo stato in cui è (ricevendo come parametro this) chiama i metodi giusti
 
-//eccezioni gestite direttamente da TUI
-//se disconnesso setta player a stato di disconnessione e chiama
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.ClientServer.Client;
-import org.example.galaxy_trucker.Controller.Messages.*;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.*;
+import org.example.galaxy_trucker.ClientServer.Messages.TileSets.*;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.PlayerTileEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
 import org.example.galaxy_trucker.View.ClientModel.States.*;
 import org.example.galaxy_trucker.View.View;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
 import org.example.galaxy_trucker.View.ViewPhase;

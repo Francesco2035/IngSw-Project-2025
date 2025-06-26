@@ -5,14 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.Settings;
-import org.example.galaxy_trucker.Controller.Messages.Event;
-import org.example.galaxy_trucker.Controller.Messages.ReconnectedEvent;
-import org.example.galaxy_trucker.Controller.Messages.TokenEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.Event;
+import org.example.galaxy_trucker.ClientServer.Messages.ReconnectedEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.TokenEvent;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
-import java.rmi.NotBoundException;
 
 //TODO: non possiamo far terminare l'input con end
 public class TCPClient{
