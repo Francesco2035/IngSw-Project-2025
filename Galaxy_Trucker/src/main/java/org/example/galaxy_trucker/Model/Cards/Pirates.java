@@ -388,7 +388,9 @@ public class Pirates extends Card{
                 if(p.GetID()== currentPlayer.GetID()){
                     this.sendRandomEffect(p.GetID(),new LogEvent("You have accepted to loot the pirates",-1,-1,-1,-1));
                 }
-                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" has accepted to loot the pirates",-1,-1,-1,-1));
+                else {
+                    this.sendRandomEffect(p.GetID(), new LogEvent(currentPlayer.GetID() + " has accepted to loot the pirates", -1, -1, -1, -1));
+                }
             }
 
             currentPlayer.getmyPlayerBoard().setCredits(this.reward);

@@ -219,7 +219,9 @@ public class Slavers extends Card{
                 if(p.GetID()== currentPlayer.GetID()){
                     this.sendRandomEffect(p.GetID(),new LogEvent("You have refused to loot the slavers",-1,-1,-1,-1));
                 }
-                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" has refused to loot the slavers",-1,-1,-1,-1));
+                else {
+                    this.sendRandomEffect(p.GetID(), new LogEvent(currentPlayer.GetID() + " has refused to loot the slavers", -1, -1, -1, -1));
+                }
             }
         }
 
