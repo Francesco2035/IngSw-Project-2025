@@ -12,6 +12,31 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * The DebugShip class represents a specialized command in the game to debug and modify the player's
+ * ship setup. It extends the Command class and implements Serializable. The class is responsible for
+ * setting up specific debug configurations for a player's ship by inserting predefined tiles and adjustments
+ * for testing purposes.
+ *
+ * This command interacts with the player's PlayerBoard and uses specific tiles from a tile deck to construct
+ * a test configuration. The execute method carries out the modifications based on the `number` parameter
+ * which determines the specific debug use case. Tile rotations, placements, and adjustments are explicitly
+ * programmed for debugging purposes.
+ *
+ * Fields:
+ * - `commandType`: Specifies the type of command as "DebugShip".
+ * - `number`: Represents the debug scenario or configuration to be executed.
+ *
+ * Constructors:
+ * - DebugShip(String gameId, String playerId, int lv, String title, String token, int number): Initializes
+ *   the command with the provided game ID, player ID, title, and debug configuration number.
+ * - DebugShip(): Default empty constructor.
+ *
+ * Methods:
+ * - execute(Player player): Overrides the execute method to perform the debugging setup on the player's
+ *   ship. The method retrieves the player's PlayerBoard, validates the tiles, and sets up a predefined
+ *   debug configuration based on the `number` provided.
+ */
 public class DebugShip extends Command implements Serializable {
 
 
@@ -20,7 +45,19 @@ public class DebugShip extends Command implements Serializable {
     @JsonProperty("number")
     private int number;
 
+    public DebugShip() {}
 
+
+    /**
+     * Constructs a DebugShip object with the specified parameters.
+     *
+     * @param gameId   the unique identifier of the game
+     * @param playerId the unique identifier of the player
+     * @param lv       the level associated with the DebugShip command
+     * @param title    the title or name associated with the DebugShip command
+     * @param token    the token used for authentication or validation
+     * @param number   the integer value representing the number associated with the DebugShip command
+     */
     public DebugShip(String gameId, String playerId, int lv, String title, String token, int number) {
         super(gameId, playerId, lv, title, token,-1);
         this.gameId = gameId;
@@ -29,9 +66,14 @@ public class DebugShip extends Command implements Serializable {
         this.number = number;
     }
 
-    public DebugShip() {}
 
-
+    /**
+     * Executes the DebugShip command for the specified player. This method modifies the player's
+     * game state by manipulating their player board, making tile placements based on predefined configurations.
+     *
+     * @param player the Player instance whose game state is to be modified through this command execution
+     * @throws IOException if an input or output operation fails during execution
+     */
     @Override
     public void execute(Player player) throws IOException {
 
@@ -53,65 +95,9 @@ public class DebugShip extends Command implements Serializable {
         }
 
         ArrayList<Tile> tiles = gag.getTilesDeck();
-//        Tile t1 = tiles.get(133); //"SINGLE", "DOUBLE", "SINGLE", "NONE addons, br factos
-//        Tile t2 = tiles.get(102); //none,cannon, single, universal , plasmadrill    ruota sx due volte factos
-//        Tile t3 = tiles.get(128); //doublem cannon, none, unviersal. plasmadrill  factos
-//        Tile t4 = tiles.get(149); //double,k single, double, single shield none, double, double, universal ruota a sx factos
-//        Tile specialStorage = tiles.get(57);
-//        Tile normalStorage  =tiles.get(24);
-//        Tile t8 = tiles.get(56);  // universal, universal, double, double. sewerpips factos
-//        Tile t9 = tiles.get(32); //SINGLE", "NONE", "NONE", "UNIVERSAL housingjfoaihj factos
-//        Tile t10 = tiles.get(33); //SINGLE", "SINGLE", "DOUBLE", "SINGLE moudsajdahoyusingunit ruota dx factos
-//        Tile t11 = tiles.get(73); //SINGLE", "DOUBLE", "NONE", "MOTOR" un motore factos
-//        Tile t12 = tiles.get(145);
-//        Tile powerCenter = tiles.get(12);
-//        Tile powerCenter2 = tiles.get(5);
-//        Tile plasmaDrill = tiles.get(130);
-//        Tile addonspurple = tiles.get(142);
-//        Tile modular1 = tiles.get(39);
-//        Tile sewerpipes = tiles.get(52);
-//        Tile modular2 = tiles.get(47);
-//        Tile modular3 = tiles.get(48);
-//        Tile hotWaterHeater = tiles.get(92);
-//        Tile shield = tiles.get(151);
-//
-//        shield.RotateSx();
-//
-//        addonspurple.RotateSx();
-//        plasmaDrill.RotateDx();
-//
-//        debugShip.setListener(player.getmyPlayerBoard().getListener());
-//        debugShip.setRewardsListener(player.getmyPlayerBoard().getRewardsListener());
-//
-//        t2.RotateSx();
-//        t2.RotateSx();
-//        t8.RotateDx();
-//        t4.RotateSx();
-//        t10.RotateDx();
-//        specialStorage.RotateDx();
-//        specialStorage.RotateDx();
-//
-//
-//        debugShip.insertTile(t1, 6,7, false);
-//        debugShip.insertTile(t8, 7,6, false);
-//        debugShip.insertTile(t11, 6,5, false);
-//        debugShip.insertTile(t9, 5,7, false);
-//        debugShip.insertTile(t4, 5,5, false);
-//        debugShip.insertTile(t10, 4,5, false);
-//        debugShip.insertTile(t12, 6,8, false);
-//        debugShip.insertTile(specialStorage, 7,8, false);
-//        debugShip.insertTile(normalStorage, 7,9, false);
-//        debugShip.insertTile(powerCenter, 6,9, false);
-//        debugShip.insertTile(powerCenter2, 5,4, false);
-//        debugShip.insertTile(plasmaDrill,8,9, false);
-//        debugShip.insertTile(addonspurple,6,4, false);
-//        debugShip.insertTile(modular1,7,4, false);
-//        debugShip.insertTile(sewerpipes,7,3, false);
-//        debugShip.insertTile(hotWaterHeater,8,3, false);
-//        debugShip.insertTile(player.getmyPlayerBoard().getTile(6,6),6,6, false);
 
 
-        //da cam
+
         switch (number){  /// fai id-1
             case 0:{
                 Tile tile = tiles.get(37); ///mod housing uinit
@@ -240,7 +226,6 @@ public class DebugShip extends Command implements Serializable {
                 debugShip.insertTile(tile,8,4,false);
 
 
-                /// Todo Rotazione Tile  shield buggata
                 tile = tiles.get(145); //shield
                 tile.RotateDx();
                 tile.setRotation(90);
@@ -272,8 +257,6 @@ public class DebugShip extends Command implements Serializable {
                 tile.RotateDx();
                 tile.setRotation(90);
                 debugShip.insertTile(tile,5,5,false);
-
-                /// todo per determinare se vinci o meno c'e anche il bonus nave più bella
 
                 tile = tiles.get(119); // plasmadrill
                 debugShip.insertTile(tile,4,5,false);
@@ -331,10 +314,21 @@ public class DebugShip extends Command implements Serializable {
 
     }
 
+    /**
+     * Sets the value of the number property for the instance.
+     *
+     * @param number the integer value to assign to the number property
+     */
     public void setNumber(int number) {
         this.number = number;
     }
 
+    /**
+     * Determines if the current command is allowed in the given player's state.
+     *
+     * @param playerState the PlayerState instance to check whether this command is allowed
+     * @return true if the command is allowed in the specified PlayerState; false otherwise
+     */
     @Override
     public boolean allowedIn(PlayerState playerState) {
         return playerState.allows(this);

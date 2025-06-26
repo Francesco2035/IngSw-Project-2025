@@ -219,14 +219,15 @@ public class GuiRoot implements View {
             tileImage.setImage(tilePlaceholder);
             tileImage.setOpacity(0.5);
 
-            //background setup
-            Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-
-            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            mediaPlayer.setAutoPlay(true);
-
-            MediaView background = new MediaView(mediaPlayer);
+//            background setup
+//            Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
+//            MediaPlayer mediaPlayer = new MediaPlayer(media);
+//
+//            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+//            mediaPlayer.setAutoPlay(true);
+//
+//            MediaView background = new MediaView(mediaPlayer);
+            ImageView background = new ImageView(new Image(getClass().getResourceAsStream("/GUI/background.jpg")));
             background.setPreserveRatio(false);
 
             background.fitHeightProperty().bind(primaryStage.heightProperty());
@@ -1216,14 +1217,10 @@ public class GuiRoot implements View {
         amIBuilding = false;
         checkvalidity = true;
 
-        prompt.setText("Remove Invalid Tiles!");
-        prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
-
         ImageView txtBackground = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/all_belt.png")));
         txtBackground.setFitWidth(600);
         txtBackground.setFitHeight(100);
 
-        StackPane textPanel = new StackPane(txtBackground, prompt);
 
         Button finishButton = new Button("Done");
 
@@ -1308,16 +1305,16 @@ public class GuiRoot implements View {
                     newTile.setOpacity(0.5);
             }
 
-
-
 //            Platform.runLater(()->{
 //                myBoard.getChildren().remove(node);
 //                myBoard.add(newTile,  GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
 //            });
 
         }
-
         Platform.runLater(()->{
+            prompt.setText("Remove Invalid Tiles!");
+            prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+            StackPane textPanel = new StackPane(txtBackground, prompt);
             VBox othersBox = new VBox(20);
             int i = 0;
             for (String id : othersBoards.keySet()) {

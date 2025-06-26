@@ -5,11 +5,26 @@ import org.example.galaxy_trucker.Controller.Messages.TileSets.DeckEvent;
 
 import java.io.Serializable;
 
+/**
+ * CardListner is an interface that defines methods to handle events related to card operations.
+ * It extends the Serializable interface to allow implementations to be serialized.
+ */
 public interface CardListner extends Serializable {
 
-    public void seeDeck(DeckEvent deck) ;
+    /**
+     * Notifies the implementing listener about the current state of a deck
+     * by providing a DeckEvent object that contains the relevant information.
+     *
+     * @param deck the DeckEvent containing the list of card IDs in the deck.
+     */
+    void seeDeck(DeckEvent deck);
 
-    public void newCard(CardEvent cardEvent);
+    /**
+     * Handles the action of a new card event. This method is triggered when a new card is added or introduced.
+     *
+     * @param cardEvent The CardEvent object containing details of the new card.
+     */
+    void newCard(CardEvent cardEvent);
 
 
 }
