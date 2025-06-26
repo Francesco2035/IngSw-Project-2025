@@ -579,7 +579,7 @@ public class GameController implements ConcurrentCardListener, ReadyListener, Fi
      * The method utilizes threads to manage the flight phase, ensuring asynchronous handling of game flow.
      * It logs key events, such as the start and end of the flight, and interactions during card effects.
      */
-    public void startFlightMode() {  ///  per aggiornare il
+    public void startFlightMode() {
 
 //client si riconnete ma non può inviare input fino a che non si ricambia il controller
         if (firtflight) {
@@ -641,9 +641,7 @@ public class GameController implements ConcurrentCardListener, ReadyListener, Fi
                             cur.DefaultAction(this);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            System.out.println(e.getMessage() + "cristo de dio");
-                            //System.exit(-1);
-                            //throw new ImpossibleActionException("errore nell'azione di default, che dio ci aiuti");
+
                         }
                         ///  credo ci vada una thìry ctch ma non la stava lanciando :)
 
@@ -657,7 +655,6 @@ public class GameController implements ConcurrentCardListener, ReadyListener, Fi
 
                         try {
                             Command cmd = flightQueue.poll();
-                            //TODO: notify della carta se è fase concorrenziale
                             //game.getPlayers().get(cmd.getPlayerId()).getmyPlayerBoard().setRewardsListener(VirtualViewMap.get(currentPlayer.GetID()));
                             if (cmd != null) {
                                 if (concurrent) {
@@ -675,7 +672,6 @@ public class GameController implements ConcurrentCardListener, ReadyListener, Fi
                                         index++;
                                     }
                                 } else {
-                                    //TODO: non ho capito che minchia fa la offer
                                     flightQueue.offer(cmd);
                                 }
                             }

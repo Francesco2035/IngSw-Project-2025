@@ -85,7 +85,7 @@ public abstract class Controller {
                 playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
                 playerBoardCopy.setRewardsListener(curPlayer.getmyPlayerBoard().getRewardsListener());
                 if (playerBoardCopy.getRewardsListener() == null) {
-                    System.out.println("No rewards listener available mannaggia la democrazia cristiana");
+                    System.out.println("No rewards listener available");
                 }
                 curPlayer.setMyPlance(playerBoardCopy);
                 e.printStackTrace();

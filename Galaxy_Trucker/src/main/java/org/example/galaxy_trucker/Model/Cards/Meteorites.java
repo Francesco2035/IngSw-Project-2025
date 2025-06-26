@@ -53,7 +53,6 @@ public class   Meteorites extends Card {
 
 
 
-    ///  in caso di disconnessione semplicemente non si difende da ncazzoz che lo colpisce
     public Meteorites(int level, int time, GameBoard board, ArrayList<Integer> attacks) {
         super(level, 0, board);
 

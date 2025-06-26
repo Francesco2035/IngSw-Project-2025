@@ -3843,10 +3843,6 @@ public class GuiRoot implements View {
         Button quit = new Button("Quit");
 
         Platform.runLater(()->{
-//            for(Label name : players){
-//                System.out.println("PORCODIO");
-//                name.setText(name.getText() + "(not ready)");
-//            }
 
             curCard.setImage(null);
             prompt.setText("Picking next card when everyone is ready...");

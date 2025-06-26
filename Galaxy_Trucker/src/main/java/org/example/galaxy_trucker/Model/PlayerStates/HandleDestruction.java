@@ -76,7 +76,6 @@ public class HandleDestruction extends PlayerState {
                 }
             }
             if (coord==null){
-                System.out.println("Coords == null cristooooooooooooooOOOOOO");
                 //devo mettere una return particolare :()()()
                 /// non hai case con umani hai perso brutta merda
             }

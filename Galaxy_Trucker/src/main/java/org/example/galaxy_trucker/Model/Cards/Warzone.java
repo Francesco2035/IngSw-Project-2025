@@ -281,7 +281,6 @@ public class Warzone extends Card{
 
     @Override
     public void finishCard() {
-        System.out.println("ODDIO FINISH DI WARZONE");
         GameBoard Board=this.getBoard();
         ArrayList<Player> PlayerList = Board.getPlayers();
         for(int i=0; i<PlayerList.size(); i++){
@@ -880,7 +879,7 @@ public class Warzone extends Card{
                     throw new InvalidInput("there is nothing at this position in the storage");
                 }
                 if(currStorage.getValue(index)==max){//iterator.next da il primo elemento non chiederti perché
-                    CurrentPlanche.performAction(tiles[coord.getFirst()][coord.getSecond()].getComponent(), new GetGoodAction(index,CurrentPlanche,coord.getFirst(),coord.getSecond()),new HandleTheft());///prega dio sia giusto :)
+                    CurrentPlanche.performAction(tiles[coord.getFirst()][coord.getSecond()].getComponent(), new GetGoodAction(index,CurrentPlanche,coord.getFirst(),coord.getSecond()),new HandleTheft());
                     this.tmpPunishment--;
                     this.setDefaultPunishment(tmpPunishment);
 
