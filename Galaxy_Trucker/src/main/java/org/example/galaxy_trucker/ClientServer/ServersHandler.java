@@ -2,7 +2,6 @@ package org.example.galaxy_trucker.ClientServer;
 
 import org.example.galaxy_trucker.ClientServer.RMI.RMIServer;
 import org.example.galaxy_trucker.ClientServer.TCP.TCPServer;
-import org.example.galaxy_trucker.Controller.GamesHandler;
 import org.example.galaxy_trucker.Controller.VirtualView;
 
 import java.rmi.RemoteException;

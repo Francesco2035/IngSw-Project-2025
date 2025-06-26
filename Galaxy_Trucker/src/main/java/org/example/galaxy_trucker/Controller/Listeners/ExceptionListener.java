@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Controller.Listeners;
 
-import org.example.galaxy_trucker.Controller.Messages.ExceptionEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.ExceptionEvent;
 
 /**
  * The ExceptionListener interface should be implemented by any class

@@ -1,8 +1,8 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Controller.Listeners.TileSestListener;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.CoveredTileSetEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.UncoverdTileSetEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.TileSets.CoveredTileSetEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.TileSets.UncoverdTileSetEvent;
 import org.example.galaxy_trucker.Model.GAGen;
 
 import java.rmi.RemoteException;

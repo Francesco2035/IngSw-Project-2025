@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker;
 
 import org.example.galaxy_trucker.Controller.GameController;
-import org.example.galaxy_trucker.Controller.GamesHandler;
+import org.example.galaxy_trucker.ClientServer.GamesHandler;
 import org.example.galaxy_trucker.Controller.VirtualView;
 import org.example.galaxy_trucker.Model.Boards.Actions.AddCrewAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;

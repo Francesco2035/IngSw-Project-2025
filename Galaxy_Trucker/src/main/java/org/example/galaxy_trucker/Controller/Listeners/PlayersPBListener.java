@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Controller.Listeners;
 
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.PlayerTileEvent;
 
 /**
  * Interface representing a listener for personal best (PB) updates related to players.

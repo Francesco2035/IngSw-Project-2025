@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker.Model.Cards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Exceptions.*;
 import org.example.galaxy_trucker.Model.Boards.Actions.GetGoodAction;
 import org.example.galaxy_trucker.Model.Boards.Actions.KillCrewAction;

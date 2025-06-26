@@ -16,9 +16,9 @@
         requires jdk.compiler;
 
 
-        opens org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents to com.fasterxml.jackson.databind;
-        opens org.example.galaxy_trucker.Controller.Messages to com.fasterxml.jackson.databind;
-        opens org.example.galaxy_trucker.Controller.Messages.TileSets to com.fasterxml.jackson.databind;
+        opens org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents to com.fasterxml.jackson.databind;
+        opens org.example.galaxy_trucker.ClientServer.Messages to com.fasterxml.jackson.databind;
+        opens org.example.galaxy_trucker.ClientServer.Messages.TileSets to com.fasterxml.jackson.databind;
 
         opens org.example.galaxy_trucker to javafx.fxml, com.fasterxml.jackson.databind;
 

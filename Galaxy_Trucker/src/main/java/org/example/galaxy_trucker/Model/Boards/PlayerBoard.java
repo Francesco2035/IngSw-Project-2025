@@ -2,9 +2,9 @@ package org.example.galaxy_trucker.Model.Boards;
 
 
 import org.example.galaxy_trucker.Controller.Listeners.RewardsListener;
-import org.example.galaxy_trucker.Controller.Messages.PBInfoEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PBInfoEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RewardsEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Listeners.PlayerBoardListener;
 import org.example.galaxy_trucker.Exceptions.*;
 
