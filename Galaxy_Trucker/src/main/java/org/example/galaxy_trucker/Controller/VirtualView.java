@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
 import org.example.galaxy_trucker.Controller.Listeners.*;
 import org.example.galaxy_trucker.Controller.Messages.*;
+import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Connectors.NONE;
 
@@ -19,6 +19,7 @@ import java.util.HashMap;
 
 public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener, ExceptionListener, PlayersPBListener, RandomCardEffectListener{
 
+    private int lv;
     private boolean Disconnected = false;
     private TileEvent[][] eventMatrix;
     private String playerName;
@@ -39,8 +40,11 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     private PBInfoEvent pbInfoEvent = null;
     private ArrayList<LogEvent> logEvents = new ArrayList<>();
     private ArrayList<PlayerTileEvent> otherPlayerTileEvents = new ArrayList<>();
-    //non credo serva salvarsi rewards event
     private HourglassEvent hourglassEvent = null;
+
+    public void setLv(int lv){
+        this.lv = lv;
+    }
 
 
     public VirtualView(String playerName, String idGame, ClientInterface client, PrintWriter echoSocket) {
@@ -52,7 +56,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-    public void setEventMatrix(int lv) {
+    public void setEventMatrix(int lv) { //TODO test
         ArrayList<Connectors> noneConnectors = new ArrayList<>();
         noneConnectors.add(NONE.INSTANCE);
         noneConnectors.add(NONE.INSTANCE);
@@ -105,7 +109,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-    public void sendEvent(HandEvent event)  {
+    public void sendEvent(HandEvent event)  { //TODO test
         hand = event;
         if (!Disconnected) {
             if (out != null ) {
@@ -129,7 +133,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-    public void sendEvent(PlayerTileEvent event){
+    public void sendEvent(PlayerTileEvent event){ //TODO test
 
         if (!Disconnected) {
             if (out != null) {
@@ -153,7 +157,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-    public void sendEvent(TileEvent event) {
+    public void sendEvent(TileEvent event) { //TODO test
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -200,7 +204,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void tilesSetChanged(CoveredTileSetEvent event)  {
+    public void tilesSetChanged(CoveredTileSetEvent event)  { //TODO test
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -224,7 +228,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void tilesSetChanged(UncoverdTileSetEvent event) throws RemoteException {
+    public void tilesSetChanged(UncoverdTileSetEvent event) throws RemoteException { //TODO test
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -248,7 +252,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void seeDeck(DeckEvent event) {
+    public void seeDeck(DeckEvent event) { //TODO test
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -272,7 +276,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void newCard(CardEvent event) {
+    public void newCard(CardEvent event) { //TODO test
         card = event;
         if (!Disconnected) {
             if (out != null) {
@@ -298,7 +302,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void gameBoardChanged(GameBoardEvent event)  {
+    public void gameBoardChanged(GameBoardEvent event)  { //TODO test
         board.add(event);
         if (!Disconnected) {
             if (out != null) {
@@ -333,68 +337,80 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     }
 
 
-    public void reconnect() {
-        //hourglass event
+    public void reconnect() { //TODO test
+
+        sendEvent(new ReconnectedEvent(token,idGame,playerName,lv));
+
         if (card != null){
             newCard(card);
-        }
-        for (int i = 0; i < 10; i ++){
-            for(int j = 0; j < 10; j ++){
-                sendEvent(eventMatrix[i][j]);
-            }
-        }
-        if(hand != null) {
-            sendEvent(hand);
-        }
-
-        if (phase != null){
-            sendEvent(phase);
-        }
-        if (lobby != null){
-            sendEvent(lobby);
-        }
-        for (PlayerTileEvent playerTileEvent : otherPlayerTileEvents){
-            System.out.println("Sending PlayerTileEvent " + playerTileEvent.getPlayerName() + " " + playerTileEvent.getId());
-            sendEvent(playerTileEvent);
-        }
-        for (GameBoardEvent gbEvent : board){
-            System.out.println("Sending board" + board.size() + " " + gbEvent.getPlayerID() + " " +gbEvent.getPosition());
-            sendEvent(gbEvent);
         }
 
         for (LogEvent log : logEvents){
             sendEvent(log);
         }
+
+        for (PlayerTileEvent playerTileEvent : otherPlayerTileEvents){
+            sendEvent(playerTileEvent);
+        }
+
+        for (int i = 0; i < 10; i ++){
+            for(int j = 0; j < 10; j ++){
+                sendEvent(eventMatrix[i][j]);
+            }
+        }
+
+        if (pbInfoEvent != null){
+            sendEvent(pbInfoEvent);
+        }
+
+        if(hand != null) {
+            sendEvent(hand);
+        }
+
+        if (lobby != null){
+            sendEvent(lobby);
+        }
+
+        for (GameBoardEvent gbEvent : board){
+            sendEvent(gbEvent);
+        }
+
         if (rewardsEvent != null){
             sendEvent(rewardsEvent);
         }
+        if (hourglassEvent != null){
+            sendEvent(hourglassEvent);
+        }
 
+        if (phase != null){
+            sendEvent(phase);
+        }
 
     }
 
 
     public void setToken(String token) {
         this.token = token;
-    }
+    } //TODO test
 
 
     public String getToken() {
         return token;
-    }
+    } //TODO test
 
 
     public void setPrintWriter(PrintWriter printWriter) {
         this.out = printWriter;
-    }
+    } //TODO test
 
 
     public void setClient(ClientInterface client){
         this.client = client;
-    }
+    } //TODO test
 
 
     @Override
-    public void GameLobbyChanged(GameLobbyEvent event) {
+    public void GameLobbyChanged(GameLobbyEvent event) { //TODO test
         lobby = event;
         if (!Disconnected) {
             if (out != null) {
@@ -425,14 +441,18 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
         sendEvent(event);
     }
 
+    public void sendHourglass(HourglassEvent event){
+        hourglassEvent = event;
+        sendEvent(event);
+    }
 
-    public void sendEvent(Event event) {
+    public void sendEvent(Event event) { //TODO test
         if (!Disconnected) {
             if (out != null) {
                 try{
                     ObjectMapper objectMapper = new ObjectMapper();
                     out.println(objectMapper.writeValueAsString(event));
-                    System.out.println("Send: "+objectMapper.writeValueAsString(event));
+                    //System.out.println("Send: "+objectMapper.writeValueAsString(event));
                 }
                 catch (JsonProcessingException e){
                     e.printStackTrace();
@@ -452,7 +472,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void rewardsChanged(RewardsEvent event) {
+    public void rewardsChanged(RewardsEvent event) { //TODO test
         rewardsEvent = event;
         sendEvent(event);
     }
@@ -461,15 +481,15 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
     @Override
     public void exceptionOccured(ExceptionEvent event) {
         sendEvent(event);
-    }
+    } //TODO test
 
 
     public PlayersPBListener getPBlistener(){
         return this;
-    }
+    } //TODO test
 
 
-    public void setPlayersPBListeners(PlayersPBListener listener){
+    public void setPlayersPBListeners(PlayersPBListener listener){ //TODO test
         this.playersPBListeners.add(listener);
         for (int i = 0; i < 10; i ++){
             for (int j = 0; j < 10; j ++){
@@ -491,8 +511,8 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
 
     @Override
-    public void receivePBupdate(PlayerTileEvent event){
-        System.out.println("adding player tile event "+ event.getPlayerName()+ " "+ event.getId());
+    public void receivePBupdate(PlayerTileEvent event){ //TODO test
+        //System.out.println("adding player tile event "+ event.getPlayerName()+ " "+ event.getId());
         otherPlayerTileEvents.add(event);
         sendEvent(event);
     }
@@ -500,7 +520,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     public String getPlayerName(){
         return playerName;
-    }
+    } //TODO test
 
 
     @Override
@@ -517,7 +537,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
 
     public void removeListener(PlayersPBListener listener){
         this.playersPBListeners.remove(listener);
-    }
+    } //TODO test
 
     public void sendLogEvent(LogEvent event) {
         logEvents.add(event);

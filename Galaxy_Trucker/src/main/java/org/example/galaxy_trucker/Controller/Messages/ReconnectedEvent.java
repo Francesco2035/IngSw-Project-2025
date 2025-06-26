@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller.Messages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ReconnectedEvent implements Event{
@@ -9,6 +10,10 @@ public class ReconnectedEvent implements Event{
     String gameId;
     String playerId;
     int lv;
+
+    public ReconnectedEvent() {
+
+    }
 
     @JsonCreator
     public ReconnectedEvent(@JsonProperty("token") String token,@JsonProperty("gameId") String gameId,@JsonProperty("playerId") String playerId,@JsonProperty("lv") int lv){
@@ -23,6 +28,7 @@ public class ReconnectedEvent implements Event{
         visitor.visit(this);
     }
 
+    @JsonIgnore
     @Override
     public String message() {
         return "";

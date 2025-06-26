@@ -7,12 +7,19 @@ import org.jline.jansi.Ansi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * The Out class manages the output and state representation of a game,
+ * enabling interactions and updates to game visuals and player data.
+ * This class serves as a bridge for rendering the game state, facilitating communication
+ * between backend game components and user-facing interfaces.
+ */
 public class Out {
 
     private int CardId = -1;
@@ -61,9 +68,18 @@ public class Out {
     private HashMap<String,Integer > PlayerToPosition = new HashMap<>();
     private HashMap<String, String[]> lobby = new HashMap<>();
     private ViewPhase phase;
+    private StringBuilder scoreboard = null;
 
 
 
+    /**
+     * Updates the board of other players with specific data at a given position.
+     *
+     * @param playerId The unique identifier of the player whose board is being updated.
+     * @param x The x-coordinate on the player's board where the update is applied.
+     * @param y The y-coordinate on the player's board where the update is applied.
+     * @param cell The data to be inserted at the specified position on the board.
+     */
     public void setOthersPB(String playerId, int x, int y, String[] cell){
         if (!otherPlayersBoard.containsKey(playerId)){
             otherPlayersBoard.put(playerId, new String[10][10][7]);
@@ -79,6 +95,16 @@ public class Out {
         otherPlayersBoard.get(playerId)[x][y] = cell;
     }
 
+    /**
+     * Updates or initializes the game board for another player identified by playerId at a specific
+     * position (x, y) with the given value in a specific layer (k).
+     *
+     * @param playerId the unique identifier of the player whose game board is being updated
+     * @param x the x-coordinate of the cell on the board
+     * @param y the y-coordinate of the cell on the board
+     * @param k the layer index within the cell of the board
+     * @param s the value to be set in the specified cell and layer
+     */
     public void setOthersPB(String playerId, int x, int y,int k, String s){
         if (!otherPlayersBoard.containsKey(playerId)){
             otherPlayersBoard.put(playerId, new String[10][10][7]);
@@ -94,6 +120,12 @@ public class Out {
         otherPlayersBoard.get(playerId)[x][y][k] = s;
     }
 
+    /**
+     * Constructs an instance of the Out class, initializing necessary components and caches.
+     *
+     * @param inputReader   an InputReader instance used to receive input for the game.
+     * @param playerClient  a PlayerClient instance used to manage player interactions.
+     */
     public Out(InputReader inputReader, PlayerClient playerClient) {
         this.inputReader = inputReader;
         this.lobby = new HashMap<>();
@@ -114,14 +146,43 @@ public class Out {
     }
 
 
+    /**
+     * Provides access to the lock object associated with the current instance.
+     * This method typically returns an object that can be used for synchronization purposes.
+     *
+     * @return the lock object used for synchronization
+     */
     public Object getLock(){
         return lock;
     }
 
+    /**
+     * Retrieves the mapping of player IDs to their corresponding positions.
+     *
+     * @return a HashMap where the keys are player IDs (as Strings) and the values are their positions (as Integers)
+     */
     public HashMap<String, Integer> getPlayerToPosition() {
         return PlayerToPosition;
     }
 
+    /**
+     * Updates the card ID and sets the corresponding title card based on the card ID.
+     *
+     * @param cardId the unique identifier for the card. Based on its value, the method assigns
+     *               a specific title from the ASCII_ART collection to the titleCard field.
+     *               Acceptable ranges and their corresponding title categories are:
+     *               - 1, 2: TitleSlavers
+     *               - 3, 4: TitleSmugglers
+     *               - 5, 6: TitlePirates
+     *               - 7-10: TitleAbandonedShip
+     *               - 11-14: TitleAbandonedStation
+     *               - 15-20: TitleMeteorSwarm
+     *               - 21-28: TitlePlanets
+     *               - 29-35: TitleOpenSpace
+     *               - 36, 37: TitleCombatZone
+     *               - 38, 39: TitleStardust
+     *               - 40: TitleEpidemic
+     */
     public void setCardId(int cardId) {
         CardId = cardId;
         switch (cardId){
@@ -175,6 +236,12 @@ public class Out {
         }
     }
 
+    /**
+     * Sets the list of player IDs and updates the `otherPlayersBoard` map by
+     * removing entries for players that are no longer in the provided list.
+     *
+     * @param players an ArrayList of player IDs to set as the current players
+     */
     public void setPlayers(ArrayList<String> players) {
         this.players = players;
         for (String playerId : otherPlayersBoard.keySet()) {
@@ -184,23 +251,55 @@ public class Out {
         }
     }
 
+    /**
+     * Sets the readiness status for the players.
+     *
+     * @param ready an ArrayList of Boolean values indicating the readiness
+     *              status of each player. Each Boolean represents whether
+     *              a specific player is ready (true) or not (false).
+     */
     public void setReady(ArrayList<Boolean> ready) {
         this.ready = ready;
     }
 
+    /**
+     * Updates the cached board at the specified coordinates with the given cell data.
+     *
+     * @param x    the x-coordinate on the cached board.
+     * @param y    the y-coordinate on the cached board.
+     * @param cell the array of strings representing the cell data to be set at the specified coordinates.
+     */
     public void setCachedBoard(int x, int y, String[] cell) {
         cachedBoard[x][y] = cell;
     }
 
+    /**
+     * Updates the cached board by setting the specified value at the given coordinates.
+     *
+     * @param x the x-coordinate of the board.
+     * @param y the y-coordinate of the board.
+     * @param k the specific layer or level in the board structure.
+     * @param cell the value to set in the specified position on the board.
+     */
     public void setCachedBoard(int x, int y,int k, String cell) {
         cachedBoard[x][y][k] = cell;
     }
 
+    /**
+     * Sets the cache for the player's hand.
+     *
+     * @param cacheHand An array of strings representing the cached hand of the player.
+     */
     public void setCacheHand(String[] cacheHand) {
         this.cacheHand = cacheHand;
     }
 
 
+    /**
+     * Updates the list of uncovered tile IDs by adding or removing the specified ID.
+     * If the ID already exists in the list, it will be removed. Otherwise, it will be added.
+     *
+     * @param id the unique identifier of the tile to be added or removed from the*/
     public void setUncoveredTilesId(int id) {
         if (uncoveredTilesId.contains((Integer)id)) {
             uncoveredTilesId.remove(Integer.valueOf(id));
@@ -211,6 +310,13 @@ public class Out {
 
     }
 
+    /**
+     * Updates or clears the cached data for a specified uncovered tile set.
+     *
+     * @param i the identifier of the tile set to update or clear.
+     *          When the cache parameter is null, this identifier is
+     *          used to remove the tile set cache.
+     * @param cache*/
     public void setUncoverdTileSetCache(int i, String[] cache) {
         if (cache != null) {
             uncoverdTileSetCache.put((Integer)i, cache);
@@ -222,54 +328,98 @@ public class Out {
 
     }
 
+    /**
+     * Updates the `CardsDescriptions` field with the provided mapping of card IDs to their descriptions.
+     *
+     * @param cardsDescriptions a HashMap where the keys*/
     public void setCardsDescriptions(HashMap<Integer, String> cardsDescriptions) {
         CardsDescriptions = cardsDescriptions;
     }
 
+    /**
+     * Updates the specified cell in the game board at the given coordinates.
+     *
+     * @param x    the x-coordinate on the game board where the cell is to be updated.
+     * @param y    the y-coordinate on the game board where the cell is to be updated.
+     * @*/
     public void setGameboard(int x, int y, String[] cell) {
         Gameboard[x][y] = cell;
     }
 
+    /**
+     * Updates or initializes the gameboard at the specified coordinates and layer with a given value.
+     *
+     * @param x    the x-coordinate of the cell on the gameboard.
+     * @param y    the y-coordinate of the cell on the gameboard.
+     * @param k    the*/
     public void setGameboard(int x, int y, int k, String cell) {
         Gameboard[x][y][k] = cell;
     }
 
+    /**
+     * Sets the level value for the game or a particular component.
+     *
+     * @param lv the level value to be set.
+     */
     public void setLv(int lv) {
         this.lv = lv;
     }
 
+    /**
+     * Sets the setup value for this instance.
+     *
+     * @param setup the integer value representing the setup configuration
+     */
     public void setSetup(int setup) {
         this.setup = setup;
     }
 
-    public void setFase(boolean fase) {
-        this.fase = fase;
-    }
+//    public void setFase(boolean fase) {
+//        this.fase = fase;
+//    }
 
+    /**
+     * Sets the value of the covered tile set.
+     *
+     * @param coveredTileSet an integer representing the new value for the covered tile set
+     */
     public void setCoveredTileSet(int coveredTileSet) {
         CoveredTileSet = coveredTileSet;
     }
 
-    public void setInputReader(InputReader inputReader) {
-        this.inputReader = inputReader;
-    }
-
-    public void setInputThread(Thread inputThread) {
-        this.inputThread = inputThread;
-    }
+//    public void setInputReader(InputReader inputReader) {
+//        this.inputReader = inputReader;
+//    }
+//
+//    public void setInputThread(Thread inputThread) {
+//        this.inputThread = inputThread;
+//    }
+//
+//    public void setConnected(Boolean connected) {
+//        this.connected = connected;
+//    }
+//
+//    public void setPositionToGameboard(int i, IntegerPair pair) {
+//        positionToGameboard.put(i, pair);
+//    }
+//
+//    public void setPlayerToPosition(HashMap<String, Integer> playerToPosition) {
+//        PlayerToPosition = playerToPosition;
+//    }
 
     public void setConnected(Boolean connected) {
         this.connected = connected;
     }
 
-    public void setPositionToGameboard(int i, IntegerPair pair) {
-        positionToGameboard.put(i, pair);
-    }
-
-    public void setPlayerToPosition(HashMap<String, Integer> playerToPosition) {
-        PlayerToPosition = playerToPosition;
-    }
-
+    /**
+     * Sets or updates the lobby for a specified game. If the provided cell data is null,
+     * the game is removed from the lobby. Otherwise, the game ID and its associated cell data
+     * are added or updated in the lobby.
+     *
+     * @param gameid The unique identifier for the game.
+     * @param cell   An array of strings representing the cell data associated with the game.
+     *               If null, the game will be removed from the lobby.
+     */
     public void setLobby(String gameid, String[]cell) {
         if(cell == null){
             lobby.remove(gameid);
@@ -279,20 +429,34 @@ public class Out {
         }
     }
 
+
+    /**
+     * Sets the current phase of the view.
+     *
+     * @param phase the current phase to be set, represented as a {@code ViewPhase} enum.
+     */
     public void setPhase(ViewPhase phase) {
         this.phase = phase;
     }
 
+
+    /**
+     * Retrieves the player's cached game board data.
+     *
+     * @return a three-dimensional array of Strings representing the cached board of the player.
+     */
     public String[][][] getPlayerBoard() {
         return cachedBoard;
     }
 
 
-
-
-
-
-
+    /**
+     * Generates a StringBuilder representation of the current lobby state.
+     * If the lobby is empty, a predefined ASCII art message indicating no games is appended.
+     * Otherwise, it iterates through the lobby's contents and formats them into a structured output.
+     *
+     * @return A StringBuilder object containing the formatted representation of the lobby state.
+     */
     public StringBuilder showLobby(){
         StringBuilder sb = new StringBuilder();
 
@@ -329,6 +493,15 @@ public class Out {
     }
 
 
+    /**
+     * Generates a visual representation of the game board and returns it as a StringBuilder object.
+     *
+     * The method iterates through a predefined 2D cached board structure to construct a formatted
+     * string representation of the board. Additional ASCII art elements, such as a border or header,
+     * are appended to enhance visualization.
+     *
+     * @return a StringBuilder containing the formatted string representation of the game board.
+     */
     public StringBuilder printBoard() {
         StringBuilder toPrint = new StringBuilder();
         int rows = 10;
@@ -361,6 +534,17 @@ public class Out {
     }
 
 
+    /**
+     * Formats and prints a three-dimensional board as a string representation.
+     * Processes the given board array and appends formatted text to a StringBuilder
+     * which is then returned. The output includes specified rows and columns of
+     * the board formatted for display along with additional ASCII art borders.
+     *
+     * @param board a three-dimensional array representing the board, where the
+     *              first dimension is rows, the second dimension is columns, and
+     *              the third dimension contains string elements to be printed
+     * @return a StringBuilder object containing the formatted board representation
+     */
     public StringBuilder printBoard(String[][][] board) {
         StringBuilder toPrint = new StringBuilder();
         int rows = 10;
@@ -393,7 +577,13 @@ public class Out {
     }
 
 
-
+    /**
+     * Constructs a visual representation of uncovered tiles using ASCII art.
+     * The uncovered tiles are displayed in groups of eight, each tile formatted
+     * with its respective position and visual representation from a cache.
+     *
+     * @return A StringBuilder containing the ASCII art representation of the uncovered tiles.
+     */
     public StringBuilder showUncoveredTiles() {
 
 
@@ -428,7 +618,13 @@ public class Out {
     }
 
 
-
+    /**
+     * Builds and returns a StringBuilder object that represents the player's hand.
+     * The method compiles the ASCII representation of the hand, along with a border
+     * and any cached hand data, into a formatted structure suitable for display.
+     *
+     * @return a StringBuilder object containing the ASCII representation of the hand.
+     */
     public StringBuilder printHand(){
         StringBuilder toPrint = new StringBuilder();
         toPrint.append(ASCII_ART.Hand);
@@ -439,36 +635,44 @@ public class Out {
     }
 
 
+    /**
+     * Constructs and retrieves the visual representation of the game board, including ASCII art
+     * and the current state of the game board based on the specified level and dimensions.
+     *
+     * @return A StringBuilder object containing the formatted visual representation of the game board.
+     */
     public  StringBuilder printGameBoard(){
 
         StringBuilder toPrint = new StringBuilder();
         toPrint.append(ASCII_ART.GameBoard);
+        if(Gameboard!= null){
+            if (lv == 2){
+                for (int i = 0; i < 6; i++) {
 
-        if (lv == 2){
-            for (int i = 0; i < 6; i++) {
-
-                for (int k = 0; k < 7; k++) {
-                    for (int j = 0; j < 12; j++) {
-                        toPrint.append(Gameboard[i][j][k]);
+                    for (int k = 0; k < 7; k++) {
+                        for (int j = 0; j < 12; j++) {
+                            toPrint.append(Gameboard[i][j][k]);
+                        }
+                        toPrint.append("\n");
                     }
-                    toPrint.append("\n");
+
                 }
 
             }
+            else{
+                for (int i = 0; i < 5; i++) {
 
-        }
-        else{
-            for (int i = 0; i < 5; i++) {
-
-                for (int k = 0; k < 7; k++) {
-                    for (int j = 0; j < 11; j++) {
-                        toPrint.append(Gameboard[i][j][k]);
+                    for (int k = 0; k < 7; k++) {
+                        for (int j = 0; j < 11; j++) {
+                            toPrint.append(Gameboard[i][j][k]);
+                        }
+                        toPrint.append("\n");
                     }
-                    toPrint.append("\n");
-                }
 
+                }
             }
         }
+
 
         toPrint.append(ASCII_ART.Border);
         return toPrint;
@@ -477,6 +681,13 @@ public class Out {
     }
 
 
+    /**
+     * Generates a formatted string that displays the list of players
+     * and their readiness status.
+     *
+     * @return A StringBuilder containing the list of players along with
+     *         their "Ready" or "Not Ready" status.
+     */
     public StringBuilder showPlayers() {
         StringBuilder line = new StringBuilder();
                 int i = 0;
@@ -496,8 +707,13 @@ public class Out {
     }
 
 
-
-
+    /**
+     * Displays the current game state to the player. This method toggles
+     * the internal visibility state of the game, ensuring it is temporarily
+     * hidden and then shown to the player via the player's client interface.
+     * The player's client interface handles the rendering or processing
+     * of the game display.
+     */
     public void showGame(){
         show  = false;
         this.playerClient.showGame(this);
@@ -506,10 +722,25 @@ public class Out {
     }
 
 
+    /**
+     * Retrieves the mapping of positions to their corresponding gameboard coordinates.
+     *
+     * @return A HashMap where the key represents a position as an Integer
+     *         and the value is an IntegerPair representing the coordinates on the gameboard.
+     */
     public HashMap<Integer, IntegerPair> getPositionToGameboard() {
         return positionToGameboard;
     }
 
+
+    /**
+     * Initializes the gameboard and sets up the mapping of positions
+     * to their corresponding gameboard coordinates based on the specified level.
+     *
+     * @param lv the level of the gameboard to initialize.
+     *           If lv is 2, a 6x12x7 gameboard is created.
+     *           If lv is 1, a 5x11x7 gameboard is created.
+     */
     public void initGameBoard(int lv){
         this.lv = lv;
         if (lv == 2){
@@ -566,20 +797,37 @@ public class Out {
     }
 
 
+//    private void printTilesSet(){
+//        showUncoveredTiles();
+//    }
 
-    private void printTilesSet(){
-        showUncoveredTiles();
-    }
 
-
+    /**
+     * Sets the value of the cache card.
+     *
+     * @param s the new value to set for CacheCard
+     */
     public void setCacheCard(String s){
         CacheCard = s;
     }
 
+
+    /**
+     * Sets the rewards information.
+     *
+     * @param rewards A StringBuilder object containing the rewards details to be set.
+     */
     public void setRewards(StringBuilder rewards){
         Rewards = rewards;
     }
 
+
+    /**
+     * Generates a StringBuilder object that contains the ASCII art representation
+     * of covered tiles and the size of the CoveredTileSet.
+     *
+     * @return a StringBuilder containing the ASCII art and the CoveredTileSet size
+     */
     public StringBuilder showCovered(){
         StringBuilder toPrint = new StringBuilder();
         toPrint.append(ASCII_ART.CoveredTiles);
@@ -587,6 +835,14 @@ public class Out {
         return toPrint;
     }
 
+
+    /**
+     * Displays the currently cached card along with associated ASCII art if available.
+     * If the CacheCard is empty, the method will return an empty StringBuilder.
+     *
+     * @return a StringBuilder containing the ASCII art of a card followed by the cached card details,
+     *         or an empty StringBuilder if no card is cached.
+     */
     public StringBuilder showCard(){
         StringBuilder toPrint = new StringBuilder();
 
@@ -600,24 +856,50 @@ public class Out {
         return toPrint;
     }
 
-    public void printMessage(String s){
-        inputReader.printGraphicMessage(s);
-    }
+
+//    public void printMessage(String s){
+//        inputReader.printGraphicMessage(s);
+//    }
 
 
+    /**
+     * Renders the content to the provided StringBuilder by delegating
+     * the rendering task to the inputReader's renderScreen method.
+     *
+     * @param sb the StringBuilder instance to which the rendered content is appended
+     */
     public void render(StringBuilder sb){
         inputReader.renderScreen(sb);
     }
 
 
+    /**
+     * Displays the current rewards information.
+     *
+     * @return a StringBuilder object containing the rewards details
+     */
     public StringBuilder showRewards() {
         return Rewards;
     }
 
+
+    /**
+     * Sets the exception message.
+     *
+     * @param exception the exception message to be set
+     */
     public void setException(String exception) {
         this.exception = exception;
     }
 
+
+    /**
+     * Handles and formats exception messages for output.
+     * If an exception message is present, it wraps the message in a formatted
+     * style and resets the exception to an empty state.
+     *
+     * @return A StringBuilder containing the formatted exception message, or an empty StringBuilder if no exception message is available.
+     */
     public StringBuilder showException() {
         StringBuilder sb = new StringBuilder();
         if (!exception.equals("")){
@@ -628,13 +910,26 @@ public class Out {
         return sb;
     }
 
-    public StringBuilder printSystemException(String s){
-        StringBuilder sb = new StringBuilder();
+
+//    public StringBuilder printSystemException(String s){
+//        StringBuilder sb = new StringBuilder();
+//
+//
+//        return sb;
+//    }
 
 
-        return sb;
-    }
-
+    /**
+     * Displays the game boards of all players, including the current player's board.
+     *
+     * The method iterates through the boards of other players and appends their
+     * board representation with relevant details to a string. It includes a border
+     * and player name for context. Once all other players' boards are displayed,
+     * the current player's board is appended in a similar format. The complete
+     * result is then rendered to the screen using the provided input reader.
+     *
+     * Uses ASCII art for board decoration and separation.
+     */
     public void seeBoards() {
         StringBuilder sb = new StringBuilder();
 
@@ -649,6 +944,12 @@ public class Out {
         inputReader.renderScreen(sb);
     }
 
+
+    /**
+     * Sets a log message and adds it to the log list in a formatted manner.
+     *
+     * @param message the log message to set and add to the log list
+     */
     public void setLog(String message) {
         this.effect = message;
         StringBuilder sb = new StringBuilder();
@@ -657,6 +958,15 @@ public class Out {
         log.add(sb.toString());
     }
 
+
+    /**
+     * Displays the effect of a card if present. The effect is formatted with
+     * ANSI yellow color and returned as a StringBuilder. Once the effect
+     * is displayed, it is cleared.
+     *
+     * @return A StringBuilder containing the formatted effect text, or an empty
+     *         StringBuilder if no effect is present.
+     */
     public StringBuilder showCardEffect(){
         StringBuilder sb = new StringBuilder();
         if (!effect.equals("")){
@@ -667,22 +977,54 @@ public class Out {
         return sb;
     }
 
+
+    /**
+     * Retrieves the title card as a StringBuilder.
+     *
+     * @return a StringBuilder object containing the title card.
+     */
     public StringBuilder getTitleCard(){
         return new StringBuilder(titleCard);
     }
 
+
+    /**
+     * Sets the PBInfo property with the specified value.
+     *
+     * @param s the new value to set for PBInfo
+     */
     public void setPBInfo(String s) {
         PBInfo = s;
     }
 
+
+    /**
+     * Returns a StringBuilder object containing the PBInfo data.
+     *
+     * @return a StringBuilder object representing the PBInfo data
+     */
     public StringBuilder showPbInfo(){
         return new StringBuilder(PBInfo);
     }
 
+
+    /**
+     * Sets the deck with the given list of IDs.
+     *
+     * @param ids the list of card IDs to set as the deck
+     */
     public void setDeck(ArrayList<String> ids) {
         deck = ids;
     }
 
+
+    /**
+     * Displays the deck of cards in a formatted manner by aligning the contents of each card.
+     * Each card is split into lines, and cards are displayed side-by-side until all lines are exhausted.
+     * The deck is cleared after the operation.
+     *
+     * @return a StringBuilder containing the formatted representation of the deck. If the deck is empty, returns an empty StringBuilder.
+     */
     public StringBuilder showDeck() {
         if (deck.isEmpty()){
             return new StringBuilder("");
@@ -718,11 +1060,26 @@ public class Out {
 
     }
 
+
+    /**
+     * Sets the hourglass state with specified parameters.
+     *
+     * @param start   a boolean indicating whether to start or stop the hourglass effect
+     * @param message a string message associated with the hourglass effect
+     */
     public void setHourglass(boolean start, String message) {
         hourglass = start;
         effect = message;
     }
 
+
+    /**
+     * Generates a textual representation of an hourglass in ASCII art format.
+     * The representation depends on the current state of the hourglass.
+     *
+     * @return A StringBuilder object containing the ASCII art representation
+     * of either the starting or ending state of the hourglass.
+     */
     public StringBuilder showHorglass(){
         StringBuilder sb = new StringBuilder();
 
@@ -737,6 +1094,13 @@ public class Out {
         return sb;
     }
 
+
+    /**
+     * Compiles all log entries into a single StringBuilder object,
+     * separating each entry with a newline character.
+     *
+     * @return a StringBuilder containing all log entries, with each entry separated by a newline.
+     */
     public StringBuilder showLog() {
         StringBuilder sb = new StringBuilder();
         for (String s : log){
@@ -746,21 +1110,49 @@ public class Out {
         return sb;
     }
 
+
+    /**
+     * Clears the contents of the lobby and log.
+     * This method resets the state by removing all elements
+     * from both the lobby and the log, ensuring they are empty.
+     */
     public void clearOut() {
         lobby.clear();
         log.clear();
     }
 
+
+    /**
+     * Generates and returns a StringBuilder object containing the outcome.
+     *
+     * @return a StringBuilder instance that holds the outcome value.
+     */
     public StringBuilder showOutcome() {
         return new StringBuilder(outcome);
     }
 
+
+    /**
+     * Sets the outcome message based on the provided parameters.
+     *
+     * @param message A string message (not used within the method logic).
+     * @param outcome A boolean value representing the outcome;
+     *                true for success ("hai vinto") and false for failure ("hai perso").
+     */
     public void setOutcome(String message, boolean outcome) {
         if (outcome){
-            this.outcome = "hai vinto";
+            this.outcome = ASCII_ART.win;
         }
         else{
-            this.outcome = "hai perso";
+            this.outcome = ASCII_ART.lose;
         }
+    }
+
+    public void setScoreBoard(StringBuilder sb){
+        scoreboard = sb;
+    }
+
+    public StringBuilder showScoreboard(){
+        return Objects.requireNonNullElseGet(scoreboard, StringBuilder::new);
     }
 }

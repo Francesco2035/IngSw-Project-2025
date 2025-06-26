@@ -5,11 +5,10 @@ package org.example.galaxy_trucker.Model.Boards;
 import org.example.galaxy_trucker.Controller.Listeners.GameBoardListener;
 import org.example.galaxy_trucker.Controller.Messages.GameBoardEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
+import org.example.galaxy_trucker.Controller.Messages.ScoreboardEvent;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.Cards.CardStacks;
 import org.example.galaxy_trucker.Model.Player;
-import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
-import org.example.galaxy_trucker.Model.Tiles.Tile;
 import org.example.galaxy_trucker.Model.Tiles.TileSets;
 
 import java.lang.*;
@@ -22,7 +21,7 @@ public class GameBoard {
 
     // questo arrayList tiene conto della posizione effettiva nel Game
     private ArrayList<Player_IntegerPair> players;
-    private ArrayList<Player_IntegerPair> scoreboard;
+    private HashMap<String, Integer> scoreboard;
     private Player[] positions;
     private int nPositions;
     private int[] startPos;
@@ -44,7 +43,7 @@ public class GameBoard {
         tileSets = list;
         startPos = new int[4];
         PlayersOnBoard = 0;
-        scoreboard = new ArrayList<>();
+        scoreboard = new HashMap<>();
 
         if(lv == 2) {
             nPositions = 24;
@@ -123,33 +122,34 @@ public class GameBoard {
      * @param pl reference to the player
      */
     public void SetStartingPosition(Player pl){
-
         Player_IntegerPair cur = players.stream()
                 .filter(p -> pl.equals( p.getKey()) )
                 .findFirst().orElseThrow();
-
-        SetNewPosition(cur, startPos[PlayersOnBoard], startPos[PlayersOnBoard]);
-
-        PlayersOnBoard++;
+        if(cur.getValue() == -1){
+            SetNewPosition(cur, startPos[PlayersOnBoard], startPos[PlayersOnBoard]);
+            PlayersOnBoard++;
+        }
+        else throw new IllegalStateException("You already are on the board!");
     }
 
 
     public void SetStartingPosition (Player pl, int index) throws IllegalArgumentException{
-
         Player_IntegerPair cur = players.stream()
                 .filter(p -> pl.equals(p.getKey()))
                 .findFirst().orElseThrow();
+        if(cur.getValue() == -1) {
+            if (index > players.size())
+                throw new IllegalArgumentException("Cell not available!");
 
-        if(index > players.size())
-            throw new IllegalArgumentException("Cell not available!");
+            if (positions[startPos[index - 1]] == null) {
+                SetNewPosition(cur, startPos[index - 1], startPos[index - 1]);
+                sendUpdates(new GameBoardEvent(startPos[index - 1], pl.GetID()));
+                System.out.println("@@@" + startPos[index - 1] + ":" + pl.GetID());
+                PlayersOnBoard++;
+            } else throw new IllegalArgumentException("This cell is already taken!");
 
-        if(positions[startPos[index-1]] == null) {
-            SetNewPosition(cur, startPos[index-1], startPos[index-1]);
-            sendUpdates(new GameBoardEvent(startPos[index-1], pl.GetID()));
-            System.out.println("@@@"+startPos[index-1]+":"+pl.GetID());
-            PlayersOnBoard++;
         }
-        else throw new IllegalArgumentException("This cell is already taken!");
+        else throw new IllegalStateException("You already are on the board!");
     }
 
 
@@ -186,7 +186,7 @@ public class GameBoard {
                 if(p.getValue() >=0){
                     p.setValue(shiftedPositions[i]);
                     positions[shiftedPositions[i]] = p.getKey();
-                    System.out.println("@@@Set "+p.getKey().GetID()+" to "+shiftedPositions[i]+ " position: "+positions[shiftedPositions[i]]);
+                    //System.out.println("@@@Set "+p.getKey().GetID()+" to "+shiftedPositions[i]+ " position: "+positions[shiftedPositions[i]]);
                     i++;
                 }
             PlayersOnBoard--;
@@ -210,7 +210,7 @@ public class GameBoard {
     public void updateAllPosition(){
         for(Player_IntegerPair p : players) //come hashmap
             if(p.getValue() >=0){
-                System.out.println("@@@"+p.getValue()+":"+ p.getKey().GetID());
+                //System.out.println("@@@"+p.getValue()+":"+ p.getKey().GetID());
                 sendUpdates(new GameBoardEvent(p.getValue(), p.getKey().GetID()));
             }
     }
@@ -346,7 +346,6 @@ public class GameBoard {
         ArrayList<Player> PlayersCopy = new ArrayList<>();
         try{
             for (Player_IntegerPair player : players) {
-                System.out.println("GAMEBOARD: "+ player.getKey().GetID());
                 PlayersCopy.add(player.getKey());
             }
         }catch (Exception e){
@@ -370,86 +369,64 @@ public class GameBoard {
 
 
     public void abandonRace(Player loser, String message,boolean started) {
-        int arrayIndex;
-//        System.out.println(loser.GetID() + " HAI PERSO!");
-        try {
-            Player_IntegerPair pair = players.stream()
+        //risultato del modulo per andare a togliere il player dalla board
+        try{
+            int arrayIndex;
+            Player_IntegerPair pair= players.stream()
                     .filter(p -> p.getKey().equals(loser))
                     .findFirst()
                     .orElseThrow();
-            if (pair.getValue() < 0) arrayIndex = nPositions - (-pair.getValue() % nPositions);
-            else arrayIndex = pair.getValue() % nPositions;
-            positions[arrayIndex] = null;
-            Player player = pair.getKey();
-            int finalScore = player.CalculateResult(false);
-            if(started) {
-
-                scoreboard.add(new Player_IntegerPair(player, finalScore));
-                pair.getKey().finishRace(finalScore,message);
+            if (started){
+                if (pair.getValue() < 0){
+                    arrayIndex = nPositions - (-pair.getValue() % nPositions);
+                }
+                else {
+                    arrayIndex = pair.getValue() % nPositions;
+                }
+                positions[arrayIndex] = null;
+                int finalScore = loser.CalculateResult(false);
+                scoreboard.put(loser.GetID(), finalScore);
+                loser.finishRace(finalScore,message); // ora il player si spera non esista più
             }
-            else{
+            else {
                 message="quit";
-                pair.getKey().finishRace(finalScore,message);
-
+                loser.finishRace(0,message);
             }
-
-            /// controllare che anche lato controller il player che abbandona smetta di esistere
             players.remove(pair);
-        } catch (Exception e) {
-            Player_IntegerPair pair = players.stream()
-                    .filter(p -> p.getKey().equals(loser))
-                    .findFirst()
-                    .orElseThrow();
-            players.remove(pair);
-            int score = pair.getKey().CalculateResult(false);
-            pair.getKey().finishRace(score,message);
-            if(started) {
-                pair.getKey().finishRace(score,message);
-                scoreboard.add(new Player_IntegerPair(pair.getKey(), score));
-            }
-            else{
-                message="quit";
-                pair.getKey().finishRace(score,message);
-            }
-            //e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
 
     }
 
     public void finishGame(){
-        if (!GameOver){
             int arrayIndex;
 
-            //le positions vanno rimosse dopo imo
             for(Player_IntegerPair p : players){
 
-               Player playah = p.getKey();
-               int finalScore = playah.CalculateResult(true);
-               scoreboard.add(new Player_IntegerPair(playah, finalScore));
+               Player player = p.getKey();
+               int finalScore = player.CalculateResult(true);
+               scoreboard.put(player.GetID(), finalScore);
 
-               /// todo in qualche modo questo deve notificare il gioco che la partitra è finita:)
            }
             for(Player_IntegerPair p:players){
                 int outcome = 0;
-                if(p.getValue() < 0) arrayIndex = nPositions - (-p.getValue() % nPositions);
-               else arrayIndex = p.getValue() % nPositions;
+                if(p.getValue() < 0) {
+                    arrayIndex = nPositions - (-p.getValue() % nPositions);
+                }
+                else{
+                    arrayIndex = p.getValue() % nPositions;
+                }
                 positions[arrayIndex] = null;
                 /// mando classifica
-
-                for(int i=0; i<scoreboard.size(); i++){
-                    if(scoreboard.get(i).getKey().GetID().equals(p.getKey().GetID())){
-                        outcome = scoreboard.get(i).getValue();
-                    }
-                }
-
-                p.getKey().finishRace(outcome,"sk");
+                outcome = scoreboard.get(p.getKey().GetID());
+                ScoreboardEvent scoreboardEvent = new ScoreboardEvent(scoreboard);
+                p.getKey().finishRace(scoreboardEvent,outcome,"sk");
 
             }
 
            players.clear();
 
-        }
     }
 
     public int arrivalBonus(Player player){

@@ -4,6 +4,7 @@ import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.PlayerTi
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Controller.Messages.TileSets.*;
+//import org.example.galaxy_trucker.Messages.TileSets.*;
 
 public interface EventVisitor {
 
@@ -52,6 +53,8 @@ public interface EventVisitor {
     void visit(ReconnectedEvent reconnectedEvent);
 
     void visit(TokenEvent tokenEvent);
+
+    void visit(ScoreboardEvent scoreboardEvent);
 
 
     //public void visit(GameBoardEvent event);

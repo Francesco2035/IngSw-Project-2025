@@ -41,7 +41,7 @@ public class GuiMain extends Application {
     public void start(Stage stage) throws IOException {
         this.primaryStage = stage;
         guiRoot.setStage(primaryStage);
-        guiRoot.goToFirstScene();
+        guiRoot.sceneSetup();
 
     }
 
@@ -49,21 +49,5 @@ public class GuiMain extends Application {
     public static void main(String[] args) {
         launch();
     }
-
-    /**
-     * Stops the application
-     */
-    public void stop () {
-        Platform.exit();
-        System.exit(0);
-    }
-
-    /**
-     * @return A reference to the primary stage.
-     */
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
 
 }

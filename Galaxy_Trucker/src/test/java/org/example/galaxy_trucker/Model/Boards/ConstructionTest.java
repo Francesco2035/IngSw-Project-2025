@@ -10,7 +10,6 @@ import org.example.galaxy_trucker.Controller.PrepController;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.BuildingShip;
-import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

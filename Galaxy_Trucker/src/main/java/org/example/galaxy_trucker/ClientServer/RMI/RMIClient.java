@@ -1,12 +1,11 @@
 package org.example.galaxy_trucker.ClientServer.RMI;
 
-import org.example.galaxy_trucker.ClientServer.NetworkUtils;
 import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.Settings;
 import org.example.galaxy_trucker.Controller.Messages.Event;
-import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
 import org.example.galaxy_trucker.Controller.Messages.TokenEvent;
+import org.example.galaxy_trucker.Model.Cards.SolarSystem;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 
@@ -16,10 +15,11 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.exit;
-import static java.lang.System.out;
 
 public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
@@ -28,10 +28,49 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     private Game myGame;
     private CommandInterpreter commandInterpreter;
     private Client client;
+    private volatile long lastPingTime = System.currentTimeMillis();
+
 
     Boolean running = false;
     private Thread inputLoop = null;
-    boolean lobby = false;
+
+    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+    @Override
+    public void receivePing() throws RemoteException {
+
+        lastPingTime = System.currentTimeMillis();
+        server.receivePong(this);
+
+    }
+
+
+    public void startPingMonitor() {
+        System.out.println("Start monitor pings");
+
+
+        // Se esiste un scheduler attivo, spegnilo prima
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdownNow();
+        }
+
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+
+        scheduler.scheduleAtFixedRate(() -> {
+            long now = System.currentTimeMillis();
+            //System.out.println(lastPingTime);
+            if (now - lastPingTime > 10000) {
+                System.out.println("Connection lost");
+                try {
+                    handleDisconnection();
+                } catch (InterruptedException | IOException e) {
+                    System.out.println("Error while disconnecting: "+e.getMessage());
+                }
+
+            }
+        }, 0, 2, TimeUnit.SECONDS);
+    }
+
 
 
 
@@ -48,57 +87,25 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     }
 
-    public RMIClient(Client client, CommandInterpreter commandInterpreter) throws IOException, NotBoundException, InterruptedException {
-        this.client = client;
-        this.commandInterpreter = commandInterpreter;
-        reconnect();
-
-    }
-
-    private void reconnect() throws IOException, InterruptedException {
-        if (!setup()){
-            handleDisconnection();
-            return;
-        }
-        Command command = commandInterpreter.interpret("Reconnect");
-        if (commandInterpreter.getClient() == null){
-            System.out.println("Reconnecting failed client is null");
-            handleDisconnection();
-            return;
-        }
-        server.command(command);
-        System.out.println("Server started");
-        //monitorPings();
-        running = true;
-
-        sendPongs();
-        inputLoop = new Thread(() -> {
-            try {
-                this.inputLoop(true);
-            } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        inputLoop.setDaemon(true);
-        inputLoop.start();
-    }
 
     private boolean setup(){
         try{
-            //System.out.println("Starting Client");
+            System.out.println("Starting Client");
             Registry registry;
-            //System.out.println(Settings.SERVER_NAME + " " + Settings.RMI_PORT);
+            System.out.println(Settings.SERVER_NAME + " " + Settings.RMI_PORT);
 
             registry = LocateRegistry.getRegistry(Settings.SERVER_NAME, Settings.RMI_PORT);
 
             this.server = (ServerInterface) registry.lookup("CommandReader");
 
-            //System.out.println(server);
+            System.out.println(server);
             running = true;
+            System.out.println("running "+ running);
             return true;
         }
 
         catch(RemoteException | NotBoundException e){
+            System.out.println("error reconnecting "+ e.getMessage());
             return false;
         }
     }
@@ -108,16 +115,10 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     @Override
     public void StartClient() throws IOException, NotBoundException {
-        //System.out.println("Starting Client");
 
         if (!setup()){
             exit(1);
         }
-
-
-
-        //monitorPings();
-
 
         inputLoop = new Thread(() -> {
             try {
@@ -143,12 +144,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         }
     }
 
-    @Override
-    public void receivePing() throws RemoteException {
-
-        //lastPingTime = System.currentTimeMillis();
-
-    }
 
     @Override
     public void receiveToken(String token) throws RemoteException {
@@ -157,10 +152,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         this.client.getView().setGameboard(commandInterpreter.getLv());
         this.client.receiveEvent(new TokenEvent(token));
         //System.out.println(token);
-        sendPongs();
+        //sendPongs();
 
     }
-
 
     public void inputLoop(boolean fromConsole) throws IOException, InterruptedException {
         String cmd = "";
@@ -172,9 +166,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     if (cmd.equals("")){
 
                     }
-                    else if (cmd.equals("ChangeConnection")) {
-                        System.out.println("No need to change connection!");
-                    }
+
                     else if (cmd.equals("Reconnect") && client.getLogin()) {
                         System.out.println("No need to reconnect!");
                     }
@@ -187,12 +179,18 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     else if(cmd.equals("Log")){
                         client.getView().seeLog();
                     }
+                    else if (cmd.equals("BG")){
+                        client.getView().background();
+                        client.getView().refresh();
+                    }
                     else if (cmd.equals("Lobby")){
                         if (!client.getLobby()){
                             client.setLobby(true);
                             LobbyCommand Lobby = new LobbyCommand("Lobby");
                             Lobby.setClient(this);
                             server.command(Lobby);
+                            lastPingTime = System.currentTimeMillis();
+                            startPingMonitor();
                         }
                         else{
                             if (client.getLogin()){
@@ -200,7 +198,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                             }
                             else{
                                 System.out.println("No need to reconnect lobby!");
-
                             }
                         }
 
@@ -208,9 +205,34 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     else if (cmd.equals("Create")){
 
                          if (!client.getLogin()){
-                            client.setLogin(true);
-                            String playerId = client.getView().askInput("Insert player ID: ");
-                            String gameId = client.getView().askInput("Insert game ID: ");
+                            boolean aborted = false;
+                            String playerId = "";
+                            while (playerId.equals("") || playerId.length() > 20){
+                                playerId = client.getView().askInput("Insert player ID [max 20 characters || abort]: ");
+                                if (playerId.equals("abort")){
+                                    aborted = true;
+                                    break;
+                                }
+                            }
+                            if (aborted){
+                                client.getView().refresh();
+                                continue;
+                            }
+
+                            String gameId = "";
+                            while (gameId.equals("") || gameId.length() > 20){
+                                gameId = client.getView().askInput("Insert game ID [max 20 characters || abort]: ");
+                                if (gameId.equals("abort")){
+                                    aborted = true;
+                                    break;
+                                }
+                            }
+                             if (aborted){
+                                 client.getView().refresh();
+                                 continue;
+                             }
+
+
                             int level = Integer.parseInt(client.getView().askInput("Insert game level: "));
                             int maxPlayers = Integer.parseInt(client.getView().askInput("Insert number of players [1-4]: "));
                             if (maxPlayers < 1){
@@ -220,20 +242,19 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                 maxPlayers = 4;
                             }
 
-                            String fullCommand = "Login " + playerId + " " + gameId + " " + level;
-                            //System.out.println(fullCommand);
-//                            commandInterpreter.setPlayerId(playerId);
-//                            commandInterpreter.setGameId(gameId);
                             commandInterpreter = new CommandInterpreter(playerId, gameId);
                             commandInterpreter.setlv(level);
 
                             commandInterpreter.setClient(this);
+                            client.setLogin(true);
                             LoginCommand loginCommand = new LoginCommand(gameId,playerId,level,"Login", maxPlayers);
                             loginCommand.setClient(this);
 
-                            //System.out.println(loginCommand);
                             server.command(loginCommand);
-                            //System.out.println("Sent login command");
+                            if (scheduler != null && scheduler.isShutdown()){
+                                lastPingTime = System.currentTimeMillis();
+                                startPingMonitor();
+                            }
 
                         }
                         else{
@@ -243,19 +264,37 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     }
                     else if (cmd.equals("Join")) {
                         if (!client.getLogin()){
+                            boolean aborted = false;
+                            String playerId = "";
+                            while (playerId.equals("") || playerId.length() > 20){
+                                playerId = client.getView().askInput("Insert player ID [max 20 characters || abort]: ");
+                                if (playerId.equals("abort")){
+                                    aborted = true;
+                                    break;
+                                }
+                            }
+                            if (aborted){
+                                client.getView().refresh();
+                                continue;
+                            }
 
-                            String playerId = client.getView().askInput("Insert player ID: ");
-                            String gameId = client.getView().askInput("Insert game ID: ");
+                            String gameId = "";
+                            while (gameId.equals("") || gameId.length() > 20){
+                                gameId = client.getView().askInput("Insert game ID [max 20 characters || abort]: ");
+                                if (gameId.equals("abort")){
+                                    aborted = true;
+                                    break;
+                                }
+                            }
+                            if (aborted){
+                                client.getView().refresh();
+                                continue;
+                            }
                             if (client.containsGameId(gameId)) {
-//                                System.out.println("Invalid Game!");
-//                                break;
+
                                 client.setLogin(true);
                                 int level = client.getLevel(gameId);
 
-                                //String fullCommand = "Login " + playerId + " " + gameId + " " + level;
-                                //System.out.println(fullCommand);
-//                                commandInterpreter.setPlayerId(playerId);
-//                                commandInterpreter.setGameId(gameId);
                                 commandInterpreter = new CommandInterpreter(playerId, gameId);
                                 commandInterpreter.setlv(level);
 
@@ -265,7 +304,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                 System.out.println(loginCommand);
                                 server.command(loginCommand);
-                                //System.out.println("Sent login command");
+                                lastPingTime = System.currentTimeMillis();
+                                startPingMonitor();
                             }
                             else {
                                 System.out.println("Invalid game: "+gameId+"\n games:");
@@ -305,6 +345,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                 }catch (RemoteException ex) {
                     synchronized (running){
                         if(running){
+                            System.out.println("Exception: ");
                             System.out.println(ex.getMessage());
                             running = false;
                             handleDisconnection();
@@ -321,25 +362,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         else {
             handleDisconnection();
         }
-
-
         System.out.println("Fine input.");
     }
 
-
-    public void changeConnection() throws NotBoundException, IOException, InterruptedException {
-        try {
-            //UnicastRemoteObject.unexportObject(this, true);
-            System.out.println("RMI connection closed.");
-        } catch (Exception e) {
-            System.out.println("Error RMI: " + e.getMessage());
-        }
-        this.server = null;
-
-        client.getView().disconnect();
-        client.changeConnection("TCP", commandInterpreter);
-
-    }
 
 
     public void sendPongs(){
@@ -354,7 +379,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                 try {
                     new Thread(() -> {
                         try {
-                            server.receivePong();
+                            server.receivePong(this);
                         } catch (RemoteException e) {
                             synchronized (running) {
                                 if (running) {
@@ -382,63 +407,85 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
     private void handleDisconnection() throws InterruptedException, IOException {
+        System.out.println("handle disconnection");
         running = false;
-        client.getView().disconnect();
         if (inputLoop != null && inputLoop.isAlive()) {
             inputLoop.interrupt();
-            //inputLoop.join();
         }
-
-        //client.getView().connect();
-        try{
-            while(true) {
-                String whatNow = client.getView().askInput("<Reconnect> | <Exit> | <ChangeConnection> :");
-                switch (whatNow) {
-                    case "Exit": {
-                        exit(1);
-                        return;
-                    }
-                    case "ChangeConnection": {
-                        changeConnection();
-                        return;
-                    }
-                    case "Reconnect": {
-                        if (!setup()) {
-                            System.out.println("Error reconnecting!");
-                            break;
-                        }
-                        Command command = commandInterpreter.interpret("Reconnect");
-                        server.command(command);
-                        running = true;
-                        inputLoop = new Thread(() -> {
-                            try {
-                                this.inputLoop(true);
-                            } catch (IOException | InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
-                        inputLoop.setDaemon(true);
-                        //monitorPings();
-                        sendPongs();
-                        inputLoop.start();
-                        return;
-                    }
-                    default: {
-                        System.out.println("Unknown command: " + whatNow);
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdown();
+        }
+        client.getView().disconnect();
+        String whatNow = "";
+        while(whatNow.isEmpty()|| !running) {
+            whatNow = client.getView().askInput("<Reconnect> | <Exit>: ");
+            switch (whatNow) {
+                case "Exit": {
+                    System.out.println("Exit");
+                    exit(1);
+                    return;
+                }
+                case "Reconnect": {
+                    if (!setup()) {
+                        System.out.println("Error reconnecting!");
                         break;
                     }
+                    String command = "";
+                    Command cmd = null;
+
+                    if(client.getLobby() && !client.getLogin()){
+                        LobbyCommand lobby = new LobbyCommand("Lobby");
+                        lobby.setClient(this);
+                        try {
+                            server.command(lobby);
+                            //System.out.println(lobby.getClass().getSimpleName());
+                        } catch (Exception e) {
+                            System.out.println("catch "+e.getMessage());
+                            //e.printStackTrace();
+                            //throw new RuntimeException(e);
+                            break;
+                        }
+                    }
+                    else if (client.getLogin()){
+                        command = "Reconnect";
+                    }
+                    if (!command.isEmpty()){
+                        try{
+                             cmd = commandInterpreter.interpret(command);
+                        }
+                        catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
+                        try {
+                            server.command(cmd);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    running = true;
+                    inputLoop = new Thread(() -> {
+                        try {
+                            this.inputLoop(true);
+                        } catch (IOException | InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                    inputLoop.setDaemon(true);
+                    inputLoop.start();
+                    //sendPongs();
+                    if (client.getLogin() || client.getLobby()){
+                        lastPingTime = System.currentTimeMillis();
+                        startPingMonitor();
+                    }
+                    return;
+                }
+                default: {
+                    System.out.println("Unknown command: " + whatNow);
+                    break;
                 }
             }
-        } catch (NotBoundException | IOException e) {
-            System.out.println("Error: " + e.getMessage());
-            handleDisconnection();
-
         }
 
     }
 
-
-
-//TODO: usare metodo input reader per stamapre i messaggi di errore e usare [...] per capire se System o Server
-    //perchè tanto potrei salvarmi l'ultimo StringBuilder usato per il render
 }

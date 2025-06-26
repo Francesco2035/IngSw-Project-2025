@@ -1,5 +1,6 @@
 package org.example.galaxy_trucker.Commands;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Model.Cards.Card;
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.Player;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 public class ConsumeEnergyCommand extends Command implements Serializable {
 
+    @JsonProperty("coordinate")
     private ArrayList<IntegerPair> coordinate;
 
     public ConsumeEnergyCommand() {}

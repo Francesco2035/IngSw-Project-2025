@@ -8,12 +8,12 @@ public class PBInfoEvent implements Event {
 
     private int credits;
     private int totValue;
-    private int Energy = 0;
+    private int energy = 0;
     private int exposedConnectors;
     private int damage;
     private int numHumans = 0;
-    private int EnginePower = 0;
-    private double PlasmaDrillsPower = 0;
+    private int enginePower = 0;
+    private double plasmaDrillsPower = 0;
     private boolean purpleAlien;
     private boolean brownAlien;
     private int[] shield;
@@ -24,8 +24,8 @@ public class PBInfoEvent implements Event {
 
     @JsonCreator
     public PBInfoEvent(@JsonProperty("damage") int damage, @JsonProperty("credits") int credits, @JsonProperty("exposedConnectors") int exposedConnectors,
-                       @JsonProperty("shield") int[]shield, @JsonProperty("numHumans") int numHumans, @JsonProperty("EnginePower") int EnginePower,
-                       @JsonProperty("PlasmaDrillPower") double plasmaDrillsPower, @JsonProperty("Energy") int energy,
+                       @JsonProperty("shield") int[]shield, @JsonProperty("numHumans") int numHumans, @JsonProperty("enginePower") int enginePower,
+                       @JsonProperty("plasmaDrillPower") double plasmaDrillsPower, @JsonProperty("energy") int energy,
                        @JsonProperty("purpleAlien") boolean purpleAlien, @JsonProperty("brownAlien") boolean brownAlien,
                        @JsonProperty("totValue") int totValue) {
 
@@ -35,11 +35,11 @@ public class PBInfoEvent implements Event {
         this.exposedConnectors = exposedConnectors;
         this.shield = shield;
         this.numHumans = numHumans;
-        this.EnginePower = EnginePower;
+        this.enginePower = enginePower;
         this.brownAlien = brownAlien;
         this.purpleAlien = purpleAlien;
-        this.Energy = energy;
-        this.PlasmaDrillsPower = plasmaDrillsPower;
+        this.energy = energy;
+        this.plasmaDrillsPower = plasmaDrillsPower;
 
 
 
@@ -50,62 +50,52 @@ public class PBInfoEvent implements Event {
         visitor.visit(this);
     }
 
+    @JsonIgnore
     @Override
     public String message() {
         return "";
     }
 
-    @JsonIgnore
     public int getCredits() {
         return credits;
     }
 
-    @JsonIgnore
     public int getTotValue() {
         return totValue;
     }
 
-    @JsonIgnore
     public int getEnergy() {
-        return Energy;
+        return energy;
     }
 
-    @JsonIgnore
     public int getExposedConnectors() {
         return exposedConnectors;
     }
 
-    @JsonIgnore
     public int getDamage() {
         return damage;
     }
 
-    @JsonIgnore
     public int getNumHumans() {
         return numHumans;
     }
 
-    @JsonIgnore
     public int getEnginePower() {
-        return EnginePower;
+        return enginePower;
     }
 
-    @JsonIgnore
     public double getPlasmaDrillsPower() {
-        return PlasmaDrillsPower;
+        return plasmaDrillsPower;
     }
 
-    @JsonIgnore
     public boolean isPurpleAlien() {
         return purpleAlien;
     }
 
-    @JsonIgnore
     public boolean isBrownAlien() {
         return brownAlien;
     }
 
-    @JsonIgnore
     public int[] getShield() {
         return shield;
     }

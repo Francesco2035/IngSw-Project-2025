@@ -11,21 +11,15 @@ public class DeckEvent implements Event {
 
     private ArrayList<Integer> ids;
 
-    // Costruttore con annotazione @JsonCreator per la deserializzazione
     @JsonCreator
     public DeckEvent(@JsonProperty("ids") ArrayList<Integer> ids) {
         this.ids = ids;
     }
 
-    // Getter per ids
     public ArrayList<Integer> getIds() {
         return ids;
     }
 
-    // Setter per ids
-    public void setIds(ArrayList<Integer> ids) {
-        this.ids = ids;
-    }
 
     @Override
     public void accept(EventVisitor visitor) {

@@ -1,7 +1,6 @@
 package org.example.galaxy_trucker.Model.Boards;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.galaxy_trucker.Controller.Listeners.RewardsListener;
 import org.example.galaxy_trucker.Controller.Messages.PBInfoEvent;
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
@@ -15,7 +14,6 @@ import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.*;
 import org.example.galaxy_trucker.Model.Goods.*;
-import org.jline.builtins.SyntaxHighlighter;
 
 
 import java.util.*;
@@ -890,6 +888,7 @@ public class PlayerBoard {
 
 
     public int getNumHumans() {
+
         return numHumans;
     }
 
@@ -1132,7 +1131,7 @@ public class PlayerBoard {
                 crew++;
             }
 //            int engine = 0;
-            PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,crew, this.EnginePower, this.PlasmaDrillsPower, this.Energy, this.purpleAlien, this.brownAlien, this.totalValue);
+            PBInfoEvent event = new PBInfoEvent(this.damage, this.credits, this.exposedConnectors, this.shield,crew, getEnginePower(), getPlasmaDrillsPower(), this.Energy, this.purpleAlien, this.brownAlien, this.totalValue);
             listener.PBInfoChanged(event);
         }
 

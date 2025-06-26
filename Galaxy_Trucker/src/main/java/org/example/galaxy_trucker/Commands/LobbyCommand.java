@@ -16,6 +16,7 @@ public class LobbyCommand extends Command implements Serializable {
     @JsonProperty("commandType")
     private final String commandType = "LobbyCommand";
 
+    @JsonIgnore //TODO VERIFICARE CHE QUESTO SERVA A QUALCOSA DAVVERO
     private ClientInterface client;
 
 
@@ -28,9 +29,7 @@ public class LobbyCommand extends Command implements Serializable {
 
 
     @Override
-    public void execute(Player player) throws IOException {
-
-    }
+    public void execute(Player player) throws IOException {}
 
     @Override
     public boolean allowedIn(PlayerState playerState) {

@@ -1,13 +1,16 @@
 package org.example.galaxy_trucker.Controller.Messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.io.Serializable;
 
 public class FinishGameEvent implements Event {
 
     boolean win;
     String message;
+
+    public FinishGameEvent() {
+
+    }
 
     public FinishGameEvent(@JsonProperty("win") boolean win, @JsonProperty("message") String message) {
         this.win = win;
@@ -19,6 +22,7 @@ public class FinishGameEvent implements Event {
         visitor.visit(this);
     }
 
+    @JsonIgnore
     @Override
     public String message() {
         return message;
@@ -26,5 +30,9 @@ public class FinishGameEvent implements Event {
 
     public boolean isWin() {
         return win;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

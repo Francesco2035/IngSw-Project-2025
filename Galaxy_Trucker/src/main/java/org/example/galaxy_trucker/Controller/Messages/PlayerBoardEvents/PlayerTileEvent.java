@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.galaxy_trucker.Controller.Messages.Event;
 import org.example.galaxy_trucker.Controller.Messages.EventVisitor;
@@ -22,6 +23,10 @@ public class PlayerTileEvent extends TileEvent implements Event  {
     private ArrayList<Goods> cargo;
     private int rotation;
     private ArrayList<Connectors> connectors;
+
+    public PlayerTileEvent() {
+
+    }
 
     @JsonCreator
     public PlayerTileEvent(
@@ -50,6 +55,7 @@ public class PlayerTileEvent extends TileEvent implements Event  {
         this.playerName = playerName;
     }
 
+    @JsonIgnore
     @Override
     public String message() {
         return "";
@@ -104,5 +110,4 @@ public class PlayerTileEvent extends TileEvent implements Event  {
         visitor.visit(this);
     }
 
-    public PlayerTileEvent() {}
 }

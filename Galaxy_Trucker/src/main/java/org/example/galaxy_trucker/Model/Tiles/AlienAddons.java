@@ -2,7 +2,6 @@ package org.example.galaxy_trucker.Model.Tiles;
 
 import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
-import org.example.galaxy_trucker.Model.Goods.Goods;
 
 public class AlienAddons extends Component{
 

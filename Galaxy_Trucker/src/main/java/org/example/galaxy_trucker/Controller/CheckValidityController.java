@@ -13,13 +13,13 @@ import java.io.IOException;
 public class CheckValidityController extends Controller{
 
 
-    public CheckValidityController( Player player, String gameId,boolean disconnected) {
+    public CheckValidityController( Player player, String gameId,boolean disconnected) { //TODO test
         this.gameId = gameId;
         this.curPlayer = player;
     }
 
     @Override
-    public synchronized void action(Command command, GameController gc) { //  devo overridare anche qui ok
+    public synchronized void action(Command command, GameController gc) { //TODO test //  devo overridare anche qui ok
 
         System.out.println("CHECK_CONTROLLER");
 
@@ -31,7 +31,7 @@ public class CheckValidityController extends Controller{
             try {
                 System.out.println("Action called for " + gameId + ": " + command.getTitle() + " "+ command.playerId);
                 command.execute(curPlayer);
-                if(gc != null){
+                if(gc != null){ // l'if non vine raggiunto per qualche motivo
                     nextState(gc);
                 }
             } catch (Exception e) {
@@ -48,7 +48,7 @@ public class CheckValidityController extends Controller{
     }
 
     @Override
-    public  void  DefaultAction(GameController gc) {
+    public  void  DefaultAction(GameController gc) { //TODO test
         PlayerState state = curPlayer.getPlayerState();
         Command cmd =state.createDefaultCommand(gameId,curPlayer);
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
@@ -56,7 +56,7 @@ public class CheckValidityController extends Controller{
             try {
                 this.curPlayer.SetHasActed(true);
                 System.out.println("DefaultAction called for " + curPlayer.GetID());
-                /// forse potrei fare il controllo che sia != null anche se dovrebbe esssere ridondante
+                /// forse potrei fare il controllo che sia != null anche se dovrebbe essere ridondante
                 cmd.execute(curPlayer);
                 nextState(gc);
 
@@ -64,7 +64,7 @@ public class CheckValidityController extends Controller{
                 playerBoardCopy.setListener(curPlayer.getmyPlayerBoard().getListener());
                 curPlayer.setMyPlance(playerBoardCopy);
                 // this.curPlayer.SetHasActed(false);
-                throw new ImpossibleActionException("errore nelle azioni di default :)");
+                throw new ImpossibleActionException("DefaultAction chiamata impossibile da eseguire nel CheckValidityController");
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -74,7 +74,7 @@ public class CheckValidityController extends Controller{
 
 
     @Override
-    public void nextState(GameController gc) {
+    public void nextState(GameController gc) { //TODO test
         System.out.println("CHECK_CONTROLLER callign next state for " + curPlayer.GetID());
         if (curPlayer.getmyPlayerBoard().checkValidity()) {
             curPlayer.setState(new ChoosePosition());

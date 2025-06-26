@@ -22,6 +22,11 @@ public class TileEvent implements Event {
     private int rotation;
     private ArrayList<Connectors> connectors;
 
+    public TileEvent() {
+
+    }
+
+
     @JsonCreator
     public TileEvent(
             @JsonProperty("id") int id,
@@ -97,6 +102,5 @@ public class TileEvent implements Event {
         visitor.visit(this);
     }
 
-    public TileEvent() {}
 
 }

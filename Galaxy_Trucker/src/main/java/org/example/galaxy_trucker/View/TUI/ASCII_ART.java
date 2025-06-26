@@ -1,5 +1,11 @@
 package org.example.galaxy_trucker.View.TUI;
 
+/**
+ * ASCII_ART class provides utility methods and fields related to ASCII representation
+ * and composition of various game elements, phases, and titles.
+ * It includes static methods to manipulate and compose ASCII art strings and a comprehensive
+ * range of predefined ASCII representations for game phases, titles, and objects.
+ */
 public class ASCII_ART {
 
 
@@ -814,6 +820,15 @@ public class ASCII_ART {
                     "          "
     };
 
+    /**
+     * Adds a number, represented as a string, to each element of the input string array
+     * using ASCII art components for representation.
+     *
+     * @param s the input string array where each element will be modified and the number will be appended
+     * @param n the number to be added, represented as a string
+     * @return a new string array where each input string has been modified to include the appended number
+     * @throws IllegalArgumentException if the number string contains unsupported characters
+     */
     public static String[] addNumber(String[] s, String n) {
 
         int height = equals.length;
@@ -901,6 +916,15 @@ public class ASCII_ART {
         return result;
     }
 
+
+    /**
+     * Composes a string by concatenating elements from multiple string arrays,
+     * separating them with a specified delimiter and appending a newline after each iteration.
+     *
+     * @param s the delimiter to be inserted between elements of the string arrays
+     * @param toCompose a variable number of string arrays to be combined
+     * @return a {@code StringBuilder} containing the composed string
+     */
     public static StringBuilder compose(String s, String[]... toCompose){
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < toCompose[1].length; ++i) {
@@ -966,6 +990,52 @@ public class ASCII_ART {
             "                                  ▓▒▓▓██████▓▓▓▓▒▒▒▒▓▓                                                                                                                                                                                                   \n" +
             "                                                                                                                                                                                                                                                         \n";
 
+
+    public static String lose = "" +
+            "\n" +
+            "\n" +
+            "╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                       ██╗   ██╗ ██████╗ ██╗   ██╗    ██╗      ██████╗ ███████╗███████╗                                                                                                                           ║\n" +
+            "║                                                                                                                       ╚██╗ ██╔╝██╔═══██╗██║   ██║    ██║     ██╔═══██╗██╔════╝██╔════╝                                                                                                                           ║\n" +
+            "║                                                                                                                        ╚████╔╝ ██║   ██║██║   ██║    ██║     ██║   ██║███████╗█████╗                                                                                                                             ║\n" +
+            "║                                                                                                                         ╚██╔╝  ██║   ██║██║   ██║    ██║     ██║   ██║╚════██║██╔══╝                                                                                                                             ║\n" +
+            "║                                                                                                                          ██║   ╚██████╔╝╚██████╔╝    ███████╗╚██████╔╝███████║███████╗                                                                                                                           ║\n" +
+            "║                                                                                                                          ╚═╝    ╚═════╝  ╚═════╝     ╚══════╝ ╚═════╝ ╚══════╝╚══════╝                                                                                                                           ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n" +
+            "\n";
+
+
+    public static String win = "\n" +
+            "\n" +
+            "╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                          ██╗   ██╗ ██████╗ ██╗   ██╗    ██╗    ██╗██╗███╗   ██╗                                                                                                                                  ║\n" +
+            "║                                                                                                                          ╚██╗ ██╔╝██╔═══██╗██║   ██║    ██║    ██║██║████╗  ██║                                                                                                                                  ║\n" +
+            "║                                                                                                                           ╚████╔╝ ██║   ██║██║   ██║    ██║ █╗ ██║██║██╔██╗ ██║                                                                                                                                  ║\n" +
+            "║                                                                                                                            ╚██╔╝  ██║   ██║██║   ██║    ██║███╗██║██║██║╚██╗██║                                                                                                                                  ║\n" +
+            "║                                                                                                                             ██║   ╚██████╔╝╚██████╔╝    ╚███╔███╔╝██║██║ ╚████║                                                                                                                                  ║\n" +
+            "║                                                                                                                             ╚═╝    ╚═════╝  ╚═════╝      ╚══╝╚══╝ ╚═╝╚═╝  ╚═══╝                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "║                                                                                                                                                                                                                                                                                                                  ║\n" +
+            "╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n" +
+            "\n";
 
 
 }

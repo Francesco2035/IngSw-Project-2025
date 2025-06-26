@@ -15,7 +15,6 @@ import org.example.galaxy_trucker.NewTestSetupHelper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
