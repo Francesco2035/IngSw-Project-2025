@@ -538,13 +538,14 @@ public class Out {
     }
 
     /**
-     * Updates or clears the cached data for a specified uncovered tile set.
+     * Updates the uncovered tile set cache for a given index. If the cache parameter
+     * is not null, it stores the cache array in the uncoverdTileSetCache map using the index.
+     * If the cache parameter is null, it removes the entry for the specified index
+     * from the uncoverdTileSetCache map.
      *
-     * @param i the identifier of the tile set to update or clear.
-     *          When the cache parameter is null, this identifier is
-     *          used to remove the tile set cache.
-     * @param cache formatted String[]
-     **/
+     * @param i the index at which the tile set cache is updated or removed
+     * @param cache the array representing the uncovered tile set cache; if null, the existing entry is removed
+     */
     public void setUncoverdTileSetCache(int i, String[] cache) {
         if (cache != null) {
             uncoverdTileSetCache.put((Integer)i, cache);
@@ -557,32 +558,34 @@ public class Out {
     }
 
     /**
-     * Updates the `CardsDescriptions` field with the provided mapping of card IDs to their descriptions.
+     * Sets the descriptions of the cards.
      *
-     * @param cardsDescriptions a HashMap where the keys*/
+     * @param cardsDescriptions a HashMap where the key is an Integer representing the card ID
+     *                          and the value is a String containing the description of the card.
+     */
     public void setCardsDescriptions(HashMap<Integer, String> cardsDescriptions) {
         CardsDescriptions = cardsDescriptions;
     }
 
     /**
-     * Updates the specified cell in the game board at the given coordinates.
+     * Sets the gameboard at the specified coordinates with the provided cell data.
      *
-     * @param x    the x-coordinate on the game board where the cell is to be updated.
-     * @param y    the y-coordinate on the game board where the cell is to be updated.
-     * @param cell the formatted String[]
-     **/
+     * @param x the x-coordinate of the gameboard.
+     * @param y the y-coordinate of the gameboard.
+     * @param cell the data to set at the specified coordinates on the gameboard.
+     */
     public void setGameboard(int x, int y, String[] cell) {
         Gameboard[x][y] = cell;
     }
 
     /**
-     * Updates or initializes the gameboard at the specified coordinates and layer with a given value.
+     * Sets the value of a specific cell in the gameboard.
      *
-     * @param x    the x-coordinate of the cell on the game board.
-     * @param y    the y-coordinate of the cell on the game board.
-     * @param k    the kth position in the cell
-     * @param cell the formatted string
-     * */
+     * @param x   The x-coordinate of the cell on the gameboard.
+     * @param y   The y-coordinate of the cell on the gameboard.
+     * @param k   The depth or layer index of the cell in the gameboard.
+     * @param cell The value to be assigned to the specified cell.
+     */
     public void setGameboard(int x, int y, int k, String cell) {
         Gameboard[x][y][k] = cell;
     }
@@ -1351,10 +1354,20 @@ public class Out {
         }
     }
 
+    /**
+     * Sets the scoreboard with the provided StringBuilder.
+     *
+     * @param sb the StringBuilder object containing the scoreboard data
+     */
     public void setScoreBoard(StringBuilder sb){
         scoreboard = sb;
     }
 
+    /**
+     * Displays the current scoreboard. If the scoreboard is null, an empty StringBuilder is returned.
+     *
+     * @return a StringBuilder object representing the scoreboard, or an empty StringBuilder if the scoreboard is null
+     */
     public StringBuilder showScoreboard(){
         return Objects.requireNonNullElseGet(scoreboard, StringBuilder::new);
     }
