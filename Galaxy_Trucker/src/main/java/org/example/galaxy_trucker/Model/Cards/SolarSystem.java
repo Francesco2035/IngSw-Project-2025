@@ -68,9 +68,9 @@ public class SolarSystem extends Card {
                 PlayerBoard CurrentPlanche =currentPlayer.getmyPlayerBoard();
 
 
-                if(!message.equals(" ")) {
-                    this.sendRandomEffect(currentPlayer.GetID(), new LogEvent(message,-1,-1,-1,-1));
-                }
+//                if(!message.equals(" ")) {
+//                    this.sendRandomEffect(currentPlayer.GetID(), new LogEvent(message,-1,-1,-1,-1));
+//                }
                 this.currentPlayer.setState(new ChoosingPlanet());
 
                 System.out.println(this.currentPlayer.GetID() + " : "+ this.currentPlayer.getPlayerState());
@@ -136,10 +136,10 @@ public class SolarSystem extends Card {
                 ArrayList<Player> pMsg = this.getBoard().getPlayers();
                 for(Player p : pMsg){
                     if (p.GetID() == currentPlayer.GetID()){
-                        this.sendRandomEffect(p.GetID(),new LogEvent("you have chosen planet number"+planet,-1,-1,-1,-1));
+                        this.sendRandomEffect(p.GetID(),new LogEvent(" you have chosen planet number"+planet,-1,-1,-1,-1));
                     }
                     else {
-                        this.sendRandomEffect(p.GetID(), new LogEvent(currentPlayer.GetID() + "has chosen planet number " + planet, -1, -1, -1, -1));
+                        this.sendRandomEffect(p.GetID(), new LogEvent(currentPlayer.GetID() + " has chosen planet number " + planet, -1, -1, -1, -1));
                     }
                 }
                 this.updateStates();
