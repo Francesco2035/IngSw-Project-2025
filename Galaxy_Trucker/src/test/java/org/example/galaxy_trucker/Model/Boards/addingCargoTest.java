@@ -18,6 +18,10 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * test if the cargo is handled correctly in the player board
+ */
+
 public class addingCargoTest {
 
 
@@ -40,6 +44,9 @@ public class addingCargoTest {
 
     }
 
+    /**
+     * test the cargo actions including the switch, discard and insert
+     */
 
     @Test
     public void cargoTest(){

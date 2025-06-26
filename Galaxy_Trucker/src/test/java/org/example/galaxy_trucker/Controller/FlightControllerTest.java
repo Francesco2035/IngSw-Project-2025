@@ -23,6 +23,10 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Tests the flight Controllere subclass
+ */
+
 class FlightControllerTest {
 
 
@@ -34,8 +38,13 @@ class FlightControllerTest {
     static VirtualView vv;
     FlightController c1;
 
+    /**
+     *test the correct call of the handle cargo commands using the flight controller
+     * @throws IOException
+     */
+
     @Test
-    public void testFlightController() throws IOException {
+    public void testHadleCargoInFlight() throws IOException {
 
         game = new Game(2, "testFlightController");
         gc = new GameController(game.getGameID(), game, new GamesHandler(), game.getLv(), 4);

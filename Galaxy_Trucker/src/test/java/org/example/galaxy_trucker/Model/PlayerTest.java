@@ -18,9 +18,16 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test the player class
+ */
 class PlayerTest {
 
 
+    /**
+     * tests the creation of a player and the actions he can take
+     * @throws IOException
+     */
     @Test
     void testPlayer() throws IOException {
 

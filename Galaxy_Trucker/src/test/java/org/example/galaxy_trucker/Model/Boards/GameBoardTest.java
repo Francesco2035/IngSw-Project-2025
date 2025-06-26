@@ -19,8 +19,16 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the gameboard
+ */
+
 class GameBoardTest {
 
+    /**
+     * test the correct creation of a board and seeing if the gameboard catches  the excepions
+     * @throws IOException
+     */
     @Test
     void testGameBoard() throws IOException {
 

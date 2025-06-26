@@ -10,8 +10,14 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the plasma drills
+ */
 class plasmaDrillTest {
-
+    /**
+     * test the initType method
+     * @throws IOException
+     */
     @Test
     void initType() throws IOException {
 
@@ -22,7 +28,10 @@ class plasmaDrillTest {
 
 //        assertEquals(1, Tiles.get(97).getComponent().getAbility());
     }
-
+    /**
+     * test the getability method
+     * @throws IOException
+     */
     @Test
     void getAbility() throws IOException {
 

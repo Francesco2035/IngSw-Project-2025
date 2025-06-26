@@ -15,8 +15,15 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test the gag gen
+ */
 class GAGenTest {
-
+    /**
+     * tests the creation of the tiles and of the card decks
+     * it also tests if they can be picked
+      * @throws IOException
+     */
     @Test
     void getDecks() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -40,7 +47,10 @@ class GAGenTest {
         Tiles.get(99).RotateDx();
     }
 
-
+    /**
+     * test  the cards and tiles to set
+     * @throws IOException
+     */
     @Test
     void listToSet() throws IOException {
 

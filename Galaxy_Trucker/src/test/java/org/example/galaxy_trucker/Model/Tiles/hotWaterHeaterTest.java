@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class hotWaterHeaterTest {
-
+    /**
+     * test the getability method
+     * @throws IOException
+     */
     @Test
     void getAbility() throws IOException {
 
@@ -27,6 +30,10 @@ class hotWaterHeaterTest {
 //        assertEquals(2, comp.getAbility());
 
     }
+    /**
+     * test the initType method
+     * @throws IOException
+     */
 
     @Test
     void initType() throws IOException {

@@ -20,6 +20,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * test the prep controller
+ */
 
 class PrepControllerTest {
 
@@ -29,6 +32,11 @@ class PrepControllerTest {
     static Player p1;
     static VirtualView vv;
     PrepController c1;
+
+    /**
+     * tests the commands that can be called by the prep controller and soe possible exceptions
+     * @throws IOException
+     */
 
     @Test
     public void testPrepController() throws IOException {

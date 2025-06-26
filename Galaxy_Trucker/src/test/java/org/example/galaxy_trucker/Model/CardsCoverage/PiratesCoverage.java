@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * tests pirates for better coverage
+ */
 public class PiratesCoverage {
 
 
@@ -46,9 +49,13 @@ public class PiratesCoverage {
     // static CardsController c1 = new CardsController(p1,game.getGameID(),false);
     //static CardsController c2= new CardsController(p2,game.getGameID(),false);;
 
-
+    /**
+     * tests different decisions and some edge cases for coverage and to see if it catches the excepions
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Test
-    public void DefaultSlavers() throws IOException, InterruptedException {
+    public void PiratesEdgeCase() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");
         NewTestSetupHelper helper = new NewTestSetupHelper();
 

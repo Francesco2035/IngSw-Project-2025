@@ -4,8 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**t
+ * tests the integer pair method
+ */
 class IntegerPairTest {
-
+    /**
+     * tests the return values of the getter and setter methods
+     */
     @Test
     void testIntegerPair() {
 

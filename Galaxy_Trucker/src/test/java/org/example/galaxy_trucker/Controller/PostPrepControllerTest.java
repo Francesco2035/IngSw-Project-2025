@@ -19,6 +19,9 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the postprep Controller
+ */
 class PostPrepControllerTest {
 
 
@@ -29,6 +32,10 @@ class PostPrepControllerTest {
     static VirtualView vv;
     PostPrepController c1;
 
+    /**
+     * tests the addcrewCommands including the ecxceptions
+     * @throws IOException
+     */
     @Test
     public void testPostPrepController() throws IOException {
 

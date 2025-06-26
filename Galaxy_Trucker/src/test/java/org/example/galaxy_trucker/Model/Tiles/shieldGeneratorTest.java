@@ -13,7 +13,10 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class shieldGeneratorTest {
-
+    /**
+     * test the initType method
+     * @throws IOException
+     */
     @Test
     void initType() throws IOException {
 
@@ -28,6 +31,10 @@ class shieldGeneratorTest {
 
     }
 
+    /**
+     * tests if a shield protecsts the orrect sides
+     * @throws IllegalAccessException
+     */
     @Test
     void ShieldGen() throws IllegalAccessException{
 
@@ -39,9 +46,11 @@ class shieldGeneratorTest {
 //        ArrayList<Integer> p =  t.getComponent().getAbility(0);
 //        assertEquals(0,p.get(0).intValue());
     }
-    @Test
-    void getAbility() {
-    }
+
+    /**
+     * tests the set ability method
+     * @throws IOException
+     */
 
     @Test
     void setAbility() throws IOException {

@@ -23,6 +23,9 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * tests the default actions during Abandonedship
+ */
 public class MeteoriteDefenceTest {
 
 

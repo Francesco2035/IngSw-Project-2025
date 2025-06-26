@@ -12,9 +12,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the housing units
+ */
 class HousingUnitTest {
 
-
+    /**
+     * tests the housing units methods
+     */
     @Test
     public void testHousingUnit() {
         Player player = new Player();

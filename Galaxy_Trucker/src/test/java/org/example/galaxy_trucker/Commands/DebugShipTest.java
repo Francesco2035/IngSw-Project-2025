@@ -20,8 +20,17 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests the correct creation of the pre-made Ships
+ */
+
 class DebugShipTest {
 
+
+    /**
+     * tests the validity and correct creation of debugship1
+     * @throws IOException
+     */
 
     @Test
     public void DebugShipTest1() throws IOException {

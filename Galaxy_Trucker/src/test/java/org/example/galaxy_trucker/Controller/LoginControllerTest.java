@@ -17,6 +17,9 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ *tests the logincontroller
+ */
 class LoginControllerTest {
 
 
@@ -27,6 +30,11 @@ class LoginControllerTest {
     static VirtualView vv;
     LoginController c1;
 
+
+    /**
+     * test the excepions calledand commands used by the login controller
+     * @throws IOException
+     */
 
     @Test
     public void testLoginController() throws IOException {

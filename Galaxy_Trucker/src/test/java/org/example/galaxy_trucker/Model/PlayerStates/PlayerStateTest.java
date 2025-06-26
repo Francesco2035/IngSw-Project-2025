@@ -28,9 +28,16 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the actios of player states
+ */
 class PlayerStateTest {
 
-
+    /**
+     *tests what player state allows what action
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Test
     void allows() throws IOException, InterruptedException {
 

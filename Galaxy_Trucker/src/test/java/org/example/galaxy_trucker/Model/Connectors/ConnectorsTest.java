@@ -4,9 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the connectors
+ */
 class ConnectorsTest {
 
-
+    /**
+     * tests the check legal of the connectors 
+     */
     @Test
     public void test() {
 

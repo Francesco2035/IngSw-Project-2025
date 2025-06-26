@@ -19,8 +19,16 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the playerboard for better coverage
+ */
+
 class PlayerBoardTest2 {
 
+    /**
+     * test setters and getters to see if they work
+     * @throws IOException
+     */
     @Test
     void testPlayerBoard() throws IOException {
 

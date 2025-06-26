@@ -14,8 +14,15 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the game controller
+ */
 class GameControllerTest2 {
 
+    /**
+     * test the commands used to create and start a game
+     * @throws IOException
+     */
 
     @Test
     void startGame() throws IOException {

@@ -5,7 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the jason helper
+ */
 class JsonHelperTest {
+    /**
+     * tests the excepion caught by the jsonhelper
+     */
     @Test
     void testJsonHelper() {
         JsonNode node = JsonHelper.parseJson("  { \"id\": 23, \"component\":  {\"componentType\": \"storageCompartment\", \"type\":2}, \"connectors\": [{\"type\":\"UNIVERSAL\"}, {\"type\":\"NONE\"}, {\"type\":\"SINGLE\"}, {\"type\":\"NONE\"}] },\n");

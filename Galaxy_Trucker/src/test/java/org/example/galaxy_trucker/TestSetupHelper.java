@@ -23,6 +23,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * old version of the Newsetuphelper
+ */
 public class TestSetupHelper {
 
     static PlayerBoard playerBoard1 = new PlayerBoard(2);
@@ -40,6 +43,11 @@ public class TestSetupHelper {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * creates a board
+     * @return
+     * @throws IOException
+     */
     public static PlayerBoard createInitializedBoard1() {
 
         ArrayList<Tile> tiles = gag.getTilesDeck();
@@ -117,6 +125,10 @@ public class TestSetupHelper {
 
     }
 
+    /**
+     * prints the entire board in the console
+     */
+
     @Test
     public void print(){
         ArrayList<Tile> tiles = gag.getTilesDeck();
@@ -126,6 +138,10 @@ public class TestSetupHelper {
 
 
     }
+    /**
+     * checks the validity of the created board
+     * @throws IOException
+     */
 
     @Test
     public void boardChecks(){
@@ -133,6 +149,11 @@ public class TestSetupHelper {
         assertFalse(playerBoard.checkValidity());
 
     }
+    /**
+     * creates a board
+     * @return
+     * @throws IOException
+     */
 
     public static PlayerBoard createInitializedBoard2(){
         /// crea la 39 e 48 ad hoc perché le usa gia la uno e ovviamente crea problemi popolarle entrambe
@@ -180,6 +201,11 @@ public class TestSetupHelper {
 
 
     }
+    /**
+     * creates a board
+     * @return
+     * @throws IOException
+     */
 
     public static PlayerBoard createInitializedBoard3(){
         //test housing unit
@@ -217,6 +243,11 @@ public class TestSetupHelper {
 
         return playerBoard3;
     }
+    /**
+     * creates a board
+     * @return
+     * @throws IOException
+     */
 
     public static PlayerBoard createInitializedBoard4(){
         SINGLE SS = SINGLE.INSTANCE;
@@ -229,6 +260,11 @@ public class TestSetupHelper {
 
         return playerBoard4;
     }
+    /**
+     * creates a board
+     * @return
+     * @throws IOException
+     */
 
     public static PlayerBoard createInitializedBoard5(){
         //invalid
@@ -263,6 +299,10 @@ public class TestSetupHelper {
 
         return playerBoard5;
     }
+    /**
+     * populates a board entirely with humans
+     * @param playerBoard
+     */
 
     public static void HumansSetter1(PlayerBoard playerBoard){
 
@@ -277,6 +317,10 @@ public class TestSetupHelper {
         HousingCoords.clear();
     }
 
+    /**
+     * populates a board withs humans and puts a purple alien in a givenposition if possible
+     * @param playerBoard
+     */
 
     public static void HumansSetter2(PlayerBoard playerBoard){ ArrayList<HousingUnit> HousingCoords=new ArrayList<>();
         HousingCoords.addAll(playerBoard.getHousingUnits());
@@ -291,6 +335,11 @@ public class TestSetupHelper {
 
     }
 
+    /**
+     * creates a GameControllerClass
+     * @return
+     * @throws IOException
+     */
 
     public static GameController GameControllerSetup() throws IOException {
         Game game = new Game(2, "poggi");

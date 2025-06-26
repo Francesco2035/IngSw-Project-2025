@@ -18,6 +18,9 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the default actions during Abandonedship
+ */
 public class DefaultSolarSystem {
 
     static Game game;
