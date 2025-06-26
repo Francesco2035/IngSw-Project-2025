@@ -21,6 +21,18 @@ import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.util.HashMap;
 
+/**
+ * The Client class is responsible for handling the communication between the client
+ * and the server, managing the player's view and events, and coordinating game logic
+ * on the client side. It implements the EventVisitor interface allowing the client
+ * to react to various events.
+ *
+ * It supports both RMI and TCP communication protocols and provides functionalities
+ * such as updating the board, managing game states, and processing events from the server.
+ *
+ * The Client also initializes different types of views (GUI or TUI) and orchestrates
+ * the game flow and interactions between the user interface, the server, and the game logic.
+ */
 public class Client implements EventVisitor {
 
     private View view;
@@ -35,35 +47,79 @@ public class Client implements EventVisitor {
     CommandInterpreter commandInterpreter;
 
 
+    /**
+     * Retrieves the login status of the client.
+     *
+     * @return true if the client is logged in; false otherwise.
+     */
     public boolean getLogin(){
         return login;
     }
 
+    /**
+     * Sets the login status of the client.
+     *
+     * @param login the new login status to be set. True indicates the client is logged in,
+     *              while false indicates the client is logged out.
+     */
     public void setLogin(boolean login){
         this.login = login;
     }
 
+    /**
+     * Retrieves the current status of the lobby.
+     *
+     * @return a boolean indicating the state of the lobby.
+     *         Returns true if the lobby is active, otherwise false.
+     */
     public boolean getLobby(){
         return lobby;
     }
 
+    /**
+     * Sets the lobby status for the client.
+     *
+     * @param lobby a boolean value indicating the lobby state.
+     *              If {@code true}, the client is in the lobby;
+     *              if {@code false}, the client is not in the lobby.
+     */
     public void setLobby(boolean lobby){
         this.lobby = lobby;
     }
 
 
+    /**
+     * Checks whether a specific game ID is present in the gameidToLV map.
+     *
+     * @param gameId the ID of the game to check for in the map.
+     * @return {@code true} if the game ID is present in the map, {@code false} otherwise.
+     */
     public synchronized boolean containsGameId(String gameId) {
         //System.out.println(this);
 
         return gameidToLV.containsKey(gameId);
     }
 
+    /**
+     * Retrieves the level associated with the specified game ID.
+     * This method is thread-safe and ensures synchronized access to the underlying data structure.
+     *
+     * @param gameId the unique identifier of the game whose level is to be retrieved
+     * @return the level associated with the given game ID, or null if the game ID does not exist in the mapping
+     */
     public synchronized int getLevel(String gameId) {
         //System.out.println(this);
 
         return gameidToLV.get(gameId);
     }
 
+    /**
+     * Associates a game ID with a specific level in the internal mapping structure.
+     * If the game ID is not already present in the mapping, it will be added along with the specified level.
+     *
+     * @param gameid the unique identifier of the game to associate with a level.
+     * @param lv the level to be associated with the specified game ID.
+     */
     public synchronized void setGameIdToLV(String gameid, int lv) {
         //System.out.println(this);
 
@@ -72,27 +128,49 @@ public class Client implements EventVisitor {
         //System.out.println(gameid + " " + gameidToLV.get(gameid)+" size: "+gameidToLV.size());
     }
 
+    /**
+     * Retrieves the mapping of game IDs to their associated levels.
+     * This method provides a thread-safe access to the internal data structure.
+     *
+     * @return a HashMap where the keys are game IDs (strings) and the values are the corresponding levels (integers)
+     */
     public synchronized HashMap<String, Integer> getGameidToLV() {
         return gameidToLV;
     }
 
+    /**
+     * Default constructor for the Client class.
+     * Initializes the game board represented as a 10x10 array of {@link TileEvent}.
+     */
     public Client() {
         board = new TileEvent[10][10];
     }
 
+    /**
+     * Initializes and starts the RMI client for the application.
+     * The method sets up the RMIClient instance and invokes its `StartClient` method to establish
+     * the RMI connection necessary for client-server communication.
+     *
+     * @throws IOException if an I/O error occurs during the RMI client setup.
+     * @throws NotBoundException if the RMI registry does not contain a binding for the expected remote object.
+     * @throws InterruptedException if the thread executing the method is interrupted.
+     */
     public void startRMIClient() throws IOException, NotBoundException, InterruptedException {
         //this.commandInterpreter = new CommandInterpreter();
-
         //String ip = NetworkUtils.getLocalIPAddress();
-
-        //TODO: da fare in modo dinamico, non so se la classe networkutils lo trova quello di zerotier
         //System.setProperty("java.rmi.server.hostname", ip);
-
         //System.out.println("RMI hostname set to: " + ip);
         rmiClient = new RMIClient(this);
         rmiClient.StartClient();
     }
 
+    /**
+     * Initializes and starts the TCP client for the application.
+     * This method creates a new instance of the TCPClient using the current client instance
+     * and invokes its startClient method to establish and manage the connection.
+     *
+     * @throws IOException if an I/O error occurs while starting the TCP client.
+     */
     private void startTCPClient() throws IOException {
         //this.commandInterpreter = new CommandInterpreter();
         tcpClient = new TCPClient(this);
@@ -101,16 +179,16 @@ public class Client implements EventVisitor {
 
 
 
-    public void updateBoard(TileEvent event) {
-        //System.out.println(event.message());
-        board[event.getX()][event.getY()] = event;
-        view.updateBoard(event);
-    }
 
-    public void updateHand(HandEvent event) {
-        view.updateHand(event);
-    }
-
+    /**
+     * Launches the client application, prompting the user to configure server connection
+     * settings and interface preferences. This method interacts with the user through the
+     * console for input, establishes the appropriate connection type (TCP or RMI), and
+     * initializes the selected user interface (GUI or TUI).
+     *
+     * @throws Exception if any error occurs during the execution of the method,
+     *                   including IO operations or client setup.
+     */
     public  void run() throws Exception {
         Terminal terminal = TerminalBuilder.builder().build();
         LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
@@ -154,86 +232,150 @@ public class Client implements EventVisitor {
         }
     }
 
-//    public void disconnected(UUID token){
-//        this.token = token;
-//        String s = view.askInput("Choose connection type or EXIT");
-//        if (s.equalsIgnoreCase("EXIT")) {
-//            System.exit(0);
-//        }
-//        if (s.equals("RMI")) {
-//            System.exit(0);
-//        }
-//        if (s.equals("TCP")) {
-//            tcpClient = new TCPClient(this);
-//            tcpClient.reconnect(token);
-//        }
-//    }
 
-
-
+    /**
+     * Retrieves the current view associated with the client.
+     *
+     * @return the current {@code View} instance representing the client's interface.
+     */
     public View getView() {
         return view;
     }
 
+
+    /**
+     * Sets the view associated with the client.
+     * This method updates the internal reference to the view to the provided instance.
+     *
+     * @param view the view instance to be associated with the client
+     */
     public void setView(View view) {
         this.view = view;
     }
 
-    public void updateCoveredTilesSet(CoveredTileSetEvent event) {
-        this.view.updateCoveredTilesSet(event);
-    }
 
-
-    public void updateUncoveredTilesSet(UncoverdTileSetEvent event) {
-        this.view.updateUncoveredTilesSet(event);
-    }
-
-    public void seeDeck(DeckEvent deck) {
-        this.view.showDeck(deck);
-    }
-
+    /**
+     * Receives and processes an event by allowing it to invoke its corresponding
+     * visitor method on this client instance. The event is expected to implement
+     * the Visitor design pattern, invoking its {@code accept} method with the
+     * current object as the visitor.
+     *
+     * @param event the event to be processed. This event must be a subclass of
+     *              {@code Event} and is expected to handle its behavior using
+     *              the Visitor design pattern by delegating control to the
+     *              appropriate visit method on the current object.
+     */
     public void receiveEvent(Event event) {
         event.accept(this);
     }
 
+    /**
+     * Handles the visit for a {@code LobbyEvent} instance.
+     * This method displays the lobby associated with the provided event
+     * using the client's view.
+     *
+     * @param event the {@code LobbyEvent} instance to be processed,
+     *              containing data about the lobby to display.
+     */
     @Override
     public void visit(LobbyEvent event){this.view.showLobby(event);}
 
+    /**
+     * Handles the visit for a {@code PhaseEvent}.
+     * This method is invoked when a {@code PhaseEvent} is processed,
+     * and it delegates the phase change handling to the client's view.
+     *
+     * @param event the {@code PhaseEvent} to be handled,
+     *              containing details regarding the phase change.
+     */
     @Override
     public void visit(PhaseEvent event) {
         //System.out.println("------------------------------------------------------------------------------------nuove phase "+event.getStateClient().getClass());
         this.view.phaseChanged(event);
     }
 
+    /**
+     * Handles the visit operation for a {@code RewardsEvent} instance.
+     * This method updates the client's view to reflect the changes indicated by the rewards event.
+     *
+     * @param rewardsEvent the {@code RewardsEvent} instance containing the details
+     *                     of the rewards that have changed or been updated.
+     */
     @Override
     public void visit(RewardsEvent rewardsEvent) {this.view.rewardsChanged(rewardsEvent);}
 
+    /**
+     * Handles the visit for an {@code ExceptionEvent} instance.
+     * This method delegates the exception handling to the client's view.
+     *
+     * @param exceptionEvent the {@code ExceptionEvent} instance to be processed,
+     *                       containing details about the exception that occurred.
+     */
     @Override
     public void visit(ExceptionEvent exceptionEvent) {
         this.view.exceptionOccurred(exceptionEvent);
     }
 
+    /**
+     * Handles the visit for a {@code PlayerTileEvent}.
+     * This method updates the view to reflect changes related to other players' progress
+     * as indicated by the {@code PlayerTileEvent}.
+     *
+     * @param playerTileEvent the {@code PlayerTileEvent} instance containing
+     *                        data about updates to other players' progress or tiles.
+     */
     @Override
     public void visit(PlayerTileEvent playerTileEvent) {
         this.view.updateOthersPB(playerTileEvent);
     }
 
+    /**
+     * Handles the visit operation for a {@code LogEvent} instance.
+     * This method triggers the client's view to apply the effect associated
+     * with the provided log event.
+     *
+     * @param event the {@code LogEvent} instance containing the details
+     *              of the log message or action to be displayed or executed.
+     */
     @Override
     public void visit(LogEvent event) {
         this.view.effectCard(event);
     }
 
+    /**
+     * Handles the visit for a {@code ConnectionRefusedEvent} instance.
+     * This method sets the client's login status to {@code false} and
+     * delegates the exception handling to the client's view.
+     *
+     * @param event the {@code ConnectionRefusedEvent} instance to be processed,
+     *              containing details about the connection refusal.
+     */
     @Override
     public void visit(ConnectionRefusedEvent event) {
         login = false;
         this.view.exceptionOccurred(new ExceptionEvent(event.message()));
     }
 
+    /**
+     * Handles the visit operation for a {@code PBInfoEvent} instance.
+     * This method updates the client's view with information encapsulated in the {@code PBInfoEvent}.
+     *
+     * @param event the {@code PBInfoEvent} instance containing the relevant information
+     *              to be presented or processed by the client's view.
+     */
     @Override
     public void visit(PBInfoEvent event) {
         this.view.updatePBInfo(event);
     }
 
+    /**
+     * Handles the visit operation for a {@code QuitEvent} instance.
+     * This method updates the client's login and lobby status to reflect
+     * that the user has quit, and notifies the view of the phase change.
+     *
+     * @param quitEvent the {@code QuitEvent} instance to be processed,
+     *                  indicating that the user has quit.
+     */
     @Override
     public void visit(QuitEvent quitEvent) {
         this.login = false;
@@ -241,11 +383,27 @@ public class Client implements EventVisitor {
         this.view.phaseChanged(new PhaseEvent(loginClient));
     }
 
+    /**
+     * Handles the visit for an {@code HourglassEvent} instance.
+     * This method updates the client's view to reflect the state or changes indicated by the hourglass event.
+     *
+     * @param event the {@code HourglassEvent} instance to be processed,
+     *              containing information about the hourglass state or update.
+     */
     @Override
     public void visit(HourglassEvent event) {
         this.view.updateHourglass(event);
     }
 
+    /**
+     * Handles the visit for a {@code FinishGameEvent} instance.
+     * This method updates the client's status by setting the login and lobby states to false.
+     * It displays the game outcome using the client's view and pauses execution briefly
+     * before notifying about a phase change.
+     *
+     * @param event the {@code FinishGameEvent} instance to be processed,
+     *              containing details about the game's conclusion and outcome.
+     */
     @Override
     public void visit(FinishGameEvent event) {
         this.login = false;
@@ -260,6 +418,15 @@ public class Client implements EventVisitor {
         this.view.phaseChanged(new PhaseEvent(loginClient));
     }
 
+    /**
+     * Handles a {@code ReconnectedEvent} to manage client reconnection logic.
+     * This method updates the client state based on the token and player information
+     * provided by the event, initializes appropriate components for game interaction,
+     * and invokes view updates to reflect the reconnection.
+     *
+     * @param event the {@code ReconnectedEvent} containing details of the reconnection,
+     *              including the token, player ID, game ID, and other relevant data.
+     */
     @Override
     public void visit(ReconnectedEvent event) {
         this.token = event.getToken();
@@ -285,11 +452,25 @@ public class Client implements EventVisitor {
 
     }
 
+
+    /**
+     * Handles the visitation of a TokenEvent instance and delegates its processing to the view.
+     *
+     * @param tokenEvent the TokenEvent instance to be processed
+     */
     @Override
     public void visit(TokenEvent tokenEvent) {
         this.view.Token(tokenEvent);
     }
 
+
+    /**
+     * Handles the given ScoreboardEvent by showing the score using the view and
+     * performing phase transition operations. Pauses the thread temporarily
+     * before notifying the phase change.
+     *
+     * @param event the ScoreboardEvent containing the information to be handled
+     */
     @Override
     public void visit(ScoreboardEvent event) {
         this.login = false;
@@ -304,46 +485,102 @@ public class Client implements EventVisitor {
         this.view.phaseChanged(new PhaseEvent(loginClient));
     }
 
+
+    /**
+     * Processes a given DeckEvent by displaying the associated deck.
+     *
+     * @param event the DeckEvent to process
+     */
     @Override
     public void visit(DeckEvent event) {
         this.view.showDeck(event);
     }
 
+
+    /**
+     * Processes the given CardEvent and updates the view to show the associated card.
+     *
+     * @param event the CardEvent to be handled, representing the event that triggers
+     *              the display of a specific card in the view
+     */
     @Override
     public void visit(CardEvent event) {
         this.view.showCard(event);
     }
 
+
+    /**
+     * Handles the visiting logic for a GameLobbyEvent.
+     *
+     * @param event the GameLobbyEvent object containing details about the game lobby
+     */
     @Override
     public void visit(GameLobbyEvent event){
         this.view.showLobbyGame(event);
     }
 
+
+    /**
+     * Handles the visit action for the provided HandEvent.
+     *
+     * @param event the HandEvent object to be processed, containing the details of the hand action
+     */
     @Override
     public void visit(HandEvent event) {
         this.view.updateHand(event);
     }
 
+
+    /**
+     * Processes the provided VoidEvent.
+     *
+     * @param event the VoidEvent instance to be processed
+     */
     @Override
     public void visit(VoidEvent event) {
         System.out.println("non so a cosa serve, vediamo se arriva un void");
     }
 
+
+    /**
+     * Handles the visit action for a given TileEvent by updating the board view.
+     *
+     * @param event the TileEvent instance containing the details needed to update the board
+     */
     @Override
     public void visit(TileEvent event) {
         this.view.updateBoard(event);
     }
-    
+
+
+    /**
+     * Handles the visit operation for an UncoverdTileSetEvent.
+     *
+     * @param event the UncoverdTileSetEvent to be processed
+     */
     @Override
     public void visit(UncoverdTileSetEvent event) {
         this.view.updateUncoveredTilesSet(event);
     }
 
+
+    /**
+     * Handles the CoveredTileSetEvent by updating the covered tiles in the view.
+     *
+     * @param event the CoveredTileSetEvent containing the details of the updated covered tiles
+     */
     @Override
     public void visit(CoveredTileSetEvent event) {
         this.view.updateCoveredTilesSet(event);
     }
 
+
+    /**
+     * Handles the visit operation for a GameBoardEvent. This method is used to
+     * update the game board view based on the details of the provided event.
+     *
+     * @param gameBoardEvent the event containing the game board update details
+     */
     @Override
     public void visit(GameBoardEvent gameBoardEvent) {
         this.view.updateGameboard(gameBoardEvent);

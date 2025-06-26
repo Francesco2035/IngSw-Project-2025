@@ -149,7 +149,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
      * @param lv the level used to determine the configuration of the event matrix.
      *           The values affect how events are mapped to the grid.
      */
-    public void setEventMatrix(int lv) { //TODO test
+    public void setEventMatrix(int lv) {
         ArrayList<Connectors> noneConnectors = new ArrayList<>();
         noneConnectors.add(NONE.INSTANCE);
         noneConnectors.add(NONE.INSTANCE);
@@ -214,7 +214,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
      *               - If the client interface (`client`) is present, the event is sent
      *                 using the `receiveMessage` method.
      */
-    public void sendEvent(HandEvent event)  { //TODO test
+    public void sendEvent(HandEvent event)  {
         hand = event;
         if (!Disconnected) {
             if (out != null ) {
@@ -248,7 +248,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
      *              to be sent. It holds data such as player details and tile
      *              information.
      */
-    public void sendEvent(PlayerTileEvent event){ //TODO test
+    public void sendEvent(PlayerTileEvent event){
 
         if (!Disconnected) {
             if (out != null) {
@@ -366,7 +366,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
      *              It contains information such as the size of the tile set.
      */
     @Override
-    public void tilesSetChanged(CoveredTileSetEvent event)  { //TODO test
+    public void tilesSetChanged(CoveredTileSetEvent event)  {
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -399,7 +399,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
      * @throws RemoteException if there is an error communicating with the client interface.
      */
     @Override
-    public void tilesSetChanged(UncoverdTileSetEvent event) throws RemoteException { //TODO test
+    public void tilesSetChanged(UncoverdTileSetEvent event) throws RemoteException {
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -432,7 +432,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
      *              of card IDs representing the current deck state.
      */
     @Override
-    public void seeDeck(DeckEvent event) { //TODO test
+    public void seeDeck(DeckEvent event) {
         if (!Disconnected) {
             if (out != null) {
                 try{
@@ -472,7 +472,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
      *              system components.
      */
     @Override
-    public void newCard(CardEvent event) { //TODO test
+    public void newCard(CardEvent event) {
         card = event;
         if (!Disconnected) {
             if (out != null) {
@@ -586,7 +586,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
      * - The method iterates through collections and matrices to resend events and should be
      *   optimized for performance in games with a large number of events or complex states.
      */
-    public void reconnect() { //TODO test
+    public void reconnect() {
 
         sendEvent(new ReconnectedEvent(token,idGame,playerName,lv));
 
@@ -684,7 +684,7 @@ public class VirtualView implements PlayerBoardListener, HandListener, TileSestL
      * @param event The GameLobbyEvent object containing details about the changes in the game lobby.
      */
     @Override
-    public void GameLobbyChanged(GameLobbyEvent event) { //TODO test
+    public void GameLobbyChanged(GameLobbyEvent event) {
         lobby = event;
         if (!Disconnected) {
             if (out != null) {

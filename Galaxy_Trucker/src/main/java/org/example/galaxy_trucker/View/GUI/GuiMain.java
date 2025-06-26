@@ -32,6 +32,7 @@ public class GuiMain extends Application {
         Application.launch(GuiMain.class);
     }
 
+
     /**
      * Starts the application and displays first scene
      * @param stage Stage to set
@@ -42,7 +43,6 @@ public class GuiMain extends Application {
         this.primaryStage = stage;
         guiRoot.setStage(primaryStage);
         guiRoot.sceneSetup();
-
     }
 
 

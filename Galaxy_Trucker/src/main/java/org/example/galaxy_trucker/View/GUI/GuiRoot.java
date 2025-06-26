@@ -211,7 +211,7 @@ public class GuiRoot implements View {
             primaryScene = new Scene(primaryRoot, 800, 600);
 
             tileImage = new ImageView();
-            tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
+            tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/tileBG.png"));
             tileImage.setImage(tilePlaceholder);
             tileImage.setOpacity(0.5);
 
@@ -2332,7 +2332,7 @@ public class GuiRoot implements View {
 
 
         HBox bufferBox = new HBox( 15, buffer1, buffer2);
-        bufferBox.setPadding(new Insets(20));
+        bufferBox.setPadding(new Insets(35));
         Pane bufferPane = new Pane(bufferBox);
         StackPane buffer = new StackPane(background, bufferPane);
 
@@ -3175,7 +3175,7 @@ public class GuiRoot implements View {
             VBox txtBox = new VBox(3,new HBox(10, alert, txt1), txt2, txt3, ok);
             txtBox.setAlignment(Pos.CENTER);
 
-            Scene scene = new Scene(txtBox, 400, 150);
+            Scene scene = new Scene(txtBox, 400, 200);
             stage.setScene(scene);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.show();
