@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Controller.Listeners;
 
-import org.example.galaxy_trucker.Controller.Messages.HandEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.HandEvent;
 
 /**
  * The HandListener interface is used to listen for changes or updates to a hand event.

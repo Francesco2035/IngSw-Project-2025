@@ -2,7 +2,7 @@ package org.example.galaxy_trucker.Controller;
 
 import org.example.galaxy_trucker.Commands.Command;
 import org.example.galaxy_trucker.Controller.Listeners.ControllerHourGlassListener;
-import org.example.galaxy_trucker.Controller.Messages.HourglassEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.HourglassEvent;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.AddCrewState;
 import org.example.galaxy_trucker.Model.PlayerStates.CheckValidity;

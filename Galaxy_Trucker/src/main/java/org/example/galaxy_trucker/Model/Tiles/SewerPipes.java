@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RemoveTileEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 
 public class SewerPipes extends Component {

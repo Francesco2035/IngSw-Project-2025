@@ -3,9 +3,8 @@ package org.example.galaxy_trucker.ClientServer.RMI;
 import org.example.galaxy_trucker.Commands.*;
 import org.example.galaxy_trucker.ClientServer.Client;
 import org.example.galaxy_trucker.ClientServer.Settings;
-import org.example.galaxy_trucker.Controller.Messages.Event;
-import org.example.galaxy_trucker.Controller.Messages.TokenEvent;
-import org.example.galaxy_trucker.Model.Cards.SolarSystem;
+import org.example.galaxy_trucker.ClientServer.Messages.Event;
+import org.example.galaxy_trucker.ClientServer.Messages.TokenEvent;
 import org.example.galaxy_trucker.Model.Game;
 import org.example.galaxy_trucker.Model.Player;
 

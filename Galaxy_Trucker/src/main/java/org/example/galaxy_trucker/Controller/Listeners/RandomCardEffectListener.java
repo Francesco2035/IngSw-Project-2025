@@ -1,6 +1,6 @@
 package org.example.galaxy_trucker.Controller.Listeners;
 
-import org.example.galaxy_trucker.Controller.Messages.TileSets.LogEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.TileSets.LogEvent;
 
 /**
  * Represents a listener interface for handling random card effects in the system.

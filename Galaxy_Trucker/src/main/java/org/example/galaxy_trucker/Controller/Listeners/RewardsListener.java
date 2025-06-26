@@ -1,7 +1,7 @@
 package org.example.galaxy_trucker.Controller.Listeners;
 
 
-import org.example.galaxy_trucker.Controller.Messages.PlayerBoardEvents.RewardsEvent;
+import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RewardsEvent;
 
 /**
  * The RewardsListener interface should be implemented by any class
