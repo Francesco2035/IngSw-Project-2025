@@ -88,80 +88,441 @@ import java.util.stream.Collectors;
  */
 public class GuiRoot implements View {
 
+    /**
+     * Represents the main thread responsible for managing and updating the graphical user interface (GUI).
+     * This thread is typically used to ensure that all GUI-related operations are performed
+     * on the same thread to maintain thread safety and avoid concurrency issues.
+     */
     private Thread guiThread;
+    /**
+     * A thread-safe blocking queue that holds strings to be processed as input.
+     * This queue uses a First-In-First-Out (FIFO) ordering and provides methods
+     * that block or timeout when retrieving or adding elements, ensuring safe
+     * concurrent access in multi-threaded environments.
+     */
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
+    /**
+     * Represents the primary stage of the JavaFX application.
+     * This is the main window where the application's user interface
+     * is displayed. It serves as the entry point for displaying
+     * scenes and managing the main application lifecycle.
+     */
     private Stage primaryStage;
 
+    /**
+     * The root container for the primary user interface layout in a JavaFX application.
+     * This object serves as the main container node for all other graphical components
+     * and defines the structure of the application's visible scene.
+     */
     private StackPane primaryRoot;
+    /**
+     * The root container for the main content of the user interface.
+     * This variable typically acts as the primary parent node
+     * for displaying content components or controls in the application layout.
+     */
     private Pane contentRoot;
+    /**
+     * Represents the primary {@link Scene} of the application.
+     * This variable is used to set and manage the main user interface elements
+     * displayed within the application's primary stage.
+     */
     private Scene primaryScene;
 
 
+    /**
+     * Represents the client responsible for handling player-related operations
+     * such as managing player data or communicating with player services.
+     */
     private PlayerClient playerClient;
+    /**
+     * A private instance variable representing the output handler for the graphical user interface.
+     * The printer is responsible for handling and managing the output display within the GUI context.
+     */
     private GuiOut printer;
+    /**
+     * A list of lobby event objects used to store events occurring within a lobby.
+     * This variable holds instances of the LobbyEvent class, which represent individual events.
+     */
     private ArrayList<LobbyEvent> lobbyEvents = new ArrayList<>();
 
+    /**
+     * Represents the name of the game.
+     * This variable is used to store the title or identifier of the game.
+     */
     private String myGameName;
+    /**
+     * Represents the name of an individual or entity.
+     * This variable is used to store the name as a String value.
+     */
     private String myName;
+    /**
+     * Represents the current level of the game for a player.
+     * This variable tracks the player's progress within the game.
+     * It is stored as an integer and typically increases as the player advances.
+     */
     private int myGameLv;
 
+    /**
+     * A ListView containing Label instances that represent the players
+     * who are ready. This UI component is typically used to display
+     * a list of players that have indicated they are prepared for
+     * an upcoming event or game.
+     */
     private ListView<Label> readyPlayers;
+    /**
+     * Indicates whether the current entity or system is prepared or ready to proceed
+     * or execute a specific operation. The readiness status is managed internally
+     * and determines if further actions can be performed.
+     */
     private boolean amIReady;
+    /**
+     * A boolean variable indicating whether the current process or operation
+     * is in the process of building or constructing something.
+     *
+     * When set to true, it signifies that the build or construction
+     * process is actively taking place. When set to false, it denotes
+     * that the build process is either completed, not started, or not applicable.
+     */
     private boolean amIBuilding;
 
+    /**
+     * A list that stores player labels.
+     * This ArrayList holds Label objects representing players,
+     * typically used to associate player-related properties or information
+     * with corresponding labels in the application.
+     */
     private ArrayList<Label> players;
+    /**
+     * Represents a collection of discarded tile identifiers.
+     * This list stores the integers corresponding to tiles that have
+     * been removed or discarded during gameplay or processing.
+     */
     private ArrayList<Integer> discardedTiles;
+    /**
+     * A map that stores discarded items, associating an Integer key with a VBox value.
+     * The Integer key typically represents a unique identifier, while the VBox value
+     * represents a UI component or container associated with the discarded item.
+     *
+     * This map is likely used for managing or tracking elements that have been discarded
+     * or removed in a specific context within the application.
+     */
     private HashMap<Integer, VBox> discardedMap;
+    /**
+     * Represents the image used for displaying the game board.
+     * This variable holds the graphical representation of the game board
+     * and is used to render it on the screen.
+     */
     private Image gameBoardImg;
+    /**
+     * Represents the primary game board displayed in the application's user interface.
+     * This is a GridPane layout container used to organize and hold the components
+     * or elements of the game board in a structured grid format.
+     */
     private GridPane myBoard;
+    /**
+     * Represents a placeholder image used for tiles in the application.
+     * This image may be displayed when the actual tile image is not available
+     * or has not yet been loaded.
+     */
     private Image tilePlaceholder;
+    /**
+     * Represents the graphical component that displays the image of a tile.
+     * Used to manage and render the visual representation of a tile in the user interface.
+     */
     private ImageView tileImage;
+    /**
+     * Represents a container or pane for tiles that are currently uncovered in
+     * a game or puzzle. This variable typically holds and manages the
+     * uncovered tile objects during the execution of the program.
+     */
     private TilePane uncoveredTiles;
+    /**
+     * Represents the rotation state of a tile in degrees.
+     * This variable is used to determine the orientation of a tile
+     * within a graphical or game environment. The value typically
+     * ranges from 0 to 359, where 0 represents no rotation.
+     */
     private int tileRotation;
+    /**
+     * A map that associates a String identifier with a GridPane object, representing
+     * the boards of other players or entities in a board game or other grid-based system.
+     * The keys in the HashMap are Strings, typically used as unique identifiers for
+     * different boards, while the values are GridPane objects that represent the
+     * corresponding board layouts.
+     */
     private HashMap<String, GridPane> othersBoards;
+    /**
+     * A boolean variable that indicates the validity status.
+     * It is used to determine if a certain condition, state, or operation is valid or not.
+     */
     private boolean checkvalidity;
+    /**
+     * A private instance of VBox used for structuring or arranging UI components
+     * in a vertical layout. The hourglassBox variable may specifically be utilized
+     * for displaying content related to an hourglass metaphor or animation within
+     * the application's user interface.
+     */
     private VBox hourglassBox;
-    private ImageView buffer1, buffer2;
+    /**
+     * A private member variable of type ImageView used to store an image or graphical representation.
+     * The specific purpose and usage of this variable should be determined based on the larger context
+     * of the application in which it is used.
+     */
+    private ImageView buffer1, /**
+     * The variable buffer2 is used to store or manipulate data temporarily
+     * within the context of the application or a specific operation.
+     * It typically acts as a secondary or auxiliary buffer for processing.
+     */
+    buffer2;
+    /**
+     * Represents the primary stage or window in which the game board
+     * is displayed during the application's runtime.
+     * This stage manages the graphical user interface components
+     * related to the game board.
+     */
     private Stage gameBoardStage;
 
+    /**
+     * Represents the image to be used as the back side of a playing card.
+     * This image is typically displayed when the card is face down.
+     */
     private Image cardBack;
+    /**
+     * A HashMap that associates player identifiers (as String keys) with their corresponding rocket images (as ImageView values).
+     * This map is used to manage and track the rockets assigned to each player in the game.
+     */
     private HashMap<String, ImageView>playerRockets;
+    /**
+     * Represents a mapping between player names (as keys) and their respective positions (as values).
+     * The positions typically indicate the players' ranks or placement within a game or leaderboard.
+     */
     private HashMap<String, Integer> playerPositions;
+    /**
+     * A mapping of integer keys to IntegerPair values, representing coordinates or related data.
+     * The key is an integer identifier, and the value is an IntegerPair object that holds two integers.
+     */
     private HashMap<Integer, IntegerPair> coords;
-    private Image brownAlien, purpleAlien, crewMate;
+    /**
+     * Represents the image resource of a brown-colored alien entity.
+     * This variable is used to store the visual representation of the alien,
+     * typically loaded from an external source such as a file or asset bundle.
+     */
+    private Image brownAlien, /**
+     * Represents an alien entity with unique attributes or characteristics.
+     * The 'purpleAlien' variable may hold specific information or data
+     * related to the alien, depending on its usage in the program.
+     *
+     * It is recommended to refer to the context or relevant documentation
+     * for understanding the specific role or value assigned to 'purpleAlien'.
+     */
+    purpleAlien, /**
+     * Represents a crew member in a given context, such as a team or group.
+     * Typically used to denote an individual who is part of a crew
+     * participating in a shared task or mission.
+     * The specific attributes or role of the crew member may vary depending
+     * on the implementation or application.
+     */
+    crewMate;
+    /**
+     * Represents a graphical pane within the user interface dedicated to displaying or managing rockets.
+     * This pane can be used to hold visual elements, such as images, buttons, or labels, related to rockets.
+     */
     private Pane rocketsPane;
+    /**
+     * A ListView component that displays a list of log entries as strings.
+     * This can be used to show a dynamic or static set of log messages in the
+     * user interface.
+     */
     private ListView<String> log;
+    /**
+     * Represents the total attack value of an entity, which is used to determine
+     * its offensive strength in computations or game mechanics.
+     */
     private double totAtk;
+    /**
+     * Represents the total speed calculated or accumulated, expressed as an integer value.
+     * This variable is typically used to store the cumulative speed in a specific context.
+     */
     private int totSpeed;
+    /**
+     * Represents the total number of credits accumulated or assigned.
+     * This variable is used to store an aggregate value typically
+     * related to a system that tracks credit-based transactions
+     * or metrics.
+     */
     private int totCredits;
+    /**
+     * Represents the total energy value.
+     * This variable stores the cumulative energy level as an integer.
+     */
     private int totEnergy;
+    /**
+     * Represents the total damages calculated or incurred in an operation or process.
+     * This variable stores the cumulative value of damages quantified as an integer.
+     */
     private int totDamages;
+    /**
+     * Represents the total number of humans.
+     * This variable is used to store the count of humans in a given context.
+     */
     private int totHumans;
+    /**
+     * Stores the coordinates of a shot in a 2D space.
+     * The coordinates are represented as an instance of IntegerPair,
+     * where the first integer represents the x-coordinate
+     * and the second integer represents the y-coordinate.
+     */
     private IntegerPair shotCoords;
 
+    /**
+     * Indicates whether a flight has started or not.
+     * The value is true if the flight has been initiated,
+     * and false if the flight has not yet started.
+     */
     private boolean flightStarted;
+    /**
+     * Represents the state or condition indicating whether an action
+     * or process is in a "killing" state. This variable is used to track
+     * if a certain operation or situation involves termination or cessation.
+     */
     private boolean killing;
+    /**
+     * Indicates whether a chunk of data is currently being selected.
+     * This variable is used as a flag to track the state of the selection process.
+     */
     private boolean selectingChunk;
+    /**
+     * A horizontal box container (HBox) used to hold and arrange phase-related buttons in a GUI.
+     * This variable helps in organizing buttons in a horizontal layout and provides a convenient way
+     * of managing the button components during different phases of the application's workflow.
+     */
     private HBox phaseButtons;
+    /**
+     * A list of coordinate pairs representing specific command locations.
+     * Each entry in the list specifies a pair of integer values
+     * that may denote x and y coordinates or other pair-based data.
+     */
     private ArrayList<IntegerPair> cmdCoords;
+    /**
+     * Indicates whether the tiles in the application are interactive or clickable.
+     * When set to true, tiles can respond to user interactions such as clicks.
+     * This can be used to control interactivity or enable/disable user interaction
+     * with specific UI components represented as tiles.
+     */
     private boolean tilesClickable;
+    /**
+     * Represents a Label component used to display a prompt message in the user interface.
+     * This variable holds a reference to a Label object and is generally used
+     * to guide or provide information to the user in the context of a graphical interface.
+     */
     private Label prompt;
+    /**
+     * Represents a list of tile coordinates that are excluded from certain operations
+     * or processes. Each excluded tile is defined by an IntegerPair, where the pair
+     * typically signifies the x and y coordinates of the tile on a grid or board.
+     */
     private ArrayList<IntegerPair> excludedTiles;
+    /**
+     * Represents the current card displayed in the application.
+     * This variable is used to store and manage the ImageView object
+     * associated with the currently active or visible card.
+     */
     private ImageView curCard;
+    /**
+     * Represents the current image of a card being displayed or utilized
+     * within the application's context. This variable holds the graphical
+     * representation of the card in the form of an Image object.
+     */
     private Image curCardImg;
+    /**
+     * Indicates whether the battery icon or related UI element is clickable.
+     * This variable determines if user interactions, such as clicks,
+     * are enabled for the battery UI component.
+     */
     private boolean batteryClickable;
+    /**
+     * Represents the current coordinates of the cargo in the form of an integer pair.
+     * This variable is typically used to track the location of cargo in a 2D plane
+     * where the first integer corresponds to the x-coordinate and the second integer
+     * corresponds to the y-coordinate.
+     */
     private IntegerPair curCargoCoords;
+    /**
+     * Represents the current index of the cargo being processed or accessed
+     * within a cargo-related collection or workflow.
+     * This variable is used to track the position of the current cargo item.
+     */
     private int curCargoIndex;
+    /**
+     * Represents the current cargo image displayed in the user interface.
+     * This variable holds an ImageView object that is used to visualize
+     * the cargo image associated with the current state or selection.
+     */
     private ImageView curCargoImg;
+    /**
+     * A map that associates a pair of integers, represented by the IntegerPair key,
+     * with a list of goods. This structure is designed to manage and store
+     * collections of goods based on defined integer-pair identifiers.
+     *
+     * Key:
+     * - IntegerPair: Represents a pair of integers, which can be used to
+     *   identify specific storage compartments.
+     *
+     * Value:
+     * - ArrayList<Goods>: Represents the collection of goods stored in the
+     *   corresponding identified compartment.
+     */
     private HashMap<IntegerPair, ArrayList<Goods>> storageCompartments;
+    /**
+     * Represents the number of rewards that remain available.
+     * This variable is used to keep track of the remaining rewards
+     * that can still be distributed or claimed.
+     */
     private int rewardsLeft;
+    /**
+     * Represents the number of planets.
+     * This variable stores the count of planets and is used in astronomical calculations
+     * or planetary systems modeling.
+     */
     private int nPlanets;
+    /**
+     * Indicates whether the system is currently in the process of handling cargo.
+     * The value is true if cargo is being handled, and false otherwise.
+     */
     private boolean handlingCargo;
+    /**
+     * Indicates whether a theft incident has occurred or is being tracked.
+     * This variable represents the state or presence of theft in a specific context.
+     * The value is true if theft is present, false otherwise.
+     */
     private boolean theft;
+    /**
+     * A list of rewards represented as Goods objects.
+     * This collection holds the rewards associated with a specific context,
+     * such as achievements or milestones in an application.
+     */
     private ArrayList<Goods> rewards;
+    /**
+     * A list of ImageView objects representing the selected images.
+     * This variable is used to store and manage a collection of images
+     * that have been selected by the user or through the application's
+     * functionality for further processing or display.
+     */
     private ArrayList<ImageView> selectedImages;
+    /**
+     * Represents a client responsible for handling the login functionality
+     * and managing authentication requests and responses within the application.
+     */
     private LoginClient loginClient;
 
+    /**
+     * Indicates whether a connection is currently in the process of being re-established.
+     *
+     * This variable is used to represent the state of a connection that might
+     * have been interrupted or lost and is undergoing attempts to reconnect.
+     * A value of {@code true} signifies that reconnection attempts are active,
+     * while {@code false} indicates no ongoing reconnection attempts.
+     */
     private boolean reconnecting;
 
 
@@ -4136,6 +4497,4 @@ public class GuiRoot implements View {
             primaryStage.show();
         });
     }
-
-
 }

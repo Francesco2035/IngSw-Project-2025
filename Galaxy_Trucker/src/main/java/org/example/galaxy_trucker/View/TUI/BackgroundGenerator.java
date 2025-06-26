@@ -109,6 +109,11 @@ public class BackgroundGenerator {
     }
 
 
+    /**
+     * Sets the background value for the special background configuration.
+     *
+     * @param background the integer value representing the special background to be set.
+     */
     public void setSpecial(int background) {
         this.background = background;
     }

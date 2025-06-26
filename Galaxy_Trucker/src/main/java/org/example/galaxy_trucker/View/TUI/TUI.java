@@ -36,39 +36,218 @@ import java.util.concurrent.*;
  */
 public class TUI implements View {
 
+    /**
+     * A {@code ScheduledExecutorService} initialized as a single-threaded scheduler.
+     * This scheduler can be used to execute or schedule tasks after a delay
+     * or at a fixed rate or interval.
+     *
+     * The single-threaded nature of this scheduler ensures that tasks are executed
+     * sequentially in the order they are scheduled, avoiding concurrency issues.
+     *
+     * This is a private final instance, which means it is immutable and cannot be
+     * re-initialized after construction.
+     */
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    /**
+     * A ScheduledFuture instance that represents a scheduled task.
+     * It can be used to track the status and manage the execution of
+     * a task that has been submitted to a ScheduledExecutorService.
+     * This variable allows for operations such as cancellation or
+     * querying the remaining delay of the scheduled task.
+     */
     private ScheduledFuture<?> scheduledTask;
+    /**
+     * Represents the debounce delay in milliseconds, which is the time interval
+     * to wait before executing a specific action to reduce the frequency of
+     * consecutive calls. This is particularly useful in scenarios such as
+     * handling rapid user inputs or events where performance optimization
+     * is required by limiting the number of executions.
+     */
     private final int debounceDelayMs = 250;
+    /**
+     * Represents the most recent state of the player's client.
+     * This variable tracks the last known state of the player as received or updated from the client-side logic.
+     */
     private PlayerStateClient lastState;
+    /**
+     * A flag indicating whether the current operation is the first update.
+     *
+     * This variable is set to {@code false} by default and can be used to track
+     * if an update process has been executed before.
+     */
     private boolean firstUpdate = false;
 
+    /**
+     * Represents the unique identifier for a card.
+     * This variable is initialized with a default value of -1.
+     * It is used to differentiate and track individual cards.
+     */
     private int CardId = -1;
+    /**
+     * A 2D array representing the game board consisting of TileEvent objects.
+     * The board is a 10x10 grid, where each element corresponds to a specific
+     * position on the board.
+     *
+     * This variable is used to manage the state of the board and its associated
+     * events in a tile-based game. The size of the board is fixed at 10 rows by
+     * 10 columns.
+     *
+     * It is declared as final, ensuring that the reference to the array cannot
+     * be reassigned after initialization.
+     */
     private final TileEvent[][] board = new TileEvent[10][10];
+    /**
+     * A map that associates unique integer identifiers to their corresponding string names.
+     * This map is immutable after initialization and is intended to provide a quick lookup
+     * for names based on their respective IDs.
+     */
     private final HashMap<Integer, String> idToNameMap = new HashMap<>();
+    /**
+     * The width of the content area for a specific component or layout.
+     * This value is a constant and is set to 33. It is used to determine
+     * the horizontal dimension available for rendering content.
+     */
     private final int contentWidth = 33;
+    /**
+     * A three-dimensional array used to store a cached representation of a board.
+     * The first dimension typically represents layers or levels,
+     * while the second and third dimensions represent the rows and columns of the board.
+     * This array is intended to optimize performance by avoiding expensive recalculations
+     * of board states.
+     */
     private String[][][] cachedBoard;
+    /**
+     * A private member variable that holds a cached representation of some form of data.
+     * The data is stored as an array of Strings. The specific purpose of the data
+     * stored in this array is determined by the context in which the variable
+     * is used.
+     *
+     * It is initialized as null and may later be assigned a valid array of Strings
+     * depending on the state and functionality of the program.
+     */
     private String[] cacheHand = null;
+    /**
+     * Represents the border of a game board used as a constant for visual representation.
+     * This static string provides a consistent visual separator or boundary for the game board display.
+     */
     private final String gamboardBorder = "+━━━━━━━━━━━━━━━━━━━━━━━+";
+    /**
+     * A constant string representing a decorative border.
+     * This border is a predefined graphical constant, primarily intended for use
+     * in UI rendering or console output to delineate or highlight sections visually.
+     */
     private final String border = "+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━+";
+    /**
+     * A list that stores the IDs of uncovered tiles in the order in which they are revealed.
+     * This list maintains the sequence of the tiles as they are uncovered.
+     */
     private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
+    /**
+     * A cache to store uncovered tile sets for quick access.
+     * The key represents an integer identifier for the tile set,
+     * and the value is an array of strings containing tile data.
+     * This is used to optimize performance by reducing the need
+     * to recompute tile sets that have already been uncovered.
+     */
     private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap<>();
+    /**
+     * A map that stores card descriptions where the key is the card's unique identifier
+     * represented as an Integer, and the value is the card's description represented as a String.
+     * This map is used to associate specific descriptions with corresponding cards.
+     */
     private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
+    /**
+     * Represents a 3-dimensional game board.
+     * This variable stores the structure of a game in the form of a 3D array
+     * where each element is a String. The game board can be used to track
+     * the state or positions of elements in a multi-layered grid format.
+     */
     private String[][][] Gameboard;
+    /**
+     * Represents a level or value within the context of the application.
+     * This variable is of type integer and its purpose should be defined
+     * in the context where it is used.
+     */
     private int lv;
+    /**
+     * This variable represents the initial setup configuration.
+     * It is initialized with a default value of 102.
+     */
     private int setup = 102;
 
+    /**
+     * A private variable representing a lobby, which is a mapping between a unique string key
+     * and an array of strings. This can be used to store and manage collections of data
+     * associated with specific identifiers within the lobby context.
+     */
     private HashMap<String, String[]> lobby = new HashMap<>();
+    /**
+     * Represents the current phase of the view in its lifecycle or state.
+     * This variable is used to track or control the specific stage the view is in,
+     * such as initialization, rendering, or finalization.
+     */
     private ViewPhase phase;
+    /**
+     * Represents an instance of the Out class, used to handle or process output-related operations.
+     * The specific behavior and purpose of this variable depend on the implementation details of the Out class.
+     */
     private Out out;
 
 
+    /**
+     * A thread-safe blocking queue implementation for storing string inputs to be processed.
+     * This queue ensures proper synchronization when multiple threads access it.
+     * It is used to manage and coordinate the flow of input data between producer and consumer threads.
+     */
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
+    /**
+     * A private Thread instance used to handle input operations asynchronously.
+     * This thread may be responsible for reading user input, processing input data,
+     * or managing other input-related tasks in the background. The specifics of its
+     * functionality depend on the implementation details of the class it belongs to.
+     */
     private Thread inputThread;
+    /**
+     * A private instance of InputReader used to handle input operations.
+     * This variable is intended to encapsulate the logic for reading input,
+     * providing an abstraction for input data processing within the class.
+     */
     private InputReader inputReader;
+    /**
+     * Represents a client object that manages player-related operations
+     * or interactions within the system. This object may be used to handle
+     * communication with a server or perform player-related tasks such as
+     * monitoring, control, or data retrieval.
+     */
     private PlayerClient playerClient;
+    /**
+     * Represents a client object that interacts with or consumes the functionalities
+     * provided by the application. This variable encapsulates client-specific data
+     * and behaviors necessary for communication or processing.
+     */
     private Client client;
+    /**
+     * Represents an instance of the SeeLog class used for logging purposes.
+     * This is a final variable, ensuring that the reference to the SeeLog
+     * object cannot be modified after initialization. The SeeLog instance
+     * may handle logging operations throughout the application.
+     */
     private final SeeLog seeLog = new SeeLog();
+    /**
+     * An instance of the SeeBoardsClient used to communicate with
+     * and manage operations related to SeeBoards services.
+     * This client facilitates interaction with the SeeBoards API
+     * or system, enabling tasks such as data retrieval, updates,
+     * and other operations related to boards functionality.
+     *
+     * The instance is immutable and cannot be reassigned after initialization.
+     */
     private final SeeBoardsClient seeBoardsClient = new SeeBoardsClient();
+    /**
+     * Represents an instance of the LoginClient used to handle login-related operations.
+     * This variable is used to manage client-specific login functionality and flow.
+     * It may interact with authentication services or APIs to facilitate user authentication.
+     */
     private  LoginClient loginClient;
 
 

@@ -29,17 +29,152 @@ import java.util.concurrent.BlockingQueue;
  * other tasks, ensuring an interactive and responsive terminal application.
  */
 public class InputReader implements Runnable {
+    /**
+     * A thread-safe blocking queue for storing input lines provided by the user.
+     * This queue facilitates communication between threads by allowing
+     * user inputs to be passed for further processing.
+     *
+     * It is used within the {@code InputReader} class to manage and handle
+     * user commands entered via the terminal.
+     *
+     * The queue's capacity and behavior follow the specifications of {@link BlockingQueue},
+     * ensuring proper thread synchronization and preventing input processing bottlenecks.
+     */
     private final BlockingQueue<String> inputQueue;
+    /**
+     * A BufferedReader instance used for reading input from the standard input stream (System.in).
+     * This is a final field to ensure that the reader is not re-assigned and is consistently used
+     * for processing input throughout the lifecycle of the InputReader class.
+     *
+     * The reader is wrapped around an InputStreamReader to facilitate character stream reading from
+     * the standard input. It supports efficient reading of text and handles character encoding properly.
+     *
+     * This field is designed to assist with command-line interactions, enabling the InputReader class
+     * to process user inputs effectively in a synchronized manner.
+     */
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    /**
+     * A flag indicating whether the input reading and processing loop in the `InputReader`
+     * should continue running. This variable is volatile to ensure visibility across
+     * multiple threads, allowing safe and consistent updates to the thread managing
+     * input reading.
+     *
+     * When set to `true`, the loop executes normally, reading user input and placing it
+     * into the input queue. Setting this flag to `false` signals the thread to stop
+     * processing, effectively halting the input reading operation.
+     */
     private volatile boolean running = true;
+    /**
+     * Represents a {@link LineReader} instance used for handling line-based input
+     * operations in the InputReader class. This variable is a critical part of the
+     * InputReader, facilitating user input handling and processing commands entered
+     * into the terminal.
+     *
+     * The {@code Lreader} is initialized during the construction of the InputReader
+     * object and is utilized to read input lines from the terminal while supporting
+     * features such as line editing, input history, and auto-completion.
+     *
+     * This instance is defined as {@code final}, ensuring it cannot be reassigned
+     * after initialization. It operates in conjunction with other InputReader components,
+     * including the {@code completer}, {@code highlighter}, and {@code terminal}, to
+     * provide a seamless command-line interface.
+     */
     private final LineReader Lreader;
+    /**
+     * Represents the prompt displayed to the user for input.
+     * This AttributedString is used to format and render the
+     * input prompt on the terminal, providing a visual cue
+     * for user interaction. The prompt may include attributes
+     * such as colors, styles, or additional formatting to
+     * enhance usability and aesthetics.
+     */
     AttributedString prompt;
+    /**
+     * The highlighter instance used for syntax highlighting or other display enhancements
+     * in the command-line interface. It processes user input to visually distinguish
+     * elements such as keywords, commands, or invalid syntax, enhancing readability
+     * and user experience during input handling.
+     */
     Highlighter highlighter;
+    /**
+     * Represents the terminal interface used for input and output operations
+     * within the InputReader class. This variable provides access to the
+     * terminal functionalities, enabling configuration and control of the
+     * terminal's behavior, such as rendering textual or graphical output,
+     * managing user input, and handling terminal screen updates.
+     *
+     * The `terminal` variable facilitates interaction with the underlying
+     * terminal system, which can include rendering messages, modifying the
+     * display, and managing user commands. It is a core component for handling
+     * user interaction in the InputReader class.
+     */
     Terminal terminal;
+    /**
+     * A DynamicCompleter instance used for providing dynamic auto-completion
+     * functionality during command-line interactions. This member allows for
+     * managing context-aware and runtime-adaptable command suggestions,
+     * improving user experience by offering relevant completions based on
+     * the current application state or user input.
+     *
+     * The completer can update its list of commands at runtime using the
+     * methods defined in the DynamicCompleter interface, ensuring that
+     * auto-completion behavior remains flexible and responsive to changes.
+     */
     DynamicCompleter completer;
+    /**
+     * Holds the primary {@code KeyMap} configuration for managing key bindings
+     * in the terminal input reader. This map associates specific key sequences
+     * with {@code Binding} actions, enabling user interaction through customized
+     * shortcuts and commands.
+     *
+     * The {@code mainKeyMap} is used internally by the {@code InputReader} class
+     * to define how specific keys or key combinations are interpreted and processed
+     * during input handling. It acts as the central mapping for key functionalities.
+     */
     KeyMap<Binding> mainKeyMap;
+    /**
+     * A {@code StringBuilder} instance used to store the content of the last
+     * rendered terminal output. This variable is updated each time the
+     * terminal content is rendered to preserve the current state of the
+     * displayed content.
+     *
+     * The {@code lastRender} variable is primarily used to ensure consistency
+     * in the terminal output and to manage scenarios where redrawing or
+     * redisplaying of content is required. It provides a reference for the
+     * previous state, enabling proper formatting and updates during subsequent
+     * rendering operations.
+     *
+     * This field plays a key role in maintaining smooth terminal operations
+     * and ensuring any updates made to the screen do not conflict with or
+     * overwrite previously displayed content unexpectedly.
+     */
     StringBuilder lastRender = new StringBuilder();
+    /**
+     * The `generator` variable represents an instance of the `BackgroundGenerator` class
+     * that is used to generate random or predefined background elements, typically utilized
+     * for visual effects or formatting. It is primarily responsible for providing symbols or
+     * patterns to replace certain elements in terminal outputs, such as replacing spaces
+     * with decorative symbols.
+     *
+     * This generator plays a key role in the terminal's visual customization by enabling
+     * dynamic background modifications. It is used extensively in methods that involve
+     * modifying or rendering textual content with enhanced visual styling.
+     */
     BackgroundGenerator generator ;
+    /**
+     * Represents the background type used for rendering or filling spaces
+     * in the terminal interface. This variable stores an integer value
+     * that determines the current background style. The background value
+     * is used in rendering logic to customize the visual appearance
+     * of the terminal output or patterns.
+     *
+     * This variable is dynamically updated within the class based on
+     * user interactions, commands, or specific internal processes. It
+     * plays a role in generating or modifying display content, particularly
+     * when using the terminal for input or graphical message handling.
+     *
+     * Default value is initialized to 0.
+     */
     private int background = 0;
 
 

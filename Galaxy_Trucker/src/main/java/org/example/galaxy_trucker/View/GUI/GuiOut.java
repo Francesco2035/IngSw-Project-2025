@@ -12,14 +12,87 @@ import javafx.stage.Stage;
  */
 public class GuiOut {
 
+    /**
+     * Represents the root element of the application's graphical user interface (GUI).
+     *
+     * This variable holds an instance of {@code GuiRoot}, which provides the starting point
+     * and main context for setting up and managing the various scenes and stages of the application's GUI.
+     * The {@code GuiRoot} instance is critical for coordinating user interface components and handling
+     * transitions between different scenes.
+     */
     private GuiRoot gui;
+    /**
+     * Represents the JavaFX scene for the title screen in the application.
+     *
+     * This scene is used as the initial screen displayed to the user upon launching
+     * the application. It can be updated using the setTitleScreen method and displayed
+     * via the printTitleScreen method, ensuring proper handling of JavaFX threads.
+     */
     private Scene TitleScene;
+    /**
+     * Represents the scene for the "Lobby" screen in the application.
+     *
+     * This Scene is used to display the lobby interface to the user, where
+     * they can interact with the game's lobby settings. It is managed and
+     * displayed by the GuiOut class, typically in the context of transitioning
+     * between different application screens.
+     *
+     * The Scene can be assigned and updated using the {@code setLobby} method
+     * of the GuiOut class and displayed using the {@code printLobby} method.
+     */
     private Scene LobbyScene;
+    /**
+     * Represents the Scene object for the "Game Lobby" screen in the application.
+     *
+     * This variable is used to store and manage the JavaFX Scene instance
+     * that corresponds to the "Game Lobby" interface within the application.
+     * It can be set via appropriate methods and displayed on the primary stage
+     * when needed.
+     */
     private Scene GameLobbyScene;
+    /**
+     * Represents the scene for the "Building Screen" in the application's GUI.
+     *
+     * This Scene is primarily used to display and interact with the building-related
+     * features within the application. It is managed and displayed through various
+     * methods of the GuiOut class, which handles setting, updating, and rendering
+     * this Scene in the primary JavaFX stage.
+     */
     private Scene buildingScene;
+    /**
+     * Represents the scene used to display the "Check Validity" screen in the application.
+     *
+     * This field holds the JavaFX Scene object associated with the "Check Validity" screen.
+     * It is used to configure and display the respective user interface when necessary.
+     */
     private Scene validityScene;
+    /**
+     * The `addCrewScene` variable represents the JavaFX `Scene` associated with the "Add Crew" screen
+     * in the graphical user interface of the application.
+     *
+     * It is utilized to configure and display the user interface components necessary
+     * for the "Add Crew" functionality within the application. This scene is assigned
+     * to the primary stage when the "Add Crew" screen is to be shown.
+     *
+     * The scene can be updated or accessed through corresponding methods in the class.
+     */
     private Scene addCrewScene;
+    /**
+     * Represents the JavaFX Scene used for the "Flight" screen in the application.
+     *
+     * This variable stores the reference to the Scene displayed during the "Flight" phase
+     * of the application. It is intended to be initialized and managed using methods
+     * of the GuiOut class, such as setting or displaying the scene on the primary stage.
+     */
     private Scene flightScene;
+    /**
+     * Represents the primary stage of the JavaFX application.
+     *
+     * This stage serves as the main window where various scenes of the application,
+     * such as the title screen, lobby, game lobby, and other screens, are displayed.
+     * The stage is managed using associated methods for setting and switching scenes,
+     * ensuring thread-safe execution with JavaFX's application thread.
+     */
     private Stage primaryStage;
 
 
