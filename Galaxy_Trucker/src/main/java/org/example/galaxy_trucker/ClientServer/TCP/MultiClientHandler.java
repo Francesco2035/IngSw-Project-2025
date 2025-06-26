@@ -33,14 +33,124 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MultiClientHandler implements Runnable, GhListener {
 
+    /**
+     * The socket associated with the connected client.
+     *
+     * This variable represents the communication endpoint for the client's connection
+     * to the server. It is used to send and receive data during the client's session.
+     * The `clientSocket` is initialized during the creation of the `MultiClientHandler`
+     * instance and is managed throughout the lifecycle of the connection, including
+     * handling reconnections, disconnections, and session termination.
+     *
+     * Proper resource management ensures the socket is closed upon disconnection to
+     * release server resources and maintain stability in a multi-client environment.
+     */
     private Socket clientSocket;
+    /**
+     * Manages game-related operations and interactions for the connected client.
+     *
+     * The `GamesHandler` is responsible for handling game sessions, events, and commands
+     * related to the client's gameplay. It serves as the primary interface to process
+     * commands received from the client, such as starting new games, managing active sessions,
+     * updating game states, and client reconnections. Additionally, it helps coordinate
+     * broader game logic and ensures server-client synchronization.
+     *
+     * This variable is utilized in `MultiClientHandler` to delegate game-specific tasks
+     * and ensure that client requests are routed to the appropriate game session logic.
+     */
     private GamesHandler gameHandler;
+    /**
+     * A thread-safe concurrent hash map that manages the association between
+     * session tokens (as {@code String}) and corresponding {@code VirtualView} instances.
+     *
+     * This map is utilized to maintain a relationship between unique tokens
+     * generated during client authentication (such as during login or reconnection)
+     * and the associated {@code VirtualView} object, which represents the server-side
+     * representation of a connected client's game interaction state.
+     *
+     * The {@code tokenMap} plays a critical role in:
+     * - Tracking active user sessions by mapping session tokens to client-specific views.
+     * - Supporting client reconnections by ensuring that previously authenticated tokens
+     *   can retrieve their respective {@code VirtualView}.
+     * - Facilitating multi-threaded operations safely, as it employs thread-safe
+     *   mechanisms provided by {@code ConcurrentHashMap}.
+     *
+     */
     private ConcurrentHashMap<String, VirtualView> tokenMap;
+    /**
+     * A list maintaining the identifiers (such as usernames or session tokens) of clients
+     * that are currently disconnected from their active sessions.
+     *
+     * This variable is utilized to track clients who have lost connection either temporarily
+     * or due to network interruptions. It allows the system to manage reconnection attempts
+     * and session continuity for disconnected clients.
+     *
+     * In the context of the MultiClientHandler, this list is accessed and modified to
+     * add or remove clients during events such as disconnection, reconnection, or
+     * termination of sessions.
+     */
     private ArrayList<String> disconnectedClients;
+    /**
+     * Represents the maximum number of reconnection attempts allowed for a client.
+     *
+     * This variable is used within the context of client connection management.
+     * It sets a limit on the number of retries a client can make to reconnect
+     * after being disconnected from the server. Exceeding this limit results
+     * in termination of further attempts to re-establish the connection.
+     */
     private int attempts = 3;
+    /**
+     * Represents the unique session token associated with the connected client.
+     *
+     * This variable is used to uniquely identify and authenticate a client's session
+     * within the server. It is dynamically assigned upon client login or reconnection
+     * and is utilized to map client sessions to their respective virtual views.
+     *
+     * The token plays a critical role in managing session persistence and ensuring
+     * that each client's state is securely maintained and retrievable across interactions.
+     */
     private String Token;
+    /**
+     * A collection that maps unique string identifiers to corresponding {@code LobbyEvent} objects.
+     *
+     * This map serves as a centralized data structure for managing lobby-related events,
+     * where each key represents a unique game or lobby identifier, and the value is the
+     * associated {@code LobbyEvent} instance providing details about that specific lobby
+     * (such as its level, list of players, and maximum player capacity).
+     *
+     * The {@code lobbyEvents} map is primarily used to keep track of the state of ongoing
+     * game lobbies in a thread-safe manner within the context of the multi-client handler.
+     */
     private HashMap<String, LobbyEvent> lobbyEvents = new HashMap<>();
+    /**
+     * The TCP variable represents the TCPServer instance that handles core server operations
+     * and manages client connections in the application.
+     *
+     * It serves as the central server system responsible for:
+     * - Establishing and maintaining client connections.
+     * - Handling incoming and outgoing data streams.
+     * - Coordinating multi-client communication processes.
+     * - Managing connection-related events such as disconnections and reassignments.
+     *
+     * This instance is used as a foundational component for the MultiClientHandler
+     * to interact with the server and facilitate robust client-server communication
+     * in a concurrent and networked environment.
+     */
     TCPServer TCP ;
+    /**
+     * Represents the connection status of the client managed by the MultiClientHandler.
+     *
+     * This variable indicates whether the client associated with this handler is currently
+     * connected to the server. The state is initialized to `false` and updated when the connection
+     * is established or terminated during the lifecycle of the handler.
+     *
+     * Key points:
+     * - A value of `true` indicates that the client is actively connected to the server.
+     * - A value of `false` indicates that the client is not connected, either due to
+     *   an intentional disconnection or an error.
+     * - The variable is used internally to monitor and manage the connection state during operations
+     *   such as handling commands, managing reconnections, and processing client requests.
+     */
     private boolean connected = false;
 
     private long lastPingTime;

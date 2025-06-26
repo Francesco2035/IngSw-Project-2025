@@ -35,15 +35,71 @@ import java.util.HashMap;
  */
 public class Client implements EventVisitor {
 
+    /**
+     * Represents a visual component or an element in the user interface.
+     * This variable is used to reference and interact with a specific UI view element.
+     */
     private View view;
+    /**
+     * Represents an instance of the RMIClient, used to establish
+     * and manage remote method invocation communication.
+     * This variable typically facilitates interaction with a remote server
+     * by invoking methods and transferring data.
+     */
     private RMIClient rmiClient;
+    /**
+     * An instance of the TCPClient class responsible for managing
+     * TCP connections and communication. This variable is used to
+     * handle interactions over a TCP network, including sending
+     * and receiving data. It encapsulates the behavior and functionality
+     * required for establishing and maintaining a TCP connection.
+     */
     private TCPClient tcpClient;
+    /**
+     * A 2D array representing the game board. Each element is a {@code TileEvent},
+     * which defines the state or event associated with a specific tile on the board.
+     * The first dimension represents the rows, and the second dimension represents the columns.
+     */
     private TileEvent[][] board;
+    /**
+     * Represents a token string used for authentication or identification purposes.
+     * This field typically stores encoded or raw token data.
+     */
     private String token;
+    /**
+     * Represents the login status of a user.
+     * This variable indicates whether the user is currently logged in.
+     * A value of {@code true} means the user is logged in, while
+     * {@code false} indicates the user is not logged in.
+     */
     private boolean login = false;
+    /**
+     * A boolean variable indicating the state of the lobby.
+     * When set to true, it signifies that the lobby is active or in use.
+     * When set to false, it indicates that the lobby is inactive or not in use.
+     */
     private boolean lobby = false;
+    /**
+     * An instance of the LoginClient class used to handle client login functionality.
+     * This variable is declared as final, meaning its reference cannot be changed
+     * after initialization. It is intended to encapsulate all operations and interactions
+     * related to user authentication and login management within the application.
+     */
     private final LoginClient loginClient = new LoginClient();
+    /**
+     * A mapping of game IDs to their corresponding level values.
+     *
+     * This HashMap is used to associate a unique game identifier (String)
+     * with an integer value representing the level or rank of the game.
+     * It provides a way to track or query the level of a game by its ID.
+     */
     HashMap<String, Integer> gameidToLV = new HashMap<>();
+    /**
+     * The commandInterpreter is responsible for interpreting and executing commands
+     * within the application. It serves as a central processing unit for parsing
+     * commands, determining their intent, and invoking the appropriate functionality
+     * based on the input provided.
+     */
     CommandInterpreter commandInterpreter;
 
 

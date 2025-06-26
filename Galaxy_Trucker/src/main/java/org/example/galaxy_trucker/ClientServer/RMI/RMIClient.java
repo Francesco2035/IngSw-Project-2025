@@ -31,17 +31,142 @@ import static java.lang.System.exit;
  */
 public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
+    /**
+     * Represents the remote server interface used by the RMIClient for communication.
+     *
+     * This variable holds a reference to the server-side implementation of the
+     * ServerInterface, enabling the client to invoke remote methods for sending
+     * commands, monitoring connection status, and interacting with server-side
+     * functionalities. It serves as the primary link between the client and the
+     * server in an RMI-based architecture.
+     *
+     * The ServerInterface instance referenced by this variable must be properly
+     * initialized during the client's setup process to ensure seamless interaction
+     * with the server. If the server interface is not bound or unavailable, the
+     * client will fail to execute remote operations.
+     *
+     * This variable is private to encapsulate the server reference and prevent
+     * unauthorized access or manipulation of the remote interface from outside
+     * the RMIClient class.
+     */
     private ServerInterface server;
+    /**
+     * Represents the local player instance of the client within the RMIClient context.
+     *
+     * This field is used to store and manage the state and actions
+     * of the player associated with this client session.
+     * It provides access to player-specific data and methods needed
+     * to interact with the game environment and server.
+     */
     private Player me;
+    /**
+     * Represents the current game instance for the RMIClient.
+     *
+     * This variable holds a reference to a {@code Game} object, which encapsulates the state
+     * and logic of the game session that the client is participating in. The {@code myGame}
+     * variable is used to interact with various aspects of the game, including players,
+     * game board, card decks, and tiles.
+     *
+     * The {@code Game} object includes functionalities such as adding or removing players,
+     * retrieving game-specific components, and managing the overall state of the game.
+     *
+     * This field is used within the RMIClient to perform operations related to the game session,
+     * such as updating the game state, interacting with the game's board, or processing
+     * game-related events. It is typically initialized when a game is created or joined
+     * through user interaction or server responses.
+     *
+     * Access to this variable may be synchronized depending on the operations being performed
+     * to ensure thread safety during concurrent access.
+     */
     private Game myGame;
+    /**
+     * Represents the command interpreter for the RMIClient.
+     *
+     * The `commandInterpreter` field is responsible for handling and processing commands
+     * issued by the client or received from the server. It acts as the interface for interpreting
+     * various user inputs or system commands and coordinating the appropriate logic for execution.
+     *
+     * This field is initialized externally and must be explicitly set using the
+     * {@link #setCommandInterpreter(CommandInterpreter)} method before it can be used.
+     * It plays a critical role in enabling the functionality of the client for interpreting actions,
+     * managing tokens, and interacting with the game environment.
+     */
     private CommandInterpreter commandInterpreter;
+    /**
+     * Represents the client instance utilized by the RMIClient.
+     *
+     * This variable serves as the core component to facilitate communication
+     * between the RMIClient and the server or other remote objects. It is
+     * expected to implement the required client-side functionality, enabling
+     * the RMIClient to process incoming data, send requests, and handle events.
+     *
+     * The `client` variable is a private field within the RMIClient and plays
+     * a key role in delegating tasks such as event reception, token processing,
+     * and interaction with the server interface. It must adhere to the appropriate
+     * contracts and interfaces to ensure proper interaction within the RMI framework.
+     */
     private Client client;
+    /**
+     * Tracks the timestamp of the last received ping from the server.
+     *
+     * This variable is updated each time a ping is successfully received,
+     * and its value represents the timestamp in milliseconds since the epoch
+     * (as returned by {@code System.currentTimeMillis()}).
+     *
+     * It is used to monitor the connection status between the client and server.
+     * If the time elapsed since the last ping exceeds a predefined threshold, the
+     * connection is considered lost, and appropriate reconnection or disconnection
+     * handling routines are triggered.
+     *
+     * The variable is declared as {@code volatile} to ensure visibility across
+     * multiple threads, as it is accessed and modified in a concurrent environment.
+     */
     private volatile long lastPingTime = System.currentTimeMillis();
 
 
+    /**
+     * Represents the running state of the RMIClient.
+     *
+     * This variable acts as a flag to indicate whether the client is currently operating or not.
+     * It is used throughout various methods to control execution of processes such as ping monitoring,
+     * input handling, and disconnection routines. When set to false, the client operations are halted.
+     */
     Boolean running = false;
+    /**
+     * Represents a thread responsible for continuously handling user input or server communication.
+     *
+     * The input loop is intended to run in a separate thread and is primarily used to manage
+     * the input mechanism asynchronously. It facilitates interaction between the user and
+     * the client, delegating commands and actions to their respective handlers. This thread
+     * serves an essential role in maintaining the responsiveness of the client while processing
+     * input or communication independently.
+     *
+     * The thread lifecycle is managed explicitly within the client, ensuring it is started
+     * and terminated as needed during the client operations.
+     */
     private Thread inputLoop = null;
 
+    /**
+     * A single-threaded scheduled executor service responsible for managing scheduled tasks
+     * within the RMIClient class.
+     *
+     * This scheduler is used to run periodic or delayed tasks in a separate thread, ensuring
+     * that all scheduled operations are executed in a serialized and thread-safe manner.
+     *
+     * Key Use Cases:
+     * - Supporting background tasks such as connection monitoring and handling pings.
+     * - Coordinating periodic events required by the client, such as automated tasks
+     *   that do not interfere with the main application workflow.
+     *
+     * Thread Management:
+     * The scheduler operates independently of other threads in the application
+     * and maintains a single thread for executing submitted tasks in sequence.
+     *
+     * Lifecycle:
+     * The lifecycle of the scheduler is managed by the RMIClient class. It is started
+     * when tasks are scheduled and can be explicitly terminated during disconnection
+     * or application shutdown to release resources properly.
+     */
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
 

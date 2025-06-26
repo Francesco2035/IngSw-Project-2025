@@ -65,16 +65,126 @@ import java.util.concurrent.*;
 public class RMIServer extends UnicastRemoteObject implements ServerInterface, Runnable , GhListener {
 
 
+    /**
+     * An instance of the GamesHandler, responsible for managing and coordinating
+     * the game's states, events, and player interactions. This variable is used
+     * throughout the RMIServer class to delegate game-specific logic and operations.
+     */
     GamesHandler gh;
+    /**
+     * A thread-safe map that associates unique client tokens with their corresponding VirtualView instances.
+     * This map allows for concurrent access and updates, ensuring safe interaction in a multithreaded environment.
+     * The key represents the client's unique token, and the value is the associated VirtualView object.
+     *
+     * It is used to manage active clients and their views in the system.
+     */
     private ConcurrentHashMap<String, VirtualView> tokenMap;
+    /**
+     * A map that associates a client interface with a unique identifier string.
+     * This map is used to keep track of the currently connected clients and their
+     * associated IDs for communication and management purposes.
+     *
+     * The client interface serves as a reference to the remote client, and the string
+     * represents a unique identifier used to track the client in the server's context.
+     *
+     * It's declared as final to ensure thread-safe access and prevent reassignment.
+     */
     private final HashMap<ClientInterface, String> clients;
-    private  ArrayList<String> DisconnectedClients = new ArrayList<>();
+    /**
+     * Represents a list that keeps track of tokens corresponding to clients
+     * that have been disconnected from the server.
+     *
+     * This field is used internally in the server to maintain and manage
+     * disconnected clients for potential reconnection or removal processes.
+     * It can be updated during disconnection handling and is referenced in
+     * various reconnection and server management operations.
+     */
+    private ArrayList<String> DisconnectedClients = new ArrayList<>();
+    /**
+     * A map that tracks the number of unsuccessful connection or interaction
+     * attempts made by each client. The `ClientInterface` is used as the key to
+     * uniquely identify a client, while the integer value represents the count
+     * of attempts.
+     *
+     * This field is primarily used internally to monitor client activity, enforce
+     * restrictions, or take corrective actions after a certain threshold of
+     * failed attempts, such as disconnection from the server.
+     *
+     * The map is initialized as a `HashMap` and updated as needed during the server's
+     * runtime based on client interactions.
+     */
     private final HashMap<ClientInterface, Integer> attempts = new HashMap<>();
+    /**
+     * Represents the list of active clients currently in the lobby of the server.
+     * This collection is used to manage client interfaces for communication and
+     * coordination within the server's game lobby.
+     *
+     * The lobby is primarily updated and managed through various server operations,
+     * including handling new connections, disconnections, or other events related
+     * to the lifecycle of a client in the server environment.
+     *
+     * Thread-safety considerations may be required for modifying this list, as it
+     * can be accessed and updated by multiple methods managing client interactions.
+     */
     private ArrayList<ClientInterface> lobby = new ArrayList<>();
+    /**
+     * A data structure used to manage and store the state of all ongoing lobby events in the RMI server.
+     * Each entry in the map represents a unique lobby, identified by its game ID (as the key),
+     * and its corresponding lobby details encapsulated in a {@link LobbyEvent} object (as the value).
+     * This map provides efficient retrieval and modification of lobby events during client-server communication.
+     * It plays a central role in handling operations like sending events to clients, updating the
+     * state of the lobby, and maintaining a synchronized view of active games in the system.
+     */
     private HashMap<String, LobbyEvent> lobbyEvents;
+    /**
+     * A map that holds pending client connections. Each entry consists of a unique string
+     * identifier (token) as the key, and a {@link ClientInterface} implementation as the value.
+     *
+     * This map is used to temporarily store clients during intermediate states, such as
+     * awaiting activation or reconnection, before they are transitioned to the active clients list.
+     * The key represents a client's unique identifier, while the value signifies the client's
+     * remote interface for communication.
+     *
+     * This field plays a crucial role in managing the server's client lifecycle and ensuring that
+     * clients in transient states are accounted for until their status is resolved.
+     */
     private HashMap<String, ClientInterface> pending = new HashMap<>();
+    /**
+     * An `ExecutorService` used for asynchronous task execution within the `RMIServer` context.
+     * This executor is configured as a fixed thread pool with a size of 8 threads, which allows
+     * for concurrent handling of a predefined number of asynchronous operations.
+     *
+     * It is primarily utilized to manage background tasks, including client communication,
+     * reconnection logic, and event handling, ensuring non-blocking execution of critical server processes.
+     *
+     * The usage of this executor helps improve server responsiveness and thread management by
+     * delegating tasks to a pool of reusable worker threads, reducing the overhead of thread creation
+     * and destruction during runtime.
+     */
     private final ExecutorService asyncExecutor = Executors.newFixedThreadPool(8);
+    /**
+     * A data structure that maps connected clients to their respective executor services.
+     * Each client, represented by a {@code ClientInterface} instance, is associated with
+     * an {@code ExecutorService} used to handle client-specific asynchronous tasks. This
+     * mapping facilitates the management of client connections and their associated
+     * background operations, such as ping checks or communication tasks.
+     *
+     * The {@code HashMap} serves as the backend storage, providing efficient lookups
+     * for managing executor services or performing cleanup operations when clients
+     * disconnect or time out.
+     *
+     * This field is private and is utilized internally by the {@code RMIServer} class
+     * to maintain and manage the server's active clients and related thread pools.
+     */
     private HashMap<ClientInterface, ExecutorService> pingClient = new HashMap<>();
+    /**
+     * A thread-safe map that tracks the last known activity timestamp (ping) for each connected client.
+     * The keys represent the {@link ClientInterface} instances of the clients, and the values are
+     * timestamps in milliseconds indicating when the last ping was received from the respective client.
+     *
+     * This map is used to monitor client connections and detect potential timeouts or disconnections.
+     * It is periodically checked by the timeout monitoring thread to ensure clients remain active.
+     */
     private final ConcurrentHashMap<ClientInterface, Long> lastPingMap = new ConcurrentHashMap<>();
 
 

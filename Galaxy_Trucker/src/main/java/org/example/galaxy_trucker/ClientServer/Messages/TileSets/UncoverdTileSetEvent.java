@@ -22,7 +22,27 @@ import java.util.ArrayList;
  */
 public class UncoverdTileSetEvent implements Event {
 
+    /**
+     * Represents the unique identifier of the uncovered tile set.
+     *
+     * This variable is used to associate a specific tile set with an instance of
+     * the UncoverdTileSetEvent class. It serves as a reference to identify the tile
+     * set within the game's context, allowing the event to track changes or actions
+     * associated with that particular tile set.
+     */
     private Integer id;
+    /**
+     * Represents a list of connectors associated with the uncovered tile set event.
+     *
+     * The connectors provide additional information about the adjacency and properties
+     * of the tiles involved in the uncovered tile set. Each connector is an implementation
+     * of the Connectors interface, which may include different types such as SINGLE, DOUBLE,
+     * UNIVERSAL, NONE, ENGINE, and CANNON.
+     *
+     * This variable is utilized to maintain the state and attributes of the connections
+     * related to the uncovered tiles in the game, enabling further operations or validations
+     * on the connected tiles.
+     */
     private ArrayList<Connectors> connectors;
 
     /**
