@@ -39,6 +39,7 @@ public class AcceptClient  extends PlayerStateClient{
         toPrint.append(out.showPlayers());
         toPrint.append(out.printGameBoard());
         toPrint.append(out.showCard());
+        toPrint.append(out.showPbInfo());
         toPrint.append(out.printBoard());
         toPrint.append(out.showException());
         out.render(toPrint);
