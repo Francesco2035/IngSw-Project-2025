@@ -1388,10 +1388,20 @@ public class Out {
         }
     }
 
+    /**
+     * Sets the scoreboard with the provided StringBuilder.
+     *
+     * @param sb the StringBuilder object containing the scoreboard data
+     */
     public void setScoreBoard(StringBuilder sb){
         scoreboard = sb;
     }
 
+    /**
+     * Displays the current scoreboard. If the scoreboard is null, an empty StringBuilder is returned.
+     *
+     * @return a StringBuilder object representing the scoreboard, or an empty StringBuilder if the scoreboard is null
+     */
     public StringBuilder showScoreboard(){
         return Objects.requireNonNullElseGet(scoreboard, StringBuilder::new);
     }
