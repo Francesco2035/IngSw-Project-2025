@@ -2175,6 +2175,7 @@ public class GuiRoot implements View {
     public void showLobbyGame(GameLobbyEvent event){
 
         Platform.runLater(()->{
+
             readyPlayers.getItems().clear();
 
             String s;
@@ -2199,6 +2200,14 @@ public class GuiRoot implements View {
 
                 readyPlayers.getItems().add(name);
             }
+            if(flightStarted){
+                for (String p : othersBoards.keySet()) {
+                    if (!event.getPlayers().contains(p))
+                        othersBoards.remove(p);
+                }
+                flightScene();
+            }
+
         });
 
     }
@@ -2325,7 +2334,7 @@ public class GuiRoot implements View {
 
                 Scene newGameScene = new Scene(quitBox, 250, 80);
                 confirmStage.setScene(newGameScene);
-                confirmStage.initOwner(primaryStage); // Blocca interazioni con la finestra principale
+                confirmStage.initOwner(primaryStage);
                 confirmStage.initModality(Modality.WINDOW_MODAL);
 
                 confirmStage.show();
@@ -4034,8 +4043,35 @@ public class GuiRoot implements View {
             });
 
             quit.setOnAction(e -> {
-                inputQueue.add("Quit");
+                Stage confirmStage = new Stage();
+                confirmStage.setTitle("Quitting");
+
+                Label quitLabel = new Label("Are You Sure?");
+                quitLabel.setStyle("-fx-font-size: 15px");
+
+                Button confirmButton = new Button("Pretty Sure");
+                Button goBackButton = goBackButtonMaker(confirmStage);
+
+                confirmButton.setOnAction(E -> {
+                    inputQueue.add("Quit");
+                    confirmStage.close();
+                });
+
+                HBox buttons = new HBox(50, goBackButton, confirmButton);
+                buttons.setAlignment(Pos.CENTER);
+                buttons.setPadding(new Insets(5));
+
+                VBox quitBox = new VBox(3, quitLabel, buttons);
+                quitBox.setAlignment(Pos.CENTER);
+
+                Scene newGameScene = new Scene(quitBox, 250, 80);
+                confirmStage.setScene(newGameScene);
+                confirmStage.initOwner(primaryStage);
+                confirmStage.initModality(Modality.WINDOW_MODAL);
+
+                confirmStage.show();
             });
+
             primaryStage.show();
         });
     }
