@@ -10,17 +10,7 @@ import java.util.HashMap;
  * test the aascii art
  */
 class ASCII_ARTTest {
-    //QUESTO TEST NON SERVE A NIENTE, ERA GIUSTO PER VISUALIZZARE VELOCEMENTE LE SCRITTE
 
-    /**
-     * tests the acsi art of the TUI names
-     */
-    @Test
-    public void test() {
-        System.out.println(ASCII_ART.AbandonedStation);
-
-        System.out.println(ASCII_ART.largeMeteor);
-    }
 
     /**
      *tests the ascii art of the TUI scoreboard
