@@ -16,6 +16,13 @@ import java.util.HashMap;
 
 import static java.util.Collections.max;
 
+/**
+ * The HandleTheft class is a concrete implementation of the PlayerState
+ * class, responsible for handling specific behaviors and states associated
+ * with theft-related actions in the game. This state governs the player's
+ * ability to perform theft operations and manage relevant game logic during
+ * such interactions.
+ */
 public class HandleTheft extends PlayerState {
 //    @Override
 //    public Command PlayerAction(String json, Player player) {
@@ -40,6 +47,15 @@ public class HandleTheft extends PlayerState {
 
 
 
+    /**
+     * Creates a default command for handling theft during the game.
+     * It determines the best possible target based on maximum value in cargo
+     * and creates a Theft command for the current player.
+     *
+     * @param gameId the unique identifier of the game instance
+     * @param player the player for whom the command is being created
+     * @return a newly created Theft command configured with the appropriate parameters
+     */
     @Override
     public  Command createDefaultCommand(String gameId, Player player) { // se nono qui e non in consume energy ho sicuramente il cargo non vuoto
         PlayerBoard board =player.getmyPlayerBoard();
@@ -67,6 +83,15 @@ public class HandleTheft extends PlayerState {
         return  new Theft(index,coord,gameId,player.GetID(),lv,"HandleTheft","boh");
     }
 
+    /**
+     * Converts the current state into a client-phase representation.
+     * This method encapsulates the game state into a {@link PhaseEvent} object
+     * with the associated {@link HandleTheftClient}, which represents the player's
+     * state during the scenario of handling theft.
+     *
+     * @return a {@link PhaseEvent} object containing the {@link HandleTheftClient} state,
+     *         which encapsulates the behavior and commands available during the theft-handling phase.
+     */
     @Override
     public PhaseEvent toClientState() {
         return new PhaseEvent(new HandleTheftClient());
@@ -112,10 +137,7 @@ public class HandleTheft extends PlayerState {
 //                            z--;
 //                        }
 //                    }
-////                        for (int z=0; (z<powerCenters.get(j).getType() )&&i<p;z++){
-////                            coords.add(new IntegerPair(powerCenters.get(j).getX(),powerCenters.get(j).getY()));
-////                            i++;
-////                        }
+
 //                        //ruba energie
 //                    }
 //                    else {
@@ -163,11 +185,24 @@ public class HandleTheft extends PlayerState {
         //}
  //   }
 
+
+    /**
+     * Determines if the specified TheftCommand is allowed.
+     *
+     * @param command the TheftCommand to validate
+     * @return true if the command is permitted, otherwise false
+     */
     @Override
     public boolean allows(TheftCommand command){
         return true;
     }
 
+    /**
+     * Determines whether the given GetGoodAction is allowed in the current state.
+     *
+     * @param action the GetGoodAction to be evaluated
+     * @return true if the action is allowed, otherwise false
+     */
     @Override
     public boolean allows(GetGoodAction action) {
         return true;
