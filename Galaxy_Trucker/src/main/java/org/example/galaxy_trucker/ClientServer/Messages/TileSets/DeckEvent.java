@@ -21,6 +21,12 @@ import java.util.ArrayList;
  */
 public class DeckEvent implements Event {
 
+    /**
+     * A list of integer IDs representing elements associated with a deck.
+     * These IDs could correspond to unique identifiers of cards or entities
+     * within the deck and are used to encapsulate relevant data for deck-related
+     * operations in the event system.
+     */
     private ArrayList<Integer> ids;
 
     /**

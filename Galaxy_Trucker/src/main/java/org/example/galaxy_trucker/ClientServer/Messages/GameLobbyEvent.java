@@ -28,7 +28,23 @@ import java.util.ArrayList;
  */
 public class GameLobbyEvent implements Event{
 
+    /**
+     * A list of players in the game lobby.
+     *
+     * This variable stores the names of all players currently present in the game lobby.
+     * Each player's name is represented as a string within the list.
+     */
     ArrayList<String> players;
+    /**
+     * Represents the readiness statuses of players in the game lobby.
+     *
+     * Each element in the list corresponds to the readiness state of a player.
+     * A value of {@code true} indicates that the respective player is ready,
+     * while a value of {@code false} indicates that the player is not ready.
+     *
+     * This variable is used to manage and track the readiness state of all players
+     * in the context of a game lobby event.
+     */
     ArrayList<Boolean> ready;
 
     /**

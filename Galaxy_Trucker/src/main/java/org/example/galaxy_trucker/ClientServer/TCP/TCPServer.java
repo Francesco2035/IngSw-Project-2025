@@ -26,9 +26,43 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TCPServer implements  Runnable {
 
+    /**
+     * A static instance of the GamesHandler used for managing game-related operations
+     * and logic within the server. This variable serves as the main access point
+     * for game handling functionalities, providing centralized management of
+     * game sessions, players, and associated interactions.
+     *
+     * The GamesHandler instance is shared across multiple threads within the
+     * TCP server to synchronize game state and handle client communications.
+     */
     private static GamesHandler gamesHandler;
+    /**
+     * A thread-safe map that associates unique client tokens (represented as Strings) with their corresponding
+     * VirtualView instances. This map is primarily used to manage client connections in the TCPServer
+     * and to provide an efficient way to retrieve and handle virtual views for each client using their token.
+     */
     private ConcurrentHashMap<String, VirtualView> tokenMap;
+    /**
+     * A list of tokens representing clients that have disconnected from the server.
+     * This field is utilized by the {@code TCPServer} to track and manage the clients
+     * that have been disconnected, ensuring proper handling and resource management
+     * within the server.
+     *
+     * It is initialized during the construction of the {@code TCPServer} instance.
+     * The list is used to maintain a record of disconnected client identifiers, allowing
+     * for any necessary cleanup or reallocation of resources associated with these clients.
+     */
     private ArrayList<String> DisconnectedClients;
+    /**
+     * A map that associates each {@link MultiClientHandler} instance with its corresponding {@link Thread}.
+     * This structure is used to manage and track active client threads in the server.
+     *
+     * Each {@code MultiClientHandler} is responsible for handling communication with an individual client,
+     * and the associated {@code Thread} allows for asynchronous handling of multiple clients simultaneously.
+     *
+     * This map enables the server to maintain an organized structure, facilitating operations such as
+     * managing, interrupting, or removing specific client threads during the server's execution.
+     */
     private HashMap<MultiClientHandler,Thread> multiClientThreads;
 
     /**

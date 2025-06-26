@@ -17,8 +17,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class HourglassEvent implements Event {
 
+    /**
+     * Represents the message property of the HourglassEvent.
+     *
+     * The `message` variable contains contextual or descriptive information
+     * related to the event. It is initialized with an empty string by default
+     * and can later be updated with a specific message. This property is typically
+     * used to convey details about the purpose or state of the event in a human-readable format.
+     *
+     * The `@JsonProperty` annotation is used to bind this field to the JSON key "message"
+     * during the serialization and deserialization process, ensuring consistent mapping
+     * between the object and its JSON representation.
+     */
     @JsonProperty("message")
     String message = "";
+    /**
+     * Indicates whether an event signifies the start of a process or action.
+     *
+     * This boolean property represents the initiation state of an event,
+     * where a value of true implies that the event signifies the start
+     * of a particular process or operation, and false indicates otherwise.
+     */
     @JsonProperty("start")
     boolean start;
 

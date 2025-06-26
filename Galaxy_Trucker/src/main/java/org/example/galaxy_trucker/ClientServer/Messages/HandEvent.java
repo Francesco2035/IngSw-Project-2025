@@ -13,16 +13,30 @@ import java.util.ArrayList;
  */
 public class HandEvent implements Event {
 
+    /**
+     * The identifier of the HandEvent instance.
+     *
+     * This variable represents a unique integer ID associated with a specific instance
+     * of the HandEvent. It is used to distinguish between different HandEvent objects
+     * within the system and may be utilized in event processing and identification
+     * by various components.
+     */
     private int id;
+    /**
+     * A list of connector instances associated with this event.
+     *
+     * This variable holds an ArrayList of objects implementing the {@code Connectors}
+     * interface, representing the connectors relevant to the {@code HandEvent}.
+     * Connectors are responsible for defining relationships or interactions
+     * between components within the application, such as validation and adjacency checks.
+     */
     private ArrayList<Connectors> connectors;
 
     /**
-     * Constructs a HandEvent instance with the specified identifier and list of connectors.
-     * This class represents an event related to a player's hand that contains a unique ID
-     * and a collection of connectors associated with it.
+     * Constructs a new instance of HandEvent with the specified identifier and connectors.
      *
-     * @param id the unique identifier for the HandEvent
-     * @param connectors the list of connectors associated with this event
+     * @param id the unique identifier for this HandEvent
+     * @param connectors the list of {@code Connectors} associated with this HandEvent
      */
     @JsonCreator
     public HandEvent(

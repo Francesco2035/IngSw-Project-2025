@@ -22,6 +22,16 @@ import org.example.galaxy_trucker.ClientServer.Messages.EventVisitor;
  */
 public class CardEvent  implements Event {
 
+    /**
+     * Represents the unique identifier for a CardEvent.
+     *
+     * The `id` is an integer value that uniquely identifies a CardEvent instance. This ID
+     * can be used to distinguish different CardEvent instances, associate events with
+     * external entities, or support serialization and deserialization mechanisms.
+     *
+     * It plays a critical role in ensuring each CardEvent is distinguishable within the
+     * event processing framework.
+     */
     private int id;
 
     /**

@@ -23,8 +23,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class ConnectionRefusedEvent implements Event{
 
+    /**
+     * A descriptive message providing details about the nature or context
+     * of the ConnectionRefusedEvent. This string typically explains why the
+     * connection was refused, aiding in debugging or user feedback.
+     */
     String message;
 
+    /**
+     * Creates a new instance of ConnectionRefusedEvent with default initialization.
+     *
+     * This constructor initializes a ConnectionRefusedEvent without any specific
+     * message, representing a generic occurrence of a connection refusal event.
+     * The message can be set later using the appropriate constructors or methods.
+     *
+     * This event is typically used to notify that a connection attempt has been refused,
+     * either due to server-side limitations, client-side issues, or other network constraints.
+     */
     public ConnectionRefusedEvent(){
 
     }

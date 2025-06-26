@@ -12,9 +12,38 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class ReconnectedEvent implements Event{
 
+    /**
+     * The authentication token associated with a reconnected player.
+     *
+     * This token is used to authenticate or uniquely identify the player who has
+     * rejoined a game session. It plays a critical role in ensuring that the reconnection
+     * event is securely processed and linked to the corresponding player account.
+     */
     String token;
+    /**
+     * Represents the unique identifier of a game in the context of a reconnect event.
+     *
+     * The `gameId` field stores the unique ID associated with the game to which a player
+     * has reconnected. It is utilized to track and reference the specific game session
+     * during the reconnection process.
+     */
     String gameId;
+    /**
+     * Represents the unique identifier of a player.
+     *
+     * The {@code playerId} is used to distinguish players within the scope of a game or event.
+     * It acts as the primary reference for identifying the player who is associated with a specific
+     * event, such as a reconnection or other in-game occurrences. This ID is typically assigned
+     * during the player's registration or session initialization.
+     */
     String playerId;
+    /**
+     * Represents the level of the player at the time of reconnection.
+     *
+     * This variable holds an integer value that indicates the player's current level
+     * when the ReconnectedEvent is created. It is used to track the player's progress
+     * in the game or session upon rejoining.
+     */
     int lv;
 
     /**

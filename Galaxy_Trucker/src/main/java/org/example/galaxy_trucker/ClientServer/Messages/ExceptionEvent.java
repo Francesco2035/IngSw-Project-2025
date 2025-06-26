@@ -16,6 +16,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ExceptionEvent implements Event{
 
 
+    /**
+     * Represents the exception message associated with this event.
+     *
+     * The {@code exception} variable is used to store details about an exception
+     * that has occurred during runtime. This information is part of the
+     * {@code ExceptionEvent} and can be accessed or logged as needed to provide
+     * insights into the error or issue that was encountered.
+     */
     String exception;
 
     /**

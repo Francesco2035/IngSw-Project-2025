@@ -15,6 +15,13 @@ import org.example.galaxy_trucker.ClientServer.Messages.EventVisitor;
  */
 public class CoveredTileSetEvent implements Event {
 
+    /**
+     * Represents the size of the covered tile set associated with this event.
+     *
+     * This field stores the integer value indicating the number of tiles in the
+     * covered tile set. It is referenced in various methods to provide
+     * size-related information or perform operations based on the size.
+     */
     private int size;
 
     /**

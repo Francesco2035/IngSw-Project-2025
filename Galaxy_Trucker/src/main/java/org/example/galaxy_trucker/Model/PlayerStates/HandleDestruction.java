@@ -11,6 +11,15 @@ import org.example.galaxy_trucker.View.ClientModel.States.HandleDestructionClien
 
 import java.util.ArrayList;
 
+/**
+ * The HandleDestruction class represents a specific state of the player during the game,
+ * where the player has to handle the aftermath of destruction events such as meteor strikes.
+ * It extends the PlayerState class, which provides the base logic for different player states.
+ *
+ * This state involves actions such as selecting chunks of destroyed housing units
+ * and determining the next steps. It also ensures that the player's actions are
+ * appropriate based on the current state and handles the transition to a client-side representation of this state.
+ */
 public class HandleDestruction extends PlayerState {
 
 //    @Override
@@ -29,6 +38,13 @@ public class HandleDestruction extends PlayerState {
 //        return new SelectChunkCommand(player, chunk);
 //    }
 
+    /**
+     * Creates and returns a default command for the player based on the current state of their game board.
+     *
+     * @param gameId the unique identifier of the game.
+     * @param player the player for whom the default command is being generated.
+     * @return a command instance that represents the player's next possible action.
+     */
     @Override ///  che cristo succede se Viene distrutta ogni singola tile?
     public Command createDefaultCommand(String gameId, Player player) {
         int lv= player.getCommonBoard().getLevel();
@@ -71,12 +87,27 @@ public class HandleDestruction extends PlayerState {
         return new SelectChunkCommand(coord,gameId, player.GetID(),lv,"SelectChunkCommand","placeholder");
     }
 
+    /**
+     * Determines whether the provided SelectChunkCommand is allowed in
+     * the current state of the player.
+     *
+     * @param command the SelectChunkCommand to be evaluated
+     * @return true if the command is allowed, false otherwise
+     */
     @Override
     public boolean allows(SelectChunkCommand command){
         return true;
     }
 
 
+    /**
+     * Converts the current state of the "HandleDestruction" to a client-facing phase state.
+     * This method creates a new {@link PhaseEvent} instance encapsulating a client-side
+     * representation of the "HandleDestruction" state for use in the game.
+     *
+     * @return a {@link PhaseEvent} object containing a {@link HandleDestructionClient}
+     *         instance that represents the player's state when handling destruction in the game phase.
+     */
     @Override
     public PhaseEvent toClientState() {
         return new PhaseEvent(new HandleDestructionClient());

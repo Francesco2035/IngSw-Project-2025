@@ -24,6 +24,19 @@ import org.example.galaxy_trucker.View.ClientModel.States.PlayerStateClient;
  */
 public class PhaseEvent implements Event{
 
+    /**
+     * Represents the specific state of a player during a phase of the game.
+     *
+     * This variable encapsulates the player's behavior and available actions
+     * within the context of the current game phase. It is an instance of the
+     * PlayerStateClient class or one of its subclasses, which allows for
+     * polymorphic operations dependent on the specific game state.
+     *
+     * The stateClient can handle various functionalities such as rendering
+     * game views, providing available commands, and managing game-specific
+     * player interactions. It is utilized within the PhaseEvent to model
+     * phase-oriented player behaviors and actions in the game logic.
+     */
     public PlayerStateClient stateClient;
 
     /**

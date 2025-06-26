@@ -13,6 +13,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TokenEvent implements Event{
 
+    /**
+     * The token associated with the event.
+     *
+     * This variable holds a string representation of a token used within the context
+     * of the event. The token may be utilized for identification, authentication, or
+     * other purposes depending on the specific requirements of the system.
+     */
     String token;
 
 

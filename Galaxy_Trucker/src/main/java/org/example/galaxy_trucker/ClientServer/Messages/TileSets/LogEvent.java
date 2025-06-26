@@ -21,10 +21,59 @@ import org.example.galaxy_trucker.ClientServer.Messages.EventVisitor;
  */
 public class LogEvent implements Event {
 
+    /**
+     * Represents the effect description associated with a LogEvent.
+     *
+     * This variable stores a string that provides a context-specific explanation
+     * or message about the impact or outcome of the event. It can be used to describe
+     * the nature of the event, such as its purpose, the changes it induces, or any other
+     * related information deemed necessary for understanding the event's behavior
+     * within the application.
+     *
+     * The `effect` variable is initialized to an empty string by default, ensuring
+     * that it always contains a value, even if no specific effect is defined.
+     */
     String effect = "";
+    /**
+     * Represents the x-coordinate of the event within the system.
+     *
+     * This variable indicates the horizontal position associated with this specific
+     * event. It is commonly used in spatial contexts or grid-based calculations,
+     * where events are positioned or interpreted based on x and y coordinates.
+     *
+     * The value of x is initially set during the construction of the event object
+     * and can be retrieved for processing purposes or system understanding of the
+     * event's spatial attributes.
+     */
     int x;
+    /**
+     * Represents the y-coordinate associated with the event.
+     *
+     * The y-coordinate typically corresponds to the vertical position related to this
+     * event in a spatial or grid-based context. It is used to indicate the specific
+     * vertical location at which the event occurs or is associated.
+     */
     int y;
+    /**
+     * Represents the direction associated with the event.
+     *
+     * This variable holds an integer value that typically describes the orientation
+     * or movement aspect of the event. The specific interpretation of this value
+     * depends on the context in which the event is being used. It may be used
+     * for navigation, spatial representation, or other directional purposes.
+     *
+     * The value is set during the creation or update of a LogEvent instance
+     * and can be accessed using the corresponding getter method.
+     */
     int direction;
+    /**
+     * Represents the type of the event within the LogEvent class.
+     *
+     * This integer value serves as a categorization or classification identifier for the event,
+     * facilitating event-specific processing or handling logic. The `type` is often used to
+     * differentiate between various kinds of events and to determine the appropriate response
+     * or behavior associated with the event during its lifecycle.
+     */
     int type;
 
 

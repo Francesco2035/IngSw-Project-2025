@@ -12,7 +12,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class GameBoardEvent implements Event {
 
 
+    /**
+     * Represents the position on the game board associated with this event.
+     *
+     * This variable indicates a specific location on the board that is relevant
+     * to the occurrence or state encapsulated by this event.
+     */
     private int position;
+    /**
+     * Represents the unique identifier of a player associated with the event.
+     *
+     * This variable is intended to store a string value that uniquely identifies
+     * a player in the context of the game. It helps associate specific actions
+     * or states on the game board with a particular player.
+     */
     private String playerID;
 
 

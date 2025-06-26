@@ -15,7 +15,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class FinishGameEvent implements Event {
 
+    /**
+     * Indicates whether the game concluded with a win state.
+     *
+     * This variable is used to represent the outcome of a game event.
+     * A value of {@code true} signifies that the game ended successfully
+     * with a win, while a value of {@code false} indicates the absence
+     * of a win.
+     */
     boolean win;
+    /**
+     * A string representing the descriptive message associated with the event.
+     *
+     * This message provides additional details or context about the event,
+     * such as the outcome or specific state of the game at the conclusion of
+     * an event. It plays a crucial role in delivering human-readable information
+     * to external components or during logging of the event processing.
+     */
     String message;
 
     /**

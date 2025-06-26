@@ -25,18 +25,81 @@ import java.util.ArrayList;
  */
 public class PlayerTileEvent extends TileEvent implements Event  {
 
+    /**
+     * Represents the name of the player associated with the tile event.
+     * This field specifies the player involved in the event and is used
+     * for identifying the relevant player in the context of the event.
+     */
     private String playerName;
+    /**
+     * Represents the unique identifier of the tile event on the player board.
+     * This ID is used to differentiate between different tile events.
+     */
     private int id;
+    /**
+     * Represents the number of humans present on a specific tile in the player's board.
+     * This value indicates the count of human characters involved in the tile event.
+     */
     private int humans;
+    /**
+     * Represents the x-coordinate of a tile on the player board in the context of a PlayerTileEvent.
+     * This value indicates the horizontal position of the tile within the board's grid.
+     */
     private int x;
+    /**
+     * Represents the y-coordinate of the tile on the player's board.
+     * It is used to determine the vertical position of a tile within the game.
+     */
     private int y;
+    /**
+     * Indicates whether a purple alien is present on the tile associated
+     * with this event.
+     *
+     * This boolean flag represents the presence or absence of a purple alien
+     * on the tile in the player's board during a specific event. It is used
+     * within the context of the PlayerTileEvent class to determine the state
+     * of the tile regarding purple alien occupants.
+     */
     private boolean purpleAlien;
+    /**
+     * Represents the presence of a brown alien on a tile.
+     * This variable is a boolean flag used to indicate whether a brown alien
+     * is present in a specific tile associated with a player's event.
+     *
+     * It is a key attribute relevant to the game's tile event logic,
+     * especially when determining the entities or effects on a given tile.
+     */
     private boolean brownAlien;
+    /**
+     * Represents the number of batteries present on the player's tile.
+     * Batteries can be used to power various components or systems in the game.
+     */
     private int batteries;
+    /**
+     * Represents the collection of goods stored as cargo in the context of a player's tile event.
+     * The type of goods is defined by the {@code Goods} interface, which can represent multiple
+     * specific types such as BLUE, GREEN, YELLOW, or RED. Each item in the cargo list corresponds
+     * to an instance of {@code Goods}.
+     */
     private ArrayList<Goods> cargo;
+    /**
+     * Represents the rotation angle of a tile in a PlayerTileEvent.
+     * This value denotes the orientation of the tile, typically measured
+     * in degrees or as a standardized internal representation.
+     */
     private int rotation;
+    /**
+     * Represents a collection of connectors associated with a tile in the player's event.
+     * Each connector defines a specific type of connection mechanism and can be used
+     * to determine compatibility and adjacency between tiles.
+     */
     private ArrayList<Connectors> connectors;
 
+    /**
+     * Default constructor for the PlayerTileEvent class.
+     * Creates an instance of PlayerTileEvent with default or uninitialized values.
+     * This constructor is primarily used for deserialization or initialization purposes.
+     */
     public PlayerTileEvent() {
 
     }

@@ -13,9 +13,41 @@ import java.util.ArrayList;
  */
 public class LobbyEvent implements Event {
 
+    /**
+     * Represents the unique identifier of the game session associated with a LobbyEvent.
+     * This identifier is used to distinguish and track individual game sessions
+     * within the system. It must be unique for each game session to ensure proper
+     * association and communication between events and their respective lobbies.
+     */
     String gameId;
+    /**
+     * Represents the level associated with the lobby event.
+     *
+     * This variable indicates the current level or stage of the game lobby,
+     * providing information about the game progression or configuration phase.
+     * It is integral to identifying the state of the game tied to the specific
+     * lobby event.
+     */
     int lv;
+    /**
+     * Represents the maximum number of players allowed in the game lobby.
+     *
+     * This variable specifies the upper limit of players that can simultaneously
+     * join a game session. The value is used to enforce lobby size restrictions
+     * and manage game session scalability.
+     */
     int maxPlayers;
+    /**
+     * Represents a list of player names currently in the game lobby.
+     *
+     * This field holds an {@code ArrayList} of {@code String} objects, where each string
+     * is the name of a player currently participating in the lobby. The list provides
+     * functionality to manage and access player data associated with a particular lobby event.
+     *
+     * The {@code players} list is initialized during the construction of a {@code LobbyEvent}
+     * instance and can be retrieved using the {@code getPlayers()} method. It is designed
+     * to facilitate tracking and processing of players within the game's lobby system.
+     */
     ArrayList<String> players;
 
 

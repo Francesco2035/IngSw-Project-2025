@@ -28,11 +28,98 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class GamesHandler implements LobbyListener {
 
+    /**
+     * A map that associates unique player tokens with their corresponding game IDs.
+     *
+     * This map is used to track the relationship between a player's token, acting as a unique identifier,
+     * and the specific game instance they are associated with. It facilitates operations such as
+     * player reconnections, game removal, and command routing by providing a way to quickly identify
+     * the game linked to a given token.
+     *
+     * Thread-safety and access synchronization considerations need to be taken into account
+     * when modifying or accessing this map, as it is a shared resource within the GamesHandler class.
+     */
     private final HashMap<String, String> tokenToGame = new HashMap<>();
+    /**
+     * A mapping of game identifiers to their respective {@link GameController} instances.
+     * This map is used to manage and interact with active game controllers within the context of the game handler.
+     *
+     * Thread-safety:
+     * Access to this map may involve synchronization where required to ensure it can be safely
+     * accessed and modified in a concurrent environment.
+     *
+     * Usage context:
+     * - The map allows retrieving or updating {@link GameController} instances based on their associated game IDs.
+     * - It is a key component of the game management system, facilitating game operations like adding, removing,
+     *   or processing game-specific commands for individual games.
+     */
     private final HashMap<String, GameController> gameControllerMap;
+    /**
+     * A thread-safe blocking queue that holds pairs of {@link Command} and {@link VirtualView}
+     * instances, representing pending player login requests to be processed.
+     *
+     * Each entry in the queue contains:
+     * - A {@link Command} object containing details required for player initialization or login.
+     * - A {@link VirtualView} instance representing the player's communication interface with the server.
+     *
+     * The queue is utilized in a multithreaded environment to ensure that login requests
+     * are processed asynchronously and in the order they are received. The processing of these
+     * requests is handled by a background thread that continuously polls the queue until interrupted.
+     *
+     * Thread-safety is achieved through the use of a {@link BlockingQueue}, which allows
+     * multiple threads to safely add and retrieve elements concurrently.
+     *
+     * This queue is primarily used internally by the {@link GamesHandler} class
+     * to manage the initialization and addition of players to their respective game sessions.
+     */
     private final BlockingQueue<Pair<Command, VirtualView>> pendingLogins;
+    /**
+     * A list of {@link GhListener} instances that are registered to listen for
+     * and handle events related to the game lobby and player actions.
+     *
+     * This collection serves as a centralized repository for all listeners
+     * that have expressed interest in monitoring lobby events, game updates,
+     * and player-related actions. The listeners list is used to:
+     * - Notify all registered listeners about the current state of the lobby or
+     *   specific events by invoking their respective methods.
+     * - Add new listeners through {@link GamesHandler#setListeners(GhListener)}
+     *   to extend event-handling capabilities.
+     * - Provide access to the list of listeners through
+     *   {@link GamesHandler#getListeners()}, offering flexibility to inspect
+     *   or manage the listeners dynamically.
+     *
+     * This field is a core component of the event broadcasting mechanism within
+     * the {@link GamesHandler}, ensuring all relevant parties are updated about
+     * significant events in the game or lobby environment.
+     */
     private ArrayList<GhListener> listeners = new ArrayList<>();
+    /**
+     * A collection that stores {@link LobbyEvent} instances representing events
+     * occurring within the game lobby.
+     *
+     * This list is utilized to maintain the history of lobby events and to
+     * facilitate the broadcasting of events to registered listeners.
+     * Events added to this list are typically propagated to all instances of
+     * {@link GhListener} that are registered with the containing class.
+     *
+     * Thread-safety considerations:
+     * - Access to this list should be properly synchronized if shared across multiple threads.
+     */
     private ArrayList<LobbyEvent> lobbyEvents = new ArrayList<>();
+    /**
+     * Represents an instance of the `RMIServer` used for managing remote method invocation (RMI)
+     * operations in the context of the GamesHandler.
+     *
+     * This field serves as the primary entry point for handling RMI-based communication
+     * and is used to facilitate interactions between the server-side logic and remote clients.
+     *
+     * The `rmi` instance can be set or updated using the `setRmiServer` method.
+     * It plays a crucial role in providing networked communication capabilities for
+     * game management and player interactions.
+     *
+     * Thread-safety: The usage of this field should be synchronized or managed carefully
+     * to ensure no concurrent modification issues arise when accessing or updating the RMI server logic.
+     */
     private RMIServer rmi;
 
     /**

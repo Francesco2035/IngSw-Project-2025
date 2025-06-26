@@ -21,16 +21,197 @@ import java.net.SocketException;
  */
 public class TCPClient{
 
+    /**
+     * Indicates the connection status of the TCPClient to the server.
+     *
+     * This variable is used to track whether the client is currently connected
+     * to the server. It is set to `true` when the connection is successfully
+     * established and is actively maintained, and set to `false` when the
+     * connection is closed or the client is disconnected.
+     *
+     * Roles and behavior:
+     * - Serves as an internal flag that helps manage the client state in
+     *   various methods.
+     * - Updated during operations such as connecting, disconnecting,
+     *   or when the connection state changes unexpectedly (e.g., due to
+     *   errors or timeouts).
+     *
+     * This variable is private and only used within the TCPClient class to
+     * ensure proper encapsulation and consistent management of connection
+     * state across the implementation.
+     */
     private boolean connected = false;
+    /**
+     * Represents the socket connection used for communication with the server.
+     * This socket facilitates the data exchange between the client and the server,
+     * forming the core communication channel within the {@code TCPClient}.
+     *
+     * Key responsibilities of the socket include:
+     * - Establishing and maintaining a connection with the server.
+     * - Sending and receiving data streams during the client-server interaction.
+     * - Serving as the underlying transport layer for executing commands and handling events.
+     *
+     * Note:
+     * - This field is initialized during the client's connection setup process in the {@code setup()} method.
+     * - Proper management and cleanup of this socket are critical, as it ensures the integrity of the client-server connection.
+     */
     private Socket echoSocket;
+    /**
+     * A PrintWriter instance used for sending data or messages to the server
+     * over an established socket connection. This field is critical for
+     * enabling output communication with the server, allowing the TCPClient
+     * to transmit commands, requests, and other data in a text format.
+     *
+     * The PrintWriter is typically initialized during the setup of the client-server
+     * connection (e.g., in the {@code setup()} method) and remains in use throughout
+     * the lifecycle of the TCPClient.
+     *
+     * Usage notes:
+     * - The object must be properly initialized before use to prevent null pointer exceptions.
+     * - It is recommended to flush the PrintWriter to ensure the immediate delivery
+     *   of messages to the server.
+     * - Proper handling and closing of this resource during disconnection or shutdown
+     *   is necessary to avoid resource leaks.
+     */
     private PrintWriter out = null;
+    /**
+     * A BufferedReader instance used for reading text input from the server.
+     *
+     * This field is responsible for managing the input stream associated with
+     * the TCP connection. It enables line-by-line reading of incoming messages
+     * from the server, facilitating the processing of server responses or events.
+     *
+     * Usage and Behavior:
+     * - This reader is initialized during the connection setup process to
+     *   handle server communication.
+     * - Acts as the primary input mechanism for receiving data in TCPClient.
+     * - Utilized by various methods, including the event handling logic,
+     *   to process messages received from the server.
+     *
+     * Note:
+     * - Proper initialization is required to avoid NullPointerExceptions.
+     * - Should be closed along with the socket when the connection is terminated
+     *   to release resources.
+     * - The underlying InputStream should be properly synchronized if accessed
+     *   across multiple threads.
+     */
     private BufferedReader in;
+    /**
+     * A `BufferedReader` instance used to read input from the standard input stream.
+     *
+     * This field is typically utilized to capture user input or read text data in a line-by-line manner.
+     * It is initialized and managed to facilitate interaction between the client and user input.
+     *
+     * Note:
+     * - This field is initialized to `null` by default and must be properly set up
+     *   before being accessed to avoid potential `NullPointerException`.
+     * - Responsible for handling standard input-related communication in the `TCPClient` class.
+     */
     private BufferedReader stdIn = null;
+    /**
+     * Tracks the timestamp of the last "pong" message received from the server.
+     *
+     * This variable is used to monitor the health of the connection between the client
+     * and the server. It is updated whenever a "pong" message is received in response
+     * to a "ping" message, ensuring that the connection remains active. The value is
+     * represented as the number of milliseconds since the epoch (January 1, 1970, 00:00:00 GMT).
+     *
+     * This parameter is critical for maintaining the keep-alive mechanism by providing
+     * a reference point to detect connection timeouts or interruptions.
+     */
     private long lastPongTime = 0;
+    /**
+     * Represents the client instance associated with the TCPClient.
+     *
+     * This variable holds a reference to the `Client` object and serves as the
+     * primary link for communication and interaction with the client-side logic.
+     * It is utilized to send and receive events, manage client-related state,
+     * and execute various commands within the context of the TCPClient's operations.
+     *
+     * The `client` variable is initialized during the construction of the
+     * `TCPClient` object and interacts seamlessly with other components, such as
+     * the command interpreter and event handling mechanisms, to facilitate the
+     * proper functioning of the client-server communication infrastructure.
+     */
     private Client client = null;
+    /**
+     * The command interpreter responsible for processing and handling commands
+     * received from the server or provided by the client.
+     *
+     * This variable is intended to be set using the {@code setCommandInterpreter} method
+     * and is utilized throughout various methods in the {@code TCPClient} class to parse
+     * and execute commands.
+     *
+     * The role of the command interpreter includes:
+     * - Parsing incoming messages or commands from the server.
+     * - Executing client commands such as game-related actions or session handling.
+     * - Providing a bridge between the client's input and server communication.
+     *
+     * Note:
+     * - The {@code commandInterpreter} is initialized as {@code null} and must be properly set
+     *   before it is used in the client-server operation context.
+     * - This variable directly interacts with server messages and client functions, making it
+     *   critical for enabling effective communication and command delegation.
+     * - It facilitates the proper interpretation of server messages used in token management,
+     *   event handling, and game state updates.
+     */
     private CommandInterpreter commandInterpreter = null;
+    /**
+     * Represents the token used for authentication or session management
+     * within the TCPClient instance.
+     *
+     * The token is dynamically set when the client receives a "Token: "
+     * message from the server. It is subsequently used for operations
+     * requiring client identification or reconnection to maintain
+     * the session state.
+     *
+     * The value of this field starts as null and can be updated
+     * based on server communication.
+     */
     private String token = null;
+    /**
+     * Represents a dedicated thread responsible for handling incoming events from the server.
+     *
+     * This thread runs the {@code EventListener()} method, which processes server messages
+     * and updates the client state accordingly. It operates concurrently to ensure real-time
+     * client-server communication while allowing the main application to function without delays.
+     *
+     * Key Characteristics:
+     * - Facilitates asynchronous event handling.
+     * - Ensures continuous monitoring of server messages during the client's runtime.
+     * - Operates independently to avoid blocking other client operations.
+     *
+     * Lifecycle:
+     * - The thread is started by invoking the {@code startThread()} method in the containing class.
+     * - This thread terminates when the connection is closed or the client disconnects.
+     *
+     * Usage Note:
+     * The thread is initialized as {@code null} and is assigned and started dynamically
+     * when required by the TCPClient instance.
+     */
     private Thread eventThread = null;
+    /**
+     * A private thread responsible for handling the periodic "ping" communication
+     * loop between the TCPClient and the server.
+     *
+     * This thread ensures that the connection remains active by periodically
+     * sending "ping" messages to the server and monitoring the response ("pong").
+     * It utilizes the PingLoop method for this functionality.
+     *
+     * The ping thread operates independently in the background to maintain
+     * connection health and validity. If the server does not respond within a
+     * predefined timeout duration, the thread initiates a disconnection process.
+     *
+     * The thread is initialized and started when the TCPClient's communication
+     * process begins and is terminated during cleanup or disconnection to
+     * ensure proper resource management.
+     *
+     * Note:
+     * - This thread works in conjunction with the event thread for handling
+     *   asynchronous communication with the server.
+     * - Properly managing this thread is critical for the stability of the
+     *   client-server connection.
+     */
     private Thread pingThread = null;
     //private Thread clientLoop = null;
 

@@ -13,9 +13,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class VoidEvent implements Event {
 
+    /**
+     * The X-coordinate associated with this VoidEvent.
+     *
+     * This variable represents a specific horizontal position or attribute
+     * of the event within the system. It is integral to the event's functionality
+     * and is typically used alongside the Y-coordinate to define the event's
+     * spatial or contextual location.
+     */
     private int x;
+    /**
+     * Represents the Y-coordinate associated with the VoidEvent.
+     *
+     * This variable stores the vertical position or coordinate as an integer.
+     * It is used in conjunction with the X-coordinate to designate a specific
+     * location, primarily in the context of the VoidEvent class.
+     */
     private int y;
 
+    /**
+     * Constructs a VoidEvent instance with the specified coordinates.
+     * This constructor is primarily used for JSON deserialization to initialize
+     * a VoidEvent object with the given x and y values.
+     *
+     * @param x the X-coordinate associated with this event
+     * @param y the Y-coordinate associated with this event
+     */
     @JsonCreator
     public VoidEvent(
             @JsonProperty("x") int x,
