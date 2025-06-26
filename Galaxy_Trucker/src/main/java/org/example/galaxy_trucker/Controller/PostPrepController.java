@@ -38,7 +38,18 @@ import java.io.IOException;
  */
 public class PostPrepController extends Controller {
 
+    /**
+     * Represents a counter utilized within the {@code PostPrepController} class.
+     * This variable is used to track a specific numerical value related to the game logic.
+     */
     private int count;
+    /**
+     * Indicates whether the current player is disconnected from the game.
+     *
+     * This variable is used to track the player's connection status within the game state.
+     * It helps determine if certain actions can be executed or if the player's game
+     * progression should be handled differently due to their disconnection.
+     */
     private boolean disconnected;
 
     /**

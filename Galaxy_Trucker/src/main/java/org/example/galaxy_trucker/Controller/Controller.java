@@ -21,11 +21,40 @@ public abstract class Controller {
 
 
 
-    //Command command;
+    /**
+     * Represents the current player in the game context managed by the controller.
+     * This variable holds a reference to the Player instance whose turn it currently is
+     * or who is currently taking an action in the game.
+     */
     Player curPlayer;
+    /**
+     * Represents the unique identifier for the current game instance.
+     * This identifier is used to track and manage the state of the game
+     * across different operations within the controller.
+     */
     String gameId;
+    /**
+     * A copy of the player's board state used for restoring the previous state in case an error occurs during
+     * the execution of a command. This ensures the game state can be rolled back safely if needed.
+     */
     PlayerBoard playerBoardCopy;
+    /**
+     * Represents the disconnected state of the controller.
+     * When set to true, it indicates that the controller has been disconnected from
+     * its associated players or game, preventing normal operations.
+     * When set to false, it indicates that the controller is actively connected
+     * and operational.
+     */
     private boolean disconnected;
+    /**
+     * An instance of an ExceptionListener that is used to handle exceptions
+     * occurring during the operation of the controller. The exceptionListener
+     * serves as a callback mechanism for notifying and managing exception events.
+     *
+     * It can be set or replaced using the {@code setExceptionListener(ExceptionListener exceptionListener)}
+     * method and removed using the {@code removeExceptionListener()} method. When an exception occurs,
+     * the listener is notified through the {@code sendException(Exception e)} method, if it is not null.
+     */
     ExceptionListener exceptionListener;
 
 

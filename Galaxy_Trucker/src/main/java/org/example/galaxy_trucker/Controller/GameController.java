@@ -99,33 +99,183 @@ import java.util.concurrent.LinkedBlockingQueue;
  * - getTokenToPlayerId(): Returns the map of tokens to player IDs.
  */
 public class GameController implements ConcurrentCardListener, ReadyListener, FinishListener {
+    /**
+     * Represents the unique identifier for a game.
+     * This variable is used to distinguish one game instance from another.
+     */
     String idGame;
+    /**
+     * A private final HashMap that serves as a mapping between string keys
+     * and their corresponding Controller objects.
+     *
+     * This map is used to manage and retrieve Controller instances associated
+     * with specific string identifiers. Once initialized, the map cannot be reassigned.
+     */
     private final HashMap<String, Controller> ControllerMap;
+    /**
+     * A map that keeps track of connected players and their connection statuses.
+     * The keys represent player identifiers (e.g., usernames), and the values are booleans
+     * indicating whether the player is currently connected (true) or not (false).
+     */
     private final HashMap<String, Boolean> connectedPlayers = new HashMap<>();
+    /**
+     * A map that holds command queues identified by their string keys.
+     * Each key associates with a {@link BlockingQueue} that stores commands of type {@link Command}.
+     * This structure is used to organize and manage command processing queues in a thread-safe manner.
+     */
     private final HashMap<String, BlockingQueue<Command>> commandQueues = new HashMap<>();
+    /**
+     * A map that holds a collection of threads, where the key is a string identifier
+     * associated with each thread, and the value is the corresponding thread instance.
+     * This map is used to manage and retrieve threads by their identifiers.
+     */
     private final HashMap<String, Thread> threads = new HashMap<>();
+    /**
+     * A map that associates a string identifier with a corresponding VirtualView object.
+     * This map is used to manage and store relationships between string keys and their associated virtual views.
+     * It is implemented as a final HashMap, ensuring that the reference to the map itself cannot be reassigned.
+     */
     private final HashMap<String, VirtualView> VirtualViewMap = new HashMap<>();
+    /**
+     * A mapping between tokens and player IDs.
+     *
+     * This HashMap is used to associate unique tokens with corresponding player IDs,
+     * enabling identification and management of players based on their assigned tokens.
+     * The key represents a unique token (String), and the value is the corresponding
+     * player ID (String).
+     */
     private final HashMap<String, String> tokenToPlayerId = new HashMap<>();
+    /**
+     * Represents an instance of a Game.
+     * This variable holds a reference to the current game object.
+     * It is marked as final, meaning the reference cannot be reassigned
+     * once it has been initialized.
+     */
     final Game game;
+    /**
+     * A private instance of the GamesHandler class, responsible for
+     * managing and controlling operations related to games within
+     * the application. This variable serves as a central access
+     * point for game-related functionalities and operations.
+     */
     private GamesHandler gh;
+    /**
+     * A thread-safe queue for managing Command objects related to flight operations.
+     * The {@code flightQueue} is implemented as a {@code LinkedBlockingQueue} to ensure
+     * proper synchronization and safe operations in a multi-threaded environment.
+     * It is used to store and retrieve commands that control or monitor flight activities.
+     * Commands are processed in the order they are added, following FIFO (First-In-First-Out) principle.
+     */
     //private BlockingQueue<Command> prepQueue = new LinkedBlockingQueue<>();
     private BlockingQueue<Command> flightQueue = new LinkedBlockingQueue<>();
+    /**
+     * A {@code Thread} instance named {@code flightThread}, which is used to handle
+     * operations related to flight execution processes asynchronously.
+     *
+     * This thread may be utilized to perform tasks such as monitoring flight data,
+     * updating flight statuses, or managing related concurrent operations. The exact
+     * functionality depends on the context in which the {@code flightThread} is invoked.
+     *
+     * It is expected that this thread will operate independently, facilitating efficient
+     * handling of flight-related tasks without blocking the main processing workflow.
+     */
     private Thread flightThread;
+    /**
+     * Represents the flight mode status of a system or device.
+     * This variable indicates whether the flight mode is enabled or disabled.
+     * When set to {@code true}, the flight mode is active, disabling certain functionalities like network connections.
+     * When set to {@code false}, the flight mode is inactive, allowing normal operation.
+     */
     private boolean flightMode = false;
+    /**
+     * Represents the total number of flights recorded or stored.
+     * This variable is initialized to 0 and can be updated as new flight data is added.
+     */
     int flightCount = 0;
+    /**
+     * Represents the total number of buildings.
+     * This variable is used to store the count of buildings
+     * in a given context such as a city, neighborhood,
+     * or a specific project.
+     */
     int buildingCount = 0;
+    /**
+     * A boolean variable indicating whether the game has ended.
+     *
+     * This variable is set to {@code true} when the game concludes, and remains
+     * {@code false} while the game is ongoing. It serves as a flag for controlling
+     * the game's life cycle or state.
+     */
     boolean GameOver = false;
+    /**
+     * A flag indicating whether the process or operation has been started.
+     * The value is {@code true} if it has started, otherwise {@code false}.
+     */
     private boolean started = false;
+    /**
+     * Represents a flag to indicate whether it is the first flight.
+     * The value is set to true by default.
+     */
     private boolean firtflight = true;
+    /**
+     * Indicates whether the process or operation should be executed concurrently.
+     * The default value is {@code false}, meaning concurrent execution is disabled.
+     * When set to {@code true}, it allows tasks to run simultaneously,
+     * ensuring potential efficiency in multi-threaded environments.
+     */
     private boolean concurrent = false;
+    /**
+     * Represents the color value as an integer.
+     * The value typically corresponds to a specific color defined by its
+     * integer representation, which might be encoded as an ARGB, RGB, or
+     * another color format depending on the application's usage.
+     */
     private int color = 153;
+    /**
+     * Represents a local variable initialized to the value 0.
+     * This variable can be used to store an integer value
+     * within its scope.
+     */
     int lv = 0;
+    /**
+     * A variable representing the completion status of a process or task.
+     * The value is typically used as a flag or counter:
+     * - 0 indicates the process or task is incomplete.
+     * - A non-zero value may indicate completion or progress, depending on the context.
+     */
     int finished = 0;
+    /**
+     * Represents the maximum number of players allowed.
+     * This variable defines the upper limit for the number of players
+     * that can participate in a game or session.
+     */
     private int maxPlayer = 4;
+    /**
+     * A final object used as a synchronization lock to manage thread-safe operations.
+     * This lock ensures that only one thread can execute a block of code or access
+     * a shared resource at a time when synchronized on this object.
+     */
     private final Object lock = new Object();
+    /**
+     * A private Thread instance used for preparation tasks.
+     * This thread is likely utilized for executing background operations
+     * or tasks related to preparing certain processes or resources.
+     */
     private Thread prepThread;
 
+    /**
+     * An instance of the LobbyListener interface used to handle
+     * events or interactions occurring within a lobby context.
+     * The specific functionality and behavior of this listener are
+     * defined by the implementation of the LobbyListener interface.
+     */
     private LobbyListener lobbyListener;
+    /**
+     * A collection of listeners that observe and react to events occurring in the game lobby.
+     * This list holds instances of objects implementing the GameLobbyListener interface.
+     * Listeners in this collection are notified about relevant updates or changes
+     * within the game lobby, allowing them to respond accordingly.
+     */
     private ArrayList<GameLobbyListener> gameLobbyListeners = new ArrayList<>();
 
     /**

@@ -17,6 +17,13 @@ import org.example.galaxy_trucker.Model.PlayerStates.ChoosePosition;
  */
 public class PrepController extends Controller implements ControllerHourGlassListener {
 
+    /**
+     * Represents the VirtualView associated with the PrepController.
+     * The VirtualView facilitates the interaction between the server-side
+     * logic and the client-side view, enabling communication and
+     * synchronization of the game state during the preparation phase
+     * of the game.
+     */
     private VirtualView vv;
 
     /**

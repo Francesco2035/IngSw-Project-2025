@@ -91,26 +91,140 @@ import java.util.HashMap;
  */
 public class VirtualView implements PlayerBoardListener, HandListener, TileSestListener, CardListner, GameBoardListener, GameLobbyListener, PhaseListener, RewardsListener, ExceptionListener, PlayersPBListener, RandomCardEffectListener{
 
+    /**
+     * Represents the level or value associated with a specific context.
+     * This variable is used to store an integer value which could denote
+     * a level, stage, or any other numerical measurement depending on the
+     * context in which it is utilized.
+     */
     private int lv;
+    /**
+     * Represents the connection status of a system or component.
+     * The value is {@code true} if disconnected, and {@code false} if connected.
+     */
     private boolean Disconnected = false;
+    /**
+     * A two-dimensional array used to store TileEvent objects.
+     * Represents a matrix where each element corresponds to an event
+     * associated with specific tiles in a grid or map-like structure.
+     * This is typically used to handle interactions or behaviors
+     * associated with specific locations.
+     */
     private TileEvent[][] eventMatrix;
+    /**
+     * Represents the name of a player in the system.
+     * This variable is used to store and identify the player's name.
+     */
     private String playerName;
+    /**
+     * Represents the unique identifier for a game.
+     * This variable is used to distinguish one game from another within the system.
+     */
     private String idGame;
+    /**
+     * Represents the client interface used to define and manage
+     * client-specific operations and interactions.
+     * This variable provides an abstraction for client handling,
+     * enabling communication with the client-dependent systems
+     * or services.
+     */
     private ClientInterface client;
+    /**
+     * A PrintWriter object used for writing output data, typically to a file, socket, or other text-output streams.
+     * This variable handles character-based output, allowing formatted text to be written efficiently.
+     * It provides methods to write strings, characters, and other data types.
+     */
     private PrintWriter out ;
+    /**
+     * Represents the number of tiles that have been covered, typically in a game or a grid-based application.
+     * This variable is initialized to 0 and can be incremented as more tiles are covered.
+     */
     private int coveredTiles= 0;
+    /**
+     * A map that associates an integer key with a list of Connectors.
+     * This map is used to maintain information about tiles that
+     * have not yet been covered or processed in the current context.
+     *
+     * The key represents an identifier for a specific grouping or category
+     * of uncovered tiles, while the value is an ArrayList containing
+     * Connectors associated with that key.
+     */
     private HashMap<Integer, ArrayList<Connectors>> uncoveredTilesMap = new HashMap<>();
+    /**
+     * Represents an event or action associated with a hand.
+     * This variable is likely used to capture or manage state
+     * or interactions related to hand-based events in the application.
+     */
     private HandEvent hand ;
+    /**
+     * A variable to store a token, which could represent an authentication credential,
+     * access key, or identifier used for secure communication or access control in an application.
+     */
     private String token;
+    /**
+     * Represents the card event associated with this context.
+     * This variable holds the current state or action related to a card.
+     * It is initialized to null and later assigned when a valid CardEvent is provided.
+     */
     private CardEvent card = null;
+    /**
+     * Represents a game lobby event associated with the current state or interactions
+     * within a game lobby. It may hold information about the event or act as a reference
+     * point for handling specific actions within the lobby.
+     */
     private GameLobbyEvent lobby = null;
+    /**
+     * Represents the game board, which is a list of events that occur on the board.
+     * Each event is stored as an instance of {@code GameBoardEvent}.
+     * Used to track and manage the state or actions occurring on the game board.
+     */
     private ArrayList<GameBoardEvent> board = new ArrayList<>();
+    /**
+     * Represents the current phase event in a lifecycle or process.
+     * This variable holds the state of the phase which can be used
+     * to track or manipulate the ongoing phase of the system.
+     * It is initialized to null by default.
+     */
     private PhaseEvent phase = null;
+    /**
+     * Represents an instance of a RewardsEvent object which may be used to track or manage
+     * events related to rewards within the system. This variable is initialized as null
+     * and should be assigned with a valid RewardsEvent object before use.
+     */
     private RewardsEvent rewardsEvent = null;
+    /**
+     * A list of listeners that are interested in player personal best (PB) events.
+     * This collection stores instances of classes implementing the PlayersPBListener interface,
+     * allowing them to receive updates or notifications regarding changes or updates to player
+     * personal best data.
+     */
     private ArrayList<PlayersPBListener> playersPBListeners = new ArrayList<>();
+    /**
+     * An instance of PBInfoEvent that stores event-related information.
+     * This variable is initialized to null and can be set or accessed
+     * to manage or retrieve specific PBInfoEvent data when required.
+     */
     private PBInfoEvent pbInfoEvent = null;
+    /**
+     * A list that stores log events of type LogEvent.
+     * This list is used to collect and manage instances of log events,
+     * which can represent various logging information or activities
+     * within an application.
+     */
     private ArrayList<LogEvent> logEvents = new ArrayList<>();
+    /**
+     * Represents a collection of tile events associated with other players.
+     * Each event in the list is an instance of PlayerTileEvent, which likely contains
+     * information related to a specific interaction or occurrence on a game tile
+     * caused by or involving other players.
+     */
     private ArrayList<PlayerTileEvent> otherPlayerTileEvents = new ArrayList<>();
+    /**
+     * Represents an instance of HourglassEvent which is initialized to null.
+     * This variable may be used to store or manage an event related to the "hourglass" concept
+     * in the application. The specific use or manipulation of this variable is determined
+     * by the context in which it is employed.
+     */
     private HourglassEvent hourglassEvent = null;
 
     /**

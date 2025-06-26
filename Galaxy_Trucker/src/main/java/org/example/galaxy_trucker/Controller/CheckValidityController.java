@@ -26,7 +26,7 @@ public class CheckValidityController extends Controller{
      * @param gameId       The identifier of the game session.
      * @param disconnected Indicates whether the player is currently disconnected from the game.
      */
-    public CheckValidityController( Player player, String gameId,boolean disconnected) { //TODO test
+    public CheckValidityController( Player player, String gameId,boolean disconnected) {
         this.gameId = gameId;
         this.curPlayer = player;
     }
@@ -39,7 +39,7 @@ public class CheckValidityController extends Controller{
      * @param gc the game controller to manage game transitions; can be null
      */
     @Override
-    public synchronized void action(Command command, GameController gc) { //TODO test //  devo overridare anche qui ok
+    public synchronized void action(Command command, GameController gc) {
 
         System.out.println("CHECK_CONTROLLER");
 
@@ -75,7 +75,7 @@ public class CheckValidityController extends Controller{
      * @param gc The GameController instance managing the game state and logic.
      */
     @Override
-    public  void  DefaultAction(GameController gc) { //TODO test
+    public  void  DefaultAction(GameController gc) {
         PlayerState state = curPlayer.getPlayerState();
         Command cmd =state.createDefaultCommand(gameId,curPlayer);
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
@@ -110,7 +110,7 @@ public class CheckValidityController extends Controller{
      * @param gc the {@code GameController} instance managing the current state and functionality of the game
      */
     @Override
-    public void nextState(GameController gc) { //TODO test
+    public void nextState(GameController gc) {
         System.out.println("CHECK_CONTROLLER callign next state for " + curPlayer.GetID());
         if (curPlayer.getmyPlayerBoard().checkValidity()) {
             curPlayer.setState(new ChoosePosition());
