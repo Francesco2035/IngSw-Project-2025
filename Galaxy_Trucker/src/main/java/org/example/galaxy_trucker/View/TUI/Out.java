@@ -22,52 +22,285 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class Out {
 
+    /**
+     * Represents the unique identifier for a card entity.
+     * This variable is used to uniquely distinguish cards within a system.
+     * The default value is set to -1, indicating that the identifier is uninitialized.
+     */
     private int CardId = -1;
+    /**
+     * Represents the client component responsible for managing player interactions
+     * and communication with the server or underlying game logic.
+     */
     private PlayerClient playerClient;
+    /**
+     * Represents a flag to determine visibility or whether a specific element
+     * or feature should be shown.
+     *
+     * When set to {@code true}, the element or feature is visible or shown.
+     * When set to {@code false}, the element or feature is hidden or not shown.
+     */
     private Boolean show = true;
 
+    /**
+     * Represents a placeholder or container for information related to PB.
+     * The specific purpose or usage of this variable may depend on the context in which it is used.
+     * By default, this variable is initialized as an empty string.
+     */
     String PBInfo = "";
+    /**
+     * Represents a string variable intended to store an exception message or identifier.
+     * This variable can be used for capturing or handling information related to exceptions.
+     */
     String exception = "";
+    /**
+     * Represents the outcome or influence that may result from a specific action,
+     * occurrence, or condition. This variable is designed to hold descriptive
+     * text that conveys the nature or consequence of an effect.
+     */
     String effect = "";
+    /**
+     * Represents a title card, typically used to display a title or label
+     * in an application or user interface.
+     */
     String titleCard = "";
+    /**
+     * Represents the result or conclusion of an operation, decision, or process.
+     * This variable is initialized as an empty string and can hold a textual
+     * representation of the outcome.
+     */
     String outcome = "";
+    /**
+     * Represents a collection of strings, typically used to model a deck of items such as playing cards.
+     * The deck is implemented as an ArrayList, allowing dynamic resizing and efficient access.
+     * Each element of the deck represents an individual card or item as a string.
+     */
     ArrayList<String> deck = new ArrayList<>();
+    /**
+     * Indicates whether the hourglass feature is enabled or not.
+     * The variable is a boolean flag that can be set to true to enable
+     * the hourglass functionality or false to disable it.
+     */
     private boolean hourglass = false;
+    /**
+     * A list used for storing log messages or entries as strings.
+     * This ArrayList can be dynamically updated to include new log messages,
+     * allowing for sequential or chronological storage of log data.
+     */
     ArrayList<String> log = new ArrayList<>();
 
 
+    /**
+     * An {@code ExecutorService} instance initialized as a single-threaded executor.
+     * This executor ensures that tasks are executed sequentially, one at a time,
+     * in the order they are submitted. It is suitable for scenarios where tasks
+     * must not run concurrently and require serialization of execution.
+     */
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    /**
+     * A thread-safe flag indicating whether an update has been scheduled.
+     * This variable is immutable and defaults to false, serving as a controlled
+     * mechanism to coordinate and track the state of update scheduling in
+     * concurrent environments.
+     */
     private final AtomicBoolean updateScheduled = new AtomicBoolean(false);
 
+    /**
+     * Represents a cache identifier or storage mechanism for a card-related entity.
+     * This variable is utilized to store or manage information related to a card,
+     * potentially for caching purposes. The exact functionality and purpose
+     * depend on the context in which it is used in the application logic.
+     */
     private String CacheCard = "";
+    /**
+     * Represents a list of players.
+     * This variable is used to store the names of players as strings.
+     * It is initialized as an empty list and can be modified to add or remove player names.
+     */
     private ArrayList<String> players = new ArrayList<>();
+    /**
+     * A list that holds Boolean values indicating the readiness status.
+     * Each element in the list represents the ready state of a specific entity or process.
+     */
     private ArrayList<Boolean> ready = new ArrayList<>();
 
 
+    /**
+     * A final object used as a synchronization lock to ensure thread safety
+     * when accessing or modifying shared resources.
+     * This lock object is used in synchronized blocks or methods to control
+     * concurrent access in a multi-threaded environment.
+     */
     private final Object lock = new Object();
+    /**
+     * A map that associates unique integer identifiers with their corresponding names.
+     * The keys represent the unique IDs and the values are the associated names as strings.
+     * This map is designed to store and retrieve names based on their integer ID efficiently.
+     */
     private final HashMap<Integer, String> idToNameMap = new HashMap<>();
+    /**
+     * A mapping of other players' boards in a game, where the key is the player's identifier
+     * and the value is a 3-dimensional array representing the state or layout of their board.
+     * Used to store and track the boards of players other than the current player.
+     */
     private final HashMap<String,  String[][][]> otherPlayersBoard  = new HashMap<>();
+    /**
+     * Represents the fixed width of the content area.
+     * This value is immutable and specifies the width in units.
+     * It is used to configure or enforce layout constraints.
+     */
     private final int contentWidth = 33;
+    /**
+     * A multi-dimensional array used to cache the state of a game board.
+     * The array represents the board's state across different dimensions
+     * and layers, which can vary depending on the specific implementation
+     * or use case. This can improve performance when repeatedly accessing
+     * or modifying the board's current or previous states.
+     */
     private String[][][] cachedBoard;
+    /**
+     * A private array of strings used to cache hand-related data or operations.
+     *
+     * This variable may store intermediate or temporary values for processing
+     * purposes related to a specific hand-based functionality. It is initialized
+     * to null, meaning it does not hold any data by default.
+     */
     private String[] cacheHand = null;
+    /**
+     * The `border` variable represents a constant decorative string
+     * used to create a visual boundary or separation in the user interface or output.
+     * It consists of a plus symbol followed by a series of horizontal lines and ends with another plus symbol.
+     * This formatting is typically used for styling purposes to enhance readability.
+     */
     private final String border = "+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━+";
+    /**
+     * A list that stores the IDs of tiles that have been uncovered.
+     * The IDs are stored in the order in which the tiles are uncovered.
+     */
     private ArrayList<Integer> uncoveredTilesId = new ArrayList<>(); //ordine, quindi contiene gli ID in ordine di come arrivano
+    /**
+     * A cache that stores uncovered tile sets, using an integer as the key and
+     * an array of strings to represent the tile set values.
+     *
+     * The key represents an identifier for the tile set, while the value is
+     * an array of strings containing the details about each tile in the set.
+     *
+     * This cache is primarily used to avoid redundant operations by storing
+     * previously uncovered tile sets for quick retrieval during processing.
+     */
     private HashMap<Integer, String[]> uncoverdTileSetCache = new HashMap<>();
+    /**
+     * A HashMap that stores descriptions of cards.
+     * The key is an Integer representing the card ID, and the value is a String containing the description of the card.
+     */
     private HashMap<Integer, String> CardsDescriptions = new HashMap<>();
+    /**
+     * Represents a three-dimensional game board.
+     *
+     * The Gameboard variable is a 3D array that may be used to store the state
+     * or configuration of a game. Each element can represent a cell in a
+     * multi-dimensional grid, potentially holding specific game-related data.
+     *
+     * Example use cases could include implementing a 3D game or tracking
+     * game-related data in a three-dimensional space.
+     */
     private String[][][] Gameboard;
+    /**
+     * Represents an accumulator for reward-related information.
+     * This variable is of type StringBuilder, allowing dynamic
+     * and mutable storage of string data related to rewards.
+     * It is designed to handle operations such as appending,
+     * modifying, or retrieving reward information efficiently.
+     */
     private StringBuilder Rewards;
+    /**
+     * Represents a level or value that is stored as an integer.
+     * This variable may be used to track or denote a specific
+     * level, grade, or numeric value in a class or application.
+     */
     private int lv;
+    /**
+     * Represents the configuration or initialization parameter with a default value of 102.
+     * This variable might be used to control or signify a specific setup state or configuration in the application.
+     */
     private int setup = 102;
+    /**
+     * Represents the status or state of a particular entity or process.
+     * The variable 'fase' is a boolean that indicates whether a specific
+     * condition or operation is active or inactive.
+     * It defaults to false, implying an inactive or initial state.
+     */
     private boolean fase = false;
+    /**
+     * Represents the number of tiles covered in a specific set or context.
+     * This variable holds an integer value that defines the size of a tile set
+     * that is considered or accounted for, possibly in a grid or mapping system.
+     * The value is initialized to 152.
+     */
     private int CoveredTileSet = 152;
+    /**
+     * A thread-safe blocking queue designed to store and manage a collection of strings
+     * that are intended to be processed in a producer-consumer scenario. This queue allows
+     * threads to safely add and retrieve elements, effectively handling concurrent access.
+     *
+     * The queue operates with a first-in-first-out (FIFO) order, ensuring that elements
+     * are processed in the order they were added. Threads attempting to retrieve an element
+     * from an empty queue will be blocked until an element becomes available, while threads
+     * attempting to add to a full queue (if bounded) will be blocked until space is available.
+     *
+     * This queue implementation is well-suited for scenarios where data needs to be safely
+     * passed between multiple threads and synchronization is required.
+     */
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
+    /**
+     * Handles input reading operations for the application.
+     * This variable is an instance of the InputReader class, which facilitates
+     * reading and processing input data, such as from standard input or a file.
+     */
     private InputReader inputReader;
+    /**
+     * A private instance of the {@link Thread} class used to handle input-related operations.
+     * This thread is designed to run tasks associated with receiving or processing inputs
+     * independently of the main application thread, ensuring asynchronous and non-blocking behavior.
+     */
     private Thread inputThread;
+    /**
+     * Represents the connection status.
+     * This variable indicates whether a connection is established.
+     * The value is {@code true} if connected, and {@code false} otherwise.
+     */
     private Boolean connected = false;
+    /**
+     * A mapping of integer positions to corresponding gameboard coordinates.
+     * The HashMap uses an Integer key to represent a position and maps it to an
+     * IntegerPair value, which contains the respective x and y coordinates on the gameboard.
+     * This is used to relate linear positions to 2D coordinates within the game logic.
+     */
     private HashMap<Integer, IntegerPair> positionToGameboard = new HashMap<>();
+    /**
+     * A mapping of player names to their respective positions.
+     * The key is a String representing the player's name,
+     * and the value is an Integer representing the position of the player.
+     */
     private HashMap<String,Integer > PlayerToPosition = new HashMap<>();
+    /**
+     * A private HashMap representing the lobby structure.
+     * The keys are Strings representing unique identifiers,
+     * and the values are arrays of Strings containing associated data.
+     */
     private HashMap<String, String[]> lobby = new HashMap<>();
+    /**
+     * Represents the current phase of the view in the application's lifecycle.
+     * This variable is used to track and manage the specific state or stage
+     * the view is currently in, such as initialization, rendering, or cleanup.
+     */
     private ViewPhase phase;
+    /**
+     * A {@code StringBuilder} instance representing the scoreboard data.
+     * This variable is used to store and modify the content of the scoreboard dynamically.
+     * It allows for efficient appending, updating, or altering of the scoreboard details.
+     * The initial value of this variable is {@code null}.
+     */
     private StringBuilder scoreboard = null;
 
 

@@ -22,6 +22,15 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The MultiClientHandler class implements the Runnable interface and the GhListener interface
+ * to handle multiple client connections and provide appropriate event handling logic
+ * for game lobby and client interactions.
+ *
+ * This class manages the communication with a single client, processes incoming commands,
+ * and ensures proper synchronization with the overall game logic. It also handles client
+ * disconnections, reconnections, and updates related to the game lobby.
+ */
 public class MultiClientHandler implements Runnable, GhListener {
 
     private Socket clientSocket;
@@ -36,6 +45,16 @@ public class MultiClientHandler implements Runnable, GhListener {
 
     private long lastPingTime;
 
+    /**
+     * Constructor for the MultiClientHandler class, responsible for initializing
+     * the client connection and handling related game operations.
+     *
+     * @param clientSocket the socket associated with the connected client.
+     * @param gameHandler the handler responsible for managing game sessions and events.
+     * @param tokenMap a concurrent hash map linking session tokens to virtual views for clients.
+     * @param disconnectedClients a list of clients currently disconnected from their active sessions.
+     * @param TCP the TCP server instance managing overall server operations and client connections.
+     */
     public MultiClientHandler(Socket clientSocket, GamesHandler gameHandler, ConcurrentHashMap<String, VirtualView> tokenMap, ArrayList<String> disconnectedClients, TCPServer TCP) {
         this.clientSocket = clientSocket;
         this.gameHandler = gameHandler;
@@ -46,6 +65,16 @@ public class MultiClientHandler implements Runnable, GhListener {
         lobbyEvents.put("EMPTY CREATE NEW GAME", new LobbyEvent("EMPTY CREATE NEW GAME", -1,null, -1));
     }
 
+
+    /**
+     * Starts the MultiClientHandler instance and manages the client's connection lifecycle.
+     *
+     * This method is executed when the Runnable interface's run method is invoked.
+     * It initializes the connection status by setting the `connected` field to true
+     * and logs that the handler has started. Then, it invokes the clientLoop method,
+     * which manages the interaction with the connected client, including processing commands
+     * and managing connection states.
+     */
     @Override
     public void run() {
         connected = true;
@@ -53,6 +82,27 @@ public class MultiClientHandler implements Runnable, GhListener {
         clientLoop();
     }
 
+
+    /**
+     * Continuously handles the connection with a client, processes incoming commands, and provides appropriate responses.
+     *
+     * The method communicates with the client using input and output streams, manages client commands, and coordinates
+     * reconnections, disconnections, and game-related logic. It ensures protocol adherence and handles various types
+     * of client requests such as "Lobby", "Login", "Reconnect", or other commands processed by the game handler.
+     *
+     * Key operations include:
+     * - Receiving and parsing client commands in JSON format using the ObjectMapper.
+     * - Responding to a client "ping" with a "pong" message to maintain connection stability.
+     * - Handling "Lobby" commands to send back a thread-safe list of lobby events.
+     * - Managing "Login" commands to authenticate players and generate unique tokens for session management.
+     * - Processing "Reconnect" commands to allow previously disconnected clients to rejoin their sessions.
+     * - Delegating other command-specific operations to the game handler.
+     *
+     * The method also enforces a limited number of reconnection attempts and manages socket timeouts. It ensures that
+     * tokens and client virtual views are synchronized and safely handled within multi-threaded contexts.
+     *
+     * Proper resource management is ensured in the finally block, where the client socket is closed, and the
+     * client's disconnection status is updated in relevant data structures.*/
     private void clientLoop() {
         BufferedReader in = null;
         PrintWriter out = null;
@@ -192,8 +242,18 @@ public class MultiClientHandler implements Runnable, GhListener {
     }
 
 
-
-
+    /**
+     * Sends a lobby event to the client and updates the lobby states accordingly.
+     *
+     * This method processes the given lobby event, updates the internal lobby state,
+     * and attempts to send the event to the connected client if the socket is active.
+     * If the client cannot be reached or any error occurs during the transmission,
+     * the exception is caught and logged without interrupting the program flow.
+     *
+     * @param event the {@code LobbyEvent} to be sent, containing details about the
+     *              game session and lobby state such as game ID, level, players,
+     *              and the maximum number of players.
+     */
     @Override
     public void sendEvent(LobbyEvent event) {
         System.out.println(event + " " + event.getGameId());
@@ -213,6 +273,19 @@ public class MultiClientHandler implements Runnable, GhListener {
 
     }
 
+
+    /**
+     * Updates the current state of the lobby events by removing specific entries
+     * and adding or replacing an entry associated with the given lobby event.
+     *
+     * This method ensures that specific placeholder entries and outdated lobby events
+     * are removed, and the provided event is added or updated in the internal
+     * representation of lobby events.
+     *
+     * @param event the {@code LobbyEvent} containing updated information about
+     *              the game session, including game identifier, player list, and
+     *              other lobby-related details
+     */
     @Override
     public void updateLobby(LobbyEvent event) {
         lobbyEvents.remove("EMPTY CREATE NEW GAME");
@@ -220,6 +293,18 @@ public class MultiClientHandler implements Runnable, GhListener {
         lobbyEvents.put(event.getGameId(), event);
     }
 
+
+    /**
+     * Handles the player quit action by removing the current client handler
+     * from the TCP server's management system.
+     *
+     * This method is triggered when a player sends a QuitCommand. It ensures
+     * that the connection associated with the quitting player is appropriately
+     * removed from the TCP server's list of active clients.
+     *
+     * @param event the {@code QuitCommand} representing the player's quit action,
+     *              including related details such as player ID and game context.
+     */
     @Override
     public void quitPlayer(QuitCommand event) {
         TCP.removeMC(this);

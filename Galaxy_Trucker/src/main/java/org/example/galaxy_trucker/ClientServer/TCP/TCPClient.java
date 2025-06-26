@@ -13,7 +13,12 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 
-//TODO: non possiamo far terminare l'input con end
+/**
+ * The TCPClient class handles the communication between a client application and a TCP server.
+ * It manages connection, data exchange, and threading for network interactions.
+ * The class is designed to handle events, ping-pong logic to maintain connectivity,
+ * and interpret commands issued by the client.
+ */
 public class TCPClient{
 
     private boolean connected = false;
@@ -29,14 +34,57 @@ public class TCPClient{
     private Thread pingThread = null;
     //private Thread clientLoop = null;
 
+    /**
+     * Creates an instance of TCPClient associated with the given Client object.
+     *
+     * @param c the Client object to associate with this TCPClient instance
+     */
     public TCPClient(Client c) {
         this.client = c;
     }
 
+    /**
+     * Sets the command interpreter for the TCPClient instance.
+     *
+     * @param commandInterpreter the CommandInterpreter instance to be set,
+     *                           responsible for handling command processing logic.
+     */
     public void setCommandInterpreter(CommandInterpreter commandInterpreter) {
         this.commandInterpreter = commandInterpreter;
     }
 
+    /**
+     * Handles incoming messages from the server in a continuous loop, parsing and processing
+     * them accordingly. This method implements the core event listening functionality
+     * for the client-server communication.
+     *
+     * The method operates in the following steps:
+     * 1. Reads lines of messages from the input stream (`in`) until the stream ends or an
+     *    exception occurs.
+     * 2. Identifies the type of the message and performs appropriate actions:
+     *    - If the message is a "pong" response from the server, updates the `lastPongTime`
+     *      to the current time.
+     *    - If the message starts with a "Token: " prefix, extracts the token value, notifies
+     *      the client with a `TokenEvent`, sets the token in the command interpreter, and
+     *      updates the gameboard view with the level obtained from the command interpreter.
+     *    - For any other messages, deserializes the message into an `Event` object using
+     *      the ObjectMapper, then processes the event using the client's `receiveEvent` method.
+     * 3. Catches and handles exceptions occurring during the execution, including:
+     *    - `SocketException` when the socket connection is closed.
+     *    - `EOFException` when the end of the input stream is reached.
+     *    - `IOException` and all other general exceptions, logging them accordingly.
+     *
+     * This method is private and intended to be executed as part of a thread to enable
+     * asynchronous communication with the server.
+     *
+     * Note:
+     * - The method assumes the `in` field is initialized as a `BufferedReader` for reading
+     *   messages.
+     * - The method interacts with various client and command interpreter components to
+     *   handle parsed messages and events.
+     * - This is a blocking method that reads indefinitely from the input stream until its
+     *   termination or an error disrupts its execution.
+     */
     private void EventListener() {
         try {
             String msg;
@@ -72,11 +120,22 @@ public class TCPClient{
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 
-
+    /**
+     * Starts two separate threads for the TCPClient.
+     *
+     * The first thread is responsible for listening to incoming events.
+     * This is achieved by invoking the EventListener method in a thread-safe manner.
+     *
+     * The second thread is responsible for sending periodic "ping" messages
+     * to maintain the connection with the server and validate the connection's health.
+     * This is done by invoking the PingLoop method.
+     *
+     * Each thread operates independently and is crucial for the functionality
+     * of the client-server communication in the TCPClient.
+     */
     private void startThread(){
         eventThread = new Thread(this::EventListener);
         pingThread = new Thread(this::PingLoop);
@@ -85,6 +144,13 @@ public class TCPClient{
     }
 
 
+    /**
+     * Establishes a connection to the server and initializes
+     * input/output streams for communication.
+     *
+     * @return true if the connection and streams are successfully established,
+     *         false otherwise.
+     */
     private boolean setup(){
         try {
             echoSocket = new Socket(Settings.SERVER_NAME, Settings.TCP_PORT);
@@ -108,6 +174,20 @@ public class TCPClient{
 
     }
 
+
+    /**
+     * Handles a continuous "ping" communication loop to ensure that the connection remains active.
+     *
+     * The method sends a "ping" message repeatedly at fixed intervals and monitors the last received
+     * "pong" response. If the time elapsed since the last "pong" exceeds a defined timeout duration,
+     * the connection is deemed inactive, and the method initiates a disconnection process.
+     *
+     * The loop runs until the socket is closed or the thread is interrupted.
+     *
+     * Exceptions:
+     * - InterruptedException: Thrown if the thread running this method is interrupted during its sleep cycle.
+     * - IOException: Thrown if there are any issues during the disconnection process.
+     */
     private void PingLoop() {
         while (!echoSocket.isClosed()) {
             out.println("ping");
@@ -130,6 +210,22 @@ public class TCPClient{
     }
 
 
+    /**
+     * Disconnects the client from the current session or server.
+     * <ul>
+     * This method performs the following tasks:
+     * - Ensures that the connection status is reset.
+     * - Attempts to close the active socket safely.
+     * - Interrupts and terminates any active threads associated with event handling or pinging mechanisms.
+     * - Disconnects and reconnects the client's view to refresh its state.
+     * - Prompts the user to either reconnect to the server or exit the application.
+     * </ul>
+     *
+     * This process is critical for the proper cleanup of resources, preventing resource leaks
+     * and ensuring a reliable mechanism for handling disconnections and reconnections.
+     *
+     * @throws IOException If an I/O operation error occurs during the disconnection process or when trying to reconnect.
+     */
     public void disconnect() throws IOException {
         if (connected){
             client.getView().disconnect();
@@ -191,7 +287,36 @@ public class TCPClient{
     }
 
 
-
+    /**
+     * Handles the main client loop for interaction and communication between the client
+     * and the server. This method continuously listens and processes user input, sending
+     * appropriate commands to the server and managing client-side features such as
+     * login, game creation, joining lobbies, and refreshing the interface.
+     *
+     * The loop runs until the client disconnects or explicitly ends the interaction.
+     * Various supported commands include:
+     * - "SeeBoards": Displays the boards when the client is logged in.
+     * - "Log": Shows the activity log.
+     * - "Bg": Handles background updates and refreshes the client view.
+     * - "MainTerminal": Triggers a view refresh.
+     * - "Reconnect": Allows reconnection using a token if not already logged in.
+     * - "Lobby": Connects to or verifies connection to a lobby.
+     * - "Create": Enables the creation of a new game with specified parameters.
+     * - "Join": Allows joining an existing game using a valid game ID.
+     * - "end": Terminates the client loop.
+     * - "ChangeConnection": Provides feedback regarding connection changes.
+     * - Commands that are interpreted and sent to the server via a command interpreter.
+     *
+     * Error handling mechanisms ensure the robustness of user interactions, and
+     * invalid inputs or improperly handled scenarios are managed gracefully.
+     * The method terminates when disconnection occurs, an input is invalid, or the
+     * "end" command is invoked.
+     *
+     * Implementation details include the use of an {@code ObjectMapper} for JSON serialization
+     * and parsing, client-side state checks, and command interpretation.
+     *
+     * @throws IOException if communication-related exceptions occur during the interaction loop.
+     */
     public void clientLoop() {
         String userInput = "";
         String jsonLogin;
@@ -399,7 +524,22 @@ public class TCPClient{
     }
 
 
-
+    /**
+     * Initializes and starts the client. Manages the connection setup, thread creation,
+     * and main client communication loop.
+     *
+     * This method first attempts to establish and configure the connection using the
+     * {@code setup()} method. If the setup fails, it initiates disconnection using
+     * {@code disconnect()} to ensure proper cleanup.
+     *
+     * Once the connection is successfully established, it starts the relevant background
+     * threads for event and ping handling using {@code startThread()}.
+     *
+     * The method prints a confirmation of the connection and begins the main client
+     * interaction loop via the {@code clientLoop()} method.
+     *
+     * @throws IOException if an I/O error occurs during setup or disconnection.
+     */
     public void startClient() throws IOException {
 
         if (!setup()){
@@ -410,6 +550,37 @@ public class TCPClient{
         clientLoop();
         }
 
+
+    /**
+     * Attempts to re-establish a connection to the server. This includes creating
+     * a new socket connection, initializing input and output streams, and sending
+     * a handshake request to verify connectivity.
+     *
+     * Behavior:
+     * - Opens a socket to the specified server using the configuration in the
+     *   {@link Settings} class.
+     * - Initializes communication streams to interact with the server.
+     * - Sends a "ping" message to the server and expects a "pong" response to
+     *   confirm the connection is active.
+     * - Based on the client state, sends appropriate commands:
+     *   - If the client is in the lobby and not logged in, it sends a lobby
+     *     command.
+     *   - If the client is logged in, it sends a reconnect command.
+     * - Starts threads for handling events and maintaining a connection through
+     *   periodic pings.
+     * - If reconnection fails at any step, the connection is terminated by
+     *   invoking the {@code disconnect()} method.
+     *
+     * Note:
+     * - The method handles exceptions during socket creation, stream initialization,
+     *   and communication with the server. Upon encountering an error, it ensures
+     *   proper cleanup by calling {@code disconnect()}.
+     * - Uses Jackson's {@code ObjectMapper} to serialize commands to JSON format.
+     *
+     * Throws:
+     * - IOException if an error occurs during the connection process or
+     *   communication with the server.
+     */
     private void reconnect() throws IOException {
         connected = true;
         try {
@@ -476,9 +647,6 @@ public class TCPClient{
             disconnect();
         }
     }
-
-
-
 }
 
 

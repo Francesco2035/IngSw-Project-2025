@@ -8,17 +8,37 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
 import java.io.IOException;
 
+/**
+ * The ChoosePositionController class is a specific implementation of the abstract Controller
+ * class. It handles the logic for the "Choose Position" phase in the game, allowing players
+ * to select their position on the game board. The controller ensures that commands executed
+ * during this phase are valid according to the player's current state.
+ */
 public class ChoosePositionController extends Controller{
 
 
-
-
+    /**
+     * Constructor for the ChoosePositionController class.
+     *
+     * @param player       The player currently making a decision or whose turn it is.
+     * @param gameId       The unique identifier of the game.
+     * @param disconnected A flag indicating whether the player is currently disconnected.
+     */
     public ChoosePositionController(Player player, String gameId, boolean disconnected) { //TODO test
         this.curPlayer = player;
         this.gameId = gameId;
     }
 
 
+    /**
+     * Executes an action on the current player based on the given command and game controller context.
+     * This method processes a player's command, validates its state, executes it if allowable,
+     * and transitions the game to the next state if successful. In case of an error, the player's state
+     * is reverted, and the exception is sent back to the client.
+     *
+     * @param command The command issued by the player to be executed.
+     * @param gc The game controller that handles the game state and flow.
+     */
     @Override
     public synchronized void action(Command command, GameController gc) { //TODO test //  devo overridare anche qui ok
 
@@ -46,6 +66,13 @@ public class ChoosePositionController extends Controller{
     }
 
 
+    /**
+     * Executes the default action for the current player in the game.
+     * This method interacts with the game controller to perform a player's default move,
+     * updating game state and handling any errors that might occur during execution.
+     *
+     * @param gc the game controller instance that manages the game's flow and state
+     */
     @Override
     public  void  DefaultAction(GameController gc) { //TODO test
         PlayerState state = curPlayer.getPlayerState();
@@ -72,6 +99,11 @@ public class ChoosePositionController extends Controller{
     }
 
 
+    /**
+     * Transitions the current state to the next state in the game's flow.
+     *
+     * @param gc the GameController object responsible for managing game logic
+     */
     @Override
     public void nextState(GameController gc) { //TODO test
         curPlayer.setState(new AddCrewState());

@@ -11,18 +11,63 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import java.io.IOException;
 
 
+/**
+ * The Controller class is an abstract representation of the game's state management and player interaction.
+ * It handles game actions, transitions between states, and manages interactions with exceptions
+ * and player connection statuses. Each concrete implementation of this class defines specific
+ * behaviors for different phases or mechanics of the game.
+ */
 public abstract class Controller {
 
 
 
-    //Command command;
+    /**
+     * Represents the current player in the game context managed by the controller.
+     * This variable holds a reference to the Player instance whose turn it currently is
+     * or who is currently taking an action in the game.
+     */
     Player curPlayer;
+    /**
+     * Represents the unique identifier for the current game instance.
+     * This identifier is used to track and manage the state of the game
+     * across different operations within the controller.
+     */
     String gameId;
+    /**
+     * A copy of the player's board state used for restoring the previous state in case an error occurs during
+     * the execution of a command. This ensures the game state can be rolled back safely if needed.
+     */
     PlayerBoard playerBoardCopy;
+    /**
+     * Represents the disconnected state of the controller.
+     * When set to true, it indicates that the controller has been disconnected from
+     * its associated players or game, preventing normal operations.
+     * When set to false, it indicates that the controller is actively connected
+     * and operational.
+     */
     private boolean disconnected;
+    /**
+     * An instance of an ExceptionListener that is used to handle exceptions
+     * occurring during the operation of the controller. The exceptionListener
+     * serves as a callback mechanism for notifying and managing exception events.
+     *
+     * It can be set or replaced using the {@code setExceptionListener(ExceptionListener exceptionListener)}
+     * method and removed using the {@code removeExceptionListener()} method. When an exception occurs,
+     * the listener is notified through the {@code sendException(Exception e)} method, if it is not null.
+     */
     ExceptionListener exceptionListener;
 
 
+    /**
+     * Executes the provided command for the current player and manages the state transition
+     * in the game controller. If the command is not allowed in the player's current state,
+     * an exception is sent to the exception listener. If an error occurs during the command
+     * execution, the player's board is rolled back to its previous state, and an exception
+     * is sent to the exception listener.
+     *
+     * @param command The command to be executed. This determines the action to be performed by the player.
+     * @param gc The game controller responsible for changing the state after the command is executed.
+     */
     public synchronized void action(Command command, GameController gc) { // è realmente necessario avere questa action qui? non è sempre overridata?
 
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
@@ -53,6 +98,12 @@ public abstract class Controller {
        // this.curPlayer.SetHasActed(true);
     }
 
+    /**
+     * Executes the default action for the current player based on their state and the provided game controller.
+     *
+     * @param gc the game controller to manage the game state and execute transitions; it may be null,
+     *           in which case certain operations will be handled differently
+     */
     public void DefaultAction(GameController gc) { //TODO test
        PlayerState state = curPlayer.getPlayerState();
        Command cmd =state.createDefaultCommand(gameId,curPlayer);
@@ -95,20 +146,48 @@ public abstract class Controller {
 
     }
 
+    /**
+     * Sets the disconnected state of the controller.
+     *
+     * @param disconnected a boolean indicating whether the controller is disconnected (true)
+     *                     or connected (false).
+     */
     public synchronized void setDisconnected(boolean disconnected) {
         this.disconnected = disconnected;
     }
 
+    /**
+     * Advances the game to its next state by processing the current game context and
+     * determining the appropriate transition.
+     *
+     * @param gc the GameController instance managing the current game state and actions
+     */
     public abstract void nextState(GameController gc);
 
+    /**
+     * Sets the ExceptionListener to handle exception events.
+     *
+     * @param exceptionListener the ExceptionListener instance to be set. This listener will handle
+     *                          exception events generated within the system.
+     */
     public void setExceptionListener(ExceptionListener exceptionListener) {
         this.exceptionListener = exceptionListener;
     }
 
+    /**
+     * Removes the current exception listener, if any, by setting it to null.
+     * This effectively disables the handling of exceptions via the exception listener mechanism.
+     */
     public void removeExceptionListener() {
         this.exceptionListener = null;
     } //TODO test
 
+    /**
+     * Sends an exception event through the exception listener if it is not null.
+     * If the listener is null, logs a message indicating the absence of a listener.
+     *
+     * @param e the exception to be processed and sent to the listener
+     */
     public void sendException(Exception e) { //TODO test
         if (exceptionListener != null) {
             ExceptionEvent event = new ExceptionEvent(e.getMessage());
@@ -120,6 +199,11 @@ public abstract class Controller {
     }
 
 
+    /**
+     * Retrieves the disconnected state of the controller.
+     *
+     * @return true if the controller is currently in a disconnected state, false otherwise.
+     */
     public synchronized boolean getDisconnected(){
         return disconnected;
     }

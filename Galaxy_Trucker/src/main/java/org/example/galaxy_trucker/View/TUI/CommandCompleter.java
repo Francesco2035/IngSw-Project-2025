@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.View.TUI;
 
-import org.jline.reader.Completer;
 import org.jline.reader.Candidate;
 import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
@@ -59,7 +58,6 @@ public class CommandCompleter implements DynamicCompleter {
      * where applicable.
      */
     public CommandCompleter() {
-        //TODO: scrivere meglio qualche descrizione
         description = new HashMap<>();
         description.put("join", "Join an existing game");
         description.put("reconnect", "insert token");

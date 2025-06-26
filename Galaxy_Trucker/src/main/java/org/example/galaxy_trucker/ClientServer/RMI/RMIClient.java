@@ -20,6 +20,15 @@ import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.exit;
 
+/**
+ * Represents a Remote Method Invocation (RMI) client that interacts with a remote server and
+ * interfaces with a game client. This class handles establishing connections, managing ping
+ * monitoring with the server, receiving commands and events, and enabling interactive
+ * client-to-server communication for an RMI-based application.
+ *
+ * This class extends the {@code UnicastRemoteObject} to allow communication over RMI and
+ * implements the {@code ClientInterface} for client-side functionalities.
+ */
 public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     private ServerInterface server;
@@ -35,6 +44,15 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
+
+    /**
+     * Handles the reception of a ping message from the server.
+     *
+     * Updates the last known ping time to the current system time
+     * and notifies the server by sending a pong response.
+     *
+     * @throws RemoteException if a remote communication error occurs while sending the pong response.
+     */
     @Override
     public void receivePing() throws RemoteException {
 
@@ -44,6 +62,19 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
 
+    /**
+     * Starts the ping monitor that periodically checks the time of the last received ping
+     * and detects connection loss if no ping is received within a defined threshold.
+     *
+     * If a scheduler is already running, it is terminated before starting a new one.
+     * The monitoring process is executed at fixed intervals using a single-threaded scheduled executor.
+     *
+     * If the time since the last ping exceeds 10 seconds, the connection is considered lost,
+     * and a disconnection handling routine is triggered. This might include cleaning up resources
+     * and attempting reconnection.
+     *
+     * The ping monitor operates autonomously in a separate thread provided by the executor service.
+     */
     public void startPingMonitor() {
         System.out.println("Start monitor pings");
 
@@ -71,13 +102,22 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
 
-
-
+    /**
+     * Sets the command interpreter for the RMIClient.
+     *
+     * @param commandInterpreter the CommandInterpreter instance to be set for handling commands
+     */
     public void setCommandInterpreter(CommandInterpreter commandInterpreter) {
         this.commandInterpreter = commandInterpreter;
     }
 
 
+    /**
+     * Constructs a new RMIClient instance.
+     *
+     * @param client the client instance that this RMIClient will use for communication.
+     * @throws RemoteException if a remote communication error occurs.
+     */
     public RMIClient(Client client) throws RemoteException{
         //System.setProperty("java.rmi.server.hostname", "192.168.1.145");
         me =  new Player();
@@ -87,6 +127,17 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
 
+    /**
+     * Initializes the RMI client by connecting to the RMI registry and retrieving the server interface.
+     *
+     * This method attempts to locate a remote server object using the provided server name and
+     * RMI port from the Settings class. If successful, it assigns the server object to the local
+     * field and sets the client to a "running" state. If there are connection issues, an appropriate
+     * exception message is printed, and the method will return false.
+     *
+     * @return true if the setup process completes successfully and the client is running;
+     *         false if an exception occurs during connection to the server or registry.
+     */
     private boolean setup(){
         try{
             System.out.println("Starting Client");
@@ -110,8 +161,20 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
 
-
-
+    /**
+     * Starts the client by initializing necessary components and entering an input loop.
+     *
+     * This method performs the following steps:
+     * 1. Calls the `setup` method to establish initial connections and configurations.
+     *    If the setup fails, the application exits with a status code of 1.
+     * 2. Initializes and starts a daemon thread to handle user input and server communication.
+     *    The input handling loop is executed in a separate thread to allow asynchronous
+     *    processing of user commands and server responses.
+     *
+     * @throws IOException if any I/O error occurs during setup or input processing.
+     * @throws NotBoundException if the expected server interface is not bound
+     *         in the RMI registry during the setup process.
+     */
     @Override
     public void StartClient() throws IOException, NotBoundException {
 
@@ -131,7 +194,18 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
 
-
+    /**
+     * Receives and handles an incoming event.
+     *
+     * This method delegates the processing of the event to the client by invoking
+     * the {@code receiveEvent} method on the client instance. If an exception occurs
+     * during the event processing, it is caught and an error message is logged
+     * indicating the issue.
+     *
+     * @param event the event to be received and processed. The event must implement
+     *              the {@code Event} interface and comply with the Visitor design
+     *              pattern.
+     */
     @Override
     public void receiveMessage(Event event) {
         try{
@@ -144,6 +218,19 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
 
+    /**
+     * Receives a token and processes it by updating the command interpreter,
+     * gameboard view, and triggering a token-related event.
+     *
+     * This method sets the token in the associated {@code CommandInterpreter},
+     * updates the client's gameboard to reflect the current level provided
+     * by the command interpreter, and generates a {@code TokenEvent} containing
+     * the token for further handling.
+     *
+     * @param token the token string to be processed. It serves as a unique identifier
+     *              or access token within the system.
+     * @throws RemoteException if a remote communication error occurs during the method execution.
+     */
     @Override
     public void receiveToken(String token) throws RemoteException {
 
@@ -155,6 +242,16 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     }
 
+
+    /**
+     * Handles the main input loop for user commands. Depending on the input, various actions
+     * such as reconnecting, creating or joining a game, viewing logs, or interacting with boards
+     * can be performed.
+     *
+     * @param fromConsole Specifies whether the input should be read from the console or handled differently.
+     * @throws IOException If an input or output exception occurs during the loop's operations.
+     * @throws InterruptedException If the thread running the input loop is interrupted.
+     */
     public void inputLoop(boolean fromConsole) throws IOException, InterruptedException {
         String cmd = "";
 
@@ -365,46 +462,33 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
     }
 
 
-
-    public void sendPongs(){
-        new Thread(()->{
-            //System.out.println("PONG");
-            while(running){
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                try {
-                    new Thread(() -> {
-                        try {
-                            server.receivePong(this);
-                        } catch (RemoteException e) {
-                            synchronized (running) {
-                                if (running) {
-                                    running = false;
-                                    try {
-                                        handleDisconnection();
-                                    } catch (InterruptedException | IOException ex) {
-                                        throw new RuntimeException(ex);
-                                    }
-                                } else {
-                                    System.out.println("Error receiving pongs");
-                                }
-                            }
-                        }
-                    }).start();
-
-                } finally {
-
-                }
-
-
-            }
-        }).start();
-
-    }
-
+    /**
+     * Handles the disconnection process for the client and provides options for reconnection or exiting.
+     *
+     * This method is invoked when the client loses its connection to the server or needs to explicitly
+     * disconnect. It performs the following tasks:
+     *
+     * 1. Stops the current client operations by setting the `running` flag to false and interrupting
+     *    the input loop thread if it is active.
+     * 2. Shuts down the scheduler service if it is not already terminated.
+     * 3. Disconnects the client's view from the current session.
+     * 4. Prompts the user with options to either reconnect or exit:
+     *    - "Exit": Terminates the application.
+     *    - "Reconnect": Attempts to re-establish the connection by invoking the `setup` method. If the
+     *       setup is successful, it reinitializes the client state, starts necessary threads, and
+     *       resumes normal operation.
+     *    - Any other input is treated as an unknown command and prompts the user again for valid input.
+     * 5. Handles any errors or exceptions encountered during the reconnection process, including failed
+     *    server communication or setup attempts.
+     *
+     * This method ensures the client properly cleans up resources and provides a seamless process
+     * for reconnection or closure.
+     *
+     * @throws InterruptedException if the current thread is interrupted while waiting or performing
+     *                              reconnection-related operations.
+     * @throws IOException if an I/O error occurs during client operations, such as input handling
+     *                     or reconnection processes.
+     */
     private void handleDisconnection() throws InterruptedException, IOException {
         System.out.println("handle disconnection");
         running = false;

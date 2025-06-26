@@ -15,9 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
@@ -83,7 +80,6 @@ import java.util.stream.Collectors;
  * - `void updateBoard(TileEvent event)`: Updates the game board UI to reflect changes based on a tile event.
  * - `void updateOthersPB(PlayerTileEvent event)`: Updates the personal boards of other players based on a player tile event.
  * - `void updateHand(HandEvent event)`: Updates the currently active tile in the player's hand.
- * - `void updateCoveredTilesSet(CoveredTileSetEvent event)`: Updates the coverage state of tiles on the board.
  * - `void updateUncoveredTilesSet(UncoverdTileSetEvent event)`: Updates the UI for uncovered tiles, including managing discarded tiles and their interactions.
  *
  * The implementation ensures seamless and fluid user experiences, maintaining thread safety
@@ -92,80 +88,441 @@ import java.util.stream.Collectors;
  */
 public class GuiRoot implements View {
 
+    /**
+     * Represents the main thread responsible for managing and updating the graphical user interface (GUI).
+     * This thread is typically used to ensure that all GUI-related operations are performed
+     * on the same thread to maintain thread safety and avoid concurrency issues.
+     */
     private Thread guiThread;
+    /**
+     * A thread-safe blocking queue that holds strings to be processed as input.
+     * This queue uses a First-In-First-Out (FIFO) ordering and provides methods
+     * that block or timeout when retrieving or adding elements, ensuring safe
+     * concurrent access in multi-threaded environments.
+     */
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
+    /**
+     * Represents the primary stage of the JavaFX application.
+     * This is the main window where the application's user interface
+     * is displayed. It serves as the entry point for displaying
+     * scenes and managing the main application lifecycle.
+     */
     private Stage primaryStage;
 
+    /**
+     * The root container for the primary user interface layout in a JavaFX application.
+     * This object serves as the main container node for all other graphical components
+     * and defines the structure of the application's visible scene.
+     */
     private StackPane primaryRoot;
+    /**
+     * The root container for the main content of the user interface.
+     * This variable typically acts as the primary parent node
+     * for displaying content components or controls in the application layout.
+     */
     private Pane contentRoot;
+    /**
+     * Represents the primary {@link Scene} of the application.
+     * This variable is used to set and manage the main user interface elements
+     * displayed within the application's primary stage.
+     */
     private Scene primaryScene;
 
 
+    /**
+     * Represents the client responsible for handling player-related operations
+     * such as managing player data or communicating with player services.
+     */
     private PlayerClient playerClient;
+    /**
+     * A private instance variable representing the output handler for the graphical user interface.
+     * The printer is responsible for handling and managing the output display within the GUI context.
+     */
     private GuiOut printer;
+    /**
+     * A list of lobby event objects used to store events occurring within a lobby.
+     * This variable holds instances of the LobbyEvent class, which represent individual events.
+     */
     private ArrayList<LobbyEvent> lobbyEvents = new ArrayList<>();
 
+    /**
+     * Represents the name of the game.
+     * This variable is used to store the title or identifier of the game.
+     */
     private String myGameName;
+    /**
+     * Represents the name of an individual or entity.
+     * This variable is used to store the name as a String value.
+     */
     private String myName;
+    /**
+     * Represents the current level of the game for a player.
+     * This variable tracks the player's progress within the game.
+     * It is stored as an integer and typically increases as the player advances.
+     */
     private int myGameLv;
 
-    private ListView<String> readyPlayers;
+    /**
+     * A ListView containing Label instances that represent the players
+     * who are ready. This UI component is typically used to display
+     * a list of players that have indicated they are prepared for
+     * an upcoming event or game.
+     */
+    private ListView<Label> readyPlayers;
+    /**
+     * Indicates whether the current entity or system is prepared or ready to proceed
+     * or execute a specific operation. The readiness status is managed internally
+     * and determines if further actions can be performed.
+     */
     private boolean amIReady;
+    /**
+     * A boolean variable indicating whether the current process or operation
+     * is in the process of building or constructing something.
+     *
+     * When set to true, it signifies that the build or construction
+     * process is actively taking place. When set to false, it denotes
+     * that the build process is either completed, not started, or not applicable.
+     */
     private boolean amIBuilding;
 
+    /**
+     * A list that stores player labels.
+     * This ArrayList holds Label objects representing players,
+     * typically used to associate player-related properties or information
+     * with corresponding labels in the application.
+     */
     private ArrayList<Label> players;
+    /**
+     * Represents a collection of discarded tile identifiers.
+     * This list stores the integers corresponding to tiles that have
+     * been removed or discarded during gameplay or processing.
+     */
     private ArrayList<Integer> discardedTiles;
+    /**
+     * A map that stores discarded items, associating an Integer key with a VBox value.
+     * The Integer key typically represents a unique identifier, while the VBox value
+     * represents a UI component or container associated with the discarded item.
+     *
+     * This map is likely used for managing or tracking elements that have been discarded
+     * or removed in a specific context within the application.
+     */
     private HashMap<Integer, VBox> discardedMap;
+    /**
+     * Represents the image used for displaying the game board.
+     * This variable holds the graphical representation of the game board
+     * and is used to render it on the screen.
+     */
     private Image gameBoardImg;
+    /**
+     * Represents the primary game board displayed in the application's user interface.
+     * This is a GridPane layout container used to organize and hold the components
+     * or elements of the game board in a structured grid format.
+     */
     private GridPane myBoard;
+    /**
+     * Represents a placeholder image used for tiles in the application.
+     * This image may be displayed when the actual tile image is not available
+     * or has not yet been loaded.
+     */
     private Image tilePlaceholder;
+    /**
+     * Represents the graphical component that displays the image of a tile.
+     * Used to manage and render the visual representation of a tile in the user interface.
+     */
     private ImageView tileImage;
+    /**
+     * Represents a container or pane for tiles that are currently uncovered in
+     * a game or puzzle. This variable typically holds and manages the
+     * uncovered tile objects during the execution of the program.
+     */
     private TilePane uncoveredTiles;
+    /**
+     * Represents the rotation state of a tile in degrees.
+     * This variable is used to determine the orientation of a tile
+     * within a graphical or game environment. The value typically
+     * ranges from 0 to 359, where 0 represents no rotation.
+     */
     private int tileRotation;
+    /**
+     * A map that associates a String identifier with a GridPane object, representing
+     * the boards of other players or entities in a board game or other grid-based system.
+     * The keys in the HashMap are Strings, typically used as unique identifiers for
+     * different boards, while the values are GridPane objects that represent the
+     * corresponding board layouts.
+     */
     private HashMap<String, GridPane> othersBoards;
+    /**
+     * A boolean variable that indicates the validity status.
+     * It is used to determine if a certain condition, state, or operation is valid or not.
+     */
     private boolean checkvalidity;
+    /**
+     * A private instance of VBox used for structuring or arranging UI components
+     * in a vertical layout. The hourglassBox variable may specifically be utilized
+     * for displaying content related to an hourglass metaphor or animation within
+     * the application's user interface.
+     */
     private VBox hourglassBox;
-    private ImageView buffer1, buffer2;
+    /**
+     * A private member variable of type ImageView used to store an image or graphical representation.
+     * The specific purpose and usage of this variable should be determined based on the larger context
+     * of the application in which it is used.
+     */
+    private ImageView buffer1, /**
+     * The variable buffer2 is used to store or manipulate data temporarily
+     * within the context of the application or a specific operation.
+     * It typically acts as a secondary or auxiliary buffer for processing.
+     */
+    buffer2;
+    /**
+     * Represents the primary stage or window in which the game board
+     * is displayed during the application's runtime.
+     * This stage manages the graphical user interface components
+     * related to the game board.
+     */
     private Stage gameBoardStage;
 
+    /**
+     * Represents the image to be used as the back side of a playing card.
+     * This image is typically displayed when the card is face down.
+     */
     private Image cardBack;
+    /**
+     * A HashMap that associates player identifiers (as String keys) with their corresponding rocket images (as ImageView values).
+     * This map is used to manage and track the rockets assigned to each player in the game.
+     */
     private HashMap<String, ImageView>playerRockets;
+    /**
+     * Represents a mapping between player names (as keys) and their respective positions (as values).
+     * The positions typically indicate the players' ranks or placement within a game or leaderboard.
+     */
     private HashMap<String, Integer> playerPositions;
+    /**
+     * A mapping of integer keys to IntegerPair values, representing coordinates or related data.
+     * The key is an integer identifier, and the value is an IntegerPair object that holds two integers.
+     */
     private HashMap<Integer, IntegerPair> coords;
-    private Image brownAlien, purpleAlien, crewMate;
+    /**
+     * Represents the image resource of a brown-colored alien entity.
+     * This variable is used to store the visual representation of the alien,
+     * typically loaded from an external source such as a file or asset bundle.
+     */
+    private Image brownAlien, /**
+     * Represents an alien entity with unique attributes or characteristics.
+     * The 'purpleAlien' variable may hold specific information or data
+     * related to the alien, depending on its usage in the program.
+     *
+     * It is recommended to refer to the context or relevant documentation
+     * for understanding the specific role or value assigned to 'purpleAlien'.
+     */
+    purpleAlien, /**
+     * Represents a crew member in a given context, such as a team or group.
+     * Typically used to denote an individual who is part of a crew
+     * participating in a shared task or mission.
+     * The specific attributes or role of the crew member may vary depending
+     * on the implementation or application.
+     */
+    crewMate;
+    /**
+     * Represents a graphical pane within the user interface dedicated to displaying or managing rockets.
+     * This pane can be used to hold visual elements, such as images, buttons, or labels, related to rockets.
+     */
     private Pane rocketsPane;
+    /**
+     * A ListView component that displays a list of log entries as strings.
+     * This can be used to show a dynamic or static set of log messages in the
+     * user interface.
+     */
     private ListView<String> log;
+    /**
+     * Represents the total attack value of an entity, which is used to determine
+     * its offensive strength in computations or game mechanics.
+     */
     private double totAtk;
+    /**
+     * Represents the total speed calculated or accumulated, expressed as an integer value.
+     * This variable is typically used to store the cumulative speed in a specific context.
+     */
     private int totSpeed;
+    /**
+     * Represents the total number of credits accumulated or assigned.
+     * This variable is used to store an aggregate value typically
+     * related to a system that tracks credit-based transactions
+     * or metrics.
+     */
     private int totCredits;
+    /**
+     * Represents the total energy value.
+     * This variable stores the cumulative energy level as an integer.
+     */
     private int totEnergy;
+    /**
+     * Represents the total damages calculated or incurred in an operation or process.
+     * This variable stores the cumulative value of damages quantified as an integer.
+     */
     private int totDamages;
+    /**
+     * Represents the total number of humans.
+     * This variable is used to store the count of humans in a given context.
+     */
     private int totHumans;
+    /**
+     * Stores the coordinates of a shot in a 2D space.
+     * The coordinates are represented as an instance of IntegerPair,
+     * where the first integer represents the x-coordinate
+     * and the second integer represents the y-coordinate.
+     */
     private IntegerPair shotCoords;
 
+    /**
+     * Indicates whether a flight has started or not.
+     * The value is true if the flight has been initiated,
+     * and false if the flight has not yet started.
+     */
     private boolean flightStarted;
+    /**
+     * Represents the state or condition indicating whether an action
+     * or process is in a "killing" state. This variable is used to track
+     * if a certain operation or situation involves termination or cessation.
+     */
     private boolean killing;
+    /**
+     * Indicates whether a chunk of data is currently being selected.
+     * This variable is used as a flag to track the state of the selection process.
+     */
     private boolean selectingChunk;
+    /**
+     * A horizontal box container (HBox) used to hold and arrange phase-related buttons in a GUI.
+     * This variable helps in organizing buttons in a horizontal layout and provides a convenient way
+     * of managing the button components during different phases of the application's workflow.
+     */
     private HBox phaseButtons;
+    /**
+     * A list of coordinate pairs representing specific command locations.
+     * Each entry in the list specifies a pair of integer values
+     * that may denote x and y coordinates or other pair-based data.
+     */
     private ArrayList<IntegerPair> cmdCoords;
+    /**
+     * Indicates whether the tiles in the application are interactive or clickable.
+     * When set to true, tiles can respond to user interactions such as clicks.
+     * This can be used to control interactivity or enable/disable user interaction
+     * with specific UI components represented as tiles.
+     */
     private boolean tilesClickable;
+    /**
+     * Represents a Label component used to display a prompt message in the user interface.
+     * This variable holds a reference to a Label object and is generally used
+     * to guide or provide information to the user in the context of a graphical interface.
+     */
     private Label prompt;
+    /**
+     * Represents a list of tile coordinates that are excluded from certain operations
+     * or processes. Each excluded tile is defined by an IntegerPair, where the pair
+     * typically signifies the x and y coordinates of the tile on a grid or board.
+     */
     private ArrayList<IntegerPair> excludedTiles;
+    /**
+     * Represents the current card displayed in the application.
+     * This variable is used to store and manage the ImageView object
+     * associated with the currently active or visible card.
+     */
     private ImageView curCard;
+    /**
+     * Represents the current image of a card being displayed or utilized
+     * within the application's context. This variable holds the graphical
+     * representation of the card in the form of an Image object.
+     */
     private Image curCardImg;
+    /**
+     * Indicates whether the battery icon or related UI element is clickable.
+     * This variable determines if user interactions, such as clicks,
+     * are enabled for the battery UI component.
+     */
     private boolean batteryClickable;
+    /**
+     * Represents the current coordinates of the cargo in the form of an integer pair.
+     * This variable is typically used to track the location of cargo in a 2D plane
+     * where the first integer corresponds to the x-coordinate and the second integer
+     * corresponds to the y-coordinate.
+     */
     private IntegerPair curCargoCoords;
+    /**
+     * Represents the current index of the cargo being processed or accessed
+     * within a cargo-related collection or workflow.
+     * This variable is used to track the position of the current cargo item.
+     */
     private int curCargoIndex;
+    /**
+     * Represents the current cargo image displayed in the user interface.
+     * This variable holds an ImageView object that is used to visualize
+     * the cargo image associated with the current state or selection.
+     */
     private ImageView curCargoImg;
+    /**
+     * A map that associates a pair of integers, represented by the IntegerPair key,
+     * with a list of goods. This structure is designed to manage and store
+     * collections of goods based on defined integer-pair identifiers.
+     *
+     * Key:
+     * - IntegerPair: Represents a pair of integers, which can be used to
+     *   identify specific storage compartments.
+     *
+     * Value:
+     * - ArrayList<Goods>: Represents the collection of goods stored in the
+     *   corresponding identified compartment.
+     */
     private HashMap<IntegerPair, ArrayList<Goods>> storageCompartments;
+    /**
+     * Represents the number of rewards that remain available.
+     * This variable is used to keep track of the remaining rewards
+     * that can still be distributed or claimed.
+     */
     private int rewardsLeft;
+    /**
+     * Represents the number of planets.
+     * This variable stores the count of planets and is used in astronomical calculations
+     * or planetary systems modeling.
+     */
     private int nPlanets;
+    /**
+     * Indicates whether the system is currently in the process of handling cargo.
+     * The value is true if cargo is being handled, and false otherwise.
+     */
     private boolean handlingCargo;
+    /**
+     * Indicates whether a theft incident has occurred or is being tracked.
+     * This variable represents the state or presence of theft in a specific context.
+     * The value is true if theft is present, false otherwise.
+     */
     private boolean theft;
+    /**
+     * A list of rewards represented as Goods objects.
+     * This collection holds the rewards associated with a specific context,
+     * such as achievements or milestones in an application.
+     */
     private ArrayList<Goods> rewards;
+    /**
+     * A list of ImageView objects representing the selected images.
+     * This variable is used to store and manage a collection of images
+     * that have been selected by the user or through the application's
+     * functionality for further processing or display.
+     */
     private ArrayList<ImageView> selectedImages;
+    /**
+     * Represents a client responsible for handling the login functionality
+     * and managing authentication requests and responses within the application.
+     */
     private LoginClient loginClient;
 
+    /**
+     * Indicates whether a connection is currently in the process of being re-established.
+     *
+     * This variable is used to represent the state of a connection that might
+     * have been interrupted or lost and is undergoing attempts to reconnect.
+     * A value of {@code true} signifies that reconnection attempts are active,
+     * while {@code false} indicates no ongoing reconnection attempts.
+     */
     private boolean reconnecting;
 
 
@@ -214,18 +571,13 @@ public class GuiRoot implements View {
             primaryScene = new Scene(primaryRoot, 800, 600);
 
             tileImage = new ImageView();
-            tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/Space void.jpg"));
+            tilePlaceholder = new Image(getClass().getResourceAsStream("/GUI/Tiles/tileBG.png"));
             tileImage.setImage(tilePlaceholder);
             tileImage.setOpacity(0.5);
 
-            //background setup
-            Media media = new Media(getClass().getResource("/GUI/magenta-nebula-moewalls-com.mp4").toExternalForm());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
 
-            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            mediaPlayer.setAutoPlay(true);
 
-            MediaView background = new MediaView(mediaPlayer);
+            ImageView background = new ImageView(new Image(getClass().getResourceAsStream("/GUI/background.jpg")));
             background.setPreserveRatio(false);
 
             background.fitHeightProperty().bind(primaryStage.heightProperty());
@@ -588,7 +940,7 @@ public class GuiRoot implements View {
                 HBox batteries = new HBox(2);
                 batteries.setPadding(new Insets(10));
                 for (int i = 0; i < event.getBatteries(); i++) {
-                    ImageView battery = new ImageView(new Image(getClass().getResourceAsStream("/GUI/battery.png")));
+                    ImageView battery = new ImageView(new Image(getClass().getResourceAsStream("/GUI/buildingPhase/battery.png")));
                     battery.setFitHeight(50);
                     tileImg.setOpacity(0.7);
                     battery.setPreserveRatio(true);
@@ -783,7 +1135,7 @@ public class GuiRoot implements View {
                     HBox batteries = new HBox(2);
 //                    batteries.setPadding(new Insets(10));
                     for (int i = 0; i < event.getBatteries(); i++) {
-                        ImageView battery = new ImageView(new Image(getClass().getResourceAsStream("/GUI/battery.png")));
+                        ImageView battery = new ImageView(new Image(getClass().getResourceAsStream("/GUI/buildingPhase/battery.png")));
                         battery.setFitHeight(30);
                         tileImg.setOpacity(0.7);
                         battery.setPreserveRatio(true);
@@ -1080,7 +1432,6 @@ public class GuiRoot implements View {
      */
     @Override
     public void disconnect() {
-        //quando si accorge di esseree disconnesso ->reconnect / exit / ChangeConnection
         Platform.runLater(()->{
             Stage disconnectStage = new Stage();
             disconnectStage.setTitle("Connection lost");
@@ -1215,14 +1566,10 @@ public class GuiRoot implements View {
         amIBuilding = false;
         checkvalidity = true;
 
-        prompt.setText("Remove Invalid Tiles!");
-        prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
-
         ImageView txtBackground = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/all_belt.png")));
         txtBackground.setFitWidth(600);
         txtBackground.setFitHeight(100);
 
-        StackPane textPanel = new StackPane(txtBackground, prompt);
 
         Button finishButton = new Button("Done");
 
@@ -1307,16 +1654,16 @@ public class GuiRoot implements View {
                     newTile.setOpacity(0.5);
             }
 
-
-
 //            Platform.runLater(()->{
 //                myBoard.getChildren().remove(node);
 //                myBoard.add(newTile,  GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
 //            });
 
         }
-
         Platform.runLater(()->{
+            prompt.setText("Remove Invalid Tiles!");
+            prompt.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:  #fbcc18;");
+            StackPane textPanel = new StackPane(txtBackground, prompt);
             VBox othersBox = new VBox(20);
             int i = 0;
             for (String id : othersBoards.keySet()) {
@@ -1818,40 +2165,11 @@ public class GuiRoot implements View {
 
 
     /**
-     * Updates and displays the in-game lobby screen showing player readiness status.
-     * This method is called whenever there's a change in player readiness states.
+     * Displays the lobby game interface by updating the list of players and their readiness status.
+     * Updates the visual representation of player names and readiness using JavaFX components.
      *
-     * <p>The method performs the following:
-     * <ul>
-     *   <li>Clears and repopulates the player list with current readiness status</li>
-     *   <li>Identifies the current player with "(You)" suffix</li>
-     *   <li>Updates the local amIReady flag with the current player's readiness state</li>
-     *   <li>Formats each player entry to show either "Ready!" or "Not Ready" status</li>
-     * </ul>
-     *
-     * <p>Formatting details:
-     * <ul>
-     *   <li>Player names are displayed with "--> Ready!" or "--> Not Ready" suffixes</li>
-     *   <li>The current player is marked with "(You)" after their name</li>
-     *   <li>All updates are performed on the JavaFX Application Thread via Platform.runLater()</li>
-     * </ul>
-     *
-     * @param event The GameLobbyEvent containing:
-     *              <ul>
-     *                <li>List of all players in the game</li>
-     *                <li>List of boolean readiness states corresponding to each player</li>
-     *              </ul>
-     *
-     * @implNote This method:
-     * <ul>
-     *   <li>Uses Platform.runLater() for thread-safe UI updates</li>
-     *   <li>Maintains the amIReady flag to track local player's readiness state</li>
-     *   <li>Clears the readyPlayers ListView before repopulating</li>
-     *   <li>Does not modify the othersBoards display (commented code suggests this was considered)</li>
-     * </ul>
-     *
-     * @see GameLobbyEvent
-     * @see Platform#runLater(Runnable)
+     * @param event the GameLobbyEvent containing the list of players, their readiness status,
+     *              and other data related to the game lobby.
      */
     @Override
     public void showLobbyGame(GameLobbyEvent event){
@@ -1863,20 +2181,24 @@ public class GuiRoot implements View {
             for(int i=0; i< event.getPlayers().size(); i++){
                 if(event.getPlayers().get(i).equals(myName)) {
                     s = event.getPlayers().get(i) + " (You)";
-                    amIReady = event.getReady().get(i);
+                    if(event.getReady().get(i)){
+                        amIReady = true;
+                    }
+                    else {
+                        amIReady = false;
+                    }
                 }
                 else s= event.getPlayers().get(i);
 
+                Label name = new Label(s);
+
+
                 if(event.getReady().get(i))
-                    readyPlayers.getItems().add(s + " --> Ready!");
-                else readyPlayers.getItems().add(s+ " --> Not Ready");
+                    name.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill:  #3cc917;");
+                else name.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill:  #000000;");
+
+                readyPlayers.getItems().add(name);
             }
-//            for(int i = 0; i< event.getPlayers().size(); i++){
-//                if(event.getReady().get(i))
-//                    for(String name : othersBoards.keySet())
-//                        if(name.equals(event.getPlayers().get(i)))
-//                            name.setText(event);
-//            }
         });
 
     }
@@ -1950,17 +2272,21 @@ public class GuiRoot implements View {
 
 
             Button quitButton = new Button("Quit");
-            Button readyButton = new Button();
+            Button readyButton = new Button("Ready!");
             Button debugShip1 = new Button("Debug Ship 1");
             Button debugShip2 = new Button("Debug Ship 2");
 
-            if (amIReady)
-                readyButton.setText("Not Ready");
-            else readyButton.setText("Ready!");
 
             readyButton.setOnAction(e -> {
-//                readyButton.setDisable(true);
-                inputQueue.add("Ready");
+                if(amIReady){
+                    inputQueue.add("NotReady");
+                    readyButton.setText("Ready!");
+                }
+
+                else{
+                    inputQueue.add("Ready");
+                    readyButton.setText("Not Ready");
+                }
             });
 
             debugShip1.setOnAction(e -> {
@@ -2003,7 +2329,6 @@ public class GuiRoot implements View {
                 confirmStage.initModality(Modality.WINDOW_MODAL);
 
                 confirmStage.show();
-
             });
 
 
@@ -2020,7 +2345,6 @@ public class GuiRoot implements View {
 
             VBox mainBox = new VBox(10, GameNameLabel, readyPlayers, stack);
             readyPlayers.setMaxWidth(800);
-            readyPlayers.setMaxHeight(100);
             mainBox.setAlignment(Pos.TOP_CENTER);
             mainBox.setPadding(new Insets(10));
 
@@ -2047,48 +2371,17 @@ public class GuiRoot implements View {
 
 
     /**
-     * Creates and configures a modal Stage displaying the game board with appropriate scaling and styling.
-     * The game board appearance varies based on the current game level (myGameLv).
+     * Configures and initializes a new Stage for displaying the game board.
+     * Depending on the game level, the stage is customized with specific dimensions,
+     * background colors, and other visual elements such as an ImageView for the game board
+     * and a StackPane as its root layout.
      *
-     * <p>Key features:
-     * <ul>
-     *   <li>Creates a non-resizable modal window with title "Game Board"</li>
-     *   <li>Applies level-specific:
-     *     <ul>
-     *       <li>Board dimensions (985x546 for level 1, 1055x639 for level 2)</li>
-     *       <li>Background color (dark blue for level 1, purple for level 2)</li>
-     *     </ul>
-     *   </li>
-     *   <li>Scales the board image to 85% of original size</li>
-     *   <li>Includes rocketsPane overlay for displaying game elements</li>
-     * </ul>
-     *
-     * <p>Implementation details:
-     * <ul>
-     *   <li>All UI operations are performed on the JavaFX Application Thread</li>
-     *   <li>Uses a StackPane layout to layer background, board image, and rockets</li>
-     *   <li>Window modality is set to WINDOW_MODAL to block interaction with parent window</li>
-     *   <li>Maintains consistent padding around the scaled board image</li>
-     * </ul>
-     *
-     * @return The fully configured (but not yet shown) Stage containing the game board
-     *
-     * @implNote This method:
-     * <ul>
-     *   <li>Relies on the gameBoardImg and rocketsPane being properly initialized</li>
-     *   <li>Uses Platform.runLater() for thread-safe UI operations</li>
-     *   <li>Preserves the board image's aspect ratio during scaling</li>
-     *   <li>Contains commented-out code for potential pawn movement functionality</li>
-     * </ul>
-     *
-     * @see Stage
-     * @see Platform#runLater(Runnable)
-     * @see Modality#WINDOW_MODAL
+     * @return a Stage instance that represents the game board stage, fully configured
+     *         and initialized but not yet displayed on the screen.
      */
     private Stage setGameBoardStage() {
         double scaleRatio = 0.85;
         int imgX, imgY;
-//            final int[] i = {0};
         if(myGameLv == 2){
             imgX = 1055;
             imgY = 639;
@@ -2100,7 +2393,6 @@ public class GuiRoot implements View {
         Stage gbStage = new Stage();
         Platform.runLater(() -> {
             gbStage.setTitle("Game Board");
-//            gbStage.initStyle(StageStyle.TRANSPARENT);
 
             StackPane root = new StackPane();
 
@@ -2114,19 +2406,6 @@ public class GuiRoot implements View {
             else
                 background.setFill(Color.rgb(6, 55, 105));
 
-//            ImageView pedine = new ImageView(new  Image(getClass().getResourceAsStream("/GUI/among-us-white.png")));
-//            pedine.setFitHeight(40);
-//            pedine.setPreserveRatio(true);
-//            pedine.setLayoutX((coords.get(i[0]).getFirst() - 20) * scaleRatio);
-//            pedine.setLayoutY((coords.get(i[0]).getSecond() - 25) * scaleRatio);
-//            pedLayer.getChildren().add(pedine);
-//
-//            pedine.setOnMouseClicked(e -> {
-//                i[0]++;
-//                pedine.setLayoutX((coords.get(i[0]).getFirst() - 20) * scaleRatio);
-//                pedine.setLayoutY((coords.get(i[0]).getSecond() - 20) * scaleRatio);
-//
-//            });
 
             root.getChildren().addAll(background, board, rocketsPane);
 
@@ -2325,7 +2604,7 @@ public class GuiRoot implements View {
         gameBoard.setFitWidth(400);
 
         ImageView hourglass = new ImageView();
-        hourglass.setImage((new Image(getClass().getResourceAsStream("/GUI/hourglass.png"))));
+        hourglass.setImage((new Image(getClass().getResourceAsStream("/GUI/buildingPhase/hourglass.png"))));
         hourglass.setPreserveRatio(true);
         hourglass.setSmooth(true);
         hourglass.setFitHeight(70);
@@ -2335,7 +2614,7 @@ public class GuiRoot implements View {
         hourglassBox.getChildren().setAll(hourglass);
 
 
-        ImageView clockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow clockwise.png")));
+        ImageView clockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/buildingPhase/rotate arrow clockwise.png")));
         clockwiseArrow.setPreserveRatio(true);
         clockwiseArrow.setFitHeight(70);
         clockwiseArrow.setFitWidth(50);
@@ -2348,7 +2627,7 @@ public class GuiRoot implements View {
         });
 
 
-        ImageView counterclockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/rotate arrow counterclockwise.png")));
+        ImageView counterclockwiseArrow = new ImageView(new Image(getClass().getResourceAsStream("/GUI/buildingPhase/rotate arrow counterclockwise.png")));
         counterclockwiseArrow.setPreserveRatio(true);
         counterclockwiseArrow.setFitHeight(70);
         counterclockwiseArrow.setFitWidth(50);
@@ -2413,7 +2692,7 @@ public class GuiRoot implements View {
 
 
         HBox bufferBox = new HBox( 15, buffer1, buffer2);
-        bufferBox.setPadding(new Insets(20));
+        bufferBox.setPadding(new Insets(35));
         Pane bufferPane = new Pane(bufferBox);
         StackPane buffer = new StackPane(background, bufferPane);
 
@@ -2836,6 +3115,9 @@ public class GuiRoot implements View {
 
             cmdCoords.clear();
 
+            ImageView alert = new ImageView(new Image(getClass().getResourceAsStream("/GUI/alert.png")));
+            alert.setFitHeight(45);
+            alert.setPreserveRatio(true);
             Stage exceptionStage = new Stage();
             exceptionStage.setTitle("Exception");
 
@@ -2845,10 +3127,10 @@ public class GuiRoot implements View {
             Button okButton = goBackButtonMaker(exceptionStage);
             okButton.setText("Ok");
 
-            VBox errorBox = new VBox(3, errorLabel, okButton);
+            VBox errorBox = new VBox(3, new HBox(10, alert, errorLabel), okButton);
             errorBox.setAlignment(Pos.CENTER);
 
-            Scene errorScene = new Scene(errorBox, 300, 80);
+            Scene errorScene = new Scene(errorBox, 400, 80);
             exceptionStage.setScene(errorScene);
             exceptionStage.initOwner(primaryStage);
             exceptionStage.initModality(Modality.WINDOW_MODAL);
@@ -3069,7 +3351,7 @@ public class GuiRoot implements View {
 
         Platform.runLater(()->{
             if(event.getStart()){
-                hourglassImg.setImage((new Image(getClass().getResourceAsStream("/GUI/super-buu-hourglass.gif"))));
+                hourglassImg.setImage((new Image(getClass().getResourceAsStream("/GUI/buildingPhase/super-buu-hourglass.gif"))));
                 hourglassImg.setOnMouseClicked(null);
                 hourglassImg.setFitWidth(150);
                 hourglassImg.setFitHeight(100);
@@ -3079,7 +3361,7 @@ public class GuiRoot implements View {
 
             }
             else{
-                hourglassImg.setImage((new Image(getClass().getResourceAsStream("/GUI/hourglass.png"))));
+                hourglassImg.setImage((new Image(getClass().getResourceAsStream("/GUI/buildingPhase/hourglass.png"))));
                 hourglassImg.setFitHeight(70);
                 hourglassImg.setPreserveRatio(true);
                 hourglassImg.setOnMouseClicked(e->inputQueue.add("Hourglass"));
@@ -3229,6 +3511,10 @@ public class GuiRoot implements View {
             Stage stage = new Stage();
             stage.setTitle("Token");
 
+            ImageView alert = new ImageView(new Image(getClass().getResourceAsStream("/GUI/alert.png")));
+            alert.setFitHeight(45);
+            alert.setPreserveRatio(true);
+
             Label txt1 = new Label("This is your token:\n");
             txt1.setStyle("-fx-font-size: 15px");
 
@@ -3238,8 +3524,7 @@ public class GuiRoot implements View {
             txt2.setStyle("-fx-background-color: transparent; -fx-border-width: 0;-fx-font-size: 19px");
             txt1.setAlignment(Pos.CENTER);
 
-//            Label txt2 = new Label(tokenEvent.getToken());
-//            txt2.setStyle("-fx-font-size: 19px");
+
             Label txt3 = new Label("\nRemember this, you will need it for reconnection!");
             txt3.setStyle("-fx-font-size: 15px");
             Button ok = new Button("Ok");
@@ -3247,10 +3532,10 @@ public class GuiRoot implements View {
                 stage.close();
             });
 
-            VBox txtBox = new VBox(3, txt1, txt2, txt3, ok);
+            VBox txtBox = new VBox(3,new HBox(10, alert, txt1), txt2, txt3, ok);
             txtBox.setAlignment(Pos.CENTER);
 
-            Scene scene = new Scene(txtBox, 350, 150);
+            Scene scene = new Scene(txtBox, 400, 200);
             stage.setScene(scene);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.show();
@@ -3506,7 +3791,7 @@ public class GuiRoot implements View {
             reconnecting = false;
 
             readyPlayers = new ListView<>();
-            readyPlayers.setMaxHeight(100);
+            readyPlayers.setMaxHeight(110);
             log = new ListView<>();
             prompt = new Label();
 
@@ -3533,7 +3818,6 @@ public class GuiRoot implements View {
             startButton.setOnAction(e -> {
                 inputQueue.add("Lobby");
                 playerClient.setPlayerState(new LobbyClient());
-                System.out.println("schiaccio bottone lobby");
             });
         });
     }
@@ -3642,19 +3926,19 @@ public class GuiRoot implements View {
 
             if(!playerRockets.containsKey(pl)){
                 if (id == 153) {
-                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-blue.png")));
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/shuttles/shuttle_blue.png")));
                     playerRockets.put(pl, img);
                 }
                 if (id == 154) {
-                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-green.png")));
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/shuttles/shuttle_green.png")));
                     playerRockets.put(pl, img);
                 }
                 if (id == 155) {
-                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-red.png")));
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/shuttles/shuttle_red.png")));
                     playerRockets.put(pl, img);
                 }
                 if (id == 156) {
-                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/addons/among-us-yellow.png")));
+                    img.setImage(new Image(getClass().getResourceAsStream("/GUI/Boards/shuttles/shuttle_yellow.png")));
                     playerRockets.put(pl, img);
                 }
             }
@@ -4077,7 +4361,7 @@ public class GuiRoot implements View {
             prompt.setText("Move your cargo as you like!");
 
             StackPane cargo = new StackPane();
-            ImageView slot = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargoBg.png")));
+            ImageView slot = new ImageView(new Image(getClass().getResourceAsStream("/GUI/cargo/cargoBg.png")));
             slot.setFitHeight(70);
             slot.setPreserveRatio(true);
 
@@ -4213,6 +4497,4 @@ public class GuiRoot implements View {
             primaryStage.show();
         });
     }
-
-
 }
