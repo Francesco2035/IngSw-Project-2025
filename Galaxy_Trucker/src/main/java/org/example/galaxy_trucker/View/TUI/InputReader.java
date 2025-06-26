@@ -296,15 +296,18 @@ public class InputReader implements Runnable {
     public synchronized void printServerMessage(String message) {
 
             Lreader.printAbove(message);
-
     }
 
 
 
     /**
-     * Renders the current screen content on the terminal. This method clears
-     * the terminal screen, formats the content, and redisplay the terminal
-     * state with updated*/
+     * Renders the screen content by clearing the terminal, applying background processing
+     * on the given content, and displaying it along with the current input line. This method
+     * ensures proper terminal rendering and resets certain terminal states for a clear display.
+     *
+     * @param content a StringBuilder containing the text content to be rendered on the screen.
+     *                This text may be modified based on the background processing logic.
+     */
     public synchronized void renderScreen(StringBuilder content) {
 
 
