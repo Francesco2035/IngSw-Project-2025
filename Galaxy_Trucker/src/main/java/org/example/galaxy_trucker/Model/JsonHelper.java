@@ -9,8 +9,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Utility class for handling JSON operations using Jackson library.
+ */
 public class JsonHelper {
 
+    /**
+     * A static and immutable instance of the ObjectMapper class from the Jackson library.
+     * This mapper is used for performing JSON serialization and deserialization throughout the utility class.
+     */
     private static final ObjectMapper mapper = new ObjectMapper();
 
 //    public static int readInt(JsonNode root, String fieldName) {
@@ -60,6 +67,13 @@ public class JsonHelper {
 //    }
 
 
+    /**
+     * Parses a JSON string and converts it into a JsonNode object.
+     *
+     * @param json the JSON string to be parsed
+     * @return a JsonNode representing the parsed JSON structure
+     * @throws IllegalArgumentException if the input string is invalid JSON or cannot be parsed
+     */
     public static JsonNode parseJson(String json) {
         try {
             return mapper.readTree(json);
@@ -68,6 +82,15 @@ public class JsonHelper {
         }
     }
 
+    /**
+     * Retrieves the text value of a specified field from a given JSON node.
+     * If the field is absent or does not contain a valid text value, an exception is thrown.
+     *
+     * @param root      the root JSON node from which the field is to be retrieved
+     * @param fieldName the name of the field whose text value is to be retrieved
+     * @return the text value of the specified field
+     * @throws IllegalArgumentException if the specified field is missing or does not contain a valid text value
+     */
     public static String getRequiredText(JsonNode root, String fieldName) {
         if (root.has(fieldName)) {
             return root.get(fieldName).asText();
