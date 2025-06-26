@@ -24,27 +24,6 @@ import static java.util.Collections.max;
  * such interactions.
  */
 public class HandleTheft extends PlayerState {
-//    @Override
-//    public Command PlayerAction(String json, Player player) {
-//
-//        JsonNode root = JsonHelper.parseJson(json);
-//
-//        String title = JsonHelper.getRequiredText(root, "title");
-//        switch (title) {
-//            case "GetFromStorage": {
-//                int position = JsonHelper.readInt(root, "position");
-//                int x = JsonHelper.readInt(root, "x");
-//                int y = JsonHelper.readInt(root, "y");
-//                return new Theft(position, new IntegerPair(x, y), player);
-//            }
-//            default:{
-//                throw new InvalidInput("Title is missing in the JSON input or invalid Command");
-//            }
-//        }
-//    }
-
-
-
 
 
     /**

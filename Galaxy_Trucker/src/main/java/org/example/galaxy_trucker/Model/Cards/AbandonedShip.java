@@ -20,79 +20,64 @@ import java.util.ArrayList;
 
 
 /**
- * Represents an Abandoned Ship card in the Galaxy Trucker game.
- *
- * <p>This card presents players with the opportunity to board an abandoned ship
- * in exchange for sacrificing crew members. Players must have sufficient crew
- * to meet the requirement and choose which crew members to sacrifice.</p>
- *
- * <p>The card follows a turn-based approach where players are checked in order
- * to see if they meet the crew requirement. The first player who meets the
- * requirement can choose to accept or decline the opportunity.</p>
- *
- * <p>Card mechanics:
- * <ul>
- * <li>Players need a minimum number of crew members (including aliens) to qualify</li>
- * <li>If accepted, the player must sacrifice the required number of crew members</li>
- * <li>In return, the player receives credits and moves backward in time</li>
- * <li>Players with no remaining crew are eliminated from the race</li>
- * </ul></p>
- *
- * <p>Note: In case of disconnection, the player automatically refuses the offer.</p>
- *
- * @author Pietro
- * @version 1.0
- * @since 1.0
+ * The AbandonedShip class is a type of Card that implements specific effects
+ * within a game. It extends the basic functionality provided by the Card class.
+ * This card requires players to meet certain conditions in order to succeed,
+ * and failure to do so can result in penalties.
  */
-
 public class AbandonedShip extends Card{
     /**
-     * The minimum number of crew members required to board the abandoned ship.
-     * This includes both human crew and alien crew members.
+     * Represents the minimum human crew requirement for interaction with the abandoned ship card.
+     * This value indicates the number of humans necessary to proceed with specific actions
+     * or events related to the abandoned ship card.
      */
     private int requirement;
-
     /**
-     * The credit reward given to the player who successfully boards the ship.
-     * This compensation is provided after sacrificing the required crew.
+     * Represents the reward points awarded to the player for successfully completing
+     * the encounter or task associated with the card. The value of this variable
+     * is set when the card is initialized and can be modified during the game.
+     * It typically reflects the motivation for players to attempt or complete
+     * the actions required by the card.
      */
     private int reward;
-
     /**
-     * The player currently being evaluated or interacting with the card.
-     * This tracks which player is making the decision to accept or decline.
+     * Represents the player who is currently interacting or taking actions with
+     * respect to the AbandonedShip card. This variable tracks the active player
+     * in the context of the card's effects and gameplay logic.
      */
     private Player currentPlayer;
-
     /**
-     * Flag indicating whether a player has been found who meets the requirements.
-     * Set to true when a qualified player is found, stopping further searches.
+     * Indicates the state of the abandoned ship, often used to track specific
+     * conditions or transitions related to this card's gameplay mechanics.
+     * This variable can represent whether a particular event has occurred
+     * or a specific flag is set within the state of the card.
      */
     private boolean flag;
-
     /**
-     * The current order/index in the player list being evaluated.
-     * Used to iterate through players in turn order.
+     * Represents the order in which the card effects are executed or processed.
+     * This variable may be used to sequence or prioritize specific actions or events
+     * within the context of the game logic.
      */
     private int order;
-
     /**
-     * The total number of human crew members the current player has.
-     * Used for tracking crew count before the sacrifice decision.
+     * Represents the total number of human crew members on the abandoned ship.
+     * This variable tracks the current amount of humans available in the ship,
+     * which may be influenced by different card effects or game mechanics.
      */
     private int totHumans;
-
     /**
-     * List of players who will be eliminated due to having no crew left.
-     * Populated when players sacrifice their last crew members.
+     * A list of players who failed to meet the requirements or objectives
+     * associated with the current card effect or scenario.
+     *
+     * This field is used to keep track of the players who are considered
+     * losers in the context of the game logic defined by the AbandonedShip class.
      */
     private ArrayList<Player> losers;
 
-
     /**
-     * Sends type-specific log information to all players.
-     * Notifies all players that an Abandoned Ship card has been encountered.
-     */
+     * Sends a "Type Log" event to all players currently in the game.
+     * This method retrieves the list of players from the game board and iterates over them,
+     * sending a randomized "Abandoned Ship"*/
     @Override
     public void sendTypeLog(){
         this.getBoard().getPlayers();
@@ -101,15 +86,12 @@ public class AbandonedShip extends Card{
         }
     }
 
+
     /**
-     * Constructs a new AbandonedShip card with specified parameters.
+     * Constructs an AbandonedShip card with specified requirements, rewards, level, time, and game board.
      *
-     * @param requirement the minimum number of crew members needed to qualify
-     * @param reward the credit reward for boarding the ship
-     * @param level the difficulty level of the card
-     * @param time the time cost associated with this card
-     * @param board the game board this card is associated with
-     */
+     * @param requirement the requirement needed to complete the abandoned ship scenario
+     * @param reward the reward given upon completing*/
     public AbandonedShip(int requirement, int reward, int level, int time, GameBoard board) {
         super(level, time, board);
         this.requirement = requirement;
@@ -120,16 +102,18 @@ public class AbandonedShip extends Card{
         totHumans=0;
     }
 
-
     /**
-     * Executes the main effect of the Abandoned Ship card.
+     * Executes the effect of the "Abandoned Ship" card. This method is responsible for:
      *
-     * <p>Sets the default punishment to the crew requirement, initializes the losers list,
-     * puts all players in waiting state, and begins the evaluation process after a delay.</p>
+     * 1. Setting the default punishment value for the card using the {@code setDefaultPunishment} method,
+     *    initialized with the card's requirement value.
+     * 2. Initializing a list to track players who fail to meet the card's conditions.
+     * 3. Transitioning all players in the game to the "Waiting" state.
+     * 4. Introducing a pause in execution for a specified duration using {@code Thread.sleep}.
+     * 5. Updating the game states after the delay by invoking {@code updateStates}.
      *
-     * @throws InterruptedException if the thread is interrupted during the sleep period
+     * @throws InterruptedException if the thread's sleep is interrupted during execution.
      */
-
     @Override
     public void CardEffect() throws InterruptedException {
         this.setDefaultPunishment(this.requirement);
@@ -143,13 +127,21 @@ public class AbandonedShip extends Card{
         this.updateStates();
     }
     /**
-     * Updates player states and evaluates players in turn order.
+     * Updates the state of the game based on the current state of the "Abandoned Ship" card.
      *
-     * <p>Iterates through players to find the first one who meets the crew requirement.
-     * The requirement includes human crew plus brown and purple aliens if present.
-     * When a qualified player is found, they are put in Accepting state.</p>
+     * This method iterates over the list of players in the game to determine the next steps
+     * for the card's progression. It performs the following operations:
      *
-     * <p>If no qualified player is found, the card finishes automatically.</p>
+     * 1. Retrieves the game board and the list of players currently in the game.
+     * 2. Iterates through the players based on the card's internal order, stopping
+     *    either when the order exceeds the player list size or a specific condition is met.
+     * 3. Changes the state of the current player to "Waiting" and moves to the next player.
+     * 4. Retrieves the current player's board status, checks the number of humans present,
+     *    and determines if the player satisfies the requirement for passing the "Abandoned Ship" card.
+     * 5. If a player meets or exceeds the required number of humans, sets the player's state to "Accepting"
+     *    and assigns the card to the player, marking the card as accepted.
+     * 6. If all players have been processed without triggering the acceptance condition,
+     *    marks the card as finished by calling the {@code finishCard} method.
      */
     @Override
     public void updateStates(){
@@ -185,6 +177,14 @@ public class AbandonedShip extends Card{
         }
 
     }
+
+    /**
+     * Handles the continuation of the "Abandoned Ship" card based on whether the card has been accepted or not.
+     * If accepted, applies a random effect to all players and transitions the current player to the "Killing" state.
+     * If not accepted, transitions the current player to the "Waiting" state and updates the states of the game.
+     *
+     * @param accepted a boolean value indicating whether the card has been accepted (true) or refused (false).
+     */
     @Override
     public void continueCard(boolean accepted) {
 
@@ -192,11 +192,13 @@ public class AbandonedShip extends Card{
         if(accepted){
 
             ArrayList<Player> PlayerList = this.getBoard().getPlayers();
-            for(Player p : PlayerList){
-                if(p.GetID()== currentPlayer.GetID()){
-                    this.sendRandomEffect(p.GetID(),new LogEvent("You have accepted to board the ship",-1,-1,-1,-1));
+            for(Player p : PlayerList) {
+                if (p.GetID() == currentPlayer.GetID()) {
+                    this.sendRandomEffect(p.GetID(), new LogEvent("You have accepted to board the ship", -1, -1, -1, -1));
                 }
-                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" has accepted to board the ship",-1,-1,-1,-1));
+                else{
+                     this.sendRandomEffect(p.GetID(), new LogEvent(currentPlayer.GetID() + " has accepted to board the ship", -1, -1, -1, -1));
+                }
             }
             System.out.println(currentPlayer.GetID()+" has accepted");
             this.currentPlayer.setState(new Killing());
@@ -208,13 +210,15 @@ public class AbandonedShip extends Card{
             this.updateStates();
         }
     }
-//    @Override
-//    public  void  ActivateCard() {
-//
-//        System.out.println("ActivateCard");
-//        currentPlayer.getInputHandler().action();
-//    }
 
+    /**
+     * Marks the current "AbandonedShip" card as finished by performing the following steps:
+     *
+     * 1. Prints a message indicating the card is finished.
+     * 2. Invokes the {@code checkLosers()} method to determine and handle any players
+     *    who lost based on the game's criteria.
+     * 3. Sets the card's finished state to true by calling {@code setFinished(true)}.
+     */
     @Override
     public void finishCard() {
         System.out.println("card finished");
@@ -224,6 +228,18 @@ public class AbandonedShip extends Card{
 
     }
 
+    /**
+     * Executes the logic to "kill" humans located at specified coordinates on the player's board.
+     * This method validates the input, applies the action, and updates the game state accordingly.
+     * If the number of coordinates provided does not match the required number or
+     * an error occurs during the operation, an exception will be thrown.
+     *
+     * @param coordinates the list of {@code IntegerPair} objects representing the positions
+     *                    of the humans to be "killed" on the player's board.
+     *                    Each {@code IntegerPair} contains the row and column indices of a target tile.
+     * @throws WrongNumofHumansException if the number of coordinates supplied is incorrect.
+     * @throws ImpossibleBoardChangeException if an error occurs while attempting to modify the board state.
+     */
     @Override
     public void killHumans (ArrayList<IntegerPair> coordinates) {
         if(coordinates!=null) {
@@ -268,20 +284,55 @@ public class AbandonedShip extends Card{
 //        }
     }
 
+    /**
+     * Retrieves the total number of humans currently present on the abandoned ship.
+     *
+     * @return the total number of humans as an integer
+     */
     public int getTotHumans() {
         return totHumans;
     }
 
+    /**
+     * Retrieves the current player associated with the game or card context.
+     *
+     * @return the current player object.
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+
     /**
-     * Empty constructor required for JSON serialization.
+     * Default constructor for the AbandonedShip class.
+     * This constructor initializes an instance of the AbandonedShip card
+     * without specifying any initial parameters.
+     * It serves as a no-arguments constructor that can be used to instantiate
+     * the object with default values.
      */
     public AbandonedShip() {}
+    /**
+     * Retrieves the requirement value associated with the AbandonedShip card.
+     *
+     * @return the requirement needed to complete the abandoned ship scenario
+     */
     public int getRequirement() {return requirement;}
+    /**
+     * Sets the requirement value for the AbandonedShip scenario.
+     *
+     * @param requirement the integer value representing the requirement to complete the scenario
+     */
     public void setRequirement(int requirement) {this.requirement = requirement;}
+    /**
+     * Retrieves the reward associated with the AbandonedShip card.
+     *
+     * @return the reward value as an integer
+     */
     public int getReward() {return reward;}
+    /**
+     * Sets the reward value for the AbandonedShip card.
+     *
+     * @param reward the reward value to be assigned
+     */
     public void setReward(int reward) {this.reward = reward;}
 }

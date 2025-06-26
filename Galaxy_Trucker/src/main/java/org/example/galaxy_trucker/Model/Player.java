@@ -125,6 +125,12 @@ public class Player implements Serializable {
      * scoreboard, notifying players, or handling game completion workflows.
      */
     private FinishListener finishListener;
+
+    /**
+     * A flag indicating whether the debug call has been made in the current execution context.
+     * This variable is primarily used to track if a debug operation has occurred,
+     * helping to ensure that certain debug-related functionality is executed only once.
+     */
     private boolean debugCalled = false;
 
     /**
@@ -323,13 +329,17 @@ public class Player implements Serializable {
 
 
     /**
-     * Picks a new tile either randomly or at a specified index, updating the current tile.
-     * Throws an exception if there is already an active tile.
+     * Picks a new tile based on the provided index. If no tile is currently picked,
+     * either a new random tile or a tile at the specified index is retrieved
+     * depending on the input value.
      *
-     * @param index The index of the tile to pick. If the value is -1, a random tile is picked.
-     *              If the value is greater than or equal to 0, a tile at the specified index is picked.
-     *              Any other value is considered invalid.
-     * @throws IllegalStateException If there is already an active tile when attempting to pick a new one.
+     * @param index the index of the tile to be picked. If index is -1,
+     *              a random tile is picked. If the index is a non-negative
+     *              number, a tile at the specified index is picked.
+     *              If the index is invalid, an exception is thrown.
+     * @throws IllegalStateException if a tile is already picked and
+     *                               the method is called again.
+     * @throws InvalidInput          if the index is other than -1 or non-negative.
      */
     public void PickNewTile(int index)  {
         if (index == -1){
@@ -660,10 +670,20 @@ public class Player implements Serializable {
         this.finishListener = null;
     }
 
+    /**
+     * Checks whether debug mode has been called.
+     *
+     * @return true if debug mode was invoked, false otherwise.
+     */
     public boolean isDebugCalled() {
         return debugCalled;
     }
 
+    /**
+     * Sets the debugCalled flag to the specified value.
+     *
+     * @param debugCalled the value to set for the debugCalled flag
+     */
     public void setDebugCalled(boolean debugCalled) {
         this.debugCalled = debugCalled;
     }

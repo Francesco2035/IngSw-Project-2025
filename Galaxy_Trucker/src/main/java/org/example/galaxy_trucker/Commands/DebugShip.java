@@ -93,11 +93,14 @@ public class DebugShip extends Command implements Serializable {
 
 
     /**
-     * Executes the DebugShip command for the specified player. This method modifies the player's
-     * game state by manipulating their player board, making tile placements based on predefined configurations.
+     * Executes the specified action for the given player during the building phase of the game.
+     * This method customizes the player's board based on predefined configurations or setups,
+     * while ensuring the player adheres to the rules of this phase.
      *
-     * @param player the Player instance whose game state is to be modified through this command execution
-     * @throws IOException if an input or output operation fails during execution
+     * @param player The player whose game actions are being executed.
+     * @throws IOException If an input or output operation fails or is interrupted.
+     * @throws InvalidInput If the player's action violates predefined conditions, such as being
+     *                      in the wrong game level or attempting to debug more than once.
      */
     @Override
     public void execute(Player player) throws IOException {
@@ -130,7 +133,7 @@ public class DebugShip extends Command implements Serializable {
 
 
 
-        switch (number){  /// fai id-1
+        switch (number){
             case 0:{
                 Tile tile = tiles.get(37); ///mod housing uinit
                 debugShip.insertTile(tile,6,5,false);

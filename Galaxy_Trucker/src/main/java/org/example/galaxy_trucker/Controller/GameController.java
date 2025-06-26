@@ -579,7 +579,7 @@ public class GameController implements ConcurrentCardListener, ReadyListener, Fi
      * The method utilizes threads to manage the flight phase, ensuring asynchronous handling of game flow.
      * It logs key events, such as the start and end of the flight, and interactions during card effects.
      */
-    public void startFlightMode() {  ///  per aggiornare il
+    public void startFlightMode() {
 
 //client si riconnete ma non può inviare input fino a che non si ricambia il controller
         if (firtflight) {

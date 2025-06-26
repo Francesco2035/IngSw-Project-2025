@@ -103,12 +103,15 @@ public class AddCrewCommand extends Command implements Serializable {
     }
 
     /**
-     * Executes the AddCrewCommand for the specified player, applying the action to the player's game board.
-     * This method creates an AddCrewAction based on the provided parameters (number of humans,
-     * alien types, and coordinate) and performs the action on the associated tile of the player's board.
+     * Executes the AddCrewCommand for the given player. This method ensures
+     * that the command is valid in the current game state and performs the
+     * necessary actions to add the specified crew members to the designated
+     * tile on the player's game board.
      *
-     * @param player the player for whom the command is being executed. This includes the player's game board
-     *               and state, which are used to perform the action.
+     * @param player the player executing the command. The method operates on
+     *               this player's board and game state to carry out the action.
+     *               It throws an exception if the command violates game rules
+     *               or cannot be performed due to the current game state.
      */
     @Override
     public void execute(Player player) {

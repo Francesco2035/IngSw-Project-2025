@@ -62,13 +62,14 @@ public interface Connectors extends Serializable {
 
 
     /**
-     * Determines whether this connector is exposed.
+     * Checks whether this connector is exposed.
      *
-     * The "exposed" status indicates whether the connector is in a state
-     * that allows it to interact with external elements or configurations.
-     * The exact behavior depends on the specific implementation of the connector type.
+     * This method provides a boolean value indicating the exposure status
+     * of the connector. The specific implementation may determine the
+     * conditions under which a connector is considered exposed.
      *
-     * @*/
+     * @return true if the connector is exposed, false otherwise.
+     */
     @JsonIgnore
     boolean isExposed();
 
