@@ -16,20 +16,26 @@ public class KillingClient extends PlayerStateClient{
 
     /**
      * Default constructor for the KillingClient class.
-     * Initializes an instance of the KillingClient state, which represents a game state
-     * where the player is engaged in actions related to "killing". This state is responsible
-     * for*/
+     *
+     * This constructor initializes an instance of the KillingClient state,
+     * representing the game state where the player performs actions related to "killing."
+     * It provides specific logic for rendering the game state and retrieving relevant commands
+     * during the "killing" phase.
+     */
     public KillingClient() {
 
     }
 
     /**
-     * Displays the current state of the game by rendering various elements such as
-     * the title card, player details, the game board, card information, and additional
-     * game-specific messages. This method is invoked to update the game's visual
-     * representation for the user.
+     * Displays the current game state related to the "killing" phase.
+     * This method assembles various game components such as the title card, player details,
+     * game board, cards, and additional player or board information. Once all components
+     * are gathered, the complete formatted game state is rendered using the provided output.
      *
-     * @param out the {@code*/
+     * @param out the output interface used to generate and display the game state.
+     *            It provides methods to retrieve the necessary game components
+     *            and renders the final assembled game state.
+     */
     @Override
     public void showGame(Out out) {
         StringBuilder toPrint = new StringBuilder();
@@ -56,10 +62,12 @@ public class KillingClient extends PlayerStateClient{
 
 
     /**
-     * Displays the "killing" phase of the game using the provided graphical user interface (GUI) output.
-     * This method is specific to the "killing" state and updates the game GUI to allow the user to
-     * select crew members for elimination. The method invokes the killing logic of the current
-     * GUI root to set up the appropriate prompts,*/
+     * Displays the current game state related to the "killing" phase using a graphical user interface.
+     * This method invokes the graphical rendering specific to the "killing" phase through the root GUI element.
+     *
+     * @param out the graphical output interface used to render the game state. It provides
+     *            methods and access to GUI elements required for displaying the current state.
+     */
     public void showGame(GuiOut out){
         out.getRoot().killing();
     }
