@@ -2,7 +2,6 @@ package org.example.galaxy_trucker.Commands;
 
 import com.fasterxml.jackson.annotation.*;
 import org.example.galaxy_trucker.ClientServer.RMI.ClientInterface;
-import org.example.galaxy_trucker.Model.Cards.CardEffect.DefendFromSmall;
 import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 
