@@ -460,7 +460,9 @@ public class Warzone extends Card{
                 if(p.GetID()== currentPlayer.GetID()){
                     this.sendRandomEffect(p.GetID(),new LogEvent("You are now the worst with "+this.Minimum+" plasma drill power",-1,-1,-1,-1));
                 }
-                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" is now the worst with "+this.Minimum+" plasma drill power",-1,-1,-1,-1));
+                else {
+                    this.sendRandomEffect(p.GetID(), new LogEvent(currentPlayer.GetID() + " is now the worst with " + this.Minimum + " plasma drill power", -1, -1, -1, -1));
+                }
             }
 
         }
@@ -480,7 +482,9 @@ public class Warzone extends Card{
                 if(p.GetID()== currentPlayer.GetID()){
                     this.sendRandomEffect(p.GetID(),new LogEvent("You are now the worst with "+this.Minimum+" engine power",-1,-1,-1,-1));
                 }
-                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" is now the worst with "+this.Minimum+" engine power",-1,-1,-1,-1));
+                else {
+                    this.sendRandomEffect(p.GetID(), new LogEvent(currentPlayer.GetID() + " is now the worst with " + this.Minimum + " engine power", -1, -1, -1, -1));
+                }
             }
 
         }
@@ -528,7 +532,9 @@ public class Warzone extends Card{
             if(p.GetID()== Worst.GetID()){
                 this.sendRandomEffect(p.GetID(),new LogEvent("You were the worst with "+this.Minimum+" people",-1,-1,-1,-1));
             }
-            this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" was the worst with "+this.Minimum+" people",-1,-1,-1,-1));
+            else {
+                this.sendRandomEffect(p.GetID(), new LogEvent(currentPlayer.GetID() + " was the worst with " + this.Minimum + " people", -1, -1, -1, -1));
+            }
         }
 
         this.PlayerOrder=PlayerList.size();
