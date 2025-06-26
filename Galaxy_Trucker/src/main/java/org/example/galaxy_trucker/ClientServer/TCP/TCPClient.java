@@ -393,13 +393,13 @@ public class TCPClient{
 
     /**
      * Disconnects the client from the current session or server.
-     * <ul>
      * This method performs the following tasks:
-     * - Ensures that the connection status is reset.
-     * - Attempts to close the active socket safely.
-     * - Interrupts and terminates any active threads associated with event handling or pinging mechanisms.
-     * - Disconnects and reconnects the client's view to refresh its state.
-     * - Prompts the user to either reconnect to the server or exit the application.
+     * <ul>
+     * <li>Ensures that the connection status is reset.</li>
+     * <li>Attempts to close the active socket safely.</li>
+     * <li>Interrupts and terminates any active threads associated with event handling or pinging mechanisms.</li>
+     * <li>Disconnects and reconnects the client's view to refresh its state.</li>
+     * <li>Prompts the user to either reconnect to the server or exit the application.</li>
      * </ul>
      *
      * This process is critical for the proper cleanup of resources, preventing resource leaks
@@ -487,16 +487,12 @@ public class TCPClient{
      * - "end": Terminates the client loop.
      * - "ChangeConnection": Provides feedback regarding connection changes.
      * - Commands that are interpreted and sent to the server via a command interpreter.
-     *
      * Error handling mechanisms ensure the robustness of user interactions, and
      * invalid inputs or improperly handled scenarios are managed gracefully.
      * The method terminates when disconnection occurs, an input is invalid, or the
      * "end" command is invoked.
-     *
      * Implementation details include the use of an {@code ObjectMapper} for JSON serialization
      * and parsing, client-side state checks, and command interpretation.
-     *
-     * @throws IOException if communication-related exceptions occur during the interaction loop.
      */
     public void clientLoop() {
         String userInput = "";

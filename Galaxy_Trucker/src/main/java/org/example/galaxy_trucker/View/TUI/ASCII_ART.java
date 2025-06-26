@@ -467,8 +467,8 @@ public class ASCII_ART {
                     "                                                                            "};
 
     /**
-     *
-     */
+     * A static string array representing ASCII art depictions that highlight
+     * the visual construction*/
     public static String[] crew  =
                     {
                     "                      " ,
@@ -481,11 +481,9 @@ public class ASCII_ART {
     /**
      * Represents an ASCII art representation of the engine power in the form of a string array.
      * Each element of the array corresponds to a line of ASCII art representing the power level.
-     *
      * The string array includes:
      * - Padding or empty lines for spacing.
      * - ASCII art formatted text visually representing "engine power" and its symbolic styling.
-     *
      * The contents are structured and stylized to visually convey the intended theme when displayed.
      */
     public static String[] enginePower =
@@ -526,11 +524,9 @@ public class ASCII_ART {
 
     /**
      * A static String array that represents an ASCII art component.
-     *
      * The "equals" field contains a predefined set of strings for constructing a visual
      * representation, possibly used for graphical output or display in text-based
      * interfaces.
-     *
      * Each element of the array corresponds to a line of the ASCII art. This particular
      * array's content is structured with spaces and symbols to represent a specific pattern.
      */
@@ -546,10 +542,8 @@ public class ASCII_ART {
     /**
      * Represents a predefined ASCII art design stored as a string array.
      * Each string in the array corresponds to a line in the ASCII art.
-     *
      * This particular design is structured to create a visual representation using characters.
      * It includes blank spaces and symbols to form an abstract shape or symbol.
-     *
      * Note: The elements of this array are immutable and are used as a static resource
      * in the enclosing class for rendering or further composition in ASCII art.
      */
