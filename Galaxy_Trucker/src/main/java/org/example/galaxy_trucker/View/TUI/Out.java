@@ -549,7 +549,8 @@ public class Out {
      * @param i the identifier of the tile set to update or clear.
      *          When the cache parameter is null, this identifier is
      *          used to remove the tile set cache.
-     * @param cache*/
+     * @param cache formatted String[]
+     **/
     public void setUncoverdTileSetCache(int i, String[] cache) {
         if (cache != null) {
             uncoverdTileSetCache.put((Integer)i, cache);
@@ -574,7 +575,8 @@ public class Out {
      *
      * @param x    the x-coordinate on the game board where the cell is to be updated.
      * @param y    the y-coordinate on the game board where the cell is to be updated.
-     * @*/
+     * @param cell the formatted String[]
+     **/
     public void setGameboard(int x, int y, String[] cell) {
         Gameboard[x][y] = cell;
     }
@@ -582,9 +584,11 @@ public class Out {
     /**
      * Updates or initializes the gameboard at the specified coordinates and layer with a given value.
      *
-     * @param x    the x-coordinate of the cell on the gameboard.
-     * @param y    the y-coordinate of the cell on the gameboard.
-     * @param k    the*/
+     * @param x    the x-coordinate of the cell on the game board.
+     * @param y    the y-coordinate of the cell on the game board.
+     * @param k    the kth position in the cell
+     * @param cell the formatted string
+     * */
     public void setGameboard(int x, int y, int k, String cell) {
         Gameboard[x][y][k] = cell;
     }
@@ -620,25 +624,6 @@ public class Out {
         CoveredTileSet = coveredTileSet;
     }
 
-//    public void setInputReader(InputReader inputReader) {
-//        this.inputReader = inputReader;
-//    }
-//
-//    public void setInputThread(Thread inputThread) {
-//        this.inputThread = inputThread;
-//    }
-//
-//    public void setConnected(Boolean connected) {
-//        this.connected = connected;
-//    }
-//
-//    public void setPositionToGameboard(int i, IntegerPair pair) {
-//        positionToGameboard.put(i, pair);
-//    }
-//
-//    public void setPlayerToPosition(HashMap<String, Integer> playerToPosition) {
-//        PlayerToPosition = playerToPosition;
-//    }
 
     public void setConnected(Boolean connected) {
         this.connected = connected;
