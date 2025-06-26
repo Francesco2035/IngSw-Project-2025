@@ -13,7 +13,6 @@ import org.example.galaxy_trucker.View.View;
 import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Connectors.Connectors;
 import org.example.galaxy_trucker.Model.Goods.Goods;
-import org.example.galaxy_trucker.View.ViewPhase;
 
 
 import java.io.*;
@@ -172,18 +171,6 @@ public class TUI implements View {
      */
     private int setup = 102;
 
-    /**
-     * A private variable representing a lobby, which is a mapping between a unique string key
-     * and an array of strings. This can be used to store and manage collections of data
-     * associated with specific identifiers within the lobby context.
-     */
-    private HashMap<String, String[]> lobby = new HashMap<>();
-    /**
-     * Represents the current phase of the view in its lifecycle or state.
-     * This variable is used to track or control the specific stage the view is in,
-     * such as initialization, rendering, or finalization.
-     */
-    private ViewPhase phase;
     /**
      * Represents an instance of the Out class, used to handle or process output-related operations.
      * The specific behavior and purpose of this variable depend on the implementation details of the Out class.

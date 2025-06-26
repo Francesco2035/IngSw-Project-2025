@@ -2,7 +2,6 @@ package org.example.galaxy_trucker.View.TUI;
 
 import org.example.galaxy_trucker.Model.IntegerPair;
 import org.example.galaxy_trucker.View.ClientModel.PlayerClient;
-import org.example.galaxy_trucker.View.ViewPhase;
 import org.jline.jansi.Ansi;
 
 import java.util.ArrayList;
@@ -289,12 +288,7 @@ public class Out {
      * and the values are arrays of Strings containing associated data.
      */
     private HashMap<String, String[]> lobby = new HashMap<>();
-    /**
-     * Represents the current phase of the view in the application's lifecycle.
-     * This variable is used to track and manage the specific state or stage
-     * the view is currently in, such as initialization, rendering, or cleanup.
-     */
-    private ViewPhase phase;
+
     /**
      * A {@code StringBuilder} instance representing the scoreboard data.
      * This variable is used to store and modify the content of the scoreboard dynamically.
@@ -647,15 +641,6 @@ public class Out {
         }
     }
 
-
-    /**
-     * Sets the current phase of the view.
-     *
-     * @param phase the current phase to be set, represented as a {@code ViewPhase} enum.
-     */
-    public void setPhase(ViewPhase phase) {
-        this.phase = phase;
-    }
 
 
     /**
