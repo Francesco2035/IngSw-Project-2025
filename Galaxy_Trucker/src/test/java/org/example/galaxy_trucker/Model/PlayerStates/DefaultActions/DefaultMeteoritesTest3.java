@@ -18,6 +18,9 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the default actions during Meteorites
+ */
 public class DefaultMeteoritesTest3 {
 
 
@@ -41,6 +44,12 @@ public class DefaultMeteoritesTest3 {
     // static CardsController c1 = new CardsController(p1,game.getGameID(),false);
     //static CardsController c2= new CardsController(p2,game.getGameID(),false);;
 
+    /**
+     * test to see if the default actions a disconnected player would take work
+     * it runs multiple times for better coverage of the random dice throws
+     * @throws IOException
+     * @throws InterruptedException
+     */
 
     @RepeatedTest(25)
     public void DefaultMeteorites() throws IOException, InterruptedException {

@@ -17,6 +17,10 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * test the construction of a playerboards
+ */
+
 public class ConstructionTest {
 
 
@@ -69,6 +73,10 @@ public class ConstructionTest {
 // CardsController c2= new CardsController(p2,game.getGameID(),false);
 
     }
+
+    /**
+     * tests the picking of tiles from the buffer, and the covered and uncovered tiles
+     */
 
     @Test
     public void pickingTilesTest() {

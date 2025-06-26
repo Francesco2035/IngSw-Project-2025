@@ -19,8 +19,15 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CardTest {
+/**
+ * tests a basic card
+ */
 
+class CardTest {
+    /**
+     * tests to see if a card is correctly created and it stes the correct listeners to the view
+     * @throws IOException
+     */
     @Test
     void testCard() throws IOException {
 

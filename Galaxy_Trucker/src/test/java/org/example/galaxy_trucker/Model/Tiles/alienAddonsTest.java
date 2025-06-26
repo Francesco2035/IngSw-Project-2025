@@ -10,8 +10,14 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test alen addons
+ */
 class alienAddonsTest {
-
+    /**
+     * test the getability method
+     * @throws IOException
+     */
     @Test
     void getAbility() throws IOException {
 
@@ -31,6 +37,10 @@ class alienAddonsTest {
 
     }
 
+    /**
+     * test the initType method
+     * @throws IOException
+     */
     @Test
     void initType() throws IOException {
 

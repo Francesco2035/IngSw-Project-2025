@@ -6,8 +6,14 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the class game
+ */
 class GameTest {
-
+    /**
+     * tests the creation if a gem from the model
+     * @throws IOException
+     */
     @Test
     void gameTest() throws IOException {
 

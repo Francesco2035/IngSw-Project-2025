@@ -18,9 +18,16 @@ import java.io.PrintWriter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test the playerBoard again for betetr coverge
+ */
 class GameBoardTest2 {
 
 
+    /**
+     * tests another board creation
+     * @throws IOException
+     */
     @Test
     public void positioning() throws IOException {
 

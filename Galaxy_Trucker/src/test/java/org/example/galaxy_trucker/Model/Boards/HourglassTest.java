@@ -20,7 +20,15 @@ import java.io.IOException;
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the hourglass
+ */
 class HourglassTest {
+    /**
+     * tests the correct updatig of the player boards when the hourglass runs out
+     * @throws IOException
+     * @throws InterruptedException
+     */
 
     @Test
     void testHourGlass() throws IOException, InterruptedException {

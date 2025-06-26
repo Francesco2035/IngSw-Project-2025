@@ -28,8 +28,15 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test the VirtualView
+ */
 class VirtualViewTest {
 
+    /**
+     * test the correct updating of the virtual view including correctly handling events if you are connected or disconnected
+     * @throws IOException
+     */
 
     @Test
     void vvTest() throws IOException {

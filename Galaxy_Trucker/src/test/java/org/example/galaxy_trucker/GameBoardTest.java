@@ -10,8 +10,14 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test some gameboard methods
+ */
 class GameBoardTest {
-
+    /**
+     * tests the add player method
+      * @throws IOException
+     */
     @Test
     void addPlayer() throws IOException {
         GAGen gag = new GAGen();
@@ -27,6 +33,10 @@ class GameBoardTest {
         }
     }
 
+    /**
+     * tests the set starting positions method
+     * @throws IOException
+     */
     @Test
     void setStartingPositions() throws IOException {
         GAGen gag = new GAGen();
@@ -53,6 +63,10 @@ class GameBoardTest {
 
     }
 
+    /**
+     * tests the moveplayer method
+     * @throws IOException
+     */
     @Test
     void movePlayer() throws IOException {
         GAGen gag = new GAGen();
@@ -97,6 +111,10 @@ class GameBoardTest {
 
     }
 
+    /**
+     * tests other edge cases of the move player method
+     * @throws IOException
+     */
     @Test
     void movePlayerTest2() throws IOException {
         GAGen gag = new GAGen();
@@ -136,8 +154,11 @@ class GameBoardTest {
     }
 
 
-
-
+    /**
+     * tests if it prperly removes a player in case there is an invalid board after the prep phase
+     * and if it correctly shifts foward the other players on the board
+     * @throws IOException
+     */
     @Test
     void RemoveAndShiftTest() throws IOException {
 

@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+/**
+ * tests the playerboard
+ */
 public class PlayerBoardTest {
     static PlayerBoard playerBoard = new PlayerBoard(2);
     static PlayerBoard playerBoard2 = new PlayerBoard(2);
@@ -36,6 +39,9 @@ public class PlayerBoardTest {
 
     @Test
 
+    /**
+     * tests to see if the check validity can see if a player board is valid or not
+     */
     @DisplayName("test validity")
     @Order(1)
     public void testValidity(){
@@ -92,7 +98,9 @@ public class PlayerBoardTest {
 
     }
 
-
+    /**
+     * tests the actions of the componets
+     */
     @Test
     @DisplayName("test ComponentActions")
     @Order(2)
@@ -159,6 +167,10 @@ public class PlayerBoardTest {
 
 
     }
+
+    /**
+     * test if a clone method correctly copies the gameboard
+     */
 
     @Test
     @DisplayName("Test cloning")

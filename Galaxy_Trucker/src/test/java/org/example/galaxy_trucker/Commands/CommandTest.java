@@ -7,7 +7,16 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+
+/**
+ *Tests the correct serializaton of the Commands
+ */
+
 class CommandTest {
+
+    /**
+     * Test the jackson serializatof of each command type
+     */
 
     @Test
     public void Jackson(){

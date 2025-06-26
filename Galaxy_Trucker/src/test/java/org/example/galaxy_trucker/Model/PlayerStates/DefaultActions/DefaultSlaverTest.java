@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * tests the default actions during slavers
+ */
 public class DefaultSlaverTest {
 
 
@@ -40,6 +43,11 @@ public class DefaultSlaverTest {
     // static CardsController c1 = new CardsController(p1,game.getGameID(),false);
     //static CardsController c2= new CardsController(p2,game.getGameID(),false);;
 
+    /**
+     * test to see if the default actions a disconnected player would take work
+     * @throws IOException
+     * @throws InterruptedException
+     */
 
     @Test
     public void DefaultSlavers() throws IOException, InterruptedException {

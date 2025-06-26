@@ -23,8 +23,16 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
+/**
+ * test all the possible actions
+ */
 class ActionTest {
-    
+
+    /**
+     * test the correct functioning of the actions and if they can be called from only certain player states
+     * @throws IOException
+     */
     
     @Test
     public void testActions() throws IOException {

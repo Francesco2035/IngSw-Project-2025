@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * tests the default actions during Meteorites
+ */
 public class DefaultMeteoritesTest1 {
 
 
@@ -39,6 +42,11 @@ public class DefaultMeteoritesTest1 {
     //static CardsController c2= new CardsController(p2,game.getGameID(),false);;
 
 
+    /**
+     * test to see if the default actions a disconnected player would take work
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Test
     public void DefaultMeteorites() throws IOException, InterruptedException {
         try{

@@ -7,7 +7,16 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+/**
+ * Tests to see if the TUI prints  the view correctly
+ */
+
 class TUITest {
+
+    /**
+     *tests to see if the TUI correctly creates and updates the view of multiple players
+     * @throws IOException
+     */
 
     @Test
     void test() throws IOException {

@@ -9,12 +9,21 @@ import org.example.galaxy_trucker.Model.Player;
 import org.example.galaxy_trucker.TestSetupHelper;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test the creation of a Handle cargo command
+ */
 class HandleCargoTest {
 
+
+    /**
+     * test the serializiation of the give HandleCargo command
+     * @throws IOException
+     */
     @Test
     void playerAction() {
 

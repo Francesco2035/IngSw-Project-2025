@@ -15,6 +15,9 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * tests level 1 warzone
+ */
 public class Warzone1Coverage {
 
 
@@ -41,9 +44,15 @@ public class Warzone1Coverage {
     // static CardsController c1 = new CardsController(p1,game.getGameID(),false);
     //static CardsController c2= new CardsController(p2,game.getGameID(),false);;
 
+    /**
+     * test the possible actions and correct assignment of the loser
+     * and his punishment for the first warzone card
+     * @throws IOException
+     * @throws InterruptedException
+     */
 
     @Test
-    public void DefaultSlavers() throws IOException, InterruptedException {
+    public void Level1Warzone() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");
         NewTestSetupHelper helper = new NewTestSetupHelper();
 

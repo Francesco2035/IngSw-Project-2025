@@ -12,14 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class powerCenterTest {
 
-    @Test
-    void getPrivEnergy() {
-    }
 
-    @Test
-    void setPrivEnergy() {
-    }
-
+    /**
+     * test the getability method
+     * @throws IOException
+     */
     @Test
     void getAbility() throws IOException {
         GAGen gag = new GAGen();
@@ -30,6 +27,10 @@ class powerCenterTest {
 
     }
 
+    /**
+     * test the setability method
+     * @throws IOException
+     */
     @Test
     void setAbility() throws IOException {
         GAGen gag = new GAGen();
@@ -39,7 +40,10 @@ class powerCenterTest {
         me.setId("prova");
 
     }
-
+    /**
+     * test the initType method
+     * @throws IOException
+     */
     @Test
     void initType() throws IOException {
         GAGen gen = new GAGen();

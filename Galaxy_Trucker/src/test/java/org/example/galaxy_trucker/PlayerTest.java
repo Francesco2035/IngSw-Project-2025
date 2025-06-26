@@ -16,8 +16,15 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+/**
+ * tests some methods of the Player class
+ */
 class PlayerTest {
 
+    /**
+     * tests the pick card method
+     * @throws IOException
+     */
     @Test
     void PickCardTest() throws IOException {
 

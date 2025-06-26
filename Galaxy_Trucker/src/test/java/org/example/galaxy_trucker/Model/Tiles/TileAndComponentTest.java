@@ -27,10 +27,17 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the component actions of the tiles
+ */
 class TileAndComponentTest {
 
 
-
+    /**
+     * tests what is the utcome of the component actions of a tile depending on its component
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Test
     public void ComponentTest() throws IOException, InterruptedException {
 

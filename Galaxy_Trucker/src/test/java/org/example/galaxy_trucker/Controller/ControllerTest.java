@@ -20,9 +20,16 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the correct action that the Controller class can call when the subclasseds don't override the methods
+ */
+
 class ControllerTest {
 
 
+/**
+ * tests various actions and to see if correctly catches exceptions
+ */
 
     @Test
     void contrTest() throws IOException {

@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * tests the default actions during OpenSpace
+ */
 public class DefaultOpenspaceTest {
 
 
@@ -46,6 +49,11 @@ public class DefaultOpenspaceTest {
     //static CardsController c2= new CardsController(p2,game.getGameID(),false);;
 
 
+    /**
+     * test to see if the default actions a disconnected player would take work
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Test
     public void DefaultAbandonedStation() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");

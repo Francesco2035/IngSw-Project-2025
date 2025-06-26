@@ -18,6 +18,9 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * tests the default actions during Abandonedship
+ */
 public class PiratesCoverageTest1 {
 
 

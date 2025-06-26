@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * tests the default actions during Abandonedship
+ */
 public class DefaultAbandonedShipTest {
     static Game game;
 
@@ -38,7 +41,11 @@ public class DefaultAbandonedShipTest {
     // static CardsController c1 = new CardsController(p1,game.getGameID(),false);
     //static CardsController c2= new CardsController(p2,game.getGameID(),false);;
 
-
+    /**
+     * test to see if the default actions a disconnected player would take work
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Test
     public void DefaultAbandonedStation() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");

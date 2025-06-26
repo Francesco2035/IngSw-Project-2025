@@ -16,6 +16,9 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * tests the default actions during Pirates
+ */
 public class DefaultPiratesTest {
 
 
@@ -40,6 +43,11 @@ public class DefaultPiratesTest {
     //static CardsController c2= new CardsController(p2,game.getGameID(),false);;
 
 
+    /**
+     * test to see if the default actions a disconnected player would take work
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Test
     public void DefaultMeteorites() throws IOException, InterruptedException {
         Game game = new Game(2, "testCarteController");
