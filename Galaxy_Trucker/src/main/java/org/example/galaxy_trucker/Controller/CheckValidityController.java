@@ -39,7 +39,7 @@ public class CheckValidityController extends Controller{
      * @param gc the game controller to manage game transitions; can be null
      */
     @Override
-    public synchronized void action(Command command, GameController gc) {
+    public synchronized void action(Command command, GameController gc) { //  devo overridare anche qui ok
 
         System.out.println("CHECK_CONTROLLER");
 

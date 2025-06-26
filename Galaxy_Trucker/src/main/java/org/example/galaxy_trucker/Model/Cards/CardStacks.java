@@ -59,8 +59,9 @@ public class CardStacks implements Serializable {
             HiddenCards.add(Gag.getCardsDeck().get(7));
             HiddenCards.add(Gag.getCardsDeck().get(11));
             HiddenCards.add(Gag.getCardsDeck().get(14));
+            HiddenCards.add(Gag.getCardsDeck().get(35)); //REMEMBER
+//            HiddenCards.add(Gag.getCardsDeck().get(36)); //REMEMBER
             HiddenCards.add(Gag.getCardsDeck().get(21));
-            HiddenCards.add(Gag.getCardsDeck().get(35));
             HiddenCards.add(Gag.getCardsDeck().get(37));
             HiddenCards.add(Gag.getCardsDeck().get(29));
 

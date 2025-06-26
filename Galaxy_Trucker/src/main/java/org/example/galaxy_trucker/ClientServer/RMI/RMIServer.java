@@ -469,7 +469,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
                 try {
                     cmd.getClient().receivePing();
-                    System.out.println("PING");
+                    //System.out.println("PING");
                 } catch (RemoteException e) {
                     System.out.println("Client disconnected: " + cmd.getClient());
                     pingExecutor.shutdown();
@@ -489,7 +489,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, R
 
                     try {
                         cmd.getClient().receivePing();
-                        System.out.println("PING");
+                        //System.out.println("PING");
                     } catch (RemoteException e) {
                         System.out.println("Client disconnected: " + cmd.getClient());
                         lobby.remove(cmd.getClient());

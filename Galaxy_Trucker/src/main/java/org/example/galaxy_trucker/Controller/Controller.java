@@ -104,7 +104,7 @@ public abstract class Controller {
      * @param gc the game controller to manage the game state and execute transitions; it may be null,
      *           in which case certain operations will be handled differently
      */
-    public void DefaultAction(GameController gc) { //TODO test
+    public void DefaultAction(GameController gc) {
        PlayerState state = curPlayer.getPlayerState();
        Command cmd =state.createDefaultCommand(gameId,curPlayer);
        playerBoardCopy = curPlayer.getmyPlayerBoard().clone();
@@ -180,7 +180,7 @@ public abstract class Controller {
      */
     public void removeExceptionListener() {
         this.exceptionListener = null;
-    } //TODO test
+    }
 
     /**
      * Sends an exception event through the exception listener if it is not null.
@@ -188,7 +188,7 @@ public abstract class Controller {
      *
      * @param e the exception to be processed and sent to the listener
      */
-    public void sendException(Exception e) { //TODO test
+    public void sendException(Exception e) {
         if (exceptionListener != null) {
             ExceptionEvent event = new ExceptionEvent(e.getMessage());
             exceptionListener.exceptionOccured(event);

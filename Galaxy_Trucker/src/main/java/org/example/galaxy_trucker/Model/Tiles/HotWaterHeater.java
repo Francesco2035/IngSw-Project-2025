@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
@@ -128,7 +127,7 @@ public class HotWaterHeater extends Component{
         }
 
         playerBoard.getHotWaterHeaters().remove(this);
-        tile.sendUpdates(new RemoveTileEvent());
+        tile.sendUpdates();
     }
 
 

@@ -118,7 +118,7 @@ public class PostPrepController extends Controller {
      * @throws RuntimeException if an interruption occurs during the execution
      */
     @Override
-    public  void  DefaultAction(GameController gc) { //TODO test
+    public  void  DefaultAction(GameController gc) {  
         PlayerState state = curPlayer.getPlayerState();
         Command cmd =state.createDefaultCommand(gameId,curPlayer);
         playerBoardCopy = curPlayer.getmyPlayerBoard().clone();

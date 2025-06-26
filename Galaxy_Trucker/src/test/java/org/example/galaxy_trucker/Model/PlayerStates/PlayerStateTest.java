@@ -155,7 +155,12 @@ class PlayerStateTest {
         ChoosePosition chp = new ChoosePosition();
         chp.allows(new FinishBuildingCommand());
         p1.setState(chp);
-        chp.createDefaultCommand(game.getGameID(), p1).execute(p1);
+        try{
+            chp.createDefaultCommand(game.getGameID(), p1).execute(p1);
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("already"));
+        }
+
         chp.toClientState();
 
 

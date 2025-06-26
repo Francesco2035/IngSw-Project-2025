@@ -1,8 +1,5 @@
 package org.example.galaxy_trucker.View.TUI;
-//si occupa di ricevere gli eventi, formattarli e inviarli ad out. Chiama la show di out, la show di out chiama il metodo di player che in base allo stato in cui è (ricevendo come parametro this) chiama i metodi giusti
 
-//eccezioni gestite direttamente da TUI
-//se disconnesso setta player a stato di disconnessione e chiama
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.galaxy_trucker.ClientServer.Client;
@@ -949,7 +946,7 @@ public class TUI implements View {
                 extra += "B: "+ brown + " | ";
                 extra += "P: "+purple;
             }
-            case "storage", "TripleStorage", "specialStorage", "doubleSpecialStorage" -> {
+            case "Storage", "TripleStorage", "specialStorage", "doubleSpecialStorage" -> {
                 if (event.getCargo() != null && !event.getCargo().isEmpty()) {
                     StringBuilder sb = new StringBuilder();
                     for (Goods g : event.getCargo()) {

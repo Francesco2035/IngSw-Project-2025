@@ -6,8 +6,6 @@ import org.example.galaxy_trucker.ClientServer.Messages.TileSets.*;
 import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.PlayerTileEvent;
 import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RewardsEvent;
 import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.TileEvent;
-import org.example.galaxy_trucker.ClientServer.Messages.TileSets.*;
-//import org.example.galaxy_trucker.Messages.TileSets.*;
 
 import java.io.Serializable;
 

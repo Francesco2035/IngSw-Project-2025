@@ -101,6 +101,14 @@ public class AbandonedShip extends Card{
 
 
         if(accepted){
+
+            ArrayList<Player> PlayerList = this.getBoard().getPlayers();
+            for(Player p : PlayerList){
+                if(p.GetID()== currentPlayer.GetID()){
+                    this.sendRandomEffect(p.GetID(),new LogEvent("You have accepted to board the ship",-1,-1,-1,-1));
+                }
+                this.sendRandomEffect(p.GetID(),new LogEvent(currentPlayer.GetID()+" has accepted to board the ship",-1,-1,-1,-1));
+            }
             System.out.println(currentPlayer.GetID()+" has accepted");
             this.currentPlayer.setState(new Killing());
         }

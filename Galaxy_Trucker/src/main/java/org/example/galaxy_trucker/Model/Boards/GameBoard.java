@@ -643,6 +643,7 @@ public class GameBoard {
                 else {
                     arrayIndex = pair.getValue() % nPositions;
                 }
+                sendUpdates(new GameBoardEvent(-1, loser.GetID()));
                 positions[arrayIndex] = null;
                 int finalScore = loser.CalculateResult(false);
                 scoreboard.put(loser.GetID(), finalScore);

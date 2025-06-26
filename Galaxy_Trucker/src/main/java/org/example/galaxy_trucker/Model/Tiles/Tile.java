@@ -1,7 +1,6 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.TileEvent;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Connectors.*;
@@ -303,10 +302,8 @@ public class Tile implements Serializable {
      * Sends updates related to a tile removal event. This method processes a RemoveTileEvent
      * and sends the corresponding updates using the player board.
      *
-     * @param event the RemoveTileEvent that triggers the update; contains information about
-     *              the tile being removed and its associated properties
      */
-    public void sendUpdates(RemoveTileEvent event) {
+    public void sendUpdates() {
         ArrayList<Connectors> noneConnectors = new ArrayList<>();
         noneConnectors.add(NONE.INSTANCE);
         noneConnectors.add(NONE.INSTANCE);

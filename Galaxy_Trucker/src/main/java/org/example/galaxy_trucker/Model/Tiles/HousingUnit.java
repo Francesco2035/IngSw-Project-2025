@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Model.Boards.Actions.ComponentAction;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
@@ -215,7 +214,7 @@ public abstract class HousingUnit extends Component{
         for (HousingUnit unit : nearbyHousingUnits){
             unit.notifyUnit(false, this);
         }
-        tile.sendUpdates(new RemoveTileEvent());
+        tile.sendUpdates();
     }
 
     /**

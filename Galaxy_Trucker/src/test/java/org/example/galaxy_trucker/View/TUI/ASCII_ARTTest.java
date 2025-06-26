@@ -7,15 +7,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 class ASCII_ARTTest {
-    //QUESTO TEST NON SERVE A NIENTE, ERA GIUSTO PER VISUALIZZARE VELOCEMENTE LE SCRITTE
-
-
-    @Test
-    public void test() {
-        System.out.println(ASCII_ART.AbandonedStation);
-
-        System.out.println(ASCII_ART.largeMeteor);
-    }
 
     @Test
     public void testScoreBoard() throws IOException {

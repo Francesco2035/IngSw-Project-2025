@@ -1,6 +1,5 @@
 package org.example.galaxy_trucker.Model.Tiles;
 
-import org.example.galaxy_trucker.ClientServer.Messages.PlayerBoardEvents.RemoveTileEvent;
 import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.Goods.Goods;
@@ -140,7 +139,7 @@ public class StorageCompartment extends Storage{
     @Override
     public void remove(PlayerBoard playerBoard) {
         playerBoard.getStorages().remove(this);
-        tile.sendUpdates(new RemoveTileEvent());
+        tile.sendUpdates();
         for (Goods good : goods){
             playerBoard.setTotalValue(-good.getValue());
             playerBoard.getStoredGoods().get(good.getValue()).remove(new IntegerPair(tile.x, tile.y));
@@ -164,9 +163,7 @@ public class StorageCompartment extends Storage{
         StorageCompartment clone = new StorageCompartment();
         clone.goods = new ArrayList<>(goods);
         clone.type = this.type;
-        for (Goods g : clone.getGoods()) {
-            System.out.println("CLONED NC "+g);
-        }
+
         return clone;
     }
 
