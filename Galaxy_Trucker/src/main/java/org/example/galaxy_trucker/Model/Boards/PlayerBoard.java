@@ -768,7 +768,7 @@ public class PlayerBoard {
         PlayerBoard[x][y].setY(y);
 
         PlayerBoard[x][y].getComponent().remove(this);
-        PlayerBoard[x][y] = new Tile(new SpaceVoid() ,NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
+        PlayerBoard[x][y] = new Tile(new SpaceVoid() ,NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;
     }
 
@@ -1563,10 +1563,6 @@ public class PlayerBoard {
      */
     public void sendUpdates(TileEvent event){
         if(listener != null) {
-            System.out.println("Event "+event.getRotation());
-            for (Connectors con : event.getConnectors()){
-                System.out.println(con);
-            }
             listener.playerBoardChanged(event);
         }
     }

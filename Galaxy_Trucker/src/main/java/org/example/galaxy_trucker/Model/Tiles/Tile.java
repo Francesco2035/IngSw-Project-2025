@@ -372,6 +372,10 @@ public class Tile implements Serializable {
         rotation = rotation % 360;
     }
 
+    public void clearRotation(){
+        this.rotation = 0;
+    }
+
 }
 
 

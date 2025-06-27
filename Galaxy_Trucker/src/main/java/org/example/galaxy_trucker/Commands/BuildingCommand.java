@@ -189,7 +189,6 @@ public class BuildingCommand extends Command implements Serializable {
                 }
             }
         }catch (Exception e){
-            System.out.println("odio tutti");
             Tile tile = player.getCurrentTile();
             if (tile!=null){
                 int temp = 360;
@@ -200,8 +199,8 @@ public class BuildingCommand extends Command implements Serializable {
                 }
 
                 temp = rotation % 360;
-                System.out.println("temp: " + temp);
                 tile.setRotation(temp);
+                tile.clearRotation();
             }
             throw new InvalidInput(e.getMessage());
         }

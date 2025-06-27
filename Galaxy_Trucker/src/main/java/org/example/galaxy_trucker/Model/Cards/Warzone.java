@@ -352,6 +352,7 @@ public class Warzone extends Card{
                     this.Minimum = 100000;
                     if(this.currentPlayer.getmyPlayerBoard().getNumHumans()<this.PunishmentHumans){ // dovrebbe bastare a evitare il caso in cui uno è forzato ad uccidere più umani di quanti de abbia
                         losers.add(currentPlayer);
+                        this.ChallengeOrder++;
                         this.updateStates();
                         return;
                     }
