@@ -84,6 +84,10 @@ public class TestSetupHelper {
 
         PlayerBoard playerBoard = new PlayerBoard(2);
 
+        MainCockpitComp mp = new MainCockpitComp();
+        Tile mc = new Tile(mp, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        playerBoard.insertTile(mc,6,6, false);
+
         playerBoard.insertTile(t1, 6,7, true);
         t2.RotateSx();
         t2.RotateSx();
@@ -118,9 +122,7 @@ public class TestSetupHelper {
 //        playerBoard.insertTile(modular2,8,4);
 //        playerBoard.insertTile(modular3,8,5);
 //        playerBoard.insertTile(shield,6,3);
-        MainCockpitComp mp = new MainCockpitComp();
-        Tile mc = new Tile(mp, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
-        playerBoard.insertTile(mc,6,6, false);
+
         return playerBoard;
 
     }
@@ -182,6 +184,10 @@ public class TestSetupHelper {
         t9.RotateDx();
         t9.RotateDx();
 
+        MainCockpitComp mk = new MainCockpitComp();
+        Tile mkk = new Tile(mk, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        playerBoard2.insertTile(mkk,6,6, false);
+
         playerBoard2.insertTile(t1,5,6, false);
         playerBoard2.insertTile(t7,6,7, false);
         playerBoard2.insertTile(t2,7,7, false);
@@ -193,9 +199,7 @@ public class TestSetupHelper {
         playerBoard2.insertTile(t9,5,4, false);
         playerBoard2.insertTile(t10,6,4, false);
         playerBoard2.insertTile(t11,8,7, false);
-        MainCockpitComp mk = new MainCockpitComp();
-        Tile mkk = new Tile(mk, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
-        playerBoard2.insertTile(mkk,6,6, false);
+
         return playerBoard2;
 
 
@@ -225,6 +229,8 @@ public class TestSetupHelper {
         AlienAddons alienAddonsPurple = new AlienAddons();
         alienAddonsPurple.setType(1);
         Tile purple = new Tile(alienAddonsPurple,UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        playerBoard3.insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6, 6, false);
+
         playerBoard3.insertTile(modular1, 7, 8, false);
         playerBoard3.insertTile(modular2, 6, 7, false);
         playerBoard3.insertTile(modular3, 5, 7, false);
@@ -238,7 +244,6 @@ public class TestSetupHelper {
         playerBoard3.insertTile(brown2, 8, 5, false);
         playerBoard3.insertTile(sewerPipes,6,8, false);
         playerBoard3.insertTile(sewerPipes,7,6, false);
-        playerBoard3.insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6, 6, false);
 
 
         return playerBoard3;
