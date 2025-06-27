@@ -174,7 +174,7 @@ public class CommandInterpreter {
         int y;
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
         if (strings.length != 3) {
-            throw new IllegalArgumentException("Comando selectChunk richiede 2 argomenti: le coordinate");
+            throw new IllegalArgumentException("Command selectChunk requires 2 arguments: the coordinates");
         }
         x = Integer.parseInt(strings[1]);
         y = Integer.parseInt(strings[2]);
@@ -214,14 +214,14 @@ public class CommandInterpreter {
         switch (title){
             case "FINISHCARGO":{
                 if (strings.length != 1) {
-                    throw new IllegalArgumentException("Comando FinishCargo non richiede argomenti");
+                    throw new IllegalArgumentException("Command FinishCargo doesn't require arguments");
                 }
                 title = "FinishCargo";
                 break;
             }
             case "SWITCH":{
                 if (strings.length != 7) {
-                    throw new IllegalArgumentException("Comando Switch richiede 6 argomenti: x1, y1, pos1, x2, y2, pos2");
+                    throw new IllegalArgumentException("Command Switch requires 6 arguments: x1, y1, pos1, x2, y2, pos2");
                 }
                 title = "Switch";
                 x1 = Integer.parseInt(strings[1]);
@@ -235,7 +235,7 @@ public class CommandInterpreter {
             }
             case "DISCARDCARGO":{
                 if (strings.length != 4) {
-                    throw new IllegalArgumentException("Comando DiscardCargo richiede 3 argomenti: x1, y1, pos1");
+                    throw new IllegalArgumentException("Command DiscardCargo requires 3 arguments: x1, y1, pos1");
                 }
                 title = "Discard";
                 x1 = Integer.parseInt(strings[1]);
@@ -247,7 +247,7 @@ public class CommandInterpreter {
 
             case "THEFT":{
                 if (strings.length != 4) {
-                    throw new IllegalArgumentException("Comando Theft richiede 3 argomenti: x1, y1, pos1");
+                    throw new IllegalArgumentException("Command Theft requires 3 arguments: x1, y1, pos1");
                 }
                 title = "TheftCommand";
                 x1 = Integer.parseInt(strings[1]);
@@ -257,7 +257,7 @@ public class CommandInterpreter {
             }
             case "GETREWARD":{
                 if (strings.length != 4) {
-                    throw new IllegalArgumentException("Comando GetReward richiede 3 argomenti: x1, y1, posRewards");
+                    throw new IllegalArgumentException("Command GetReward requires 3 arguments: x1, y1, posRewards");
                 }
                 title = "GetFromRewards";
                 //position2= Integer.parseInt(strings[1]);
@@ -335,7 +335,7 @@ public class CommandInterpreter {
     private Command createAddCrewCommand(String[] strings) {
 
         if (strings.length != 3) {
-            throw new IllegalArgumentException("Comando AddCrew richiede 3 argomenti: titolo, x e y");
+            throw new IllegalArgumentException("Command AddCrew requires 3 arguments: title, x e y");
         }
         String title = strings[0];
         int x = Integer.parseInt(strings[1]);
@@ -370,7 +370,7 @@ public class CommandInterpreter {
         CommandCreator creator = commandMap.get(commandTitle);
 
         if (creator == null) {
-            throw new IllegalArgumentException("Comando non riconosciuto: " + commandTitle);
+            throw new IllegalArgumentException("Command not recognized: " + commandTitle);
         }
 
         return creator.createCommand(parts);
@@ -388,7 +388,7 @@ public class CommandInterpreter {
      */
     private Command createLoginCommand(String[] parts) {
         if (parts.length != 5) {
-            throw new IllegalArgumentException("Comando Login richiede 3 argomenti: nome giocatore, nome gioco, livello, max num di players");
+            throw new IllegalArgumentException("Command Login requires 3 argumenst: player name, game name, level, max num of players");
         }
 
         String level = parts[3];
@@ -396,7 +396,7 @@ public class CommandInterpreter {
         try {
             levelInt = Integer.parseInt(level);
         } catch (NumberFormatException e) {
-            System.out.println("Errore: la stringa non è un numero valido.");
+            System.out.println("Error: the string isn't a valid number.");
         }
         setlv(levelInt);
         int maxPlayers = Integer.parseInt(parts[4]);
@@ -428,7 +428,7 @@ public class CommandInterpreter {
 
             case "SEEDECK":{
                 if (parts.length != 2) {
-                    throw new IllegalArgumentException("Comando SeeDeck richiede 1 argomento: numero deck scelto");
+                    throw new IllegalArgumentException("Command SeeDeck requires 1 argument: chosen deck number");
                 }
                 x = Integer.parseInt(parts[1]);
                 break;
@@ -436,7 +436,7 @@ public class CommandInterpreter {
 
             case "INSERTTILE":{
                 if (parts.length != 4) {
-                    throw new IllegalArgumentException("Comando InsertTile richiede 4 argomenti: x, y, rotazione");
+                    throw new IllegalArgumentException("Command InestTile requires 3 arguments: x, y, rotation");
                 }
                 x = Integer.parseInt(parts[1]);
                 y = Integer.parseInt(parts[2]);
@@ -455,19 +455,19 @@ public class CommandInterpreter {
             }
             case "HORGLASS", "DISCARD":{
                 if (parts.length != 1) {
-                    throw new IllegalArgumentException("Comando Hourglass e Discard non richiedono nessun argomento");
+                    throw new IllegalArgumentException("Command Hourglass and Discard don't require arguments");
                 }
                 break;
             }
             case "TOBUFFER" :{
                 if (parts.length != 1) {
-                    throw new IllegalArgumentException("Comando ToBuffer non richiede argomenti");
+                    throw new IllegalArgumentException("Command ToBuffer doesn't require arguments");
                 }
                 break;
             }
             case "FROMBUFFER" :{
                 if (parts.length != 2) {
-                    throw new IllegalArgumentException("Comando FromBuffer richiede 1 argomento: posizione");
+                    throw new IllegalArgumentException("Command FromBuffer requires 1 argument: position in the buffer");
                 }
                 position = Integer.parseInt(parts[1]);
                 break;
@@ -488,12 +488,12 @@ public class CommandInterpreter {
 
         if (lv == 2) {
             if(parts.length != 2 )
-                throw new IllegalArgumentException("Comando FinishBuilding richiede 1 argomento: Posizione iniziale scelta");
+                throw new IllegalArgumentException("Command FinishBuilding requires 1 argument: chosen starting positon");
             else
                 index = Integer.parseInt(parts[1]);
         }
         else if (parts.length != 1 && lv == 1)
-            throw new IllegalArgumentException("Comando FinishBuilding non richiede argomenti");
+            throw new IllegalArgumentException("Command FinishBuilding doesn't require arguments");
 
         return new FinishBuildingCommand(index, gameId,playerId, lv, "FinishBuilding", token);
     }
@@ -513,7 +513,7 @@ public class CommandInterpreter {
      * @return*/
     private Command createRemoveTileCommand(String[] parts) {
         if (parts.length != 3) {
-            throw new IllegalArgumentException("Comando Hourglass richiede 2 argomenti: x e y");
+            throw new IllegalArgumentException("Command RemoveTile requires 2 arguments: x and y");
         }
         int x = Integer.parseInt(parts[1]);
         int y = Integer.parseInt(parts[2]);
@@ -532,7 +532,7 @@ public class CommandInterpreter {
     private Command createAcceptCommand(String[] parts){
         boolean accept;
         if (parts.length != 1) {
-            throw new IllegalArgumentException("Comando Accept richiede 1 argomento: se si accetta o meno");
+            throw new IllegalArgumentException("Command Accept or Decline require no arguments");
         }
         if(parts[0].equals("ACCEPT")){
             accept = true;
@@ -558,11 +558,11 @@ public class CommandInterpreter {
     private Command createChoosingPlanetsCommand(String[] parts) {
 
         if(parts.length==1 || parts[1].equals("DoNothing")){
-            return new ChoosingPlanetsCommand(-1,gameId,playerId,lv, "DefendFromSmallCommand",token);
+            return new ChoosingPlanetsCommand(-1,gameId,playerId,lv, "ChoosingPlanetsCommand",token);
         }
 
         if (parts.length != 2) {
-            throw new IllegalArgumentException("Comando ChoosingPlanets richiede 1 argomento: numero del pianeta");
+            throw new IllegalArgumentException("Command ChoosingPlanets requires 1 argument: planetNumber");
         }
         int x = Integer.parseInt(parts[1]);
         return new ChoosingPlanetsCommand(x,gameId,playerId,lv, "ChoosingPlanetsCommand",token);
@@ -585,7 +585,7 @@ public class CommandInterpreter {
         int y;
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
         if ((parts.length-1)%2 != 0) {
-            throw new IllegalArgumentException("Comando ConsumeEnergy richiede un numero pari di argomenti: le coordinate"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+            throw new IllegalArgumentException("Command ConsumeEnergy requires an even number of arguments: the coordinates"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
         for (int i = 1; i < parts.length; i+=2) {
             x = Integer.parseInt(parts[i]);
@@ -616,7 +616,7 @@ public class CommandInterpreter {
             return new DefendFromLargeCommand(null,null,gameId,playerId,lv, "DefendFromLargeCommand",token);
         }
         if (parts.length != 5) {
-            throw new IllegalArgumentException("Comando DefendFromLarge richiede 4 argomenti: le due coordinate del cannone e dell'eventuale energia da consumare"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+            throw new IllegalArgumentException("Command DefendFromLarge requires 4 arguments: the coordinates of the plasma drill and the coordinates of the power center"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
         x= Integer.parseInt(parts[1]);
         y= Integer.parseInt(parts[2]);
@@ -660,7 +660,7 @@ public class CommandInterpreter {
             return new DefendFromSmallCommand(null,gameId,playerId,lv, "DefendFromSmallCommand",token);
         }
         if (parts.length != 3) {
-            throw new IllegalArgumentException("Comando DefendFromSmall richiede 2 argomenti: le due coordinate dell'energia da consumare " + parts[0] + " " + parts[1]); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+            throw new IllegalArgumentException("Command DefendFromSmall requires 2 arguments: the coordinates of the power center" + parts[0] + " " + parts[1]); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
         x=Integer.parseInt(parts[1]);
         y=Integer.parseInt(parts[2]);
@@ -694,7 +694,7 @@ public class CommandInterpreter {
             return new GiveAttackCommand(coordinates,gameId,playerId,lv,"GiveAttackCommand",token);
         }
         if ((parts.length-1)%2 != 0) {
-            throw new IllegalArgumentException("Comando GiveAttack richiede un numero pari di argomenti: le coordinate"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+            throw new IllegalArgumentException("Command GiveAttack requires an even number of arguments: the coordinates"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
         for (int i = 1; i < parts.length; i+=2) {
             x = Integer.parseInt(parts[i]);
@@ -724,7 +724,7 @@ public class CommandInterpreter {
             return new GiveSpeedCommand(coordinates,gameId,playerId,lv,"GiveAttackCommand",token);
         }
         if ((parts.length-1)%2 != 0) {
-            throw new IllegalArgumentException("Comando GiveSpeed richiede un numero pari di argomenti: le coordinate"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+            throw new IllegalArgumentException("Command GiveSpeed requires an even number of arguments: the coordinates"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
         for (int i = 1; i < parts.length; i+=2) {
             x = Integer.parseInt(parts[i]);
@@ -756,7 +756,7 @@ public class CommandInterpreter {
         int y;
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
         if ((parts.length-1)%2 != 0) {
-            throw new IllegalArgumentException("Comando Kill richiede un numero pari di argomenti: le coordinate"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
+            throw new IllegalArgumentException("Command Kill requires an even number of arguments: the coordinates"); // anche se dubito possa essere colpa del player se succedono casini qui ma vabbé
         }
 
         for (int i = 1; i < parts.length; i+=2) {
