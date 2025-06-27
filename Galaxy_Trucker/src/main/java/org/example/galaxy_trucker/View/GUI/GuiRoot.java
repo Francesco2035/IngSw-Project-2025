@@ -3909,6 +3909,7 @@ public class GuiRoot implements View {
                 for(ImageView i : selectedImages){
                     i.setOpacity(1);
                 }
+                cmd.set("Kill");
                 cmdCoords.clear();
             });
             primaryStage.show();
