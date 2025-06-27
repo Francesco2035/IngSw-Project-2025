@@ -3007,6 +3007,8 @@ public class GuiRoot implements View {
             }
 
             cmdCoords.clear();
+            tileRotation = 0;
+            tileImage.setRotate(0);
 
             ImageView alert = new ImageView(new Image(getClass().getResourceAsStream("/GUI/alert.png")));
             alert.setFitHeight(45);
