@@ -997,7 +997,7 @@ public class GuiRoot implements View {
                             buffer2.setOpacity(0.5);
                         });
                         buffer2.setOnMouseClicked(e -> {
-                            inputQueue.add("ToBuffer 1");
+                            inputQueue.add("ToBuffer");
                         });
 
                     } else {
@@ -1010,7 +1010,7 @@ public class GuiRoot implements View {
                             buffer1.setOpacity(0.5);
                         });
                         buffer1.setOnMouseClicked(e -> {
-                            inputQueue.add("ToBuffer 0");
+                            inputQueue.add("ToBuffer");
                         });
                     }
                 } else {
@@ -1034,7 +1034,7 @@ public class GuiRoot implements View {
                         buffer2.setOpacity(0.5);
                     });
                     buffer2.setOnMouseClicked(e -> {
-                        inputQueue.add("ToBuffer 1");
+                        inputQueue.add("ToBuffer");
                     });
                 } else {
                     buffer2.setImage(tileImg.getImage());
