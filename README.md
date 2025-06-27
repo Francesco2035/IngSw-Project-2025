@@ -71,14 +71,19 @@ To run the project you will need to:
 * The next step for the client is following the instruction on screen to reach the game homepage
 
 
+# UML diagrams
+
+In this [directory](https://github.com/PietroPoggi/ing-sw-2025-Poggi-Paludetti-Passolunghi-Rausa/tree/main/Galaxy_Trucker/deliverables/UML) are listed all the various requested UML diagrams.
+
+
 ## Javadocs
 
-You can find the generated documentation at this [link]().
+You can find the generated documentation at this [link](https://github.com/PietroPoggi/ing-sw-2025-Poggi-Paludetti-Passolunghi-Rausa/tree/main/Galaxy_Trucker/deliverables/javadoc).
 
 
-## Project presentation document
+## Project connection protocol
 
-[Here]()'s the document for the presentation of the project. 
+[Here](https://github.com/PietroPoggi/ing-sw-2025-Poggi-Paludetti-Passolunghi-Rausa/blob/main/Galaxy_Trucker/deliverables/UML/connection%20protocol.pdf)'s the document for the connection protocol of the project. 
 
 
 
@@ -108,11 +113,11 @@ Tests of model and controller reach a classe coverage level of 100%.
 
 | Package | Line Coverage |
 |:-----------------------|:------------------------------------:|
-| Controller  |624/737 (84%)
-| Model | 2837/3349 (84%)
+| Controller  |614/735 (83%)
+| Model | 2817/3337 (84%)
 
 
-See the complete report [here](https://github.com/PietroPoggi/ing-sw-2025-Poggi-Paludetti-Passolunghi-Rausa/blob/quasi_main/Galaxy_Trucker/src/main/resources/TESTS.png).
+See the complete report [here](https://github.com/PietroPoggi/ing-sw-2025-Poggi-Paludetti-Passolunghi-Rausa/blob/main/Galaxy_Trucker/deliverables/Coverage.png).
 
 ## The team
 
