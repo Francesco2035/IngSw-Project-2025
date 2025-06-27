@@ -588,7 +588,10 @@ public class TCPClient{
                             continue;
                         }
 
-                        int gameLevel = Integer.parseInt(client.getView().askInput("Game level: "));
+                        int level = Integer.parseInt(client.getView().askInput("Insert game level [1-2, values above 2 will be capped to 2]: "));
+                        if (level > 2){
+                            level = 2;
+                        }
 
                         int maxPlayers = Integer.parseInt(client.getView().askInput("Insert number of players [1-4]: "));
                         if (maxPlayers < 1){
@@ -598,11 +601,11 @@ public class TCPClient{
                             maxPlayers = 4;
                         }
 
-                        LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login", maxPlayers);
+                        LoginCommand loginCommand = new LoginCommand(gameId, playerId, level, "Login", maxPlayers);
 
 
                         commandInterpreter = new CommandInterpreter(playerId, gameId);
-                        commandInterpreter.setlv(gameLevel);
+                        commandInterpreter.setlv(level);
                         mapper = new ObjectMapper();
                         client.setLogin(true);
                         jsonLogin = mapper.writeValueAsString(loginCommand);
@@ -643,14 +646,12 @@ public class TCPClient{
                         }
                         if (client.containsGameId(gameId)) {
                             client.setLogin(true);
+                            int level = client.getLevel(gameId);
 
-                            int gameLevel = Integer.parseInt(client.getView().askInput("Game level: "));
+                            LoginCommand loginCommand = new LoginCommand(gameId, playerId, level, "Login", -1);
 
-                            LoginCommand loginCommand = new LoginCommand(gameId, playerId, gameLevel, "Login", -1);
-//                            commandInterpreter.setPlayerId(playerId);
-//                            commandInterpreter.setGameId(gameId);
                             commandInterpreter = new CommandInterpreter(playerId, gameId);
-                            commandInterpreter.setlv(gameLevel);
+                            commandInterpreter.setlv(level);
                             mapper = new ObjectMapper();
                             jsonLogin = mapper.writeValueAsString(loginCommand);
 

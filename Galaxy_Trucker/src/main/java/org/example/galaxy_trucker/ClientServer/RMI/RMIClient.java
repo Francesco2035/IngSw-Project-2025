@@ -422,7 +422,12 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                              }
 
 
-                            int level = Integer.parseInt(client.getView().askInput("Insert game level: "));
+
+
+                            int level = Integer.parseInt(client.getView().askInput("Insert game level [1-2, values above 2 will be capped to 2]: "));
+                             if (level > 2){
+                                 level = 2;
+                             }
                             int maxPlayers = Integer.parseInt(client.getView().askInput("Insert number of players [1-4]: "));
                             if (maxPlayers < 1){
                                 maxPlayers = 1;
