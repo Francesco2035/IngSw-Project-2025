@@ -709,7 +709,6 @@ public class GuiRoot implements View {
      */
     @Override
     public void updateBoard(TileEvent event) {
-        System.out.println("rotazione mia "+ event.getRotation());
         boolean stackTile;
         IntegerPair pair = null;
 
@@ -1077,7 +1076,6 @@ public class GuiRoot implements View {
      */
     @Override
     public void updateOthersPB(PlayerTileEvent event) {
-        System.out.println("rotazione "+event.getPlayerName() + " "+ event.getRotation());
         Platform.runLater(() -> {
             StackPane tileStack;
             Pane crewPane = new Pane();
