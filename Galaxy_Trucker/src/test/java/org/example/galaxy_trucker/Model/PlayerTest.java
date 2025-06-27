@@ -92,7 +92,7 @@ class PlayerTest {
         try {
             p1.PickNewTile(-2);
         } catch (Exception e){
-            assertEquals("Valore non valido", e.getMessage());
+            assertEquals("where are you picking?", e.getMessage());
         }
 
         p1.PickNewTile(-1);
