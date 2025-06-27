@@ -2997,6 +2997,7 @@ public class GuiRoot implements View {
      */
     @Override
     public void exceptionOccurred(ExceptionEvent exceptionEvent){
+        cmdCoords.clear();
 
         Platform.runLater(() -> {
 
@@ -3006,7 +3007,6 @@ public class GuiRoot implements View {
                     tile.setOpacity(1);
             }
 
-            cmdCoords.clear();
             tileRotation = 0;
             tileImage.setRotate(tileRotation);
 
