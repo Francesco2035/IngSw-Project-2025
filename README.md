@@ -16,7 +16,7 @@
 
 Galaxy Truckers is the final test of **"Software Engineering"**, course of **"Computer Science Engineering"** held at Politecnico di Milano (2024/2025).
 
-**Teacher** Gianpaolo Cugola
+**Teacher**: Gianpaolo Cugola
 
 **Final Score**:
 
