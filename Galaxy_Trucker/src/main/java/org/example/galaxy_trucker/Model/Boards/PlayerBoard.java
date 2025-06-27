@@ -1563,6 +1563,10 @@ public class PlayerBoard {
      */
     public void sendUpdates(TileEvent event){
         if(listener != null) {
+            System.out.println("Event "+event.getRotation());
+            for (Connectors con : event.getConnectors()){
+                System.out.println(con);
+            }
             listener.playerBoardChanged(event);
         }
     }
