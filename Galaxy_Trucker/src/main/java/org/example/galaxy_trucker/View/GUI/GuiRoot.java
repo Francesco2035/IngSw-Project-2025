@@ -2500,7 +2500,7 @@ public class GuiRoot implements View {
      *   <li><b>Tile Buffers</b>:
      *     <ul>
      *       <li>Visual hover effects (opacity changes)</li>
-     *       <li>Sends "ToBuffer 0" or "ToBuffer 1" commands when clicked</li>
+     *       <li>Sends "ToBuffer" commands when clicked</li>
      *     </ul>
      *   </li>
      *   <li><b>Action Buttons</b>:
@@ -2582,7 +2582,7 @@ public class GuiRoot implements View {
             buffer1.setOpacity(0.5);
         });
         buffer1.setOnMouseClicked(event -> {
-            inputQueue.add("ToBuffer 0");
+            inputQueue.add("ToBuffer");
         });
 
         buffer2.setImage(tilePlaceholder);
@@ -2596,7 +2596,7 @@ public class GuiRoot implements View {
             buffer2.setOpacity(0.5);
         });
         buffer2.setOnMouseClicked(event -> {
-            inputQueue.add("ToBuffer 1");
+            inputQueue.add("ToBuffer");
         });
 
         ImageView deck1 = new ImageView(cardBack);
