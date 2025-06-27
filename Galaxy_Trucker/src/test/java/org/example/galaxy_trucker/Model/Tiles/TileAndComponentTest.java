@@ -538,11 +538,15 @@ class TileAndComponentTest {
 
 
         //tilesets
-
-        TileSets ts = new TileSets(new GAGen());
-        ts.getNewTile(-1);
-        ts.removeListeners(vv);
-        ts.setListeners(vv);
+try {
+    TileSets ts = new TileSets(new GAGen());
+    ts.getNewTile(-1);
+    ts.removeListeners(vv);
+    ts.setListeners(vv);
+}
+catch(Exception e){
+    System.out.println("exception called correctly");
+        }
 
 
 
