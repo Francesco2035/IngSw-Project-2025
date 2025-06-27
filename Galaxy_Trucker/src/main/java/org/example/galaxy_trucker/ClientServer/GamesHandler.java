@@ -360,17 +360,17 @@ public class GamesHandler implements LobbyListener {
         synchronized (tokenToGame) {
             game = tokenToGame.get(token);
         }
-        if (game == null) {
-            throw new InvalidInput("game null: ");
-        }
+        if (game != null) {
+            synchronized (gameControllerMap) {
+                GameController gc = gameControllerMap.get(game);
+                if (gc != null){
+                    gc.stopPlayer(token);
+                }
 
-        synchronized (gameControllerMap) {
-            GameController gc = gameControllerMap.get(game);
-            if (gc != null){
-                gc.stopPlayer(token);
             }
-
         }
+
+
 
     }
 
@@ -381,13 +381,13 @@ public class GamesHandler implements LobbyListener {
         synchronized (tokenToGame) {
             game = tokenToGame.get(token);
         }
-        if (game == null) {
-            throw new InvalidInput("game null: ");
+        if (game != null) {
+            synchronized (gameControllerMap) {
+                gameControllerMap.get(game).startPlayer(token);
+            }
         }
 
-        synchronized (gameControllerMap) {
-            gameControllerMap.get(game).startPlayer(token);
-        }
+
     }
 
     /**

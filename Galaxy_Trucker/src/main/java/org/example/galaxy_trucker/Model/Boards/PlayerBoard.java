@@ -766,7 +766,7 @@ public class PlayerBoard {
         PlayerBoard[x][y].setX(x);
 
         PlayerBoard[x][y].setY(y);
-
+        System.out.println("rimuovo "+x + " "+ y);
         PlayerBoard[x][y].getComponent().remove(this);
         PlayerBoard[x][y] = new Tile(new SpaceVoid() ,NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE, NONE.INSTANCE);
         ValidPlayerBoard[x][y] = 0;

@@ -284,7 +284,7 @@ public class GameBoard {
      */
     public void SetStartingPosition(Player pl){
         Player_IntegerPair cur = players.stream()
-                .filter(p -> pl.equals( p.getKey()) )
+                .filter(p -> pl.equals(p.getKey()) )
                 .findFirst().orElseThrow();
         if(cur.getValue() == -1){
             SetNewPosition(cur, startPos[PlayersOnBoard], startPos[PlayersOnBoard]);
@@ -348,6 +348,7 @@ public class GameBoard {
         if(cur.equals(players.getLast())) {
             positions[cur.getValue()] = null;
             cur.setValue(-1);
+            PlayersOnBoard--;
         }
         else{
             int i=0;
@@ -356,6 +357,7 @@ public class GameBoard {
                     shiftedPositions[i] = p.getValue();
                     positions[shiftedPositions[i]] = null;
                     i++;
+
                     //qui tolgo tutto
                 }
             }
@@ -548,8 +550,8 @@ public class GameBoard {
      * @return the newly selected card from the card stack
      */
     public Card NewCard() {
-        CurrentCard = CardStack.PickNewCard();
-        //CurrentCard = getCardStack().getGaG().getCardsDeck().get(36);
+        //CurrentCard = CardStack.PickNewCard();
+        CurrentCard = getCardStack().getGaG().getCardsDeck().get(36);
         for(Player_IntegerPair p : players){
             p.getKey().setCard(CurrentCard);
         }
