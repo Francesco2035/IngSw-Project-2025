@@ -212,7 +212,7 @@ public class Pirates extends Card{
                         Colpito= new String("hit you");
                         location = new String("at "+lines[ShotsOrder/2]+" "+Movement);
                             shotsFlag = true;
-                            hit.setValue(Movement, lines[ShotsOrder / 2]);
+                            hit.setValue( lines[ShotsOrder / 2],Movement);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
                             System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
@@ -296,7 +296,7 @@ public class Pirates extends Card{
                         location = new String("at "+lines[ShotsOrder/2]+" "+Movement);
 
                             shotsFlag = true;
-                            hit.setValue(Movement, lines[ShotsOrder/2]);
+                            hit.setValue(lines[ShotsOrder/2],Movement);
                         if(Punishment.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
 
                             System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
