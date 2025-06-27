@@ -222,6 +222,7 @@ public class Pirates extends Card{
                                 sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
                                 this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
                                 this.currentPlayer.setState(new HandleDestruction());
+                                this.ShotsOrder+=2;
                                 return;
 
                             }
@@ -264,6 +265,7 @@ public class Pirates extends Card{
                                 this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
 
                                 this.currentPlayer.setState(new HandleDestruction());
+                                this.ShotsOrder+=2;
                                 return;
 
                             }
@@ -305,6 +307,7 @@ public class Pirates extends Card{
                                 sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
                                 this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
                                 this.currentPlayer.setState(new HandleDestruction());
+                                this.ShotsOrder+=2;
                                 return;
 
                             }
@@ -345,6 +348,7 @@ public class Pirates extends Card{
                                 sendRandomEffect(currentPlayer.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
                                 this.sendRandomEffect(currentPlayer.GetID(),new LogEvent("your ship got broken into parts, select a chunk to keep",-1,-1,-1,-1));
                                 this.currentPlayer.setState(new HandleDestruction());
+                                this.ShotsOrder+=2;
                                 return;
 
                             }
