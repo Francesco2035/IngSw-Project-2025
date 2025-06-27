@@ -1,4 +1,11 @@
 
+# Galaxy Truckers board game
+
+
+
+
+<img src="https://github.com/PietroPoggi/ing-sw-2025-Poggi-Paludetti-Passolunghi-Rausa/blob/quasi_main_3/Galaxy_Trucker/src/main/resources/galaxy-trucker_sx_SITO___optimized_600_600%20(1).jpg" width=192px height=192 px align="right" />
+
 
 
 
@@ -16,7 +23,7 @@ Galaxy Truckers is the final test of **"Software Engineering"**, course of **"Co
 ## Project specification
 The objective was to digitize and reproduce in Java the board game *Galaxy Truckers*, made by Czech Games Edition. 
 
-The full game (Italian version) can be found at this [link](https://www.craniocreations.it/prodotto/galaxy-trucker)
+The full game (Italian distribution) can be found at this [link](https://www.craniocreations.it/prodotto/galaxy-trucker)
 
 In this repository the following is included:
 * UML diagram custom made for the project by the team;
@@ -25,13 +32,53 @@ In this repository the following is included:
 * source code for the implementation;
 * source code for the unity test of such implementation;
 
+
+<!--
+
 ## About the project
 
 
 | **[Installation][installation-link]**     | **[Compiling][compiling-link]**     |    **[Running][running-link]**       | **[Javadocs][javadocs]** | **[Troubleshooting][troubleshooting-link]**
 |-------------------------------------|-------------------------------------|-------------------------------------|-------------------------------------|-------------------------------------|
 | [![i1][installation-image]][installation-link] | [![i2][compiling-image]][compiling-link] | [![i4][running-image]][running-link] | [![i3][javadocs-image]][javadocs] | [![i5][troubleshooting-image]][troubleshooting-link]
+-->
 
+
+
+## Initialization
+
+The *system requirements* for running the project are the following:
+* Linux, MacOS or Windows OS with an active terminal.
+* Java SE JDK 23.0.2 (OracleJDK or OpenJDK) or above.
+* Maven version 4.0.0 or above.
+
+#### WARNING:
+to achieve the best exceperience on Windows, usage of cmd.exe as a terminal is not adviced
+
+
+Copy the repository on your machine and start a terminal
+
+
+
+
+## Running
+
+To run the project you will need to:
+
+* Navigate to the following directory: out/artifacts/Galaxy_Trucker_jar
+* Execute the following command in the terminal to start the server: java "-Djava.rmi.server.hostname=[your_ip_address]" -jar '.\Galaxy_Trucker-1.0-SNAPSHOT.jar' server
+* And for the client: java "-Djava.rmi.server.hostname=[your_ip_address]" -jar '.\Galaxy_Trucker-1.0-SNAPSHOT.jar' client
+* The next step for the client is following the instruction on screen to reach the game homepage
+
+
+## Javadocs
+
+You can find the generated documentation at this [link]().
+
+
+## Project presentation document
+
+[Here]()'s the document for the presentation of the project. 
 
 
 
@@ -39,90 +86,55 @@ In this repository the following is included:
 
 | Functionality | Status |
 |:-----------------------|:------------------------------------:|
-| Basic rules | [✅]() |
-| Complete rules | [✅]() |
-| RMI |[✅]() |
-| TCP-IP |[✅]() |
-| GUI | [✅]() |
-| TUI |[✅]() |
-| Trial flight | [✅]() |
-| Multiple games | [✅]()|
-| Disconnection resilience | [✅]() |
-| Persistence | [⛔]() |
+| Basic rules | ✅ |
+| Complete rules | ✅ |
+| RMI |✅ |
+| TCP-IP |✅ |
+| GUI | ✅ |
+| TUI |✅ |
+| Trial flight | ✅ |
+| Multiple games | ✅|
+| Disconnection resilience | ✅|
+| Persistence |⛔|
 
 #### Legend
-[⛔]() Not Implemented &nbsp;&nbsp;&nbsp;&nbsp;[⚠️]() Implementing&nbsp;&nbsp;&nbsp;&nbsp;[✅]() Implemented
+⛔ Not Implemented &nbsp;&nbsp;&nbsp;&nbsp;✅ Implemented
 
 
 ## Test cases
-Tests of model and controller reach a classes' coverage and method coverage of 100%.
+Tests of model and controller reach a classe coverage level of 100%.
 
 **Coverage criteria: code lines.**
 
 | Package | Line Coverage |
 |:-----------------------|:------------------------------------:|
-| Controller  | --/-- (84%)
-| Model | --/-- (84%)
+| Controller  |624/737 (84%)
+| Model | 2837/3349 (84%)
 
 
-See the entire report below:
-[tests-image]
-
+See the complete report [here](https://github.com/PietroPoggi/ing-sw-2025-Poggi-Paludetti-Passolunghi-Rausa/blob/quasi_main/Galaxy_Trucker/src/main/resources/TESTS.png).
 
 ## The team
 
-* 
-*
-*
-* 
+* [Federico Paludetti](https://github.com/PaluFede)
+* [Riccardo Passolunghi](https://github.com/passo-polimi)
+* [Pietro Poggi](https://github.com/PietroPoggi)
+* [Francesco Rausa](https://github.com/Francesco2035)
+
+
+## Software used
+
+* Intellij IDEA Ultimate - main IDE
+* Astah - UML diagrams
+* Plantuml - sequence diagrams
+* JUnit - Java tests
+
+
+## Copyright
+All rights reserved to their respective partners
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[installation-link]:
-[compiling-link]:
-[running-link]:
-[javadocs]: 
-[troubleshooting-link]: 
-[installation-image]:
-[compiling-image]:
-[running-image]:
-[javadocs-image]:
-[troubleshooting-image]:
-[tests-image]: 
