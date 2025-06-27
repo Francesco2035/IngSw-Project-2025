@@ -69,6 +69,7 @@ To run the project you will need to:
 * Execute the following command in the terminal to start the server: java "-Djava.rmi.server.hostname=[your_ip_address]" -jar '.\Galaxy_Trucker-1.0-SNAPSHOT.jar' server
 * And for the client: java "-Djava.rmi.server.hostname=[your_ip_address]" -jar '.\Galaxy_Trucker-1.0-SNAPSHOT.jar' client
 * The next step for the client is following the instruction on screen to reach the game homepage
+* NB: the command for Linux doesn't use "" 
 
 
 # UML diagrams
