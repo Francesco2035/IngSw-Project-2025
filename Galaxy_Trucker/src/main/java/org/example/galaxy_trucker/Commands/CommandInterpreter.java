@@ -174,7 +174,7 @@ public class CommandInterpreter {
         int y;
         ArrayList<IntegerPair> coordinates = new ArrayList<>();
         if (strings.length != 3) {
-            throw new IllegalArgumentException("Comando selectChunk richiede 2 argomenti: le coordinate");
+            throw new IllegalArgumentException("Command selectChunk requires 2 arguments: the coordinates");
         }
         x = Integer.parseInt(strings[1]);
         y = Integer.parseInt(strings[2]);
@@ -214,14 +214,14 @@ public class CommandInterpreter {
         switch (title){
             case "FINISHCARGO":{
                 if (strings.length != 1) {
-                    throw new IllegalArgumentException("Comando FinishCargo non richiede argomenti");
+                    throw new IllegalArgumentException("Command FinishCargo doesn't require arguments");
                 }
                 title = "FinishCargo";
                 break;
             }
             case "SWITCH":{
                 if (strings.length != 7) {
-                    throw new IllegalArgumentException("Comando Switch richiede 6 argomenti: x1, y1, pos1, x2, y2, pos2");
+                    throw new IllegalArgumentException("Command Switch requires 6 arguments: x1, y1, pos1, x2, y2, pos2");
                 }
                 title = "Switch";
                 x1 = Integer.parseInt(strings[1]);
@@ -235,7 +235,7 @@ public class CommandInterpreter {
             }
             case "DISCARDCARGO":{
                 if (strings.length != 4) {
-                    throw new IllegalArgumentException("Comando DiscardCargo richiede 3 argomenti: x1, y1, pos1");
+                    throw new IllegalArgumentException("Command DiscardCargo richiede 3 argomenti: x1, y1, pos1");
                 }
                 title = "Discard";
                 x1 = Integer.parseInt(strings[1]);

@@ -71,6 +71,10 @@ public class NewTestSetupHelper {
         addonspurple.RotateSx(); //none single, none,uni
         plasmaDrill.RotateDx();
 
+        MainCockpitComp mp = new MainCockpitComp();
+        Tile mc = new Tile(mp, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        playerBoard1.insertTile(mc,6,6, false);
+
         playerBoard1.insertTile(t1, 6,7, true);
         t2.RotateSx();
         t2.RotateSx();
@@ -101,9 +105,7 @@ public class NewTestSetupHelper {
 //        playerBoard.insertTile(modular2,8,4);
 //        playerBoard.insertTile(modular3,8,5);
 //        playerBoard.insertTile(shield,6,3);
-        MainCockpitComp mp = new MainCockpitComp();
-        Tile mc = new Tile(mp, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
-        playerBoard1.insertTile(mc,6,6, false);
+
 
 //        for(int i=0; i<playerBoard1.getPlayerBoard().length; i++){
 //            for(int j=0; j<playerBoard1.getPlayerBoard().length; j++) {
@@ -159,6 +161,10 @@ public class NewTestSetupHelper {
         t9.RotateDx();
         t9.RotateDx();
 
+        MainCockpitComp mk = new MainCockpitComp();
+        Tile mkk = new Tile(mk, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
+        playerBoard2.insertTile(mkk,6,6, false);
+
         playerBoard2.insertTile(t1,5,6, false);
         playerBoard2.insertTile(t7,6,7, false);
         playerBoard2.insertTile(t2,7,7, false);
@@ -170,9 +176,7 @@ public class NewTestSetupHelper {
         playerBoard2.insertTile(t9,5,4, false);
         playerBoard2.insertTile(t10,6,4, false);
         playerBoard2.insertTile(t11,8,7, false);
-        MainCockpitComp mk = new MainCockpitComp();
-        Tile mkk = new Tile(mk, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE);
-        playerBoard2.insertTile(mkk,6,6, false);
+
         return playerBoard2;
 
 
