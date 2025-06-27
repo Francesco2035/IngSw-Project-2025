@@ -407,9 +407,9 @@ public class Warzone extends Card{
                 else {
                     this.Minimum = 1000000;
                     this.ChallengeOrder++;
-                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+" is the worst and has to kill "+this.PunishmentHumans,-1,-1,-1,-1));
-
-                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+" is the worst and he is going to get shot at ^_^",-1,-1,-1,-1));
+//                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+" is the worst and has to kill "+this.PunishmentHumans,-1,-1,-1,-1));
+//
+//                    this.sendRandomEffect(Worst.GetID(),new LogEvent(Worst.GetID()+" is the worst and he is going to get shot at ^_^",-1,-1,-1,-1));
                     Thread.sleep(1000);
                     this.continueCard();
                     return; // stessa cosa di lose time dato che ci torno automaticamente incremento qui che è meglio
@@ -820,7 +820,7 @@ public class Warzone extends Card{
                         Colpito= new String("hit you");
                         location = new String("at "+lines[ShotsOrder/2]+" "+Movement);
                         shotsFlag = true;
-                        hit.setValue(Movement, lines[ShotsOrder / 2]);
+                        hit.setValue( lines[ShotsOrder / 2],Movement);
                         if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
                             System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
@@ -829,6 +829,7 @@ public class Warzone extends Card{
                                 System.out.println("rottura nave");
                                 sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
                                 this.Worst.setState(new HandleDestruction());
+                                this.ShotsOrder+=2;
                                 return;
 
                             }
@@ -866,9 +867,11 @@ public class Warzone extends Card{
                             CurrentPlanche.destroy(hit.getFirst(), hit.getSecond());
                             CurrentPlanche.handleAttack(hit.getFirst(), hit.getSecond());
                             if (CurrentPlanche.getBroken()){
+
                                 System.out.println("rottura nave");
                                 sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
                                 this.Worst.setState(new HandleDestruction());
+                                this.ShotsOrder+=2;
                                 return;
 
                             }
@@ -899,7 +902,7 @@ public class Warzone extends Card{
                         location = new String("at "+lines[ShotsOrder/2]+" "+Movement);
 
                         shotsFlag = true;
-                        hit.setValue(Movement, lines[ShotsOrder/2]);
+                        hit.setValue( lines[ShotsOrder/2],Movement);
                         if(PunishmentShots.get(ShotsOrder+1) == 1){//colpo grande nulla da fare
 
                             System.out.println("destroyed: "+hit.getFirst()+" "+hit.getSecond());
@@ -909,6 +912,7 @@ public class Warzone extends Card{
                                 System.out.println("rottura nave");
                                 sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
                                 this.Worst.setState(new HandleDestruction());
+                                this.ShotsOrder+=2;
                                 return;
 
                             }
@@ -948,6 +952,7 @@ public class Warzone extends Card{
                                 System.out.println("rottura nave");
                                 sendRandomEffect(Worst.GetID(),new LogEvent("a "+dimensione+" shot came from "+direction+" and it "+Colpito+" "+location,-1,-1,-1,-1));
                                 this.Worst.setState(new HandleDestruction());
+                                this.ShotsOrder+=2;
                                 return;
 
                             }
