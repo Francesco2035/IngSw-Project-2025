@@ -72,7 +72,7 @@ To run the project you will need to:
 * NB: the command for Linux doesn't use "" 
 
 
-# UML diagrams
+## UML diagrams
 
 In this [directory](https://github.com/PietroPoggi/ing-sw-2025-Poggi-Paludetti-Passolunghi-Rausa/tree/main/Galaxy_Trucker/deliverables/UML) are listed all the various requested UML diagrams.
 
