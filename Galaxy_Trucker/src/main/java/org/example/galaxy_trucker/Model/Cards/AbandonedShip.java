@@ -164,7 +164,7 @@ public class AbandonedShip extends Card{
             if (CurrentPlanche.isPurpleAlien()){
                 NumHumans++;
             }
-            if(NumHumans>=requirement){ //TODO: capire se maggiore o maggiore uguale
+            if(NumHumans>=requirement){
                 this.totHumans=CurrentPlanche.getNumHumans();
                 System.out.println(currentPlayer.GetID()+" has enough required housing");
                 this.flag = true;

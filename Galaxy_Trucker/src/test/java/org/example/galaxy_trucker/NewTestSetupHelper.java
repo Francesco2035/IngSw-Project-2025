@@ -20,8 +20,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * a class to simplyfy testingù
- * by having methods create pre made boards and to quickly populate them
+ * a class to simplify testing
+ * by having methods create pre-made boards and to quickly populate them
  */
 public class NewTestSetupHelper {
 
