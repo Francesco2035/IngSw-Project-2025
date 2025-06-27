@@ -3008,7 +3008,7 @@ public class GuiRoot implements View {
 
             cmdCoords.clear();
             tileRotation = 0;
-            tileImage.setRotate(0);
+            tileImage.setRotate(tileRotation);
 
             ImageView alert = new ImageView(new Image(getClass().getResourceAsStream("/GUI/alert.png")));
             alert.setFitHeight(45);
@@ -3586,6 +3586,7 @@ public class GuiRoot implements View {
             discardedTiles = new ArrayList<>();
             discardedMap = new HashMap<>();
 
+            flightStarted = false;
             curCard = new ImageView();
             curCard.setImage(null);
             curCardImg = null;
