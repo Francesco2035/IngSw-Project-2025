@@ -550,8 +550,8 @@ public class GameBoard {
      * @return the newly selected card from the card stack
      */
     public Card NewCard() {
-        //CurrentCard = CardStack.PickNewCard();
-        CurrentCard = getCardStack().getGaG().getCardsDeck().get(36);
+        CurrentCard = CardStack.PickNewCard();
+        //CurrentCard = getCardStack().getGaG().getCardsDeck().get(36);
         for(Player_IntegerPair p : players){
             p.getKey().setCard(CurrentCard);
         }
