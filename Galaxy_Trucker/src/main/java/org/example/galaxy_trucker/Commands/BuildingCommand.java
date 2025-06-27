@@ -150,6 +150,9 @@ public class BuildingCommand extends Command implements Serializable {
 
                     case "INSERTTILE": {
                         Tile tile = player.getCurrentTile();
+
+
+                        player.getmyPlayerBoard().insertTile(tile, x, y, true);
                         int temp = 0;
                         int rotations = (rotation % 360) / 90;
                         for (int i = 0; i < rotations; i++) {
@@ -157,8 +160,6 @@ public class BuildingCommand extends Command implements Serializable {
                             temp+= 90;
                         }
                         tile.setRotation(temp);
-
-                        player.getmyPlayerBoard().insertTile(tile, x, y, true);
                         player.setCurrentTile(null);
                         break;
                     }
@@ -189,18 +190,20 @@ public class BuildingCommand extends Command implements Serializable {
                 }
             }
         }catch (Exception e){
-            Tile tile = player.getCurrentTile();
-            if (tile!=null){
-                int temp = 360;
-                int rotations = (rotation % 360) / 90;
-                for (int i = 0; i < rotations; i++) {
-                    tile.RotateSx();
-                    temp-=90;
-                }
-
-                temp = rotation % 360;
-                tile.setRotation(temp);
-            }
+//            Tile tile = player.getCurrentTile();
+//            if (tile!=null) {
+//
+//            }
+//                int temp = 360;
+//                int rotations = (rotation % 360) / 90;
+//                for (int i = 0; i < rotations; i++) {
+//                    tile.RotateSx();
+//                    temp-=90;
+//                }
+//
+//                temp = rotation % 360;
+//                tile.setRotation(temp);
+//            }
             throw new InvalidInput(e.getMessage());
         }
 

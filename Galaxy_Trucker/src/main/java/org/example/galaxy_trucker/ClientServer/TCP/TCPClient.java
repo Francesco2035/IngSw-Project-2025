@@ -349,7 +349,7 @@ public class TCPClient{
             return false;
         }
 
-        System.out.println("Connected to " + Settings.SERVER_NAME + ":" + Settings.TCP_PORT + ", starting Threads");
+        //System.out.println("Connected to " + Settings.SERVER_NAME + ":" + Settings.TCP_PORT + ", starting Threads");
         connected = true;
         return true;
 
