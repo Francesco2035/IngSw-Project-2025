@@ -138,8 +138,9 @@ public class BuildingCommand extends Command implements Serializable {
     @Override
     public void execute(Player player) throws RemoteException, JsonProcessingException, IllegalStateException {
 
-        if(!player.GetReady() || (Objects.equals(title, "HOURGLASS"))){
-            switch (title) {
+        try{
+            if(!player.GetReady() || (Objects.equals(title, "HOURGLASS"))){
+                switch (title) {
 
                     case "SEEDECK": {
                         player.getCommonBoard().getCardStack().notify(playerId, x);
@@ -159,12 +160,6 @@ public class BuildingCommand extends Command implements Serializable {
                         break;
                     }
                     case "TOBUFFER": {
-                        Tile tile = player.getCurrentTile();
-                        int rotations = (rotation % 360) / 90;
-                        for (int i = 0; i < rotations; i++) {
-                            tile.RotateDx();
-                        }
-                        tile.setRotation(rotation);
                         player.PlaceInBuffer();
                         break;
                     }
@@ -177,7 +172,6 @@ public class BuildingCommand extends Command implements Serializable {
                         break;
                     }
                     case "DISCARD": {
-                        System.out.println(player.GetID()+" sta scartando");
                         player.DiscardTile();
                         break;
                     }
@@ -191,7 +185,17 @@ public class BuildingCommand extends Command implements Serializable {
                     }
                 }
 
+
+            }
+        }catch (Exception e){
+            Tile tile = player.getCurrentTile();
+            if (tile!=null){
+                tile.clearRotation();
+            }
         }
+
+
+
 
     }
 

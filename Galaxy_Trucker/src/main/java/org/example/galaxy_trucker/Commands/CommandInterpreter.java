@@ -460,10 +460,9 @@ public class CommandInterpreter {
                 break;
             }
             case "TOBUFFER" :{
-                if (parts.length != 2) {
-                    throw new IllegalArgumentException("Comando ToBuffer richiede 1 argomento: rotazione");
+                if (parts.length != 1) {
+                    throw new IllegalArgumentException("Comando ToBuffer non richiede argomenti");
                 }
-                rotation = Integer.parseInt(parts[1]);
                 break;
             }
             case "FROMBUFFER" :{
