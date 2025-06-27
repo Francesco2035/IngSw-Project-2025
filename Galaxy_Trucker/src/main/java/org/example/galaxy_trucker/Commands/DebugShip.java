@@ -1,6 +1,7 @@
 package org.example.galaxy_trucker.Commands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.galaxy_trucker.Exceptions.InvalidInput;
 import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
 import org.example.galaxy_trucker.Model.GAGen;
 import org.example.galaxy_trucker.Model.Player;
@@ -8,97 +9,361 @@ import org.example.galaxy_trucker.Model.PlayerStates.PlayerState;
 import org.example.galaxy_trucker.Model.Tiles.Tile;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class DebugShip extends Command {
+/**
+ * The DebugShip class represents a specialized command in the game to debug and modify the player's
+ * ship setup. It extends the Command class and implements Serializable. The class is responsible for
+ * setting up specific debug configurations for a player's ship by inserting predefined tiles and adjustments
+ * for testing purposes.
+ *
+ * This command interacts with the player's PlayerBoard and uses specific tiles from a tile deck to construct
+ * a test configuration. The execute method carries out the modifications based on the `number` parameter
+ * which determines the specific debug use case. Tile rotations, placements, and adjustments are explicitly
+ * programmed for debugging purposes.
+ *
+ * Fields:
+ * - `commandType`: Specifies the type of command as "DebugShip".
+ * - `number`: Represents the debug scenario or configuration to be executed.
+ *
+ * Constructors:
+ * - DebugShip(String gameId, String playerId, int lv, String title, String token, int number): Initializes
+ *   the command with the provided game ID, player ID, title, and debug configuration number.
+ * - DebugShip(): Default empty constructor.
+ *
+ * Methods:
+ * - execute(Player player): Overrides the execute method to perform the debugging setup on the player's
+ *   ship. The method retrieves the player's PlayerBoard, validates the tiles, and sets up a predefined
+ *   debug configuration based on the `number` provided.
+ */
+public class DebugShip extends Command implements Serializable {
 
 
+    /**
+     * Represents the type of command being executed, identified as "DebugShip".
+     * This constant is used to specify the nature of the DebugShip command in the system.
+     *
+     * The value is serialized using Jackson annotations to maintain compatibility
+     * with external systems and facilitate data exchange during command processing.
+     *
+     * Being a part of the `DebugShip` class, this variable functions as a key
+     * identifier for the command type, ensuring proper handling within the command
+     * execution framework.
+     */
     @JsonProperty("commandType")
     private final String commandType = "DebugShip";
+    /**
+     * Represents the numerical value associated with the DebugShip command.
+     * This variable is serialized and deserialized using Jackson's @JsonProperty annotation.
+     * It is used to define an integral value that is significant in the context
+     * of the DebugShip's functionality and operations.
+     */
+    @JsonProperty("number")
+    private int number;
+
+    /**
+     * Default constructor for the DebugShip class.
+     *
+     * Initializes an instance of the DebugShip command without setting any specific properties.
+     * This constructor may be used to create a DebugShip instance before assigning any parameters
+     * or executing operations.
+     */
+    public DebugShip() {}
 
 
-    public DebugShip(String gameId, String playerId, int lv, String title) {
-        super(gameId, playerId, lv, title);
+    /**
+     * Constructs a DebugShip object with the specified parameters.
+     *
+     * @param gameId   the unique identifier of the game
+     * @param playerId the unique identifier of the player
+     * @param lv       the level associated with the DebugShip command
+     * @param title    the title or name associated with the DebugShip command
+     * @param token    the token used for authentication or validation
+     * @param number   the integer value representing the number associated with the DebugShip command
+     */
+    public DebugShip(String gameId, String playerId, int lv, String title, String token, int number) {
+        super(gameId, playerId, lv, title, token,-1);
         this.gameId = gameId;
         this.playerId = playerId;
         this.title = title;
-    }
-
-    public DebugShip() {
-
+        this.number = number;
     }
 
 
+    /**
+     * Executes the specified action for the given player during the building phase of the game.
+     * This method customizes the player's board based on predefined configurations or setups,
+     * while ensuring the player adheres to the rules of this phase.
+     *
+     * @param player The player whose game actions are being executed.
+     * @throws IOException If an input or output operation fails or is interrupted.
+     * @throws InvalidInput If the player's action violates predefined conditions, such as being
+     *                      in the wrong game level or attempting to debug more than once.
+     */
     @Override
     public void execute(Player player) throws IOException {
+        if (player.getCommonBoard().getLevel() != 2) {
+            throw new InvalidInput("Tutorial: enjoy the experience of the building phase");
+        }
+        if (player.isDebugCalled()) {
+            throw new InvalidInput("You have already a ship");
+        }
 
-        PlayerBoard debugShip = new PlayerBoard(lv);
+        player.setDebugCalled(true);
+        PlayerBoard debugShip = player.getmyPlayerBoard();
         GAGen gag = new GAGen();
 
+        int[][]valid = debugShip.getValidPlayerBoard();
+
+
+        int[][]validCopy = new int[valid.length][valid[0].length];
+        for (int i = 0; i < valid.length; i++) {
+            validCopy[i] = Arrays.copyOf(valid[i], valid[i].length);
+        }
+
+        for(int i=0; i<10; i++) {
+            for(int j=0; j<10; j++) {
+                if (valid[i][j]== 1 && (i!=6 && j!=6)) debugShip.removeTile(i, j);
+            }
+        }
+
         ArrayList<Tile> tiles = gag.getTilesDeck();
-        Tile t1 = tiles.get(133); //"SINGLE", "DOUBLE", "SINGLE", "NONE addons, br factos
-        Tile t2 = tiles.get(102); //none,cannon, single, universal , plasmadrill    ruota sx due volte factos
-        Tile t3 = tiles.get(128); //doublem cannon, none, unviersal. plasmadrill  factos
-        Tile t4 = tiles.get(149); //double,k single, double, single shield none, double, double, universal ruota a sx factos
-        Tile specialStorage = tiles.get(57);
-        Tile normalStorage  =tiles.get(24);
-        Tile t8 = tiles.get(56);  // universal, universal, double, double. sewerpips factos
-        Tile t9 = tiles.get(32); //SINGLE", "NONE", "NONE", "UNIVERSAL housingjfoaihj factos
-        Tile t10 = tiles.get(33); //SINGLE", "SINGLE", "DOUBLE", "SINGLE moudsajdahoyusingunit ruota dx factos
-        Tile t11 = tiles.get(73); //SINGLE", "DOUBLE", "NONE", "MOTOR" un motore factos
-        Tile t12 = tiles.get(145);
-        Tile powerCenter = tiles.get(12);
-        Tile powerCenter2 = tiles.get(5);
-        Tile plasmaDrill = tiles.get(130);
-        Tile addonspurple = tiles.get(142);
-        Tile modular1 = tiles.get(39);
-        Tile sewerpipes = tiles.get(52);
-        Tile modular2 = tiles.get(47);
-        Tile modular3 = tiles.get(48);
-        Tile hotWaterHeater = tiles.get(92);
-        Tile shield = tiles.get(151);
-
-        shield.RotateSx();
-
-        addonspurple.RotateSx();
-        plasmaDrill.RotateDx();
 
 
-        debugShip.insertTile(t1, 6,7);
-        t2.RotateSx();
-        t2.RotateSx();
-        //debugShip.insertTile(t2, 7,7);
-        t8.RotateDx();
-        debugShip.insertTile(t8, 7,6);
-        debugShip.insertTile(t11, 6,5);
-        debugShip.insertTile(t9, 5,7);
-        //debugShip.insertTile(t3, 5,6);
 
-        t4.RotateSx();
-        debugShip.insertTile(t4, 5,5);
-        t10.RotateDx();
-        debugShip.insertTile(t10, 4,5);
+        switch (number){
+            case 0:{
+                Tile tile = tiles.get(37); ///mod housing uinit
+                debugShip.insertTile(tile,6,5,false);
 
-        debugShip.insertTile(t12, 6,8);
+                tile = tiles.get(86);//engine
+                debugShip.insertTile(tile,7,6,false);
 
-        specialStorage.RotateDx();
-        specialStorage.RotateDx();
-        debugShip.insertTile(specialStorage, 7,8);
+                tile = tiles.get(60); //specialstorage
+                debugShip.insertTile(tile,7,5,false);
 
-        debugShip.insertTile(normalStorage, 7,9);
-        debugShip.insertTile(powerCenter, 6,9);
-        debugShip.insertTile(powerCenter2, 5,4);
-        debugShip.insertTile(plasmaDrill,8,9);
-        debugShip.insertTile(addonspurple,6,4);
-        debugShip.insertTile(modular1,7,4);
-        debugShip.insertTile(sewerpipes,7,3);
-        debugShip.insertTile(hotWaterHeater,8,3);
+                tile = tiles.get(121);//double drill
+                debugShip.insertTile(tile,5,6,false);
+
+                tile = tiles.get(137);//brownalien
+                tile.RotateDx();
+                tile.setRotation(90);
+                debugShip.insertTile(tile,6,4,false);
+
+                tile = tiles.get(149); //shield
+                debugShip.insertTile(tile,6,7,false);
+
+                tile = tiles.get(144);//shield
+                tile.RotateSx();
+                tile.setRotation(270);
+                debugShip.insertTile(tile,5,7,false);
+
+                tile = tiles.get(11); //triplepowercenter
+                debugShip.insertTile(tile,7,7,false);
+
+                tile = tiles.get(15);//  powercenter
+                tile.RotateDx();
+                tile.RotateDx();
+                tile.setRotation(180);
+                debugShip.insertTile(tile,5,5,false);
+
+                tile = tiles.get(104); //plasmadrill
+                debugShip.insertTile(tile,4,5,false);
+
+                tile = tiles.get(118); //plasmadrill
+                tile.RotateDx();
+                tile.RotateDx();
+                tile.setRotation(180);
+                debugShip.insertTile(tile,8,7,false);
+
+                tile = tiles.get(62);//special storage
+                tile.RotateDx();
+                tile.RotateDx();
+                tile.setRotation(180);
+                debugShip.insertTile(tile,7,4,false);
+
+                tile = tiles.get(33); //modular housing
+                tile.RotateDx();
+                tile.RotateDx();
+                tile.setRotation(180);
+                debugShip.insertTile(tile,6,8,false);
+
+                tile = tiles.get(142);//purplealien
+                tile.RotateSx();
+                tile.setRotation(270);
+                debugShip.insertTile(tile,7,8,false);
+
+                tile = tiles.get(78); // engine
+                debugShip.insertTile(tile,8,4,false);
+
+                tile = tiles.get(94); // doubleengine
+                debugShip.insertTile(tile,8,5,false);
+
+                tile = tiles.get(54); // sewerpies
+                debugShip.insertTile(tile,8,3,false);
+
+                tile = tiles.get(120); // plasmadrill
+                tile.RotateSx();
+                tile.setRotation(270);
+                debugShip.insertTile(tile,7,3,false);
+
+                tile = tiles.get(29); //triple storage
+                debugShip.insertTile(tile,6,3,false);
+
+                tile = tiles.get(125); // doubleplasmadrill
+                debugShip.insertTile(tile,5,4,false);
 
 
-        player.setMyPlance(debugShip);
+                tile = tiles.get(45); //housing
+                debugShip.insertTile(tile,5,8,false);
+
+                tile = tiles.get(17); /// storage
+                tile.RotateSx();
+                tile.setRotation(270);
+                debugShip.insertTile(tile,8,8,false);
+
+                tile = tiles.get(147); //shield
+                tile.RotateDx();
+                tile.setRotation(90);
+                debugShip.insertTile(tile,8,9,false);
+
+                tile = tiles.get(97);
+                debugShip.insertTile(tile,4,7,false);
+
+                tile = tiles.get(146);//shield
+                debugShip.insertTile(tile,6,9,false);
+
+                break;
+            }
+            case 1:{
+                Tile tile = tiles.get(91);//engine
+                debugShip.insertTile(tile,7,6,false);
+
+                tile = tiles.get(3); // double battery
+                debugShip.insertTile(tile,6,7,false);
+
+
+                tile = tiles.get(48);//housing
+                debugShip.insertTile(tile,7,7,false);
+
+                tile = tiles.get(54); //sewer
+                debugShip.insertTile(tile,6,5,false);
+
+                tile = tiles.get(5); //Powercenter
+                debugShip.insertTile(tile,7,5,false);
+
+                tile = tiles.get(40); // housingunits
+                debugShip.insertTile(tile,7,4,false);
+
+                tile = tiles.get(133);
+                debugShip.insertTile(tile,8,4,false);
+
+
+                tile = tiles.get(145); //shield
+                tile.RotateDx();
+                tile.setRotation(90);
+                debugShip.insertTile(tile,8,5,false);
+
+
+                tile = tiles.get(10); // battery comp
+                tile.RotateDx();
+                tile.setRotation(90);
+                debugShip.insertTile(tile,8,3,false);
+
+                tile = tiles.get(75);//engine
+                debugShip.insertTile(tile,8,7,false);
+
+                tile = tiles.get(63); //special storage
+                tile.RotateSx();
+                tile.setRotation(270);
+                debugShip.insertTile(tile,5,6,false);
+
+                tile = tiles.get(19); //storage
+                tile.RotateDx();
+                tile.setRotation(90);
+                debugShip.insertTile(tile,5,7,false);
+
+                tile = tiles.get(131); // double plasma
+                debugShip.insertTile(tile,4,7,false);
+
+                tile = tiles.get(38); //housing
+                tile.RotateDx();
+                tile.setRotation(90);
+                debugShip.insertTile(tile,5,5,false);
+
+                tile = tiles.get(119); // plasmadrill
+                debugShip.insertTile(tile,4,5,false);
+
+                tile = tiles.get(47); //house
+                tile.RotateSx();
+                tile.setRotation(270);
+                debugShip.insertTile(tile,7,8,false);
+
+                tile = tiles.get(14); // triple power
+                tile.RotateSx();
+                tile.setRotation(270);
+                debugShip.insertTile(tile,8,8,false);
+
+                tile = tiles.get(87); //double hot water
+                debugShip.insertTile(tile,8,9,false);
+
+                tile = tiles.get(126);//double plasma
+                tile.RotateDx();
+                tile.setRotation(90);
+                debugShip.insertTile(tile,7,9,false);
+
+                tile = tiles.get(18); //storage
+                tile.RotateDx();
+                tile.setRotation(90);
+                debugShip.insertTile(tile,6,9,false);
+
+                tile = tiles.get(49);//sewerpipes
+                debugShip.insertTile(tile,6,8,false);
+
+                tile = tiles.get(150); //shield
+                debugShip.insertTile(tile,5,8,false);
+
+                tile = tiles.get(106); //plasmadrill
+                debugShip.insertTile(tile,5,4,false);
+
+                tile = tiles.get(0); //powercenter
+                debugShip.insertTile(tile,6,4,false);
+
+                tile = tiles.get(127); //double plasma
+                tile.RotateSx();
+                tile.setRotation(270);
+                debugShip.insertTile(tile,6,3,false);
+
+                tile = tiles.get(36);
+                tile.RotateDx();
+                tile.setRotation(90);
+                debugShip.insertTile(tile,7,3,false);
+
+
+                break;
+            }
+
+        }
 
     }
 
+    /**
+     * Sets the value of the number property for the instance.
+     *
+     * @param number the integer value to assign to the number property
+     */
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    /**
+     * Determines if the current command is allowed in the given player's state.
+     *
+     * @param playerState the PlayerState instance to check whether this command is allowed
+     * @return true if the command is allowed in the specified PlayerState; false otherwise
+     */
     @Override
     public boolean allowedIn(PlayerState playerState) {
         return playerState.allows(this);

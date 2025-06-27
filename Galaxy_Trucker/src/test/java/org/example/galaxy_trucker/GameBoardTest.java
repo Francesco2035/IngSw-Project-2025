@@ -10,8 +10,14 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test some gameboard methods
+ */
 class GameBoardTest {
-
+    /**
+     * tests the add player method
+      * @throws IOException
+     */
     @Test
     void addPlayer() throws IOException {
         GAGen gag = new GAGen();
@@ -27,6 +33,10 @@ class GameBoardTest {
         }
     }
 
+    /**
+     * tests the set starting positions method
+     * @throws IOException
+     */
     @Test
     void setStartingPositions() throws IOException {
         GAGen gag = new GAGen();
@@ -41,8 +51,8 @@ class GameBoardTest {
         gb.addPlayer(p1);
         gb.addPlayer(p2);
 
-        gb.SetStartingPosition("Player1");
-        gb.SetStartingPosition("Player2");
+        gb.SetStartingPosition(p1);
+        gb.SetStartingPosition(p2);
 
         assertEquals("Player1", gb.getPositions()[6].GetID());
         assertEquals("Player2", gb.getPositions()[3].GetID());
@@ -53,53 +63,58 @@ class GameBoardTest {
 
     }
 
+    /**
+     * tests the moveplayer method
+     * @throws IOException
+     */
     @Test
     void movePlayer() throws IOException {
         GAGen gag = new GAGen();
         TileSets tileSets = new TileSets(gag);
-        GameBoard gb = new GameBoard(tileSets, 2, null);
+        GameBoard gb = new GameBoard(tileSets, 1, null);
         Player p1 = new Player();
         p1.setId("Player1");
         Player p2 = new Player();
         p2.setId("Player2");
         Player p3 = new Player();
-        p2.setId("Player3");
+        p3.setId("Player3");
 
 
         gb.addPlayer(p1);
         gb.addPlayer(p2);
         gb.addPlayer(p3);
 
-        gb.SetStartingPosition("Player1");
-        gb.SetStartingPosition("Player2");
-        gb.SetStartingPosition("Player3");
+        p1.EndConstruction();
+        p2.EndConstruction();
+        p3.EndConstruction();
 
 
-        assertEquals("Player1", gb.getPositions()[6].GetID());
-        assertEquals("Player2", gb.getPositions()[3].GetID());
+        assertEquals("Player1", gb.getPositions()[4].GetID());
+        assertEquals("Player2", gb.getPositions()[2].GetID());
         assertEquals("Player3", gb.getPositions()[1].GetID());
 
 
         gb.movePlayer("Player3", 2);
-        assertEquals("Player2", gb.getPositions()[3].GetID());
-        assertEquals("Player3", gb.getPositions()[4].GetID());
+        assertEquals("Player2", gb.getPositions()[2].GetID());
+        assertEquals("Player3", gb.getPositions()[5].GetID());
         assertNull(gb.getPositions()[1]);
 
         gb.movePlayer("Player3", -2);
         assertEquals("Player3", gb.getPositions()[1].GetID());
-        assertNull(gb.getPositions()[4]);
+        assertNull(gb.getPositions()[5]);
 
         gb.movePlayer("Player3", 5);
 
-        assertEquals("Player1", gb.getPositions()[6].GetID());
+        assertEquals("Player1", gb.getPositions()[4].GetID());
         assertEquals("Player3", gb.getPositions()[8].GetID());
-        assertNull(gb.getPositions()[4]);
-
-
-
+        assertNull(gb.getPositions()[1]);
 
     }
 
+    /**
+     * tests other edge cases of the move player method
+     * @throws IOException
+     */
     @Test
     void movePlayerTest2() throws IOException {
         GAGen gag = new GAGen();
@@ -110,25 +125,96 @@ class GameBoardTest {
         Player p2 = new Player();
         p2.setId("Player2");
         Player p3 = new Player();
-        p2.setId("Player3");
+        p3.setId("Player3");
 
 
         gb.addPlayer(p1);
         gb.addPlayer(p2);
         gb.addPlayer(p3);
 
-        gb.SetStartingPosition("Player1");
-        gb.SetStartingPosition("Player2");
-        gb.SetStartingPosition("Player3");
+        p1.EndConstruction(1);
+        p2.EndConstruction(2);
+        p3.EndConstruction(3);
 
         assertEquals("Player1", gb.getPositions()[6].GetID());
         assertEquals("Player2", gb.getPositions()[3].GetID());
         assertEquals("Player3", gb.getPositions()[1].GetID());
 
 
-        gb.movePlayer("Player3", -5);
-        assertNull(gb.getPositions()[1]);
-//        gb.movePlayer("Player1", 16);
+        gb.movePlayer("Player1", +25);
+        assertEquals("Player1", gb.getPositions()[9].GetID());
+        assertNull(gb.getPositions()[6]);
+        gb.checkDoubleLap();
+
+        gb.movePlayer("Player3", -26);
+        assertEquals("Player3", gb.getPositions()[21].GetID());
+        assertNull(gb.getPositions()[20]);
+        gb.checkDoubleLap();
+
     }
 
+
+    /**
+     * tests if it prperly removes a player in case there is an invalid board after the prep phase
+     * and if it correctly shifts foward the other players on the board
+     * @throws IOException
+     */
+    @Test
+    void RemoveAndShiftTest() throws IOException {
+
+        GAGen gag = new GAGen();
+        TileSets tileSets = new TileSets(gag);
+        GameBoard gb = new GameBoard(tileSets, 2, null);
+
+        Player p1 = new Player();
+        p1.setId("Player1");
+        Player p2 = new Player();
+        p2.setId("Player2");
+        Player p3 = new Player();
+        p3.setId("Player3");
+        Player p4 = new Player();
+        p4.setId("Player4");
+
+        gb.addPlayer(p1);
+        gb.addPlayer(p2);
+        gb.addPlayer(p3);
+        gb.addPlayer(p4);
+
+        p1.EndConstruction(1);
+        p2.EndConstruction(2);
+        p3.EndConstruction(3);
+        p4.EndConstruction(4);
+
+        assertEquals(p1, gb.getPositions()[6]);
+        assertEquals(p2, gb.getPositions()[3]);
+        assertEquals(p3, gb.getPositions()[1]);
+        assertEquals(p4, gb.getPositions()[0]);
+
+
+        gb.removePlayerAndShift(p3);
+        assertEquals(p1, gb.getPositions()[6]);
+        assertEquals(p2, gb.getPositions()[3]);
+        assertEquals(p4, gb.getPositions()[1]);
+        assertNull(gb.getPositions()[0]);
+
+        gb.removePlayerAndShift(p4);
+        assertEquals(p1, gb.getPositions()[6]);
+        assertEquals(p2, gb.getPositions()[3]);
+        assertNull(gb.getPositions()[1]);
+
+        p3.EndConstruction(4);
+        assertEquals(p1, gb.getPositions()[6]);
+        assertEquals(p2, gb.getPositions()[3]);
+        assertEquals(p3, gb.getPositions()[0]);
+
+        gb.removePlayerAndShift(p1);
+        assertEquals(p2, gb.getPositions()[6]);
+        assertEquals(p3, gb.getPositions()[3]);
+        assertNull(gb.getPositions()[0]);
+
+        gb.removePlayerAndShift(p2);
+        assertEquals(p3, gb.getPositions()[6]);
+        assertNull(gb.getPositions()[3]);
+
+    }
 }

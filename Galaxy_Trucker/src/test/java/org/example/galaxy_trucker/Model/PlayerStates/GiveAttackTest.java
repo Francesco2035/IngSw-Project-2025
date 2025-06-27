@@ -8,8 +8,14 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the creation of a Give Attack actiob
+ */
 class GiveAttackTest {
-
+    /**
+     * test the serializiation of the give attack command
+     * @throws IOException
+     */
     @Test
     void playerAction() throws IOException {
         PlayerState state = new GiveAttack();
@@ -23,12 +29,10 @@ class GiveAttackTest {
           ]
         }
         """;
-        Game game  = new Game(2,"gay");
+        Game game  = new Game(2,"Tarallo");
         Player Poggi = new Player();
         Poggi.setId("poggi");
         game.NewPlayer(Poggi);
-
-//        state.PlayerAction(json, game.getPlayers().get("poggi"));
 
 
     }

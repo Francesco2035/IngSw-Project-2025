@@ -10,8 +10,14 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * tests the tile
+ */
 class TileTest {
-
+    /**
+     * tests if fou can see the validity of adjacent tiles
+     * @throws IOException
+     */
     @Test
     void checkAdjacent() throws IOException {
 

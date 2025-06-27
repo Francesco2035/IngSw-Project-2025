@@ -1,0 +1,113 @@
+package org.example.galaxy_trucker.Controller;
+
+import org.example.galaxy_trucker.ClientServer.Client;
+import org.example.galaxy_trucker.ClientServer.GamesHandler;
+import org.example.galaxy_trucker.ClientServer.RMI.RMIClient;
+import org.example.galaxy_trucker.Commands.HandleCargoCommand;
+import org.example.galaxy_trucker.Model.Boards.GameBoard;
+import org.example.galaxy_trucker.Model.Boards.PlayerBoard;
+import org.example.galaxy_trucker.Model.Connectors.UNIVERSAL;
+import org.example.galaxy_trucker.Model.Game;
+import org.example.galaxy_trucker.Model.Goods.BLUE;
+import org.example.galaxy_trucker.Model.Goods.Goods;
+import org.example.galaxy_trucker.Model.Goods.RED;
+import org.example.galaxy_trucker.Model.Goods.YELLOW;
+import org.example.galaxy_trucker.Model.IntegerPair;
+import org.example.galaxy_trucker.Model.Player;
+import org.example.galaxy_trucker.Model.PlayerStates.HandleCargo;
+import org.example.galaxy_trucker.Model.Tiles.MainCockpitComp;
+import org.example.galaxy_trucker.Model.Tiles.Tile;
+import org.example.galaxy_trucker.TestSetupHelper;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+/**
+ * Tests the flight Controllere subclass
+ */
+
+class FlightControllerTest {
+
+
+
+    static Game game;
+    static GameBoard Gboard;
+    static GameController gc;
+    static Player p1;
+    static VirtualView vv;
+    FlightController c1;
+
+    /**
+     *test the correct call of the handle cargo commands using the flight controller
+     * @throws IOException
+     */
+
+    @Test
+    public void testHadleCargoInFlight() throws IOException {
+
+        game = new Game(2, "testFlightController");
+        gc = new GameController(game.getGameID(), game, new GamesHandler(), game.getLv(), 4);
+
+        p1 = new Player();
+        p1.setId("passos");
+        game.NewPlayer(p1);
+        p1.setBoards(game.getGameBoard());
+        vv = new VirtualView(p1.GetID(), game.getGameID(), new RMIClient(new Client()), null);
+        vv.setDisconnected(true);
+//        assertTrue(p1.getmyPlayerBoard().checkValidity());
+        Gboard = game.getGameBoard();
+        c1 = new FlightController(p1, game.getGameID(), gc, false);
+        gc.getControllerMap().put(p1.GetID(), c1);
+
+        p1.setPhaseListener(vv);
+        p1.setReadyListener(gc);
+        p1.getmyPlayerBoard().setListener(vv);
+        p1.setHandListener(vv);
+        p1.getCommonBoard().getTilesSets().setListeners(vv);
+        p1.setCardListner(vv);
+        gc.getVirtualViewMap().put(p1.GetID(), vv);
+
+        p1.setMyPlance(TestSetupHelper.createInitializedBoard1());
+        p1.getmyPlayerBoard().insertTile(new Tile(new MainCockpitComp(), UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE, UNIVERSAL.INSTANCE), 6 ,6, false);
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        PlayerBoard pb1 = TestSetupHelper.createInitializedBoard1();
+        p1.setMyPlance(pb1);
+//        assertFalse(p1.getmyPlayerBoard().checkValidity());
+
+        ArrayList<Goods> goodsList = new ArrayList<>();
+        goodsList.add(new BLUE());
+        goodsList.add(new YELLOW());
+        goodsList.add(new RED());
+        goodsList.add(new RED());
+
+        p1.setState(new HandleCargo());
+        p1.getmyPlayerBoard().setRewards(goodsList);
+
+
+        c1.action(new HandleCargoCommand(0, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+        c1.action(new HandleCargoCommand(2, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+        c1.action(new HandleCargoCommand(1, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+        c1.action(new HandleCargoCommand(0, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(-1, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(6, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(10, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(-9, new IntegerPair(7, 8), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+
+        c1.action(new HandleCargoCommand(0, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+        c1.action(new HandleCargoCommand(2, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+        c1.action(new HandleCargoCommand(1, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(0, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(-1, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(6, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(10, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+//        c1.action(new HandleCargoCommand(-9, new IntegerPair(7, 9), -9, new IntegerPair(-1, 9999), game.getGameID(), p1.GetID(), game.getLv(), "GetFromRewards", null), gc);
+
+
+
+    }
+    
+}

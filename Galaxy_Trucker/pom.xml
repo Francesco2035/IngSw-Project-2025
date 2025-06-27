@@ -13,14 +13,33 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 <junit.version>5.10.2</junit.version>  </properties>
 
+
+
+
+
   <dependencies>
+    <dependency>
+      <groupId>org.jline</groupId>
+      <artifactId>jline</artifactId>
+      <version>3.30.0</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.fusesource.jansi</groupId>
+      <artifactId>jansi</artifactId>
+      <version>2.4.0</version>
+    </dependency>
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
       <version>2.17.2</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+
+
+
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
@@ -41,16 +60,72 @@
     </dependency>
 
 
+
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>17.0.6</version>
+      <version>21.0.5</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
-      <artifactId>javafx-fxml</artifactId>
-      <version>17.0.6</version>
+      <artifactId>javafx-graphics</artifactId>
+      <version>21.0.5</version>
+      <classifier>win</classifier>
     </dependency>
+
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>21.0.5</version>
+      <classifier>linux</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>21.0.5</version>
+      <classifier>mac-aarch64</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>21.0.5</version>
+      <classifier>mac</classifier>
+    </dependency>
+
+
+
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>21.0.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-media</artifactId>
+      <version>21.0.5</version>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-media</artifactId>
+      <version>21.0.5</version>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-media</artifactId>
+      <version>21.0.5</version>
+      <classifier>mac-aarch64</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-media</artifactId>
+      <version>21.0.5</version>
+      <classifier>mac</classifier>
+    </dependency>
+
 <dependency>
       <groupId>org.controlsfx</groupId>
       <artifactId>controlsfx</artifactId>
@@ -71,13 +146,42 @@
       <dependency>
           <groupId>org.jetbrains</groupId>
           <artifactId>annotations</artifactId>
-          <version>RELEASE</version>
+          <version>26.0.2</version>
           <scope>compile</scope>
       </dependency>
   </dependencies>
 
   <build>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
     <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.4.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>org.example.galaxy_trucker.View.Launcher</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -85,16 +189,16 @@
         <configuration>
           <source>23</source>
           <target>23</target>
-            <compilerArgs>--enable-preview</compilerArgs>
+          <compilerArgs>--enable-preview</compilerArgs>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version>
         <executions>
           <execution>
-            <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
               <mainClass>org.example.galaxy_trucker/org.example.galaxy_trucker.HelloApplication</mainClass>
@@ -108,6 +212,30 @@
           </execution>
         </executions>
       </plugin>
+
+
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>org.example.galaxy_trucker.ClientServer.Client</mainClass>
+          <arguments>
+
+          </arguments>
+        </configuration>
+      </plugin>
+
+
     </plugins>
+
   </build>
 </project>
