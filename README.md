@@ -18,7 +18,7 @@ Galaxy Truckers is the final test of **"Software Engineering"**, course of **"Co
 
 **Teacher**: Gianpaolo Cugola
 
-**Final Score**:
+**Final Score**: 30L
 
 ## Project specification
 The objective was to digitize and reproduce in Java the board game *Galaxy Truckers*, made by Czech Games Edition. 
